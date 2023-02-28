@@ -7,7 +7,10 @@ import { useRouter } from "next/router";
 import { setCookie, hasCookie, getCookie, deleteCookie } from "cookies-next";
 
 const schema = yup.object().shape({
-	username: yup.string().required("Silakan isi username Anda."),
+	pn: yup
+		.number()
+		.transform((val) => (isNaN(val) ? undefined : val))
+		.required("Silakan isi nomor PN Anda."),
 	password: yup.string().required("Silakan isi password Anda."),
 });
 
@@ -21,7 +24,7 @@ export default function index() {
 		setValue,
 	} = useForm({
 		defaultValues: {
-			username: "",
+			pn: "",
 			password: "",
 			remember_me: false,
 		},
@@ -30,7 +33,7 @@ export default function index() {
 
 	useEffect(() => {
 		if (hasCookie("remember_me")) {
-			setValue("username", getCookie("username"));
+			setValue("pn", getCookie("pn"));
 			setValue("remember_me", getCookie("remember_me"));
 		}
 	}, []);
@@ -40,10 +43,10 @@ export default function index() {
 
 		try {
 			if (data.remember_me) {
-				setCookie("username", data.username);
+				setCookie("pn", data.pn);
 				setCookie("remember_me", data.remember_me);
 			} else {
-				deleteCookie("username");
+				deleteCookie("pn");
 				deleteCookie("remember_me");
 			}
 
@@ -58,7 +61,7 @@ export default function index() {
 
 	return (
 		<div className="h-screen flex items-center">
-			<div className="w-1/3 mx-auto">
+			<div className="w-2/3 mx-auto">
 				<Card>
 					<h1 className="text-center text-2xl">Login</h1>
 					<form
@@ -66,15 +69,15 @@ export default function index() {
 						onSubmit={handleSubmit(onSubmit)}>
 						<div>
 							<div className="mb-2 block">
-								<Label htmlFor="username" value="Username" />
+								<Label htmlFor="pn" value="PN" />
 							</div>
 							<TextInput
-								id="username"
-								type="text"
-								{...register("username")}
+								id="pn"
+								type="number"
+								{...register("pn")}
 							/>
 							<small className="text-red-500">
-								{errors.username?.message}
+								{errors.pn?.message}
 							</small>
 						</div>
 						<div>

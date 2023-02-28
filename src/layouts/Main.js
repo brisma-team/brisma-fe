@@ -81,7 +81,7 @@ export default function Main({ children, breadcrumb }) {
 					</Sidebar.Items>
 				</Sidebar>
 			</div>
-			<div className="flex-1">
+			<div className="flex-1 overflow-x-hidden">
 				<Navbar fluid={true} border>
 					<button onClick={() => handleToggleSidebarClick()}>
 						<Bars3Icon className="w-6 h-6 text-gray-500" />
