@@ -47,7 +47,10 @@ export default function index() {
 				deleteCookie("remember_me");
 			}
 
-			router.push("/admin/dashboard");
+			setCookie("user", "asdasdasd");
+			setCookie("token", "asdasdasd");
+
+			router.push("/dashboard");
 		} catch (error) {
 			console.log(error);
 		}

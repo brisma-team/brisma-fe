@@ -1,0 +1,6 @@
+import React from "react";
+import BarLoader from "react-spinners/BarLoader";
+
+export default function Loader() {
+	return <BarLoader color="rgb(30,66,159)" size={50} />;
+}
