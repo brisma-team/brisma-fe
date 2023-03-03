@@ -1,5 +1,15 @@
-import React, { useState } from "react";
-import { Sidebar, Navbar, Dropdown, Avatar, Breadcrumb } from "flowbite-react";
+import useUser from "@/data/useUser";
+import Loader from "@/components/Loader";
+
+import React, { useEffect, useState } from "react";
+import {
+	Sidebar,
+	Navbar,
+	Avatar,
+	Breadcrumb,
+	Card,
+	Button,
+} from "flowbite-react";
 import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import {
@@ -7,6 +17,7 @@ import {
 	UserGroupIcon,
 	BellIcon,
 	Bars3Icon,
+	ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 
 const notifications = [
@@ -23,13 +34,30 @@ const notifications = [
 export default function Main({ children, breadcrumb }) {
 	const router = useRouter();
 
+	const { user, userError, userMutate } = useUser();
+
 	const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
+	const [isShown, setIsShown] = useState(false);
+	const [isUserDropdownShown, setIsUserDropdownShown] = useState(false);
+	const [isNotificationDropdownShown, setIsNotificationDropdownShown] =
+		useState(false);
+
+	useEffect(() => {
+		if (userError) {
+			router.push("/login");
+
+			return;
+		}
+
+		if (user) {
+			setIsShown(true);
+		}
+	}, [user, userError]);
 
 	async function handleLogoutClick() {
-		deleteCookie("user");
 		deleteCookie("token");
 
-		router.push("/login");
+		userMutate();
 	}
 
 	function handleSidebarItemClick(e, href) {
@@ -42,6 +70,24 @@ export default function Main({ children, breadcrumb }) {
 		const newState = !isSidebarCollapsed;
 
 		setIsSidebarCollapsed(newState);
+	}
+
+	function handleToggleNotificationDropdownClick() {
+		setIsNotificationDropdownShown(!isNotificationDropdownShown);
+		setIsUserDropdownShown(false);
+	}
+
+	function handleToggleUserDropdownClick() {
+		setIsUserDropdownShown(!isUserDropdownShown);
+		setIsNotificationDropdownShown(false);
+	}
+
+	if (!isShown) {
+		return (
+			<div className="w-screen h-screen flex items-center justify-center">
+				<Loader />
+			</div>
+		);
 	}
 
 	return (
@@ -82,49 +128,57 @@ export default function Main({ children, breadcrumb }) {
 				</Sidebar>
 			</div>
 			<div className="flex-1 overflow-x-hidden">
-				<Navbar fluid={true} border>
-					<button onClick={() => handleToggleSidebarClick()}>
-						<Bars3Icon className="w-6 h-6 text-gray-500" />
-					</button>
-					<div className="flex gap-x-4 items-center">
-						<Dropdown
-							arrowIcon={false}
-							inline={true}
-							label={
-								<BellIcon className="w-6 h-6 text-gray-500" />
-							}>
-							{notifications.map((notif, i) => (
-								<Dropdown.Item key={i}>
-									<div className="w-96">
-										<div>Pesan Baru</div>
-										<hr className="my-4" />
-										<div>{notif.message}</div>
+				<div className="p-4">
+					<Navbar fluid={true} border>
+						<button onClick={() => handleToggleSidebarClick()}>
+							<Bars3Icon className="w-6 h-6 text-gray-500" />
+						</button>
+						<div className="flex gap-x-4 items-center relative">
+							<BellIcon
+								className="w-6 h-6 text-gray-500"
+								onClick={() =>
+									handleToggleNotificationDropdownClick()
+								}
+							/>
+							<Avatar
+								alt="User settings"
+								img="https://via.placeholder.com/150"
+								rounded={true}
+								onClick={() => handleToggleUserDropdownClick()}
+							/>
+							{isUserDropdownShown && (
+								<Card className="absolute -bottom-48 -left-24">
+									<div className="space-y-2">
+										<div className="block text-sm">
+											John Doe
+										</div>
+										<div className="block truncate text-sm font-medium">
+											john.doe@mail.com
+										</div>
 									</div>
-								</Dropdown.Item>
-							))}
-						</Dropdown>
-						<Dropdown
-							arrowIcon={false}
-							inline={true}
-							label={
-								<Avatar
-									alt="User settings"
-									img="https://via.placeholder.com/150"
-									rounded={true}
-								/>
-							}>
-							<Dropdown.Header>
-								<span className="block text-sm">John Doe</span>
-								<span className="block truncate text-sm font-medium">
-									john.doe@mail.com
-								</span>
-							</Dropdown.Header>
-							<Dropdown.Item onClick={() => handleLogoutClick()}>
-								Logout
-							</Dropdown.Item>
-						</Dropdown>
-					</div>
-				</Navbar>
+									<hr />
+									<Button
+										color="failure"
+										onClick={() => handleLogoutClick()}>
+										<ArrowLeftOnRectangleIcon className="w-6 h-6" />
+										<span className="ml-2">Logout</span>
+									</Button>
+								</Card>
+							)}
+							{isNotificationDropdownShown && (
+								<Card className="absolute top-16 right-12 w-96 z-10 space-y-2">
+									{notifications.map((notif, i) => (
+										<Card key={i}>
+											<div>Pesan Baru</div>
+											<hr />
+											<div>{notif.message}</div>
+										</Card>
+									))}
+								</Card>
+							)}
+						</div>
+					</Navbar>
+				</div>
 				<div className="main">
 					<div className="p-4">
 						<Breadcrumb className="bg-gray-50 py-3 px-5 dark:bg-gray-900">

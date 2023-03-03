@@ -1,10 +1,18 @@
-import React, { useEffect } from "react";
+import Loader from "@/components/Loader";
+import useUser from "@/data/useUser";
+
+import React, { useEffect, useState } from "react";
 import { Card, TextInput, Button, Checkbox, Label } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
 import { setCookie, hasCookie, getCookie, deleteCookie } from "cookies-next";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import axios from "axios";
+
+const ReactSwal = withReactContent(Swal);
 
 const schema = yup.object().shape({
 	pn: yup
@@ -16,6 +24,10 @@ const schema = yup.object().shape({
 
 export default function index() {
 	const router = useRouter();
+
+	const { user, userMutate, userError } = useUser();
+
+	const [isShown, setIsShown] = useState(false);
 
 	const {
 		register,
@@ -38,10 +50,33 @@ export default function index() {
 		}
 	}, []);
 
+	useEffect(() => {
+		if (userError) {
+			setIsShown(true);
+
+			return;
+		}
+
+		if (user) {
+			router.push("/dashboard");
+		}
+	}, [user, userError]);
+
 	async function onSubmit(data) {
-		console.log(data);
+		ReactSwal.fire({
+			title: "Silakan tunggu ...",
+			html: (
+				<div className="flex justify-center">
+					<Loader />
+				</div>
+			),
+			showConfirmButton: false,
+		});
 
 		try {
+			const url = `${process.env.NEXT_PUBLIC_API_URL_AUTH}/login`;
+			const result = await axios.post(url, data);
+
 			if (data.remember_me) {
 				setCookie("pn", data.pn);
 				setCookie("remember_me", data.remember_me);
@@ -50,13 +85,24 @@ export default function index() {
 				deleteCookie("remember_me");
 			}
 
-			setCookie("user", "asdasdasd");
-			setCookie("token", "asdasdasd");
+			setCookie("token", result.data.token);
 
-			router.push("/dashboard");
+			ReactSwal.close();
+
+			userMutate();
 		} catch (error) {
+			ReactSwal.close();
+
 			console.log(error);
 		}
+	}
+
+	if (!isShown) {
+		return (
+			<div className="w-screen h-screen flex items-center justify-center">
+				<Loader />
+			</div>
+		);
 	}
 
 	return (
