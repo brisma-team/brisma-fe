@@ -1,5 +1,6 @@
 import Loader from "@/components/Loader";
 import useUser from "@/data/useUser";
+import errorSwal from "@/helpers/errorSwal";
 
 import React, { useEffect, useState } from "react";
 import { Card, TextInput, Button, Checkbox, Label } from "flowbite-react";
@@ -93,7 +94,7 @@ export default function index() {
 		} catch (error) {
 			ReactSwal.close();
 
-			console.log(error);
+			errorSwal(error);
 		}
 	}
 
