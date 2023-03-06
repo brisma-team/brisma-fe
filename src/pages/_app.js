@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-virtualized/styles.css";
+import "react-loading-skeleton/dist/skeleton.css";
 
 import { store } from "@/store";
 

@@ -18,12 +18,12 @@ const breadcrumb = [
 
 export default function update() {
 	const router = useRouter();
-	const { id } = router.query;
+	const { pn } = router.query;
 
 	return (
 		<Main breadcrumb={breadcrumb}>
 			<h1 className="text-2xl font-bold mb-4">Update User</h1>
-			<Form type="update" />
+			<Form type="update" pn={pn} />
 		</Main>
 	);
 }

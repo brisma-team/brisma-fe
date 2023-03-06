@@ -1,6 +1,7 @@
 import Loader from "@/components/Loader";
 import useUser from "@/data/useUser";
 import errorSwal from "@/helpers/errorSwal";
+import loadingSwal from "@/helpers/loadingSwal";
 
 import React, { useEffect, useState } from "react";
 import { Card, TextInput, Button, Checkbox, Label } from "flowbite-react";
@@ -64,15 +65,7 @@ export default function index() {
 	}, [user, userError]);
 
 	async function onSubmit(data) {
-		ReactSwal.fire({
-			title: "Silakan tunggu ...",
-			html: (
-				<div className="flex justify-center">
-					<Loader />
-				</div>
-			),
-			showConfirmButton: false,
-		});
+		loadingSwal();
 
 		try {
 			const url = `${process.env.NEXT_PUBLIC_API_URL_AUTH}/login`;
@@ -88,11 +81,11 @@ export default function index() {
 
 			setCookie("token", result.data.token);
 
-			ReactSwal.close();
+			loadingSwal("close");
 
 			userMutate();
 		} catch (error) {
-			ReactSwal.close();
+			loadingSwal("close");
 
 			errorSwal(error);
 		}

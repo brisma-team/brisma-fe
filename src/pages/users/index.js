@@ -1,7 +1,13 @@
 import Main from "@/layouts/Main";
+import useUserSKAI from "@/data/useUserSKAI";
+import errorSwal from "@/helpers/errorSwal";
+import withTokenConfig from "@/helpers/withTokenConfig";
+import CustomDataTable from "@/components/CustomDataTable";
+import loadingSwal from "@/helpers/loadingSwal";
+import confirmationSwal from "@/helpers/confirmationSwal";
+import successSwal from "@/helpers/successSwal";
 
 import React from "react";
-import DataTable from "react-data-table-component";
 import { Button, Tooltip } from "flowbite-react";
 import {
 	PencilSquareIcon,
@@ -9,17 +15,7 @@ import {
 	PlusIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import Swal from "sweetalert2";
-
-const data = [
-	{
-		id: 1,
-		fullname: "asdasdasd",
-		pn: "asdasdasd",
-		email: "asdasdasd",
-		phone: "asdasdasd",
-	},
-];
+import axios from "axios";
 
 const breadcrumb = [
 	{
@@ -29,12 +25,14 @@ const breadcrumb = [
 ];
 
 export default function index() {
+	const { userSKAI, userSKAIMutate, userSKAIIsLoading } = useUserSKAI();
+
 	const columns = [
 		{
 			name: "Action",
 			cell: (row) => (
 				<div className="flex gap-x-2">
-					<Link href={`/users/update/${row.id}`}>
+					<Link href={`/users/update/${row.pn}`}>
 						<Tooltip content="Update">
 							<Button color="warning">
 								<PencilSquareIcon className="w-6 h-6" />
@@ -44,7 +42,7 @@ export default function index() {
 					<Tooltip content="Delete">
 						<Button
 							color="failure"
-							onClick={() => handleDeleteClick(row.id)}>
+							onClick={() => handleDeleteClick(row.pn)}>
 							<TrashIcon className="w-6 h-6" />
 						</Button>
 					</Tooltip>
@@ -53,41 +51,55 @@ export default function index() {
 			minWidth: "10rem",
 		},
 		{
-			name: "Full Name",
-			selector: (row) => row.fullname,
-		},
-		{
 			name: "PN",
 			selector: (row) => row.pn,
 		},
 		{
-			name: "Email",
-			selector: (row) => row.email,
+			name: "Nama",
+			selector: (row) => row.name,
 		},
 		{
-			name: "Phone",
-			selector: (row) => row.phone,
+			name: "UKA",
+			selector: (row) => row.name_uka,
+		},
+		{
+			name: "Role",
+			cell: (row) => (
+				<div className="flex gap-2">
+					{row.role.map((role, i) => (
+						<Button key={i}>{role.name_role}</Button>
+					))}
+				</div>
+			),
+			minWidth: "15rem",
 		},
 	];
 
-	async function handleDeleteClick(id) {
-		console.log(id);
+	async function handleDeleteClick(pn) {
+		const confirm = await confirmationSwal(
+			"Apakah Anda yakin untuk mengahapus data ini?"
+		);
 
-		const confirm = await Swal.fire({
-			title: "Perhatian!",
-			text: "Apakah Anda yakin untuk mengahapus data ini?",
-			icon: "question",
-			showCancelButton: true,
-			confirmButtonText: "Ya",
-			cancelButtonText: "Tidak",
-		});
+		if (!confirm.value) {
+			return;
+		}
 
-		if (confirm.value) {
-			await Swal.fire({
-				title: "Sukses!",
-				text: "Data berhasil dihapus.",
-				icon: "success",
-			});
+		loadingSwal();
+
+		const url = `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/user_skai/delete/${pn}`;
+
+		try {
+			const result = await axios.delete(url, withTokenConfig());
+
+			loadingSwal("close");
+
+			await successSwal(result.data.message);
+
+			userSKAIMutate();
+		} catch (error) {
+			loadingSwal("close");
+
+			errorSwal(error);
 		}
 	}
 
@@ -106,7 +118,11 @@ export default function index() {
 					</Link>
 				</div>
 			</div>
-			<DataTable columns={columns} data={data} responsive />
+			<CustomDataTable
+				columns={columns}
+				data={userSKAI?.data.data}
+				isLoading={userSKAIIsLoading}
+			/>
 		</Main>
 	);
 }
