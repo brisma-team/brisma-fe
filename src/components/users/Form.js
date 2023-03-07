@@ -66,7 +66,7 @@ export default function Form({ type, pn }) {
 						value: userSKAIDetail.data.pn,
 					});
 
-					dispatch(setSelectedUser({}));
+					dispatch(setSelectedUser(userSKAIDetail.data));
 			}
 		}
 	}, [userSKAIDetail]);
@@ -77,14 +77,10 @@ export default function Form({ type, pn }) {
 				case "update":
 					const selectedRole = [];
 
-					for (
-						let x = 0;
-						x < userSKAIDetail.data.role_kode.length;
-						x++
-					) {
+					for (let x = 0; x < userSKAIDetail.data.role.length; x++) {
 						for (let y = 0; y < role.data.length; y++) {
 							if (
-								userSKAIDetail.data.role_kode[x] ===
+								userSKAIDetail.data.role[x].kode_role ===
 								role.data[y].kode
 							) {
 								selectedRole.push(role.data[y]);
@@ -108,7 +104,7 @@ export default function Form({ type, pn }) {
 			switch (type) {
 				case "update":
 					const selectedUka = uka.data.data.filter((row) => {
-						return row.kode === userSKAIDetail.data.uka_kode;
+						return row.kode === userSKAIDetail.data.kode_uka;
 					});
 
 					setValue("uka_kode", {
@@ -186,7 +182,7 @@ export default function Form({ type, pn }) {
 						<Label value="Nama" />
 					</div>
 					<div className="flex-1 h-9">
-						<Label value={selectedUser.nama} />
+						<Label value={selectedUser.name} />
 					</div>
 				</div>
 				<div className="flex">
