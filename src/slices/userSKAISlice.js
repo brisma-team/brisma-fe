@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
 	searchParamObject: {},
 	searchParam: "",
+	selectedUser: {},
 };
 
 export const userSKAISlice = createSlice({
@@ -15,9 +16,13 @@ export const userSKAISlice = createSlice({
 		setSearchParam: (state, action) => {
 			state.searchParam = action.payload;
 		},
+		setSelectedUser: (state, action) => {
+			state.selectedUser = action.payload;
+		},
 	},
 });
 
-export const { setSearchParam, setSearchParamObject } = userSKAISlice.actions;
+export const { setSearchParam, setSearchParamObject, setSelectedUser } =
+	userSKAISlice.actions;
 
 export default userSKAISlice.reducer;

@@ -1,10 +1,14 @@
 import usePekerja from "@/data/usePekerja";
+import { setSelectedUser } from "@/slices/userSKAISlice";
 
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { Controller } from "react-hook-form";
+import { useDispatch } from "react-redux";
 
 export default function PekerjaSelect({ control, type }) {
+	const dispatch = useDispatch();
+
 	const [pn, setPN] = useState();
 	const [options, setOptions] = useState([]);
 
@@ -14,6 +18,7 @@ export default function PekerjaSelect({ control, type }) {
 		if (pekerja) {
 			const mappedPekerja = pekerja.data.map((row) => {
 				return {
+					...row,
 					label: row.pn,
 					value: row.pn,
 				};
@@ -35,6 +40,10 @@ export default function PekerjaSelect({ control, type }) {
 		setPN(newPN);
 	}
 
+	function handleChange(e) {
+		dispatch(setSelectedUser(e));
+	}
+
 	return (
 		<Controller
 			control={control}
@@ -42,7 +51,10 @@ export default function PekerjaSelect({ control, type }) {
 			render={({ field: { onChange, onBlur, value } }) => (
 				<Select
 					options={options}
-					onChange={onChange}
+					onChange={(e) => {
+						onChange(e);
+						handleChange(e);
+					}}
 					onBlur={onBlur}
 					value={value}
 					onInputChange={(e) => handleInputChange(e)}

@@ -11,15 +11,15 @@ import useRole from "@/data/useRole";
 import useUka from "@/data/useUka";
 import BackButton from "../BackButton";
 import SaveButton from "../SaveButton";
+import { setSelectedUser } from "@/slices/userSKAISlice";
 
 import React, { useEffect } from "react";
-import { Card, Label, Button } from "flowbite-react";
+import { Card, Label } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { CheckIcon, ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
 
 const schema = yup.object().shape({
 	pn: yup
@@ -34,6 +34,10 @@ const schema = yup.object().shape({
 });
 
 export default function Form({ type, pn }) {
+	const dispatch = useDispatch();
+
+	const selectedUser = useSelector((state) => state.userSKAI.selectedUser);
+
 	const { userSKAIDetail } = useUserSKAIDetail(pn);
 	const { role } = useRole();
 	const { uka } = useUka();
@@ -61,6 +65,8 @@ export default function Form({ type, pn }) {
 						label: userSKAIDetail.data.pn,
 						value: userSKAIDetail.data.pn,
 					});
+
+					dispatch(setSelectedUser({}));
 			}
 		}
 	}, [userSKAIDetail]);
@@ -173,6 +179,22 @@ export default function Form({ type, pn }) {
 						<small className="text-red-500">
 							{errors.pn?.message}
 						</small>
+					</div>
+				</div>
+				<div className="flex">
+					<div className="w-1/6">
+						<Label value="Nama" />
+					</div>
+					<div className="flex-1 h-9">
+						<Label value={selectedUser.nama} />
+					</div>
+				</div>
+				<div className="flex">
+					<div className="w-1/6">
+						<Label value="Jabatan" />
+					</div>
+					<div className="flex-1 h-9">
+						<Label value={selectedUser.jabatan} />
 					</div>
 				</div>
 				<div className="flex">
