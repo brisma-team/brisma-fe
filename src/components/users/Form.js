@@ -9,6 +9,8 @@ import successSwal from "@/helpers/successSwal";
 import useUserSKAIDetail from "@/data/useUserSKAIDetail";
 import useRole from "@/data/useRole";
 import useUka from "@/data/useUka";
+import BackButton from "../BackButton";
+import SaveButton from "../SaveButton";
 
 import React, { useEffect } from "react";
 import { Card, Label, Button } from "flowbite-react";
@@ -196,19 +198,11 @@ export default function Form({ type, pn }) {
 					</div>
 				</div>
 				<div className="flex justify-end gap-x-4">
-					<div className="w-1/6">
-						<Link href="/users">
-							<Button color="gray">
-								<ArrowUturnLeftIcon className="w-6 h-6" />
-								<span className="ml-2">Back</span>
-							</Button>
-						</Link>
+					<div className="w-1/4">
+						<BackButton href="/users" />
 					</div>
-					<div className="w-1/6">
-						<Button type="submit">
-							<CheckIcon className="w-6 h-6" />
-							<span className="ml-2">Save</span>
-						</Button>
+					<div className="w-1/4">
+						<SaveButton />
 					</div>
 				</div>
 			</form>

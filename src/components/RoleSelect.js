@@ -39,6 +39,7 @@ export default function RoleSelect({ control }) {
 						onBlur={onBlur}
 						value={value}
 						isMulti
+						isClearable
 					/>
 				)}
 			/>

@@ -38,6 +38,7 @@ export default function UkaSelect({ control }) {
 						onChange={onChange}
 						onBlur={onBlur}
 						value={value}
+						isClearable
 					/>
 				)}
 			/>

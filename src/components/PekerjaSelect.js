@@ -46,7 +46,8 @@ export default function PekerjaSelect({ control, type }) {
 					onBlur={onBlur}
 					value={value}
 					onInputChange={(e) => handleInputChange(e)}
-					// readOnly={type === "update" ? true : false}
+					isDisabled={type === "update" ? true : false}
+					isClearable
 				/>
 			)}
 		/>
