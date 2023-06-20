@@ -145,7 +145,7 @@ export default function Main({ children, breadcrumb }) {
           <div className="p-4"></div>
           <div className="main">
             <div className="p-4">
-              <Breadcrumb className="bg-gray-50 py-3 px-5 dark:bg-gray-900">
+              {/* <Breadcrumb className="bg-gray-50 py-3 px-5 dark:bg-gray-900">
                 {breadcrumb.map((br, i) => (
                   <Breadcrumb.Item
                     href={br.current === false ? br.href : undefined}
@@ -154,7 +154,7 @@ export default function Main({ children, breadcrumb }) {
                     {br.label}
                   </Breadcrumb.Item>
                 ))}
-              </Breadcrumb>
+              </Breadcrumb> */}
             </div>
             <div className="content p-4">{children}</div>
           </div>

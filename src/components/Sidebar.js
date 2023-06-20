@@ -64,9 +64,15 @@ export default function Sidebar({ handleSidebarItemClick }) {
             >
               Users
             </ButtonItem>
-            <ButtonItem iconBefore={<MediaServicesDocumentIcon label="" />}>
+            {/* <ButtonItem iconBefore={<MediaServicesDocumentIcon label="" />}>
               P.A.T
-            </ButtonItem>
+            </ButtonItem> */}
+            <LinkItem
+              href="/pat"
+              iconBefore={<MediaServicesDocumentIcon label="" />}
+            >
+              P.A.T
+            </LinkItem>
             <LinkItem
               href="#"
               iconBefore={<MediaServicesDocumentIcon label="" />}
