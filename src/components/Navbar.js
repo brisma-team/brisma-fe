@@ -8,7 +8,7 @@ import {
 const NotificationsBadge = () => (
   <NotificationIndicator
     onCountUpdated={console.log}
-    notificationLogProvider={Promise.resolve({})}
+    notificationLogProvider={Promise.resolve()}
   />
 );
 
