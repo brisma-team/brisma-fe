@@ -1,12 +1,13 @@
+import React from "react";
 import confirmationSwal from "@/helpers/confirmationSwal";
 import loadingSwal from "@/helpers/loadingSwal";
 import successSwal from "@/helpers/successSwal";
 import errorSwal from "@/helpers/errorSwal";
 import withTokenConfig from "@/helpers/withTokenConfig";
+import TrashIcon from "@atlaskit/icon/glyph/trash"
+import Button from "@atlaskit/button";
+import Tooltip from "@atlaskit/tooltip";
 
-import React from "react";
-import { TrashIcon } from "@heroicons/react/24/outline";
-import { Button, Tooltip } from "flowbite-react";
 import axios from "axios";
 
 export default function DeleteButton({ url, mutate }) {
@@ -38,9 +39,7 @@ export default function DeleteButton({ url, mutate }) {
 
 	return (
 		<Tooltip content="Delete">
-			<Button color="failure" onClick={() => handleClick(url)}>
-				<TrashIcon className="w-6 h-6" />
-			</Button>
+			<Button iconBefore={<TrashIcon/>} appearance="danger" onClick={() => handleClick(url)}/>
 		</Tooltip>
 	);
 }

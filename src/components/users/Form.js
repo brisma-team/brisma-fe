@@ -216,10 +216,10 @@ export default function Form({ type, pn }) {
 					</div>
 				</div>
 				<div className="flex justify-end gap-x-4">
-					<div className="w-1/4">
+					<div className="w-1/8 bg-red-500 rounded text-zinc-100">
 						<BackButton href="/users" />
 					</div>
-					<div className="w-1/4">
+					<div className="w-1/8">
 						<SaveButton />
 					</div>
 				</div>

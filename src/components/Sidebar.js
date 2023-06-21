@@ -30,76 +30,76 @@ export default function Sidebar({ handleSidebarItemClick }) {
   };
 
   return (
-    <div className="fixed h-screen w-64 pt-16 shadow">
-      <SideNavigation label="project" testId="side-navigation">
-        <NavigationHeader>
-          <ProfileDetail></ProfileDetail>
-        </NavigationHeader>
-        <NestableNavigationContent
-          initialStack={[]}
-          testId="nestable-navigation-content"
-        >
-          <Section>
-            {/* <NestingItem
-            id="4"
-            iconBefore={<DropboxIcon label="" />}
-            title="Dropbox"
-            testId="dropbox-nesting-item"
+      <div className="fixed h-screen w-64 pt-16 shadow">
+        <SideNavigation label="project" testId="side-navigation">
+          <NavigationHeader>
+              <ProfileDetail/>
+          </NavigationHeader>
+          <NestableNavigationContent
+            initialStack={[]}
+            testId="nestable-navigation-content"
           >
-            <span />
-          </NestingItem> */}
-            <ButtonItem
-              iconBefore={<GraphBarIcon label="" />}
-              href="/dashboard"
-              isSelected={selectedItem === "/dashboard"}
-              onClick={(e) => handleItemClick(e, "/dashboard")}
+            <Section>
+              {/* <NestingItem
+              id="4"
+              iconBefore={<DropboxIcon label="" />}
+              title="Dropbox"
+              testId="dropbox-nesting-item"
             >
-              Dashboard
-            </ButtonItem>
-            <ButtonItem
-              iconBefore={<PeopleIcon></PeopleIcon>}
-              href="/users"
-              isSelected={selectedItem === "/users"}
-              onClick={(e) => handleItemClick(e, "/users")}
-            >
-              Users
-            </ButtonItem>
-            {/* <ButtonItem iconBefore={<MediaServicesDocumentIcon label="" />}>
-              P.A.T
-            </ButtonItem> */}
-            <LinkItem
-              href="/pat"
-              iconBefore={<MediaServicesDocumentIcon label="" />}
-            >
-              P.A.T
-            </LinkItem>
-            <LinkItem
-              href="#"
-              iconBefore={<MediaServicesDocumentIcon label="" />}
-            >
-              E.W.P
-            </LinkItem>
-            <ButtonItem iconBefore={<MediaServicesDocumentIcon label="" />}>
-              R.P.M
-            </ButtonItem>
-            <LinkItem href="#" iconBefore={<PreferencesIcon label="" />}>
-              Reference
-            </LinkItem>
-            <ButtonItem iconBefore={<MediaServicesSpreadsheetIcon label="" />}>
-              Catalogue
-            </ButtonItem>
-            <LinkItem
-              href="#"
-              iconBefore={<MediaServicesSpreadsheetIcon label="" />}
-            >
-              Reporting
-            </LinkItem>
-            <LinkItem href="#" iconBefore={<FileIcon label="" />}>
-              NAF
-            </LinkItem>
-          </Section>
-        </NestableNavigationContent>
-      </SideNavigation>
-    </div>
+              <span />
+            </NestingItem> */}
+              <ButtonItem
+                iconBefore={<GraphBarIcon label="" />}
+                href="/dashboard"
+                isSelected={selectedItem === "/dashboard"}
+                onClick={(e) => handleItemClick(e, "/dashboard")}
+              >
+                Dashboard
+              </ButtonItem>
+              <ButtonItem
+                iconBefore={<PeopleIcon></PeopleIcon>}
+                href="/users"
+                isSelected={selectedItem === "/users"}
+                onClick={(e) => handleItemClick(e, "/users")}
+              >
+                Users
+              </ButtonItem>
+              {/* <ButtonItem iconBefore={<MediaServicesDocumentIcon label="" />}>
+                P.A.T
+              </ButtonItem> */}
+              <LinkItem
+                href="/pat"
+                iconBefore={<MediaServicesDocumentIcon label="" />}
+              >
+                P.A.T
+              </LinkItem>
+              <LinkItem
+                href="#"
+                iconBefore={<MediaServicesDocumentIcon label="" />}
+              >
+                E.W.P
+              </LinkItem>
+              <ButtonItem iconBefore={<MediaServicesDocumentIcon label="" />}>
+                R.P.M
+              </ButtonItem>
+              <LinkItem href="#" iconBefore={<PreferencesIcon label="" />}>
+                Reference
+              </LinkItem>
+              <ButtonItem iconBefore={<MediaServicesSpreadsheetIcon label="" />}>
+                Catalogue
+              </ButtonItem>
+              <LinkItem
+                href="#"
+                iconBefore={<MediaServicesSpreadsheetIcon label="" />}
+              >
+                Reporting
+              </LinkItem>
+              <LinkItem href="#" iconBefore={<FileIcon label="" />}>
+                NAF
+              </LinkItem>
+            </Section>
+          </NestableNavigationContent>
+        </SideNavigation>
+      </div>
   );
 }

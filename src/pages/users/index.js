@@ -126,7 +126,7 @@ export default function index() {
 				<div className="flex-1">
 					<h1 className="text-2xl font-bold">Users</h1>
 				</div>
-				<div className="w-2/12">
+				<div className="w-1/8">
 					<CreateButton href="/users/create" />
 				</div>
 			</div>
@@ -167,7 +167,7 @@ export default function index() {
 						</div>
 					</div>
 					<div className="flex justify-end gap-x-4">
-						<div className="w-1/4">
+						<div className="w-1/8">
 							<SearchButton />
 						</div>
 					</div>

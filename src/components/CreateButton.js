@@ -1,15 +1,18 @@
 import React from "react";
-import Link from "next/link";
-import { Button } from "flowbite-react";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import Button from "@atlaskit/button";
+import EditorAddIcon from "@atlaskit/icon/glyph/editor/add"
 
-export default function CreateButton({ href }) {
+export default function CreateButton({ href, text, icon, color }) {
 	return (
-		<Link href={href}>
-			<Button color="success">
-				<PlusIcon className="w-6 h-6" />
-				<span className="ml-2">Create</span>
+		<div className={color ? color : ""}>
+			<Button
+				href={href}
+				iconBefore={ icon ? icon : <EditorAddIcon/> }
+				shouldFitContainer
+				> 
+					{text ? text : "Tambah"}
 			</Button>
-		</Link>
+		</div>
+			
 	);
 }

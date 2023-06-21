@@ -1,16 +1,17 @@
 import React from "react";
-import Link from "next/link";
-import { Tooltip, Button } from "flowbite-react";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import Button from "@atlaskit/button";
+import Tooltip from "@atlaskit/tooltip";
+import EditIcon from "@atlaskit/icon/glyph/edit"
 
 export default function UpdateButton({ href }) {
 	return (
-		<Link href={href}>
-			<Tooltip content="Update">
-				<Button color="warning">
-					<PencilSquareIcon className="w-6 h-6" />
-				</Button>
-			</Tooltip>
-		</Link>
+		<Tooltip content="Update">
+			<Button
+				iconBefore={<EditIcon/>}
+				appearance="warning"
+				href={href}
+				shouldFitContainer
+				/>
+		</Tooltip>
 	);
 }

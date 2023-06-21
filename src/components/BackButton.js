@@ -1,15 +1,17 @@
 import React from "react";
-import Link from "next/link";
-import { Button } from "flowbite-react";
-import { ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
+import Button from "@atlaskit/button";
+import ArrowLeftIcon from "@atlaskit/icon/glyph/arrow-left"
 
 export default function BackButton({ href }) {
 	return (
-		<Link href={href}>
-			<Button color="gray" className="w-full">
-				<ArrowUturnLeftIcon className="w-6 h-6" />
-				<span className="ml-2">Back</span>
+		<div className="bg-slate-100 rounded hover:">
+			<Button 
+				href={href}
+				iconBefore={<ArrowLeftIcon/>}
+				shouldFitContainer
+				>
+					Back
 			</Button>
-		</Link>
+		</div>
 	);
 }

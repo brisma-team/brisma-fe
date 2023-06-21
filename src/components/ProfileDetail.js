@@ -1,9 +1,9 @@
 import AvatarDefaultExample from "./Avatar";
 
-const ProfileDetail = ({}) => {
+const ProfileDetail = () => {
   return (
     <div className="flex flex-col items-center justify-center mb-8">
-      <AvatarDefaultExample></AvatarDefaultExample>
+      <AvatarDefaultExample/>
       <div className="pt-4 leading-3 flex flex-col items-center justify-center">
         <p className="font-bold">Muhamad Firli Ismail</p>
         <p className="mb-2">20020202</p>

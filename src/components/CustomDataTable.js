@@ -1,6 +1,5 @@
-import Loader from "./Loader";
-
 import React from "react";
+import Loader from "./Loader";
 import DataTable from "react-data-table-component";
 import { useSelector, useDispatch } from "react-redux";
 

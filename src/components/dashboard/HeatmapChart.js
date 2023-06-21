@@ -2,7 +2,7 @@ import useDashboard from "@/data/useDashboard";
 import Loader from "../Loader";
 
 import React from "react";
-import { Card } from "flowbite-react";
+import Card from "../Card";
 import { AutoSizer } from "react-virtualized";
 import { HeatMap } from "@nivo/heatmap";
 
