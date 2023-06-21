@@ -6,43 +6,43 @@ import { Controller } from "react-hook-form";
 import Skeleton from "react-loading-skeleton";
 
 export default function RoleSelect({ control }) {
-	const { role, roleIsLoading } = useRole();
+  const { role, roleIsLoading } = useRole();
 
-	const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState([]);
 
-	useEffect(() => {
-		if (role) {
-			const mappedRoles = role.data.map((row) => {
-				return {
-					label: row.name,
-					value: row.kode,
-				};
-			});
+  useEffect(() => {
+    if (role) {
+      const mappedRoles = role.data.map((row) => {
+        return {
+          label: row.name,
+          value: row.kode,
+        };
+      });
 
-			setOptions(mappedRoles);
-		}
-	}, [role]);
+      setOptions(mappedRoles);
+    }
+  }, [role]);
 
-	if (roleIsLoading) {
-		return <Skeleton />;
-	}
+  if (roleIsLoading) {
+    return <Skeleton />;
+  }
 
-	if (role) {
-		return (
-			<Controller
-				control={control}
-				name="role_kode"
-				render={({ field: { onChange, onBlur, value } }) => (
-					<Select
-						options={options}
-						onChange={onChange}
-						onBlur={onBlur}
-						value={value}
-						isMulti
-						isClearable
-					/>
-				)}
-			/>
-		);
-	}
+  if (role) {
+    return (
+      <Controller
+        control={control}
+        name="role_kode"
+        render={({ field: { onChange, onBlur, value } }) => (
+          <Select
+            options={options}
+            onChange={onChange}
+            onBlur={onBlur}
+            value={value}
+            isMulti
+            isClearable
+          />
+        )}
+      />
+    );
+  }
 }

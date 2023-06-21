@@ -1,8 +1,10 @@
 import Main from "@/layouts/Main";
-import BarChart from "@/components/dashboard/BarChart";
-import PieChart from "@/components/dashboard/PieChart";
-import LineChart from "@/components/dashboard/LineChart";
-import HeatmapChart from "@/components/dashboard/HeatmapChart";
+import {
+  BarChart,
+  LineChart,
+  PieChart,
+  HeatmapChart,
+} from "@/components/dashboard";
 
 import React from "react";
 
