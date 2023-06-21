@@ -1,48 +1,22 @@
 import useUser from "@/data/useUser";
 import Loader from "@/components/Loader";
 
+// import { deleteCookie } from "cookies-next";
 import React, { useEffect, useState } from "react";
-import {
-  //   Sidebar,
-  //   Navbar,
-  Avatar,
-  Breadcrumb,
-  Card,
-  Button,
-} from "flowbite-react";
-import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
-import {
-  ChartPieIcon,
-  UserGroupIcon,
-  BellIcon,
-  Bars3Icon,
-  ArrowLeftOnRectangleIcon,
-} from "@heroicons/react/24/outline";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
 
-const notifications = [
-  {
-    message:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam faucibus eget orci ac aliquet. Cras laoreet tellus sit amet dui tristique efficitur. Nunc varius accumsan mi at molestie. Maecenas feugiat, odio pharetra aliquam sodales, dolor purus tincidunt dolor, eget euismod tortor libero vel mauris.",
-  },
-  {
-    message:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam faucibus eget orci ac aliquet. Cras laoreet tellus sit amet dui tristique efficitur. Nunc varius accumsan mi at molestie. Maecenas feugiat, odio pharetra aliquam sodales, dolor purus tincidunt dolor, eget euismod tortor libero vel mauris.",
-  },
-];
-
-export default function Main({ children, breadcrumb }) {
+export default function Main({ children }) {
   const router = useRouter();
 
-  const { user, userError, userMutate } = useUser();
+  const { user, userError } = useUser();
 
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const [isShown, setIsShown] = useState(false);
-  const [isUserDropdownShown, setIsUserDropdownShown] = useState(false);
-  const [isNotificationDropdownShown, setIsNotificationDropdownShown] =
-    useState(false);
+  // const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
+  // const [isUserDropdownShown, setIsUserDropdownShown] = useState(false);
+  // const [isNotificationDropdownShown, setIsNotificationDropdownShown] =
+  useState(false);
 
   useEffect(() => {
     if (userError) {
@@ -56,33 +30,33 @@ export default function Main({ children, breadcrumb }) {
     }
   }, [user, userError]);
 
-  async function handleLogoutClick() {
-    deleteCookie("token");
-
-    userMutate();
-  }
-
   function handleSidebarItemClick(e, href) {
     e.preventDefault();
 
     router.push(href);
   }
 
-  function handleToggleSidebarClick() {
-    const newState = !isSidebarCollapsed;
+  // async function handleLogoutClick() {
+  //   deleteCookie("token");
 
-    setIsSidebarCollapsed(newState);
-  }
+  //   userMutate();
+  // }
 
-  function handleToggleNotificationDropdownClick() {
-    setIsNotificationDropdownShown(!isNotificationDropdownShown);
-    setIsUserDropdownShown(false);
-  }
+  // function handleToggleSidebarClick() {
+  //   const newState = !isSidebarCollapsed;
 
-  function handleToggleUserDropdownClick() {
-    setIsUserDropdownShown(!isUserDropdownShown);
-    setIsNotificationDropdownShown(false);
-  }
+  //   setIsSidebarCollapsed(newState);
+  // }
+
+  // function handleToggleNotificationDropdownClick() {
+  //   setIsNotificationDropdownShown(!isNotificationDropdownShown);
+  //   setIsUserDropdownShown(false);
+  // }
+
+  // function handleToggleUserDropdownClick() {
+  //   setIsUserDropdownShown(!isUserDropdownShown);
+  //   setIsNotificationDropdownShown(false);
+  // }
 
   if (!isShown) {
     return (
