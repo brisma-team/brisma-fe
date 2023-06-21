@@ -25,7 +25,7 @@ module.exports = {
             light: "#172B4D",
           },
         },
-        // Tambahkan skemad warna lain sesuai kebutuhan Anda
+        // Tambahkan skema warna lain sesuai kebutuhan Anda
       },
     },
   },
