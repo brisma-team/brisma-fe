@@ -10,6 +10,9 @@ module.exports = {
         primary: "#3C64B1", // Ganti dengan warna primer yang diinginkan
         secondary: "#00ff00", // Ganti dengan warna sekunder yang diinginkan
         abu: "#FAFBFC", // Ganti dengan warna sekunder yang diinginkan
+        orange: {
+          coral: "#FF8F73",
+        },
         atlasian: {
           dark: "#172B4D",
           purple: "#5E4DB2",
