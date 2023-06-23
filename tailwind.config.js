@@ -6,6 +6,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        body: ["Segoe UI"],
+      },
       colors: {
         primary: "#3C64B1", // Ganti dengan warna primer yang diinginkan
         secondary: "#00ff00", // Ganti dengan warna sekunder yang diinginkan
@@ -28,6 +31,7 @@ module.exports = {
             light: "#172B4D",
           },
         },
+        brisma: "#09326C",
         // Tambahkan skema warna lain sesuai kebutuhan Anda
       },
     },

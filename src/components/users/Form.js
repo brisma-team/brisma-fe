@@ -33,7 +33,7 @@ const schema = yup.object().shape({
     .required("Silakan pilih UKA."),
 });
 
-export default function Form({ type, pn }) {
+const FormUser = ({ type, pn }) => {
   const dispatch = useDispatch();
 
   const selectedUser = useSelector((state) => state.userSKAI.selectedUser);
@@ -219,4 +219,6 @@ export default function Form({ type, pn }) {
       </form>
     </Card>
   );
-}
+};
+
+export default FormUser;

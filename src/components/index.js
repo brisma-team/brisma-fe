@@ -16,6 +16,8 @@ import SearchButton from "./SearchButton";
 import Sidebar from "./Sidebar";
 import UkaSelect from "./UkaSelect";
 import UpdateButton from "./UpdateButton";
+import Breadcrumbs from "./Breadcrumbs";
+import CardDashboard from "./CardDashboard";
 
 export {
   AvatarDefaultExample,
@@ -34,4 +36,6 @@ export {
   Sidebar,
   UkaSelect,
   UpdateButton,
+  Breadcrumbs,
+  CardDashboard,
 };

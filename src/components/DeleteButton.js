@@ -4,42 +4,48 @@ import loadingSwal from "@/helpers/loadingSwal";
 import successSwal from "@/helpers/successSwal";
 import errorSwal from "@/helpers/errorSwal";
 import withTokenConfig from "@/helpers/withTokenConfig";
-import TrashIcon from "@atlaskit/icon/glyph/trash"
+import TrashIcon from "@atlaskit/icon/glyph/trash";
 import Button from "@atlaskit/button";
 import Tooltip from "@atlaskit/tooltip";
 
 import axios from "axios";
 
-export default function DeleteButton({ url, mutate }) {
-	async function handleClick(url) {
-		const confirm = await confirmationSwal(
-			"Apakah Anda yakin untuk mengahapus data ini?"
-		);
+const DeleteButton = ({ url, mutate }) => {
+  async function handleClick(url) {
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin untuk mengahapus data ini?"
+    );
 
-		if (!confirm.value) {
-			return;
-		}
+    if (!confirm.value) {
+      return;
+    }
 
-		loadingSwal();
+    loadingSwal();
 
-		try {
-			const result = await axios.delete(url, withTokenConfig());
+    try {
+      const result = await axios.delete(url, withTokenConfig());
 
-			loadingSwal("close");
+      loadingSwal("close");
 
-			await successSwal(result.data.message);
+      await successSwal(result.data.message);
 
-			mutate();
-		} catch (error) {
-			loadingSwal("close");
+      mutate();
+    } catch (error) {
+      loadingSwal("close");
 
-			errorSwal(error);
-		}
-	}
+      errorSwal(error);
+    }
+  }
 
-	return (
-		<Tooltip content="Delete">
-			<Button iconBefore={<TrashIcon/>} appearance="danger" onClick={() => handleClick(url)}/>
-		</Tooltip>
-	);
-}
+  return (
+    <Tooltip content="Delete">
+      <Button
+        iconBefore={<TrashIcon />}
+        appearance="danger"
+        onClick={() => handleClick(url)}
+      />
+    </Tooltip>
+  );
+};
+
+export default DeleteButton;

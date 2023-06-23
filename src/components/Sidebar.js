@@ -17,7 +17,7 @@ import {
 import { ProfileDetail } from "@/components";
 import { useState } from "react";
 
-export default function Sidebar({ handleSidebarItemClick }) {
+const Sidebar = ({ handleSidebarItemClick }) => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   const handleItemClick = (e, path) => {
@@ -44,58 +44,66 @@ export default function Sidebar({ handleSidebarItemClick }) {
             >
               <span />
             </NestingItem> */}
-            <ButtonItem
-              iconBefore={<GraphBarIcon label="" />}
-              href="/dashboard"
-              isSelected={selectedItem === "/dashboard"}
-              onClick={(e) => handleItemClick(e, "/dashboard")}
-            >
-              Dashboard
-            </ButtonItem>
-            <ButtonItem
-              iconBefore={<PeopleIcon></PeopleIcon>}
-              href="/users"
-              isSelected={selectedItem === "/users"}
-              onClick={(e) => handleItemClick(e, "/users")}
-            >
-              Users
-            </ButtonItem>
-            {/* <ButtonItem iconBefore={<MediaServicesDocumentIcon label="" />}>
+
+            <div className="items-center justify-center p-8">
+              <h3 className="px-2 mb-2">Menu</h3>
+              <ButtonItem
+                iconBefore={<GraphBarIcon label="" />}
+                href="/dashboard"
+                isSelected={selectedItem === "/dashboard"}
+                onClick={(e) => handleItemClick(e, "/dashboard")}
+              >
+                <p className="text-base">Dashboard</p>
+              </ButtonItem>
+              <ButtonItem
+                iconBefore={<PeopleIcon></PeopleIcon>}
+                href="/users"
+                isSelected={selectedItem === "/users"}
+                onClick={(e) => handleItemClick(e, "/users")}
+              >
+                <p className="text-base">Users</p>
+              </ButtonItem>
+              {/* <ButtonItem iconBefore={<MediaServicesDocumentIcon label="" />}>
                 P.A.T
               </ButtonItem> */}
-            <LinkItem
-              href="/pat"
-              iconBefore={<MediaServicesDocumentIcon label="" />}
-            >
-              P.A.T
-            </LinkItem>
-            <LinkItem
-              href="#"
-              iconBefore={<MediaServicesDocumentIcon label="" />}
-            >
-              E.W.P
-            </LinkItem>
-            <ButtonItem iconBefore={<MediaServicesDocumentIcon label="" />}>
-              R.P.M
-            </ButtonItem>
-            <LinkItem href="#" iconBefore={<PreferencesIcon label="" />}>
-              Reference
-            </LinkItem>
-            <ButtonItem iconBefore={<MediaServicesSpreadsheetIcon label="" />}>
-              Catalogue
-            </ButtonItem>
-            <LinkItem
-              href="#"
-              iconBefore={<MediaServicesSpreadsheetIcon label="" />}
-            >
-              Reporting
-            </LinkItem>
-            <LinkItem href="#" iconBefore={<FileIcon label="" />}>
-              NAF
-            </LinkItem>
+              <LinkItem
+                href="/pat"
+                iconBefore={<MediaServicesDocumentIcon label="" />}
+              >
+                <p className="text-base">P.A.T</p>
+              </LinkItem>
+              <LinkItem
+                href="#"
+                iconBefore={<MediaServicesDocumentIcon label="" />}
+              >
+                <p className="text-base">E.W.P</p>
+              </LinkItem>
+              <ButtonItem iconBefore={<MediaServicesDocumentIcon label="" />}>
+                <p className="text-base">R.P.M</p>
+              </ButtonItem>
+              <LinkItem href="#" iconBefore={<PreferencesIcon label="" />}>
+                <p className="text-base">Reference</p>
+              </LinkItem>
+              <ButtonItem
+                iconBefore={<MediaServicesSpreadsheetIcon label="" />}
+              >
+                <p className="text-base">Catalogue</p>
+              </ButtonItem>
+              <LinkItem
+                href="#"
+                iconBefore={<MediaServicesSpreadsheetIcon label="" />}
+              >
+                <p className="text-base">Reporting</p>
+              </LinkItem>
+              <LinkItem href="#" iconBefore={<FileIcon label="" />}>
+                <p className="text-base">NAF</p>
+              </LinkItem>
+            </div>
           </Section>
         </NestableNavigationContent>
       </SideNavigation>
     </div>
   );
-}
+};
+
+export default Sidebar;

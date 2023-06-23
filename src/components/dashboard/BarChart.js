@@ -6,7 +6,7 @@ import Card from "../Card";
 import { Bar } from "@nivo/bar";
 import { AutoSizer } from "react-virtualized";
 
-export default function BarChart() {
+const BarChart = () => {
   const { dashboard, dashboardIsLoading } = useDashboard("bar");
 
   return (
@@ -148,4 +148,6 @@ export default function BarChart() {
       </div>
     </Card>
   );
-}
+};
+
+export default BarChart;

@@ -7,7 +7,7 @@ import Link from "next/link";
 //     { name: "Overview", path: "/pat/projects/123" },
 //   ];
 
-export default function Breadcrumbs(data) {
+const Breadcrumbs = ({ data }) => {
   return (
     data.length && (
       <div className="justify-start mb-6 flex text-atlasian-gray-dark">
@@ -24,4 +24,6 @@ export default function Breadcrumbs(data) {
       </div>
     )
   );
-}
+};
+
+export default Breadcrumbs;

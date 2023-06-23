@@ -6,7 +6,7 @@ import Card from "../Card";
 import { AutoSizer } from "react-virtualized";
 import { Line } from "@nivo/line";
 
-export default function LineChart() {
+const LineChart = () => {
   const { dashboard, dashboardIsLoading } = useDashboard("line");
 
   return (
@@ -99,4 +99,6 @@ export default function LineChart() {
       </div>
     </Card>
   );
-}
+};
+
+export default LineChart;
