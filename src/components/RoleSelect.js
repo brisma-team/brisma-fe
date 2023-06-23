@@ -5,7 +5,7 @@ import Select from "react-select";
 import { Controller } from "react-hook-form";
 import Skeleton from "react-loading-skeleton";
 
-export default function RoleSelect({ control }) {
+const RoleSelect = ({ control }) => {
   const { role, roleIsLoading } = useRole();
 
   const [options, setOptions] = useState([]);
@@ -45,4 +45,6 @@ export default function RoleSelect({ control }) {
       />
     );
   }
-}
+};
+
+export default RoleSelect;

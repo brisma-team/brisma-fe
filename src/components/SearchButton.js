@@ -2,7 +2,7 @@ import React from "react";
 import Button from "@atlaskit/button";
 import EditorSearchIcon from "@atlaskit/icon/glyph/editor/search";
 
-export default function SearchButton() {
+const SearchButton = () => {
   return (
     <Button
       iconBefore={<EditorSearchIcon />}
@@ -13,4 +13,6 @@ export default function SearchButton() {
       Cari
     </Button>
   );
-}
+};
+
+export default SearchButton;

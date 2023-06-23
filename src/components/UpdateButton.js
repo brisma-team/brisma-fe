@@ -3,7 +3,7 @@ import Button from "@atlaskit/button";
 import Tooltip from "@atlaskit/tooltip";
 import EditIcon from "@atlaskit/icon/glyph/edit";
 
-export default function UpdateButton({ href }) {
+const UpdateButton = ({ href }) => {
   return (
     <Tooltip content="Update">
       <Button
@@ -14,4 +14,6 @@ export default function UpdateButton({ href }) {
       />
     </Tooltip>
   );
-}
+};
+
+export default UpdateButton;

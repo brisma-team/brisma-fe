@@ -5,7 +5,7 @@ import Skeleton from "react-loading-skeleton";
 import { Controller } from "react-hook-form";
 import Select from "react-select";
 
-export default function UkaSelect({ control }) {
+const UkaSelect = ({ control }) => {
   const { uka, ukaIsLoading } = useUka();
 
   const [options, setOptions] = useState([]);
@@ -44,4 +44,5 @@ export default function UkaSelect({ control }) {
       />
     );
   }
-}
+};
+export default UkaSelect;

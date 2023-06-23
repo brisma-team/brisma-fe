@@ -4,7 +4,7 @@ import Loader from "@/components/Loader";
 // import { deleteCookie } from "cookies-next";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Sidebar from "@/components/Sidebar";
+import { Sidebar } from "@/components";
 import Navbar from "@/components/Navbar";
 
 export default function Main({ children }) {
@@ -112,8 +112,8 @@ export default function Main({ children }) {
         </div>
       </Navbar> */}
 
-      <Navbar></Navbar>
-      <Sidebar handleSidebarItemClick={handleSidebarItemClick}></Sidebar>
+      <Navbar />
+      <Sidebar handleSidebarItemClick={handleSidebarItemClick} />
       <div className="flex">
         <div className="flex-1 overflow-x-hidden ml-64 pt-16 h-screen overflow-y-scroll">
           <div className="p-4"></div>
