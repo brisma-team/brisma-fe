@@ -1,4 +1,4 @@
-import { AvatarDefaultExample } from "@/components";
+import AvatarDefaultExample from "./Avatar";
 
 const ProfileDetail = () => {
   return (
