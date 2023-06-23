@@ -1,42 +1,273 @@
-import Main from "@/layouts/Main";
-import PatLayout from "@/layouts/PatLayout";
-import useUserSKAI from "@/data/useUserSKAI";
-import CustomDataTable from "@/components/CustomDataTable";
-import UkaSelect from "@/components/UkaSelect";
-import RoleSelect from "@/components/RoleSelect";
-import DeleteButton from "@/components/DeleteButton";
-import UpdateButton from "@/components/UpdateButton";
-import CreateButton from "@/components/CreateButton";
-import SearchButton from "@/components/SearchButton";
-import { setSearchParam, setSearchParamObject } from "@/slices/userSKAISlice";
-
 import React from "react";
-import { Button, Card, TextInput, Label } from "flowbite-react";
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { PatOverviewLayout } from "@/layouts/pat";
+import Button from "@atlaskit/button";
+import { IconPlus, IconClose, IconEdit, IconSuccess } from "@/components/icons";
+import Select from "@atlaskit/select";
 
-export default function index() {
-    console.log('PROJECT')
-	return (
-		<PatLayout>
-			<div className="flex justify-between items-center mb-8">
-				<div className="flex-1">
-					<h2>Perancangan Audit Tahunan</h2>
-				</div>
-			</div>
-            <div className="rounded overflow-hidden border border-black w-2/4">
-                <div className="bg-gray-200 p-5 "><h3 className="text-blue-800">P.A.T</h3></div>
-                <div className="px-8 py-4">
-                    <div className="rounded mt-4 mb-8 bg-gray-200 p-5 border border-black">
-                        <h3>AUDITOR</h3>
-                        <div className="mt-3 mb -3">Penyusunan perencanaan tahunan kegiatan audit.</div>
-                    </div>
-                    <div className="rounded mt-8 mb-4 bg-gray-200 p-5 border border-black">
-                        <h3>APPROVAL</h3>
-                        <div className="mt-3 mb-3">Pelacakan <i>flow approval project</i> PAT.</div>
-                    </div>
-                </div>
+import { Breadcrumbs, Card } from "@/components";
+import Textfield from "@atlaskit/textfield";
+import ProgressBar from "@atlaskit/progress-bar";
+
+const breadcrumbs = [
+  { name: "Menu", path: "/dashboard" },
+  { name: "PAT", path: "/pat" },
+  { name: "Overview", path: "/pat/projects" },
+];
+
+// Start Card Body
+const CardBody = ({ title, value, icon }) => {
+  return (
+    <div className="flex flex-row my-2">
+      <div className="w-2/4 flex flex-row">
+        <div className="text-atlasian-blue-light">{icon}</div>
+        <div className="text-xs font-medium ml-1">{title}</div>
+      </div>
+      <div className="text-xs w-2/4 justify-end flex font-medium text-atlasian-blue-light">
+        {value}
+      </div>
+    </div>
+  );
+};
+// End Card Body
+
+// Start Content Card
+const ContentCard = ({
+  title,
+  year,
+  progress,
+  percent,
+  documentStatus,
+  apporovalStatus,
+  addendum,
+}) => {
+  return (
+    <div className="m-2">
+      <Card>
+        <div className="w-full px-4 pb-2">
+          <div className="flex flex-row justify-between">
+            <div className="text-base font-bold text-atlasian-blue-dark">
+              {title}
             </div>
-		</PatLayout>
-	);
-}
+            <div className="text-atlasian-yellow">
+              <IconEdit size="medium" />
+            </div>
+          </div>
+          <div className="text-sm font-bold">{year}</div>
+          <div className="flex flex-row justify-betwee leading-3 mt-2 items-center">
+            {/* <div style={{ width: "88vw" }}> */}
+            <ProgressBar appearance="success" value={progress} />
+            {/* </div> */}
+            <div className="flex justify-end font-medium text-sm ml-3">
+              {percent}
+            </div>
+          </div>
+          <div className="leading-3">
+            <CardBody
+              title={"Document Status"}
+              value={documentStatus}
+              icon={<IconSuccess size="small" />}
+            />
+            <CardBody
+              title={"Approval Status"}
+              value={apporovalStatus}
+              icon={<IconSuccess size="small" />}
+            />
+            <CardBody
+              title={"Addendum"}
+              value={addendum}
+              icon={<IconSuccess size="small" />}
+            />
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
+// End Content Card
+
+const index = () => {
+  const data = [
+    {
+      title: "PAT AIW PANGKAL PINANG",
+      year: "2022",
+      progress: 0.3,
+      percent: "30%",
+      documentStatus: "FINAL",
+      apporovalStatus: "Checker Pusat",
+      addendum: "0",
+    },
+    {
+      title: "PAT AIW PANGKAL PINANG",
+      year: "2022",
+      progress: 0.3,
+      percent: "30%",
+      documentStatus: "FINAL",
+      apporovalStatus: "Checker Pusat",
+      addendum: "0",
+    },
+    {
+      title: "PAT AIW PANGKAL PINANG",
+      year: "2022",
+      progress: 0.3,
+      percent: "30%",
+      documentStatus: "FINAL",
+      apporovalStatus: "Checker Pusat",
+      addendum: "0",
+    },
+    {
+      title: "PAT AIW PANGKAL PINANG",
+      year: "2022",
+      progress: 0.3,
+      percent: "30%",
+      documentStatus: "FINAL",
+      apporovalStatus: "Checker Pusat",
+      addendum: "0",
+    },
+    {
+      title: "PAT AIW PANGKAL PINANG",
+      year: "2022",
+      progress: 0.3,
+      percent: "30%",
+      documentStatus: "FINAL",
+      apporovalStatus: "Checker Pusat",
+      addendum: "0",
+    },
+    {
+      title: "PAT AIW PANGKAL PINANG",
+      year: "2022",
+      progress: 0.3,
+      percent: "30%",
+      documentStatus: "FINAL",
+      apporovalStatus: "Checker Pusat",
+      addendum: "0",
+    },
+    {
+      title: "PAT AIW PANGKAL PINANG",
+      year: "2022",
+      progress: 0.3,
+      percent: "30%",
+      documentStatus: "FINAL",
+      apporovalStatus: "Checker Pusat",
+      addendum: "0",
+    },
+    {
+      title: "PAT AIW PANGKAL PINANG",
+      year: "2022",
+      progress: 0.3,
+      percent: "30%",
+      documentStatus: "FINAL",
+      apporovalStatus: "Checker Pusat",
+      addendum: "0",
+    },
+    {
+      title: "PAT AIW PANGKAL PINANG",
+      year: "2022",
+      progress: 0.3,
+      percent: "30%",
+      documentStatus: "FINAL",
+      apporovalStatus: "Checker Pusat",
+      addendum: "0",
+    },
+    {
+      title: "PAT AIW PANGKAL PINANG",
+      year: "2022",
+      progress: 0.3,
+      percent: "30%",
+      documentStatus: "FINAL",
+      apporovalStatus: "Checker Pusat",
+      addendum: "0",
+    },
+    {
+      title: "PAT AIW PANGKAL PINANG",
+      year: "2022",
+      progress: 0.3,
+      percent: "30%",
+      documentStatus: "FINAL",
+      apporovalStatus: "Checker Pusat",
+      addendum: "0",
+    },
+  ];
+  return (
+    <PatOverviewLayout>
+      {/* Start Breadcrumbs */}
+      <Breadcrumbs data={breadcrumbs} />
+      {/* End Breadcrumbs */}
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex-1">
+          <div className="text-3xl font-bold">Project Overview</div>
+        </div>
+      </div>
+      {/* Start Filter */}
+      <div className="my-3 w-40">
+        <Button appearance="primary" iconBefore={IconPlus} shouldFitContainer>
+          Tampilkan Filter
+        </Button>
+      </div>
+      <div className="flex justify-between">
+        <Card>
+          <div className="flex m-2 w-96">
+            <div className="w-1/2">
+              <Textfield
+                placeholder="ID Proyek"
+                className="mr-3"
+                elemAfterInput={
+                  <button className="justify-center">
+                    <IconClose size="large" />
+                  </button>
+                }
+              />
+            </div>
+            <div className="w-1/2">
+              <Select options={[]} placeholder="Status Document" />
+            </div>
+          </div>
+          <div className="flex m-2 w-96">
+            <div className="w-1/2">
+              <Textfield
+                placeholder="Nama Proyek"
+                className="mr-3"
+                elemAfterInput={
+                  <button className="justify-center">
+                    <IconClose size="large" />
+                  </button>
+                }
+              />
+            </div>
+            <div className="w-1/2">
+              <Select options={[]} placeholder="Status Persetujuan" />
+            </div>
+          </div>
+        </Card>
+        {/* </div> */}
+        <div className="w-full flex justify-end items-end p-2">
+          <div className="flex items-center">
+            <div className="text-sm">URUTKAN</div>
+            <Select className="ml-2" options={[]} placeholder="Choose a city" />
+          </div>
+        </div>
+      </div>
+      {/* End Filter */}
+      {/* Start Content */}
+      <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 my-4 -mx-2">
+        {data?.length &&
+          data.map((v, i) => {
+            return (
+              <ContentCard
+                key={i}
+                title={v.title}
+                year={v.year}
+                progress={v.progress}
+                percent={v.percent}
+                documentStatus={v.documentStatus}
+                apporovalStatus={v.apporovalStatus}
+                addendum={v.addendum}
+              />
+            );
+          })}
+      </div>
+      {/* End Content */}
+    </PatOverviewLayout>
+  );
+};
+
+export default index;

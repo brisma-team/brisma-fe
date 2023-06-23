@@ -1,3 +1,4 @@
-import PatProjectOverviewLayout from "./ProjectOverview";
+import PatLayout from "./PatLayout";
+import PatOverviewLayout from "./PatOverviewLayout";
 
-export { PatProjectOverviewLayout };
+export { PatLayout, PatOverviewLayout };

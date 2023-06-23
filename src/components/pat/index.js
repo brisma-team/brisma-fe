@@ -1,4 +1,3 @@
-import SidebarProjectOverview from "./SidebarProjectOverview";
-import SidebarProjectLanding from "./SidebarProjectLanding";
+import SidebarOverview from "./SidebarOverview";
 
-export { SidebarProjectOverview, SidebarProjectLanding };
+export { SidebarOverview };

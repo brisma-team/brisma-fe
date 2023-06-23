@@ -1,25 +1,25 @@
-import Main from "@/layouts/Main";
-import PatLayout from "@/layouts/PatLayout";
-import useUserSKAI from "@/data/useUserSKAI";
-import CustomDataTable from "@/components/CustomDataTable";
-import UkaSelect from "@/components/UkaSelect";
-import RoleSelect from "@/components/RoleSelect";
-import DeleteButton from "@/components/DeleteButton";
-import UpdateButton from "@/components/UpdateButton";
-import CreateButton from "@/components/CreateButton";
-import SearchButton from "@/components/SearchButton";
-import { setSearchParam, setSearchParamObject } from "@/slices/userSKAISlice";
+// import Main from "@/layouts/Main";
+import PatLayout from "@/layouts/pat/PatLayout";
+// import useUserSKAI from "@/data/useUserSKAI";
+// import CustomDataTable from "@/components/CustomDataTable";
+// import UkaSelect from "@/components/UkaSelect";
+// import RoleSelect from "@/components/RoleSelect";
+// import DeleteButton from "@/components/DeleteButton";
+// import UpdateButton from "@/components/UpdateButton";
+// import CreateButton from "@/components/CreateButton";
+// import SearchButton from "@/components/SearchButton";
+// import { setSearchParam, setSearchParamObject } from "@/slices/userSKAISlice";
 
 import React from "react";
-import { Button, Card, TextInput, Label } from "flowbite-react";
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+// import { Button, Card, TextInput, Label } from "flowbite-react";
+// import { useForm } from "react-hook-form";
+// import { useDispatch, useSelector } from "react-redux";
 // import { useRouter } from "next/router";
 // import "next/navigation"
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 
 export default function index() {
-  const router = useRouter();
+  // const router = useRouter();
 
   return (
     <PatLayout>

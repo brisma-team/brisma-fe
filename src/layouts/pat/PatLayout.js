@@ -2,11 +2,12 @@ import useUser from "@/data/useUser";
 import Loader from "@/components/Loader";
 
 import React, { useEffect, useState } from "react";
+// import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
-import { SidebarProjectOverview } from "@/components/pat";
+import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
 
-export default function PatProjectOverview({ children }) {
+const PatLayout = ({ children }) => {
   const router = useRouter();
 
   const { user, userError } = useUser();
@@ -26,6 +27,18 @@ export default function PatProjectOverview({ children }) {
     }
   }, [user, userError]);
 
+  // async function handleLogoutClick() {
+  //   deleteCookie("token");
+
+  //   userMutate();
+  // }
+
+  function handleSidebarItemClick(e, href) {
+    e.preventDefault();
+
+    router.push(href);
+  }
+
   if (!isShown) {
     return (
       <div className="w-screen h-screen flex items-center justify-center">
@@ -37,7 +50,7 @@ export default function PatProjectOverview({ children }) {
   return (
     <div>
       <Navbar />
-      <SidebarProjectOverview />
+      <Sidebar handleSidebarItemClick={handleSidebarItemClick} />
       <div className="flex">
         <div className="flex-1 overflow-x-hidden ml-72 h-screen overflow-y-scroll">
           <div className="main flex items-center justify-center h-full">
@@ -47,4 +60,6 @@ export default function PatProjectOverview({ children }) {
       </div>
     </div>
   );
-}
+};
+
+export default PatLayout;

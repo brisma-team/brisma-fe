@@ -8,7 +8,7 @@ import {
 } from "@atlaskit/side-navigation";
 import { Card, ProfileDetail } from "@/components";
 
-export default function Sidebar() {
+const SidebarOverview = () => {
   return (
     <div className="fixed h-screen w-64 pt-16 shadow">
       <SideNavigation label="project" testId="side-navigation">
@@ -17,26 +17,32 @@ export default function Sidebar() {
         </NavigationHeader>
         <NavigationContent showTopScrollIndicator>
           <Section>
-            <div className="text-center font-bold mt-4">
+            <div className="text-center text-base font-bold mt-4">
               Approval Information
             </div>
             <div className="px-10 mt-3">
-              <div className="px-4 my-3">
+              <div className="px-6 w-full my-3">
                 <Card>
-                  <h5 className="text-atlasian-purple">New</h5>
-                  <div className="text-2xl font-bold">6</div>
+                  <p className="text-3xl font-semibold">6</p>
+                  <p className="text-atlasian-purple text-base font-semibold -mt-1">
+                    New
+                  </p>
                 </Card>
               </div>
-              <div className="px-4 my-3">
+              <div className="px-6 w-full my-3">
                 <Card>
-                  <h5 className="text-atlasian-green">Approve</h5>
-                  <div className="text-2xl font-bold">6</div>
+                  <p className="text-3xl font-semibold">6</p>
+                  <p className="text-atlasian-green text-base font-semibold -mt-1">
+                    Reject
+                  </p>
                 </Card>
               </div>
-              <div className="px-4 my-3">
+              <div className="px-6 w-full my-3">
                 <Card>
-                  <h5 className="text-atlasian-red">Reject</h5>
-                  <div className="text-2xl font-bold">6</div>
+                  <p className="text-3xl font-semibold">6</p>
+                  <p className="text-atlasian-red text-base font-semibold -mt-1">
+                    Approve
+                  </p>
                 </Card>
               </div>
             </div>
@@ -45,4 +51,6 @@ export default function Sidebar() {
       </SideNavigation>
     </div>
   );
-}
+};
+
+export default SidebarOverview;

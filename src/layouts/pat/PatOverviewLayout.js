@@ -2,15 +2,14 @@ import useUser from "@/data/useUser";
 import Loader from "@/components/Loader";
 
 import React, { useEffect, useState } from "react";
-import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
-import Sidebar from "@/components/Sidebar";
+import { SidebarOverview } from "@/components/pat";
 import Navbar from "@/components/Navbar";
 
-export default function PatLayout({ children }) {
+const PatOverviewLayout = ({ children }) => {
   const router = useRouter();
 
-  const { user, userError, userMutate } = useUser();
+  const { user, userError } = useUser();
 
   const [isShown, setIsShown] = useState(false);
   useState(false);
@@ -27,18 +26,6 @@ export default function PatLayout({ children }) {
     }
   }, [user, userError]);
 
-  async function handleLogoutClick() {
-    deleteCookie("token");
-
-    userMutate();
-  }
-
-  function handleSidebarItemClick(e, href) {
-    e.preventDefault();
-
-    router.push(href);
-  }
-
   if (!isShown) {
     return (
       <div className="w-screen h-screen flex items-center justify-center">
@@ -50,14 +37,16 @@ export default function PatLayout({ children }) {
   return (
     <div>
       <Navbar />
-      <Sidebar handleSidebarItemClick={handleSidebarItemClick} />
+      <SidebarOverview />
       <div className="flex">
-        <div className="flex-1 overflow-x-hidden ml-72 h-screen overflow-y-scroll">
-          <div className="main flex items-center justify-center h-full">
-            <div className="content p-4 w-full h-96">{children}</div>
+        <div className="flex-1 mt-16 h-screen" style={{ marginLeft: "260px" }}>
+          <div className="main">
+            <div className="px-5 py-4 w-full">{children}</div>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default PatOverviewLayout;
