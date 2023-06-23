@@ -6,7 +6,7 @@ import Card from "../Card";
 import { AutoSizer } from "react-virtualized";
 import { Pie } from "@nivo/pie";
 
-export default function PieChart() {
+const PieChart = () => {
   const { dashboard, dashboardIsLoading } = useDashboard("pie");
 
   return (
@@ -151,4 +151,6 @@ export default function PieChart() {
       </div>
     </Card>
   );
-}
+};
+
+export default PieChart;

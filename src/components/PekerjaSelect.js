@@ -6,7 +6,7 @@ import Select from "react-select";
 import { Controller } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
-export default function PekerjaSelect({ control, type }) {
+const PekerjaSelect = ({ control, type }) => {
   const dispatch = useDispatch();
 
   const [pn, setPN] = useState();
@@ -64,4 +64,6 @@ export default function PekerjaSelect({ control, type }) {
       )}
     />
   );
-}
+};
+
+export default PekerjaSelect;

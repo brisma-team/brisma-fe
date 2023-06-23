@@ -6,7 +6,7 @@ import Card from "../Card";
 import { AutoSizer } from "react-virtualized";
 import { HeatMap } from "@nivo/heatmap";
 
-export default function HeatmapChart() {
+const HeatmapChart = () => {
   const { dashboard, dashboardIsLoading } = useDashboard("heatmap");
 
   return (
@@ -88,4 +88,6 @@ export default function HeatmapChart() {
       </div>
     </Card>
   );
-}
+};
+
+export default HeatmapChart;
