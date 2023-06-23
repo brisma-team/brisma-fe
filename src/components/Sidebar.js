@@ -14,7 +14,7 @@ import {
   Section,
   SideNavigation,
 } from "@atlaskit/side-navigation";
-import { ProfileDetail } from "@/components";
+import ProfileDetail from "./ProfileDetail";
 import { useState } from "react";
 
 const Sidebar = ({ handleSidebarItemClick }) => {
