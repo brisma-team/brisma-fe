@@ -1,13 +1,12 @@
-// import AvatarDefaultExample from "./Avatar";
 import { AvatarDefaultExample } from "@/components";
 
 const ProfileDetail = () => {
   return (
     <div className="flex flex-col items-center justify-center mb-8">
       <AvatarDefaultExample />
-      <div className="pt-4 leading-3 flex flex-col items-center justify-center">
-        <p className="font-bold">Muhamad Firli Ismail</p>
-        <p className="mb-2">20020202</p>
+      <div className="pt-4 flex flex-col items-center justify-center">
+        <p className="font-bold text-base">Muhamad Firli Ismail</p>
+        <p className="-mt-1 mb-2 text-base">20020202</p>
         <div
           style={{
             backgroundColor: "#FFBDAD",
@@ -17,7 +16,7 @@ const ProfileDetail = () => {
             borderRadius: "3px",
           }}
         >
-          <p style={{ fontSize: "12px" }}>Kepala Divisi Internal Audit</p>
+          <p className="text-base text-white">Kepala Divisi Internal Audit</p>
         </div>
       </div>
     </div>
