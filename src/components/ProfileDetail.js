@@ -8,8 +8,8 @@ const ProfileDetail = () => {
         <p className="font-bold text-base">Muhamad Firli Ismail</p>
         <p className="-mt-1 mb-2 text-base">20020202</p>
         <div
+          className="bg-orange-coral"
           style={{
-            backgroundColor: "#FFBDAD",
             padding: "3px",
             paddingRight: "6px",
             paddingLeft: "6px",
