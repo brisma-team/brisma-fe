@@ -41,7 +41,7 @@ const ContentCard = ({
   addendum,
 }) => {
   return (
-    <div className="m-2">
+    <div className="m-2 hover:bg-gray-100 hover:rounded-[10px]">
       <Card>
         <div className="w-full px-4 pb-2">
           <div className="flex flex-row justify-between">
