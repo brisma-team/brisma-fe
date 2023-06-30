@@ -1,10 +1,10 @@
 import {
-  IconGraphBar,
-  IconPeople,
-  IconMediaServicesDocument,
-  IconMediaServicesSpreadsheet,
-  IconFile,
-  IconPreferences,
+  GraphBarIcon,
+  PeopleIcon,
+  MediaServicesDocumentIcon,
+  MediaServicesSpreadsheetIcon,
+  FileIcon,
+  PreferencesIcon,
 } from "@/components/icons";
 import {
   ButtonItem,
@@ -48,7 +48,7 @@ const Sidebar = ({ handleSidebarItemClick }) => {
             <div className="items-center justify-center p-8">
               <h3 className="px-2 mb-2">Menu</h3>
               <ButtonItem
-                iconBefore={<IconGraphBar label="" />}
+                iconBefore={<GraphBarIcon label="" />}
                 href="/dashboard"
                 isSelected={selectedItem === "/dashboard"}
                 onClick={(e) => handleItemClick(e, "/dashboard")}
@@ -56,7 +56,7 @@ const Sidebar = ({ handleSidebarItemClick }) => {
                 <p className="text-base">Dashboard</p>
               </ButtonItem>
               <ButtonItem
-                iconBefore={<IconPeople label="" />}
+                iconBefore={<PeopleIcon></PeopleIcon>}
                 href="/users"
                 isSelected={selectedItem === "/users"}
                 onClick={(e) => handleItemClick(e, "/users")}
@@ -68,34 +68,34 @@ const Sidebar = ({ handleSidebarItemClick }) => {
               </ButtonItem> */}
               <LinkItem
                 href="/pat"
-                iconBefore={<IconMediaServicesDocument label="" />}
+                iconBefore={<MediaServicesDocumentIcon label="" />}
               >
                 <p className="text-base">P.A.T</p>
               </LinkItem>
               <LinkItem
                 href="#"
-                iconBefore={<IconMediaServicesDocument label="" />}
+                iconBefore={<MediaServicesDocumentIcon label="" />}
               >
                 <p className="text-base">E.W.P</p>
               </LinkItem>
-              <ButtonItem iconBefore={<IconMediaServicesDocument label="" />}>
+              <ButtonItem iconBefore={<MediaServicesDocumentIcon label="" />}>
                 <p className="text-base">R.P.M</p>
               </ButtonItem>
-              <LinkItem href="#" iconBefore={<IconPreferences label="" />}>
+              <LinkItem href="#" iconBefore={<PreferencesIcon label="" />}>
                 <p className="text-base">Reference</p>
               </LinkItem>
               <ButtonItem
-                iconBefore={<IconMediaServicesSpreadsheet label="" />}
+                iconBefore={<MediaServicesSpreadsheetIcon label="" />}
               >
                 <p className="text-base">Catalogue</p>
               </ButtonItem>
               <LinkItem
                 href="#"
-                iconBefore={<IconMediaServicesSpreadsheet label="" />}
+                iconBefore={<MediaServicesSpreadsheetIcon label="" />}
               >
                 <p className="text-base">Reporting</p>
               </LinkItem>
-              <LinkItem href="#" iconBefore={<IconFile label="" />}>
+              <LinkItem href="#" iconBefore={<FileIcon label="" />}>
                 <p className="text-base">NAF</p>
               </LinkItem>
             </div>

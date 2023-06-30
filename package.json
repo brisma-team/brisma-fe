@@ -30,8 +30,6 @@
     "@atlaskit/theme": "^12.5.4",
     "@atlaskit/tokens": "^1.5.2",
     "@atlaskit/tooltip": "^17.8.2",
-    "@ckeditor/ckeditor5-build-classic": "^38.0.1",
-    "@ckeditor/ckeditor5-react": "^6.0.0",
     "@heroicons/react": "^2.0.16",
     "@hookform/resolvers": "^2.9.11",
     "@nivo/bar": "^0.80.0",
