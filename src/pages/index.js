@@ -1,4 +1,4 @@
-import { Loader } from "@/components";
+import { Loader } from "@/components/atoms";
 
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";

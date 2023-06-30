@@ -1,7 +1,6 @@
-import Loader from "@/components/atoms/Loader";
+import { Loader } from "@/components/atoms";
 import useUser from "@/data/useUser";
-import errorSwal from "@/helpers/errorSwal";
-import loadingSwal from "@/helpers/loadingSwal";
+import { errorSwal, loadingSwal } from "@/helpers";
 
 import React, { useEffect, useState } from "react";
 import { Card, TextInput, Button, Checkbox, Label } from "flowbite-react";

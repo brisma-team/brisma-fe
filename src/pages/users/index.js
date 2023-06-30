@@ -8,7 +8,7 @@ import {
   UpdateButton,
   CreateButton,
   SearchButton,
-} from "@/components";
+} from "@/components/molecules";
 import { setSearchParam, setSearchParamObject } from "@/slices/userSKAISlice";
 
 import React from "react";

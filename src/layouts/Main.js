@@ -1,11 +1,10 @@
 import useUser from "@/data/useUser";
-import Loader from "@/components/atoms/Loader";
+import { Loader } from "@/components/atoms";
 
 // import { deleteCookie } from "cookies-next";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Sidebar } from "@/components";
-import Navbar from "@/components/molecules/commons/Navbar";
+import { Sidebar, NavbarField } from "@/components/molecules";
 
 export default function Main({ children }) {
   const router = useRouter();
@@ -112,7 +111,7 @@ export default function Main({ children }) {
         </div>
       </Navbar> */}
 
-      <Navbar />
+      <NavbarField />
       <Sidebar handleSidebarItemClick={handleSidebarItemClick} />
       <div className="flex">
         <div className="flex-1 overflow-x-hidden ml-64 pt-16 h-screen overflow-y-scroll">
