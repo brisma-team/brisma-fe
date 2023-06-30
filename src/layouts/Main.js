@@ -4,7 +4,7 @@ import { Loader } from "@/components/atoms";
 // import { deleteCookie } from "cookies-next";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Sidebar, NavbarField } from "@/components/molecules";
+import { Sidebar, NavbarField } from "@/components/molecules/commons";
 
 export default function Main({ children }) {
   const router = useRouter();

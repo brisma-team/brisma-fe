@@ -1,5 +1,5 @@
 import Main from "@/layouts/Main";
-import { FormUser } from "@/components/molecules";
+import { FormUser } from "@/components/molecules/users";
 
 import React from "react";
 import { useRouter } from "next/router";

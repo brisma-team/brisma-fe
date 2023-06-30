@@ -4,7 +4,7 @@ import {
   LineChart,
   PieChart,
   HeatmapChart,
-} from "@/components/molecules";
+} from "@/components/molecules/dashboard";
 
 const breadcrumb = [
   {
