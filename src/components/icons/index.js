@@ -13,7 +13,7 @@ import IconMediaServicesSpreadsheet from "@atlaskit/icon/glyph/media-services/sp
 import IconFile from "@atlaskit/icon/glyph/file";
 import IconPreferences from "@atlaskit/icon/glyph/preferences";
 import IconEditorSearch from "@atlaskit/icon/glyph/editor/search";
-import IconEditorAlignCenter from "@atlaskit/icon/glyph/editor/align-center";
+import IconAlignCenter from "@atlaskit/icon/glyph/editor/align-center";
 import IconArrowRight from "@atlaskit/icon/glyph/arrow-right";
 import IconInfo from "@atlaskit/icon/glyph/info";
 
@@ -33,7 +33,7 @@ export {
   IconFile,
   IconPreferences,
   IconEditorSearch,
-  IconEditorAlignCenter,
+  IconAlignCenter,
   IconArrowRight,
   IconInfo,
 };

@@ -1,10 +1,10 @@
-import { EditorDoneIcon } from "@/components/icons";
+import { IconEditorDone } from "@/components/icons";
 import { ButtonField } from "@/components/atoms";
 
 const SaveButton = () => {
   return (
     <div className="bg-atlasian-blue-light">
-      <ButtonField icon={<EditorDoneIcon />} text={"Simpan"} />
+      <ButtonField icon={<IconEditorDone />} text={"Simpan"} />
     </div>
   );
 };
