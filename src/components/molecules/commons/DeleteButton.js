@@ -1,8 +1,10 @@
-import confirmationSwal from "@/helpers/confirmationSwal";
-import loadingSwal from "@/helpers/loadingSwal";
-import successSwal from "@/helpers/successSwal";
-import errorSwal from "@/helpers/errorSwal";
-import withTokenConfig from "@/helpers/withTokenConfig";
+import {
+  confirmationSwal,
+  loadingSwal,
+  successSwal,
+  errorSwal,
+  withTokenConfig,
+} from "@/helpers";
 import TrashIcon from "@atlaskit/icon/glyph/trash";
 import { ButtonField } from "@/components/atoms";
 
