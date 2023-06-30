@@ -1,16 +1,21 @@
-import RoleSelect from "../RoleSelect";
-import UkaSelect from "../UkaSelect";
-import errorSwal from "@/helpers/errorSwal";
-import withTokenConfig from "@/helpers/withTokenConfig";
-import PekerjaSelect from "../PekerjaSelect";
-import loadingSwal from "@/helpers/loadingSwal";
-import confirmationSwal from "@/helpers/confirmationSwal";
-import successSwal from "@/helpers/successSwal";
+import {
+  errorSwal,
+  loadingSwal,
+  confirmationSwal,
+  successSwal,
+  withTokenConfig,
+} from "@/helpers";
 import useUserSKAIDetail from "@/data/useUserSKAIDetail";
 import useRole from "@/data/useRole";
 import useUka from "@/data/useUka";
-import BackButton from "../BackButton";
-import SaveButton from "../SaveButton";
+
+import {
+  RoleSelect,
+  UkaSelect,
+  PekerjaSelect,
+  BackButton,
+  SaveButton,
+} from "../commons";
 import { setSelectedUser } from "@/slices/userSKAISlice";
 
 import React, { useEffect } from "react";

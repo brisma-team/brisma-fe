@@ -1,4 +1,3 @@
-import React from "react";
 import { N800 } from "@atlaskit/theme/colors";
 import { token } from "@atlaskit/tokens";
 

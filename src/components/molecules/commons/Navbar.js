@@ -12,7 +12,7 @@ const NotificationsBadge = () => (
   />
 );
 
-const NotificationsExample = () => (
+const NavbarField = () => (
   <div style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 11 }}>
     <AtlassianNavigation
       label="site"
@@ -25,4 +25,4 @@ const NotificationsExample = () => (
   </div>
 );
 
-export default NotificationsExample;
+export default NavbarField;

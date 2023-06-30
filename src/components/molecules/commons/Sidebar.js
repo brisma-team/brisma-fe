@@ -1,11 +1,11 @@
-import React from "react";
-import GraphBarIcon from "@atlaskit/icon/glyph/graph-bar";
-import PeopleIcon from "@atlaskit/icon/glyph/people";
-import MediaServicesDocumentIcon from "@atlaskit/icon/glyph/media-services/document";
-import MediaServicesSpreadsheetIcon from "@atlaskit/icon/glyph/media-services/spreadsheet";
-import FileIcon from "@atlaskit/icon/glyph/file";
-import PreferencesIcon from "@atlaskit/icon/glyph/preferences";
-
+import {
+  GraphBarIcon,
+  PeopleIcon,
+  MediaServicesDocumentIcon,
+  MediaServicesSpreadsheetIcon,
+  FileIcon,
+  PreferencesIcon,
+} from "@/components/icons";
 import {
   ButtonItem,
   LinkItem,

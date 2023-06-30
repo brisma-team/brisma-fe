@@ -1,15 +1,3 @@
-// re-export common components
-
-import {
-  AvatarDefaultExample,
-  Breadcrumbs,
-  ButtonField,
-  Card,
-  Loader,
-  TooltipField,
-  ImageField,
-  RoleLabel,
-} from "./atoms";
 import {
   BackButton,
   CreateButton,
@@ -25,26 +13,17 @@ import {
   Sidebar,
   UkaSelect,
   UpdateButton,
-  BarChart,
-  HeatmapChart,
-  LineChart,
-  PieChart,
-  FormUser,
-} from "./molecules";
+} from "./commons";
+
+import { BarChart, HeatmapChart, LineChart, PieChart } from "./dashboard";
+import { FormUser } from "./users";
 
 export {
-  AvatarDefaultExample,
-  Breadcrumbs,
-  ButtonField,
-  Card,
   BackButton,
   CreateButton,
+  CardDashboard,
   CustomDataTable,
   DeleteButton,
-  Loader,
-  TooltipField,
-  ImageField,
-  RoleLabel,
   NavbarField,
   PekerjaSelect,
   ProfileDetail,
@@ -54,7 +33,6 @@ export {
   Sidebar,
   UkaSelect,
   UpdateButton,
-  CardDashboard,
   BarChart,
   HeatmapChart,
   LineChart,

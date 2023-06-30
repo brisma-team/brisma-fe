@@ -1,4 +1,4 @@
-import Loader from "@/components/Loader";
+import Loader from "@/components/atoms/Loader";
 import useUser from "@/data/useUser";
 import errorSwal from "@/helpers/errorSwal";
 import loadingSwal from "@/helpers/loadingSwal";
