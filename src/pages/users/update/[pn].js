@@ -1,5 +1,5 @@
 import Main from "@/layouts/Main";
-import { FormUser } from "@/components/users";
+import { FormUser } from "@/components";
 
 import React from "react";
 import { useRouter } from "next/router";

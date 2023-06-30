@@ -1,4 +1,4 @@
-import AvatarDefaultExample from "./Avatar";
+import { AvatarDefaultExample, RoleLabel } from "@/components/atoms";
 
 const ProfileDetail = () => {
   return (
@@ -7,17 +7,7 @@ const ProfileDetail = () => {
       <div className="pt-4 flex flex-col items-center justify-center">
         <p className="font-bold text-base">Muhamad Firli Ismail</p>
         <p className="-mt-1 mb-2 text-base">20020202</p>
-        <div
-          className="bg-orange-coral"
-          style={{
-            padding: "3px",
-            paddingRight: "6px",
-            paddingLeft: "6px",
-            borderRadius: "3px",
-          }}
-        >
-          <p className="text-base text-white">Kepala Divisi Internal Audit</p>
-        </div>
+        <RoleLabel text={"Kepala Divisi Internal Audit"} />
       </div>
     </div>
   );

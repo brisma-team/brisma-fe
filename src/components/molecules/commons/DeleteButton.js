@@ -1,12 +1,10 @@
-import React from "react";
 import confirmationSwal from "@/helpers/confirmationSwal";
 import loadingSwal from "@/helpers/loadingSwal";
 import successSwal from "@/helpers/successSwal";
 import errorSwal from "@/helpers/errorSwal";
 import withTokenConfig from "@/helpers/withTokenConfig";
 import TrashIcon from "@atlaskit/icon/glyph/trash";
-import Button from "@atlaskit/button";
-import Tooltip from "@atlaskit/tooltip";
+import { ButtonField } from "@/components/atoms";
 
 import axios from "axios";
 
@@ -38,13 +36,13 @@ const DeleteButton = ({ url, mutate }) => {
   }
 
   return (
-    <Tooltip content="Delete">
-      <Button
-        iconBefore={<TrashIcon />}
-        appearance="danger"
-        onClick={() => handleClick(url)}
+    <div className="bg-atlasian-red hover:bg-red-700 focus:bg-red-700 rounded-lg h-10 items-center flex font-medium">
+      <ButtonField
+        icon={<TrashIcon primaryColor="#fff" />}
+        text="Delete"
+        handler={() => handleClick(url)}
       />
-    </Tooltip>
+    </div>
   );
 };
 

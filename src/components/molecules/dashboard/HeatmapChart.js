@@ -1,8 +1,5 @@
 import useDashboard from "@/data/useDashboard";
-import Loader from "../Loader";
-
-import React from "react";
-import Card from "../Card";
+import { Loader, Card } from "@/components/atoms";
 import { AutoSizer } from "react-virtualized";
 import { HeatMap } from "@nivo/heatmap";
 

@@ -1,12 +1,5 @@
 import Main from "@/layouts/Main";
-import {
-  BarChart,
-  LineChart,
-  PieChart,
-  HeatmapChart,
-} from "@/components/dashboard";
-
-import React from "react";
+import { BarChart, LineChart, PieChart, HeatmapChart } from "@/components";
 
 const breadcrumb = [
   {
