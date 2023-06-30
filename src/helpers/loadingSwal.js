@@ -1,4 +1,4 @@
-import { Loader } from "@/components";
+import { Loader } from "@/components/atoms";
 
 import React from "react";
 import Swal from "sweetalert2";

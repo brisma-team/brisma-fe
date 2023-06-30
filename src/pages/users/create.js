@@ -1,5 +1,5 @@
 import Main from "@/layouts/Main";
-import { FormUser } from "@/components";
+import { FormUser } from "@/components/molecules";
 
 import React from "react";
 
