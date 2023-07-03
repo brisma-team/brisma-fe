@@ -42,6 +42,7 @@
     "cookies-next": "^2.1.1",
     "flowbite": "^1.6.3",
     "flowbite-react": "^0.3.8",
+    "framer-motion": "^10.12.18",
     "next": "^13.4.6",
     "react": "18.2.0",
     "react-data-table-component": "^7.5.3",

@@ -1,4 +1,4 @@
-import Main from "@/layouts/Main";
+import { MainLayout } from "@/layouts";
 import { FormUser } from "@/components/molecules/users";
 
 import React from "react";
@@ -17,9 +17,9 @@ const breadcrumb = [
 
 export default function create() {
   return (
-    <Main breadcrumb={breadcrumb}>
+    <MainLayout breadcrumb={breadcrumb}>
       <h1 className="text-2xl font-bold mb-4">Create Users</h1>
       <FormUser type="create" />
-    </Main>
+    </MainLayout>
   );
 }

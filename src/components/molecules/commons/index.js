@@ -12,6 +12,7 @@ import SearchButton from "./SearchButton";
 import Sidebar from "./Sidebar";
 import UkaSelect from "./UkaSelect";
 import UpdateButton from "./UpdateButton";
+import SidebarLanding from "./SidebarLanding";
 
 export {
   BackButton,
@@ -28,4 +29,5 @@ export {
   Sidebar,
   UkaSelect,
   UpdateButton,
+  SidebarLanding,
 };
