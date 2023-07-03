@@ -6,6 +6,8 @@ import Loader from "./Loader";
 import TooltipField from "./Tooltip";
 import ImageField from "./Image";
 import RoleLabel from "./RoleLabel";
+import CardLanding from "./CardLanding";
+import DropdownFilter from "./DropdownFilter";
 
 export {
   AvatarDefaultExample,
@@ -16,4 +18,6 @@ export {
   TooltipField,
   ImageField,
   RoleLabel,
+  CardLanding,
+  DropdownFilter,
 };
