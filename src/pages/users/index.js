@@ -1,4 +1,4 @@
-import Main from "@/layouts/Main";
+import { MainLayout } from "@/layouts";
 import useUserSKAI from "@/data/useUserSKAI";
 import {
   CustomDataTable,
@@ -123,7 +123,7 @@ export default function index() {
   }
 
   return (
-    <Main breadcrumb={breadcrumb}>
+    <MainLayout breadcrumb={breadcrumb}>
       <div className="flex justify-between items-center mb-4">
         <div className="flex-1">
           <h1 className="text-2xl font-bold">Users</h1>
@@ -182,6 +182,6 @@ export default function index() {
         setSearchParam={setSearchParam}
         setSearchParamObject={setSearchParamObject}
       />
-    </Main>
+    </MainLayout>
   );
 }

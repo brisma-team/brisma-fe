@@ -1,19 +1,16 @@
 import useUser from "@/data/useUser";
-import Loader from "@/components/Loader";
+import { Loader } from "@/components/atoms";
 
 import React, { useEffect, useState } from "react";
-// import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
-import Sidebar from "@/components/Sidebar";
-import Navbar from "@/components/Navbar";
+import { Sidebar, NavbarField } from "@/components/molecules/commons";
 
-const PatLayout = ({ children }) => {
+const MainLayout = ({ children }) => {
   const router = useRouter();
 
   const { user, userError } = useUser();
 
   const [isShown, setIsShown] = useState(false);
-  useState(false);
 
   useEffect(() => {
     if (userError) {
@@ -26,12 +23,6 @@ const PatLayout = ({ children }) => {
       setIsShown(true);
     }
   }, [user, userError]);
-
-  // async function handleLogoutClick() {
-  //   deleteCookie("token");
-
-  //   userMutate();
-  // }
 
   function handleSidebarItemClick(e, href) {
     e.preventDefault();
@@ -49,12 +40,13 @@ const PatLayout = ({ children }) => {
 
   return (
     <div>
-      <Navbar />
+      <NavbarField />
       <Sidebar handleSidebarItemClick={handleSidebarItemClick} />
       <div className="flex">
-        <div className="flex-1 overflow-x-hidden ml-72 h-screen overflow-y-scroll">
-          <div className="main flex items-center justify-center h-full">
-            <div className="content p-4 w-full h-96">{children}</div>
+        <div className="flex-1 overflow-x-hidden ml-64 pt-16 h-screen overflow-y-scroll">
+          <div className="p-4"></div>
+          <div className="main">
+            <div className="content p-4">{children}</div>
           </div>
         </div>
       </div>
@@ -62,4 +54,4 @@ const PatLayout = ({ children }) => {
   );
 };
 
-export default PatLayout;
+export default MainLayout;

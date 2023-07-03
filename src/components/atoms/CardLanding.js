@@ -1,15 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 const CardLanding = ({ title, description, status, url }) => {
-  const router = useRouter();
   return (
-    <div className="w-80 h-44 border rounded-[10px] bg-white hover:bg-gray-100 m-3">
-      <Link
-        href={url ? router.push(url) : "#"}
-        style={{ textDecoration: "none" }}
-      >
+    <div className="h-44 border rounded-[10px] bg-white hover:bg-gray-100 m-3">
+      <Link href={url ? url : "#"} style={{ textDecoration: "none" }}>
         <div className="p-6">
           <h5 className="mb-2 text-base font-bold text-brisma">
             {title ? title : "No title"}

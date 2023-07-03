@@ -12,6 +12,8 @@ import SearchButton from "./SearchButton";
 import Sidebar from "./Sidebar";
 import UkaSelect from "./UkaSelect";
 import UpdateButton from "./UpdateButton";
+import SidebarLanding from "./SidebarLanding";
+import PrevNextNavigation from "./PrevNextNavigation";
 
 export {
   BackButton,
@@ -28,4 +30,6 @@ export {
   Sidebar,
   UkaSelect,
   UpdateButton,
+  SidebarLanding,
+  PrevNextNavigation,
 };

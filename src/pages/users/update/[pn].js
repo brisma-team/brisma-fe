@@ -1,4 +1,4 @@
-import Main from "@/layouts/Main";
+import { MainLayout } from "@/layouts";
 import { FormUser } from "@/components/molecules/users";
 
 import React from "react";
@@ -21,9 +21,9 @@ export default function update() {
   const { pn } = router.query;
 
   return (
-    <Main breadcrumb={breadcrumb}>
+    <MainLayout breadcrumb={breadcrumb}>
       <h1 className="text-2xl font-bold mb-4">Update User</h1>
       <FormUser type="update" pn={pn} />
-    </Main>
+    </MainLayout>
   );
 }
