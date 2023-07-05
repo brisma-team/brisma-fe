@@ -18,6 +18,7 @@
     "@atlaskit/form": "^8.11.8",
     "@atlaskit/icon": "^21.12.4",
     "@atlaskit/menu": "^1.7.9",
+    "@atlaskit/modal-dialog": "^12.6.2",
     "@atlaskit/navigation": "^37.0.2",
     "@atlaskit/notification-indicator": "^9.1.2",
     "@atlaskit/page-header": "^10.4.4",

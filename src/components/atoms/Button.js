@@ -8,7 +8,9 @@ const ButtonField = ({ url, icon, text, handler }) => {
       shouldFitContainer
       onClick={handler}
     >
-      <p className="text-white flex items-center">{text ? text : "No Text"}</p>
+      <p className="text-white flex items-center justify-center">
+        {text ? text : "No Text"}
+      </p>
     </Button>
   );
 };

@@ -16,6 +16,7 @@ import IconEditorSearch from "@atlaskit/icon/glyph/editor/search";
 import IconAlignCenter from "@atlaskit/icon/glyph/editor/align-center";
 import IconArrowRight from "@atlaskit/icon/glyph/arrow-right";
 import IconInfo from "@atlaskit/icon/glyph/info";
+import IconTrash from "@atlaskit/icon/glyph/trash";
 
 export {
   IconPlus,
@@ -36,4 +37,5 @@ export {
   IconAlignCenter,
   IconArrowRight,
   IconInfo,
+  IconTrash,
 };

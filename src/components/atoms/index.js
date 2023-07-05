@@ -8,6 +8,8 @@ import ImageField from "./Image";
 import RoleLabel from "./RoleLabel";
 import CardLanding from "./CardLanding";
 import DropdownFilter from "./DropdownFilter";
+import Modal from "./Modal";
+import PageTitle from "./PageTitle";
 
 export {
   AvatarDefaultExample,
@@ -20,4 +22,6 @@ export {
   RoleLabel,
   CardLanding,
   DropdownFilter,
+  Modal,
+  PageTitle,
 };
