@@ -6,11 +6,4 @@
   html {
     font-family: "Segoe UI";
   }
-  :root{
-    --ck-border-radius: 10px;
-  }
-  .ck-content {
-    min-height: 650px !important;
-    min-width: 595px !important;
-  }
 }

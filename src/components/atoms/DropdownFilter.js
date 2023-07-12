@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { Card } from "@/components/atoms";
 import Link from "next/link";
+import { N800 } from "@atlaskit/theme/colors";
+import { token } from "@atlaskit/tokens";
 
 const DropdownFilter = ({
   show,
@@ -26,7 +27,14 @@ const DropdownFilter = ({
   if (!show) return null;
 
   return (
-    <Card>
+    <div
+      className="py-2 w-40 rounded flex flex-col items-center fixed z-10  bg-white"
+      style={{
+        color: token("color.text", N800),
+        borderRadius: "10px",
+        boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.25)",
+      }}
+    >
       <div className="-my-2 w-full">
         {routes.map((v, i) => {
           return (
@@ -40,7 +48,7 @@ const DropdownFilter = ({
           );
         })}
       </div>
-    </Card>
+    </div>
   );
 };
 

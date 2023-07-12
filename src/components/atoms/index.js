@@ -10,6 +10,12 @@ import CardLanding from "./CardLanding";
 import DropdownFilter from "./DropdownFilter";
 import Modal from "./Modal";
 import PageTitle from "./PageTitle";
+import TextInput from "./TextInput";
+import DatepickerStartEnd from "./DatepickerStartEnd";
+import Select from "./Select";
+import LinkIcon from "./LinkIcon";
+import InlineEditText from "./InlineEditText";
+import TextAreaField from "@atlaskit/textarea";
 
 export {
   AvatarDefaultExample,
@@ -24,4 +30,10 @@ export {
   DropdownFilter,
   Modal,
   PageTitle,
+  TextInput,
+  DatepickerStartEnd,
+  Select,
+  LinkIcon,
+  InlineEditText,
+  TextAreaField,
 };
