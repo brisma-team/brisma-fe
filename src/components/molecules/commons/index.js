@@ -19,6 +19,7 @@ import CardBodyNavigation from "./CardBodyNavigation";
 import FormWithLabel from "./FormWithLabel";
 import CardBodyContent from "./CardBodyContent";
 import CardBodyContentDetailCost from "./CardBodyContentDetailCosts";
+import CardTypeCount from "./CardTypeCount";
 
 export {
   BackButton,
@@ -42,4 +43,5 @@ export {
   FormWithLabel,
   CardBodyContent,
   CardBodyContentDetailCost,
+  CardTypeCount,
 };

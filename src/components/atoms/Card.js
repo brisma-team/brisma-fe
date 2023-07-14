@@ -4,7 +4,7 @@ import { token } from "@atlaskit/tokens";
 const Card = ({ children }) => {
   return (
     <div
-      className="py-2 w-auto rounded flex flex-col items-center h-full"
+      className="py-2 w-full rounded flex flex-col items-center h-full"
       style={{
         color: token("color.text", N800),
         borderRadius: "10px",

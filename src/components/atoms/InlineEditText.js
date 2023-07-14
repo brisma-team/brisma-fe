@@ -1,20 +1,48 @@
 import { useState } from "react";
-import { InlineEditableTextfield } from "@atlaskit/inline-edit";
 
-const InlineEditText = () => {
+import { Box, xcss } from "@atlaskit/primitives";
+// import TextArea from "@atlaskit/textarea";
+import Textfield from "@atlaskit/textfield";
+import {
+  fontSize as getFontSize,
+  gridSize as getGridSize,
+} from "@atlaskit/theme/constants";
+
+import InlineEdit from "@atlaskit/inline-edit";
+
+const containerStyles = xcss({
+  width: "100%",
+});
+
+const fontSize = getFontSize();
+const gridSize = getGridSize();
+const minRows = 2;
+const textAreaLineHeightFactor = 2.5;
+
+const readViewContainerStyles = xcss({
+  minHeight: `${gridSize * textAreaLineHeightFactor * minRows}px`,
+  padding: "space.150",
+  lineHeight: `${(gridSize * textAreaLineHeightFactor) / fontSize}`,
+  wordBreak: "break-word",
+});
+
+const InlineEditCustomTextareaExample = () => {
   const [editValue, setEditValue] = useState("");
 
   return (
-    <div className="w-full">
-      <InlineEditableTextfield
-        testId="editable-text-field"
+    <Box xcss={containerStyles}>
+      <InlineEdit
         defaultValue={editValue}
-        onConfirm={(value) => setEditValue(value)}
-        placeholder=""
+        editView={({ ...fieldProps }, ref) => (
+          <Textfield {...fieldProps} ref={ref} />
+        )}
+        readView={() => <Box xcss={readViewContainerStyles}>{editValue}</Box>}
+        onConfirm={setEditValue}
+        readViewFitContainerWidth
         hideActionButtons
       />
-    </div>
+    </Box>
   );
 };
 
-export default InlineEditText;
+export default InlineEditCustomTextareaExample;

@@ -23,6 +23,9 @@ const ButtonField = ({
     case "purple":
       txtColor = "text-atlasian-purple";
       break;
+    case "brisma":
+      txtColor = "text-brisma";
+      break;
   }
 
   return (
