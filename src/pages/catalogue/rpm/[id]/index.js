@@ -11,21 +11,17 @@ import DocumentIcon from "@atlaskit/icon/glyph/document";
 const approvalData = [
   {
     id: 1,
-    document_name: "PAT Serialize 1",
+    part: "Action Plan",
+    document_name: "Action Plan",
     date: "10 Juli 2023",
-    attachment: "abd.pdf",
+    attachment: "preventive - Test",
   },
   {
     id: 2,
-    document_name: "PAT Serialize 2",
-    date: "10 Juli 2023",
-    attachment: "abcd.pdf",
-  },
-  {
-    id: 3,
-    document_name: "PAT Serialize 3",
-    date: "10 Juli 2023",
-    attachment: "abx.pdf",
+    part: "Surat Evaluasi",
+    document_name: "Surat Evaluasi",
+    date: "20 Juli 2023",
+    attachment: "Surat Evaluasi",
   },
 ];
 
@@ -115,7 +111,7 @@ const index = ({ data = approvalData }) => {
               <div className="flex m-2 w-96">
                 <div className="w-1/2">
                   <Textfield
-                    placeholder="ID Proyek"
+                    placeholder="Nama Dokumen"
                     className="mr-3"
                     elemAfterInput={
                       <button className="justify-center">
@@ -125,10 +121,10 @@ const index = ({ data = approvalData }) => {
                   />
                 </div>
                 <div className="w-1/2">
-                  <Select options={[]} placeholder="Status Document" />
+                  <Select options={[]} placeholder="Part" />
                 </div>
               </div>
-              <div className="flex m-2 w-96">
+              {/* <div className="flex m-2 w-96">
                 <div className="w-1/2">
                   <Textfield
                     placeholder="Nama Proyek"
@@ -143,7 +139,7 @@ const index = ({ data = approvalData }) => {
                 <div className="w-1/2">
                   <Select options={[]} placeholder="Status Persetujuan" />
                 </div>
-              </div>
+              </div> */}
             </Card>
           </div>
         )}
@@ -215,7 +211,8 @@ const index = ({ data = approvalData }) => {
               <div className="leading-3">
                 <div>
                   <div className="mt-2 px-6 py-3 border-b-[1px] hover:bg-gray-100 border-gray-300 font-bold">
-                    <div className="grid grid-cols-8">
+                    <div className="grid grid-cols-10">
+                      <div className="col-span-2">Part</div>
                       <div className="col-span-2">Nama Dokumen</div>
                       <div>Tanggal</div>
                       <div className="text-center col-span-2">Lampiran</div>
@@ -229,7 +226,8 @@ const index = ({ data = approvalData }) => {
                         className="px-6 py-5 border-b-[1px] border-gray-300 hover:bg-gray-100"
                         key={key}
                       >
-                        <div className="grid grid-cols-8">
+                        <div className="grid grid-cols-10">
+                          <div className="col-span-2 my-auto">{item.part}</div>
                           <div className="col-span-2 my-auto">
                             {item.document_name}
                           </div>

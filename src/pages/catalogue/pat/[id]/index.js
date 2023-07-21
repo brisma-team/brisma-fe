@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { MainLayout } from "@/layouts";
 import { Breadcrumbs, Card, Modal } from "@/components/atoms";
 import Button from "@atlaskit/button";
-import Select from "@atlaskit/select";
+// import Select from "@atlaskit/select";
 import Textfield from "@atlaskit/textfield";
 import { IconClose, IconPlus } from "@/components/icons";
 import { useRouter } from "next/router";
@@ -52,6 +52,16 @@ const histories = [
         account: "1151900010 - Dandi",
         date: "8 Juli 2023",
         time: "16.01",
+      },
+    ],
+  },
+  {
+    id: 3,
+    data: [
+      {
+        account: "1151900032 - Samuel",
+        date: "8 Juli 2023",
+        time: "12.01",
       },
     ],
   },
@@ -115,7 +125,7 @@ const index = ({ data = approvalData }) => {
               <div className="flex m-2 w-96">
                 <div className="w-1/2">
                   <Textfield
-                    placeholder="ID Proyek"
+                    placeholder="ID Project"
                     className="mr-3"
                     elemAfterInput={
                       <button className="justify-center">
@@ -125,10 +135,21 @@ const index = ({ data = approvalData }) => {
                   />
                 </div>
                 <div className="w-1/2">
-                  <Select options={[]} placeholder="Status Document" />
+                  <Textfield
+                    placeholder="Nama Dokumen"
+                    className="mr-3"
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
                 </div>
+                {/* <div className="w-1/2">
+                  <Select options={[]} placeholder="Status Document" />
+                </div> */}
               </div>
-              <div className="flex m-2 w-96">
+              {/* <div className="flex m-2 w-96">
                 <div className="w-1/2">
                   <Textfield
                     placeholder="Nama Proyek"
@@ -143,7 +164,7 @@ const index = ({ data = approvalData }) => {
                 <div className="w-1/2">
                   <Select options={[]} placeholder="Status Persetujuan" />
                 </div>
-              </div>
+              </div> */}
             </Card>
           </div>
         )}

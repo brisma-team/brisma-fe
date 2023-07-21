@@ -17,6 +17,9 @@ import IconAlignCenter from "@atlaskit/icon/glyph/editor/align-center";
 import IconArrowRight from "@atlaskit/icon/glyph/arrow-right";
 import IconInfo from "@atlaskit/icon/glyph/info";
 import IconTrash from "@atlaskit/icon/glyph/trash";
+import IconQuestions from "@atlaskit/icon/glyph/questions";
+import IconAttachment from "@atlaskit/icon/glyph/attachment";
+import IconCrossCircle from "@atlaskit/icon/glyph/cross-circle";
 
 export {
   IconPlus,
@@ -38,4 +41,7 @@ export {
   IconArrowRight,
   IconInfo,
   IconTrash,
+  IconQuestions,
+  IconAttachment,
+  IconCrossCircle,
 };

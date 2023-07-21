@@ -163,7 +163,7 @@ const index = ({ data = approvalData }) => {
         {showModal && (
           <Modal showModal={showModal} onClickOutside={() => resetState()}>
             {showPreview && (
-              <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+              <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.8.162/build/pdf.worker.min.js">
                 <div className="text-xl font-bold text-atlasian-blue-dark mb-2 mt-5 ml-10 ">
                   Preview Document
                 </div>
@@ -239,19 +239,19 @@ const index = ({ data = approvalData }) => {
               <div className="grid grid-cols-2 font-semibold font-base">
                 <div className="flex flex-row mb-2">
                   <div className="flex-1 ">Project ID</div>
-                  <div className="flex-1">: A</div>
+                  <div className="flex-1">: EWP20230001</div>
                 </div>
                 <div className="flex flex-row">
                   <div className="flex-1">Nama Project</div>
-                  <div className="flex-1">: A</div>
-                </div>
-                <div className="flex flex-row">
-                  <div className="flex-1">Kantor Audit</div>
-                  <div className="flex-1">: A</div>
+                  <div className="flex-1">: Test After Fixing</div>
                 </div>
                 <div className="flex flex-row">
                   <div className="flex-1">Tipe Audit</div>
-                  <div className="flex-1">: A</div>
+                  <div className="flex-1">: Special</div>
+                </div>
+                <div className="flex flex-row">
+                  <div className="flex-1">Triwulan</div>
+                  <div className="flex-1">: I</div>
                 </div>
               </div>
             </div>

@@ -63,7 +63,7 @@ const index = ({ data = approvalData }) => {
               <div className="flex m-2 w-96">
                 <div className="w-1/2">
                   <Textfield
-                    placeholder="ID Proyek"
+                    placeholder="ID Project"
                     className="mr-3"
                     elemAfterInput={
                       <button className="justify-center">
@@ -73,13 +73,21 @@ const index = ({ data = approvalData }) => {
                   />
                 </div>
                 <div className="w-1/2">
-                  <Select options={[]} placeholder="Status Document" />
+                  <Textfield
+                    placeholder="Kantor Audit"
+                    className=""
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
                 </div>
               </div>
               <div className="flex m-2 w-96">
                 <div className="w-1/2">
                   <Textfield
-                    placeholder="Nama Proyek"
+                    placeholder="Nama Project"
                     className="mr-3"
                     elemAfterInput={
                       <button className="justify-center">
@@ -89,7 +97,7 @@ const index = ({ data = approvalData }) => {
                   />
                 </div>
                 <div className="w-1/2">
-                  <Select options={[]} placeholder="Status Persetujuan" />
+                  <Select options={[]} placeholder="Triwulan" />
                 </div>
               </div>
             </Card>
@@ -108,14 +116,14 @@ const index = ({ data = approvalData }) => {
               <div className="leading-3">
                 <div>
                   <div className="mt-2 px-6 py-3 border-b-[1px] hover:bg-gray-100 border-gray-300 font-bold">
-                    <div className="grid grid-cols-11">
-                      <div>Nama Project</div>
-                      <div className="text-center">Tipe Audit</div>
+                    <div className="grid grid-cols-12">
+                      <div className="col-span-2">Nama Project</div>
+                      <div className="text-center">Kantor Audit</div>
                       <div className="text-center">Triwulan</div>
                       <div className="text-center">Tanggal</div>
-                      <div className="text-center col-span-3">Object Audit</div>
+                      <div className="text-center col-span-3">Uker Tujuan</div>
                       <div className="text-center col-span-2">Tim Audit</div>
-                      <div className="text-center">Addendum Ke</div>
+                      <div className="text-center">Auditee</div>
                       <div className="text-center">Aksi</div>
                     </div>
                   </div>
@@ -126,10 +134,12 @@ const index = ({ data = approvalData }) => {
                         className="px-6 py-5 border-b-[1px] border-gray-300 hover:bg-gray-100"
                         key={key}
                       >
-                        <div className="grid grid-cols-11">
-                          <div className="my-auto">{item.project_name}</div>
+                        <div className="grid grid-cols-12">
+                          <div className="my-auto col-span-2">
+                            {item.project_name}
+                          </div>
                           <div className="text-center my-auto">
-                            {item.audit_type}
+                            {item.audit_office}
                           </div>
                           <div className="text-center my-auto">
                             {item.quarter}
@@ -138,7 +148,7 @@ const index = ({ data = approvalData }) => {
                           <div className="my-auto col-span-3 pl-5">
                             <ul className="leading-3">
                               <li className="p-1 list-disc ">
-                                {item.audit_object}
+                                {item.target_uker}
                               </li>
                             </ul>
                           </div>
@@ -147,14 +157,14 @@ const index = ({ data = approvalData }) => {
                               {item.audit_team.map((data, i) => {
                                 return (
                                   <li className="p-1 list-disc" key={i}>
-                                    {data.name + " (" + data.role + ") "}
+                                    {data}
                                   </li>
                                 );
                               })}
                             </ul>
                           </div>
                           <div className="text-center my-auto">
-                            {item.addendum_phase}
+                            {item.auditee}
                           </div>
                           <div className="flex justify-between w-16 mx-auto">
                             <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 m-auto active:bg-slate-100">

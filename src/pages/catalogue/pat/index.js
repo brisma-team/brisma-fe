@@ -4,10 +4,10 @@ import { MainLayout } from "@/layouts";
 import { Breadcrumbs, Card } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { IconArrowRight, IconClose, IconPlus } from "@/components/icons";
-import Select from "@atlaskit/select";
+// import Select from "@atlaskit/select";
 import Textfield from "@atlaskit/textfield";
-import { useRef } from "react";
-import { motion } from "framer-motion";
+// import { useRef } from "react";
+// import { motion } from "framer-motion";
 
 const approvaldata = [
   {
@@ -20,8 +20,8 @@ const approvaldata = [
     addendum_phase: "0",
   },
   {
-    id: 1,
-    project_name: "PAT 1 BRILIFE",
+    id: 2,
+    project_name: "PAT 2 BRILIFE",
     audit_office: "BRILife",
     quarter: "I",
     date: "2023-04-15",
@@ -31,7 +31,7 @@ const approvaldata = [
 ];
 const index = ({ data = approvaldata }) => {
   const [showFilter, setShowFilter] = useState(false);
-  const ref = useRef(null);
+  // const ref = useRef(null);
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
@@ -61,51 +61,73 @@ const index = ({ data = approvaldata }) => {
           </Button>
         </div>
         {showFilter && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              duration: 0.4,
-            }}
-            ref={ref}
-          >
-            <div className="flex justify-between">
-              <Card>
-                <div className="flex m-2 w-96">
-                  <div className="w-1/2">
-                    <Textfield
-                      placeholder="ID Proyek"
-                      className="mr-3"
-                      elemAfterInput={
-                        <button className="justify-center">
-                          <IconClose size="large" />
-                        </button>
-                      }
-                    />
-                  </div>
-                  <div className="w-1/2">
-                    <Select options={[]} placeholder="Status Document" />
-                  </div>
+          // <motion.div
+          //   initial={{ opacity: 0, scale: 0.95 }}
+          //   animate={{ opacity: 1, scale: 1 }}
+          //   transition={{
+          //     duration: 0.4,
+          //   }}
+          //   ref={ref}
+          // >
+          <div className="flex justify-between">
+            <Card>
+              <div className="flex m-2 w-96">
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="ID Project"
+                    className="mr-3"
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
                 </div>
-                <div className="flex m-2 w-96">
-                  <div className="w-1/2">
-                    <Textfield
-                      placeholder="Nama Proyek"
-                      className="mr-3"
-                      elemAfterInput={
-                        <button className="justify-center">
-                          <IconClose size="large" />
-                        </button>
-                      }
-                    />
-                  </div>
-                  <div className="w-1/2">
-                    <Select options={[]} placeholder="Status Persetujuan" />
-                  </div>
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="Nama Project"
+                    className="mr-3"
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
                 </div>
-              </Card>
-            </div>
-          </motion.div>
+                {/* <div className="w-1/2">
+                  <Select options={[]} placeholder="Status Document" />
+                </div> */}
+              </div>
+              <div className="flex m-2 w-96">
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="Kantor Audit"
+                    className="mr-3"
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="Triwulan"
+                    className="mr-3"
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+                {/* <div className="w-1/2">
+                  <Select options={[]} placeholder="Status Persetujuan" />
+                </div> */}
+              </div>
+            </Card>
+          </div>
+          // </motion.div>
         )}
         {/* End Filter */}
 
