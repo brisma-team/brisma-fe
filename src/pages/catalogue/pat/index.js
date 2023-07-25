@@ -4,10 +4,7 @@ import { MainLayout } from "@/layouts";
 import { Breadcrumbs, Card } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { IconArrowRight, IconClose, IconPlus } from "@/components/icons";
-// import Select from "@atlaskit/select";
 import Textfield from "@atlaskit/textfield";
-// import { useRef } from "react";
-// import { motion } from "framer-motion";
 
 const approvaldata = [
   {
@@ -61,21 +58,13 @@ const index = ({ data = approvaldata }) => {
           </Button>
         </div>
         {showFilter && (
-          // <motion.div
-          //   initial={{ opacity: 0, scale: 0.95 }}
-          //   animate={{ opacity: 1, scale: 1 }}
-          //   transition={{
-          //     duration: 0.4,
-          //   }}
-          //   ref={ref}
-          // >
-          <div className="flex justify-between">
+          <div className="flex justify-between w-96">
             <Card>
-              <div className="flex m-2 w-96">
+              <div className="flex p-2">
                 <div className="w-1/2">
                   <Textfield
-                    placeholder="ID Project"
-                    className="mr-3"
+                    placeholder="ID Projek"
+                    className="mr-1"
                     elemAfterInput={
                       <button className="justify-center">
                         <IconClose size="large" />
@@ -85,8 +74,8 @@ const index = ({ data = approvaldata }) => {
                 </div>
                 <div className="w-1/2">
                   <Textfield
-                    placeholder="Nama Project"
-                    className="mr-3"
+                    placeholder="Nama Projek"
+                    className="ml-1"
                     elemAfterInput={
                       <button className="justify-center">
                         <IconClose size="large" />
@@ -94,15 +83,12 @@ const index = ({ data = approvaldata }) => {
                     }
                   />
                 </div>
-                {/* <div className="w-1/2">
-                  <Select options={[]} placeholder="Status Document" />
-                </div> */}
               </div>
-              <div className="flex m-2 w-96">
+              <div className="flex p-2">
                 <div className="w-1/2">
                   <Textfield
                     placeholder="Kantor Audit"
-                    className="mr-3"
+                    className="mr-1"
                     elemAfterInput={
                       <button className="justify-center">
                         <IconClose size="large" />
@@ -113,7 +99,7 @@ const index = ({ data = approvaldata }) => {
                 <div className="w-1/2">
                   <Textfield
                     placeholder="Triwulan"
-                    className="mr-3"
+                    className="ml-1"
                     elemAfterInput={
                       <button className="justify-center">
                         <IconClose size="large" />
@@ -121,13 +107,9 @@ const index = ({ data = approvaldata }) => {
                     }
                   />
                 </div>
-                {/* <div className="w-1/2">
-                  <Select options={[]} placeholder="Status Persetujuan" />
-                </div> */}
               </div>
             </Card>
           </div>
-          // </motion.div>
         )}
         {/* End Filter */}
 
@@ -176,7 +158,10 @@ const index = ({ data = approvaldata }) => {
                           </div>
                           <div className="flex justify-between w-16 mx-auto">
                             <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
-                              <Link href={"/catalogue/pat/" + item.id}>
+                              <Link
+                                href={"/catalogue/pat/" + item.id}
+                                prefetch={false}
+                              >
                                 <Button
                                   shouldFitContainer
                                   iconBefore={

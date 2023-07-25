@@ -106,13 +106,12 @@ const index = ({ data = approvalData }) => {
           </Button>
         </div>
         {showFilter && (
-          <div className="flex justify-between">
+          <div className="flex justify-between w-96">
             <Card>
-              <div className="flex m-2 w-96">
-                <div className="w-1/2">
+              <div className="flex p-2">
+                <div className="w-1/2 mr-1">
                   <Textfield
-                    placeholder="Nama Dokumen"
-                    className="mr-3"
+                    placeholder="ID Proyek"
                     elemAfterInput={
                       <button className="justify-center">
                         <IconClose size="large" />
@@ -120,15 +119,14 @@ const index = ({ data = approvalData }) => {
                     }
                   />
                 </div>
-                <div className="w-1/2">
-                  <Select options={[]} placeholder="Part" />
+                <div className="w-1/2 ml-1">
+                  <Select options={[]} placeholder="Status Dokumen" />
                 </div>
               </div>
-              {/* <div className="flex m-2 w-96">
-                <div className="w-1/2">
+              <div className="flex p-2">
+                <div className="w-1/2 mr-1">
                   <Textfield
                     placeholder="Nama Proyek"
-                    className="mr-3"
                     elemAfterInput={
                       <button className="justify-center">
                         <IconClose size="large" />
@@ -136,10 +134,10 @@ const index = ({ data = approvalData }) => {
                     }
                   />
                 </div>
-                <div className="w-1/2">
+                <div className="w-1/2 ml-1">
                   <Select options={[]} placeholder="Status Persetujuan" />
                 </div>
-              </div> */}
+              </div>
             </Card>
           </div>
         )}
@@ -150,51 +148,49 @@ const index = ({ data = approvalData }) => {
             showModal={showModal}
             onClickOutside={() => setShowModal(false)}
           >
-            <div>
-              <div className="w-full p-5">
-                <div className="text-xl font-bold text-atlasian-blue-dark mb-5">
-                  Download History
-                </div>
-                <div className="flex pl-3 text-sm font-semibold text-atlasian-blue-dark items-center underline">
-                  <DocumentIcon />
-                  <span className="ml-2">{selectedItem.attachment}</span>
-                </div>
-                <div className="leading-3">
-                  <>
-                    <div className="mt-2 px-6 py-3 border-b-[1px] hover:bg-gray-100 border-gray-300 font-bold">
-                      <div className="grid grid-cols-4">
-                        <div className="col-span-2">Nama Akun</div>
-                        <div>Tanggal</div>
-                        <div className="text-center">Jam</div>
-                      </div>
+            <div className="w-full p-5">
+              <div className="text-xl font-bold text-atlasian-blue-dark mb-5">
+                Download History
+              </div>
+              <div className="flex pl-3 text-sm font-semibold text-atlasian-blue-dark items-center underline">
+                <DocumentIcon />
+                <span className="ml-2">{selectedItem.attachment}</span>
+              </div>
+              <div className="leading-3">
+                <>
+                  <div className="mt-2 px-6 py-3 border-b-[1px] hover:bg-gray-100 border-gray-300 font-bold">
+                    <div className="grid grid-cols-4">
+                      <div className="col-span-2">Nama Akun</div>
+                      <div>Tanggal</div>
+                      <div className="text-center">Jam</div>
                     </div>
+                  </div>
 
-                    {histories
-                      .filter((items) => items.id == selectedItem.id)
-                      .map((history) => {
-                        return history.data.map((content, key) => {
-                          return (
-                            <div
-                              className="px-6 py-5 border-b-[1px] border-gray-300 hover:bg-gray-100"
-                              key={key}
-                            >
-                              <div className="grid grid-cols-4">
-                                <div className="col-span-2 my-auto">
-                                  {content.account ? content.account : ""}
-                                </div>
-                                <div className="my-auto">
-                                  {content.date ? content.date : ""}
-                                </div>
-                                <div className="text-center my-auto">
-                                  {content.time ? content.time : ""}
-                                </div>
+                  {histories
+                    .filter((items) => items.id == selectedItem.id)
+                    .map((history) => {
+                      return history.data.map((content, key) => {
+                        return (
+                          <div
+                            className="px-6 py-5 border-b-[1px] border-gray-300 hover:bg-gray-100"
+                            key={key}
+                          >
+                            <div className="grid grid-cols-4">
+                              <div className="col-span-2 my-auto">
+                                {content.account ? content.account : ""}
+                              </div>
+                              <div className="my-auto">
+                                {content.date ? content.date : ""}
+                              </div>
+                              <div className="text-center my-auto">
+                                {content.time ? content.time : ""}
                               </div>
                             </div>
-                          );
-                        });
-                      })}
-                  </>
-                </div>
+                          </div>
+                        );
+                      });
+                    })}
+                </>
               </div>
             </div>
           </Modal>

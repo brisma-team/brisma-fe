@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MainLayout } from "@/layouts";
 import { Breadcrumbs, Card, Modal } from "@/components/atoms";
 import Button from "@atlaskit/button";
@@ -71,6 +71,8 @@ const index = ({ data = approvalData }) => {
   const id = useRouter().query.id;
   const [showModal, setShowModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
+  const [filterId, setFilterId] = useState("");
+  const [filterName, setFilterName] = useState("");
   const [selectedItem, setSelectedItem] = useState({
     id: 0,
     document_name: "No Document",
@@ -90,13 +92,14 @@ const index = ({ data = approvalData }) => {
     setShowModal(true);
   };
 
-  // const handlePreviewDocs = (id) => {
+  useEffect(() => {
+    const delay = 3000;
+    const debounce = setTimeout(() => {
+      console.log("hitting api");
+    }, delay);
+    return () => clearTimeout(debounce);
+  }, [filterId, filterName]);
 
-  // }
-
-  // const handleDownload = (id) => {
-
-  // }
   return (
     <MainLayout>
       <div className="px-5">
@@ -120,13 +123,14 @@ const index = ({ data = approvalData }) => {
           </Button>
         </div>
         {showFilter && (
-          <div className="flex justify-between">
+          <div className="flex justify-between w-96">
             <Card>
-              <div className="flex m-2 w-96">
+              <div className="flex p-2">
                 <div className="w-1/2">
                   <Textfield
-                    placeholder="ID Project"
-                    className="mr-3"
+                    placeholder="ID Projek"
+                    className="mr-1"
+                    onChange={(e) => setFilterId(e.target.value)}
                     elemAfterInput={
                       <button className="justify-center">
                         <IconClose size="large" />
@@ -137,7 +141,8 @@ const index = ({ data = approvalData }) => {
                 <div className="w-1/2">
                   <Textfield
                     placeholder="Nama Dokumen"
-                    className="mr-3"
+                    className="ml-1"
+                    onChange={(e) => setFilterName(e.target.value)}
                     elemAfterInput={
                       <button className="justify-center">
                         <IconClose size="large" />
@@ -145,26 +150,7 @@ const index = ({ data = approvalData }) => {
                     }
                   />
                 </div>
-                {/* <div className="w-1/2">
-                  <Select options={[]} placeholder="Status Document" />
-                </div> */}
               </div>
-              {/* <div className="flex m-2 w-96">
-                <div className="w-1/2">
-                  <Textfield
-                    placeholder="Nama Proyek"
-                    className="mr-3"
-                    elemAfterInput={
-                      <button className="justify-center">
-                        <IconClose size="large" />
-                      </button>
-                    }
-                  />
-                </div>
-                <div className="w-1/2">
-                  <Select options={[]} placeholder="Status Persetujuan" />
-                </div>
-              </div> */}
             </Card>
           </div>
         )}
@@ -175,8 +161,8 @@ const index = ({ data = approvalData }) => {
             showModal={showModal}
             onClickOutside={() => setShowModal(false)}
           >
-            <div>
-              <div className="w-full p-5">
+            <>
+              <div className="w-full p-5 ">
                 <div className="text-xl font-bold text-atlasian-blue-dark mb-5">
                   Download History
                 </div>
@@ -221,7 +207,7 @@ const index = ({ data = approvalData }) => {
                   </>
                 </div>
               </div>
-            </div>
+            </>
           </Modal>
         )}
         {/* End Modal */}

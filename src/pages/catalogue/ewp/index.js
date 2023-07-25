@@ -101,13 +101,12 @@ const index = ({ data = approvalData }) => {
           </Button>
         </div>
         {showFilter && (
-          <div className="flex justify-between transition delay-300 duration-300 ease-in">
+          <div className="flex justify-between w-96">
             <Card>
-              <div className="flex m-2 w-96">
-                <div className="w-1/2">
+              <div className="flex p-2">
+                <div className="w-1/2 mr-1">
                   <Textfield
                     placeholder="ID Proyek"
-                    className="mr-3"
                     elemAfterInput={
                       <button className="justify-center">
                         <IconClose size="large" />
@@ -115,15 +114,14 @@ const index = ({ data = approvalData }) => {
                     }
                   />
                 </div>
-                <div className="w-1/2">
-                  <Select options={[]} placeholder="Status Document" />
+                <div className="w-1/2 ml-1">
+                  <Select options={[]} placeholder="Status Dokumen" />
                 </div>
               </div>
-              <div className="flex m-2 w-96">
-                <div className="w-1/2">
+              <div className="flex p-2">
+                <div className="w-1/2 mr-1">
                   <Textfield
                     placeholder="Nama Proyek"
-                    className="mr-3"
                     elemAfterInput={
                       <button className="justify-center">
                         <IconClose size="large" />
@@ -131,7 +129,7 @@ const index = ({ data = approvalData }) => {
                     }
                   />
                 </div>
-                <div className="w-1/2">
+                <div className="w-1/2 ml-1">
                   <Select options={[]} placeholder="Status Persetujuan" />
                 </div>
               </div>
@@ -201,7 +199,10 @@ const index = ({ data = approvalData }) => {
                           </div>
                           <div className="flex justify-between w-16 mx-auto">
                             <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 m-auto active:bg-slate-100">
-                              <Link href={"/catalogue/ewp/" + item.id}>
+                              <Link
+                                href={"/catalogue/ewp/" + item.id}
+                                prefetch={true}
+                              >
                                 <Button
                                   shouldFitContainer
                                   iconBefore={

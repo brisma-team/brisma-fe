@@ -88,11 +88,11 @@ const index = ({ data = approvalData }) => {
     setSelectedItem(item);
     setShowModal(true);
   };
-  const handlePreviewDocs = () => {
-    setShowPreview(true);
-    setShowHistory(false);
-    setShowModal(true);
-  };
+  // const handlePreviewDocs = () => {
+  //   setShowPreview(true);
+  //   setShowHistory(false);
+  //   setShowModal(true);
+  // };
 
   // const handleDownload = (id) => {
 
@@ -121,13 +121,12 @@ const index = ({ data = approvalData }) => {
           </Button>
         </div>
         {showFilter && (
-          <div className="flex justify-between">
+          <div className="flex justify-between w-96">
             <Card>
-              <div className="flex m-2 w-96">
-                <div className="w-1/2">
+              <div className="flex p-2">
+                <div className="w-1/2 mr-1">
                   <Textfield
                     placeholder="ID Proyek"
-                    className="mr-3"
                     elemAfterInput={
                       <button className="justify-center">
                         <IconClose size="large" />
@@ -135,15 +134,14 @@ const index = ({ data = approvalData }) => {
                     }
                   />
                 </div>
-                <div className="w-1/2">
+                <div className="w-1/2 ml-1">
                   <Select options={[]} placeholder="Status Document" />
                 </div>
               </div>
-              <div className="flex m-2 w-96">
-                <div className="w-1/2">
+              <div className="flex p-2">
+                <div className="w-1/2 mr-1">
                   <Textfield
                     placeholder="Nama Proyek"
-                    className="mr-3"
                     elemAfterInput={
                       <button className="justify-center">
                         <IconClose size="large" />
@@ -151,7 +149,7 @@ const index = ({ data = approvalData }) => {
                     }
                   />
                 </div>
-                <div className="w-1/2">
+                <div className="w-1/2 ml-1">
                   <Select options={[]} placeholder="Status Persetujuan" />
                 </div>
               </div>
@@ -343,7 +341,7 @@ const index = ({ data = approvalData }) => {
                                 <Button
                                   shouldFitContainer
                                   appearance="primary"
-                                  onClick={() => handlePreviewDocs(key)}
+                                  // onClick={() => handlePreviewDocs(key)}
                                 >
                                   Preview
                                 </Button>
