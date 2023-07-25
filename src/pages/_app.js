@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import "@/styles/ckeditor.css";
 import "@atlaskit/css-reset";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-virtualized/styles.css";

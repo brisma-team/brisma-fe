@@ -8,8 +8,6 @@ import ImageField from "./Image";
 import RoleLabel from "./RoleLabel";
 import CardLanding from "./CardLanding";
 import DropdownFilter from "./DropdownFilter";
-<<<<<<< Updated upstream
-=======
 import Modal from "./Modal";
 import PageTitle from "./PageTitle";
 import TextInput from "./TextInput";
@@ -24,7 +22,6 @@ import DatepickerField from "./Datepicker";
 import ReactSelect from "./ReactSelect";
 import ErrorValidation from "./ErrorValidation";
 import DivButton from "./DivButton";
->>>>>>> Stashed changes
 
 export {
   AvatarDefaultExample,
@@ -37,8 +34,6 @@ export {
   RoleLabel,
   CardLanding,
   DropdownFilter,
-<<<<<<< Updated upstream
-=======
   Modal,
   PageTitle,
   TextInput,
@@ -53,5 +48,4 @@ export {
   ReactSelect,
   ErrorValidation,
   DivButton,
->>>>>>> Stashed changes
 };

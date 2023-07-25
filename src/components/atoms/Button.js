@@ -33,6 +33,7 @@ const ButtonField = ({
     <Button
       href={url && url}
       iconBefore={icon}
+      iconAfter={iconAfter}
       shouldFitContainer
       onClick={handler}
       isDisabled={disabled}
