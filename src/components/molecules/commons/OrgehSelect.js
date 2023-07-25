@@ -1,9 +1,9 @@
-import usePekerja from "@/data/usePekerja";
+import useOrgeh from "@/data/useOrgeh";
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import { ReactSelect } from "@/components/atoms";
 
-const PekerjaSelect = ({
+const OrgehSelect = ({
   control,
   handleChange,
   handleClick,
@@ -13,25 +13,25 @@ const PekerjaSelect = ({
 }) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState("");
-  const [params, setParams] = useState("");
-  const { pekerja, pekerjaMutate } = usePekerja(params, "skai");
+  const [keyword, setKeyword] = useState("");
+  const { orgeh, orgehMutate } = useOrgeh(keyword);
 
   useEffect(() => {
-    const mappedPekerja = pekerja?.data?.map((row) => {
+    const mappedOrgeh = orgeh?.data?.map((row) => {
       return {
         ...row,
-        label: `${row?.pn} - ${row?.name}`,
-        value: { pn: row?.pn, name: row?.name, jabatan: row?.jabatan },
+        label: `${row?.child} - ${row?.my_name}`,
+        value: { orgeh_kode: row?.child, orgeh_name: row?.my_name },
       };
     });
-    setOptions(mappedPekerja);
-  }, [pekerja]);
+    setOptions(mappedOrgeh);
+  }, [orgeh]);
 
   useEffect(() => {
     if (value > 2) {
       const handleSearch = () => {
-        setParams(value);
-        pekerjaMutate;
+        setKeyword(value);
+        orgehMutate;
       };
       const debouncedSearch = _.debounce(handleSearch, 400);
       debouncedSearch();
@@ -65,4 +65,4 @@ const PekerjaSelect = ({
   );
 };
 
-export default PekerjaSelect;
+export default OrgehSelect;

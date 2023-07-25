@@ -1,9 +1,9 @@
-import usePekerja from "@/data/usePekerja";
+import useBranch from "@/data/useBranch";
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import { ReactSelect } from "@/components/atoms";
 
-const PekerjaSelect = ({
+const BranchSelect = ({
   control,
   handleChange,
   handleClick,
@@ -13,25 +13,25 @@ const PekerjaSelect = ({
 }) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState("");
-  const [params, setParams] = useState("");
-  const { pekerja, pekerjaMutate } = usePekerja(params, "skai");
+  const [keyword, setKeyword] = useState("");
+  const { branch, branchMutate } = useBranch(keyword);
 
   useEffect(() => {
-    const mappedPekerja = pekerja?.data?.map((row) => {
+    const mappedBranch = branch?.data?.map((row) => {
       return {
         ...row,
-        label: `${row?.pn} - ${row?.name}`,
-        value: { pn: row?.pn, name: row?.name, jabatan: row?.jabatan },
+        label: `${row?.branch} - ${row?.brdesc}`,
+        value: { branch_name: row?.branch, branch_kode: row?.brdesc },
       };
     });
-    setOptions(mappedPekerja);
-  }, [pekerja]);
+    setOptions(mappedBranch);
+  }, [branch]);
 
   useEffect(() => {
     if (value > 2) {
       const handleSearch = () => {
-        setParams(value);
-        pekerjaMutate;
+        setKeyword(value);
+        branchMutate;
       };
       const debouncedSearch = _.debounce(handleSearch, 400);
       debouncedSearch();
@@ -65,4 +65,4 @@ const PekerjaSelect = ({
   );
 };
 
-export default PekerjaSelect;
+export default BranchSelect;

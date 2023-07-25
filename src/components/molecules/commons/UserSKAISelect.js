@@ -1,27 +1,21 @@
 import usePekerja from "@/data/usePekerja";
 import React, { useEffect, useState } from "react";
+import Select from "react-select";
+import { Controller } from "react-hook-form";
 import _ from "lodash";
-import { ReactSelect } from "@/components/atoms";
 
-const PekerjaSelect = ({
-  control,
-  handleChange,
-  handleClick,
-  isSearchable,
-  placeholder,
-  selectedValue,
-}) => {
+const UserSKAISelect = ({ control, change }) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState("");
   const [params, setParams] = useState("");
-  const { pekerja, pekerjaMutate } = usePekerja(params, "skai");
+  const { pekerja, pekerjaMutate } = usePekerja(params);
 
   useEffect(() => {
     const mappedPekerja = pekerja?.data?.map((row) => {
       return {
         ...row,
-        label: `${row?.pn} - ${row?.name}`,
-        value: { pn: row?.pn, name: row?.name, jabatan: row?.jabatan },
+        label: `${row?.pn} - ${row.name}`,
+        value: row?.pn,
       };
     });
     setOptions(mappedPekerja);
@@ -38,8 +32,6 @@ const PekerjaSelect = ({
       return () => {
         debouncedSearch.cancel();
       };
-    } else {
-      setOptions([]);
     }
   }, [value]);
 
@@ -52,17 +44,24 @@ const PekerjaSelect = ({
   }
 
   return (
-    <ReactSelect
+    <Controller
       control={control}
-      options={options}
-      handleChange={handleChange}
-      handleInputChange={handleInputChange}
-      handleClick={handleClick}
-      isSearchable={isSearchable}
-      placeholder={placeholder}
-      value={selectedValue}
+      name="pn"
+      render={({ field: { onChange, onBlur, value } }) => (
+        <Select
+          options={options}
+          onChange={(e) => {
+            onChange(e);
+            change(e);
+          }}
+          onBlur={onBlur}
+          value={value}
+          onInputChange={(e) => handleInputChange(e)}
+          isClearable
+        />
+      )}
     />
   );
 };
 
-export default PekerjaSelect;
+export default UserSKAISelect;

@@ -13,21 +13,23 @@ const CardLanding = ({ title, description, status, url }) => {
             {description ? description : "No description"}
           </p>
         </div>
-        <div
-          className={`rounded-b-[10px] px-6 pt-4 pb-5 text-center ${
-            status == "success"
-              ? "bg-[#E0FAD6] text-black"
+        {status && (
+          <div
+            className={`rounded-b-lg text-center pb-3 pt-4 ${
+              status == "success"
+                ? "bg-[#E0FAD6] text-black"
+                : status == "failed"
+                ? "bg-[#FA7F7F] text-white"
+                : ""
+            } `}
+          >
+            {status == "success"
+              ? "Sudah Dikerjakan"
               : status == "failed"
-              ? "bg-[#FA7F7F] text-white"
-              : ""
-          } `}
-        >
-          {status == "success"
-            ? "Sudah Dikerjakan"
-            : status == "failed"
-            ? "Belum Dikerjakan"
-            : ""}
-        </div>
+              ? "Belum Dikerjakan"
+              : ""}
+          </div>
+        )}
       </Link>
     </div>
   );
