@@ -8,6 +8,7 @@ import ImageField from "./Image";
 import RoleLabel from "./RoleLabel";
 import CardLanding from "./CardLanding";
 import DropdownFilter from "./DropdownFilter";
+<<<<<<< Updated upstream
 import Modal from "./Modal";
 import PageTitle from "./PageTitle";
 import TextInput from "./TextInput";
@@ -16,6 +17,8 @@ import Select from "./Select";
 import LinkIcon from "./LinkIcon";
 import InlineEditText from "./InlineEditText";
 import TextAreaField from "@atlaskit/textarea";
+=======
+>>>>>>> Stashed changes
 
 export {
   AvatarDefaultExample,
@@ -28,6 +31,7 @@ export {
   RoleLabel,
   CardLanding,
   DropdownFilter,
+<<<<<<< Updated upstream
   Modal,
   PageTitle,
   TextInput,
@@ -36,4 +40,6 @@ export {
   LinkIcon,
   InlineEditText,
   TextAreaField,
+=======
+>>>>>>> Stashed changes
 };

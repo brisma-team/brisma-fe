@@ -31,7 +31,10 @@
     "@atlaskit/progress-tracker": "^8.5.2",
     "@atlaskit/select": "^16.5.4",
     "@atlaskit/side-navigation": "^1.8.6",
+<<<<<<< Updated upstream
     "@atlaskit/textarea": "^4.7.3",
+=======
+>>>>>>> Stashed changes
     "@atlaskit/textfield": "^5.5.2",
     "@atlaskit/theme": "^12.5.4",
     "@atlaskit/tokens": "^1.5.2",

@@ -1,5 +1,6 @@
 import Button from "@atlaskit/button";
 
+<<<<<<< Updated upstream
 const ButtonField = ({
   url,
   icon,
@@ -28,6 +29,9 @@ const ButtonField = ({
       break;
   }
 
+=======
+const ButtonField = ({ url, icon, text, handler }) => {
+>>>>>>> Stashed changes
   return (
     <Button
       href={url ? url : "#"}
@@ -35,6 +39,7 @@ const ButtonField = ({
       iconAfter={iconAfter}
       shouldFitContainer
       onClick={handler}
+<<<<<<< Updated upstream
       isDisabled={disabled}
     >
       <p
@@ -44,6 +49,10 @@ const ButtonField = ({
       >
         {text ? text : "No Text"}
       </p>
+=======
+    >
+      <p className="text-white flex items-center">{text ? text : "No Text"}</p>
+>>>>>>> Stashed changes
     </Button>
   );
 };
