@@ -1,20 +1,17 @@
 import userSKAIReducer from "./slices/userSKAISlice";
-<<<<<<< Updated upstream
 import jadwalAuditReducer from "./slices/jadwalAuditSlice";
-=======
->>>>>>> Stashed changes
+import projectOverviewReducer from "./slices/pat/projectOverviewSlice";
+import statusPatReducer from "./slices/pat/statusPatSlice";
+import auditTeamReducer from "./slices/pat/auditTeamSlice";
 
 import { configureStore } from "@reduxjs/toolkit";
 
 export const store = configureStore({
-<<<<<<< Updated upstream
   reducer: {
     userSKAI: userSKAIReducer,
     jadwalAudit: jadwalAuditReducer,
+    projectOverview: projectOverviewReducer,
+    statusPat: statusPatReducer,
+    auditTeam: auditTeamReducer,
   },
-=======
-	reducer: {
-		userSKAI: userSKAIReducer,
-	},
->>>>>>> Stashed changes
 });

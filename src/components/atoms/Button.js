@@ -1,6 +1,5 @@
 import Button from "@atlaskit/button";
 
-<<<<<<< Updated upstream
 const ButtonField = ({
   url,
   icon,
@@ -9,6 +8,7 @@ const ButtonField = ({
   iconAfter,
   textColor,
   disabled,
+  type,
 }) => {
   let txtColor;
   switch (textColor) {
@@ -29,30 +29,23 @@ const ButtonField = ({
       break;
   }
 
-=======
-const ButtonField = ({ url, icon, text, handler }) => {
->>>>>>> Stashed changes
   return (
     <Button
-      href={url ? url : "#"}
+      href={url && url}
       iconBefore={icon}
       iconAfter={iconAfter}
       shouldFitContainer
       onClick={handler}
-<<<<<<< Updated upstream
       isDisabled={disabled}
+      type={type}
     >
       <p
         className={`${
           textColor ? txtColor : `text-white`
         } flex items-center justify-center`}
       >
-        {text ? text : "No Text"}
+        {text && text}
       </p>
-=======
-    >
-      <p className="text-white flex items-center">{text ? text : "No Text"}</p>
->>>>>>> Stashed changes
     </Button>
   );
 };

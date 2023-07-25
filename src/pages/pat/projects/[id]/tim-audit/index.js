@@ -34,7 +34,6 @@ const index = () => {
   const baseUrl = `/pat/projects/${id}`;
 
   const statusPatState = useSelector((state) => state.statusPat.searchParam);
-  console.log("SET PARAMS ", setParams);
   const [params, setParams] = useState({
     id,
     tim_id: null,

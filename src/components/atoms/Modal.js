@@ -31,14 +31,14 @@ const Modal = ({ showModal, onClickOutside, header, footer, children }) => {
             }}
             ref={ref}
           >
-            <div>
+            <div className="flex flex-col justify-center">
               {header && (
-                <div className="relative p-4 mx-auto bg-white rounded-md shadow-lg mb-3 w-[31rem]">
+                <div className="relative p-4 mx-auto bg-white rounded-md shadow-lg mb-3">
                   {header}
                 </div>
               )}
               <div
-                className={`relative w-full p-4 mx-auto bg-white rounded-md shadow-lg max-h-[31rem] overflow-y-scroll`}
+                className={`relative w-full p-4 mx-auto bg-white rounded-md shadow-lg overflow-y-scroll`}
               >
                 {children}
               </div>

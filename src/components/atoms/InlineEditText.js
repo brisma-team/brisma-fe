@@ -26,7 +26,7 @@ const readViewContainerStyles = xcss({
   wordBreak: "break-word",
 });
 
-const InlineEditCustomTextareaExample = () => {
+const InlineEditField = () => {
   const [editValue, setEditValue] = useState("");
 
   return (
@@ -45,4 +45,4 @@ const InlineEditCustomTextareaExample = () => {
   );
 };
 
-export default InlineEditCustomTextareaExample;
+export default InlineEditField;
