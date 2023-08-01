@@ -18,7 +18,8 @@ const SupersetDashboard = () => {
       if (dashboard) {
         const guestToken = await getToken();
         const config = {
-          id: "c7f1e3c8-2bb4-4424-814a-4be727c56a42",
+          // id: "c7f1e3c8-2bb4-4424-814a-4be727c56a42",
+          id: "93b9cf71-481d-423a-8867-2709a861e6d3",
           supersetDomain: process.env.NEXT_PUBLIC_API_URL_SUPERSET,
           mountPoint: dashboard,
           fetchGuestToken: () => guestToken.token,
@@ -28,7 +29,7 @@ const SupersetDashboard = () => {
             hideTab: true,
           },
         };
-        if (guestToken) embedDashboard(config);
+        if (guestToken) await embedDashboard(config);
       }
     };
 
@@ -36,7 +37,7 @@ const SupersetDashboard = () => {
   }, []);
 
   return (
-    <div>
+    <div className="superset">
       <div id="dashboard" />
     </div>
   );
