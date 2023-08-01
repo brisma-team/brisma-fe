@@ -1,11 +1,13 @@
 
 .progress-tracker-container {
-    width: 5000px !important; /* Ubah ukuran lebar sesuai kebutuhan Anda */
-  }
-  :root{
-    --ck-border-radius: 10px;
+  width: 5000px !important; /* Ubah ukuran lebar sesuai kebutuhan Anda */
+}
+:root{
+  --ck-border-radius: 10px;
 }
 .ck-content {
-    min-height: 650px !important;
-    min-width: 595px !important;
+  min-height: 650px !important;
+  max-height: 650px !important;
+  width: 210mm;
+  overflow-y: scroll;
 }

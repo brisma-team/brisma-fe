@@ -8,6 +8,7 @@ const ButtonField = ({
   iconAfter,
   textColor,
   disabled,
+  type,
 }) => {
   let txtColor;
   switch (textColor) {
@@ -30,19 +31,20 @@ const ButtonField = ({
 
   return (
     <Button
-      href={url ? url : "#"}
+      href={url && url}
       iconBefore={icon}
       iconAfter={iconAfter}
       shouldFitContainer
       onClick={handler}
       isDisabled={disabled}
+      type={type}
     >
       <p
         className={`${
           textColor ? txtColor : `text-white`
         } flex items-center justify-center`}
       >
-        {text ? text : "No Text"}
+        {text && text}
       </p>
     </Button>
   );

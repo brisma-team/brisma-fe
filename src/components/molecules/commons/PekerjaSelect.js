@@ -1,67 +1,66 @@
 import usePekerja from "@/data/usePekerja";
-import { setSelectedUser } from "@/slices/userSKAISlice";
-
 import React, { useEffect, useState } from "react";
-import Select from "react-select";
-import { Controller } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import _ from "lodash";
+import { ReactSelect } from "@/components/atoms";
 
-const PekerjaSelect = ({ control, type }) => {
-  const dispatch = useDispatch();
-
-  const [pn, setPN] = useState();
+const PekerjaSelect = ({
+  control,
+  handleChange,
+  handleClick,
+  isSearchable,
+  placeholder,
+  selectedValue,
+}) => {
   const [options, setOptions] = useState([]);
-
-  const { pekerja } = usePekerja(pn);
+  const [value, setValue] = useState("");
+  const [params, setParams] = useState("");
+  const { pekerja, pekerjaMutate } = usePekerja(params, "skai");
 
   useEffect(() => {
-    if (pekerja) {
-      const mappedPekerja = pekerja.data.map((row) => {
-        return {
-          ...row,
-          label: row.pn,
-          value: row.pn,
-        };
-      });
-
-      setOptions(mappedPekerja);
-    }
+    const mappedPekerja = pekerja?.data?.map((row) => {
+      return {
+        ...row,
+        label: `${row?.pn} - ${row?.name}`,
+        value: { pn: row?.pn, name: row?.name, jabatan: row?.jabatan },
+      };
+    });
+    setOptions(mappedPekerja);
   }, [pekerja]);
 
-  function handleInputChange(e) {
-    let newPN;
-
-    if (e.length > 0) {
-      newPN = e;
+  useEffect(() => {
+    if (value > 2) {
+      const handleSearch = () => {
+        setParams(value);
+        pekerjaMutate;
+      };
+      const debouncedSearch = _.debounce(handleSearch, 400);
+      debouncedSearch();
+      return () => {
+        debouncedSearch.cancel();
+      };
     } else {
-      newPN = undefined;
+      setOptions([]);
     }
+  }, [value]);
 
-    setPN(newPN);
-  }
-
-  function handleChange(e) {
-    dispatch(setSelectedUser(e));
+  function handleInputChange(e) {
+    if (e.length > 2) {
+      setValue(e);
+    } else {
+      setOptions([]);
+    }
   }
 
   return (
-    <Controller
+    <ReactSelect
       control={control}
-      name="pn"
-      render={({ field: { onChange, onBlur, value } }) => (
-        <Select
-          options={options}
-          onChange={(e) => {
-            onChange(e);
-            handleChange(e);
-          }}
-          onBlur={onBlur}
-          value={value}
-          onInputChange={(e) => handleInputChange(e)}
-          isDisabled={type === "update" ? true : false}
-          isClearable
-        />
-      )}
+      options={options}
+      handleChange={handleChange}
+      handleInputChange={handleInputChange}
+      handleClick={handleClick}
+      isSearchable={isSearchable}
+      placeholder={placeholder}
+      value={selectedValue}
     />
   );
 };

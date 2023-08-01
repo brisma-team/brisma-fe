@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import { setCookie, hasCookie, getCookie, deleteCookie } from "cookies-next";
 import axios from "axios";
 import Image from "next/image";
-import BRISMAVertical from "../../../../public/images/BRISMA-vertical.png";
+import { ImageBrismaVertical } from "@/helpers/imagesUrl";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -93,7 +93,7 @@ const LoginForm = () => {
         <div className="flex-col mb-10">
           <div className="w-full justify-center flex">
             <div className="w-64">
-              <Image src={BRISMAVertical} />
+              <Image src={ImageBrismaVertical} />
             </div>
           </div>
           <div className="text-center">

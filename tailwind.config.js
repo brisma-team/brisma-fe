@@ -9,6 +9,9 @@ module.exports = {
       fontFamily: {
         body: ["Segoe UI"],
       },
+      letterSpacing: {
+        "0125": "0.0125rem",
+      },
       colors: {
         primary: "#3C64B1", // Ganti dengan warna primer yang diinginkan
         secondary: "#00ff00", // Ganti dengan warna sekunder yang diinginkan
