@@ -11,6 +11,10 @@ const ReactSelect = ({
   isSearchable,
   placeholder,
   value,
+  customIcon,
+  isDisabled,
+  handleMenuOpen,
+  handleMenuClose,
 }) => {
   const DropdownIndicator = (props) => {
     return (
@@ -35,8 +39,11 @@ const ReactSelect = ({
           onInputChange={handleInputChange}
           isSearchable={isSearchable}
           placeholder={placeholder}
-          components={{ DropdownIndicator }}
+          components={customIcon && { DropdownIndicator }}
           onIconCLick={handleClick}
+          isDisabled={isDisabled}
+          onMenuOpen={handleMenuOpen}
+          onMenuClose={handleMenuClose}
         />
       )}
     />

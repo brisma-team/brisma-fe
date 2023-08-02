@@ -10,6 +10,9 @@ const BranchSelect = ({
   isSearchable,
   placeholder,
   selectedValue,
+  customIcon,
+  fieldsProps,
+  ref,
 }) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState("");
@@ -21,7 +24,7 @@ const BranchSelect = ({
       return {
         ...row,
         label: `${row?.branch} - ${row?.brdesc}`,
-        value: { branch_name: row?.branch, branch_kode: row?.brdesc },
+        value: { branch_name: row?.brdesc, branch_kode: row?.branch },
       };
     });
     setOptions(mappedBranch);
@@ -61,6 +64,9 @@ const BranchSelect = ({
       isSearchable={isSearchable}
       placeholder={placeholder}
       value={selectedValue}
+      customIcon={customIcon}
+      fieldsProps={fieldsProps}
+      ref={ref}
     />
   );
 };

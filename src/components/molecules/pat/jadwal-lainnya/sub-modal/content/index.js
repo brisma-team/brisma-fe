@@ -1,9 +1,5 @@
-import SubModalBiayaPerjalananDinas from "./anggaran/SubModalBiayaPerjalananDinas";
-import SubModalBiayaSelamaKegiatan from "./anggaran/SubModalBiayaSelamaKegiatan";
-import SubModalUnitKerja from "./objek-kegiatan/SubModalUnitKerja";
+import SubModalActivityExpense from "./anggaran/SubModalActivityExpense";
+import SubModalTravelExpense from "./anggaran/SubModalTravelExpense";
+import SubModalWorkUnit from "./objek-kegiatan/SubModalWorkUnit";
 
-export {
-  SubModalBiayaPerjalananDinas,
-  SubModalBiayaSelamaKegiatan,
-  SubModalUnitKerja,
-};
+export { SubModalTravelExpense, SubModalActivityExpense, SubModalWorkUnit };

@@ -1,3 +1,4 @@
-import ModalAddActivitySchedule from "./ModalAddActivitySchedule";
+import ModalActivitySchedule from "./ModalActivitySchedule";
+import ModalActivityScheduleDetail from "./ModalActivityScheduleDetail";
 
-export { ModalAddActivitySchedule };
+export { ModalActivitySchedule, ModalActivityScheduleDetail };

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ButtonField, Card, DivButton } from "@/components/atoms";
+import { Card } from "@/components/atoms";
 import { IconEdit, IconTrash } from "@/components/icons";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -68,7 +68,6 @@ const CardAuditTeam = ({
   tim_id,
   pat_id,
   header_title,
-  triwulan_title,
   maker,
   created_at,
   manajer_audit,
@@ -180,11 +179,6 @@ const CardAuditTeam = ({
               </div>
             )}
           </div>
-          {triwulan_title && (
-            <div className="text-xl font-bold text-atlasian-blue-dark">
-              {triwulan_title}
-            </div>
-          )}
 
           <div className="flex flex-wrap">
             <CardBody title={"Maker"} text={maker} width={"w-2/5"} />

@@ -1,18 +1,15 @@
 import { useState, useEffect } from "react";
 import { CardBodyNavigation } from "@/components/molecules/commons";
-import {
-  SubModalBiayaPerjalananDinas,
-  SubModalBiayaSelamaKegiatan,
-} from "./content";
+import { SubModalActivityExpense, SubModalTravelExpense } from "./content";
 
-const ModalBodyAnggaran = ({ setCurrentModalStage }) => {
+const ModalBodyBudget = ({ setCurrentModalStage, typeModal }) => {
   useEffect(() => {
     setCurrentModalStage(3);
   }, []);
   const [currentStage, setCurrentStage] = useState(1);
 
   return (
-    <div className="-mx-4 w-[60rem]">
+    <div className="-mx-4 w-[60.5rem]">
       <CardBodyNavigation
         currentStage={currentStage}
         setCurrentStage={setCurrentStage}
@@ -21,10 +18,10 @@ const ModalBodyAnggaran = ({ setCurrentModalStage }) => {
           { stageNumber: 2, stageTitle: "Biaya Selama Kegiatan" },
         ]}
       />
-      {currentStage === 1 && <SubModalBiayaPerjalananDinas />}
-      {currentStage === 2 && <SubModalBiayaSelamaKegiatan />}
+      {currentStage === 1 && <SubModalTravelExpense typeModal={typeModal} />}
+      {currentStage === 2 && <SubModalActivityExpense typeModal={typeModal} />}
     </div>
   );
 };
 
-export default ModalBodyAnggaran;
+export default ModalBodyBudget;

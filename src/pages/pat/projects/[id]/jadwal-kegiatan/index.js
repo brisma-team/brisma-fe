@@ -11,15 +11,17 @@ import {
   CardFilterActivitySchedule,
 } from "@/components/molecules/pat";
 import { useState } from "react";
-import { ModalAddActivitySchedule } from "@/components/molecules/pat/jadwal-kegiatan";
+import { ModalActivitySchedule } from "@/components/molecules/pat/jadwal-kegiatan";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { useActivitySchedule, useStatusPat } from "@/data/pat";
+import { convertDate } from "@/helpers";
 
-const baseUrl = "/pat/projects/123";
 const routes = [
   {
-    name: "Latar Belakang",
-    slug: "latar-belakang",
+    name: "Latar Belakang dan Tujuan",
+    slug: "latar-belakang-dan-tujuan",
   },
-  { name: "Tujuan", slug: "tujuan" },
   { name: "Sumber Informasi", slug: "sumber-informasi" },
   { name: "Tim Audit", slug: "tim-audit" },
   { name: "Target Audit", slug: "ringkasan-objek-audit" },
@@ -27,60 +29,65 @@ const routes = [
   { name: "Jadwal Kegiatan", slug: "jadwal-kegiatan" },
 ];
 
-const breadcrumbs = [
-  { name: "Menu", path: "/dashboard" },
-  { name: "PAT", path: "/pat" },
-  { name: "Overview", path: "/pat/projects" },
-  { name: "PAT AIW BANTEN", path: "/pat/projects/123" },
-  { name: "Jadwal Kegiatan", path: "/pat/projects/123/jadwal-kegiatan" },
-];
-
-const id = "1";
-const data = [
-  {
-    type: "konsulting - formal",
-    title: "Percobaan Jadwal Konsulting 2023 BRISMA 2.0 Konsulting",
-    maker: "Annisa Damayana",
-    audit_team: "Tim Audit Percobaan Baru BRISMA",
-    speaker: "12312312 - M. Firly Ismail",
-    audit_period: "24-06-2023 s/d 31-07-2023",
-    budget: "Rp 300.000.000,-",
-    pic: ["123123 - Annisa Dian", "234234 - Dandy", "345345 - Iqbal"],
-    desc: "Jadwal audit ini dibuat dalam rangka mencoba memfasilitasi kebutuhan pelaku audit dalam merencanakan kegiatan audit.",
-    href: `/pat/projects/${id}`,
-  },
-  {
-    type: "lain-lain",
-    title: "Percobaan Jadwal Konsulting 2023 BRISMA 2.0 Konsulting",
-    maker: "Annisa Damayana",
-    audit_team: "Tim Audit Percobaan Baru BRISMA",
-    speaker: "12312312 - M. Firly Ismail",
-    audit_period: "24-06-2023 s/d 31-07-2023",
-    budget: "Rp 300.000.000,-",
-    pic: ["123123 - Annisa Dian", "234234 - Dandy", "345345 - Iqbal"],
-    desc: "Jadwal audit ini dibuat dalam rangka mencoba memfasilitasi kebutuhan pelaku audit dalam merencanakan kegiatan audit.",
-    href: `/pat/projects/${id}`,
-  },
-  {
-    type: "konsulting",
-    title: "Percobaan Jadwal Konsulting 2023 BRISMA 2.0 Konsulting",
-    maker: "Annisa Damayana",
-    audit_team: "Tim Audit Percobaan Baru BRISMA",
-    speaker: "12312312 - M. Firly Ismail",
-    audit_period: "24-06-2023 s/d 31-07-2023",
-    budget: "Rp 300.000.000,-",
-    pic: ["123123 - Annisa Dian", "234234 - Dandy", "345345 - Iqbal"],
-    desc: "Jadwal audit ini dibuat dalam rangka mencoba memfasilitasi kebutuhan pelaku audit dalam merencanakan kegiatan audit.",
-    href: `/pat/projects/${id}`,
-  },
-];
-
 const index = () => {
+  const { id } = useRouter().query;
+  const baseUrl = `/pat/projects/${id}`;
+  const { statusPat } = useStatusPat(id);
+  const [content, setContent] = useState(null);
+  const breadcrumbs = [
+    { name: "Menu", path: "/dashboard" },
+    { name: "PAT", path: "/pat" },
+    { name: "Overview", path: "/pat/projects" },
+    { name: statusPat?.data?.pat_name, path: `/pat/projects/${id}` },
+    { name: "Jadwal Kegiatan", path: `/pat/projects/${id}/jadwal-kegiatan` },
+  ];
+
   const [showModal, setShowModal] = useState(false);
+  const [showModalDetail, setShowModalDetail] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
+  const { activitySchedule, activityScheduleMutate } = useActivitySchedule(
+    "all",
+    {
+      id,
+    }
+  );
+  const [data, setData] = useState([]);
+  const [typeModal, setTypeModal] = useState(null);
+  const [scheduleId, setScheduleId] = useState(null);
+
+  useEffect(() => {
+    setContent([
+      { title: "Riwayat Addendum", value: statusPat?.data?.riwayat_adendum },
+      { title: "Status Approver", value: statusPat?.data?.status_approver },
+      { title: "Status PAT", value: statusPat?.data?.status_pat },
+    ]);
+  }, [statusPat]);
+
+  useEffect(() => {
+    const mappedData = activitySchedule?.data?.map((v) => {
+      const mappingPIC = v?.ref_penanggung_jawabs?.map((x) => {
+        return `${x?.pn} - ${x?.nama}`;
+      });
+      return {
+        id: v?.id,
+        type: v?.ref_tipe.nama,
+        title: v?.nama,
+        maker: v?.pic_maker_jadwal_sbp.nama,
+        budget: v?.total_anggaran,
+        audit_period: `${convertDate(
+          v?.pelaksanaan_start,
+          "-"
+        )} s/d ${convertDate(v?.pelaksanaan_end, "-")}`,
+        pic: mappingPIC,
+        desc: v?.deskripsi,
+      };
+    });
+
+    setData(mappedData);
+  }, [activitySchedule, activityScheduleMutate]);
 
   return (
-    <PatLandingLayout>
+    <PatLandingLayout data={statusPat} content={content}>
       <div className="pr-44">
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">
@@ -110,9 +117,12 @@ const index = () => {
             >
               Buat Jadwal Kegiatan
             </Button>
-            <ModalAddActivitySchedule
+            <ModalActivitySchedule
               showModal={showModal}
               setShowModal={setShowModal}
+              typeModal={typeModal}
+              mutate={activityScheduleMutate}
+              scheduleId={scheduleId}
             />
           </div>
         </div>
@@ -150,16 +160,21 @@ const index = () => {
               return (
                 <CardActivitySchedule
                   key={i}
+                  jadwal_sbp_id={v.id}
+                  pat_id={id}
                   type={v.type}
                   title={v.title}
                   maker={v.maker}
-                  audit_team={v.audit_team}
-                  speaker={v.speaker}
                   audit_period={v.audit_period}
                   budget={v.budget}
                   pic={v.pic}
                   desc={v.desc}
-                  href={v.href}
+                  setShowModal={setShowModal}
+                  setTypeModal={setTypeModal}
+                  showModalDetail={showModalDetail}
+                  setShowModalDetail={setShowModalDetail}
+                  scheduleId={scheduleId}
+                  setScheduleId={setScheduleId}
                 />
               );
             })}

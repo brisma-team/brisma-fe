@@ -1,8 +1,8 @@
 import {
   InlineEditText,
   LinkIcon,
-  Select,
   ButtonField,
+  ReactSelect,
 } from "@/components/atoms";
 import {
   IconAttachment,
@@ -11,11 +11,98 @@ import {
   IconPlus,
   IconQuestions,
 } from "@/components/icons";
-import { CardTypeCount } from "@/components/molecules/commons";
-
-const total = [1, 2, 1, 1];
+import {
+  CardTypeCount,
+  InlineEditOrgehSelect,
+  InlineEditBranchSelect,
+} from "@/components/molecules/commons";
+import { useDispatch, useSelector } from "react-redux";
+import { setAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useUkerType } from "@/data/reference";
 
 const SubModalUnitKerja = () => {
+  const { control } = useForm();
+  const [showBranch, setShowBranch] = useState(false);
+  const dispatch = useDispatch();
+  const auditScheduleData = useSelector(
+    (state) => state.auditSchedule.auditScheduleData
+  );
+  const { ukerType } = useUkerType("list");
+  const [optionUkerType, setOptionUkerType] = useState([]);
+  const [openTipeUkerIdx, setOpenTipeUkerIdx] = useState(null);
+
+  useEffect(() => {
+    const mapping = ukerType?.data?.map((v) => {
+      return { label: v.name, value: v.kode };
+    });
+    setOptionUkerType(mapping);
+    console.log("UKER TYPE => ", ukerType);
+  }, [ukerType]);
+
+  const handleDeleteUker = (idx) => {
+    const newData = [...auditScheduleData.uker];
+    if (auditScheduleData.uker.length > 1) {
+      newData.splice(idx, 1);
+      dispatch(setAuditScheduleData({ ...auditScheduleData, uker: newData }));
+    }
+  };
+
+  const handleChangeOrgeh = (value, idx) => {
+    const ukerData = [...auditScheduleData.uker];
+    const updatedUker = { ...ukerData[idx] };
+    updatedUker["ref_auditee_orgeh_kode"] = value.orgeh_kode;
+    updatedUker["ref_auditee_orgeh_name"] = value.orgeh_name;
+    ukerData[idx] = updatedUker;
+    const updatedData = {
+      ...auditScheduleData,
+      uker: ukerData,
+    };
+
+    dispatch(setAuditScheduleData(updatedData));
+  };
+
+  const handleChangeTipeUker = (value, idx) => {
+    const ukerData = [...auditScheduleData.uker];
+    const updatedUker = { ...ukerData[idx] };
+    updatedUker["tipe_uker"] = value;
+    ukerData[idx] = updatedUker;
+    const updatedData = {
+      ...auditScheduleData,
+      uker: ukerData,
+    };
+
+    dispatch(setAuditScheduleData(updatedData));
+  };
+
+  const handleAddUker = (value) => {
+    const newData = [...auditScheduleData.uker];
+    newData.push({
+      ref_auditee_orgeh_kode: "",
+      ref_auditee_orgeh_name: "",
+      ref_auditee_branch_kode: value.branch_kode,
+      ref_auditee_branch_name: value.branch_name,
+      tipe_uker: "",
+      attachments: [""],
+    });
+    dispatch(setAuditScheduleData({ ...auditScheduleData, uker: newData }));
+    setShowBranch(false);
+  };
+
+  const handleMenuOpen = (idx) => {
+    setOpenTipeUkerIdx(idx);
+  };
+
+  const handleMenuClose = () => {
+    setOpenTipeUkerIdx(null);
+  };
+
+  const findUkerType = (kode) => {
+    const find = ukerType?.data?.find((v) => v.kode == kode);
+    return { label: find?.name, value: find?.kode };
+  };
+
   return (
     <div>
       <div className="w-full p-4">
@@ -101,7 +188,7 @@ const SubModalUnitKerja = () => {
                 <p>Lampiran</p>
               </div>
             </div>
-            {total.map((v, i) => {
+            {auditScheduleData?.uker?.map((v, i) => {
               return (
                 <div className="flex" key={i}>
                   <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
@@ -109,32 +196,52 @@ const SubModalUnitKerja = () => {
                       href={"#"}
                       color={"red"}
                       icon={<IconCrossCircle />}
+                      handler={() => handleDeleteUker(i)}
                     />
                   </div>
                   <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center justify-center text-justify p-3">
                     <div className="-mb-3 -mx-2 -mt-5 w-full">
-                      <InlineEditText />
+                      <InlineEditText
+                        isDisabled={true}
+                        value={v.ref_auditee_branch_name}
+                        placeholder={v.ref_auditee_branch_name}
+                      />
                     </div>
                   </div>
                   <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center justify-center text-justify p-3">
                     <div className="-mb-3 -mx-2 -mt-5 w-full">
-                      <InlineEditText />
+                      <InlineEditOrgehSelect
+                        placeholder="Select an option"
+                        handleConfirm={(e) => handleChangeOrgeh(e, i)}
+                        control={control}
+                        value={{
+                          label: v.ref_auditee_orgeh_name,
+                          value: {
+                            orgeh_kode: v.ref_auditee_orgeh_kode,
+                            orgeh_name: v.ref_auditee_orgeh_name,
+                          },
+                        }}
+                      />
                     </div>
                   </div>
                   <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[14%] flex items-center px-2 py-3">
-                    <Select
-                      isSearchable={false}
-                      optionValue={[
-                        { label: "RAO", value: "RAO" },
-                        { label: "BO (KC)", value: "BO (KC)" },
-                        { label: "KK", value: "KK" },
-                        { label: "DIVISI", value: "DIVISI" },
-                        { label: "RO (Kanwil)", value: "RO (Kanwil)" },
-                        { label: "KCP", value: "KCP" },
-                        { label: "UNIT", value: "UNIT" },
-                      ]}
-                      style={`w-full`}
-                    />
+                    <div
+                      className={
+                        i == openTipeUkerIdx ? `z-50 absolute` : `w-full`
+                      }
+                    >
+                      <ReactSelect
+                        control={control}
+                        handleChange={(e) => handleChangeTipeUker(e.value, i)}
+                        options={optionUkerType}
+                        value={
+                          v.tipe_uker !== "" ? findUkerType(v.tipe_uker) : ""
+                        }
+                        isSearchable={false}
+                        handleMenuOpen={() => handleMenuOpen(i)}
+                        handleMenuClose={handleMenuClose}
+                      />
+                    </div>
                   </div>
                   <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[10%] flex items-center">
                     <div className="flex w-full justify-center gap-1">
@@ -161,16 +268,28 @@ const SubModalUnitKerja = () => {
               );
             })}
           </div>
-          <div className="w-40 text-sm font-semibold p-2 my-1">
-            <ButtonField
-              iconAfter={
-                <div className="text-atlasian-purple">
-                  <IconPlus size="medium" />
-                </div>
-              }
-              text={"Tambah Uker"}
-              textColor={"purple"}
-            />
+          <div className="flex gap-3 items-center">
+            <div className="w-40 text-sm font-semibold p-2 my-1">
+              <ButtonField
+                iconAfter={
+                  <div className="text-atlasian-purple">
+                    <IconPlus size="medium" />
+                  </div>
+                }
+                text={"Tambah Uker"}
+                textColor={"purple"}
+                handler={() => setShowBranch(true)}
+              />
+            </div>
+            {showBranch && (
+              <div className="w-40 mb-2">
+                <InlineEditBranchSelect
+                  control={control}
+                  placeholder="Select an option"
+                  handleConfirm={handleAddUker}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -1,63 +1,169 @@
-import { Select, TextInput } from "@/components/atoms";
+import { ReactSelect, TextInput } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
-import {
-  FormWithLabel,
-  CardBodyContent,
-  CardBodyContentDetailCost,
-} from "@/components/molecules/commons";
+import { FormWithLabel, CardBodyContent } from "@/components/molecules/commons";
+import { useKategoriAnggaran } from "@/data/pat";
+import { setAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { CardActivityExpense } from "@/components/molecules/pat";
 
-const SubModalBiayaSelamaKegiatan = () => {
+const SubModalBiayaSelamaKegiatan = ({ typeModal }) => {
+  const { control } = useForm();
+  const dispatch = useDispatch();
+  const auditScheduleData = useSelector(
+    (state) => state.auditSchedule.auditScheduleData
+  );
+
+  const { kategoriAnggaran } = useKategoriAnggaran();
+
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [selectedSubActivityCategory, setSelectedSubActivityCategory] =
+    useState(null);
+  const [optionActivityCategory, setOptionActivityCategory] = useState([]);
+  const [optionSubActivityCategory, setOptionSubActivityCategory] = useState(
+    []
+  );
+  useEffect(() => {
+    const mapping = kategoriAnggaran?.data?.map((v) => {
+      return {
+        label: v?.nama,
+        value: {
+          nama: v.nama,
+          ref_sub_kategori_anggarans: v.ref_sub_kategori_anggarans,
+        },
+      };
+    });
+    setOptionActivityCategory(mapping);
+  }, [kategoriAnggaran]);
+
+  const handleClickResetValue = (idx) => {
+    setOptionSubActivityCategory((prevData) => {
+      const updatedOptionSubActivityCategory = [
+        ...prevData.ref_sub_kategori_anggarans,
+      ];
+      updatedOptionSubActivityCategory[idx].amount = 0;
+      return updatedOptionSubActivityCategory;
+    });
+  };
+
+  const handleChangeActivityCategory = (e) => {
+    setSelectedSubActivityCategory(e.value.nama);
+    const mapping = e.value.ref_sub_kategori_anggarans?.map((v) => {
+      return {
+        ref_sub_kategori_anggaran_kode: {
+          ref_sub_kategori_anggaran_kode: v.id,
+          ref_sub_kategori_anggaran_name: v.nama,
+        },
+        amount: 0,
+      };
+    });
+
+    setOptionSubActivityCategory({
+      nama: e.value.nama,
+      ref_sub_kategori_anggarans: mapping,
+    });
+    setIsDisabled(false);
+  };
+
+  const handleChangeSubActivityCategory = (e, idx) => {
+    setOptionSubActivityCategory((prevData) => {
+      const updatedOptionSubActivityCategory =
+        prevData.ref_sub_kategori_anggarans.map((item, index) => {
+          if (index === idx) {
+            return {
+              ...item,
+              amount: parseInt(e.target.value),
+            };
+          } else {
+            return item;
+          }
+        });
+
+      return {
+        ...prevData,
+        ref_sub_kategori_anggarans: updatedOptionSubActivityCategory,
+      };
+    });
+  };
+
+  const handleAddBudget = () => {
+    const newData = [...auditScheduleData.anggaran_kegiatan];
+    const findByName = newData.findIndex(
+      (v) => v?.nama == selectedSubActivityCategory
+    );
+
+    if (findByName !== -1) {
+      newData[findByName] = optionSubActivityCategory;
+    } else {
+      newData.push(optionSubActivityCategory);
+    }
+
+    dispatch(
+      setAuditScheduleData({
+        ...auditScheduleData,
+        anggaran_kegiatan: newData,
+      })
+    );
+    setOptionSubActivityCategory([]);
+    setIsDisabled(true);
+  };
+
   return (
     <div className="w-full gap-3 flex p-6">
       <div className="w-1/2">
-        <CardBodyContent handler={() => console.log("TEST")}>
+        <CardBodyContent handler={handleAddBudget} buttonDisabled={isDisabled}>
           <FormWithLabel
             label={"Kategori Kegiatan"}
             form={
-              <Select
+              <ReactSelect
+                control={control}
                 isSearchable={false}
-                optionValue={[
-                  { label: "Awal", value: "awal" },
-                  { label: "Akhir", value: "akhir" },
-                ]}
+                options={optionActivityCategory}
+                handleChange={(e) => handleChangeActivityCategory(e)}
               />
             }
             widthFull={true}
           />
-          <FormWithLabel
-            label={"Porto"}
-            form={<TextInput icon={<IconClose />} />}
-            widthFull={true}
-          />
-          <FormWithLabel
-            label={"Percetakan"}
-            form={<TextInput icon={<IconClose />} />}
-            widthFull={true}
-          />
-          <FormWithLabel
-            label={"A.T.K"}
-            form={<TextInput icon={<IconClose />} />}
-            widthFull={true}
-          />
-          <FormWithLabel
-            label={"Suplai Komputer"}
-            form={<TextInput icon={<IconClose />} />}
-            widthFull={true}
-          />
+          {optionSubActivityCategory?.ref_sub_kategori_anggarans?.length
+            ? optionSubActivityCategory?.ref_sub_kategori_anggarans?.map(
+                (v, i) => {
+                  return (
+                    <div key={i}>
+                      <FormWithLabel
+                        label={
+                          v?.ref_sub_kategori_anggaran_kode
+                            .ref_sub_kategori_anggaran_name
+                        }
+                        form={
+                          <TextInput
+                            icon={<IconClose />}
+                            handleClick={() => handleClickResetValue(i)}
+                            onChange={(e) =>
+                              handleChangeSubActivityCategory(e, i)
+                            }
+                            value={v.amount}
+                          />
+                        }
+                        widthFull={true}
+                      />
+                    </div>
+                  );
+                }
+              )
+            : ""}
         </CardBodyContent>
       </div>
       <div className="w-1/2">
         <CardBodyContent>
-          <CardBodyContentDetailCost
-            title={"Rincian Biaya Perjalanan Dinas"}
-            totalCost={{ title: "Barang dan Jasa", cost: "1000000" }}
-            detailCost={[
-              { title: "Porto", cost: "1000000" },
-              { title: "Percetakkan", cost: "1000000" },
-              { title: "A.T.K", cost: "1000000" },
-              { title: "Suplai Komputer", cost: "1000000" },
-            ]}
-          />
+          {auditScheduleData.anggaran_kegiatan.length ? (
+            <div className="font-bold text-base">
+              Rincian Biaya Perjalanan Dinas
+            </div>
+          ) : (
+            ""
+          )}
+          <CardActivityExpense data={auditScheduleData.anggaran_kegiatan} />
         </CardBodyContent>
       </div>
     </div>

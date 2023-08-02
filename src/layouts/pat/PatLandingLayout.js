@@ -39,7 +39,7 @@ const PatOverviewLayout = ({ data, content, children }) => {
       <NavbarField />
       <PatSidebarLanding data={data} content={content} />
       <div className="flex">
-        <div className="flex-1 mt-16 h-screen" style={{ marginLeft: "260px" }}>
+        <div className="flex-1 mt-16" style={{ marginLeft: "260px" }}>
           <div className="main">
             <div className="px-5 py-4 w-full">{children}</div>
           </div>

@@ -7,3 +7,15 @@
     font-family: "Segoe UI";
   }
 }
+
+.page-container-a4 {
+  width: 210mm;
+  /* height: 297mm; */
+  margin-bottom: 15px;
+}
+.page-content-a4{
+  padding-left: 20mm;
+  padding-right: 20mm;
+  font-size: 11pt;
+  line-height: 1.5;
+}

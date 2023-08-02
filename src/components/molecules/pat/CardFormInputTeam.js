@@ -76,6 +76,7 @@ const CardFormInputTeam = ({
                                   label: `${v.pn} - ${v.nama}`,
                                   value: { v },
                                 }}
+                                customIcon={true}
                               />
                               {validationErrors[
                                 `ref_tim_audit_ata[${i}].pn`
@@ -111,6 +112,7 @@ const CardFormInputTeam = ({
                                             orgeh_name: x.orgeh_name,
                                           },
                                         }}
+                                        customIcon={true}
                                       />
                                       {validationErrors[
                                         `ref_tim_audit_ata[${i}].uker_binaans[${idx}].orgeh_kode`
@@ -145,6 +147,7 @@ const CardFormInputTeam = ({
                                             branch_name: x.branch_name,
                                           },
                                         }}
+                                        customIcon={true}
                                       />
                                       {validationErrors[
                                         `ref_tim_audit_ata[${i}].uker_binaans[${idx}].branch_kode`
@@ -209,8 +212,8 @@ const CardFormInputTeam = ({
                           label: `${v?.pn} - ${v?.nama}`,
                           value: { v },
                         }}
+                        customIcon={true}
                       />
-                      {console.log("MA => ", data)}
                       {type === "Manajer Audit"
                         ? validationErrors[`ref_tim_audit_ma[${i}].pn`] && (
                             <ErrorValidation
@@ -219,13 +222,15 @@ const CardFormInputTeam = ({
                               }
                             />
                           )
-                        : validationErrors[`ref_tim_audit_kta[${i}].pn`] && (
+                        : type === "Ketua Tim Audit"
+                        ? validationErrors[`ref_tim_audit_kta[${i}].pn`] && (
                             <ErrorValidation
                               message={
                                 validationErrors[`ref_tim_audit_kta[${i}].pn`]
                               }
                             />
-                          )}
+                          )
+                        : ""}
                     </div>
                   );
                 })

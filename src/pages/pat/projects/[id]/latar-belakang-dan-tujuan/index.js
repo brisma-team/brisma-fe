@@ -9,8 +9,8 @@ import { ImageBrismaHorizontal } from "@/helpers/imagesUrl";
 import { PrevNextNavigation } from "@/components/molecules/commons";
 import useLatarBelakangTujuanPat from "@/data/pat/useLatarBelakangTujuanPat";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
 import { usePostData } from "@/helpers";
+import { useStatusPat } from "@/data/pat";
 
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
@@ -18,10 +18,9 @@ const Editor = dynamic(() => import("@/components/atoms/Editor"), {
 
 const routes = [
   {
-    name: "Latar Belakang",
-    slug: "latar-belakang",
+    name: "Latar Belakang dan Tujuan",
+    slug: "latar-belakang-dan-tujuan",
   },
-  { name: "Tujuan", slug: "tujuan" },
   { name: "Sumber Informasi", slug: "sumber-informasi" },
   { name: "Tim Audit", slug: "tim-audit" },
   { name: "Target Audit", slug: "ringkasan-objek-audit" },
@@ -32,9 +31,19 @@ const routes = [
 const index = () => {
   const { id } = useRouter().query;
   const baseUrl = `/pat/projects/${id}`;
-  const [content, setContent] = useState([]);
+  const { statusPat } = useStatusPat(id);
+  const [content, setContent] = useState(null);
+  const breadcrumbs = [
+    { name: "Menu", path: "/dashboard" },
+    { name: "PAT", path: "/pat" },
+    { name: "Overview", path: "/pat/projects" },
+    { name: statusPat?.data?.pat_name, path: `/pat/projects/${id}` },
+    {
+      name: "Latar Belakang",
+      path: `/pat/projects/${id}/latar-belakang-dan-tujuan`,
+    },
+  ];
 
-  const statusPatState = useSelector((state) => state.statusPat.searchParam);
   const { latarBelakangTujuanPat } = useLatarBelakangTujuanPat(id);
 
   const [data, setData] = useState({
@@ -49,17 +58,9 @@ const index = () => {
     },
   ];
 
-  const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
-    { name: "PAT", path: "/pat" },
-    { name: "Overview", path: "/pat/projects" },
-    { name: statusPatState?.pat_name, path: `/pat/projects/${id}` },
-    { name: "Latar Belakang", path: `/pat/projects/${id}/latar-belakang` },
-  ];
-
   const handlePost = async () => {
     try {
-      return usePostData(
+      return await usePostData(
         `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/ltb`,
         data
       );
@@ -91,7 +92,7 @@ const index = () => {
   }, [latarBelakangTujuanPat]);
 
   return (
-    <PatLandingLayout data={statusPatState} content={content}>
+    <PatLandingLayout data={statusPat?.data} content={content}>
       <div className="pr-16">
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">

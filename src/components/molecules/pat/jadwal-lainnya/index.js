@@ -1,3 +1,4 @@
-import ModalAddOtherSchedule from "./ModalAddOtherSchedule";
+import ModalOtherSchedule from "./ModalOtherSchedule";
+import ModalOtherScheduleDetail from "./ModalOtherScheduleDetail";
 
-export { ModalAddOtherSchedule };
+export { ModalOtherSchedule, ModalOtherScheduleDetail };

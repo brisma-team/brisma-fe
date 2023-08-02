@@ -22,6 +22,7 @@ import DatepickerField from "./Datepicker";
 import ReactSelect from "./ReactSelect";
 import ErrorValidation from "./ErrorValidation";
 import DivButton from "./DivButton";
+import TableField from "./Table";
 
 export {
   AvatarDefaultExample,
@@ -48,4 +49,5 @@ export {
   ReactSelect,
   ErrorValidation,
   DivButton,
+  TableField,
 };

@@ -5,7 +5,7 @@ import {
   SubModalBiayaSelamaKegiatan,
 } from "./content";
 
-const ModalBodyAnggaran = ({ setCurrentModalStage }) => {
+const ModalBodyAnggaran = ({ setCurrentModalStage, typeModal }) => {
   useEffect(() => {
     setCurrentModalStage(3);
   }, []);
@@ -21,8 +21,12 @@ const ModalBodyAnggaran = ({ setCurrentModalStage }) => {
           { stageNumber: 2, stageTitle: "Biaya Selama Kegiatan" },
         ]}
       />
-      {currentStage === 1 && <SubModalBiayaPerjalananDinas />}
-      {currentStage === 2 && <SubModalBiayaSelamaKegiatan />}
+      {currentStage === 1 && (
+        <SubModalBiayaPerjalananDinas typeModal={typeModal} />
+      )}
+      {currentStage === 2 && (
+        <SubModalBiayaSelamaKegiatan typeModal={typeModal} />
+      )}
     </div>
   );
 };

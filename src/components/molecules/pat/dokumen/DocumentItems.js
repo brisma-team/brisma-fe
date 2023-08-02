@@ -1,6 +1,12 @@
-const DocumentItems = ({ no, title, count }) => {
+import Link from "next/link";
+
+const DocumentItems = ({ no, title, count, handleClick }) => {
   return (
-    <div className="text-sm py-1 flex justify-between">
+    <Link
+      className="text-sm py-1 flex justify-between no-underline hover:no-underline text-brisma hover:text-brisma"
+      href={"#"}
+      onClick={handleClick}
+    >
       <div className="w-full flex">
         <div>{no}.</div>
         <div className="ml-2">{title}</div>
@@ -13,7 +19,7 @@ const DocumentItems = ({ no, title, count }) => {
       >
         {count && count}
       </div>
-    </div>
+    </Link>
   );
 };
 

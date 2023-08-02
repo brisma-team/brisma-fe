@@ -10,6 +10,7 @@ const PekerjaSelect = ({
   isSearchable,
   placeholder,
   selectedValue,
+  customIcon,
 }) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState("");
@@ -61,6 +62,7 @@ const PekerjaSelect = ({
       isSearchable={isSearchable}
       placeholder={placeholder}
       value={selectedValue}
+      customIcon={customIcon}
     />
   );
 };
