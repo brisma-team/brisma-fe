@@ -7,6 +7,11 @@ import CardActivitySchedule from "./CardActivitySchedule";
 import CardFormInputTeam from "./CardFormInputTeam";
 import CardFilterActivitySchedule from "./CardFilterActivitySchedule";
 import CardOtherSchedule from "./CardOtherSchedule";
+import ModalHeader from "./ModalHeader";
+import ModalFooter from "./ModalFooter";
+import CardCostDetail from "./CardCostDetail";
+import CardActivityExpense from "./CardActivityExpense";
+import CardTravelExpense from "./CardTravelExpense";
 
 export {
   PatSidebarOverview,
@@ -19,4 +24,9 @@ export {
   CardFormInputTeam,
   CardFilterActivitySchedule,
   CardOtherSchedule,
+  ModalHeader,
+  ModalFooter,
+  CardCostDetail,
+  CardActivityExpense,
+  CardTravelExpense,
 };

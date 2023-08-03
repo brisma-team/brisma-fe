@@ -14,14 +14,13 @@ import { CardAuditTeam } from "@/components/molecules/pat";
 import useAuditTeam from "@/data/pat/useAuditTeam";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useStatusPat } from "@/data/pat";
 
 const routes = [
   {
-    name: "Latar Belakang",
-    slug: "latar-belakang",
+    name: "Latar Belakang dan Tujuan",
+    slug: "latar-belakang-dan-tujuan",
   },
-  { name: "Tujuan", slug: "tujuan" },
   { name: "Sumber Informasi", slug: "sumber-informasi" },
   { name: "Tim Audit", slug: "tim-audit" },
   { name: "Target Audit", slug: "ringkasan-objek-audit" },
@@ -32,14 +31,23 @@ const routes = [
 const index = () => {
   const { id } = useRouter().query;
   const baseUrl = `/pat/projects/${id}`;
+  const { statusPat } = useStatusPat(id);
+  const [content, setContent] = useState(null);
+  const breadcrumbs = [
+    { name: "Menu", path: "/dashboard" },
+    { name: "PAT", path: "/pat" },
+    { name: "Overview", path: "/pat/projects" },
+    { name: statusPat?.data?.pat_name, path: `/pat/projects/${id}` },
+    { name: "Tim Audit", path: `/pat/projects/${id}/tim-audit` },
+  ];
 
-  const statusPatState = useSelector((state) => state.statusPat.searchParam);
   const [params, setParams] = useState({
     id,
     tim_id: null,
     pages: 1,
     limit: 8,
   });
+
   const [auditTeamData, setAuditTeamData] = useState({
     pat_id: id,
     name: "",
@@ -66,18 +74,15 @@ const index = () => {
   const [showModal, setShowModal] = useState(false);
   const [typeModal, setTypeModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
-  const { auditTeam, auditTeamMutate } = useAuditTeam("list", params);
-  const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
-    { name: "PAT", path: "/pat" },
-    { name: "Overview", path: "/pat/projects" },
-    { name: statusPatState?.pat_name, path: `/pat/projects/${id}` },
-    { name: "Tim Audit", path: `/pat/projects/${id}/tim-audit` },
-  ];
+  const { auditTeam, auditTeamMutate } = useAuditTeam("all", params);
 
   useEffect(() => {
-    console.log("auditTeamData => ", auditTeamData);
-  }, [auditTeamData]);
+    setContent([
+      { title: "Riwayat Addendum", value: statusPat?.data?.riwayat_adendum },
+      { title: "Status Approver", value: statusPat?.data?.status_approver },
+      { title: "Status PAT", value: statusPat?.data?.status_pat },
+    ]);
+  }, [statusPat]);
 
   useEffect(() => {
     const mappedData = auditTeam?.data?.map((v) => {
@@ -96,7 +101,7 @@ const index = () => {
   }, [auditTeam]);
 
   return (
-    <PatLandingLayout>
+    <PatLandingLayout data={statusPat?.data} content={content}>
       <div className="pr-44">
         {/* Start Breadcrumbs */}
         <Breadcrumbs data={breadcrumbs} />

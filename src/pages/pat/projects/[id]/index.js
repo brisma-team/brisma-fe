@@ -15,16 +15,16 @@ const index = () => {
   const { statusPat } = useStatusPat(id);
   const statusPatState = useSelector((state) => state.statusPat.searchParam);
 
-  useEffect(() => {
-    dispatch(setSearchParam(statusPat?.data));
-  }, [statusPat]);
-
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "PAT", path: "/pat" },
     { name: "Overview", path: "/pat/projects" },
     { name: statusPatState?.data?.pat_name, path: `/pat/projects/${id}` },
   ];
+
+  useEffect(() => {
+    dispatch(setSearchParam(statusPat?.data));
+  }, [statusPat]);
 
   useEffect(() => {
     setData([

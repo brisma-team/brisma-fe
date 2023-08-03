@@ -23,6 +23,8 @@ import CardTypeCount from "./CardTypeCount";
 import UserSKAISelect from "./UserSKAISelect";
 import OrgehSelect from "./OrgehSelect";
 import BranchSelect from "./BranchSelect";
+import InlineEditOrgehSelect from "./InlineEditOrgehSelect";
+import InlineEditBranchSelect from "./InlineEditBranchSelect";
 
 export {
   BackButton,
@@ -50,4 +52,6 @@ export {
   UserSKAISelect,
   OrgehSelect,
   BranchSelect,
+  InlineEditOrgehSelect,
+  InlineEditBranchSelect,
 };

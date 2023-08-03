@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { CardBodyNavigation } from "@/components/molecules/commons";
-import { SubModalUnitKerja } from "./content";
+import { SubModalWorkUnit } from "./content";
 
-const ModalBodyObjekAudit = ({ setCurrentModalStage }) => {
+const ModalBodyActivityObject = ({ setCurrentModalStage, typeModal }) => {
   useEffect(() => {
     setCurrentModalStage(2);
   }, []);
@@ -15,9 +15,9 @@ const ModalBodyObjekAudit = ({ setCurrentModalStage }) => {
         setCurrentStage={setCurrentStage}
         stage={[{ stageNumber: 1, stageTitle: "Unit Kerja" }]}
       />
-      {currentStage === 1 && <SubModalUnitKerja />}
+      {currentStage === 1 && <SubModalWorkUnit typeModal={typeModal} />}
     </div>
   );
 };
 
-export default ModalBodyObjekAudit;
+export default ModalBodyActivityObject;

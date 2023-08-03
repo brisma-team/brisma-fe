@@ -8,11 +8,14 @@ const useAuditTeam = (type, params) => {
   if (!limit) limit = 8;
   let query = "";
   switch (type) {
-    case "list":
+    case "all":
       query = `/all?pat_id=${id}&page=${pages}&limit=${limit}`;
       break;
     case "detail":
       query = `?tim_id=${tim_id}&pat_id=${id}`;
+      break;
+    case "list":
+      query = `/list?pat_id=${id}`;
       break;
   }
 

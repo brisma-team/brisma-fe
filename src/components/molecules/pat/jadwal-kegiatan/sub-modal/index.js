@@ -1,5 +1,5 @@
-import ModalBodyInfoKegiatan from "./ModalBodyInfoKegiatan";
-import ModalBodyObjekKegiatan from "./ModalBodyObjekKegiatan";
-import ModalBodyAnggaran from "./ModalBodyAnggaran";
+import ModalBodyActivityInfo from "./ModalBodyActivityInfo";
+import ModalBodyActivityObject from "./ModalBodyActivityObject";
+import ModalBodyBudget from "./ModalBodyBudget";
 
-export { ModalBodyInfoKegiatan, ModalBodyObjekKegiatan, ModalBodyAnggaran };
+export { ModalBodyActivityInfo, ModalBodyActivityObject, ModalBodyBudget };

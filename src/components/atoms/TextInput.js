@@ -7,17 +7,24 @@ const TextInput = ({
   value,
   className,
   style,
+  isDisabled,
+  handleClick,
 }) => {
   return (
     <Textfield
       placeholder={placeholder}
       onChange={onChange}
       elemAfterInput={
-        icon && <button className="justify-center">{icon}</button>
+        icon && (
+          <button className="justify-center" onClick={handleClick}>
+            {icon}
+          </button>
+        )
       }
       value={value}
       className={className}
       style={style}
+      isDisabled={isDisabled}
     />
   );
 };

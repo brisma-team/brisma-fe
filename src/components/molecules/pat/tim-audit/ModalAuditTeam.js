@@ -10,7 +10,7 @@ import { usePostData, useUpdateData } from "@/helpers";
 import { useState } from "react";
 import { auditTeamSchema } from "@/helpers/schemas";
 
-const ModalAddAuditTeam = ({
+const ModalAuditTeam = ({
   showModal,
   setShowModal,
   typeModal,
@@ -18,7 +18,6 @@ const ModalAddAuditTeam = ({
   setData,
   isMutate,
 }) => {
-  console.log("TYPE MODAL => ", typeModal);
   // START ADD HANDLING
   const handleAddMA = () => {
     setData((prevData) => {
@@ -140,7 +139,7 @@ const ModalAddAuditTeam = ({
       newTimAuditATA[index]["pn"] = value?.pn;
       newTimAuditATA[index]["nama"] = value?.name;
       newTimAuditATA[index]["jabatan"] = value?.jabatan;
-      return { ...prevData, ref_tim_audit_ma: newTimAuditATA };
+      return { ...prevData, ref_tim_audit_ata: newTimAuditATA };
     });
   };
 
@@ -262,4 +261,4 @@ const ModalAddAuditTeam = ({
   );
 };
 
-export default ModalAddAuditTeam;
+export default ModalAuditTeam;

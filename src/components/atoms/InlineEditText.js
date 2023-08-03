@@ -26,18 +26,28 @@ const readViewContainerStyles = xcss({
   wordBreak: "break-word",
 });
 
-const InlineEditField = () => {
-  const [editValue, setEditValue] = useState("");
+const InlineEditField = ({ isDisabled, value, placeholder, handleConfirm }) => {
+  const [editValue, setEditValue] = useState(value);
+  const handleChange = (e) => {
+    setEditValue(e.target.value);
+  };
 
   return (
     <Box xcss={containerStyles}>
       <InlineEdit
         defaultValue={editValue}
         editView={({ ...fieldProps }, ref) => (
-          <Textfield {...fieldProps} ref={ref} />
+          <Textfield
+            {...fieldProps}
+            ref={ref}
+            isDisabled={isDisabled}
+            value={editValue}
+            placeholder={placeholder}
+            onChange={handleChange}
+          />
         )}
         readView={() => <Box xcss={readViewContainerStyles}>{editValue}</Box>}
-        onConfirm={setEditValue}
+        onConfirm={() => handleConfirm(editValue)}
         readViewFitContainerWidth
         hideActionButtons
       />
