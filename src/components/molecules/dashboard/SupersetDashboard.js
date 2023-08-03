@@ -1,40 +1,38 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { embedDashboard } from "@superset-ui/embedded-sdk";
+import useGetToken from "@/data/useGetToken";
 
 const SupersetDashboard = () => {
-  const getToken = useCallback(async () => {
-    const response = await fetch("http://192.168.100.110:4444/getGuestToken")
-      .then(async (result) => {
-        const token = await result.json();
-        if (token) return token;
-      })
-      .catch((err) => console.log(err));
-    return response;
-  }, []);
+  const { data } = useGetToken();
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    if (data && data) {
+      setToken(data.token);
+    }
+  }, [data]);
 
   useEffect(() => {
     const embed = async () => {
       const dashboard = document.getElementById("dashboard");
-      if (dashboard) {
-        const guestToken = await getToken();
+      if (dashboard && token != null) {
         const config = {
-          // id: "c7f1e3c8-2bb4-4424-814a-4be727c56a42",
-          id: "93b9cf71-481d-423a-8867-2709a861e6d3",
+          id: "c217f3a4-864f-4e82-98f9-9d6c19d74c0f",
           supersetDomain: process.env.NEXT_PUBLIC_API_URL_SUPERSET,
           mountPoint: dashboard,
-          fetchGuestToken: () => guestToken.token,
+          fetchGuestToken: () => token,
           dashboardUiConfig: {
             hideTitle: true,
             hideChartControls: true,
             hideTab: true,
           },
         };
-        if (guestToken) await embedDashboard(config);
+        if (token) await embedDashboard(config);
       }
     };
 
     embed();
-  }, []);
+  }, [token]);
 
   return (
     <div className="superset">
