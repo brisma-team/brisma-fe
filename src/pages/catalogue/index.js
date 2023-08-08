@@ -1,6 +1,6 @@
 import React from "react";
 import { MainLayout } from "@/layouts";
-import { CardDashboard } from "@/components/molecules/commons";
+import CardCatalog from "@/components/molecules/catalog/CardCatalog";
 
 const index = () => {
   const data = {
@@ -10,19 +10,19 @@ const index = () => {
         subtitle: "Pustaka Dokumen",
         subcontent: [
           {
-            title: "Catalogue P.A.T",
+            title: "P.A.T",
             description: "Pustaka Dokumen Perencanaan Audit Tahunan.",
-            url: "/catalogue/pat",
+            id: 1,
           },
           {
-            title: "Catalogue E.W.P",
+            title: "E.W.P",
             description: "Pustaka Dokumen Lembar Kerja Pelaksanaan Audit.",
-            url: "/catalogue/ewp",
+            id: 2,
           },
           {
-            title: "Catalogue R.P.M",
+            title: "R.P.M",
             description: "Pustaka Dokumen Realisasi Perbaikan Manajemen.",
-            url: "/catalogue/rpm",
+            id: 3,
           },
         ],
       },
@@ -30,7 +30,7 @@ const index = () => {
   };
   return (
     <MainLayout>
-      <CardDashboard data={data} />
+      <CardCatalog data={data} />
     </MainLayout>
   );
 };

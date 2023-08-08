@@ -9,6 +9,7 @@ const TextInput = ({
   style,
   isDisabled,
   handleClick,
+  onKeyDown,
 }) => {
   return (
     <Textfield
@@ -21,6 +22,7 @@ const TextInput = ({
           </button>
         )
       }
+      onKeyDown={onKeyDown}
       value={value}
       className={className}
       style={style}
