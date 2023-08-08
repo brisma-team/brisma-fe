@@ -1,36 +1,39 @@
 import useOrgeh from "@/data/useOrgeh";
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
-import { ReactSelect } from "@/components/atoms";
+import Select, { components } from "@atlaskit/select";
 
 const OrgehSelect = ({
-  control,
   handleChange,
-  handleClick,
   isSearchable,
   placeholder,
   selectedValue,
   customIcon,
+  fieldsProps,
 }) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState("");
   const [keyword, setKeyword] = useState("");
+  const [search, setSearch] = useState(false);
   const { orgeh, orgehMutate } = useOrgeh(keyword);
 
   useEffect(() => {
-    const mappedOrgeh = orgeh?.data?.map((row) => {
-      return {
-        ...row,
-        label: `${row?.child} - ${row?.my_name}`,
-        value: { orgeh_kode: row?.child, orgeh_name: row?.my_name },
-      };
-    });
-    setOptions(mappedOrgeh);
-  }, [orgeh]);
+    if (search) {
+      const mappedOrgeh = orgeh?.data?.map((row) => {
+        return {
+          ...row,
+          label: `${row?.child} - ${row?.my_name}`,
+          value: { orgeh_kode: row?.child, orgeh_name: row?.my_name },
+        };
+      });
+      setOptions(mappedOrgeh);
+    }
+  }, [orgeh, search]);
 
   useEffect(() => {
-    if (value > 2) {
+    if (value.length > 2) {
       const handleSearch = () => {
+        setSearch(true);
         setKeyword(value);
         orgehMutate;
       };
@@ -52,17 +55,24 @@ const OrgehSelect = ({
     }
   }
 
+  const DropdownIndicator = (props) => {
+    return (
+      <components.DropdownIndicator {...props}>
+        {customIcon && customIcon}
+      </components.DropdownIndicator>
+    );
+  };
+
   return (
-    <ReactSelect
-      control={control}
-      options={options}
-      handleChange={handleChange}
-      handleInputChange={handleInputChange}
-      handleClick={handleClick}
-      isSearchable={isSearchable}
+    <Select
+      {...fieldsProps}
       placeholder={placeholder}
+      options={options}
+      onChange={handleChange}
+      isSearchable={isSearchable}
       value={selectedValue}
-      customIcon={customIcon}
+      onInputChange={handleInputChange}
+      components={customIcon && { DropdownIndicator }}
     />
   );
 };

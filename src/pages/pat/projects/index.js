@@ -2,15 +2,14 @@ import React, { useEffect, useState } from "react";
 import { PatOverviewLayout } from "@/layouts/pat";
 import Button from "@atlaskit/button";
 import { IconPlus } from "@/components/icons";
-import { Breadcrumbs, PageTitle } from "@/components/atoms";
+import { Breadcrumbs, PageTitle, Pagination } from "@/components/atoms";
 import { CardFilterProjectOverview } from "@/components/molecules/pat/overview";
 import useProjectOverview from "@/data/pat/useProjectOverview";
 import { CardOverview } from "@/components/molecules/pat/overview";
 import { SelectSortFilter } from "@/components/molecules/commons";
-import { useSelector, useDispatch } from "react-redux";
-import { setSearchParam } from "@/slices/pat/projectOverviewSlice";
 import _ from "lodash";
 import useApprovalPat from "@/data/pat/useApprovalPat";
+import { decimalToPercentage } from "@/helpers";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -18,56 +17,63 @@ const breadcrumbs = [
   { name: "Overview", path: "/pat/projects" },
 ];
 
-const convertProgressAndPercent = (value) => {
+const convertProgressAndPercent = (approvers, status_approver) => {
   let progress, percent;
-  switch (value) {
-    case "On Progress":
-      progress = 0.33;
-      percent = "33%";
-      break;
-    case "On Approval":
-      progress = 0.66;
-      percent = "66%";
-      break;
-    case "Final":
-      progress = 1;
-      percent = "100%";
-      break;
+  const findIndex = approvers?.findIndex((v) => v.pn === status_approver?.pn);
+  if (status_approver && find) {
+    const sum = (findIndex + 1) / approvers.length;
+    progress = sum;
+    percent = decimalToPercentage(sum);
+  } else if (!status_approver) {
+    progress = 0;
+    percent = "0%";
   }
   return { progress, percent };
 };
 
 const index = () => {
-  const dispatch = useDispatch();
-  const projectOverviewState = useSelector(
-    (state) => state.projectOverview.searchParam
-  );
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [openFilter, setOpenFilter] = useState(false);
-  const [params, setParams] = useState("");
+  const [params, setParams] = useState({
+    project_name: "",
+    status_approver: "",
+    status_pat: "",
+    sortBy: "",
+    year: "",
+  });
+  const [filter, setFilter] = useState({
+    project_name: "",
+    status_approver: "",
+    status_pat: "",
+    sortBy: "",
+    year: "",
+  });
 
-  const { projectOverview, projectOverviewMutate } = useProjectOverview(params);
+  const { projectOverview, projectOverviewMutate } = useProjectOverview({
+    ...params,
+    pages: currentPage,
+    limit: 8,
+  });
+
   const { approvalPat } = useApprovalPat();
 
   useEffect(() => {
-    projectOverviewMutate;
-  }, [params]);
-
-  useEffect(() => {
     const handleSearch = () => {
-      setParams(projectOverviewState);
+      setParams(filter);
+      projectOverviewMutate;
     };
     const debouncedSearch = _.debounce(handleSearch, 2000);
     debouncedSearch();
     return () => {
       debouncedSearch.cancel();
     };
-  }, [projectOverviewState]);
+  }, [filter]);
 
   const [data, setData] = useState(null);
 
   const handleChangeSortBy = (e) => {
-    dispatch(setSearchParam({ ...projectOverviewState, sortBy: e.value }));
+    setFilter({ ...filter, sortBy: e.value });
   };
 
   useEffect(() => {
@@ -77,17 +83,22 @@ const index = () => {
           id: v.id,
           title: v.pat_name,
           year: v.tahun,
-          progress: convertProgressAndPercent(v.status_pat).progress,
-          percent: convertProgressAndPercent(v.status_pat).percent,
-          documentStatus: "FINAL",
-          apporovalStatus: "Checker Pusat",
-          addendum: v.addendum,
+          progress: convertProgressAndPercent(v?.approvers, v?.status_approver)
+            .progress,
+          percent: convertProgressAndPercent(v?.approvers, v?.status_approver)
+            .percent,
+          documentStatus: v?.status_pat,
+          apporovalStatus: v?.status_approver
+            ? `On ${v?.status_approver?.pn}`
+            : `-`,
+          addendum: v?.riwayat_adendum.toString(),
           href: `/pat/projects/${v.id}`,
         };
       });
       setData(mapping);
+      setTotalPages(projectOverview?.page?.totalPage);
     }
-  }, [projectOverview, projectOverviewState]);
+  }, [projectOverview, params]);
 
   return (
     <PatOverviewLayout data={approvalPat?.data?.header}>
@@ -110,15 +121,13 @@ const index = () => {
           </Button>
         </div>
         <div className="flex justify-between">
-          <CardFilterProjectOverview openFilter={openFilter} />
+          <CardFilterProjectOverview
+            openFilter={openFilter}
+            filter={filter}
+            setFilter={setFilter}
+          />
           <div className="w-full flex justify-end items-end p-2">
-            <SelectSortFilter
-              optionValue={[
-                { label: "Awal", value: "asc" },
-                { label: "Akhir", value: "desc" },
-              ]}
-              change={handleChangeSortBy}
-            />
+            <SelectSortFilter change={handleChangeSortBy} />
           </div>
         </div>
         {/* End Filter */}
@@ -141,6 +150,7 @@ const index = () => {
               );
             })}
         </div>
+        <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
         {/* End Content */}
       </div>
     </PatOverviewLayout>

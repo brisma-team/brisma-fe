@@ -12,6 +12,8 @@ import calculatePercentage from "./calculatePercent";
 import parseDate from "./parseDate";
 import convertDate from "./converDate";
 import splitWord from "./splitWord";
+import numberWithCommas from "./numberWithCommas";
+import decimalToPercentage from "./decimalToPercentage";
 
 export {
   loadingSwal,
@@ -28,4 +30,6 @@ export {
   parseDate,
   convertDate,
   splitWord,
+  numberWithCommas,
+  decimalToPercentage,
 };

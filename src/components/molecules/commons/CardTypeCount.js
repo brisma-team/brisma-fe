@@ -1,9 +1,9 @@
-const CardTypeCount = ({ title, total, percent, width }) => {
+const CardTypeCount = ({ title, total, percent, width, style }) => {
   return (
     <div
       className={`rounded-xl border-2 border-atlasian-blue-baby p-1 ${
-        width ? width : `w-48`
-      }`}
+        style && style
+      } ${width ? width : `w-48`}`}
     >
       <div className="w-full flex justify-between px-2 text-sm">
         <p className="font-semibold">{title}</p>

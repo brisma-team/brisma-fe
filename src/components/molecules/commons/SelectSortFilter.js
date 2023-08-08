@@ -1,12 +1,15 @@
 import Select from "@atlaskit/select";
 
-const SelectSortFilter = ({ optionValue, change }) => {
+const SelectSortFilter = ({ change }) => {
   return (
     <div className="flex items-center px-2">
       <div className="text-sm">URUTKAN</div>
       <Select
         className="ml-2"
-        options={optionValue}
+        options={[
+          { label: "Awal", value: "ASC" },
+          { label: "Akhir", value: "DESC" },
+        ]}
         isSearchable={false}
         onChange={change}
       />

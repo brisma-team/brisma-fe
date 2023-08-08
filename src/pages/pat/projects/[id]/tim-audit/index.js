@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Breadcrumbs, PageTitle } from "@/components/atoms";
+import { Breadcrumbs, PageTitle, Pagination } from "@/components/atoms";
 import { PatLandingLayout } from "@/layouts/pat";
 import Button from "@atlaskit/button";
 import {
@@ -15,6 +15,7 @@ import useAuditTeam from "@/data/pat/useAuditTeam";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useStatusPat } from "@/data/pat";
+import { useSelector } from "react-redux";
 
 const routes = [
   {
@@ -40,13 +41,8 @@ const index = () => {
     { name: statusPat?.data?.pat_name, path: `/pat/projects/${id}` },
     { name: "Tim Audit", path: `/pat/projects/${id}/tim-audit` },
   ];
-
-  const [params, setParams] = useState({
-    id,
-    tim_id: null,
-    pages: 1,
-    limit: 8,
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [auditTeamData, setAuditTeamData] = useState({
     pat_id: id,
@@ -74,7 +70,11 @@ const index = () => {
   const [showModal, setShowModal] = useState(false);
   const [typeModal, setTypeModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
-  const { auditTeam, auditTeamMutate } = useAuditTeam("all", params);
+  const { auditTeam, auditTeamMutate } = useAuditTeam("all", {
+    id,
+    pages: currentPage,
+    limit: 6,
+  });
 
   useEffect(() => {
     setContent([
@@ -98,7 +98,22 @@ const index = () => {
     });
 
     setData(mappedData);
+    setTotalPages(auditTeam?.detailPage?.totalPage);
   }, [auditTeam]);
+
+  useEffect(() => {
+    console.log("DATA => ", auditTeamData);
+  }, [auditTeamData]);
+
+  const auditTeamDataDefault = useSelector(
+    (state) => state.auditTeam.auditTeamData
+  );
+
+  const handleCreateButton = () => {
+    // console.log(auditTeamDataDefault);
+    setAuditTeamData(auditTeamDataDefault);
+    setShowModal(true);
+  };
 
   return (
     <PatLandingLayout data={statusPat?.data} content={content}>
@@ -108,7 +123,12 @@ const index = () => {
         {/* End Breadcrumbs */}
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Tim Audit"} />
-          <PrevNextNavigation baseUrl={baseUrl} routes={routes} />
+          <PrevNextNavigation
+            baseUrl={baseUrl}
+            routes={routes}
+            prevUrl={"/sumber-informasi"}
+            nextUrl={"/jadwal-audit"}
+          />
         </div>
         {/* Start Filter */}
         <div
@@ -127,7 +147,7 @@ const index = () => {
           <div className="w-40">
             <Button
               appearance="danger"
-              onClick={() => setShowModal(true)}
+              onClick={handleCreateButton}
               shouldFitContainer
             >
               Buat Tim Audit
@@ -147,12 +167,7 @@ const index = () => {
             <CardFilterTimAudit showFilter={showFilter} />
           </div>
           <div className="flex justify-end items-end rounded-full">
-            <SelectSortFilter
-              optionValue={[
-                { label: "Awal", value: "awal" },
-                { label: "Akhir", value: "akhir" },
-              ]}
-            />
+            <SelectSortFilter />
           </div>
         </div>
         {/* End Filter */}
@@ -180,6 +195,7 @@ const index = () => {
               );
             })}
         </div>
+        <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
         {/* End Content */}
       </div>
     </PatLandingLayout>

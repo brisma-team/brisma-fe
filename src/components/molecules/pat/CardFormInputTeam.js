@@ -2,9 +2,10 @@ import {
   ButtonField,
   Card,
   ErrorValidation,
+  LinkIcon,
   ReactSelect,
 } from "@/components/atoms";
-import { IconPlus } from "@/components/icons";
+import { IconClose, IconPlus } from "@/components/icons";
 import { PekerjaSelect, OrgehSelect, BranchSelect } from "../commons";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
@@ -20,6 +21,7 @@ const CardFormInputTeam = ({
   handlerChangeParent,
   handlerChangeChild,
   validationErrors,
+  property,
 }) => {
   const { control } = useForm();
   let textColor, buttonText;
@@ -71,12 +73,16 @@ const CardFormInputTeam = ({
                               <PekerjaSelect
                                 control={control}
                                 handleChange={(e) => handlerChangeParent(i, e)}
-                                handleClick={() => handlerDeleteParent(i)}
                                 selectedValue={{
                                   label: `${v.pn} - ${v.nama}`,
                                   value: { v },
                                 }}
-                                customIcon={true}
+                                customIcon={
+                                  <LinkIcon
+                                    icon={<IconClose />}
+                                    handler={() => handlerDeleteParent(i)}
+                                  />
+                                }
                               />
                               {validationErrors[
                                 `ref_tim_audit_ata[${i}].pn`
@@ -98,12 +104,8 @@ const CardFormInputTeam = ({
                                   <div className="flex gap-3 w-full">
                                     <div className="w-1/2">
                                       <OrgehSelect
-                                        control={control}
                                         handleChange={(e) =>
                                           handlerChangeChild(i, idx, e, "orgeh")
-                                        }
-                                        handleClick={() =>
-                                          handlerDeleteChild(i, idx)
                                         }
                                         selectedValue={{
                                           label: `${x.orgeh_kode} - ${x.orgeh_name}`,
@@ -112,7 +114,14 @@ const CardFormInputTeam = ({
                                             orgeh_name: x.orgeh_name,
                                           },
                                         }}
-                                        customIcon={true}
+                                        customIcon={
+                                          <LinkIcon
+                                            icon={<IconClose />}
+                                            handler={() =>
+                                              handlerDeleteChild(i, idx)
+                                            }
+                                          />
+                                        }
                                       />
                                       {validationErrors[
                                         `ref_tim_audit_ata[${i}].uker_binaans[${idx}].orgeh_kode`
@@ -128,7 +137,6 @@ const CardFormInputTeam = ({
                                     </div>
                                     <div className="w-1/2">
                                       <BranchSelect
-                                        control={control}
                                         handleChange={(e) =>
                                           handlerChangeChild(
                                             i,
@@ -137,17 +145,21 @@ const CardFormInputTeam = ({
                                             "branch"
                                           )
                                         }
-                                        handleClick={() =>
-                                          handlerDeleteChild(i, idx)
-                                        }
                                         selectedValue={{
                                           label: `${x.branch_kode} - ${x.branch_name}`,
                                           value: {
-                                            branch_kode: x.branch_kode,
-                                            branch_name: x.branch_name,
+                                            orgeh_kode: x.branch_kode,
+                                            orgeh_name: x.branch_name,
                                           },
                                         }}
-                                        customIcon={true}
+                                        customIcon={
+                                          <LinkIcon
+                                            icon={<IconClose />}
+                                            handler={() =>
+                                              handlerDeleteChild(i, idx)
+                                            }
+                                          />
+                                        }
                                       />
                                       {validationErrors[
                                         `ref_tim_audit_ata[${i}].uker_binaans[${idx}].branch_kode`
@@ -181,6 +193,11 @@ const CardFormInputTeam = ({
                   </div>
                 );
               })}
+              {validationErrors[property] && (
+                <div className="pl-2">
+                  <ErrorValidation message={validationErrors[property]} />
+                </div>
+              )}
             </>
           ) : (
             <>
@@ -205,14 +222,17 @@ const CardFormInputTeam = ({
                     <div key={i} className="my-3">
                       <PekerjaSelect
                         key={i}
-                        control={control}
                         handleChange={(e) => handlerChangeParent(i, e)}
-                        handleClick={handlerDeleteParent}
                         selectedValue={{
                           label: `${v?.pn} - ${v?.nama}`,
                           value: { v },
                         }}
-                        customIcon={true}
+                        customIcon={
+                          <LinkIcon
+                            icon={<IconClose />}
+                            handler={() => handlerDeleteParent(i)}
+                          />
+                        }
                       />
                       {type === "Manajer Audit"
                         ? validationErrors[`ref_tim_audit_ma[${i}].pn`] && (
@@ -234,6 +254,11 @@ const CardFormInputTeam = ({
                     </div>
                   );
                 })
+              )}
+              {validationErrors?.[property] && (
+                <div className="pl-2">
+                  <ErrorValidation message={validationErrors?.[property]} />
+                </div>
               )}
             </>
           )}

@@ -28,19 +28,19 @@ const DropdownFilter = ({
 
   return (
     <div
-      className="py-2 w-40 rounded flex flex-col items-center fixed z-10  bg-white"
+      className="py-2 rounded flex flex-col items-center fixed z-10  bg-white"
       style={{
         color: token("color.text", N800),
         borderRadius: "10px",
         boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.25)",
       }}
     >
-      <div className="-my-2 w-full">
+      <div className="w-full">
         {routes.map((v, i) => {
           return (
             <Link
               key={i}
-              className="border w-full border-y-0 text-base font-normal h-7 hover:bg-[#dedede] no-underline hover:no-underline text-black hover:text-black justify-center flex"
+              className="px-2 border w-full border-y-0 text-base font-normal h-7 hover:bg-[#dedede] no-underline hover:no-underline text-black hover:text-black justify-center flex"
               href={`${baseUrl}/${v.slug}`}
             >
               {v.name}

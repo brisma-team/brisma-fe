@@ -6,6 +6,7 @@ const Select = ({
   isSearchable,
   style,
   onChange,
+  value,
 }) => {
   return (
     <SelectInput
@@ -14,6 +15,7 @@ const Select = ({
       isSearchable={isSearchable}
       placeholder={placeholder}
       className={style}
+      value={value && value}
     />
   );
 };

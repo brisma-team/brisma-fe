@@ -1,12 +1,5 @@
 import Link from "next/link";
 
-// Format for Breadcrums using object inside array
-// example = [
-//     { name: "Menu", path: "/dashboard" },
-//     { name: "PAT", path: "/pat/projects" },
-//     { name: "Overview", path: "/pat/projects/123" },
-//   ];
-
 const Breadcrumbs = ({ data }) => {
   return (
     data.length && (

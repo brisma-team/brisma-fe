@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Card, LinkIcon } from "@/components/atoms";
+import { ButtonIcon, Card } from "@/components/atoms";
 import { IconEdit, IconInfo, IconTrash } from "@/components/icons";
-import { convertToRupiah, deleteSwal, splitWord } from "@/helpers";
+import { convertDate, convertToRupiah, deleteSwal, splitWord } from "@/helpers";
 import { setAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
 import { useDispatch } from "react-redux";
 import { useAuditSchedule, useKategoriAnggaran } from "@/data/pat";
@@ -23,6 +23,8 @@ const CardAuditSchedule = ({
   title,
   maker,
   audit_team,
+  start_date,
+  end_date,
   budget,
   audit_type,
   tema,
@@ -187,22 +189,22 @@ const CardAuditSchedule = ({
               />
             )}
             <div className="flex w-20 justify-between">
-              <LinkIcon
+              <ButtonIcon
                 color={"blue"}
                 icon={<IconInfo size="medium" />}
-                handler={() => (
+                handleClick={() => (
                   setShowModalDetail(true), setScheduleId(jadwal_id)
                 )}
               />
-              <LinkIcon
+              <ButtonIcon
                 color={"yellow"}
                 icon={<IconEdit size="medium" />}
-                handler={handlerUpdate}
+                handleClick={handlerUpdate}
               />
-              <LinkIcon
+              <ButtonIcon
                 color={"red"}
                 icon={<IconTrash size="medium" />}
-                handler={() => handleDelete(jadwal_id, pat_id)}
+                handleClick={() => handleDelete(jadwal_id, pat_id)}
               />
             </div>
           </div>
@@ -218,7 +220,10 @@ const CardAuditSchedule = ({
                 <CardBodyContent title={"Tim Audit"} text={audit_team} />
                 <CardBodyContent
                   title={"Periode Kegiatan"}
-                  text={"24-06-2023 s/d 31-07-2023"}
+                  text={`${convertDate(start_date, "-")} s/d ${convertDate(
+                    end_date,
+                    "-"
+                  )}`}
                 />
               </div>
               <div className="w-4/12">

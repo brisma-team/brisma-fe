@@ -109,7 +109,12 @@ const index = () => {
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Ringkasan Objek Audit"} />
-          <PrevNextNavigation baseUrl={baseUrl} routes={routes} />
+          <PrevNextNavigation
+            baseUrl={baseUrl}
+            routes={routes}
+            prevUrl={"/jadwal-lainnya"}
+            nextUrl={"/dokumen"}
+          />
         </div>
         <div className="flex justify-end items-end gap-2">
           <CardTypeCount

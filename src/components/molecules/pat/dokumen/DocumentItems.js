@@ -1,9 +1,11 @@
 import Link from "next/link";
 
-const DocumentItems = ({ no, title, count, handleClick }) => {
+const DocumentItems = ({ no, title, count, handleClick, activeIndex }) => {
   return (
     <Link
-      className="text-sm py-1 flex justify-between no-underline hover:no-underline text-brisma hover:text-brisma"
+      className={`text-sm py-1 flex justify-between no-underline hover:no-underline text-brisma hover:text-brisma ${
+        activeIndex === no && `bg-atlasian-red`
+      }`}
       href={"#"}
       onClick={handleClick}
     >

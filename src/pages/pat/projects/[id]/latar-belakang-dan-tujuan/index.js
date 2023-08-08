@@ -97,7 +97,12 @@ const index = () => {
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Latar Belakang dan Tujuan"} />
-          <PrevNextNavigation baseUrl={baseUrl} routes={routes} />
+          <PrevNextNavigation
+            baseUrl={baseUrl}
+            routes={routes}
+            prevUrl={false}
+            nextUrl={"/sumber-informasi"}
+          />
         </div>
         {/* Start Content */}
         <div className="my-4 flex">

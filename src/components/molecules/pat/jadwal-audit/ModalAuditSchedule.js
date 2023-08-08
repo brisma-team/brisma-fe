@@ -1,5 +1,5 @@
 import { Modal } from "@/components/atoms";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ModalBodyInfoKegiatan,
@@ -14,9 +14,16 @@ import { ModalHeader, ModalFooter } from "@/components/molecules/pat";
 const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
   const { id } = useRouter().query;
   const [currentModalStage, setCurrentModalStage] = useState(1);
+  const [isDisabled, setIsDisabled] = useState(false);
   const auditScheduleData = useSelector(
     (state) => state.auditSchedule.auditScheduleData
   );
+
+  useEffect(() => {
+    if (typeModal === "detail") {
+      setIsDisabled(true);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,6 +54,10 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
 
     setShowModal(false);
     mutate;
+  };
+
+  const handleNextStage = () => {
+    if (currentModalStage < 3) setCurrentModalStage(currentModalStage + 1);
   };
 
   const items = [
@@ -92,24 +103,30 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
       header={
         <ModalHeader headerText={"Buat Jadwal Audit"} progressItems={items} />
       }
-      footer={<ModalFooter handleSubmit={handleSubmit} />}
+      footer={
+        <ModalFooter
+          handleSubmit={handleSubmit}
+          handleNextStage={handleNextStage}
+          isDisabled={false}
+        />
+      }
     >
       {currentModalStage === 1 && (
         <ModalBodyInfoKegiatan
           setCurrentModalStage={setCurrentModalStage}
-          typeModal={typeModal}
+          isDisabled={isDisabled}
         />
       )}
       {currentModalStage === 2 && (
         <ModalBodyObjekAudit
           setCurrentModalStage={setCurrentModalStage}
-          typeModal={typeModal}
+          isDisabled={isDisabled}
         />
       )}
       {currentModalStage === 3 && (
         <ModalBodyAnggaran
           setCurrentModalStage={setCurrentModalStage}
-          typeModal={typeModal}
+          isDisabled={isDisabled}
         />
       )}
     </Modal>

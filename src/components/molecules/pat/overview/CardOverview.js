@@ -1,4 +1,4 @@
-import { Card } from "@/components/atoms";
+import { ButtonIcon, Card } from "@/components/atoms";
 import { IconEdit, IconSuccess } from "@/components/icons";
 import Link from "next/link";
 import ProgressBar from "@atlaskit/progress-bar";
@@ -38,9 +38,11 @@ const CardOverview = ({
             <div className="text-base font-bold text-atlasian-blue-dark">
               {title}
             </div>
-            <div className="text-atlasian-yellow">
-              <IconEdit size="medium" />
-            </div>
+            <ButtonIcon
+              color={"yellow"}
+              icon={<IconEdit size="medium" />}
+              handleClick={() => console.log("TEST")}
+            />
           </div>
           <div className="text-sm font-bold">{year}</div>
           <div className="flex flex-row justify-between leading-3 mt-2 items-center">

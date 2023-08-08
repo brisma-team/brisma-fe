@@ -22,9 +22,10 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useUkerType } from "@/data/reference";
 
-const SubModalUnitKerja = () => {
+const SubModalUnitKerja = ({ isDisabled }) => {
   const { control } = useForm();
   const [showBranch, setShowBranch] = useState(false);
+  const [countType, setCountType] = useState([]);
   const dispatch = useDispatch();
   const auditScheduleData = useSelector(
     (state) => state.auditSchedule.auditScheduleData
@@ -34,11 +35,36 @@ const SubModalUnitKerja = () => {
   const [openTipeUkerIdx, setOpenTipeUkerIdx] = useState(null);
 
   useEffect(() => {
+    const totalCount = auditScheduleData?.uker?.length;
+    if (totalCount) {
+      const typeCounts = {};
+      auditScheduleData?.uker?.forEach((item) => {
+        const type = item.tipe_uker;
+        if (type) {
+          typeCounts[type] = (typeCounts[type] || 0) + 1;
+        }
+      });
+
+      const total = Object.values(typeCounts).reduce(
+        (acc, count) => acc + count,
+        0
+      );
+
+      const result = Object.keys(typeCounts).map((type) => {
+        const count = typeCounts[type];
+        const percent = ((count / total) * 100).toFixed(0);
+        return { type, count, percent };
+      });
+
+      setCountType(result);
+    }
+  }, [auditScheduleData]);
+
+  useEffect(() => {
     const mapping = ukerType?.data?.map((v) => {
       return { label: v.name, value: v.kode };
     });
     setOptionUkerType(mapping);
-    console.log("UKER TYPE => ", ukerType);
   }, [ukerType]);
 
   const handleDeleteUker = (idx) => {
@@ -77,17 +103,19 @@ const SubModalUnitKerja = () => {
   };
 
   const handleAddUker = (value) => {
-    const newData = [...auditScheduleData.uker];
-    newData.push({
-      ref_auditee_orgeh_kode: "",
-      ref_auditee_orgeh_name: "",
-      ref_auditee_branch_kode: value.branch_kode,
-      ref_auditee_branch_name: value.branch_name,
-      tipe_uker: "",
-      attachments: [""],
-    });
-    dispatch(setAuditScheduleData({ ...auditScheduleData, uker: newData }));
-    setShowBranch(false);
+    if (value) {
+      const newData = [...auditScheduleData.uker];
+      newData.push({
+        ref_auditee_orgeh_kode: "",
+        ref_auditee_orgeh_name: "",
+        ref_auditee_branch_kode: value.branch_kode,
+        ref_auditee_branch_name: value.branch_name,
+        tipe_uker: "",
+        attachments: [""],
+      });
+      dispatch(setAuditScheduleData({ ...auditScheduleData, uker: newData }));
+      setShowBranch(false);
+    }
   };
 
   const handleMenuOpen = (idx) => {
@@ -106,63 +134,19 @@ const SubModalUnitKerja = () => {
   return (
     <div>
       <div className="w-full p-4">
-        <div className="w-full flex gap-3 my-3">
-          <CardTypeCount
-            title={"RAO"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-          <CardTypeCount
-            title={"BO (KC)"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-          <CardTypeCount
-            title={"KK"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-          <CardTypeCount
-            title={"DIVISI"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-          <CardTypeCount
-            title={"RO (KANWIL)"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-        </div>
-        <div className="w-full flex gap-3 my-3">
-          <CardTypeCount
-            title={"KCP"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-          <CardTypeCount
-            title={"UNIT"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-          <CardTypeCount
-            title={"UKLN"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-          <CardTypeCount
-            title={"PA"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
+        <div className="w-full flex flex-wrap my-1">
+          {countType.map((v, i) => {
+            return (
+              <CardTypeCount
+                key={i}
+                title={v.type}
+                total={v.count}
+                percent={v.percent}
+                width={"w-[12rem]"}
+                style={"m-1"}
+              />
+            );
+          })}
         </div>
       </div>
       <div className="w-full font-bold text-sm px-4">
@@ -221,6 +205,7 @@ const SubModalUnitKerja = () => {
                             orgeh_name: v.ref_auditee_orgeh_name,
                           },
                         }}
+                        isDisabled={isDisabled}
                       />
                     </div>
                   </div>
@@ -240,6 +225,7 @@ const SubModalUnitKerja = () => {
                         isSearchable={false}
                         handleMenuOpen={() => handleMenuOpen(i)}
                         handleMenuClose={handleMenuClose}
+                        isDisabled={isDisabled}
                       />
                     </div>
                   </div>
@@ -279,6 +265,7 @@ const SubModalUnitKerja = () => {
                 text={"Tambah Uker"}
                 textColor={"purple"}
                 handler={() => setShowBranch(true)}
+                disabled={isDisabled}
               />
             </div>
             {showBranch && (

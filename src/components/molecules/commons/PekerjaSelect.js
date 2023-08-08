@@ -1,37 +1,40 @@
 import usePekerja from "@/data/usePekerja";
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
-import { ReactSelect } from "@/components/atoms";
+import Select, { components } from "@atlaskit/select";
 
 const PekerjaSelect = ({
-  control,
   handleChange,
-  handleClick,
   isSearchable,
   placeholder,
   selectedValue,
+  fieldsProps,
   customIcon,
 }) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState("");
-  const [params, setParams] = useState("");
-  const { pekerja, pekerjaMutate } = usePekerja(params, "skai");
+  const [keyword, setKeyword] = useState("");
+  const [search, setSearch] = useState(false);
+  const { pekerja, pekerjaMutate } = usePekerja(keyword, "skai");
 
   useEffect(() => {
-    const mappedPekerja = pekerja?.data?.map((row) => {
-      return {
-        ...row,
-        label: `${row?.pn} - ${row?.name}`,
-        value: { pn: row?.pn, name: row?.name, jabatan: row?.jabatan },
-      };
-    });
-    setOptions(mappedPekerja);
-  }, [pekerja]);
+    if (search) {
+      const mappedPekerja = pekerja?.data?.map((row) => {
+        return {
+          ...row,
+          label: `${row?.pn} - ${row?.name}`,
+          value: { pn: row?.pn, name: row?.name, jabatan: row?.jabatan },
+        };
+      });
+      setOptions(mappedPekerja);
+    }
+  }, [pekerja, search]);
 
   useEffect(() => {
-    if (value > 2) {
+    if (value.length > 2) {
       const handleSearch = () => {
-        setParams(value);
+        setSearch(true);
+        setKeyword(value);
         pekerjaMutate;
       };
       const debouncedSearch = _.debounce(handleSearch, 400);
@@ -52,17 +55,24 @@ const PekerjaSelect = ({
     }
   }
 
+  const DropdownIndicator = (props) => {
+    return (
+      <components.DropdownIndicator {...props}>
+        {customIcon && customIcon}
+      </components.DropdownIndicator>
+    );
+  };
+
   return (
-    <ReactSelect
-      control={control}
-      options={options}
-      handleChange={handleChange}
-      handleInputChange={handleInputChange}
-      handleClick={handleClick}
-      isSearchable={isSearchable}
+    <Select
+      {...fieldsProps}
       placeholder={placeholder}
+      options={options}
+      onChange={handleChange}
+      isSearchable={isSearchable}
       value={selectedValue}
-      customIcon={customIcon}
+      onInputChange={handleInputChange}
+      components={customIcon && { DropdownIndicator }}
     />
   );
 };

@@ -16,6 +16,7 @@ import { setActivityScheduleOtherData } from "@/slices/pat/activityScheduleOther
 import { convertDate, parseDate } from "@/helpers";
 
 const ModalBodyActivityInfo = ({ setCurrentModalStage, typeModal }) => {
+  console.log(typeModal);
   const { control } = useForm();
   const dispatch = useDispatch();
   const activityScheduleOtherData = useSelector(
@@ -25,7 +26,7 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, typeModal }) => {
   const [selectedTipe, setSelectedTipe] = useState(null);
   const [selectedJenis, setSelectedJenis] = useState(null);
 
-  const { metode } = useMetode(1);
+  const { metode } = useMetode("all", 1);
   const { tipe } = useTipe(selectedMetode);
   const { jenis } = useJenis(selectedTipe);
   const { tema } = useTema(selectedJenis);
