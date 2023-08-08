@@ -27,7 +27,13 @@ const SupersetDashboard = () => {
             hideTab: true,
           },
         };
-        if (token) await embedDashboard(config);
+        if (token) {
+          try {
+            embedDashboard(config);
+          } catch (error) {
+            console.log("Dashboard failed to load.");
+          }
+        }
       }
     };
 

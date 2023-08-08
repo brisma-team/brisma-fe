@@ -26,7 +26,7 @@ const Sidebar = ({ handleSidebarItemClick }) => {
   };
 
   return (
-    <div className="fixed h-screen w-64 pt-16 shadow">
+    <div className="fixed h-screen w-64 pt-16 shadow bg-[#fafbfc]">
       <SideNavigation label="project" testId="side-navigation">
         <NavigationHeader>
           <ProfileDetail />
@@ -81,7 +81,10 @@ const Sidebar = ({ handleSidebarItemClick }) => {
               <ButtonItem iconBefore={<IconMediaServicesDocument label="" />}>
                 <p className="text-base">R.P.M</p>
               </ButtonItem>
-              <LinkItem href="#" iconBefore={<IconPreferences label="" />}>
+              <LinkItem
+                href="/reference"
+                iconBefore={<IconPreferences label="" />}
+              >
                 <p className="text-base">Reference</p>
               </LinkItem>
               <ButtonItem
