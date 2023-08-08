@@ -32,9 +32,7 @@ const CardBody = ({ title, text, width }) => {
           {text?.map((v, i) => {
             return (
               <div className="w-full flex justify-between" key={i}>
-                <div key={i} className="w-2/5">
-                  {v.name}
-                </div>
+                <div className="w-2/5">{v.name}</div>
                 <div key={i} className="w-3/5">
                   {v?.uker?.map((x, idx) => {
                     return (
@@ -137,8 +135,7 @@ const CardAuditTeam = ({
   };
 
   return (
-    <Link
-      href={"#"}
+    <div
       className={
         "hover:bg-gray-100 hover:rounded-[10px] hover:no-underline w-[29.4rem] relative cursor-pointer"
       }
@@ -193,7 +190,7 @@ const CardAuditTeam = ({
           <CardBody title={"Anggota Tim Audit"} text={ata} width={"w-full"} />
         </div>
       </Card>
-    </Link>
+    </div>
   );
 };
 

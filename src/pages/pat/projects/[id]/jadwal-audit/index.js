@@ -13,6 +13,9 @@ import { CardFilterActivitySchedule } from "@/components/molecules/pat";
 import { useRouter } from "next/router";
 import useAuditSchedule from "@/data/pat/useAuditSchedule";
 import { useStatusPat } from "@/data/pat";
+import _ from "lodash";
+import { useDispatch } from "react-redux";
+import { resetAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
 
 const routes = [
   {
@@ -30,7 +33,7 @@ const index = () => {
   const { id } = useRouter().query;
   const baseUrl = `/pat/projects/${id}`;
   const { statusPat } = useStatusPat(id);
-  const [content, setContent] = useState(null);
+  const dispatch = useDispatch();
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "PAT", path: "/pat" },
@@ -39,13 +42,33 @@ const index = () => {
     { name: "Jadwal Audit", path: `/pat/projects/${id}/jadwal-audit` },
   ];
 
+  const [content, setContent] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showModalDetail, setShowModalDetail] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
+  const [params, setParams] = useState({
+    project_name: "",
+    metode: "",
+    tipe: "",
+    start: "",
+    end: "",
+    sort_by: "ASC",
+  });
+  const [filter, setFilter] = useState({
+    project_name: "",
+    metode: "",
+    tipe: "",
+    start: "",
+    end: "",
+    sort_by: "ASC",
+  });
+
   const { auditSchedule, auditScheduleMutate } = useAuditSchedule("all", {
     id,
+    ...params,
   });
   const [data, setData] = useState([]);
+  const [countType, setCountType] = useState({});
   const [typeModal, setTypeModal] = useState(null);
   const [scheduleId, setScheduleId] = useState(null);
 
@@ -65,6 +88,8 @@ const index = () => {
         title: v?.name_kegiatan_audit,
         maker: v?.pic_jadwal_audit?.nama,
         audit_team: v?.tim_audit?.name,
+        start_date: v?.pelaksanaan_start,
+        end_date: v?.pelaksanaan_end,
         budget: v?.total_anggaran,
         audit_type: v?.ref_tipe?.nama,
         tema: v?.ref_tema?.nama,
@@ -73,7 +98,41 @@ const index = () => {
     });
 
     setData(mappedData);
+
+    const totalCount = auditSchedule?.result?.length;
+    if (totalCount) {
+      const typeCounts = auditSchedule?.result.reduce((acc, item) => {
+        const type = item?.ref_tipe?.nama;
+        acc[type] = (acc[type] || 0) + 1;
+        return acc;
+      }, {});
+
+      const result = Object.entries(typeCounts).map(([type, count]) => ({
+        type,
+        count,
+        percent: ((count / totalCount) * 100).toFixed(0),
+      }));
+
+      setCountType(result);
+    }
   }, [auditSchedule, auditScheduleMutate]);
+
+  useEffect(() => {
+    const handleSearch = () => {
+      setParams(filter);
+    };
+    const debouncedSearch = _.debounce(handleSearch, 2000);
+    debouncedSearch();
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [filter]);
+
+  const handleCreateButton = () => {
+    setShowModal(true);
+    setTypeModal("create");
+    dispatch(resetAuditScheduleData());
+  };
 
   return (
     <PatLandingLayout content={content} data={statusPat?.data}>
@@ -81,7 +140,12 @@ const index = () => {
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Jadwal Audit"} />
-          <PrevNextNavigation baseUrl={baseUrl} routes={routes} />
+          <PrevNextNavigation
+            baseUrl={baseUrl}
+            routes={routes}
+            prevUrl={"/tim-audit"}
+            nextUrl={"/jadwal-kegiatan"}
+          />
         </div>
 
         {/* Start Filter */}
@@ -101,7 +165,7 @@ const index = () => {
           <div className="w-40">
             <Button
               appearance="danger"
-              onClick={() => setShowModal(true)}
+              onClick={handleCreateButton}
               shouldFitContainer
             >
               Buat Jadwal Audit
@@ -116,26 +180,30 @@ const index = () => {
         </div>
         <div className="flex justify-between items-end">
           <div className="w-[27rem] flex justify-center">
-            <CardFilterActivitySchedule showFilter={showFilter} />
+            <CardFilterActivitySchedule
+              showFilter={showFilter}
+              params={filter}
+              setParams={setFilter}
+            />
           </div>
           <div className="flex justify-end items-end gap-2">
-            <CardTypeCount
-              title={"INDIVIDUAL"}
-              total={2}
-              percent={75}
-              width={"w-[12.8rem]"}
-            />
-            <CardTypeCount
-              title={"TEMATIK"}
-              total={1}
-              percent={25}
-              width={"w-[12.8rem]"}
-            />
+            {countType?.length && (
+              <div className="mb-1">
+                {countType.map((v, i) => {
+                  return (
+                    <CardTypeCount
+                      key={i}
+                      title={v.type}
+                      total={v.count}
+                      percent={v.percent}
+                      width={"w-[12.8rem]"}
+                    />
+                  );
+                })}
+              </div>
+            )}
             <SelectSortFilter
-              optionValue={[
-                { label: "Awal", value: "awal" },
-                { label: "Akhir", value: "akhir" },
-              ]}
+              change={(e) => setParams({ ...params, sort_by: e.value })}
             />
           </div>
         </div>
@@ -154,6 +222,8 @@ const index = () => {
                   title={v.title}
                   maker={v.maker}
                   audit_team={v.audit_team}
+                  start_date={v.start_date}
+                  end_date={v.end_date}
                   budget={v.budget}
                   audit_type={v.audit_type}
                   tema={v.tema}

@@ -12,18 +12,10 @@ const useProjectOverview = (params) => {
     year,
   } = params;
 
-  let query = "";
   if (!pages) pages = 1;
   if (!limit) limit = 8;
-  if (project_name) query += `&project_name=${project_name}`;
-  if (status_approver) query += `&status_approver=${status_approver}`;
-  if (status_pat) query += `&status_pat=${status_pat}`;
-  if (year) query += `&tahun=${year}`;
-  if (sortBy) query += `&sortBy=name ${sortBy}`;
 
-  console.log("QUERY => ", query);
-
-  const path = `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/auditors?page=${pages}&limit=${limit}${query}`;
+  const path = `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/auditors?page=${pages}&limit=${limit}&project_name=${project_name}&status_approver=${status_approver}&status_pat=${status_pat}&tahun=${year}&sortBy=name ${sortBy}`;
   const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);
 
   return {

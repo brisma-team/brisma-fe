@@ -5,7 +5,7 @@ import { setAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
 import { convertDate, parseDate } from "@/helpers";
 import { useEffect } from "react";
 
-const RowDatatable = ({ idx, handleChange, value }) => {
+const RowDatatable = ({ idx, handleChange, value, isDisabled }) => {
   return (
     <div className="flex">
       <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[25%] flex items-center text-justify p-1">
@@ -20,6 +20,7 @@ const RowDatatable = ({ idx, handleChange, value }) => {
               handleChange("jumlah_existing", parseInt(e), idx)
             }
             value={value?.jumlah_existing?.toString()}
+            isDisabled={isDisabled}
           />
         </div>
       </div>
@@ -30,6 +31,7 @@ const RowDatatable = ({ idx, handleChange, value }) => {
               handleChange("jumlah_target", parseInt(e), idx)
             }
             value={value?.jumlah_target?.toString()}
+            isDisabled={isDisabled}
           />
         </div>
       </div>
@@ -48,6 +50,7 @@ const RowDatatable = ({ idx, handleChange, value }) => {
             value={
               value?.posisi_data ? convertDate(value?.posisi_data, "-") : ""
             }
+            isDisabled={isDisabled}
           />
         </div>
       </div>
@@ -55,7 +58,7 @@ const RowDatatable = ({ idx, handleChange, value }) => {
   );
 };
 
-const SubModalEChannel = ({ typeModal }) => {
+const SubModalEChannel = ({ isDisabled }) => {
   const dispatch = useDispatch();
   const auditScheduleData = useSelector(
     (state) => state.auditSchedule.auditScheduleData
@@ -103,6 +106,7 @@ const SubModalEChannel = ({ typeModal }) => {
                 idx={i}
                 handleChange={handleChange}
                 value={v}
+                isDisabled={isDisabled}
               />
             );
           })}

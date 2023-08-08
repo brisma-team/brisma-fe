@@ -1,44 +1,30 @@
-import { Card, Select, TextInput } from "@/components/atoms";
+import { ButtonIcon, Card, Select, TextInput } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
-import { UserSKAISelect } from "../../commons";
-import { useForm } from "react-hook-form";
-import { setSearchParam } from "@/slices/pat/projectOverviewSlice";
-import { useSelector, useDispatch } from "react-redux";
+import { PekerjaSelect } from "../../commons";
 
-const CardFilterProjectOverview = ({ openFilter }) => {
-  const dispatch = useDispatch();
-  const projectOverviewState = useSelector(
-    (state) => state.projectOverview.searchParam
-  );
-
-  const { control } = useForm();
-
-  const onChangeUserSKAI = (e) => {
-    dispatch(
-      setSearchParam({ ...projectOverviewState, status_approver: e?.pn })
-    );
+const CardFilterProjectOverview = ({ openFilter, filter, setFilter }) => {
+  const handleChangePekerja = (e) => {
+    setFilter({ ...filter, status_approver: e.value.pn });
   };
 
   const handleStatusPAT = (e) => {
-    dispatch(setSearchParam({ ...projectOverviewState, status_pat: e.value }));
+    setFilter({ ...filter, status_pat: e?.value });
   };
 
   const handleYear = (e) => {
-    dispatch(setSearchParam({ ...projectOverviewState, year: e.target.value }));
+    setFilter({ ...filter, year: e.target.value });
   };
 
   const handleProjectName = (e) => {
-    dispatch(
-      setSearchParam({ ...projectOverviewState, project_name: e.target.value })
-    );
+    setFilter({ ...filter, project_name: e.target.value });
   };
 
   const setNullYear = () => {
-    dispatch(setSearchParam({ ...projectOverviewState, year: "" }));
+    setFilter({ ...filter, year: "" });
   };
 
   const setNullProjectName = () => {
-    dispatch(setSearchParam({ ...projectOverviewState, project_name: "" }));
+    setFilter({ ...filter, project_name: "" });
   };
 
   return (
@@ -51,17 +37,13 @@ const CardFilterProjectOverview = ({ openFilter }) => {
                 <TextInput
                   placeholder="Nama Proyek"
                   icon={
-                    <button
-                      className="justify-center"
-                      onClick={setNullProjectName}
-                    >
-                      <span>
-                        <IconClose size="large" />
-                      </span>
-                    </button>
+                    <ButtonIcon
+                      handleClick={setNullProjectName}
+                      icon={<IconClose size="large" />}
+                    />
                   }
                   onChange={handleProjectName}
-                  value={projectOverviewState.project_name}
+                  value={filter.project_name}
                 />
               </div>
               <div className="w-1/2">
@@ -83,18 +65,17 @@ const CardFilterProjectOverview = ({ openFilter }) => {
                 <TextInput
                   placeholder="Tahun"
                   icon={
-                    <button className="justify-center" onClick={setNullYear}>
-                      <span>
-                        <IconClose size="large" />
-                      </span>
-                    </button>
+                    <ButtonIcon
+                      handleClick={setNullYear}
+                      icon={<IconClose size="large" />}
+                    />
                   }
                   onChange={handleYear}
-                  value={projectOverviewState.year}
+                  value={filter.year}
                 />
               </div>
               <div className="w-1/2">
-                <UserSKAISelect control={control} change={onChangeUserSKAI} />
+                <PekerjaSelect handleChange={handleChangePekerja} />
               </div>
             </div>
           </div>

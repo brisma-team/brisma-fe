@@ -9,6 +9,7 @@ import { CardActivityExpense } from "@/components/molecules/pat";
 import { setActivityScheduleOtherData } from "@/slices/pat/activityScheduleOtherSlice";
 
 const SubModalActivityExpense = ({ typeModal }) => {
+  console.log(typeModal);
   const { control } = useForm();
   const dispatch = useDispatch();
   const activityScheduleOtherData = useSelector(

@@ -24,12 +24,7 @@ const readViewContainerStyles = xcss({
   wordBreak: "break-word",
 });
 
-const InlineEditBranchSelect = ({
-  placeholder,
-  handleConfirm,
-  value,
-  control,
-}) => {
+const InlineEditBranchSelect = ({ placeholder, handleConfirm, value }) => {
   const [editValue, setEditValue] = useState(value);
 
   const handleChange = (e) => {
@@ -40,11 +35,10 @@ const InlineEditBranchSelect = ({
     <Box xcss={containerStyles}>
       <InlineEdit
         defaultValue={editValue}
-        editView={() => (
-          // { errorMessage, ...fieldProps }, ref
+        editView={(fieldProps) => (
           <BranchSelect
+            fieldsProps={fieldProps}
             handleChange={handleChange}
-            control={control}
             selectedValue={value}
           />
         )}

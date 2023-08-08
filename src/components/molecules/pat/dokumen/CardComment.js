@@ -23,7 +23,7 @@ const CommentDetail = ({
   return (
     <div className={`rounded flex items-center ${style && style} w-full mb-4`}>
       <div>
-        <Image src={imageUrl} />
+        <Image src={imageUrl} alt="chat" />
       </div>
       <div className="w-full flex justify-between items-center pl-2">
         <div className={`text-xs font-medium ${textColor && textColor}`}>

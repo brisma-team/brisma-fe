@@ -1,9 +1,10 @@
-import { Modal, TableField } from "@/components/atoms";
+import { Modal, PageTitle, TableField } from "@/components/atoms";
 import { useEffect, useState } from "react";
 import { useAuditSchedule } from "@/data/pat";
 import { useRouter } from "next/router";
 
 const ModalAuditScheduleDetail = ({ showModal, setShowModal, scheduleId }) => {
+  console.log("scheduleId => ", scheduleId);
   const { id } = useRouter().query;
   const [items, setItems] = useState([]);
   const { auditSchedule } = useAuditSchedule("detail", {
@@ -17,8 +18,8 @@ const ModalAuditScheduleDetail = ({ showModal, setShowModal, scheduleId }) => {
         if (!parseInt(v?.existing)) {
           return {
             "Objek Audit": v?.name,
-            Eksisting: "0",
-            Target: "0",
+            Eksisting: v?.existing.toString(),
+            Target: v?.target.toString(),
             Presentase: "0%",
           };
         } else {
@@ -42,7 +43,9 @@ const ModalAuditScheduleDetail = ({ showModal, setShowModal, scheduleId }) => {
   return (
     <Modal showModal={showModal} onClickOutside={() => setShowModal(false)}>
       <div className="w-[50rem]">
-        <div className="">Percobaan</div>
+        <div className="mb-2">
+          <PageTitle text={auditSchedule?.data.jadwal?.name_kegiatan_audit} />
+        </div>
         <TableField
           headers={["Objek Audit", "Eksisting", "Target", "Presentase"]}
           columnWidths={["40%", "20%", "20%", "20%"]}

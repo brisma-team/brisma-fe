@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { CardActivityExpense } from "@/components/molecules/pat";
 
 const SubModalBiayaSelamaKegiatan = ({ typeModal }) => {
+  console.log(typeModal);
   const { control } = useForm();
   const dispatch = useDispatch();
   const auditScheduleData = useSelector(

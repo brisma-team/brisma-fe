@@ -8,6 +8,7 @@ const DatepickerStartEnd = ({
   valueStart,
   valueEnd,
   format,
+  isDisabled,
 }) => {
   return (
     <div className="flex">
@@ -17,6 +18,7 @@ const DatepickerStartEnd = ({
           onChange={handlerChangeStart}
           value={valueStart}
           dateFormat={format}
+          isDisabled={isDisabled}
         />
       </div>
       <div className="text-center mx-2">
@@ -28,6 +30,7 @@ const DatepickerStartEnd = ({
           onChange={handlerChangeEnd}
           value={valueEnd}
           dateFormat={format}
+          isDisabled={isDisabled}
         />
       </div>
     </div>

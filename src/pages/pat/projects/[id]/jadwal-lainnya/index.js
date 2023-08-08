@@ -89,7 +89,12 @@ const index = () => {
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Jadwal Lainnya"} />
-          <PrevNextNavigation baseUrl={baseUrl} routes={routes} />
+          <PrevNextNavigation
+            baseUrl={baseUrl}
+            routes={routes}
+            prevUrl={"/jadwal-kegiatan"}
+            nextUrl={"/ringkasan-objek-audit"}
+          />
         </div>
 
         {/* Start Filter */}
@@ -146,12 +151,7 @@ const index = () => {
               percent={25}
               width={"w-[12.8rem]"}
             />
-            <SelectSortFilter
-              optionValue={[
-                { label: "Awal", value: "awal" },
-                { label: "Akhir", value: "akhir" },
-              ]}
-            />
+            <SelectSortFilter />
           </div>
         </div>
         {/* End of Filter */}

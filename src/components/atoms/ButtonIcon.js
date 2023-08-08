@@ -1,6 +1,4 @@
-import Link from "next/link";
-
-const LinkIcon = ({ href, color, handler, icon, isDisabled }) => {
+const ButtonIcon = ({ color, icon, handleClick }) => {
   let iconColor;
   switch (color) {
     case "red":
@@ -19,19 +17,21 @@ const LinkIcon = ({ href, color, handler, icon, isDisabled }) => {
       iconColor = "text-black";
   }
 
-  if (isDisabled) {
-    return <span className={`${iconColor}`}>{icon}</span>;
-  }
-
   return (
-    <Link
-      href={!href ? "#" : href}
-      onClick={handler && handler}
-      className={`no-underline hover:no-underline ${iconColor} hover:${iconColor}`}
+    <span
+      role="button"
+      tabIndex={0}
+      className={`${iconColor}`}
+      onClick={handleClick}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === "Space") {
+          return;
+        }
+      }}
     >
       {icon}
-    </Link>
+    </span>
   );
 };
 
-export default LinkIcon;
+export default ButtonIcon;

@@ -23,6 +23,7 @@ import { setActivityScheduleOtherData } from "@/slices/pat/activityScheduleOther
 import { useUkerType } from "@/data/reference";
 
 const SubModalWorkUnit = ({ typeModal }) => {
+  console.log(typeModal);
   const { control } = useForm();
   const [showBranch, setShowBranch] = useState(false);
   const dispatch = useDispatch();

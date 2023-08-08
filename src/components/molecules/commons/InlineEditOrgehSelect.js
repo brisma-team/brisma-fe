@@ -4,10 +4,8 @@ import {
   fontSize as getFontSize,
   gridSize as getGridSize,
 } from "@atlaskit/theme/constants";
-
 import InlineEdit from "@atlaskit/inline-edit";
 import OrgehSelect from "./OrgehSelect";
-import { useEffect } from "react";
 
 const containerStyles = xcss({
   width: "100%",
@@ -29,27 +27,26 @@ const InlineEditOrgehSelect = ({
   placeholder,
   handleConfirm,
   value,
-  control,
+  isDisabled,
 }) => {
   const [editValue, setEditValue] = useState(value);
 
   const handleChange = (e) => {
-    setEditValue(e.value);
+    if (e?.value) {
+      setEditValue(e?.value);
+    } else {
+      setEditValue("");
+    }
   };
-
-  useEffect(() => {
-    console.log("editValue => ", editValue);
-  }, []);
 
   return (
     <Box xcss={containerStyles}>
       <InlineEdit
         defaultValue={editValue}
-        editView={() => (
-          // { errorMessage, ...fieldProps }, ref
+        editView={(fieldProps) => (
           <OrgehSelect
+            fieldsProps={fieldProps}
             handleChange={handleChange}
-            control={control}
             selectedValue={value}
           />
         )}
@@ -65,6 +62,7 @@ const InlineEditOrgehSelect = ({
             <Box xcss={readViewContainerStyles}>{editValue?.label}</Box>
           )
         }
+        isEditing={!isDisabled}
         onConfirm={handleConfirm}
         readViewFitContainerWidth
         hideActionButtons

@@ -5,7 +5,7 @@ import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
 import useStatusPat from "@/data/pat/useStatusPat";
 import { setSearchParam } from "@/slices/pat/statusPatSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -13,13 +13,16 @@ const index = () => {
   const [data, setData] = useState([]);
   const [content, setContent] = useState([]);
   const { statusPat } = useStatusPat(id);
-  const statusPatState = useSelector((state) => state.statusPat.searchParam);
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "PAT", path: "/pat" },
     { name: "Overview", path: "/pat/projects" },
-    { name: statusPatState?.data?.pat_name, path: `/pat/projects/${id}` },
+    { name: statusPat?.data?.pat_name, path: `/pat/projects/${id}` },
+    {
+      name: "Tim Audit",
+      path: `/pat/projects/${id}/tim-audit`,
+    },
   ];
 
   useEffect(() => {

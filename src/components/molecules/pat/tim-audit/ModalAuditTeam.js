@@ -184,13 +184,11 @@ const ModalAuditTeam = ({
         isMutate;
       })
       .catch((err) => {
-        console.log("ERROR => ", err);
         if (err.inner) {
           const errors = {};
           err.inner.forEach((error) => {
             errors[error.path] = error.message;
           });
-          console.log("ERROR => ", errors);
           setValidationErrors(errors);
         }
       });
@@ -214,22 +212,26 @@ const ModalAuditTeam = ({
         <div className="flex gap-3 justify-between my-3">
           <div className="w-1/3">
             <CardFormInputTeam
+              key={0}
               type={"Manajer Audit"}
               data={data?.ref_tim_audit_ma}
               handlerDeleteParent={handleDeleteMA}
               handlerAddParent={handleAddMA}
               handlerChangeParent={handleChangeMA}
               validationErrors={validationErrors}
+              property={"ref_tim_audit_ma"}
             />
           </div>
           <div className="w-1/3">
             <CardFormInputTeam
+              key={1}
               type={"Ketua Tim Audit"}
               data={data?.ref_tim_audit_kta}
               handlerDeleteParent={handleDeleteKTA}
               handlerAddParent={handleAddKTA}
               handlerChangeParent={handleChangeKTA}
               validationErrors={validationErrors}
+              property={"ref_tim_audit_kta"}
             />
           </div>
           <div className="w-1/3">
@@ -245,6 +247,7 @@ const ModalAuditTeam = ({
         </div>
         <div className="my-3">
           <CardFormInputTeam
+            key={2}
             type={"Anggota Tim Audit"}
             data={data.ref_tim_audit_ata}
             handlerDeleteParent={handleDeleteATA}
@@ -254,6 +257,7 @@ const ModalAuditTeam = ({
             handlerChangeParent={handleChangeATA}
             handlerChangeChild={handleChangeUkerATA}
             validationErrors={validationErrors}
+            property={"ref_tim_audit_ata"}
           />
         </div>
       </form>

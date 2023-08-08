@@ -23,6 +23,7 @@ import ReactSelect from "./ReactSelect";
 import ErrorValidation from "./ErrorValidation";
 import DivButton from "./DivButton";
 import TableField from "./Table";
+import ButtonIcon from "./ButtonIcon";
 
 export {
   AvatarDefaultExample,
@@ -50,4 +51,5 @@ export {
   ErrorValidation,
   DivButton,
   TableField,
+  ButtonIcon,
 };

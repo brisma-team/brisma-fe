@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  ButtonIcon,
   DatepickerStartEnd,
   ReactSelect,
   TextAreaField,
@@ -25,12 +26,14 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
   const auditScheduleData = useSelector(
     (state) => state.auditSchedule.auditScheduleData
   );
+
+  const [isDisabled, setIsDisabled] = useState(false);
   const [selectedMetode, setSelectedMetode] = useState(null);
   const [selectedTipe, setSelectedTipe] = useState(null);
   const [selectedJenis, setSelectedJenis] = useState(null);
 
-  const { metode } = useMetode(1);
-  const { tipe } = useTipe(selectedMetode);
+  const { metode } = useMetode("all", 1);
+  const { tipe } = useTipe("all", selectedMetode);
   const { jenis } = useJenis(selectedTipe);
   const { tema } = useTema(selectedJenis);
   const { auditTeam } = useAuditTeam("list", { id });
@@ -47,6 +50,9 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
 
   useEffect(() => {
     setCurrentModalStage(1);
+    if (typeModal === "detail") {
+      setIsDisabled(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -168,11 +174,17 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
     <div className="w-[60rem]">
       <div className="w-1/2 pr-1">
         <TextInput
-          icon={<IconClose size="medium" />}
+          icon={
+            <ButtonIcon
+              handleClick={() => handleChange("name_kegiatan_audit", "")}
+              icon={<IconClose size="medium" />}
+            />
+          }
           className={"font-bold text-5xl rounded text-brisma"}
           style={{ fontSize: "1.25rem" }}
           onChange={(e) => handleChange("name_kegiatan_audit", e.target.value)}
           value={auditScheduleData.name_kegiatan_audit}
+          isDisabled={isDisabled}
         />
       </div>
       <div className="flex gap-3 justify-between my-3">
@@ -192,6 +204,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
                       value: auditScheduleData?.ref_metode?.kode,
                     }
                   }
+                  isDisabled={isDisabled}
                 />
               }
             />
@@ -209,6 +222,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
                       value: auditScheduleData.ref_tipe?.kode,
                     }
                   }
+                  isDisabled={isDisabled}
                 />
               }
             />
@@ -226,6 +240,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
                       value: auditScheduleData.ref_jenis?.kode,
                     }
                   }
+                  isDisabled={isDisabled}
                 />
               }
             />
@@ -243,6 +258,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
                       value: auditScheduleData.ref_tema?.kode,
                     }
                   }
+                  isDisabled={isDisabled}
                 />
               }
             />
@@ -255,6 +271,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
                     handleChange("deskripsi", e.target.value)
                   }
                   value={auditScheduleData.deskripsi}
+                  isDisabled={isDisabled}
                 />
               }
               labelPositionTop={true}
@@ -274,6 +291,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
                   }
                   valueStart={auditScheduleData.pelaksanaan_start}
                   valueEnd={auditScheduleData.pelaksanaan_end}
+                  isDisabled={isDisabled}
                 />
               }
               widthFull={true}
@@ -290,6 +308,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
                       ? findAuditTeam(auditScheduleData.tim_audit_id)
                       : ""
                   }
+                  isDisabled={isDisabled}
                 />
               }
             />

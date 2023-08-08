@@ -1,38 +1,39 @@
 import useBranch from "@/data/useBranch";
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
-import { ReactSelect } from "@/components/atoms";
+import Select, { components } from "@atlaskit/select";
 
 const BranchSelect = ({
-  control,
   handleChange,
-  handleClick,
   isSearchable,
   placeholder,
   selectedValue,
-  customIcon,
   fieldsProps,
-  ref,
+  customIcon,
 }) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState("");
   const [keyword, setKeyword] = useState("");
+  const [search, setSearch] = useState(false);
   const { branch, branchMutate } = useBranch(keyword);
 
   useEffect(() => {
-    const mappedBranch = branch?.data?.map((row) => {
-      return {
-        ...row,
-        label: `${row?.branch} - ${row?.brdesc}`,
-        value: { branch_name: row?.brdesc, branch_kode: row?.branch },
-      };
-    });
-    setOptions(mappedBranch);
-  }, [branch]);
+    if (search) {
+      const mappedBranch = branch?.data?.map((row) => {
+        return {
+          ...row,
+          label: `${row?.branch} - ${row?.brdesc}`,
+          value: { branch_name: row?.brdesc, branch_kode: row?.branch },
+        };
+      });
+      setOptions(mappedBranch);
+    }
+  }, [branch, search]);
 
   useEffect(() => {
-    if (value > 2) {
+    if (value.length > 2) {
       const handleSearch = () => {
+        setSearch(true);
         setKeyword(value);
         branchMutate;
       };
@@ -54,19 +55,24 @@ const BranchSelect = ({
     }
   }
 
+  const DropdownIndicator = (props) => {
+    return (
+      <components.DropdownIndicator {...props}>
+        {customIcon && customIcon}
+      </components.DropdownIndicator>
+    );
+  };
+
   return (
-    <ReactSelect
-      control={control}
-      options={options}
-      handleChange={handleChange}
-      handleInputChange={handleInputChange}
-      handleClick={handleClick}
-      isSearchable={isSearchable}
+    <Select
+      {...fieldsProps}
       placeholder={placeholder}
+      options={options}
+      onChange={handleChange}
+      isSearchable={isSearchable}
       value={selectedValue}
-      customIcon={customIcon}
-      fieldsProps={fieldsProps}
-      ref={ref}
+      onInputChange={handleInputChange}
+      components={customIcon && { DropdownIndicator }}
     />
   );
 };
