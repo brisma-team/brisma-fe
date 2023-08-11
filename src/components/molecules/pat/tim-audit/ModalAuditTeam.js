@@ -9,154 +9,158 @@ import CardFormInputTeam from "../CardFormInputTeam";
 import { usePostData, useUpdateData } from "@/helpers";
 import { useState } from "react";
 import { auditTeamSchema } from "@/helpers/schemas";
+import { useSelector, useDispatch } from "react-redux";
+import { setAuditTeamData } from "@/slices/pat/auditTeamSlice";
+import { useRouter } from "next/router";
 
-const ModalAuditTeam = ({
-  showModal,
-  setShowModal,
-  typeModal,
-  data,
-  setData,
-  isMutate,
-}) => {
+const ModalAuditTeam = ({ showModal, setShowModal, typeModal, isMutate }) => {
+  const { id } = useRouter().query;
+  const dispatch = useDispatch();
+  const auditTeamData = useSelector((state) => state.auditTeam.auditTeamData);
+
   // START ADD HANDLING
-  const handleAddMA = () => {
-    setData((prevData) => {
-      const newTimAuditMA = [...prevData.ref_tim_audit_ma];
-      newTimAuditMA.push({ pn: "", nama: "", jabatan: "" });
-      const newData = { ...prevData, ref_tim_audit_ma: newTimAuditMA };
-      return newData;
-    });
-  };
-
-  const handleAddKTA = () => {
-    setData((prevData) => {
-      const newTimAuditKTA = [...prevData.ref_tim_audit_kta];
-      newTimAuditKTA.push({ pn: "", nama: "", jabatan: "" });
-      const newData = { ...prevData, ref_tim_audit_kta: newTimAuditKTA };
-      return newData;
-    });
+  const handleAdd = (property) => {
+    const newTimAudit = [...auditTeamData[property]];
+    newTimAudit.push({ pn: "", nama: "", jabatan: "" });
+    dispatch(setAuditTeamData({ ...auditTeamData, [property]: newTimAudit }));
   };
 
   const handleAddATA = () => {
-    setData((prevData) => {
-      const newTimAuditATA = [...prevData.ref_tim_audit_ata];
-      newTimAuditATA.push({
-        pn: "",
-        nama: "",
-        jabatan: "",
-        uker_binaans: [
-          {
-            orgeh_kode: "",
-            orgeh_name: "",
-            branch_name: "",
-            branch_kode: "",
-          },
-        ],
-      });
-      const newData = { ...prevData, ref_tim_audit_ata: newTimAuditATA };
-      return newData;
+    const newTimAuditATA = [...auditTeamData.ref_tim_audit_ata];
+    newTimAuditATA.push({
+      pn: "",
+      nama: "",
+      jabatan: "",
+      uker_binaans: [
+        {
+          orgeh_kode: "",
+          orgeh_name: "",
+          branch_name: "",
+          branch_kode: "",
+        },
+      ],
     });
+    dispatch(
+      setAuditTeamData({ ...auditTeamData, ref_tim_audit_ata: newTimAuditATA })
+    );
   };
 
   const handleAddUkerATA = (idx) => {
-    setData((prevData) => {
-      const newTimAuditATA = [...prevData.ref_tim_audit_ata];
-      const newUkerBinaans = [...newTimAuditATA[idx].uker_binaans];
-      newUkerBinaans.push({
-        orgeh_kode: "",
-        orgeh_name: "",
-        branch_name: "",
-        branch_kode: "",
-      });
-      newTimAuditATA[idx].uker_binaans = newUkerBinaans;
-      return { ...prevData, ref_tim_audit_ata: newTimAuditATA };
+    const newTimAuditATA = [...auditTeamData.ref_tim_audit_ata];
+    const newUkerBinaans = [...newTimAuditATA[idx].uker_binaans];
+    newUkerBinaans.push({
+      orgeh_kode: "",
+      orgeh_name: "",
+      branch_name: "",
+      branch_kode: "",
     });
+    newTimAuditATA[idx] = {
+      ...newTimAuditATA[idx],
+      uker_binaans: newUkerBinaans,
+    };
+
+    dispatch(
+      setAuditTeamData({ ...auditTeamData, ref_tim_audit_ata: newTimAuditATA })
+    );
   };
   // END ADD HANDLING
 
   // START DELETE HANDLING
-  const handleDeleteMA = (idx) => {
-    const newData = { ...data };
-    if (newData.ref_tim_audit_ma.length > 1) {
-      newData.ref_tim_audit_ma.splice(idx, 1);
-      setData(newData);
-    }
-  };
-
-  const handleDeleteKTA = (idx) => {
-    const newData = { ...data };
-    if (newData.ref_tim_audit_kta.length > 1) {
-      newData.ref_tim_audit_kta.splice(idx, 1);
-      setData(newData);
-    }
-  };
-
-  const handleDeleteATA = (idx) => {
-    const newData = { ...data };
-    if (newData.ref_tim_audit_ata.length > 1) {
-      newData.ref_tim_audit_ata.splice(idx, 1);
-      setData(newData);
+  const handleDelete = (property, idx) => {
+    const newData = { ...auditTeamData };
+    if (newData[property].length > 1) {
+      const newData = [...auditTeamData[property]];
+      newData.splice(idx, 1);
+      dispatch(setAuditTeamData({ ...auditTeamData, [property]: newData }));
     }
   };
 
   const handleDeleteUkerATA = (idxATA, idxUker) => {
-    if (data?.ref_tim_audit_ata[idxATA]?.uker_binaans?.length > 1) {
-      setData((prevData) => {
-        const newRefTimAuditAta = [...prevData.ref_tim_audit_ata];
-        const newUkerBinaans = [...newRefTimAuditAta[idxATA].uker_binaans];
-        newUkerBinaans.splice(idxUker, 1);
-        newRefTimAuditAta[idxATA].uker_binaans = newUkerBinaans;
-        return { ...prevData, ref_tim_audit_ata: newRefTimAuditAta };
-      });
+    const currentATA = auditTeamData.ref_tim_audit_ata[idxATA];
+    if (currentATA?.uker_binaans?.length > 1) {
+      const newRefTimAuditAta = [...auditTeamData.ref_tim_audit_ata];
+      const newUkerBinaans = [...currentATA.uker_binaans];
+      newUkerBinaans.splice(idxUker, 1);
+      newRefTimAuditAta[idxATA] = {
+        ...currentATA,
+        uker_binaans: newUkerBinaans,
+      };
+
+      dispatch(
+        setAuditTeamData({
+          ...auditTeamData,
+          ref_tim_audit_ata: newRefTimAuditAta,
+        })
+      );
     }
   };
   // END DELETE HANDLING
 
   // START CHANGE HANDLING
-  const handleChangeMA = (index, value) => {
-    setData((prevData) => {
-      const newTimAuditMA = [...prevData.ref_tim_audit_ma];
-      newTimAuditMA[index]["pn"] = value?.pn;
-      newTimAuditMA[index]["nama"] = value?.name;
-      newTimAuditMA[index]["jabatan"] = value?.jabatan;
-      return { ...prevData, ref_tim_audit_ma: newTimAuditMA };
-    });
-  };
-
-  const handleChangeKTA = (index, value) => {
-    setData((prevData) => {
-      const newTimAuditKTA = [...prevData.ref_tim_audit_kta];
-      newTimAuditKTA[index]["pn"] = value?.pn;
-      newTimAuditKTA[index]["nama"] = value?.name;
-      newTimAuditKTA[index]["jabatan"] = value?.jabatan;
-      return { ...prevData, ref_tim_audit_kta: newTimAuditKTA };
-    });
-  };
-
-  const handleChangeATA = (index, value) => {
-    setData((prevData) => {
-      const newTimAuditATA = [...prevData.ref_tim_audit_ata];
-      newTimAuditATA[index]["pn"] = value?.pn;
-      newTimAuditATA[index]["nama"] = value?.name;
-      newTimAuditATA[index]["jabatan"] = value?.jabatan;
-      return { ...prevData, ref_tim_audit_ata: newTimAuditATA };
-    });
-  };
-
   const handleChangeUkerATA = (idxATA, idxUker, value, type) => {
-    setData((prevData) => {
-      const newRefTimAuditAta = [...prevData.ref_tim_audit_ata];
-      const newUkerBinaans = [...newRefTimAuditAta[idxATA].uker_binaans];
-      if (type === "orgeh") {
-        newUkerBinaans[idxUker]["orgeh_kode"] = value?.child;
-        newUkerBinaans[idxUker]["orgeh_name"] = value?.my_name;
-      } else if (type === "branch") {
-        newUkerBinaans[idxUker]["branch_name"] = value?.brdesc;
-        newUkerBinaans[idxUker]["branch_kode"] = value?.branch;
-      }
-      newRefTimAuditAta[idxATA].uker_binaans = newUkerBinaans;
-      return { ...prevData, ref_tim_audit_ata: newRefTimAuditAta };
-    });
+    const newATAData = [...auditTeamData.ref_tim_audit_ata];
+    const newUkerData = [...newATAData[idxATA].uker_binaans];
+
+    if (type === "orgeh") {
+      newUkerData[idxUker] = {
+        ...newUkerData[idxUker],
+        orgeh_kode: value?.child,
+        orgeh_name: value?.my_name,
+      };
+    } else if (type === "branch") {
+      newUkerData[idxUker] = {
+        ...newUkerData[idxUker],
+        branch_name: value?.brdesc,
+        branch_kode: value?.branch,
+      };
+    }
+
+    newATAData[idxATA] = {
+      ...newATAData[idxATA],
+      uker_binaans: newUkerData,
+    };
+
+    dispatch(
+      setAuditTeamData({
+        ...auditTeamData,
+        ref_tim_audit_ata: newATAData,
+      })
+    );
+  };
+
+  const handleChange = (property, index, e) => {
+    const newData = [...auditTeamData[property]];
+    const updated = {
+      ...newData[index],
+      pn: e?.value?.pn,
+      nama: e?.value?.name,
+      jabatan: e?.value?.jabatan,
+    };
+    newData[index] = updated;
+    dispatch(
+      setAuditTeamData({
+        ...auditTeamData,
+        [property]: newData,
+      })
+    );
+  };
+
+  const handleChangeTypeTeam = (e) => {
+    dispatch(
+      setAuditTeamData({
+        ...auditTeamData,
+        ref_tipe_tim: e.value,
+      })
+    );
+  };
+
+  const handleChangeText = (property, e) => {
+    dispatch(
+      setAuditTeamData({
+        ...auditTeamData,
+        [property]: e.target.value,
+      })
+    );
   };
   // END CHANGE HANDLING
 
@@ -165,6 +169,7 @@ const ModalAuditTeam = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const data = { ...auditTeamData, pat_id: id };
     auditTeamSchema
       .validate(data, { abortEarly: false })
       .then(async () => {
@@ -175,6 +180,7 @@ const ModalAuditTeam = ({
             data
           );
         } else {
+          console.log("CREATE");
           await usePostData(
             `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/tim_audit/create`,
             data
@@ -190,6 +196,7 @@ const ModalAuditTeam = ({
             errors[error.path] = error.message;
           });
           setValidationErrors(errors);
+          console.log("error ", errors);
         }
       });
   };
@@ -202,8 +209,8 @@ const ModalAuditTeam = ({
             icon={<IconClose size="medium" />}
             className={"font-bold text-5xl rounded text-brisma"}
             style={{ fontSize: "1.25rem" }}
-            onChange={(e) => setData({ ...data, name: e.target.value })}
-            value={data?.name}
+            onChange={(e) => handleChangeText("name", e)}
+            value={auditTeamData?.name}
           />
           {validationErrors.name && (
             <ErrorValidation message={validationErrors.name} />
@@ -214,10 +221,10 @@ const ModalAuditTeam = ({
             <CardFormInputTeam
               key={0}
               type={"Manajer Audit"}
-              data={data?.ref_tim_audit_ma}
-              handlerDeleteParent={handleDeleteMA}
-              handlerAddParent={handleAddMA}
-              handlerChangeParent={handleChangeMA}
+              data={auditTeamData?.ref_tim_audit_ma}
+              handlerDeleteParent={handleDelete}
+              handlerAddParent={handleAdd}
+              handlerChangeParent={handleChange}
               validationErrors={validationErrors}
               property={"ref_tim_audit_ma"}
             />
@@ -226,16 +233,21 @@ const ModalAuditTeam = ({
             <CardFormInputTeam
               key={1}
               type={"Ketua Tim Audit"}
-              data={data?.ref_tim_audit_kta}
-              handlerDeleteParent={handleDeleteKTA}
-              handlerAddParent={handleAddKTA}
-              handlerChangeParent={handleChangeKTA}
+              data={auditTeamData?.ref_tim_audit_kta}
+              handlerDeleteParent={handleDelete}
+              handlerAddParent={handleAdd}
+              handlerChangeParent={handleChange}
               validationErrors={validationErrors}
               property={"ref_tim_audit_kta"}
             />
           </div>
           <div className="w-1/3">
-            <CardFormInputTeam type={"Tipe Tim"} placeholder={"Tipe Tim"} />
+            <CardFormInputTeam
+              type={"Tipe Tim"}
+              data={auditTeamData?.ref_tipe_tim}
+              placeholder={"Tipe Tim"}
+              handlerChangeParent={handleChangeTypeTeam}
+            />
             {typeModal !== "detail" && (
               <div className="w-full flex justify-end">
                 <div className="w-[7.75rem] h-[2.4rem] bg-atlasian-green rounded mt-5 flex justify-center">
@@ -249,12 +261,12 @@ const ModalAuditTeam = ({
           <CardFormInputTeam
             key={2}
             type={"Anggota Tim Audit"}
-            data={data.ref_tim_audit_ata}
-            handlerDeleteParent={handleDeleteATA}
+            data={auditTeamData?.ref_tim_audit_ata}
+            handlerDeleteParent={handleDelete}
             handlerDeleteChild={handleDeleteUkerATA}
             handlerAddParent={handleAddATA}
             handlerAddChild={handleAddUkerATA}
-            handlerChangeParent={handleChangeATA}
+            handlerChangeParent={handleChange}
             handlerChangeChild={handleChangeUkerATA}
             validationErrors={validationErrors}
             property={"ref_tim_audit_ata"}

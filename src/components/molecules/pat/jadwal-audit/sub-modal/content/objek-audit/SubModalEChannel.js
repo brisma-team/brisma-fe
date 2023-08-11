@@ -3,6 +3,7 @@ import { DatePicker } from "@atlaskit/datetime-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
 import { convertDate, parseDate } from "@/helpers";
+import { useEchannel } from "@/data/reference";
 import { useEffect } from "react";
 
 const RowDatatable = ({ idx, handleChange, value, isDisabled }) => {
@@ -63,6 +64,19 @@ const SubModalEChannel = ({ isDisabled }) => {
   const auditScheduleData = useSelector(
     (state) => state.auditSchedule.auditScheduleData
   );
+  const { echannel } = useEchannel();
+
+  useEffect(() => {
+    const mapping = echannel?.data.map((v) => {
+      return {
+        ref_echanel_type_kode: v,
+        jumlah_existing: "",
+        jumlah_target: "",
+        posisi_data: "",
+      };
+    });
+    dispatch(setAuditScheduleData({ ...auditScheduleData, echannel: mapping }));
+  }, [echannel]);
 
   const handleChange = (property, value, idx) => {
     const echannelData = [...auditScheduleData.echannel];
@@ -76,10 +90,6 @@ const SubModalEChannel = ({ isDisabled }) => {
 
     dispatch(setAuditScheduleData(updatedData));
   };
-
-  useEffect(() => {
-    console.log("auditScheduleData echannel => ", auditScheduleData.echannel);
-  }, [auditScheduleData]);
 
   return (
     <div className="w-full font-bold text-sm px-4 mt-6">
@@ -99,7 +109,7 @@ const SubModalEChannel = ({ isDisabled }) => {
               <p>Posisi Data</p>
             </div>
           </div>
-          {auditScheduleData.echannel.map((v, i) => {
+          {auditScheduleData?.echannel?.map((v, i) => {
             return (
               <RowDatatable
                 key={i}

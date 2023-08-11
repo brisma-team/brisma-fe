@@ -1,13 +1,16 @@
 import {
   ButtonField,
+  ButtonIcon,
   Card,
   ErrorValidation,
-  LinkIcon,
-  ReactSelect,
 } from "@/components/atoms";
 import { IconClose, IconPlus } from "@/components/icons";
-import { PekerjaSelect, OrgehSelect, BranchSelect } from "../commons";
-import { useForm } from "react-hook-form";
+import {
+  PekerjaSelect,
+  OrgehSelect,
+  BranchSelect,
+  TypeTeamSelect,
+} from "../commons";
 import Link from "next/link";
 
 const CardFormInputTeam = ({
@@ -23,7 +26,6 @@ const CardFormInputTeam = ({
   validationErrors,
   property,
 }) => {
-  const { control } = useForm();
   let textColor, buttonText;
   switch (type) {
     case "Manajer Audit":
@@ -44,6 +46,19 @@ const CardFormInputTeam = ({
     case "P.I.C":
       textColor = "text-atlasian-red";
       buttonText = "P.I.C";
+      break;
+    case "Maker":
+      textColor = "text-atlasian-blue-light";
+      buttonText = "Maker";
+      break;
+    case "Approver":
+      textColor = "text-atlasian-red";
+      buttonText = "Checker";
+      break;
+    case "Signer":
+      textColor = "text-atlasian-green";
+      buttonText = "Signer";
+      break;
   }
 
   return (
@@ -71,16 +86,19 @@ const CardFormInputTeam = ({
                           <div className="w-1/3 pr-1.5">
                             <div className="w-full">
                               <PekerjaSelect
-                                control={control}
-                                handleChange={(e) => handlerChangeParent(i, e)}
+                                handleChange={(e) =>
+                                  handlerChangeParent(property, i, e)
+                                }
                                 selectedValue={{
                                   label: `${v.pn} - ${v.nama}`,
                                   value: { v },
                                 }}
                                 customIcon={
-                                  <LinkIcon
+                                  <ButtonIcon
                                     icon={<IconClose />}
-                                    handler={() => handlerDeleteParent(i)}
+                                    handleClick={() =>
+                                      handlerDeleteParent(property, i)
+                                    }
                                   />
                                 }
                               />
@@ -115,9 +133,9 @@ const CardFormInputTeam = ({
                                           },
                                         }}
                                         customIcon={
-                                          <LinkIcon
+                                          <ButtonIcon
                                             icon={<IconClose />}
-                                            handler={() =>
+                                            handleClick={() =>
                                               handlerDeleteChild(i, idx)
                                             }
                                           />
@@ -153,9 +171,9 @@ const CardFormInputTeam = ({
                                           },
                                         }}
                                         customIcon={
-                                          <LinkIcon
+                                          <ButtonIcon
                                             icon={<IconClose />}
-                                            handler={() =>
+                                            handleClick={() =>
                                               handlerDeleteChild(i, idx)
                                             }
                                           />
@@ -205,16 +223,14 @@ const CardFormInputTeam = ({
                 <p className={`font-semibold text-sm ${textColor}`}>{type}</p>
               </div>
               {type === "Tipe Tim" ? (
-                <ReactSelect
-                  control={control}
-                  options={[
-                    { label: "Original Team", value: "Original Team" },
-                    { label: "Scheduled Team", value: "Scheduled Team" },
-                    { label: "dll", value: "Dll" },
-                  ]}
+                <TypeTeamSelect
                   isSearchable={false}
-                  handleChange={(e) => console.log("E CHANGE => ", e)}
+                  handleChange={handlerChangeParent}
                   placeholder={placeholder}
+                  selectedValue={{
+                    label: data?.nama,
+                    value: data,
+                  }}
                 />
               ) : (
                 data?.map((v, i) => {
@@ -222,15 +238,17 @@ const CardFormInputTeam = ({
                     <div key={i} className="my-3">
                       <PekerjaSelect
                         key={i}
-                        handleChange={(e) => handlerChangeParent(i, e)}
+                        handleChange={(e) =>
+                          handlerChangeParent(property, i, e)
+                        }
                         selectedValue={{
                           label: `${v?.pn} - ${v?.nama}`,
                           value: { v },
                         }}
                         customIcon={
-                          <LinkIcon
+                          <ButtonIcon
                             icon={<IconClose />}
-                            handler={() => handlerDeleteParent(i)}
+                            handleClick={() => handlerDeleteParent(property, i)}
                           />
                         }
                       />
@@ -247,6 +265,14 @@ const CardFormInputTeam = ({
                             <ErrorValidation
                               message={
                                 validationErrors[`ref_tim_audit_kta[${i}].pn`]
+                              }
+                            />
+                          )
+                        : type === "P.I.C"
+                        ? validationErrors[`penanggung_jawab[${i}].pn`] && (
+                            <ErrorValidation
+                              message={
+                                validationErrors[`penanggung_jawab[${i}].pn`]
                               }
                             />
                           )
@@ -273,7 +299,7 @@ const CardFormInputTeam = ({
                   }
                   text={`Tambah ${buttonText}`}
                   textColor={"brisma"}
-                  handler={handlerAddParent}
+                  handler={() => handlerAddParent(property)}
                 />
               </div>
             </div>

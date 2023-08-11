@@ -1,6 +1,7 @@
-import { Breadcrumbs, PageTitle } from "@/components/atoms";
+import { Breadcrumbs, PageTitle, Pagination } from "@/components/atoms";
 import {
   CardTypeCount,
+  DataNotFound,
   PrevNextNavigation,
   SelectSortFilter,
 } from "@/components/molecules/commons";
@@ -10,12 +11,14 @@ import {
   CardActivitySchedule,
   CardFilterActivitySchedule,
 } from "@/components/molecules/pat";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ModalActivitySchedule } from "@/components/molecules/pat/jadwal-kegiatan";
-import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useActivitySchedule, useStatusPat } from "@/data/pat";
+import _ from "lodash";
 import { convertDate } from "@/helpers";
+import { useDispatch } from "react-redux";
+import { resetAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
 
 const routes = [
   {
@@ -31,6 +34,7 @@ const routes = [
 
 const index = () => {
   const { id } = useRouter().query;
+  const dispatch = useDispatch();
   const baseUrl = `/pat/projects/${id}`;
   const { statusPat } = useStatusPat(id);
   const [content, setContent] = useState(null);
@@ -42,18 +46,39 @@ const index = () => {
     { name: "Jadwal Kegiatan", path: `/pat/projects/${id}/jadwal-kegiatan` },
   ];
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [countType, setCountType] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [showModalDetail, setShowModalDetail] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
-  const { activitySchedule, activityScheduleMutate } = useActivitySchedule(
-    "all",
-    {
-      id,
-    }
-  );
   const [data, setData] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
   const [scheduleId, setScheduleId] = useState(null);
+  const [params, setParams] = useState({
+    project_name: "",
+    metode: "",
+    tipe: "",
+    start: "",
+    end: "",
+    sort_by: "ASC",
+  });
+  const [filter, setFilter] = useState({
+    project_name: "",
+    metode: "",
+    tipe: "",
+    start: "",
+    end: "",
+    sort_by: "ASC",
+  });
+
+  const { activitySchedule, activityScheduleMutate, activityScheduleError } =
+    useActivitySchedule("all", {
+      ...params,
+      id,
+      pages: currentPage,
+      limit: 6,
+    });
 
   useEffect(() => {
     setContent([
@@ -84,7 +109,42 @@ const index = () => {
     });
 
     setData(mappedData);
+    setTotalPages(activitySchedule?.detailPage?.totalPage);
+
+    const totalCount = activitySchedule?.result?.length;
+    if (totalCount) {
+      const typeCounts = activitySchedule?.result.reduce((acc, item) => {
+        const type = item?.ref_tipe?.nama;
+        acc[type] = (acc[type] || 0) + 1;
+        return acc;
+      }, {});
+
+      const result = Object.entries(typeCounts).map(([type, count]) => ({
+        type,
+        count,
+        percent: ((count / totalCount) * 100).toFixed(0),
+      }));
+
+      setCountType(result);
+    }
   }, [activitySchedule, activityScheduleMutate]);
+
+  useEffect(() => {
+    const handleSearch = () => {
+      setParams(filter);
+    };
+    const debouncedSearch = _.debounce(handleSearch, 2000);
+    debouncedSearch();
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [filter]);
+
+  const handleCreateButton = () => {
+    setShowModal(true);
+    setTypeModal("create");
+    dispatch(resetAuditScheduleData());
+  };
 
   return (
     <PatLandingLayout data={statusPat} content={content}>
@@ -117,7 +177,7 @@ const index = () => {
           <div className="w-40">
             <Button
               appearance="danger"
-              onClick={() => setShowModal(true)}
+              onClick={handleCreateButton}
               shouldFitContainer
             >
               Buat Jadwal Kegiatan
@@ -126,36 +186,46 @@ const index = () => {
               showModal={showModal}
               setShowModal={setShowModal}
               typeModal={typeModal}
-              mutate={activityScheduleMutate}
-              scheduleId={scheduleId}
             />
           </div>
         </div>
         <div className="flex justify-between items-end">
           <div className="w-[28rem]">
-            <CardFilterActivitySchedule showFilter={showFilter} />
+            <CardFilterActivitySchedule
+              showFilter={showFilter}
+              params={filter}
+              setParams={setFilter}
+            />
           </div>
           <div className="flex justify-end items-end gap-2">
-            <CardTypeCount
-              title={"KONSULTING"}
-              total={2}
-              percent={75}
-              width={"w-[12.8rem]"}
+            {countType?.length && (
+              <div className="mb-1 flex gap-2">
+                {countType.map((v, i) => {
+                  return (
+                    <CardTypeCount
+                      key={i}
+                      title={v.type}
+                      total={v.count}
+                      percent={v.percent}
+                      width={"w-[12.8rem]"}
+                    />
+                  );
+                })}
+              </div>
+            )}
+            <SelectSortFilter
+              change={(e) => setParams({ ...params, sort_by: e.value })}
             />
-            <CardTypeCount
-              title={"LAIN-LAIN"}
-              total={1}
-              percent={25}
-              width={"w-[12.8rem]"}
-            />
-            <SelectSortFilter />
           </div>
         </div>
         {/* End of Filter */}
 
         {/* Start Content */}
         <div className="flex flex-wrap my-4 overflow-hidden -mx-2">
-          {data?.length &&
+          {activityScheduleError ? (
+            <DataNotFound />
+          ) : (
+            data?.length &&
             data.map((v, i) => {
               return (
                 <CardActivitySchedule
@@ -177,8 +247,10 @@ const index = () => {
                   setScheduleId={setScheduleId}
                 />
               );
-            })}
+            })
+          )}
         </div>
+        <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
         {/* End Content */}
       </div>
     </PatLandingLayout>

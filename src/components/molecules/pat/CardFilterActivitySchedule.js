@@ -1,29 +1,16 @@
 import {
+  ButtonIcon,
   Card,
   DatepickerStartEnd,
-  Select,
   TextInput,
 } from "@/components/atoms";
 import { useMetode, useTipe } from "@/data/reference";
-import { useState } from "react";
-import { useEffect } from "react";
+import { MetodeSelect, TypeSelect } from "../commons";
+import { IconClose } from "@/components/icons";
 
 const CardFilterActivitySchedule = ({ showFilter, params, setParams }) => {
   const { metode } = useMetode("list");
   const { tipe } = useTipe("list");
-  const [optionMetode, setOptionMetode] = useState([]);
-  const [optionTipe, setOptionTipe] = useState([]);
-
-  useEffect(() => {
-    const arrMetode = metode?.data?.map((v) => {
-      return { label: v.nama, value: v.kode };
-    });
-    const arrTipe = tipe?.data?.map((v) => {
-      return { label: v.nama, value: v.kode };
-    });
-    setOptionMetode(arrMetode);
-    setOptionTipe(arrTipe);
-  }, [metode, tipe]);
 
   const handleChange = (property, value) => {
     const updatedData = {
@@ -34,12 +21,12 @@ const CardFilterActivitySchedule = ({ showFilter, params, setParams }) => {
   };
 
   const findMetode = (kode) => {
-    const find = metode?.data?.find((v) => v.id == kode);
+    const find = metode?.data?.find((v) => v.kode == kode);
     return { label: find?.nama, value: find?.kode };
   };
 
   const findTipe = (kode) => {
-    const find = tipe?.data?.find((v) => v.id == kode);
+    const find = tipe?.data?.find((v) => v.kode == kode);
     return { label: find?.nama, value: find?.kode };
   };
 
@@ -52,15 +39,27 @@ const CardFilterActivitySchedule = ({ showFilter, params, setParams }) => {
               placeholder="Nama Proyek"
               onChange={(e) => handleChange("project_name", e.target.value)}
               value={params.project_name}
+              icon={
+                <ButtonIcon
+                  icon={<IconClose size="medium" />}
+                  handleClick={() => handleChange("project_name", "")}
+                />
+              }
             />
           </div>
           <div className="w-48">
-            <Select
-              optionValue={optionMetode}
-              isSearchable={false}
+            <MetodeSelect
               placeholder={"Metode Audit"}
-              onChange={(e) => handleChange("metode", e.value)}
-              value={params.metode !== "" ? findMetode(params.metode) : ""}
+              customIcon={
+                <ButtonIcon
+                  icon={<IconClose />}
+                  handleClick={() => handleChange("metode", "")}
+                />
+              }
+              handleChange={(e) => handleChange("metode", e.value)}
+              selectedValue={
+                params?.metode === "" ? "" : findMetode(params?.metode)
+              }
             />
           </div>
           <div className="w-48">
@@ -74,12 +73,16 @@ const CardFilterActivitySchedule = ({ showFilter, params, setParams }) => {
             />
           </div>
           <div className="w-48">
-            <Select
-              optionValue={optionTipe}
-              isSearchable={false}
+            <TypeSelect
               placeholder={"Tipe Audit"}
-              onChange={(e) => handleChange("tipe", e.value)}
-              value={params.tipe !== "" ? findTipe(params.tipe) : ""}
+              customIcon={
+                <ButtonIcon
+                  icon={<IconClose />}
+                  handleClick={() => handleChange("tipe", "")}
+                />
+              }
+              handleChange={(e) => handleChange("tipe", e.value)}
+              selectedValue={params?.tipe === "" ? "" : findTipe(params?.tipe)}
             />
           </div>
         </div>

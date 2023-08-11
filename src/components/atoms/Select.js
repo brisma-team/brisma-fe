@@ -7,6 +7,9 @@ const Select = ({
   style,
   onChange,
   value,
+  isDisabled,
+  handleMenuOpen,
+  handleMenuClose,
 }) => {
   return (
     <SelectInput
@@ -16,6 +19,9 @@ const Select = ({
       placeholder={placeholder}
       className={style}
       value={value && value}
+      isDisabled={isDisabled}
+      onMenuOpen={handleMenuOpen}
+      onMenuClose={handleMenuClose}
     />
   );
 };

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Breadcrumbs, PageTitle, Pagination } from "@/components/atoms";
 import { PatLandingLayout } from "@/layouts/pat";
 import Button from "@atlaskit/button";
 import {
+  DataNotFound,
   PrevNextNavigation,
   SelectSortFilter,
 } from "@/components/molecules/commons";
@@ -13,9 +14,11 @@ import {
 import { CardAuditTeam } from "@/components/molecules/pat";
 import useAuditTeam from "@/data/pat/useAuditTeam";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { useStatusPat } from "@/data/pat";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import _ from "lodash";
+import { convertDate } from "@/helpers";
+import { resetAuditTeamData } from "@/slices/pat/auditTeamSlice";
 
 const routes = [
   {
@@ -31,6 +34,7 @@ const routes = [
 
 const index = () => {
   const { id } = useRouter().query;
+  const dispatch = useDispatch();
   const baseUrl = `/pat/projects/${id}`;
   const { statusPat } = useStatusPat(id);
   const [content, setContent] = useState(null);
@@ -43,37 +47,32 @@ const index = () => {
   ];
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
-  const [auditTeamData, setAuditTeamData] = useState({
-    pat_id: id,
-    name: "",
-    ref_tim_audit_ma: [{ pn: "", nama: "", jabatan: "" }],
-    ref_tim_audit_kta: [{ pn: "", nama: "", jabatan: "" }],
-    ref_tim_audit_ata: [
-      {
-        pn: "",
-        nama: "",
-        jabatan: "",
-        uker_binaans: [
-          {
-            orgeh_kode: "",
-            orgeh_name: "",
-            branch_name: "",
-            branch_kode: "",
-          },
-        ],
-      },
-    ],
-  });
-
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [typeModal, setTypeModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
-  const { auditTeam, auditTeamMutate } = useAuditTeam("all", {
+  const [sortBy, setSortBy] = useState("ASC");
+  const [filter, setFilter] = useState({
+    tim_name: "",
+    nama_ma: "",
+    nama_kta: "",
+    nama_ata: "",
+    sortBy: "ASC",
+  });
+  const [params, setParams] = useState({
+    tim_name: "",
+    nama_ma: "",
+    nama_kta: "",
+    nama_ata: "",
+    sortBy: "ASC",
+  });
+
+  const { auditTeam, auditTeamMutate, auditTeamError } = useAuditTeam("all", {
+    ...params,
     id,
     pages: currentPage,
     limit: 6,
+    sortBy,
   });
 
   useEffect(() => {
@@ -90,7 +89,7 @@ const index = () => {
         id: v.id,
         header_title: v.name,
         maker: v.pic_maker_tim_audit.nama,
-        created_at: "23-06-2023",
+        created_at: convertDate(v.createdAt, "-", "d"),
         manajer_audit: v.ref_tim_audit_mas,
         ketua_tim_audit: v.ref_tim_audit_kta,
         anggota_tim_audit: v.ref_tim_audit_ata,
@@ -102,16 +101,23 @@ const index = () => {
   }, [auditTeam]);
 
   useEffect(() => {
-    console.log("DATA => ", auditTeamData);
-  }, [auditTeamData]);
+    const handleSearch = () => {
+      setParams(filter);
+      auditTeamMutate;
+    };
+    const debouncedSearch = _.debounce(handleSearch, 2000);
+    debouncedSearch();
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [filter]);
 
-  const auditTeamDataDefault = useSelector(
-    (state) => state.auditTeam.auditTeamData
-  );
+  const handleChangeSortBy = (e) => {
+    setSortBy(e.value);
+  };
 
   const handleCreateButton = () => {
-    // console.log(auditTeamDataDefault);
-    setAuditTeamData(auditTeamDataDefault);
+    dispatch(resetAuditTeamData());
     setShowModal(true);
   };
 
@@ -156,24 +162,29 @@ const index = () => {
               showModal={showModal}
               setShowModal={setShowModal}
               typeModal={typeModal}
-              data={auditTeamData}
-              setData={setAuditTeamData}
               isMutate={auditTeamMutate}
             />
           </div>
         </div>
         <div className="flex justify-between items-end">
           <div className="w-[27rem]">
-            <CardFilterTimAudit showFilter={showFilter} />
+            <CardFilterTimAudit
+              showFilter={showFilter}
+              filter={filter}
+              setFilter={setFilter}
+            />
           </div>
           <div className="flex justify-end items-end rounded-full">
-            <SelectSortFilter />
+            <SelectSortFilter change={handleChangeSortBy} />
           </div>
         </div>
         {/* End Filter */}
         {/* Start Content */}
         <div className="flex flex-wrap my-4 overflow-hidden -ml-2 p-2 gap-3">
-          {data?.length &&
+          {auditTeamError ? (
+            <DataNotFound />
+          ) : (
+            data?.length &&
             data?.map((v, i) => {
               return (
                 <CardAuditTeam
@@ -190,10 +201,10 @@ const index = () => {
                   setShowModal={setShowModal}
                   isMutate={auditTeamMutate}
                   setTypeModal={setTypeModal}
-                  setData={setAuditTeamData}
                 />
               );
-            })}
+            })
+          )}
         </div>
         <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
         {/* End Content */}

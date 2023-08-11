@@ -1,49 +1,80 @@
 import { IconClose } from "@/components/icons";
-import Textfield from "@atlaskit/textfield";
-import { Card } from "@/components/atoms";
+import { Card, LinkIcon, TextInput } from "@/components/atoms";
+import { PekerjaSelect } from "../../commons";
 
-const CardFilterTimAudit = ({ showFilter }) => {
+const CardFilterTimAudit = ({ showFilter, filter, setFilter }) => {
+  const handleChange = (property, value) => {
+    setFilter({ ...filter, [property]: value });
+  };
+
   return (
     showFilter && (
       <Card>
         <div className="flex flex-wrap m-2 gap-3 px-2">
           <div className="w-48">
-            <Textfield
+            <TextInput
               placeholder="Nama Tim"
-              elemAfterInput={
-                <button className="justify-center">
-                  <IconClose size="large" />
-                </button>
+              icon={<IconClose size="large" />}
+              onChange={(e) => handleChange("tim_name", e.target.value)}
+            />
+          </div>
+          <div className="w-48">
+            <PekerjaSelect
+              placeholder={"Manajer Audit"}
+              customIcon={
+                <LinkIcon
+                  icon={<IconClose />}
+                  handler={() => handleChange("nama_ma", "")}
+                />
+              }
+              handleChange={(e) => handleChange("nama_ma", e.value.name)}
+              selectedValue={
+                filter?.nama_ma === ""
+                  ? ""
+                  : {
+                      label: filter?.nama_ma,
+                      value: filter?.nama_ma,
+                    }
               }
             />
           </div>
           <div className="w-48">
-            <Textfield
-              placeholder="Manajer Audit"
-              elemAfterInput={
-                <button className="justify-center">
-                  <IconClose size="large" />
-                </button>
+            <PekerjaSelect
+              placeholder={"Ketua Tim Audit"}
+              customIcon={
+                <LinkIcon
+                  icon={<IconClose />}
+                  handler={() => handleChange("nama_kta", "")}
+                />
+              }
+              handleChange={(e) => handleChange("nama_kta", e.value.name)}
+              selectedValue={
+                filter?.nama_kta === ""
+                  ? ""
+                  : {
+                      label: filter?.nama_kta,
+                      value: filter?.nama_kta,
+                    }
               }
             />
           </div>
           <div className="w-48">
-            <Textfield
-              placeholder="Ketua Tim Audit"
-              elemAfterInput={
-                <button className="justify-center">
-                  <IconClose size="large" />
-                </button>
+            <PekerjaSelect
+              placeholder={"Anggota Tim Audit"}
+              customIcon={
+                <LinkIcon
+                  icon={<IconClose />}
+                  handler={() => handleChange("nama_ata", "")}
+                />
               }
-            />
-          </div>
-          <div className="w-48">
-            <Textfield
-              placeholder="Anggota Tim Audit"
-              elemAfterInput={
-                <button className="justify-center">
-                  <IconClose size="large" />
-                </button>
+              handleChange={(e) => handleChange("nama_ata", e.value.name)}
+              selectedValue={
+                filter?.nama_ata === ""
+                  ? ""
+                  : {
+                      label: filter?.nama_ata,
+                      value: filter?.nama_ata,
+                    }
               }
             />
           </div>

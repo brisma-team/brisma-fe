@@ -21,7 +21,6 @@ const PekerjaSelect = ({
     if (search) {
       const mappedPekerja = pekerja?.data?.map((row) => {
         return {
-          ...row,
           label: `${row?.pn} - ${row?.name}`,
           value: { pn: row?.pn, name: row?.name, jabatan: row?.jabatan },
         };
@@ -62,7 +61,6 @@ const PekerjaSelect = ({
       </components.DropdownIndicator>
     );
   };
-
   return (
     <Select
       {...fieldsProps}

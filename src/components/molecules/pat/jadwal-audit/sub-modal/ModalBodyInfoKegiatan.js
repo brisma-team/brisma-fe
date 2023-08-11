@@ -2,13 +2,17 @@ import { useEffect, useState } from "react";
 import {
   ButtonIcon,
   DatepickerStartEnd,
-  ReactSelect,
+  ErrorValidation,
+  Select,
   TextAreaField,
   TextInput,
 } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
-import { CardBodyContent, FormWithLabel } from "@/components/molecules/commons";
-import { useForm } from "react-hook-form";
+import {
+  AuditTeamSelect,
+  CardBodyContent,
+  FormWithLabel,
+} from "@/components/molecules/commons";
 import { useMetode, useTipe, useJenis, useTema } from "@/data/reference";
 import { useAuditTeam } from "@/data/pat";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,26 +22,27 @@ import {
 } from "@/slices/pat/auditScheduleSlice";
 import { useRouter } from "next/router";
 import CardAuditTeam from "../../CardAuditTeam";
+import { convertDate } from "@/helpers";
 
-const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
-  const { control } = useForm();
+const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
   const { id } = useRouter().query;
   const dispatch = useDispatch();
   const auditScheduleData = useSelector(
     (state) => state.auditSchedule.auditScheduleData
   );
+  const validationErrors = useSelector(
+    (state) => state.auditSchedule.validationErrorsAI
+  );
 
-  const [isDisabled, setIsDisabled] = useState(false);
   const [selectedMetode, setSelectedMetode] = useState(null);
   const [selectedTipe, setSelectedTipe] = useState(null);
   const [selectedJenis, setSelectedJenis] = useState(null);
 
   const { metode } = useMetode("all", 1);
   const { tipe } = useTipe("all", selectedMetode);
-  const { jenis } = useJenis(selectedTipe);
-  const { tema } = useTema(selectedJenis);
-  const { auditTeam } = useAuditTeam("list", { id });
-  const auditTeamDetail = useAuditTeam("detail", {
+  const { jenis } = useJenis("all", selectedTipe);
+  const { tema } = useTema("all", selectedJenis);
+  const { auditTeam, auditTeamMutate } = useAuditTeam("detail", {
     tim_id: auditScheduleData.tim_audit_id,
     id,
   });
@@ -46,22 +51,10 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
   const [optionTipe, setOptionTipe] = useState([]);
   const [optionJenis, setOptionJenis] = useState([]);
   const [optionTema, setOptionTema] = useState([]);
-  const [optionAuditTeam, setOptionAuditTeam] = useState([]);
 
   useEffect(() => {
     setCurrentModalStage(1);
-    if (typeModal === "detail") {
-      setIsDisabled(true);
-    }
   }, []);
-
-  useEffect(() => {
-    const mappingAuditTeam = auditTeam?.data?.map((v) => ({
-      label: v.name,
-      value: v.id,
-    }));
-    setOptionAuditTeam(mappingAuditTeam);
-  }, [auditTeam]);
 
   useEffect(() => {
     const mappingMetode = metode?.data?.map((v) => ({
@@ -128,7 +121,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
       tim_audit_id: e.value,
     };
     dispatch(setAuditScheduleData(updatedData));
-    auditTeamDetail.auditTeamMutate;
+    auditTeamMutate;
   };
 
   const handleChange = (props, value) => {
@@ -140,21 +133,15 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
   };
 
   useEffect(() => {
-    const mappedMA = auditTeamDetail.auditTeam?.data?.ref_tim_audit_mas?.map(
-      (v) => {
-        return { pn: v?.pn_ma, nama: v?.nama_ma, jabatan: v?.jabatan };
-      }
-    );
-    const mappedKTA = auditTeamDetail.auditTeam?.data?.ref_tim_audit_kta?.map(
-      (v) => {
-        return { pn: v?.pn_kta, nama: v?.nama_kta, jabatan: v?.jabatan };
-      }
-    );
-    const mappedATA = auditTeamDetail.auditTeam?.data?.ref_tim_audit_ata?.map(
-      (v) => {
-        return { pn: v?.pn_ata, nama: v?.nama_ata, jabatan: v?.jabatan };
-      }
-    );
+    const mappedMA = auditTeam?.data?.ref_tim_audit_mas?.map((v) => {
+      return { pn: v?.pn_ma, nama: v?.nama_ma, jabatan: v?.jabatan };
+    });
+    const mappedKTA = auditTeam?.data?.ref_tim_audit_kta?.map((v) => {
+      return { pn: v?.pn_kta, nama: v?.nama_kta, jabatan: v?.jabatan };
+    });
+    const mappedATA = auditTeam?.data?.ref_tim_audit_ata?.map((v) => {
+      return { pn: v?.pn_ata, nama: v?.nama_ata, jabatan: v?.jabatan };
+    });
 
     if (
       mappedMA !== undefined &&
@@ -163,12 +150,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
     ) {
       dispatch(setAuditTeamData([...mappedMA, ...mappedKTA, ...mappedATA]));
     }
-  }, [auditTeamDetail.auditTeam]);
-
-  const findAuditTeam = (id) => {
-    const find = auditTeam?.data?.find((v) => v.id == id);
-    return { label: find?.name, value: find?.id };
-  };
+  }, [auditTeam]);
 
   return (
     <div className="w-[60rem]">
@@ -186,6 +168,13 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
           value={auditScheduleData.name_kegiatan_audit}
           isDisabled={isDisabled}
         />
+        {validationErrors["name_kegiatan_audit"] && (
+          <div className="mt-2">
+            <ErrorValidation
+              message={validationErrors["name_kegiatan_audit"]}
+            />
+          </div>
+        )}
       </div>
       <div className="flex gap-3 justify-between my-3">
         <div className="w-1/2">
@@ -193,29 +182,28 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
             <FormWithLabel
               label={"Metode Audit"}
               form={
-                <ReactSelect
-                  options={optionMetode}
-                  control={control}
+                <Select
+                  optionValue={optionMetode}
                   isSearchable={false}
-                  handleChange={(e) => handleChangeRef("ref_metode", e.value)}
+                  onChange={(e) => handleChangeRef("ref_metode", e.value)}
                   value={
-                    auditScheduleData?.ref_metode?.nama !== "" && {
-                      label: auditScheduleData?.ref_metode?.nama,
-                      value: auditScheduleData?.ref_metode?.kode,
+                    auditScheduleData.ref_metode?.nama !== "" && {
+                      label: auditScheduleData.ref_metode?.nama,
+                      value: auditScheduleData.ref_metode?.kode,
                     }
                   }
                   isDisabled={isDisabled}
                 />
               }
+              errors={validationErrors["ref_metode.kode"]}
             />
             <FormWithLabel
               label={"Tipe Audit"}
               form={
-                <ReactSelect
-                  options={optionTipe}
-                  control={control}
+                <Select
+                  optionValue={optionTipe}
                   isSearchable={false}
-                  handleChange={(e) => handleChangeRef("ref_tipe", e.value)}
+                  onChange={(e) => handleChangeRef("ref_tipe", e.value)}
                   value={
                     auditScheduleData.ref_tipe?.nama !== "" && {
                       label: auditScheduleData.ref_tipe?.nama,
@@ -225,15 +213,15 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
                   isDisabled={isDisabled}
                 />
               }
+              errors={validationErrors["ref_tipe.kode"]}
             />
             <FormWithLabel
               label={"Jenis Audit"}
               form={
-                <ReactSelect
-                  options={optionJenis}
-                  control={control}
+                <Select
+                  optionValue={optionJenis}
                   isSearchable={false}
-                  handleChange={(e) => handleChangeRef("ref_jenis", e.value)}
+                  onChange={(e) => handleChangeRef("ref_jenis", e.value)}
                   value={
                     auditScheduleData.ref_jenis?.nama !== "" && {
                       label: auditScheduleData.ref_jenis?.nama,
@@ -243,15 +231,15 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
                   isDisabled={isDisabled}
                 />
               }
+              errors={validationErrors["ref_jenis.kode"]}
             />
             <FormWithLabel
               label={"Tema Audit"}
               form={
-                <ReactSelect
-                  options={optionTema}
-                  control={control}
+                <Select
+                  optionValue={optionTema}
                   isSearchable={false}
-                  handleChange={(e) => handleChangeRef("ref_tema", e.value)}
+                  onChange={(e) => handleChangeRef("ref_tema", e.value)}
                   value={
                     auditScheduleData.ref_tema?.nama !== "" && {
                       label: auditScheduleData.ref_tema?.nama,
@@ -295,35 +283,32 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, typeModal }) => {
                 />
               }
               widthFull={true}
+              errors={validationErrors["pelaksanaan_start"]}
             />
             <FormWithLabel
               label={"Tim Audit"}
               form={
-                <ReactSelect
-                  control={control}
-                  options={optionAuditTeam}
+                <AuditTeamSelect
                   handleChange={handleChangeAuditTeam}
-                  value={
-                    auditScheduleData.tim_audit_id !== ""
-                      ? findAuditTeam(auditScheduleData.tim_audit_id)
-                      : ""
-                  }
                   isDisabled={isDisabled}
+                  selectedValue={auditScheduleData.tim_audit_id}
                 />
               }
+              errors={validationErrors["pelaksanaan_end"]}
             />
           </CardBodyContent>
         </div>
         <div className="w-1/2">
           <CardAuditTeam
-            header_title={auditTeamDetail.auditTeam?.data?.name}
-            maker={auditTeamDetail.auditTeam?.data?.pic_maker_tim_audit?.nama}
-            created_at={"23-06-2023"}
-            manajer_audit={auditTeamDetail.auditTeam?.data?.ref_tim_audit_mas}
-            ketua_tim_audit={auditTeamDetail.auditTeam?.data?.ref_tim_audit_kta}
-            anggota_tim_audit={
-              auditTeamDetail.auditTeam?.data?.ref_tim_audit_ata
+            header_title={auditTeam?.data?.name}
+            maker={auditTeam?.data?.pic_maker_tim_audit?.nama}
+            created_at={
+              auditTeam?.data?.createdAt &&
+              convertDate(auditTeam?.data?.createdAt, "-", "d")
             }
+            manajer_audit={auditTeam?.data?.ref_tim_audit_mas}
+            ketua_tim_audit={auditTeam?.data?.ref_tim_audit_kta}
+            anggota_tim_audit={auditTeam?.data?.ref_tim_audit_ata}
           />
         </div>
       </div>

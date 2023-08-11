@@ -6,6 +6,7 @@ import TableTree, {
   Row,
   Rows,
 } from "@atlaskit/table-tree";
+import { DataNotFound } from "../molecules/commons";
 
 const TableField = ({ headers, columnWidths, items }) => {
   return (
@@ -17,20 +18,24 @@ const TableField = ({ headers, columnWidths, items }) => {
           </Header>
         ))}
       </Headers>
-      <Rows
-        items={items}
-        render={(rowData) => (
-          <Row>
-            {headers.map((header, index) => {
-              return (
-                <Cell key={index} className="text-brisma">
-                  {rowData[header]}
-                </Cell>
-              );
-            })}
-          </Row>
-        )}
-      />
+      {!items.length ? (
+        <DataNotFound />
+      ) : (
+        <Rows
+          items={items}
+          render={(rowData) => (
+            <Row>
+              {headers.map((header, index) => {
+                return (
+                  <Cell key={index} className="text-brisma">
+                    {rowData[header]}
+                  </Cell>
+                );
+              })}
+            </Row>
+          )}
+        />
+      )}
     </TableTree>
   );
 };

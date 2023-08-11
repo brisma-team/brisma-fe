@@ -6,6 +6,8 @@ import { useState } from "react";
 import { deleteSwal } from "@/helpers";
 import useAuditTeam from "@/data/pat/useAuditTeam";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { setAuditTeamData } from "@/slices/pat/auditTeamSlice";
 
 const CardBody = ({ title, text, width }) => {
   let textColor;
@@ -75,9 +77,9 @@ const CardAuditTeam = ({
   setShowModal,
   isMutate,
   setTypeModal,
-  setData,
 }) => {
   const router = useRouter().query;
+  const dispatch = useDispatch();
   const [ma, setMa] = useState([]);
   const [kta, setKta] = useState([]);
   const [ata, setAta] = useState([]);
@@ -107,6 +109,7 @@ const CardAuditTeam = ({
       pat_id: pat_id,
       tim_audit_id: tim_id,
       name: auditTeam?.data?.name,
+      ref_tipe_tim: auditTeam?.data?.ref_tipe_tim,
       ref_tim_audit_ma: auditTeam?.data?.ref_tim_audit_mas?.map((v) => ({
         pn: v?.pn_ma,
         nama: v?.nama_ma,
@@ -129,7 +132,7 @@ const CardAuditTeam = ({
         })),
       })),
     };
-    setData(mapppedData);
+    dispatch(setAuditTeamData(mapppedData));
     setShowModal(true);
     setTypeModal("update");
   };

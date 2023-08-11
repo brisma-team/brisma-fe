@@ -87,6 +87,8 @@ const LoginForm = () => {
     );
   }
 
+  console.log("env", process.env);
+
   return (
     <div className="h-screen">
       <div className="w-2/3 mx-auto">
@@ -97,7 +99,9 @@ const LoginForm = () => {
             </div>
           </div>
           <div className="text-center">
-            <p className="text-base font-normal">Versi 2.0.2</p>
+            <p className="text-base font-normal">
+              Versi 2.0.2 {`( ${process.env.NEXT_PUBLIC_VERSION} )`}
+            </p>
           </div>
         </div>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
