@@ -1,4 +1,4 @@
-import useDashboard from "@/data/useDashboard";
+import useDashboard from "@/data/dashboard/useDashboardId";
 import { Loader, Card } from "@/components/atoms";
 import { Bar } from "@nivo/bar";
 import { AutoSizer } from "react-virtualized";

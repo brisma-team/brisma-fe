@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { embedDashboard } from "@superset-ui/embedded-sdk";
-import useGetToken from "@/data/useGetToken";
+import useGetToken from "@/data/dashboard/useGetToken";
 
 const SupersetDashboard = () => {
   const { data } = useGetToken();
