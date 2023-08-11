@@ -1,11 +1,14 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { NotificationIndicator } from "@atlaskit/notification-indicator";
 import {
   AtlassianNavigation,
   Notifications,
+  SignIn,
 } from "@atlaskit/atlassian-navigation";
 import { useRouter } from "next/router";
+import { deleteCookie } from "cookies-next";
 
 const NotificationsBadge = () => (
   <NotificationIndicator
@@ -16,18 +19,26 @@ const NotificationsBadge = () => (
 
 const CustomHome = () => (
   <div className="w-64 p-5">
-    <Image
-      src="/images/BRISMA-2.0.2.png"
-      width={1000}
-      height={0}
-      alt="test"
-    ></Image>
+    <Link href="/dashboard">
+      <Image
+        src="/images/BRISMA-2.0.2.png"
+        width={1000}
+        height={0}
+        alt="test"
+      ></Image>
+    </Link>
   </div>
 );
 
 const NavbarField = () => {
   const router = useRouter();
   const { pathname } = router;
+  const handleLogout = () => {
+    deleteCookie("pn");
+    deleteCookie("token");
+    alert("Anda Berhasil Logout");
+    router.push("/login");
+  };
   const firstSegment = pathname.split("/")[1];
   const ar =
     pathname != "/pat" &&
@@ -41,8 +52,8 @@ const NavbarField = () => {
             <button
               className={`font-semibold text-xl text-atlasian-dark px-2 p-3 ${
                 firstSegment == "dashboard"
-                  ? "border-b-4 border-atlasian-blue-light"
-                  : ""
+                  ? "border-b-4 border-atlasian-blue-light "
+                  : "hover:border-b-4 hover:border-atlasian-blue-light"
               }`}
             >
               Dashboard
@@ -53,7 +64,7 @@ const NavbarField = () => {
               className={`font-semibold text-xl text-atlasian-dark px-2 p-3 ${
                 firstSegment == "pat"
                   ? "border-b-4 border-atlasian-blue-light"
-                  : ""
+                  : "hover:border-b-4 hover:border-atlasian-blue-light"
               }`}
             >
               P.A.T
@@ -64,7 +75,7 @@ const NavbarField = () => {
               className={`font-semibold text-xl text-atlasian-dark px-2 p-3 ${
                 firstSegment == "ewp"
                   ? "border-b-4 border-atlasian-blue-light"
-                  : ""
+                  : "hover:border-b-4 hover:border-atlasian-blue-light"
               }`}
             >
               E.W.P
@@ -75,7 +86,7 @@ const NavbarField = () => {
               className={`font-semibold text-xl text-atlasian-dark px-2 p-3 ${
                 firstSegment == "rpm"
                   ? "border-b-4 border-atlasian-blue-light"
-                  : ""
+                  : "hover:border-b-4 hover:border-atlasian-blue-light"
               }`}
             >
               R.P.M
@@ -91,6 +102,7 @@ const NavbarField = () => {
         renderNotifications={() => (
           <Notifications badge={NotificationsBadge} tooltip="Notifications" />
         )}
+        renderSignIn={() => <SignIn onClick={handleLogout} />}
         primaryItems={ar}
       />
     </div>
