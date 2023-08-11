@@ -1,34 +1,37 @@
 import { useEffect, useState } from "react";
 import {
+  ButtonIcon,
   DatepickerStartEnd,
-  ReactSelect,
+  ErrorValidation,
+  Select,
   TextAreaField,
   TextInput,
 } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
 import { CardFormInputTeam } from "@/components/molecules/pat";
 import { CardBodyContent, FormWithLabel } from "@/components/molecules/commons";
-import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useJenis, useMetode, useTema, useTipe } from "@/data/reference";
 import { setActivityScheduleData } from "@/slices/pat/activityScheduleSlice";
-import { convertDate, parseDate } from "@/helpers";
+import { parseDate } from "@/helpers";
 
-const ModalBodyActivityInfo = ({ setCurrentModalStage, typeModal }) => {
-  console.log(typeModal);
-  const { control } = useForm();
+const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
   const dispatch = useDispatch();
   const activityScheduleData = useSelector(
     (state) => state.activitySchedule.activityScheduleData
   );
+  const validationErrors = useSelector(
+    (state) => state.activitySchedule.validationErrorsAI
+  );
+
   const [selectedMetode, setSelectedMetode] = useState(null);
   const [selectedTipe, setSelectedTipe] = useState(null);
   const [selectedJenis, setSelectedJenis] = useState(null);
 
   const { metode } = useMetode("all", 1);
-  const { tipe } = useTipe(selectedMetode);
-  const { jenis } = useJenis(selectedTipe);
-  const { tema } = useTema(selectedJenis);
+  const { tipe } = useTipe("all", selectedMetode);
+  const { jenis } = useJenis("all", selectedTipe);
+  const { tema } = useTema("all", selectedJenis);
 
   const [optionMetode, setOptionMetode] = useState([]);
   const [optionTipe, setOptionTipe] = useState([]);
@@ -143,12 +146,23 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, typeModal }) => {
     <div className="w-[50rem]">
       <div className="w-1/2 pr-1">
         <TextInput
-          icon={<IconClose size="medium" />}
+          icon={
+            <ButtonIcon
+              handleClick={() => handleChange("nama", "")}
+              icon={<IconClose />}
+            />
+          }
           className={"font-bold text-5xl rounded text-brisma"}
           style={{ fontSize: "1.25rem" }}
           onChange={(e) => handleChange("nama", e.target.value)}
           value={activityScheduleData.nama}
+          isDisabled={isDisabled}
         />
+        {validationErrors["nama"] && (
+          <div className="mt-2">
+            <ErrorValidation message={validationErrors["nama"]} />
+          </div>
+        )}
       </div>
       <div className="flex gap-3 justify-between my-3">
         <div className="w-1/2">
@@ -156,68 +170,71 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, typeModal }) => {
             <FormWithLabel
               label={"Metode Kegiatan"}
               form={
-                <ReactSelect
-                  options={optionMetode}
-                  control={control}
+                <Select
+                  optionValue={optionMetode}
                   isSearchable={false}
-                  handleChange={(e) => handleChangeRef("ref_metode", e.value)}
+                  onChange={(e) => handleChangeRef("ref_metode", e.value)}
                   value={
-                    activityScheduleData?.ref_metode?.nama !== "" && {
-                      label: activityScheduleData?.ref_metode?.nama,
-                      value: activityScheduleData?.ref_metode?.kode,
+                    activityScheduleData.ref_metode?.nama !== "" && {
+                      label: activityScheduleData.ref_metode?.nama,
+                      value: activityScheduleData.ref_metode?.kode,
                     }
                   }
+                  isDisabled={isDisabled}
                 />
               }
+              errors={validationErrors["ref_metode.kode"]}
             />
             <FormWithLabel
               label={"Tipe Kegiatan"}
               form={
-                <ReactSelect
-                  options={optionTipe}
-                  control={control}
+                <Select
+                  optionValue={optionTipe}
                   isSearchable={false}
-                  handleChange={(e) => handleChangeRef("ref_tipe", e.value)}
+                  onChange={(e) => handleChangeRef("ref_tipe", e.value)}
                   value={
                     activityScheduleData.ref_tipe?.nama !== "" && {
                       label: activityScheduleData.ref_tipe?.nama,
                       value: activityScheduleData.ref_tipe?.kode,
                     }
                   }
+                  isDisabled={isDisabled}
                 />
               }
+              errors={validationErrors["ref_tipe.kode"]}
             />
             <FormWithLabel
               label={"Jenis Kegiatan"}
               form={
-                <ReactSelect
-                  options={optionJenis}
-                  control={control}
+                <Select
+                  optionValue={optionJenis}
                   isSearchable={false}
-                  handleChange={(e) => handleChangeRef("ref_jenis", e.value)}
+                  onChange={(e) => handleChangeRef("ref_jenis", e.value)}
                   value={
                     activityScheduleData.ref_jenis?.nama !== "" && {
                       label: activityScheduleData.ref_jenis?.nama,
                       value: activityScheduleData.ref_jenis?.kode,
                     }
                   }
+                  isDisabled={isDisabled}
                 />
               }
+              errors={validationErrors["ref_jenis.kode"]}
             />
             <FormWithLabel
               label={"Tema Kegiatan"}
               form={
-                <ReactSelect
-                  options={optionTema}
-                  control={control}
+                <Select
+                  optionValue={optionTema}
                   isSearchable={false}
-                  handleChange={(e) => handleChangeRef("ref_tema", e.value)}
+                  onChange={(e) => handleChangeRef("ref_tema", e.value)}
                   value={
                     activityScheduleData.ref_tema?.nama !== "" && {
                       label: activityScheduleData.ref_tema?.nama,
                       value: activityScheduleData.ref_tema?.kode,
                     }
                   }
+                  isDisabled={isDisabled}
                 />
               }
             />
@@ -233,23 +250,12 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, typeModal }) => {
                   handlerChangeEnd={(e) =>
                     handleChangePeriodActivity("pelaksanaan_end", e)
                   }
-                  valueStart={
-                    activityScheduleData.pelaksanaan_start !== ""
-                      ? convertDate(
-                          activityScheduleData?.pelaksanaan_start,
-                          "-"
-                        )
-                      : ""
-                  }
-                  valueEnd={
-                    activityScheduleData.pelaksanaan_end !== ""
-                      ? convertDate(activityScheduleData?.pelaksanaan_end, "-")
-                      : ""
-                  }
-                  format={"YYYY/MM/DD"}
+                  valueStart={activityScheduleData.pelaksanaan_start}
+                  valueEnd={activityScheduleData.pelaksanaan_end}
                 />
               }
               widthFull={true}
+              errors={validationErrors["pelaksanaan_start"]}
             />
             <FormWithLabel
               label={"Deskripsi Kegiatan"}
@@ -260,6 +266,7 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, typeModal }) => {
                     handleChange("deskripsi", e.target.value)
                   }
                   value={activityScheduleData.deskripsi}
+                  isDisabled={isDisabled}
                 />
               }
               labelPositionTop={true}
@@ -273,6 +280,7 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, typeModal }) => {
             data={activityScheduleData.penanggung_jawab}
             handlerChangeParent={handleChangePIC}
             handlerAddParent={handleAddPIC}
+            validationErrors={validationErrors}
           />
         </div>
       </div>

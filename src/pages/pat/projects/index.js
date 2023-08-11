@@ -35,6 +35,7 @@ const index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [openFilter, setOpenFilter] = useState(false);
+  const [data, setData] = useState([]);
   const [params, setParams] = useState({
     project_name: "",
     status_approver: "",
@@ -55,7 +56,6 @@ const index = () => {
     pages: currentPage,
     limit: 8,
   });
-
   const { approvalPat } = useApprovalPat();
 
   useEffect(() => {
@@ -69,12 +69,6 @@ const index = () => {
       debouncedSearch.cancel();
     };
   }, [filter]);
-
-  const [data, setData] = useState(null);
-
-  const handleChangeSortBy = (e) => {
-    setFilter({ ...filter, sortBy: e.value });
-  };
 
   useEffect(() => {
     if (projectOverview) {
@@ -99,6 +93,10 @@ const index = () => {
       setTotalPages(projectOverview?.page?.totalPage);
     }
   }, [projectOverview, params]);
+
+  const handleChangeSortBy = (e) => {
+    setFilter({ ...filter, sortBy: e.value });
+  };
 
   return (
     <PatOverviewLayout data={approvalPat?.data?.header}>

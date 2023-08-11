@@ -6,23 +6,49 @@ import {
   ModalBodyActivityObject,
   ModalBodyBudget,
 } from "./sub-modal";
-import { useSelector } from "react-redux";
-import { usePostData, useUpdateData } from "@/helpers";
+import { useSelector, useDispatch } from "react-redux";
+import { setErrorValidation, usePostData, useUpdateData } from "@/helpers";
 import { useRouter } from "next/router";
 import { ModalHeader, ModalFooter } from "@/components/molecules/pat";
+import {
+  activityInfoSchema,
+  activityObjectSchema,
+} from "@/helpers/schemas/pat/auditScheduleSchema";
+import {
+  setvalidationErrorsAI,
+  setvalidationErrorsAO,
+  resetvalidationErrorsAI,
+  resetvalidationErrorsAO,
+} from "@/slices/pat/auditScheduleSlice";
+import { useEffect } from "react";
 
-const ModalActivitySchedule = ({
-  showModal,
-  setShowModal,
-  typeModal,
-  mutate,
-  scheduleId,
-}) => {
+const ModalActivitySchedule = ({ showModal, setShowModal, typeModal }) => {
   const { id } = useRouter().query;
+  const dispatch = useDispatch();
   const [currentModalStage, setCurrentModalStage] = useState(1);
+  const [isFormDisabled, setIsFormDisabled] = useState(false);
   const activityScheduleData = useSelector(
     (state) => state.activitySchedule.activityScheduleData
   );
+
+  const schemaMappings = {
+    1: {
+      schema: activityInfoSchema,
+      resetErrors: resetvalidationErrorsAI,
+      setErrors: setvalidationErrorsAI,
+    },
+    2: {
+      schema: activityObjectSchema,
+      resetErrors: resetvalidationErrorsAO,
+      setErrors: setvalidationErrorsAO,
+    },
+  };
+
+  useEffect(() => {
+    if (typeModal === "detail") {
+      setIsFormDisabled(true);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,26 +57,41 @@ const ModalActivitySchedule = ({
         return [...result, ...item.ref_sub_kategori_anggarans];
       }, []);
 
+    const filterEchannel = activityScheduleData.echannel.filter(
+      (v) => v.posisi_data !== ""
+    );
+
     const data = {
       ...activityScheduleData,
       pat_id: id,
       anggaran_kegiatan: combinedActivityBudget,
+      echannel: filterEchannel,
     };
 
     if (typeModal === "update") {
-      await useUpdateData(`${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/sbp`, {
-        ...data,
-        jadwal_sbp_id: scheduleId,
-      });
+      await useUpdateData(
+        `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/sbp`,
+        data
+      );
     } else {
       await usePostData(
         `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/sbp/create`,
         data
       );
     }
-
     setShowModal(false);
-    mutate;
+  };
+
+  const handleNextStage = async () => {
+    const validate = setErrorValidation(
+      activityScheduleData,
+      dispatch,
+      schemaMappings[currentModalStage]
+    );
+
+    if (validate && currentModalStage < 3) {
+      setCurrentModalStage(currentModalStage + 1);
+    }
   };
 
   const items = [
@@ -103,24 +144,30 @@ const ModalActivitySchedule = ({
           progressItems={items}
         />
       }
-      footer={<ModalFooter handleSubmit={handleSubmit} />}
+      footer={
+        <ModalFooter
+          handleSubmit={handleSubmit}
+          handleNextStage={handleNextStage}
+          isDisabled={false}
+        />
+      }
     >
       {currentModalStage === 1 && (
         <ModalBodyActivityInfo
           setCurrentModalStage={setCurrentModalStage}
-          typeModal={typeModal}
+          isDisabled={isFormDisabled}
         />
       )}
       {currentModalStage === 2 && (
         <ModalBodyActivityObject
           setCurrentModalStage={setCurrentModalStage}
-          typeModal={typeModal}
+          isDisabled={isFormDisabled}
         />
       )}
       {currentModalStage === 3 && (
         <ModalBodyBudget
           setCurrentModalStage={setCurrentModalStage}
-          typeModal={typeModal}
+          isDisabled={isFormDisabled}
         />
       )}
     </Modal>

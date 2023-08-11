@@ -1,8 +1,9 @@
 import {
   InlineEditText,
-  LinkIcon,
   ButtonField,
-  ReactSelect,
+  ErrorValidation,
+  Select,
+  ButtonIcon,
 } from "@/components/atoms";
 import {
   IconAttachment,
@@ -19,11 +20,9 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
 import { useUkerType } from "@/data/reference";
 
 const SubModalUnitKerja = ({ isDisabled }) => {
-  const { control } = useForm();
   const [showBranch, setShowBranch] = useState(false);
   const [countType, setCountType] = useState([]);
   const dispatch = useDispatch();
@@ -33,6 +32,9 @@ const SubModalUnitKerja = ({ isDisabled }) => {
   const { ukerType } = useUkerType("list");
   const [optionUkerType, setOptionUkerType] = useState([]);
   const [openTipeUkerIdx, setOpenTipeUkerIdx] = useState(null);
+  const validationErrors = useSelector(
+    (state) => state.auditSchedule.validationErrorsAO
+  );
 
   useEffect(() => {
     const totalCount = auditScheduleData?.uker?.length;
@@ -176,11 +178,10 @@ const SubModalUnitKerja = ({ isDisabled }) => {
               return (
                 <div className="flex" key={i}>
                   <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
-                    <LinkIcon
-                      href={"#"}
+                    <ButtonIcon
                       color={"red"}
                       icon={<IconCrossCircle />}
-                      handler={() => handleDeleteUker(i)}
+                      handleClick={() => handleDeleteUker(i)}
                     />
                   </div>
                   <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center justify-center text-justify p-3">
@@ -197,7 +198,6 @@ const SubModalUnitKerja = ({ isDisabled }) => {
                       <InlineEditOrgehSelect
                         placeholder="Select an option"
                         handleConfirm={(e) => handleChangeOrgeh(e, i)}
-                        control={control}
                         value={{
                           label: v.ref_auditee_orgeh_name,
                           value: {
@@ -207,6 +207,19 @@ const SubModalUnitKerja = ({ isDisabled }) => {
                         }}
                         isDisabled={isDisabled}
                       />
+                      {validationErrors[
+                        `uker[${i}].ref_auditee_orgeh_kode`
+                      ] && (
+                        <div className="px-1 py-0.5">
+                          <ErrorValidation
+                            message={
+                              validationErrors[
+                                `uker[${i}].ref_auditee_orgeh_kode`
+                              ]
+                            }
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[14%] flex items-center px-2 py-3">
@@ -215,40 +228,34 @@ const SubModalUnitKerja = ({ isDisabled }) => {
                         i == openTipeUkerIdx ? `z-50 absolute` : `w-full`
                       }
                     >
-                      <ReactSelect
-                        control={control}
-                        handleChange={(e) => handleChangeTipeUker(e.value, i)}
-                        options={optionUkerType}
+                      <Select
+                        optionValue={optionUkerType}
+                        isSearchable={false}
+                        onChange={(e) => handleChangeTipeUker(e.value, i)}
                         value={
                           v.tipe_uker !== "" ? findUkerType(v.tipe_uker) : ""
                         }
-                        isSearchable={false}
+                        isDisabled={isDisabled}
                         handleMenuOpen={() => handleMenuOpen(i)}
                         handleMenuClose={handleMenuClose}
-                        isDisabled={isDisabled}
                       />
+                      {validationErrors[`uker[${i}].tipe_uker`] && (
+                        <div className="px-1 py-0.5">
+                          <ErrorValidation
+                            message={validationErrors[`uker[${i}].tipe_uker`]}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[10%] flex items-center">
                     <div className="flex w-full justify-center gap-1">
-                      <LinkIcon
-                        href={"#"}
-                        color={"yellow"}
-                        icon={<IconInfo />}
-                      />
-                      <LinkIcon
-                        href={"#"}
-                        color={"blue"}
-                        icon={<IconQuestions />}
-                      />
+                      <ButtonIcon color={"yellow"} icon={<IconInfo />} />
+                      <ButtonIcon color={"blue"} icon={<IconQuestions />} />
                     </div>
                   </div>
                   <div className="border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
-                    <LinkIcon
-                      href={"#"}
-                      color={"purple"}
-                      icon={<IconAttachment />}
-                    />
+                    <ButtonIcon color={"purple"} icon={<IconAttachment />} />
                   </div>
                 </div>
               );
@@ -271,13 +278,17 @@ const SubModalUnitKerja = ({ isDisabled }) => {
             {showBranch && (
               <div className="w-40 mb-2">
                 <InlineEditBranchSelect
-                  control={control}
                   placeholder="Select an option"
                   handleConfirm={handleAddUker}
                 />
               </div>
             )}
           </div>
+          {validationErrors["uker"] && (
+            <div className="-mt-1 mx-3 mb-2">
+              <ErrorValidation message={validationErrors["uker"]} />
+            </div>
+          )}
         </div>
       </div>
     </div>

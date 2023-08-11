@@ -13,11 +13,7 @@ const Pagination = ({ pages, setCurrentPage }) => {
   return (
     <div className="w-full flex justify-center mt-6">
       <PaginationDefault
-        nextLabel="Next"
-        label="Page"
-        pageLabel="Page"
         pages={arrPages}
-        previousLabel="Previous"
         onChange={(e) => handleChangePage(parseInt(e.target.textContent))}
       />
     </div>

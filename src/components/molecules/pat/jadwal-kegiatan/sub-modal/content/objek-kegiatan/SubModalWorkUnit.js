@@ -1,8 +1,9 @@
 import {
   InlineEditText,
-  LinkIcon,
   ButtonField,
-  ReactSelect,
+  ErrorValidation,
+  Select,
+  ButtonIcon,
 } from "@/components/atoms";
 import {
   IconAttachment,
@@ -17,15 +18,13 @@ import {
   InlineEditOrgehSelect,
 } from "@/components/molecules/commons";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { setActivityScheduleData } from "@/slices/pat/activityScheduleSlice";
 import { useUkerType } from "@/data/reference";
 
-const SubModalWorkUnit = ({ typeModal }) => {
-  console.log(typeModal);
-  const { control } = useForm();
+const SubModalWorkUnit = ({ isDisabled }) => {
   const [showBranch, setShowBranch] = useState(false);
+  const [countType, setCountType] = useState([]);
   const dispatch = useDispatch();
   const activityScheduleData = useSelector(
     (state) => state.activitySchedule.activityScheduleData
@@ -33,6 +32,35 @@ const SubModalWorkUnit = ({ typeModal }) => {
   const { ukerType } = useUkerType("list");
   const [optionUkerType, setOptionUkerType] = useState([]);
   const [openTipeUkerIdx, setOpenTipeUkerIdx] = useState(null);
+  const validationErrors = useSelector(
+    (state) => state.activitySchedule.validationErrorsAO
+  );
+
+  useEffect(() => {
+    const totalCount = activityScheduleData?.uker?.length;
+    if (totalCount) {
+      const typeCounts = {};
+      activityScheduleData?.uker?.forEach((item) => {
+        const type = item.tipe_uker;
+        if (type) {
+          typeCounts[type] = (typeCounts[type] || 0) + 1;
+        }
+      });
+
+      const total = Object.values(typeCounts).reduce(
+        (acc, count) => acc + count,
+        0
+      );
+
+      const result = Object.keys(typeCounts).map((type) => {
+        const count = typeCounts[type];
+        const percent = ((count / total) * 100).toFixed(0);
+        return { type, count, percent };
+      });
+
+      setCountType(result);
+    }
+  }, [activityScheduleData]);
 
   useEffect(() => {
     const mapping = ukerType?.data?.map((v) => {
@@ -80,7 +108,6 @@ const SubModalWorkUnit = ({ typeModal }) => {
 
   const handleAddUker = (value) => {
     if (value) {
-      console.log("uker => ", value);
       const newData = [...activityScheduleData.uker];
       newData.push({
         ref_auditee_orgeh_kode: "",
@@ -110,70 +137,22 @@ const SubModalWorkUnit = ({ typeModal }) => {
     return { label: find?.name, value: find?.kode };
   };
 
-  useEffect(() => {
-    console.log("UKER => ", activityScheduleData.uker);
-  }, [activityScheduleData]);
-
   return (
     <div>
       <div className="w-full p-4">
-        <div className="w-full flex gap-3 my-3">
-          <CardTypeCount
-            title={"RAO"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-          <CardTypeCount
-            title={"BO (KC)"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-          <CardTypeCount
-            title={"KK"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-          <CardTypeCount
-            title={"DIVISI"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-          <CardTypeCount
-            title={"RO (KANWIL)"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-        </div>
-        <div className="w-full flex gap-3 my-3">
-          <CardTypeCount
-            title={"KCP"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-          <CardTypeCount
-            title={"UNIT"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-          <CardTypeCount
-            title={"UKLN"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
-          <CardTypeCount
-            title={"PA"}
-            total={2}
-            percent={75}
-            width={"w-[12rem]"}
-          />
+        <div className="w-full flex flex-wrap my-1">
+          {countType.map((v, i) => {
+            return (
+              <CardTypeCount
+                key={i}
+                title={v.type}
+                total={v.count}
+                percent={v.percent}
+                width={"w-[12rem]"}
+                style={"m-1"}
+              />
+            );
+          })}
         </div>
       </div>
       <div className="w-full font-bold text-sm px-4">
@@ -203,11 +182,10 @@ const SubModalWorkUnit = ({ typeModal }) => {
               return (
                 <div className="flex" key={i}>
                   <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
-                    <LinkIcon
-                      href={"#"}
+                    <ButtonIcon
                       color={"red"}
                       icon={<IconCrossCircle />}
-                      handler={() => handleDeleteUker(i)}
+                      handleClick={() => handleDeleteUker(i)}
                     />
                   </div>
                   <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center justify-center text-justify p-3">
@@ -224,7 +202,6 @@ const SubModalWorkUnit = ({ typeModal }) => {
                       <InlineEditOrgehSelect
                         placeholder="Select an option"
                         handleConfirm={(e) => handleChangeOrgeh(e, i)}
-                        control={control}
                         value={{
                           label: v.ref_auditee_orgeh_name,
                           value: {
@@ -232,7 +209,21 @@ const SubModalWorkUnit = ({ typeModal }) => {
                             orgeh_name: v.ref_auditee_orgeh_name,
                           },
                         }}
+                        isDisabled={isDisabled}
                       />
+                      {validationErrors[
+                        `uker[${i}].ref_auditee_orgeh_kode`
+                      ] && (
+                        <div className="px-1 py-0.5">
+                          <ErrorValidation
+                            message={
+                              validationErrors[
+                                `uker[${i}].ref_auditee_orgeh_kode`
+                              ]
+                            }
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[14%] flex items-center px-2 py-3">
@@ -241,43 +232,34 @@ const SubModalWorkUnit = ({ typeModal }) => {
                         i == openTipeUkerIdx ? `z-50 absolute` : `w-full`
                       }
                     >
-                      {console.log(
-                        "findUkerType => ",
-                        findUkerType(v.tipe_uker)
-                      )}
-                      <ReactSelect
-                        control={control}
-                        handleChange={(e) => handleChangeTipeUker(e.value, i)}
-                        options={optionUkerType}
+                      <Select
+                        optionValue={optionUkerType}
+                        isSearchable={false}
+                        onChange={(e) => handleChangeTipeUker(e.value, i)}
                         value={
                           v.tipe_uker !== "" ? findUkerType(v.tipe_uker) : ""
                         }
-                        isSearchable={false}
+                        isDisabled={isDisabled}
                         handleMenuOpen={() => handleMenuOpen(i)}
                         handleMenuClose={handleMenuClose}
                       />
+                      {validationErrors[`uker[${i}].tipe_uker`] && (
+                        <div className="px-1 py-0.5">
+                          <ErrorValidation
+                            message={validationErrors[`uker[${i}].tipe_uker`]}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[10%] flex items-center">
                     <div className="flex w-full justify-center gap-1">
-                      <LinkIcon
-                        href={"#"}
-                        color={"yellow"}
-                        icon={<IconInfo />}
-                      />
-                      <LinkIcon
-                        href={"#"}
-                        color={"blue"}
-                        icon={<IconQuestions />}
-                      />
+                      <ButtonIcon color={"yellow"} icon={<IconInfo />} />
+                      <ButtonIcon color={"blue"} icon={<IconQuestions />} />
                     </div>
                   </div>
                   <div className="border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
-                    <LinkIcon
-                      href={"#"}
-                      color={"purple"}
-                      icon={<IconAttachment />}
-                    />
+                    <ButtonIcon color={"purple"} icon={<IconAttachment />} />
                   </div>
                 </div>
               );
@@ -299,7 +281,6 @@ const SubModalWorkUnit = ({ typeModal }) => {
             {showBranch && (
               <div className="w-40 mb-2">
                 <InlineEditBranchSelect
-                  control={control}
                   placeholder="Select an option"
                   handleConfirm={handleAddUker}
                 />

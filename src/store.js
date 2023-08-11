@@ -6,6 +6,7 @@ import auditTeamReducer from "./slices/pat/auditTeamSlice";
 import auditScheduleReducer from "./slices/pat/auditScheduleSlice";
 import activityScheduleReducer from "./slices/pat/activityScheduleSlice";
 import activityScheduleOtherReducer from "./slices/pat/activityScheduleOtherSlice";
+import documentPATReducer from "./slices/pat/documentSlice";
 
 import { configureStore } from "@reduxjs/toolkit";
 
@@ -19,5 +20,6 @@ export const store = configureStore({
     auditSchedule: auditScheduleReducer,
     activitySchedule: activityScheduleReducer,
     activityScheduleOther: activityScheduleOtherReducer,
+    documentPAT: documentPATReducer,
   },
 });

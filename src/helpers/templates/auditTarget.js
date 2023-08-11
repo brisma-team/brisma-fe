@@ -75,7 +75,7 @@ const auditTarget = (data) => {
     const typeIndex = Object.keys(data).indexOf(typeKey);
     const typeLetter = letters[Object.keys(data).indexOf(typeKey)];
     for (const categoryKey in data[typeKey]) {
-      const categoryIndex = Object.keys(data[typeKey]).indexOf(categoryKey);
+      // const categoryIndex = Object.keys(data[typeKey]).indexOf(categoryKey);
       data[typeKey][categoryKey].map((v) => {
         arrData.push(
           `<div class="sub_section_ruang_lingkup" style="margin-bottom: 30px;">

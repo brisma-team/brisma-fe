@@ -14,6 +14,7 @@ import convertDate from "./converDate";
 import splitWord from "./splitWord";
 import numberWithCommas from "./numberWithCommas";
 import decimalToPercentage from "./decimalToPercentage";
+import setErrorValidation from "./setErrorValidation";
 
 export {
   loadingSwal,
@@ -32,4 +33,5 @@ export {
   splitWord,
   numberWithCommas,
   decimalToPercentage,
+  setErrorValidation,
 };

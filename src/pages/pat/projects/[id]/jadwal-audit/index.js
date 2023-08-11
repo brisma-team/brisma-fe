@@ -1,6 +1,7 @@
-import { Breadcrumbs, PageTitle } from "@/components/atoms";
+import { Breadcrumbs, PageTitle, Pagination } from "@/components/atoms";
 import {
   CardTypeCount,
+  DataNotFound,
   PrevNextNavigation,
   SelectSortFilter,
 } from "@/components/molecules/commons";
@@ -9,10 +10,9 @@ import Button from "@atlaskit/button";
 import CardAuditSchedule from "@/components/molecules/pat/CardAuditSchedule";
 import { useEffect, useState } from "react";
 import { ModalBuatJadwalAudit } from "@/components/molecules/pat/jadwal-audit";
-import { CardFilterActivitySchedule } from "@/components/molecules/pat";
+import { CardFilterAuditSchedule } from "@/components/molecules/pat";
 import { useRouter } from "next/router";
-import useAuditSchedule from "@/data/pat/useAuditSchedule";
-import { useStatusPat } from "@/data/pat";
+import { useStatusPat, useAuditSchedule } from "@/data/pat";
 import _ from "lodash";
 import { useDispatch } from "react-redux";
 import { resetAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
@@ -42,6 +42,8 @@ const index = () => {
     { name: "Jadwal Audit", path: `/pat/projects/${id}/jadwal-audit` },
   ];
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [content, setContent] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showModalDetail, setShowModalDetail] = useState(false);
@@ -50,6 +52,10 @@ const index = () => {
     project_name: "",
     metode: "",
     tipe: "",
+    jenis: "",
+    tema: "",
+    timAudit: "",
+    maker: "",
     start: "",
     end: "",
     sort_by: "ASC",
@@ -58,15 +64,22 @@ const index = () => {
     project_name: "",
     metode: "",
     tipe: "",
+    jenis: "",
+    tema: "",
+    timAudit: "",
+    maker: "",
     start: "",
     end: "",
     sort_by: "ASC",
   });
 
-  const { auditSchedule, auditScheduleMutate } = useAuditSchedule("all", {
-    id,
-    ...params,
-  });
+  const { auditSchedule, auditScheduleMutate, auditScheduleError } =
+    useAuditSchedule("all", {
+      ...params,
+      id,
+      pages: currentPage,
+      limit: 6,
+    });
   const [data, setData] = useState([]);
   const [countType, setCountType] = useState({});
   const [typeModal, setTypeModal] = useState(null);
@@ -98,6 +111,7 @@ const index = () => {
     });
 
     setData(mappedData);
+    setTotalPages(auditSchedule?.detailPage?.totalPage);
 
     const totalCount = auditSchedule?.result?.length;
     if (totalCount) {
@@ -174,21 +188,24 @@ const index = () => {
               showModal={showModal}
               setShowModal={setShowModal}
               typeModal={typeModal}
-              mutate={auditScheduleMutate}
             />
           </div>
         </div>
-        <div className="flex justify-between items-end">
-          <div className="w-[27rem] flex justify-center">
-            <CardFilterActivitySchedule
+        <div className="flex justify-between items-end relative">
+          <div className="flex justify-center absolute z-10 bg-white top-0">
+            <CardFilterAuditSchedule
               showFilter={showFilter}
               params={filter}
               setParams={setFilter}
             />
           </div>
-          <div className="flex justify-end items-end gap-2">
+          <div
+            className={`w-full flex justify-end items-end gap-2 ${
+              showFilter && `pt-[92px]`
+            }`}
+          >
             {countType?.length && (
-              <div className="mb-1">
+              <div className="mb-1 flex gap-2">
                 {countType.map((v, i) => {
                   return (
                     <CardTypeCount
@@ -211,7 +228,10 @@ const index = () => {
 
         {/* Start Content */}
         <div className="flex flex-wrap my-4 overflow-hidden -ml-2">
-          {data?.length &&
+          {auditScheduleError ? (
+            <DataNotFound />
+          ) : (
+            data?.length &&
             data.map((v, i) => {
               return (
                 <CardAuditSchedule
@@ -236,8 +256,10 @@ const index = () => {
                   setScheduleId={setScheduleId}
                 />
               );
-            })}
+            })
+          )}
         </div>
+        <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
         {/* End Content */}
       </div>
     </PatLandingLayout>

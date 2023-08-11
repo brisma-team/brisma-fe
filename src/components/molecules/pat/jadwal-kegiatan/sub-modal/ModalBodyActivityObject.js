@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { CardBodyNavigation } from "@/components/molecules/commons";
 import { SubModalWorkUnit } from "./content";
 
-const ModalBodyActivityObject = ({ setCurrentModalStage, typeModal }) => {
+const ModalBodyActivityObject = ({ setCurrentModalStage, isDisabled }) => {
   useEffect(() => {
     setCurrentModalStage(2);
   }, []);
@@ -15,7 +15,7 @@ const ModalBodyActivityObject = ({ setCurrentModalStage, typeModal }) => {
         setCurrentStage={setCurrentStage}
         stage={[{ stageNumber: 1, stageTitle: "Unit Kerja" }]}
       />
-      {currentStage === 1 && <SubModalWorkUnit typeModal={typeModal} />}
+      {currentStage === 1 && <SubModalWorkUnit isDisabled={isDisabled} />}
     </div>
   );
 };

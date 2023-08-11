@@ -24,35 +24,7 @@ const initialState = {
     pelaksanaan_end: "",
     deskripsi: "",
     uker: [],
-    echannel: [
-      {
-        ref_echanel_type_kode: {
-          kode: "1",
-          name: "A.T.M",
-        },
-        jumlah_existing: null,
-        jumlah_target: null,
-        posisi_data: "",
-      },
-      {
-        ref_echanel_type_kode: {
-          kode: "2",
-          name: "E.D.C",
-        },
-        jumlah_existing: null,
-        jumlah_target: null,
-        posisi_data: "",
-      },
-      {
-        ref_echanel_type_kode: {
-          kode: "3",
-          name: "C.R.M",
-        },
-        jumlah_existing: null,
-        jumlah_target: null,
-        posisi_data: "",
-      },
-    ],
+    echannel: [],
     tim_audit_id: "",
     anggaran_kegiatan: [],
     anggaran_dinas: [],
@@ -80,39 +52,13 @@ const initialState = {
     pelaksanaan_end: "",
     deskripsi: "",
     uker: [],
-    echannel: [
-      {
-        ref_echanel_type_kode: {
-          kode: "1",
-          name: "A.T.M",
-        },
-        jumlah_existing: null,
-        jumlah_target: null,
-        posisi_data: "",
-      },
-      {
-        ref_echanel_type_kode: {
-          kode: "2",
-          name: "E.D.C",
-        },
-        jumlah_existing: null,
-        jumlah_target: null,
-        posisi_data: "",
-      },
-      {
-        ref_echanel_type_kode: {
-          kode: "3",
-          name: "C.R.M",
-        },
-        jumlah_existing: null,
-        jumlah_target: null,
-        posisi_data: "",
-      },
-    ],
+    echannel: [],
     tim_audit_id: "",
     anggaran_kegiatan: [],
     anggaran_dinas: [],
   },
+  validationErrorsAI: {},
+  validationErrorsAO: {},
   auditTeamData: [],
 };
 
@@ -126,6 +72,18 @@ export const auditScheduleSlice = createSlice({
     setAuditTeamData: (state, action) => {
       state.auditTeamData = action.payload;
     },
+    setvalidationErrorsAI: (state, action) => {
+      state.validationErrorsAI = action.payload;
+    },
+    setvalidationErrorsAO: (state, action) => {
+      state.validationErrorsAO = action.payload;
+    },
+    resetvalidationErrorsAI: (state) => {
+      state.validationErrorsAI = {};
+    },
+    resetvalidationErrorsAO: (state) => {
+      state.validationErrorsAO = {};
+    },
     resetAuditScheduleData: (state) => {
       state.auditScheduleData = { ...state.defaultData };
     },
@@ -134,7 +92,11 @@ export const auditScheduleSlice = createSlice({
 
 export const {
   setAuditScheduleData,
+  setvalidationErrorsAI,
+  setvalidationErrorsAO,
   setAuditTeamData,
+  resetvalidationErrorsAI,
+  resetvalidationErrorsAO,
   resetAuditScheduleData,
 } = auditScheduleSlice.actions;
 

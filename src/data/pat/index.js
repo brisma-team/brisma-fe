@@ -9,6 +9,8 @@ import useActivitySchedule from "./useActivitySchedule";
 import useActivityScheduleOther from "./useActivityScheduleOther";
 import useAuditTarget from "./useAuditTarget";
 import useDocument from "./useDocument";
+import useWorkflow from "./useWorkflow";
+import useSumberInformasiPAT from "./useSumberInformasiPAT";
 
 export {
   useApprovalPat,
@@ -22,4 +24,6 @@ export {
   useActivityScheduleOther,
   useAuditTarget,
   useDocument,
+  useWorkflow,
+  useSumberInformasiPAT,
 };

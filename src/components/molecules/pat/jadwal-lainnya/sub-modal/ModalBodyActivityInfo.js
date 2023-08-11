@@ -27,9 +27,9 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, typeModal }) => {
   const [selectedJenis, setSelectedJenis] = useState(null);
 
   const { metode } = useMetode("all", 1);
-  const { tipe } = useTipe(selectedMetode);
-  const { jenis } = useJenis(selectedTipe);
-  const { tema } = useTema(selectedJenis);
+  const { tipe } = useTipe("all", selectedMetode);
+  const { jenis } = useJenis("all", selectedTipe);
+  const { tema } = useTema("all", selectedJenis);
 
   const [optionMetode, setOptionMetode] = useState([]);
   const [optionTipe, setOptionTipe] = useState([]);

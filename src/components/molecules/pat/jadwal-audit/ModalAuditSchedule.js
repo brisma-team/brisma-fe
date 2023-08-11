@@ -6,22 +6,46 @@ import {
   ModalBodyObjekAudit,
   ModalBodyAnggaran,
 } from "./sub-modal";
-import { useSelector } from "react-redux";
-import { usePostData, useUpdateData } from "@/helpers";
+import { useSelector, useDispatch } from "react-redux";
+import { setErrorValidation, usePostData, useUpdateData } from "@/helpers";
 import { useRouter } from "next/router";
 import { ModalHeader, ModalFooter } from "@/components/molecules/pat";
+import {
+  activityInfoSchema,
+  activityObjectSchema,
+} from "@/helpers/schemas/pat/auditScheduleSchema";
+import {
+  setvalidationErrorsAI,
+  setvalidationErrorsAO,
+  resetvalidationErrorsAI,
+  resetvalidationErrorsAO,
+} from "@/slices/pat/auditScheduleSlice";
 
-const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
+const ModalAuditSchedule = ({ showModal, setShowModal, typeModal }) => {
   const { id } = useRouter().query;
+  const dispatch = useDispatch();
+
   const [currentModalStage, setCurrentModalStage] = useState(1);
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isFormDisabled, setIsFormDisabled] = useState(false);
   const auditScheduleData = useSelector(
     (state) => state.auditSchedule.auditScheduleData
   );
+  const schemaMappings = {
+    1: {
+      schema: activityInfoSchema,
+      resetErrors: resetvalidationErrorsAI,
+      setErrors: setvalidationErrorsAI,
+    },
+    2: {
+      schema: activityObjectSchema,
+      resetErrors: resetvalidationErrorsAO,
+      setErrors: setvalidationErrorsAO,
+    },
+  };
 
   useEffect(() => {
     if (typeModal === "detail") {
-      setIsDisabled(true);
+      setIsFormDisabled(true);
     }
   }, []);
 
@@ -34,30 +58,49 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
       []
     );
 
+    const filterEchannel = auditScheduleData.echannel.filter(
+      (v) => v.posisi_data !== ""
+    );
+
     const data = {
       ...auditScheduleData,
       pat_id: id,
       anggaran_kegiatan: combinedAnggaranKegiatan,
+      echannel: filterEchannel,
     };
 
-    if (typeModal === "update") {
-      await useUpdateData(
-        `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/audit`,
-        data
-      );
-    } else {
-      await usePostData(
-        `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/audit/create`,
-        data
-      );
-    }
+    const validate = setErrorValidation(
+      data,
+      dispatch,
+      schemaMappings[currentModalStage]
+    );
 
-    setShowModal(false);
-    mutate;
+    if (validate && currentModalStage > 1) {
+      if (typeModal === "update") {
+        await useUpdateData(
+          `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/audit`,
+          data
+        );
+      } else {
+        await usePostData(
+          `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/audit/create`,
+          data
+        );
+      }
+      setShowModal(false);
+    }
   };
 
-  const handleNextStage = () => {
-    if (currentModalStage < 3) setCurrentModalStage(currentModalStage + 1);
+  const handleNextStage = async () => {
+    const validate = setErrorValidation(
+      auditScheduleData,
+      dispatch,
+      schemaMappings[currentModalStage]
+    );
+
+    if (validate && currentModalStage < 3) {
+      setCurrentModalStage(currentModalStage + 1);
+    }
   };
 
   const items = [
@@ -114,19 +157,19 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
       {currentModalStage === 1 && (
         <ModalBodyInfoKegiatan
           setCurrentModalStage={setCurrentModalStage}
-          isDisabled={isDisabled}
+          isDisabled={isFormDisabled}
         />
       )}
       {currentModalStage === 2 && (
         <ModalBodyObjekAudit
           setCurrentModalStage={setCurrentModalStage}
-          isDisabled={isDisabled}
+          isDisabled={isFormDisabled}
         />
       )}
       {currentModalStage === 3 && (
         <ModalBodyAnggaran
           setCurrentModalStage={setCurrentModalStage}
-          isDisabled={isDisabled}
+          isDisabled={isFormDisabled}
         />
       )}
     </Modal>

@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   activityScheduleData: {
     pat_id: "",
-    nama: "",
+    name_kegiatan_audit: "",
     ref_metode: {
       kode: "",
       nama: "",
@@ -24,13 +24,13 @@ const initialState = {
     pelaksanaan_end: "",
     deskripsi: "",
     uker: [],
-    penanggung_jawab: [],
+    tim_audit_id: "",
     anggaran_kegiatan: [],
     anggaran_dinas: [],
   },
-  activityScheduleDefaultData: {
+  defaultData: {
     pat_id: "",
-    nama: "",
+    name_kegiatan_audit: "",
     ref_metode: {
       kode: "",
       nama: "",
@@ -50,49 +50,13 @@ const initialState = {
     pelaksanaan_start: "",
     pelaksanaan_end: "",
     deskripsi: "",
-    uker: [
-      {
-        ref_auditee_orgeh_kode: "",
-        ref_auditee_orgeh_name: "",
-        ref_auditee_branch_kode: "",
-        ref_auditee_branch_name: "",
-        tipe_uker: "",
-        attachments: [],
-      },
-    ],
-    echannel: [
-      {
-        ref_echanel_type_kode: {
-          kode: "1",
-          nama: "A.T.M",
-        },
-        jumlah_existing: null,
-        jumlah_target: null,
-        posisi_data: "",
-      },
-      {
-        ref_echanel_type_kode: {
-          kode: "2",
-          nama: "E.D.C",
-        },
-        jumlah_existing: null,
-        jumlah_target: null,
-        posisi_data: "",
-      },
-      {
-        ref_echanel_type_kode: {
-          kode: "3",
-          nama: "C.R.M",
-        },
-        jumlah_existing: null,
-        jumlah_target: null,
-        posisi_data: "",
-      },
-    ],
+    uker: [],
     tim_audit_id: "",
     anggaran_kegiatan: [],
     anggaran_dinas: [],
   },
+  validationErrorsAI: {},
+  validationErrorsAO: {},
   auditTeamData: [],
 };
 
@@ -103,19 +67,35 @@ export const activityScheduleSlice = createSlice({
     setActivityScheduleData: (state, action) => {
       state.activityScheduleData = action.payload;
     },
-    setActivityScheduleDefaultData: (state, action) => {
-      state.activityScheduleDefaultData = action.payload;
-    },
     setAuditTeamData: (state, action) => {
       state.auditTeamData = action.payload;
+    },
+    setvalidationErrorsAI: (state, action) => {
+      state.validationErrorsAI = action.payload;
+    },
+    setvalidationErrorsAO: (state, action) => {
+      state.validationErrorsAO = action.payload;
+    },
+    resetvalidationErrorsAI: (state) => {
+      state.validationErrorsAI = {};
+    },
+    resetvalidationErrorsAO: (state) => {
+      state.validationErrorsAO = {};
+    },
+    resetActivityScheduleData: (state) => {
+      state.activityScheduleData = { ...state.defaultData };
     },
   },
 });
 
 export const {
   setActivityScheduleData,
-  setActivityScheduleDefaultData,
+  setvalidationErrorsAI,
+  setvalidationErrorsAO,
   setAuditTeamData,
+  resetvalidationErrorsAI,
+  resetvalidationErrorsAO,
+  resetActivityScheduleData,
 } = activityScheduleSlice.actions;
 
 export default activityScheduleSlice.reducer;
