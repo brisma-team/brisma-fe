@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { PatOverviewLayout } from "@/layouts/pat";
-
+import useApproval from "@/data/pat/approval/useApproval";
 import { Breadcrumbs } from "@/components/atoms";
 import {
   CardApprovalList,
@@ -8,6 +8,7 @@ import {
   CardApprovalHistory,
 } from "@/components/molecules/pat";
 import Button from "@atlaskit/button";
+import useApprovalHistory from "@/data/pat/approval/useApprovalHistory";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -16,6 +17,22 @@ const breadcrumbs = [
 ];
 
 const index = () => {
+  const [queue, setQueue] = useState([]);
+  const [totalApproved, setTotalApproved] = useState({});
+  const [history, setHistory] = useState([]);
+  const { approvalList } = useApproval();
+  const { approvalHistory } = useApprovalHistory(1, 5);
+  useEffect(() => {
+    if (approvalList != undefined) {
+      setQueue(approvalList.data.body);
+      setTotalApproved(approvalList.data.header);
+    }
+  }, [approvalList]);
+  useEffect(() => {
+    if (approvalHistory != undefined) {
+      setHistory(approvalHistory.data.logPAT.data);
+    }
+  }, [approvalHistory]);
   return (
     <PatOverviewLayout withContent={false}>
       <div className="pr-24">
@@ -30,15 +47,15 @@ const index = () => {
         <div className="flex mb-6">
           <div className="flex-initial w-[850px]">
             <div className="mb-5">
-              <CardApprovalQueue />
+              <CardApprovalQueue data={queue} />
             </div>
             <div>
-              <CardApprovalHistory />
+              <CardApprovalHistory data={history} />
             </div>
           </div>
           <div className="flex-initial w-[260px] px-16">
             <div>
-              <CardApprovalList />
+              <CardApprovalList data={totalApproved} />
             </div>
             <div>
               <Button appearance="primary">Tampilkan Filter</Button>

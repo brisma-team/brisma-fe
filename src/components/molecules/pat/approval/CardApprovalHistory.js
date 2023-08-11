@@ -1,41 +1,7 @@
 import { Card } from "@/components/atoms";
 import Pagination from "@atlaskit/pagination";
 
-//default data
-const approvaldata = [
-  {
-    project_name: "PAT AIW Banten",
-    year: "2023",
-    approval_phase: "Final Dokumen PAT",
-    status: "Approved",
-  },
-  {
-    project_name: "PAT AIW Surabaya",
-    year: "2023",
-    approval_phase: "Draft Dokumen PAT",
-    status: "Rejected",
-  },
-  {
-    project_name: "PAT AIW Jayapura",
-    year: "2022",
-    approval_phase: "Final Dokumen PAT",
-    status: "Rejected",
-  },
-  {
-    project_name: "PAT AIW Palembang",
-    year: "2022",
-    approval_phase: "Final Dokumen PAT",
-    status: "Approved",
-  },
-  {
-    project_name: "PAT AIW Pangkal Pinang",
-    year: "2022",
-    approval_phase: "Final Dokumen PAT",
-    status: "Approved",
-  },
-];
-
-const CardApprovalHistory = ({ data = approvaldata }) => {
+const CardApprovalHistory = ({ data }) => {
   return (
     <div>
       <Card>
@@ -56,21 +22,22 @@ const CardApprovalHistory = ({ data = approvaldata }) => {
                 </div>
               </div>
 
-              {data.map((item, key) => {
-                return (
-                  <div
-                    className="px-6 py-5 border-b-[1px] border-gray-300 hover:bg-gray-100"
-                    key={key}
-                  >
-                    <div className="grid grid-cols-4">
-                      <div>{item.project_name}</div>
-                      <div>{item.year}</div>
-                      <div>{item.approval_phase}</div>
-                      <div>{item.status}</div>
+              {data &&
+                data.map((item, key) => {
+                  return (
+                    <div
+                      className="px-6 py-5 border-b-[1px] border-gray-300 hover:bg-gray-100"
+                      key={key}
+                    >
+                      <div className="grid grid-cols-4">
+                        <div>{item.pat.name}</div>
+                        <div>{item.pat.tahun}</div>
+                        <div>{item.note}</div>
+                        <div>{item.is_approved ? "Approved" : "Rejected"}</div>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           </div>
           <div className="flex justify-center mt-4">
