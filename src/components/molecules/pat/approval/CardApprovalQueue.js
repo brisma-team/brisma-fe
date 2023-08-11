@@ -40,7 +40,7 @@ const CardApprovalQueue = ({ data }) => {
                           <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5">
                             <Button
                               shouldFitContainer
-                              href={`/pat/projects/${item.id}/dokumen`}
+                              href={`/pat/projects/${item.pat_id}/dokumen`}
                               iconBefore={
                                 <IconArrowRight
                                   primaryColor="#0051CB"
