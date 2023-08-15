@@ -21,7 +21,7 @@ import {
   resetvalidationErrorsAO,
 } from "@/slices/pat/auditScheduleSlice";
 
-const ModalAuditSchedule = ({ showModal, setShowModal, typeModal }) => {
+const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
   const { id } = useRouter().query;
   const dispatch = useDispatch();
 
@@ -89,6 +89,7 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal }) => {
             data
           );
         }
+        mutate();
         setShowModal(false);
       }
     }
@@ -151,9 +152,9 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal }) => {
       }
       footer={
         <ModalFooter
+          currentModalStage={currentModalStage}
           handleSubmit={handleSubmit}
           handleNextStage={handleNextStage}
-          isDisabled={false}
         />
       }
     >

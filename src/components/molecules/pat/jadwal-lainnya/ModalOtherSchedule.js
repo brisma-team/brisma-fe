@@ -22,7 +22,7 @@ import {
 } from "@/slices/pat/activityScheduleOtherSlice";
 import { useEffect } from "react";
 
-const ModalOtherSchedule = ({ showModal, setShowModal, typeModal }) => {
+const ModalOtherSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
   const { id } = useRouter().query;
   const dispatch = useDispatch();
 
@@ -84,6 +84,7 @@ const ModalOtherSchedule = ({ showModal, setShowModal, typeModal }) => {
             data
           );
         }
+        mutate();
         setShowModal(false);
       }
     }
@@ -149,9 +150,9 @@ const ModalOtherSchedule = ({ showModal, setShowModal, typeModal }) => {
       }
       footer={
         <ModalFooter
+          currentModalStage={currentModalStage}
           handleSubmit={handleSubmit}
           handleNextStage={handleNextStage}
-          isDisabled={false}
         />
       }
     >

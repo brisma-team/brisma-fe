@@ -64,6 +64,7 @@ const index = () => {
   const [doc, setDoc] = useState([]);
   const [workflowDetail, setWorkflowDetail] = useState({});
   const [currentPosition, setCurrentPosition] = useState(0);
+  const [content, setContent] = useState(null);
 
   const [type, setType] = useState("ltb");
   const { documentPAT } = useDocument(type, { id });
@@ -102,6 +103,14 @@ const index = () => {
       }
     }
   };
+
+  useEffect(() => {
+    setContent([
+      { title: "Riwayat Addendum", value: statusPat?.data?.riwayat_adendum },
+      { title: "Status Approver", value: statusPat?.data?.status_approver },
+      { title: "Status PAT", value: statusPat?.data?.status_pat },
+    ]);
+  }, [statusPat]);
 
   useEffect(() => {
     if (activeDivRef.current) {
@@ -170,7 +179,7 @@ const index = () => {
   }, [workflow]);
 
   return (
-    <PatLandingLayout>
+    <PatLandingLayout content={content} data={statusPat?.data}>
       <div className="pr-44">
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">

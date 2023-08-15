@@ -29,6 +29,7 @@ const CardFormInputTeam = ({
   childProperty,
   optionValue,
   iconBeside,
+  isDisabled,
 }) => {
   let textColor, buttonText;
   switch (type) {
@@ -105,6 +106,7 @@ const CardFormInputTeam = ({
                                     }
                                   />
                                 }
+                                isDisabled={isDisabled}
                               />
                               {validationErrors[
                                 `ref_tim_audit_ata[${i}].pn`
@@ -144,6 +146,7 @@ const CardFormInputTeam = ({
                                             }
                                           />
                                         }
+                                        isDisabled={isDisabled}
                                       />
                                       {validationErrors[
                                         `ref_tim_audit_ata[${i}].uker_binaans[${idx}].orgeh_kode`
@@ -182,6 +185,7 @@ const CardFormInputTeam = ({
                                             }
                                           />
                                         }
+                                        isDisabled={isDisabled}
                                       />
                                       {validationErrors[
                                         `ref_tim_audit_ata[${i}].uker_binaans[${idx}].branch_kode`
@@ -235,6 +239,7 @@ const CardFormInputTeam = ({
                     label: data?.nama,
                     value: data,
                   }}
+                  isDisabled={isDisabled}
                 />
               ) : (
                 data?.map((v, i) => {
@@ -260,6 +265,7 @@ const CardFormInputTeam = ({
                                 }
                               />
                             }
+                            isDisabled={isDisabled}
                           />
                         ) : (
                           <PekerjaSelect
@@ -279,6 +285,7 @@ const CardFormInputTeam = ({
                                 }
                               />
                             }
+                            isDisabled={isDisabled}
                           />
                         )}
                         {type === "Manajer Audit"
@@ -355,6 +362,7 @@ const CardFormInputTeam = ({
                   text={`Tambah ${buttonText}`}
                   textColor={"brisma"}
                   handler={() => handlerAddParent(property)}
+                  disabled={isDisabled}
                 />
               </div>
             </div>
