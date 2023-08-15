@@ -5,10 +5,11 @@ import useGetToken from "@/data/dashboard/useGetToken";
 const SupersetDashboard = () => {
   const { data } = useGetToken();
   const [token, setToken] = useState("");
-
+  const [dashboardid, setDashboardId] = useState("");
   useEffect(() => {
     if (data && data) {
       setToken(data.token);
+      setDashboardId(data.id);
     }
   }, [data]);
 
@@ -17,7 +18,7 @@ const SupersetDashboard = () => {
       const dashboard = document.getElementById("dashboard");
       if (dashboard && token != null) {
         const config = {
-          id: "c217f3a4-864f-4e82-98f9-9d6c19d74c0f",
+          id: dashboardid,
           supersetDomain: process.env.NEXT_PUBLIC_API_URL_SUPERSET,
           mountPoint: dashboard,
           fetchGuestToken: () => token,

@@ -9,6 +9,7 @@ import {
 } from "@atlaskit/atlassian-navigation";
 import { useRouter } from "next/router";
 import { deleteCookie } from "cookies-next";
+import { confirmationSwal, loadingSwal, successSwal } from "@/helpers";
 
 const NotificationsBadge = () => (
   <NotificationIndicator
@@ -25,6 +26,7 @@ const CustomHome = () => (
         width={1000}
         height={0}
         alt="test"
+        priority={true}
       ></Image>
     </Link>
   </div>
@@ -33,11 +35,19 @@ const CustomHome = () => (
 const NavbarField = () => {
   const router = useRouter();
   const { pathname } = router;
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const confirm = await confirmationSwal("Apakah Anda yakin untuk keluar?");
+
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+
     deleteCookie("pn");
     deleteCookie("token");
-    alert("Anda Berhasil Logout");
-    router.push("/login");
+    successSwal("Logout Berhasil");
+    return router.push("/login");
   };
   const firstSegment = pathname.split("/")[1];
   const ar =

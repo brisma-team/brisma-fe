@@ -12,7 +12,7 @@ const index = () => {
           {
             title: "USER S.K.A.I",
             description: "Pengaturan user pengguna aplikasi.",
-            url: "#",
+            url: "/reference/users/skai",
           },
           {
             title: "Pengganti Sementara (PgS)",

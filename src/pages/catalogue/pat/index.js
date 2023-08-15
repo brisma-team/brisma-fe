@@ -5,54 +5,10 @@ import { Breadcrumbs, Card, TableField } from "@/components/atoms";
 import { IconArrowRight, IconClose, IconPlus } from "@/components/icons";
 import Button from "@atlaskit/button";
 import Textfield from "@atlaskit/textfield";
+import useCatalogPAT from "@/data/catalog/useCatalogPAT";
+import EditorPanelIcon from "@atlaskit/icon/glyph/editor/panel";
 
-const approvaldata = [
-  {
-    id: 1,
-    project_name: "PAT AIW Pangkal Pinang",
-    audit_office: "RAO Pangkal Pinang",
-    audit_type: "Special",
-    audit_year: "2023",
-    quarter: "1",
-    date: "24/06/2023 - 23/07/2023",
-    audit_team: "TIM AUDIT PERCOBAAN BARU BRISMA",
-    addendum_phase: "0",
-  },
-  {
-    id: 2,
-    project_name: "PAT AIW Surabaya",
-    audit_office: "RAO Surabaya",
-    audit_type: "Special",
-    audit_year: "2023",
-    quarter: "1",
-    date: "27/06/2023 - 29/07/2023",
-    audit_team: "TIM AUDIT UTAMA BRISMA",
-    addendum_phase: "0",
-  },
-  {
-    id: 3,
-    project_name: "PAT AIW Jayapura",
-    audit_office: "RAO Jayapura",
-    audit_type: "Reguler",
-    audit_year: "2023",
-    quarter: "1",
-    date: "10/07/2023 - 12/08/2023",
-    audit_team: "TIM AUDIT UTAMA BRISMA",
-    addendum_phase: "0",
-  },
-  {
-    id: 4,
-    project_name: "PAT AIW Palembang",
-    audit_office: "RAO Palembang",
-    audit_type: "Reguler",
-    audit_year: "2023",
-    quarter: "1",
-    date: "14/08/2023 - 16/09/2023",
-    audit_team: "TIM AUDIT PERCOBAAN BARU BRISMA",
-    addendum_phase: "0",
-  },
-];
-const index = ({ data = approvaldata }) => {
+const index = () => {
   const [showFilter, setShowFilter] = useState(false);
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
@@ -60,33 +16,53 @@ const index = ({ data = approvaldata }) => {
     { name: "P.A.T", path: "/catalogue/pat" },
   ];
   const [catPat, setCatPat] = useState([]);
+  const { data } = useCatalogPAT();
   useEffect(() => {
-    const mappingCatPat = data?.map((v) => {
-      return {
-        No: v?.id,
-        "Nama Project": v?.project_name,
-        "Kantor Audit": v?.audit_office,
-        "Jenis Audit": v?.audit_type,
-        "Periode Audit": "Triwulan " + v?.quarter + " - " + v?.audit_year,
-        "Tim Audit": v?.audit_team,
-        "Addendum Ke": "Fase ke - " + v?.addendum_phase,
-        Aksi: (
-          <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
-            <Link href={"/catalogue/pat/" + v.id} prefetch={false}>
-              <Button
-                shouldFitContainer
-                iconBefore={
-                  <IconArrowRight primaryColor="#0051CB" size="medium" />
-                }
-                className="bottom-1.5"
-              />
-            </Link>
-          </div>
-        ),
-      };
-    });
-    setCatPat(mappingCatPat);
-  }, []);
+    if (data != undefined) {
+      const mappingCatPat = data?.data.map((v, key) => {
+        return {
+          No: key + 1,
+          "Nama Project": v?.project_name,
+          "Kantor Audit":
+            v?.audit_office.uka_kode + " - " + v?.audit_office.uka_name,
+          "Tahun Audit": v?.audit_year,
+          "Tim Audit": v?.audit_team.map((d, key) => {
+            return (
+              <div key={key} className="flex justify-between">
+                <p className="mr-2">{d.name}</p>
+                <div className="rounded-full overflow-hidden w-5 h-[21px] mx-auto active:bg-slate-100">
+                  <Button
+                    appearance="default"
+                    shouldFitContainer
+                    onClick={() => alert("info")}
+                    iconBefore={
+                      <EditorPanelIcon primaryColor="#0051CB" size="large" />
+                    }
+                    className="bottom-1.5"
+                  />
+                </div>
+              </div>
+            );
+          }),
+          "Addendum Ke": "Fase ke - " + v?.addendum_phase,
+          Aksi: (
+            <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
+              <Link href={"/catalogue/pat/" + v.id} prefetch={false}>
+                <Button
+                  shouldFitContainer
+                  iconBefore={
+                    <IconArrowRight primaryColor="#0051CB" size="medium" />
+                  }
+                  className="bottom-1.5"
+                />
+              </Link>
+            </div>
+          ),
+        };
+      });
+      setCatPat(mappingCatPat);
+    }
+  }, [data]);
   return (
     <MainLayout>
       <div className="px-5">
@@ -173,18 +149,18 @@ const index = ({ data = approvaldata }) => {
                     "No",
                     "Nama Project",
                     "Kantor Audit",
-                    "Jenis Audit",
-                    "Periode Audit",
+                    "Tahun Audit",
+                    // "Periode Audit",
                     "Tim Audit",
                     "Addendum Ke",
                     "Aksi",
                   ]}
                   columnWidths={[
                     "5%",
-                    "18%",
+                    "23%",
+                    "20%",
                     "15%",
-                    "10%",
-                    "15%",
+                    // "15%",
                     "18%",
                     "12%",
                     "7%",

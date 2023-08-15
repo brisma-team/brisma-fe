@@ -1,16 +1,129 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card } from "@/components/atoms";
+import { Breadcrumbs, Card, TableField } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { IconPlus } from "@/components/icons";
+import useDashboardList from "@/data/dashboard/useDashboardList";
+import {
+  useDeleteData,
+  usePostData,
+  confirmationSwal,
+  loadingSwal,
+  useUpdateData,
+} from "@/helpers";
+import ModalAddDashboard from "@/components/molecules/dashboard/ModalAddDashboard";
 
 const index = () => {
-  const [showFilter, setShowFilter] = useState(false);
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Reference", path: "/reference" },
     { name: "Dashboard", path: "/reference/dashboard" },
   ];
+  const [showModal, setShowModal] = useState(false);
+  const [list, setList] = useState([]);
+  const [dashboard, setDashboard] = useState([]);
+  const [data, setData] = useState({ embedId: "", name: "" });
+
+  const { dashboardList, dashboardListMutate } = useDashboardList();
+
+  const fetchData = () => {
+    return dashboardListMutate({ ...dashboardList });
+  };
+
+  const handleDelete = async (id) => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin untuk mengahapus data ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/deleteDashboard`;
+    return await useDeleteData(url, { id: id }).then(() => fetchData());
+  };
+
+  const handleActivate = async (id, dashboardid) => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin untuk mengaktifkan Dashboard ID " + dashboardid + " ?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/updateDashboard`;
+    return await useUpdateData(url, { id: id, state: confirm.value }).then(() =>
+      fetchData()
+    );
+  };
+
+  const handleSubmit = async () => {
+    loadingSwal();
+    setShowModal(false);
+    const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/createDashboard`;
+    return await usePostData(url, data).then(() => fetchData());
+  };
+
+  useEffect(() => {
+    if (dashboardList != undefined) {
+      setList(dashboardList.list);
+    }
+  }, [dashboardList]);
+
+  useEffect(() => {
+    const mappingDashboard = list
+      ?.sort((a, b) => {
+        const namaDashboardA = a["_created_at"] || ""; // Default to empty string if undefined/null
+        const namaDashboardB = b["_created_at"] || "";
+
+        return namaDashboardB.localeCompare(namaDashboardA);
+      })
+      .map((v, key) => {
+        return {
+          No: key + 1,
+          "Dashboard ID": v?.superset_embed_id,
+          "Nama Dashboard": v?.dashboard_name,
+          Status: (
+            <div
+              className={`my-auto ${
+                v?.is_active ? "text-lime-600" : "text-red-500"
+              }`}
+            >
+              {v?.is_active ? "Active" : "In-active"}
+            </div>
+          ),
+          "Tanggal Dibuat": v?._created_at,
+          Aksi: (
+            <div className="flex justify-between text-center">
+              <div className="min-w-[7rem] px-2">
+                <Button
+                  appearance={v.is_active ? "warning" : "primary"}
+                  shouldFitContainer
+                  onClick={() => handleActivate(v?._id, v?.superset_embed_id)}
+                >
+                  <span className="text-white">
+                    {v.is_active ? "In-activate" : "Activate"}
+                  </span>
+                </Button>
+              </div>
+              <div className="min-w-[7rem] px-2">
+                <Button
+                  shouldFitContainer
+                  onClick={() => handleDelete(v?._id)}
+                  appearance="danger"
+                >
+                  Delete
+                </Button>
+              </div>
+            </div>
+          ),
+        };
+      });
+    setDashboard(mappingDashboard);
+  }, [list]);
 
   return (
     <MainLayout>
@@ -23,94 +136,50 @@ const index = () => {
             <div className="text-3xl font-bold">Manajemen Dashboard</div>
           </div>
         </div>
-        <div className="my-3 w-40">
-          <Button
-            appearance="primary"
-            iconBefore={IconPlus}
-            shouldFitContainer
-            onClick={() => setShowFilter(!showFilter)}
-          >
-            Tambah Dashboard
-          </Button>
-        </div>
+
         <div className="mt-5 mr-40">
           <Card>
-            <div className="w-full p-5">
-              <div className="flex flex-row justify-between mb-6">
-                <div className="text-xl font-bold text-atlasian-blue-dark">
-                  Pustaka Dashboard
-                </div>
+            <div className="w-full h-full px-6">
+              <div className="text-xl font-bold p-5">Pustaka Dashboard</div>
+              <div className="px-5 pb-5 w-[13rem]">
+                <Button
+                  appearance="primary"
+                  iconBefore={IconPlus}
+                  shouldFitContainer
+                  onClick={() => setShowModal(true)}
+                >
+                  Tambah Dashboard
+                </Button>
               </div>
-              <div className="leading-3">
-                <div>
-                  <div className="mt-2 px-6 py-3 border-b-[1px] hover:bg-gray-100 border-gray-300 font-bold">
-                    <div className="grid grid-cols-6">
-                      <div>No</div>
-                      <div className="col-span-2">Dashboard ID</div>
-                      <div>Nama Dashboard</div>
-                      <div>Status</div>
-                      <div className="text-center">Aksi</div>
-                    </div>
-                  </div>
-
-                  <div className="px-6 py-5 border-b-[1px] border-gray-300 hover:bg-gray-100">
-                    <div className="grid grid-cols-6">
-                      <div>1</div>
-                      <div className="col-span-2 my-auto">
-                        c217f3a4-864f-4e82-98f9-9d6c19d74c0f
-                      </div>
-                      <div className="my-auto">Dashboard Utama</div>
-                      <div className="my-auto text-lime-600">Activated</div>
-                      <div className="grid grid-cols-2 text-center">
-                        <div className="align-middle px-2">
-                          <Button shouldFitContainer appearance="warning">
-                            <span className="text-white">Inactivate</span>
-                          </Button>
-                        </div>
-                        <div className="align-middle px-2 ">
-                          <Button shouldFitContainer appearance="danger">
-                            Delete
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="px-6 py-5 border-b-[1px] border-gray-300 hover:bg-gray-100">
-                    <div className="grid grid-cols-6">
-                      <div>2</div>
-                      <div className="col-span-2 my-auto">
-                        875d02b9-d53c-4aaf-8f8a-964840f7f02a
-                      </div>
-                      <div className="my-auto">Dashboard Analisis</div>
-                      <div className="my-auto text-red-600">Inactivated</div>
-                      <div className="grid grid-cols-2 text-center">
-                        <div className="align-middle px-2">
-                          <Button shouldFitContainer appearance="primary">
-                            Activate
-                          </Button>
-                        </div>
-                        <div className="align-middle px-2 ">
-                          <Button shouldFitContainer appearance="danger">
-                            Delete
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* <div className="flex justify-center mt-4">
-                <Pagination
-                  nextLabel="Next"
-                  label="Page"
-                  pageLabel="Page"
-                  pages={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-                  previousLabel="Previous"
+              <div className="max-h-[60rem] px-2 mb-5">
+                <TableField
+                  headers={[
+                    "No",
+                    "Dashboard ID",
+                    "Nama Dashboard",
+                    "Status",
+                    "Tanggal Dibuat",
+                    "Aksi",
+                  ]}
+                  columnWidths={["5%", "26%", "20%", "10%", "15%", "25%"]}
+                  items={dashboard}
                 />
+              </div>
+              {/* <div className="flex justify-center mt-5">
+                <Pagination totalPages={3} setCurrentPage={() => 1} />
               </div> */}
             </div>
           </Card>
         </div>
+        {showModal && (
+          <ModalAddDashboard
+            showModal={showModal}
+            setShowModal={setShowModal}
+            setData={setData}
+            handleSubmit={handleSubmit}
+            data={data}
+          />
+        )}
       </div>
     </MainLayout>
   );
