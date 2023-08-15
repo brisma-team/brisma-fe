@@ -7,10 +7,16 @@ import { useForm } from "react-hook-form";
 import { loginSchema } from "@/helpers/schemas";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
+import { Section } from "@atlaskit/menu";
 import { setCookie, hasCookie, getCookie, deleteCookie } from "cookies-next";
 import axios from "axios";
 import Image from "next/image";
 import { ImageBrismaVertical } from "@/helpers/imagesUrl";
+import {
+  Header,
+  NavigationHeader,
+  SideNavigation,
+} from "@atlaskit/side-navigation";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -90,47 +96,56 @@ const LoginForm = () => {
   console.log("env", process.env);
 
   return (
-    <div className="h-screen">
-      <div className="w-2/3 mx-auto">
-        <div className="flex-col mb-10">
-          <div className="w-full justify-center flex">
-            <div className="w-64">
-              <Image src={ImageBrismaVertical} />
+    <SideNavigation label="Project navigation" testId="side-navigation">
+      <NavigationHeader>
+        <Header description="">
+          <div className="flex-col mb-10">
+            <div className="w-full justify-center flex">
+              <div className="w-64">
+                <Image src={ImageBrismaVertical} />
+              </div>
+            </div>
+            <div className="text-center">
+              <p className="text-base font-normal">
+                Versi 2.0.2 {`( ${process.env.NEXT_PUBLIC_VERSION} )`}
+              </p>
             </div>
           </div>
-          <div className="text-center">
-            <p className="text-base font-normal">
-              Versi 2.0.2 {`( ${process.env.NEXT_PUBLIC_VERSION} )`}
-            </p>
-          </div>
+        </Header>
+      </NavigationHeader>
+      <Section>
+        <div className="w-2/3 mx-auto">
+          <form
+            className="flex flex-col gap-4"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="pn" value="Personal Number" />
+              </div>
+              <TextInput id="pn" type="number" {...register("pn")} />
+              <small className="text-red-500">{errors.pn?.message}</small>
+            </div>
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="password" value="Password" />
+              </div>
+              <TextInput
+                id="password"
+                type="password"
+                {...register("password")}
+              />
+              <small className="text-red-500">{errors.password?.message}</small>
+            </div>
+            <div className="flex items-center gap-2">
+              <Checkbox id="remember_me" {...register("remember_me")} />
+              <Label htmlFor="remember_me">Remember me</Label>
+            </div>
+            <Button type="submit">Login</Button>
+          </form>
         </div>
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <div className="mb-2 block">
-              <Label htmlFor="pn" value="Personal Number" />
-            </div>
-            <TextInput id="pn" type="number" {...register("pn")} />
-            <small className="text-red-500">{errors.pn?.message}</small>
-          </div>
-          <div>
-            <div className="mb-2 block">
-              <Label htmlFor="password" value="Password" />
-            </div>
-            <TextInput
-              id="password"
-              type="password"
-              {...register("password")}
-            />
-            <small className="text-red-500">{errors.password?.message}</small>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox id="remember_me" {...register("remember_me")} />
-            <Label htmlFor="remember_me">Remember me</Label>
-          </div>
-          <Button type="submit">Login</Button>
-        </form>
-      </div>
-    </div>
+      </Section>
+    </SideNavigation>
   );
 };
 
