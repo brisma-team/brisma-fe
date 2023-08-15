@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import {
+  ButtonIcon,
   DatepickerStartEnd,
-  ReactSelect,
+  ErrorValidation,
+  Select,
   TextAreaField,
   TextInput,
 } from "@/components/atoms";
@@ -9,19 +11,19 @@ import { IconClose } from "@/components/icons";
 import { CardFormInputTeam } from "@/components/molecules/pat";
 import { CardBodyContent, FormWithLabel } from "@/components/molecules/commons";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useJenis, useMetode, useTema, useTipe } from "@/data/reference";
 import { setActivityScheduleOtherData } from "@/slices/pat/activityScheduleOtherSlice";
-import { convertDate, parseDate } from "@/helpers";
 
-const ModalBodyActivityInfo = ({ setCurrentModalStage, typeModal }) => {
-  console.log(typeModal);
-  const { control } = useForm();
+const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
   const dispatch = useDispatch();
   const activityScheduleOtherData = useSelector(
     (state) => state.activityScheduleOther.activityScheduleOtherData
   );
+  const validationErrors = useSelector(
+    (state) => state.activityScheduleOther.validationErrorsAI
+  );
+
   const [selectedMetode, setSelectedMetode] = useState(null);
   const [selectedTipe, setSelectedTipe] = useState(null);
   const [selectedJenis, setSelectedJenis] = useState(null);
@@ -91,19 +93,29 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, typeModal }) => {
     }
   };
 
-  const handleAddPIC = () => {
-    const newData = [...activityScheduleOtherData.penanggung_jawab];
-    newData.push({
-      pn: "",
-      nama: "",
-      jabatan: "",
-    });
+  const handleAdd = (property) => {
+    const newData = [...activityScheduleOtherData[property]];
+    newData.push({ pn: "", nama: "", jabatan: "" });
     dispatch(
       setActivityScheduleOtherData({
         ...activityScheduleOtherData,
-        penanggung_jawab: newData,
+        [property]: newData,
       })
     );
+  };
+
+  const handleDelete = (property, idx) => {
+    const newData = { ...activityScheduleOtherData };
+    if (newData[property].length > 1) {
+      const newData = [...activityScheduleOtherData[property]];
+      newData.splice(idx, 1);
+      dispatch(
+        setActivityScheduleOtherData({
+          ...activityScheduleOtherData,
+          [property]: newData,
+        })
+      );
+    }
   };
 
   const handleChange = (props, value) => {
@@ -117,40 +129,49 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, typeModal }) => {
   const handleChangePeriodActivity = (property, value) => {
     const updatedData = {
       ...activityScheduleOtherData,
-      [property]: value !== "" ? parseDate(value, "/") : "",
+      [property]: value,
     };
     dispatch(setActivityScheduleOtherData(updatedData));
   };
 
-  const handleChangePIC = (idx, e) => {
-    const picData = [...activityScheduleOtherData.penanggung_jawab];
-    const updatedPIC = { ...picData[idx] };
-    updatedPIC["pn"] = e.value.pn;
-    updatedPIC["nama"] = e.value.name;
-    updatedPIC["jabatan"] = e.value.jabatan;
-    picData[idx] = updatedPIC;
-    const updatedData = {
-      ...activityScheduleOtherData,
-      penanggung_jawab: picData,
+  const handleChangePIC = (property, index, e) => {
+    const newData = [...activityScheduleOtherData[property]];
+    const updated = {
+      ...newData[index],
+      pn: e?.value?.pn,
+      nama: e?.value?.name,
+      jabatan: e?.value?.jabatan,
     };
-    dispatch(setActivityScheduleOtherData(updatedData));
+    newData[index] = updated;
+    dispatch(
+      setActivityScheduleOtherData({
+        ...activityScheduleOtherData,
+        [property]: newData,
+      })
+    );
   };
-
-  useEffect(() => {
-    console.log("activityScheduleData => ", activityScheduleOtherData);
-  }, [activityScheduleOtherData]);
 
   return (
     <div className="w-[50rem]">
       <div className="w-1/2 pr-1">
         <TextInput
-          icon={<IconClose size="medium" />}
+          icon={
+            <ButtonIcon
+              handleClick={() => handleChange("nama", "")}
+              icon={<IconClose />}
+            />
+          }
           className={"font-bold text-5xl rounded text-brisma"}
           style={{ fontSize: "1.25rem" }}
           onChange={(e) => handleChange("nama", e.target.value)}
           value={activityScheduleOtherData.nama}
-          placeholder="Masukan Judul Jadwal Kegiatan Lain"
+          isDisabled={isDisabled}
         />
+        {validationErrors["nama"] && (
+          <div className="mt-2">
+            <ErrorValidation message={validationErrors["nama"]} />
+          </div>
+        )}
       </div>
       <div className="flex gap-3 justify-between my-3">
         <div className="w-1/2">
@@ -158,68 +179,71 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, typeModal }) => {
             <FormWithLabel
               label={"Metode Kegiatan"}
               form={
-                <ReactSelect
-                  options={optionMetode}
-                  control={control}
+                <Select
+                  optionValue={optionMetode}
                   isSearchable={false}
-                  handleChange={(e) => handleChangeRef("ref_metode", e.value)}
+                  onChange={(e) => handleChangeRef("ref_metode", e.value)}
                   value={
-                    activityScheduleOtherData?.ref_metode?.nama !== "" && {
-                      label: activityScheduleOtherData?.ref_metode?.nama,
-                      value: activityScheduleOtherData?.ref_metode?.kode,
+                    activityScheduleOtherData.ref_metode?.nama !== "" && {
+                      label: activityScheduleOtherData.ref_metode?.nama,
+                      value: activityScheduleOtherData.ref_metode?.kode,
                     }
                   }
+                  isDisabled={isDisabled}
                 />
               }
+              errors={validationErrors["ref_metode.kode"]}
             />
             <FormWithLabel
               label={"Tipe Kegiatan"}
               form={
-                <ReactSelect
-                  options={optionTipe}
-                  control={control}
+                <Select
+                  optionValue={optionTipe}
                   isSearchable={false}
-                  handleChange={(e) => handleChangeRef("ref_tipe", e.value)}
+                  onChange={(e) => handleChangeRef("ref_tipe", e.value)}
                   value={
                     activityScheduleOtherData.ref_tipe?.nama !== "" && {
                       label: activityScheduleOtherData.ref_tipe?.nama,
                       value: activityScheduleOtherData.ref_tipe?.kode,
                     }
                   }
+                  isDisabled={isDisabled}
                 />
               }
+              errors={validationErrors["ref_tipe.kode"]}
             />
             <FormWithLabel
               label={"Jenis Kegiatan"}
               form={
-                <ReactSelect
-                  options={optionJenis}
-                  control={control}
+                <Select
+                  optionValue={optionJenis}
                   isSearchable={false}
-                  handleChange={(e) => handleChangeRef("ref_jenis", e.value)}
+                  onChange={(e) => handleChangeRef("ref_jenis", e.value)}
                   value={
                     activityScheduleOtherData.ref_jenis?.nama !== "" && {
                       label: activityScheduleOtherData.ref_jenis?.nama,
                       value: activityScheduleOtherData.ref_jenis?.kode,
                     }
                   }
+                  isDisabled={isDisabled}
                 />
               }
+              errors={validationErrors["ref_jenis.kode"]}
             />
             <FormWithLabel
               label={"Tema Kegiatan"}
               form={
-                <ReactSelect
-                  options={optionTema}
-                  control={control}
+                <Select
+                  optionValue={optionTema}
                   isSearchable={false}
-                  handleChange={(e) => handleChangeRef("ref_tema", e.value)}
+                  onChange={(e) => handleChangeRef("ref_tema", e.value)}
                   value={
                     activityScheduleOtherData.ref_tema?.nama !== "" && {
                       label: activityScheduleOtherData.ref_tema?.nama,
                       value: activityScheduleOtherData.ref_tema?.kode,
                     }
                   }
+                  isDisabled={isDisabled}
                 />
               }
             />
@@ -235,26 +259,13 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, typeModal }) => {
                   handlerChangeEnd={(e) =>
                     handleChangePeriodActivity("pelaksanaan_end", e)
                   }
-                  valueStart={
-                    activityScheduleOtherData.pelaksanaan_start !== ""
-                      ? convertDate(
-                          activityScheduleOtherData?.pelaksanaan_start,
-                          "-"
-                        )
-                      : ""
-                  }
-                  valueEnd={
-                    activityScheduleOtherData.pelaksanaan_end !== ""
-                      ? convertDate(
-                          activityScheduleOtherData?.pelaksanaan_end,
-                          "-"
-                        )
-                      : ""
-                  }
-                  format={"YYYY/MM/DD"}
+                  valueStart={activityScheduleOtherData.pelaksanaan_start}
+                  valueEnd={activityScheduleOtherData.pelaksanaan_end}
+                  isDisabled={isDisabled}
                 />
               }
               widthFull={true}
+              errors={validationErrors["pelaksanaan_start"]}
             />
             <FormWithLabel
               label={"Deskripsi Kegiatan"}
@@ -277,7 +288,10 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, typeModal }) => {
             type={"P.I.C"}
             data={activityScheduleOtherData.penanggung_jawab}
             handlerChangeParent={handleChangePIC}
-            handlerAddParent={handleAddPIC}
+            handlerAddParent={handleAdd}
+            handlerDeleteParent={handleDelete}
+            property={"penanggung_jawab"}
+            validationErrors={validationErrors}
           />
         </div>
       </div>

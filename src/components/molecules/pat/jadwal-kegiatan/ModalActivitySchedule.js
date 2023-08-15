@@ -13,18 +13,19 @@ import { ModalHeader, ModalFooter } from "@/components/molecules/pat";
 import {
   activityInfoSchema,
   activityObjectSchema,
-} from "@/helpers/schemas/pat/auditScheduleSchema";
+} from "@/helpers/schemas/pat/activityScheduleSchema";
 import {
   setvalidationErrorsAI,
   setvalidationErrorsAO,
   resetvalidationErrorsAI,
   resetvalidationErrorsAO,
-} from "@/slices/pat/auditScheduleSlice";
+} from "@/slices/pat/activityScheduleSlice";
 import { useEffect } from "react";
 
 const ModalActivitySchedule = ({ showModal, setShowModal, typeModal }) => {
   const { id } = useRouter().query;
   const dispatch = useDispatch();
+
   const [currentModalStage, setCurrentModalStage] = useState(1);
   const [isFormDisabled, setIsFormDisabled] = useState(false);
   const activityScheduleData = useSelector(
@@ -52,34 +53,40 @@ const ModalActivitySchedule = ({ showModal, setShowModal, typeModal }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const buttonName = e.target.textContent;
     const combinedActivityBudget =
       activityScheduleData.anggaran_kegiatan.reduce((result, item) => {
         return [...result, ...item.ref_sub_kategori_anggarans];
       }, []);
 
-    const filterEchannel = activityScheduleData.echannel.filter(
-      (v) => v.posisi_data !== ""
-    );
-
     const data = {
       ...activityScheduleData,
       pat_id: id,
       anggaran_kegiatan: combinedActivityBudget,
-      echannel: filterEchannel,
     };
 
-    if (typeModal === "update") {
-      await useUpdateData(
-        `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/sbp`,
-        data
-      );
-    } else {
-      await usePostData(
-        `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/sbp/create`,
-        data
-      );
+    const validate = setErrorValidation(
+      data,
+      dispatch,
+      schemaMappings[currentModalStage]
+    );
+
+    if ((validate && currentModalStage > 1) || currentModalStage === 3) {
+      if (buttonName === "Simpan") {
+        if (typeModal === "update") {
+          await useUpdateData(
+            `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/sbp`,
+            data
+          );
+        } else {
+          await usePostData(
+            `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/sbp/create`,
+            data
+          );
+        }
+        setShowModal(false);
+      }
     }
-    setShowModal(false);
   };
 
   const handleNextStage = async () => {

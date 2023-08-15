@@ -84,7 +84,7 @@ const index = () => {
 
     setContent([
       { title: "Riwayat Addendum", value: statusPat?.data?.riwayat_adendum },
-      { title: "Status Approver", value: statusPat?.data?.status_approver },
+      { title: "Status Approver", value: statusPat?.data?.status_approver?.pn },
       { title: "Status PAT", value: statusPat?.data?.status_pat },
     ]);
   }, [statusPat]);

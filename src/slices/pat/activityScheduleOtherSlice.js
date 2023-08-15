@@ -28,7 +28,7 @@ const initialState = {
     anggaran_kegiatan: [],
     anggaran_dinas: [],
   },
-  activityScheduleOtherDefaultData: {
+  defaultData: {
     pat_id: "",
     nama: "",
     ref_metode: {
@@ -55,6 +55,8 @@ const initialState = {
     anggaran_kegiatan: [],
     anggaran_dinas: [],
   },
+  validationErrorsAI: {},
+  validationErrorsAO: {},
 };
 
 export const activityScheduleOtherSlice = createSlice({
@@ -64,15 +66,31 @@ export const activityScheduleOtherSlice = createSlice({
     setActivityScheduleOtherData: (state, action) => {
       state.activityScheduleOtherData = action.payload;
     },
-    setActivityScheduleOtherDefaultData: (state, action) => {
-      state.activityScheduleOtherDefaultData = action.payload;
+    setvalidationErrorsAI: (state, action) => {
+      state.validationErrorsAI = action.payload;
+    },
+    setvalidationErrorsAO: (state, action) => {
+      state.validationErrorsAO = action.payload;
+    },
+    resetvalidationErrorsAI: (state) => {
+      state.validationErrorsAI = {};
+    },
+    resetvalidationErrorsAO: (state) => {
+      state.validationErrorsAO = {};
+    },
+    resetOtherScheduleData: (state) => {
+      state.activityScheduleOtherData = { ...state.defaultData };
     },
   },
 });
 
 export const {
   setActivityScheduleOtherData,
-  setActivityScheduleOtherDefaultData,
+  setvalidationErrorsAI,
+  setvalidationErrorsAO,
+  resetvalidationErrorsAI,
+  resetvalidationErrorsAO,
+  resetOtherScheduleData,
 } = activityScheduleOtherSlice.actions;
 
 export default activityScheduleOtherSlice.reducer;

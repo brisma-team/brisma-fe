@@ -6,7 +6,6 @@ import {
 } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
 import {
-  AuditTeamSelect,
   CategorySelect,
   MetodeSelect,
   PekerjaSelect,
@@ -15,14 +14,13 @@ import {
 } from "../commons";
 import { useState } from "react";
 
-const CardFilterAuditSchedule = ({ showFilter, params, setParams }) => {
+const CardFilterActivitySchedule = ({ showFilter, params, setParams }) => {
   const [selectedValue, setSelectedValue] = useState({
     metode: "",
     tipe: "",
     jenis: "",
     tema: "",
-    timAudit: "",
-    maker: "",
+    pic: "",
   });
 
   const handleChangeParams = (property, value) => {
@@ -54,14 +52,12 @@ const CardFilterAuditSchedule = ({ showFilter, params, setParams }) => {
             <div className="w-48">
               <TextInput
                 placeholder="Nama Proyek"
-                onChange={(e) =>
-                  handleChangeParams("project_name", e.target.value)
-                }
+                onChange={(e) => handleChangeParams("nama", e.target.value)}
                 value={params.project_name}
                 icon={
                   <ButtonIcon
                     icon={<IconClose size="medium" />}
-                    handleClick={() => handleChangeParams("project_name", "")}
+                    handleClick={() => handleChangeParams("nama", "")}
                   />
                 }
               />
@@ -128,18 +124,18 @@ const CardFilterAuditSchedule = ({ showFilter, params, setParams }) => {
             </div>
             <div className="w-48">
               <PekerjaSelect
-                placeholder={"Maker"}
+                placeholder={"PIC"}
                 customIcon={
                   <ButtonIcon
                     icon={<IconClose />}
-                    handleClick={() => handleResetSelected("maker")}
+                    handleClick={() => handleResetSelected("pic")}
                   />
                 }
                 handleChange={(e) => (
-                  handleChangeParams("maker", e.value.pn),
-                  handleChangeSelected("maker", e)
+                  handleChangeParams("pic", e.value.pn),
+                  handleChangeSelected("pic", e)
                 )}
-                selectedValue={selectedValue.maker}
+                selectedValue={selectedValue.pic}
               />
             </div>
             <div className="w-48">
@@ -158,22 +154,6 @@ const CardFilterAuditSchedule = ({ showFilter, params, setParams }) => {
                 selectedValue={selectedValue.tema}
               />
             </div>
-            <div className="w-48">
-              <AuditTeamSelect
-                placeholder={"Tim Audit"}
-                customIcon={
-                  <ButtonIcon
-                    icon={<IconClose />}
-                    handleClick={() => handleResetSelected("timAudit")}
-                  />
-                }
-                handleChange={(e) => (
-                  handleChangeParams("timAudit", e.value),
-                  handleChangeSelected("timAudit", e.value)
-                )}
-                selectedValue={selectedValue.timAudit}
-              />
-            </div>
           </div>
         </div>
       </Card>
@@ -181,4 +161,4 @@ const CardFilterAuditSchedule = ({ showFilter, params, setParams }) => {
   );
 };
 
-export default CardFilterAuditSchedule;
+export default CardFilterActivitySchedule;

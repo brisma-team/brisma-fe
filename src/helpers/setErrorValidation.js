@@ -5,11 +5,13 @@ const setErrorValidation = (data, dispatch, schemaMapping) => {
     dispatch(schemaMapping.resetErrors());
     return true;
   } catch (err) {
+    console.log("err => ", err);
     if (err.inner) {
       const errors = {};
       err.inner.forEach((error) => {
         errors[error.path] = error.message;
       });
+      console.log("ERRORS => ", errors);
       dispatch(schemaMapping.setErrors(errors));
     }
     return false;

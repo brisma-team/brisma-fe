@@ -6,27 +6,54 @@ import {
   ModalBodyActivityInfo,
   ModalBodyBudget,
 } from "./sub-modal";
-import { usePostData, useUpdateData } from "@/helpers";
+import { setErrorValidation, usePostData, useUpdateData } from "@/helpers";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
-import ModalHeader from "../ModalHeader";
-import ModalFooter from "../ModalFooter";
+import { useDispatch, useSelector } from "react-redux";
+import { ModalHeader, ModalFooter } from "@/components/molecules/pat";
+import {
+  activityInfoSchema,
+  activityObjectSchema,
+} from "@/helpers/schemas/pat/otherScheduleSchema";
+import {
+  setvalidationErrorsAI,
+  setvalidationErrorsAO,
+  resetvalidationErrorsAI,
+  resetvalidationErrorsAO,
+} from "@/slices/pat/activityScheduleOtherSlice";
+import { useEffect } from "react";
 
-const ModalOtherSchedule = ({
-  showModal,
-  setShowModal,
-  typeModal,
-  mutate,
-  scheduleId,
-}) => {
+const ModalOtherSchedule = ({ showModal, setShowModal, typeModal }) => {
   const { id } = useRouter().query;
+  const dispatch = useDispatch();
+
   const [currentModalStage, setCurrentModalStage] = useState(1);
+  const [isFormDisabled, setIsFormDisabled] = useState(false);
   const activityScheduleOtherData = useSelector(
     (state) => state.activityScheduleOther.activityScheduleOtherData
   );
 
+  const schemaMappings = {
+    1: {
+      schema: activityInfoSchema,
+      resetErrors: resetvalidationErrorsAI,
+      setErrors: setvalidationErrorsAI,
+    },
+    2: {
+      schema: activityObjectSchema,
+      resetErrors: resetvalidationErrorsAO,
+      setErrors: setvalidationErrorsAO,
+    },
+  };
+
+  useEffect(() => {
+    if (typeModal === "detail") {
+      setIsFormDisabled(true);
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const buttonName = e.target.textContent;
     const combinedActivityBudget =
       activityScheduleOtherData.anggaran_kegiatan.reduce((result, item) => {
         return [...result, ...item.ref_sub_kategori_anggarans];
@@ -38,20 +65,40 @@ const ModalOtherSchedule = ({
       anggaran_kegiatan: combinedActivityBudget,
     };
 
-    if (typeModal === "update") {
-      await useUpdateData(`${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/lain`, {
-        ...data,
-        kegiatan_lain_id: scheduleId,
-      });
-    } else {
-      await usePostData(
-        `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/lain/create`,
-        data
-      );
-    }
+    const validate = setErrorValidation(
+      data,
+      dispatch,
+      schemaMappings[currentModalStage]
+    );
 
-    setShowModal(false);
-    mutate;
+    if ((validate && currentModalStage > 1) || currentModalStage === 3) {
+      if (buttonName === "Simpan") {
+        if (typeModal === "update") {
+          await useUpdateData(
+            `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/lain`,
+            data
+          );
+        } else {
+          await usePostData(
+            `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/lain/create`,
+            data
+          );
+        }
+        setShowModal(false);
+      }
+    }
+  };
+
+  const handleNextStage = async () => {
+    const validate = setErrorValidation(
+      activityScheduleOtherData,
+      dispatch,
+      schemaMappings[currentModalStage]
+    );
+
+    if (validate && currentModalStage < 3) {
+      setCurrentModalStage(currentModalStage + 1);
+    }
   };
 
   const items = [
@@ -94,31 +141,36 @@ const ModalOtherSchedule = ({
     <Modal
       showModal={showModal}
       onClickOutside={() => setShowModal(false)}
-      width={"63rem"}
       header={
         <ModalHeader
           headerText={"Buat Jadwal Kegiatan Lain"}
           progressItems={items}
         />
       }
-      footer={<ModalFooter handleSubmit={handleSubmit} />}
+      footer={
+        <ModalFooter
+          handleSubmit={handleSubmit}
+          handleNextStage={handleNextStage}
+          isDisabled={false}
+        />
+      }
     >
       {currentModalStage === 1 && (
         <ModalBodyActivityInfo
           setCurrentModalStage={setCurrentModalStage}
-          typeModal={typeModal}
+          isDisabled={isFormDisabled}
         />
       )}
       {currentModalStage === 2 && (
         <ModalBodyActivityObject
           setCurrentModalStage={setCurrentModalStage}
-          typeModal={typeModal}
+          isDisabled={isFormDisabled}
         />
       )}
       {currentModalStage === 3 && (
         <ModalBodyBudget
           setCurrentModalStage={setCurrentModalStage}
-          typeModal={typeModal}
+          isDisabled={isFormDisabled}
         />
       )}
     </Modal>

@@ -20,6 +20,8 @@ import IconTrash from "@atlaskit/icon/glyph/trash";
 import IconQuestions from "@atlaskit/icon/glyph/questions";
 import IconAttachment from "@atlaskit/icon/glyph/attachment";
 import IconCrossCircle from "@atlaskit/icon/glyph/cross-circle";
+import IconEye from "@atlaskit/icon/glyph/watch";
+import IconEyeOff from "@atlaskit/icon/glyph/watch-filled";
 
 export {
   IconPlus,
@@ -44,4 +46,6 @@ export {
   IconQuestions,
   IconAttachment,
   IconCrossCircle,
+  IconEye,
+  IconEyeOff,
 };

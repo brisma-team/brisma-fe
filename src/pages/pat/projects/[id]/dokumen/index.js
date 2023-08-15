@@ -11,7 +11,7 @@ import { ImageChat } from "@/helpers/imagesUrl";
 import { PatLandingLayout } from "@/layouts/pat";
 import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
-import { useDocument, useStatusPat } from "@/data/pat";
+import { useDocument, useStatusPat, useWorkflow } from "@/data/pat";
 import { useRouter } from "next/router";
 import { getAuditTeamTable } from "@/helpers/templates/auditTeam";
 import { getAuditTargetTable } from "@/helpers/templates/auditTarget";
@@ -32,6 +32,7 @@ const index = () => {
   const { id } = useRouter().query;
   const baseUrl = `/pat/projects/${id}`;
   const { statusPat } = useStatusPat(id);
+  const { workflow } = useWorkflow("detail", { id });
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "PAT", path: "/pat" },
@@ -61,6 +62,7 @@ const index = () => {
   const activeDivRef = useRef(null);
   const [hitEndpointCount, setHitEndpointCount] = useState(0);
   const [doc, setDoc] = useState([]);
+  const [workflowDetail, setWorkflowDetail] = useState({});
   const [currentPosition, setCurrentPosition] = useState(0);
 
   const [type, setType] = useState("ltb");
@@ -115,7 +117,6 @@ const index = () => {
   useEffect(() => {
     const addScrollListener = () => {
       const parentContainer = document.querySelector(".parent");
-      console.log("parentContainer => ", parentContainer);
       if (parentContainer) {
         parentContainer.addEventListener("scroll", handleScrollHitEndpoint);
         return () => {
@@ -152,8 +153,21 @@ const index = () => {
   }, [documentPAT]);
 
   useEffect(() => {
-    console.log("DOC => ", doc);
-  }, [doc]);
+    const mappingChecker = workflow?.data?.approvers?.map((v) => {
+      return v;
+    });
+    const mappingSigner = workflow?.data?.signers?.map((v) => {
+      return v;
+    });
+
+    setWorkflowDetail({
+      statusPat: workflow?.data?.status_pat,
+      statusApprover: workflow?.data?.status_approver,
+      maker: workflow?.data?.pn_maker_akhir?.nama,
+      checker: mappingChecker,
+      signer: mappingSigner,
+    });
+  }, [workflow]);
 
   return (
     <PatLandingLayout>
@@ -189,10 +203,7 @@ const index = () => {
           </div>
           <div>
             <Card>
-              <div
-                className="overflow-y-scroll my-2 parent"
-                style={{ maxHeight: "40rem" }}
-              >
+              <div className="overflow-y-scroll my-2 parent max-h-[40rem]">
                 {doc.map((v, i) => {
                   return (
                     <div
@@ -264,15 +275,16 @@ const index = () => {
                       </p>
                       <ApprovalUkaItems
                         title={"Maker"}
-                        text={"Annisa Damayana"}
+                        text={workflowDetail?.maker}
                       />
                       <ApprovalUkaItems
                         title={"Checker"}
-                        text={["Dandy", "Iqbal"]}
+                        text={workflowDetail?.checker}
+                        data={workflowDetail}
                       />
                       <ApprovalUkaItems
                         title={"Signer"}
-                        text={"M. Firli Ismail"}
+                        text={workflowDetail?.signer}
                       />
                     </div>
                   </div>

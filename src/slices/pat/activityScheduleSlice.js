@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   activityScheduleData: {
     pat_id: "",
-    name_kegiatan_audit: "",
+    nama: "",
     ref_metode: {
       kode: "",
       nama: "",
@@ -24,13 +24,13 @@ const initialState = {
     pelaksanaan_end: "",
     deskripsi: "",
     uker: [],
-    tim_audit_id: "",
+    penanggung_jawab: [],
     anggaran_kegiatan: [],
     anggaran_dinas: [],
   },
   defaultData: {
     pat_id: "",
-    name_kegiatan_audit: "",
+    nama: "",
     ref_metode: {
       kode: "",
       nama: "",
@@ -51,7 +51,7 @@ const initialState = {
     pelaksanaan_end: "",
     deskripsi: "",
     uker: [],
-    tim_audit_id: "",
+    penanggung_jawab: [],
     anggaran_kegiatan: [],
     anggaran_dinas: [],
   },

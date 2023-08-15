@@ -9,6 +9,7 @@ const ButtonField = ({
   textColor,
   disabled,
   type,
+  name,
 }) => {
   let txtColor;
   switch (textColor) {
@@ -38,6 +39,7 @@ const ButtonField = ({
       onClick={handler}
       isDisabled={disabled}
       type={type}
+      name={name && name}
     >
       <p
         className={`${

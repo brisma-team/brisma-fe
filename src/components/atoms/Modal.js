@@ -1,7 +1,14 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
-const Modal = ({ showModal, onClickOutside, header, footer, children }) => {
+const Modal = ({
+  showModal,
+  onClickOutside,
+  header,
+  footer,
+  widthFullFooter,
+  children,
+}) => {
   const ref = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -20,10 +27,10 @@ const Modal = ({ showModal, onClickOutside, header, footer, children }) => {
   return (
     showModal && (
       <>
-        <div className="fixed inset-0 z-20 overflow-y-auto">
+        <div className="fixed inset-0 z-20 flex justify-center items-start py-8">
           <div className="absolute inset-0 w-full h-full bg-black opacity-80"></div>
           <motion.div
-            className="flex flex-col justify-center items-center min-h-screen"
+            className="flex flex-col min-h-full max-h-[55rem] overflow-y-scroll"
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{
@@ -31,20 +38,24 @@ const Modal = ({ showModal, onClickOutside, header, footer, children }) => {
             }}
             ref={ref}
           >
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col justify-center ">
               {header && (
                 <div className="relative p-4 mx-auto bg-white rounded-md shadow-lg mb-3">
                   {header}
                 </div>
               )}
               <div
-                className={`relative w-full p-4 mx-auto bg-white rounded-md shadow-lg overflow-y-scroll`}
+                className={`relative w-full p-4 mx-auto bg-white rounded-md shadow-lg`}
               >
                 {children}
               </div>
               {footer && (
                 <div className="mt-3 flex justify-end ">
-                  <div className="relative p-4 bg-white rounded-md shadow-lg">
+                  <div
+                    className={`relative p-4 bg-white rounded-md shadow-lg ${
+                      widthFullFooter && `w-full`
+                    }`}
+                  >
                     {footer}
                   </div>
                 </div>

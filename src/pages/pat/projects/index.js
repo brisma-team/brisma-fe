@@ -6,7 +6,7 @@ import { Breadcrumbs, PageTitle, Pagination } from "@/components/atoms";
 import { CardFilterProjectOverview } from "@/components/molecules/pat/overview";
 import useProjectOverview from "@/data/pat/useProjectOverview";
 import { CardOverview } from "@/components/molecules/pat/overview";
-import { SelectSortFilter } from "@/components/molecules/commons";
+import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
 import _ from "lodash";
 import useApprovalPat from "@/data/pat/useApprovalPat";
 import { decimalToPercentage } from "@/helpers";
@@ -51,11 +51,12 @@ const index = () => {
     year: "",
   });
 
-  const { projectOverview, projectOverviewMutate } = useProjectOverview({
-    ...params,
-    pages: currentPage,
-    limit: 8,
-  });
+  const { projectOverview, projectOverviewMutate, projectOverviewError } =
+    useProjectOverview({
+      ...params,
+      pages: currentPage,
+      limit: 8,
+    });
   const { approvalPat } = useApprovalPat();
 
   useEffect(() => {
@@ -131,7 +132,10 @@ const index = () => {
         {/* End Filter */}
         {/* Start Content */}
         <div className="flex flex-wrap my-4 overflow-hidden -ml-2">
-          {data?.length &&
+          {projectOverviewError ? (
+            <DataNotFound />
+          ) : (
+            data?.length &&
             data.map((v, i) => {
               return (
                 <CardOverview
@@ -146,7 +150,8 @@ const index = () => {
                   href={v.href}
                 />
               );
-            })}
+            })
+          )}
         </div>
         <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
         {/* End Content */}

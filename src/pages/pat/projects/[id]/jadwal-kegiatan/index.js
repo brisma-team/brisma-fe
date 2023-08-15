@@ -56,17 +56,23 @@ const index = () => {
   const [typeModal, setTypeModal] = useState(null);
   const [scheduleId, setScheduleId] = useState(null);
   const [params, setParams] = useState({
-    project_name: "",
+    nama_sbp: "",
     metode: "",
     tipe: "",
+    jenis: "",
+    tema: "",
+    pic: "",
     start: "",
     end: "",
     sort_by: "ASC",
   });
   const [filter, setFilter] = useState({
-    project_name: "",
+    nama_sbp: "",
     metode: "",
     tipe: "",
+    jenis: "",
+    tema: "",
+    pic: "",
     start: "",
     end: "",
     sort_by: "ASC",
@@ -111,9 +117,9 @@ const index = () => {
     setData(mappedData);
     setTotalPages(activitySchedule?.detailPage?.totalPage);
 
-    const totalCount = activitySchedule?.result?.length;
+    const totalCount = activitySchedule?.data?.length;
     if (totalCount) {
-      const typeCounts = activitySchedule?.result.reduce((acc, item) => {
+      const typeCounts = activitySchedule?.data.reduce((acc, item) => {
         const type = item?.ref_tipe?.nama;
         acc[type] = (acc[type] || 0) + 1;
         return acc;
@@ -189,15 +195,19 @@ const index = () => {
             />
           </div>
         </div>
-        <div className="flex justify-between items-end">
-          <div className="w-[28rem]">
+        <div className="flex justify-between items-end relative">
+          <div className="flex justify-center absolute z-10 bg-white top-0">
             <CardFilterActivitySchedule
               showFilter={showFilter}
               params={filter}
               setParams={setFilter}
             />
           </div>
-          <div className="flex justify-end items-end gap-2">
+          <div
+            className={`w-full flex justify-end items-end gap-2 ${
+              showFilter && `pt-[92px]`
+            }`}
+          >
             {countType?.length && (
               <div className="mb-1 flex gap-2">
                 {countType.map((v, i) => {

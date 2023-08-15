@@ -8,7 +8,13 @@ import TableTree, {
 } from "@atlaskit/table-tree";
 import { DataNotFound } from "../molecules/commons";
 
-const TableField = ({ headers, columnWidths, items }) => {
+const TableField = ({
+  headers,
+  columnWidths,
+  items,
+  customStyle,
+  customField,
+}) => {
   return (
     <TableTree>
       <Headers>
@@ -26,9 +32,21 @@ const TableField = ({ headers, columnWidths, items }) => {
           render={(rowData) => (
             <Row>
               {headers.map((header, index) => {
+                let cellContent = rowData[header];
+                let cellClassName = "";
+
+                if (header === customField && customStyle) {
+                  cellClassName += ` ${customStyle[cellContent] || ""}`;
+                }
                 return (
-                  <Cell key={index} className="text-brisma">
-                    {rowData[header]}
+                  <Cell key={index}>
+                    <p
+                      className={`${
+                        cellClassName.length > 0 ? cellClassName : `text-brisma`
+                      }`}
+                    >
+                      {rowData[header]}
+                    </p>
                   </Cell>
                 );
               })}
