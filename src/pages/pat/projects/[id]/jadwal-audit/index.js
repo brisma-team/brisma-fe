@@ -135,7 +135,7 @@ const index = () => {
     const handleSearch = () => {
       setParams(filter);
     };
-    const debouncedSearch = _.debounce(handleSearch, 2000);
+    const debouncedSearch = _.debounce(handleSearch, 800);
     debouncedSearch();
     return () => {
       debouncedSearch.cancel();
@@ -188,6 +188,7 @@ const index = () => {
               showModal={showModal}
               setShowModal={setShowModal}
               typeModal={typeModal}
+              mutate={auditScheduleMutate}
             />
           </div>
         </div>

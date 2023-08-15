@@ -162,6 +162,7 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
           onChange={(e) => handleChange("nama", e.target.value)}
           value={activityScheduleData.nama}
           isDisabled={isDisabled}
+          placeholder={"Masukkan Judul Jadwal Kegiatan"}
         />
         {validationErrors["nama"] && (
           <div className="mt-2">
@@ -189,6 +190,7 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               errors={validationErrors["ref_metode.kode"]}
+              widthFull={true}
             />
             <FormWithLabel
               label={"Tipe Kegiatan"}
@@ -207,6 +209,7 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               errors={validationErrors["ref_tipe.kode"]}
+              widthFull={true}
             />
             <FormWithLabel
               label={"Jenis Kegiatan"}
@@ -225,6 +228,7 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               errors={validationErrors["ref_jenis.kode"]}
+              widthFull={true}
             />
             <FormWithLabel
               label={"Tema Kegiatan"}
@@ -242,6 +246,7 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
                   isDisabled={isDisabled}
                 />
               }
+              widthFull={true}
             />
             <FormWithLabel
               label={"Periode Kegiatan"}

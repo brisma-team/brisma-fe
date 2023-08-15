@@ -72,10 +72,17 @@ const SubModalBiayaSelamaKegiatan = ({ typeModal }) => {
       const updatedOptionSubActivityCategory =
         prevData.ref_sub_kategori_anggarans.map((item, index) => {
           if (index === idx) {
-            return {
-              ...item,
-              amount: parseInt(e.target.value),
-            };
+            if (isNaN(parseInt(e.target.value))) {
+              return {
+                ...item,
+                amount: 0,
+              };
+            } else {
+              return {
+                ...item,
+                amount: parseInt(e.target.value),
+              };
+            }
           } else {
             return item;
           }

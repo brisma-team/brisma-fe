@@ -9,6 +9,7 @@ const TypeTeamSelect = ({
   selectedValue,
   fieldsProps,
   customIcon,
+  isDisabled,
 }) => {
   const [options, setOptions] = useState([]);
   const { typeTeam } = useTypeTeam("all");
@@ -40,6 +41,7 @@ const TypeTeamSelect = ({
       isSearchable={isSearchable}
       value={selectedValue}
       components={customIcon && { DropdownIndicator }}
+      isDisabled={isDisabled}
     />
   );
 };

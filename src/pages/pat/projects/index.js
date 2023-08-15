@@ -17,10 +17,13 @@ const breadcrumbs = [
   { name: "Overview", path: "/pat/projects" },
 ];
 
-const convertProgressAndPercent = (approvers, status_approver) => {
+const convertProgressAndPercent = (approvers, status_approver, status_pat) => {
   let progress, percent;
   const findIndex = approvers?.findIndex((v) => v.pn === status_approver?.pn);
-  if (status_approver && find) {
+  if (status_pat === "Final") {
+    progress = 1;
+    percent = "100%";
+  } else if (status_approver && find) {
     const sum = (findIndex + 1) / approvers.length;
     progress = sum;
     percent = decimalToPercentage(sum);
@@ -64,7 +67,7 @@ const index = () => {
       setParams(filter);
       projectOverviewMutate;
     };
-    const debouncedSearch = _.debounce(handleSearch, 2000);
+    const debouncedSearch = _.debounce(handleSearch, 800);
     debouncedSearch();
     return () => {
       debouncedSearch.cancel();
@@ -78,10 +81,16 @@ const index = () => {
           id: v.id,
           title: v.pat_name,
           year: v.tahun,
-          progress: convertProgressAndPercent(v?.approvers, v?.status_approver)
-            .progress,
-          percent: convertProgressAndPercent(v?.approvers, v?.status_approver)
-            .percent,
+          progress: convertProgressAndPercent(
+            v?.approvers,
+            v?.status_approver,
+            v?.status_pat
+          ).progress,
+          percent: convertProgressAndPercent(
+            v?.approvers,
+            v?.status_approver,
+            v?.status_pat
+          ).percent,
           documentStatus: v?.status_pat,
           apporovalStatus: v?.status_approver
             ? `On ${v?.status_approver?.pn}`

@@ -17,7 +17,7 @@ const Content = ({ title, value }) => {
           : title === "Riwayat Addendum"
           ? `Addendum ke-${value}`
           : title === "Status Approver"
-          ? `On ${value}`
+          ? `On ${value?.pn}`
           : value}
       </p>
     </div>

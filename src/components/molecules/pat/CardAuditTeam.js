@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Card } from "@/components/atoms";
+import { ButtonIcon, Card } from "@/components/atoms";
 import { IconEdit, IconTrash } from "@/components/icons";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -104,7 +104,7 @@ const CardAuditTeam = ({
     tim_id,
   });
 
-  const handlerUpdate = () => {
+  const handleDetail = (type) => {
     const mapppedData = {
       pat_id: pat_id,
       tim_audit_id: tim_id,
@@ -134,18 +134,15 @@ const CardAuditTeam = ({
     };
     dispatch(setAuditTeamData(mapppedData));
     setShowModal(true);
-    setTypeModal("update");
+    setTypeModal(type);
   };
 
   return (
-    <div
+    <Link
       className={
         "hover:bg-gray-100 hover:rounded-[10px] hover:no-underline w-[29.4rem] relative cursor-pointer"
       }
-      // onClick={() => {
-      //   setShowModal(true);
-      //   setTypeModal("detail");
-      // }}
+      href={"#"}
     >
       <Card>
         <div className="w-full px-4 py-2">
@@ -155,27 +152,23 @@ const CardAuditTeam = ({
             </div>
             {button && (
               <div className="flex w-14 justify-between">
-                <Link
-                  href={"#"}
-                  className="text-atlasian-yellow hover:text-atlasian-yellow"
-                  onClick={handlerUpdate}
-                >
-                  <IconEdit size="medium" />
-                </Link>
-                <Link
-                  href={"#"}
-                  className="text-atlasian-red hover:text-atlasian-red"
-                  onClick={() =>
+                <ButtonIcon
+                  handleClick={() => handleDetail("update")}
+                  color={"yellow"}
+                  icon={<IconEdit size="medium" />}
+                />
+                <ButtonIcon
+                  handleClick={() =>
                     deleteSwal(
                       "Apakah anda yakin ingin menghapus data ini?",
                       "Data ini dihapus seacara permanen",
                       `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/tim_audit?tim_id=${tim_id}&pat_id=${pat_id}`,
-                      isMutate
+                      isMutate()
                     )
                   }
-                >
-                  <IconTrash size="medium" />
-                </Link>
+                  color={"red"}
+                  icon={<IconTrash size="medium" />}
+                />
               </div>
             )}
           </div>
@@ -193,7 +186,7 @@ const CardAuditTeam = ({
           <CardBody title={"Anggota Tim Audit"} text={ata} width={"w-full"} />
         </div>
       </Card>
-    </div>
+    </Link>
   );
 };
 
