@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev -p 1106 --turbo",
     "build": "next build && next export",
     "start": "next start",
     "lint": "next lint"
@@ -58,6 +58,7 @@
     "lodash": "^4.17.21",
     "next": "^13.4.6",
     "pdfjs-dist": "^3.4.120",
+    "pm2": "^5.3.0",
     "qr-image": "^3.2.0",
     "react": "18.2.0",
     "react-data-table-component": "^7.5.3",
