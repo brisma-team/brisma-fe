@@ -8,6 +8,7 @@ const Modal = ({
   footer,
   widthFullFooter,
   children,
+  positionCenter,
 }) => {
   const ref = useRef(null);
   useEffect(() => {
@@ -27,7 +28,11 @@ const Modal = ({
   return (
     showModal && (
       <>
-        <div className="fixed inset-0 z-20 flex justify-center items-start py-8">
+        <div
+          className={`${
+            !positionCenter ? "fixed" : ""
+          } inset-0 z-20 flex justify-center items-start py-8`}
+        >
           <div className="absolute inset-0 w-full h-full bg-black opacity-80"></div>
           <motion.div
             className="flex flex-col min-h-full max-h-[55rem] overflow-y-scroll"

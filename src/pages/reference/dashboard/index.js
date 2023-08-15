@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { MainLayout } from "@/layouts";
 import { Breadcrumbs, Card, TableField } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { IconPlus } from "@/components/icons";
 import useDashboardList from "@/data/dashboard/useDashboardList";
 import {
-  useDeleteData,
   usePostData,
+  useUpdateData,
+  useDeleteData,
   confirmationSwal,
   loadingSwal,
-  useUpdateData,
 } from "@/helpers";
 import ModalAddDashboard from "@/components/molecules/dashboard/ModalAddDashboard";
 
@@ -19,15 +19,15 @@ const index = () => {
     { name: "Reference", path: "/reference" },
     { name: "Dashboard", path: "/reference/dashboard" },
   ];
+
   const [showModal, setShowModal] = useState(false);
-  const [list, setList] = useState([]);
   const [dashboard, setDashboard] = useState([]);
   const [data, setData] = useState({ embedId: "", name: "" });
 
   const { dashboardList, dashboardListMutate } = useDashboardList();
 
-  const fetchData = () => {
-    return dashboardListMutate({ ...dashboardList });
+  const fetchData = async () => {
+    await dashboardListMutate({ ...dashboardList });
   };
 
   const handleDelete = async (id) => {
@@ -35,13 +35,12 @@ const index = () => {
       "Apakah Anda yakin untuk mengahapus data ini?"
     );
 
-    if (!confirm.value) {
-      return;
+    if (confirm.value) {
+      loadingSwal();
+      const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/deleteDashboard`;
+      await useDeleteData(url, { id: id });
+      fetchData();
     }
-
-    loadingSwal();
-    const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/deleteDashboard`;
-    return await useDeleteData(url, { id: id }).then(() => fetchData());
   };
 
   const handleActivate = async (id, dashboardid) => {
@@ -49,88 +48,95 @@ const index = () => {
       "Apakah Anda yakin untuk mengaktifkan Dashboard ID " + dashboardid + " ?"
     );
 
-    if (!confirm.value) {
-      return;
+    if (confirm.value) {
+      loadingSwal();
+      const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/updateDashboard`;
+      await useUpdateData(url, { id: id, state: confirm.value });
+      fetchData();
     }
+  };
 
-    loadingSwal();
-    const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/updateDashboard`;
-    return await useUpdateData(url, { id: id, state: confirm.value }).then(() =>
-      fetchData()
+  const handleInActivate = async (id, dashboardid) => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin untuk tidak mengaktifkan Dashboard ID " +
+        dashboardid +
+        " ?"
     );
+
+    if (confirm.value) {
+      loadingSwal();
+      const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/updateDashboard`;
+      await useUpdateData(url, { id: id, state: false });
+      fetchData();
+    }
   };
 
   const handleSubmit = async () => {
     loadingSwal();
     setShowModal(false);
     const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/createDashboard`;
-    return await usePostData(url, data).then(() => fetchData());
+    await usePostData(url, data);
+    fetchData();
   };
 
   useEffect(() => {
-    if (dashboardList != undefined) {
-      setList(dashboardList.list);
+    if (dashboardList) {
+      setDashboard(
+        dashboardList.list
+          ?.sort((a, b) =>
+            (b["_created_at"] || "").localeCompare(a["_created_at"] || "")
+          )
+          .map((v, key) => ({
+            No: key + 1,
+            "Dashboard ID": v?.superset_embed_id,
+            "Nama Dashboard": v?.dashboard_name,
+            Status: (
+              <div
+                className={`my-auto ${
+                  v?.is_active ? "text-lime-600" : "text-red-500"
+                }`}
+              >
+                {v?.is_active ? "Active" : "In-active"}
+              </div>
+            ),
+            "Tanggal Dibuat": v?._created_at,
+            Aksi: (
+              <div className="flex justify-between text-center">
+                <div className="min-w-[7rem] px-2">
+                  <Button
+                    appearance={v.is_active ? "warning" : "primary"}
+                    shouldFitContainer
+                    onClick={() =>
+                      v.is_active
+                        ? handleInActivate(v?._id, v?.superset_embed_id)
+                        : handleActivate(v?._id, v?.superset_embed_id)
+                    }
+                  >
+                    <span className="text-white">
+                      {v.is_active ? "In-activate" : "Activate"}
+                    </span>
+                  </Button>
+                </div>
+                <div className="min-w-[7rem] px-2">
+                  <Button
+                    shouldFitContainer
+                    onClick={() => handleDelete(v?._id)}
+                    appearance="danger"
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </div>
+            ),
+          }))
+      );
     }
   }, [dashboardList]);
-
-  useEffect(() => {
-    const mappingDashboard = list
-      ?.sort((a, b) => {
-        const namaDashboardA = a["_created_at"] || ""; // Default to empty string if undefined/null
-        const namaDashboardB = b["_created_at"] || "";
-
-        return namaDashboardB.localeCompare(namaDashboardA);
-      })
-      .map((v, key) => {
-        return {
-          No: key + 1,
-          "Dashboard ID": v?.superset_embed_id,
-          "Nama Dashboard": v?.dashboard_name,
-          Status: (
-            <div
-              className={`my-auto ${
-                v?.is_active ? "text-lime-600" : "text-red-500"
-              }`}
-            >
-              {v?.is_active ? "Active" : "In-active"}
-            </div>
-          ),
-          "Tanggal Dibuat": v?._created_at,
-          Aksi: (
-            <div className="flex justify-between text-center">
-              <div className="min-w-[7rem] px-2">
-                <Button
-                  appearance={v.is_active ? "warning" : "primary"}
-                  shouldFitContainer
-                  onClick={() => handleActivate(v?._id, v?.superset_embed_id)}
-                >
-                  <span className="text-white">
-                    {v.is_active ? "In-activate" : "Activate"}
-                  </span>
-                </Button>
-              </div>
-              <div className="min-w-[7rem] px-2">
-                <Button
-                  shouldFitContainer
-                  onClick={() => handleDelete(v?._id)}
-                  appearance="danger"
-                >
-                  Delete
-                </Button>
-              </div>
-            </div>
-          ),
-        };
-      });
-    setDashboard(mappingDashboard);
-  }, [list]);
 
   return (
     <MainLayout>
       <div className="px-5">
-        {/* Start Breadcrumbs */}
         <Breadcrumbs data={breadcrumbs} />
-        {/* End Breadcrumbs */}
         <div className="flex justify-between items-center mb-6">
           <div className="flex-1">
             <div className="text-3xl font-bold">Manajemen Dashboard</div>

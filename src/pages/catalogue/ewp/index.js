@@ -10,7 +10,7 @@ import Textfield from "@atlaskit/textfield";
 const approvalData = [
   {
     id: 1,
-    project_name: "PAT AIW Pangkal Pinang",
+    project_name: "EWP AIW Pangkal Pinang",
     audit_office: "RAO Pangkal Pinang",
     audit_type: "Special",
     audit_year: "2023",
@@ -21,7 +21,7 @@ const approvalData = [
   },
   {
     id: 2,
-    project_name: "PAT AIW Surabaya",
+    project_name: "EWP AIW Surabaya",
     audit_office: "RAO Surabaya",
     audit_type: "Special",
     audit_year: "2023",
@@ -32,7 +32,7 @@ const approvalData = [
   },
   {
     id: 3,
-    project_name: "PAT AIW Jayapura",
+    project_name: "EWP AIW Jayapura",
     audit_office: "RAO Jayapura",
     audit_type: "Reguler",
     audit_year: "2023",
@@ -43,7 +43,7 @@ const approvalData = [
   },
   {
     id: 4,
-    project_name: "PAT AIW Palembang",
+    project_name: "EWP AIW Palembang",
     audit_office: "RAO Palembang",
     audit_type: "Reguler",
     audit_year: "2023",
@@ -73,7 +73,7 @@ const index = ({ data = approvalData }) => {
         "Addendum Ke": "Fase ke - " + v?.addendum_phase,
         Aksi: (
           <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
-            <Link href={"/catalogue/ewp/" + v.id} prefetch={false}>
+            <Link href={"/catalogue/ewp/" + v.id} prefetch={true}>
               <Button
                 shouldFitContainer
                 iconBefore={
