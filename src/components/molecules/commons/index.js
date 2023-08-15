@@ -32,6 +32,7 @@ import MetodeSelect from "./MetodeSelect";
 import TypeSelect from "./TypeSelect";
 import CategorySelect from "./CategorySelect";
 import TemaSelect from "./TemaSelect";
+import CardFormInput from "./CardFormInput";
 
 export {
   BackButton,
@@ -68,4 +69,5 @@ export {
   TypeSelect,
   CategorySelect,
   TemaSelect,
+  CardFormInput,
 };

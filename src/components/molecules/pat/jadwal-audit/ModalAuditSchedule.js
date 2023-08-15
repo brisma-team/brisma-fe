@@ -51,6 +51,7 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const buttonName = e.target.textContent;
     const combinedAnggaranKegiatan = auditScheduleData.anggaran_kegiatan.reduce(
       (result, item) => {
         return [...result, ...item.ref_sub_kategori_anggarans];
@@ -75,19 +76,21 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal }) => {
       schemaMappings[currentModalStage]
     );
 
-    if (validate && currentModalStage > 1) {
-      if (typeModal === "update") {
-        await useUpdateData(
-          `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/audit`,
-          data
-        );
-      } else {
-        await usePostData(
-          `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/audit/create`,
-          data
-        );
+    if ((validate && currentModalStage > 1) || currentModalStage === 3) {
+      if (buttonName === "Simpan") {
+        if (typeModal === "update") {
+          await useUpdateData(
+            `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/audit`,
+            data
+          );
+        } else {
+          await usePostData(
+            `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/audit/create`,
+            data
+          );
+        }
+        setShowModal(false);
       }
-      setShowModal(false);
     }
   };
 

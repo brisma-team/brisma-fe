@@ -13,7 +13,6 @@ import { CardBodyContent, FormWithLabel } from "@/components/molecules/commons";
 import { useDispatch, useSelector } from "react-redux";
 import { useJenis, useMetode, useTema, useTipe } from "@/data/reference";
 import { setActivityScheduleData } from "@/slices/pat/activityScheduleSlice";
-import { parseDate } from "@/helpers";
 
 const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
   const dispatch = useDispatch();
@@ -93,19 +92,26 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
     }
   };
 
-  const handleAddPIC = () => {
-    const newData = [...activityScheduleData.penanggung_jawab];
-    newData.push({
-      pn: "",
-      nama: "",
-      jabatan: "",
-    });
+  const handleAdd = (property) => {
+    const newData = [...activityScheduleData[property]];
+    newData.push({ pn: "", nama: "", jabatan: "" });
     dispatch(
-      setActivityScheduleData({
-        ...activityScheduleData,
-        penanggung_jawab: newData,
-      })
+      setActivityScheduleData({ ...activityScheduleData, [property]: newData })
     );
+  };
+
+  const handleDelete = (property, idx) => {
+    const newData = { ...activityScheduleData };
+    if (newData[property].length > 1) {
+      const newData = [...activityScheduleData[property]];
+      newData.splice(idx, 1);
+      dispatch(
+        setActivityScheduleData({
+          ...activityScheduleData,
+          [property]: newData,
+        })
+      );
+    }
   };
 
   const handleChange = (props, value) => {
@@ -119,28 +125,27 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
   const handleChangePeriodActivity = (property, value) => {
     const updatedData = {
       ...activityScheduleData,
-      [property]: value !== "" ? parseDate(value, "/") : "",
+      [property]: value,
     };
     dispatch(setActivityScheduleData(updatedData));
   };
 
-  const handleChangePIC = (idx, e) => {
-    const picData = [...activityScheduleData.penanggung_jawab];
-    const updatedPIC = { ...picData[idx] };
-    updatedPIC["pn"] = e.value.pn;
-    updatedPIC["nama"] = e.value.name;
-    updatedPIC["jabatan"] = e.value.jabatan;
-    picData[idx] = updatedPIC;
-    const updatedData = {
-      ...activityScheduleData,
-      penanggung_jawab: picData,
+  const handleChangePIC = (property, index, e) => {
+    const newData = [...activityScheduleData[property]];
+    const updated = {
+      ...newData[index],
+      pn: e?.value?.pn,
+      nama: e?.value?.name,
+      jabatan: e?.value?.jabatan,
     };
-    dispatch(setActivityScheduleData(updatedData));
+    newData[index] = updated;
+    dispatch(
+      setActivityScheduleData({
+        ...activityScheduleData,
+        [property]: newData,
+      })
+    );
   };
-
-  useEffect(() => {
-    console.log("activityScheduleData => ", activityScheduleData);
-  }, [activityScheduleData]);
 
   return (
     <div className="w-[50rem]">
@@ -252,6 +257,7 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
                   }
                   valueStart={activityScheduleData.pelaksanaan_start}
                   valueEnd={activityScheduleData.pelaksanaan_end}
+                  isDisabled={isDisabled}
                 />
               }
               widthFull={true}
@@ -279,7 +285,9 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
             type={"P.I.C"}
             data={activityScheduleData.penanggung_jawab}
             handlerChangeParent={handleChangePIC}
-            handlerAddParent={handleAddPIC}
+            handlerAddParent={handleAdd}
+            handlerDeleteParent={handleDelete}
+            property={"penanggung_jawab"}
             validationErrors={validationErrors}
           />
         </div>

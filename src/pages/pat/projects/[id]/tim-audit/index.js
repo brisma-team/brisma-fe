@@ -105,7 +105,7 @@ const index = () => {
       setParams(filter);
       auditTeamMutate;
     };
-    const debouncedSearch = _.debounce(handleSearch, 2000);
+    const debouncedSearch = _.debounce(handleSearch, 800);
     debouncedSearch();
     return () => {
       debouncedSearch.cancel();

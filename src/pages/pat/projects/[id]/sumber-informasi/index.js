@@ -60,7 +60,7 @@ const index = () => {
   const handlePost = async () => {
     try {
       return await usePostData(
-        `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/ltb`,
+        `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/si`,
         data
       );
     } catch (e) {

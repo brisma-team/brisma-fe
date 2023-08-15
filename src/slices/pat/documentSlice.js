@@ -1,31 +1,45 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  documentData: {
-    ref_tim_audit_maker: [{ pn: "", nama: "", jabatan: "" }],
-    ref_tim_audit_approver: [{ pn: "", nama: "", jabatan: "" }],
-    ref_tim_audit_signer: [{ pn: "", nama: "", jabatan: "" }],
+  workflowData: {
+    ref_tim_audit_maker: "",
+    ref_tim_audit_approver: [],
+    ref_tim_audit_signer: [],
+    note: "",
   },
-  defaultData: {
-    ref_tim_audit_maker: [{ pn: "", nama: "", jabatan: "" }],
-    ref_tim_audit_approver: [{ pn: "", nama: "", jabatan: "" }],
-    ref_tim_audit_signer: [{ pn: "", nama: "", jabatan: "" }],
+  workflowDefaultData: {
+    ref_tim_audit_maker: "",
+    ref_tim_audit_approver: [],
+    ref_tim_audit_signer: [],
+    note: "",
   },
+  validationErrorsWorkflow: {},
 };
 
 export const documentSlice = createSlice({
-  name: "document",
+  name: "documentPAT",
   initialState,
   reducers: {
-    setDocumentData: (state, action) => {
-      state.documentData = action.payload;
+    setWorkflowData: (state, action) => {
+      state.workflowData = action.payload;
     },
-    resetDcumentData: (state) => {
-      state.documentData = { ...state.defaultData };
+    setvalidationErrorsWorkflow: (state, action) => {
+      state.validationErrorsWorkflow = action.payload;
+    },
+    resetWorkflowData: (state) => {
+      state.workflowData = { ...state.workflowDefaultData };
+    },
+    resetvalidationErrorsWorkflow: (state) => {
+      state.validationErrorsWorkflow = {};
     },
   },
 });
 
-export const { setDocumentData, resetDcumentData } = documentSlice.actions;
+export const {
+  setWorkflowData,
+  setvalidationErrorsWorkflow,
+  resetWorkflowData,
+  resetvalidationErrorsWorkflow,
+} = documentSlice.actions;
 
 export default documentSlice.reducer;

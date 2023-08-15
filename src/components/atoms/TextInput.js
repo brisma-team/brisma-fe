@@ -1,4 +1,5 @@
 import Textfield from "@atlaskit/textfield";
+import ButtonIcon from "./ButtonIcon";
 
 const TextInput = ({
   onChange,
@@ -16,11 +17,7 @@ const TextInput = ({
       placeholder={placeholder}
       onChange={onChange}
       elemAfterInput={
-        icon && (
-          <button className="justify-center" onClick={handleClick}>
-            {icon}
-          </button>
-        )
+        icon && <ButtonIcon handleClick={handleClick} icon={icon} />
       }
       onKeyDown={onKeyDown}
       value={value}

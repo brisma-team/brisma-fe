@@ -162,6 +162,15 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, isMutate }) => {
       })
     );
   };
+
+  const handleSetNull = (property) => {
+    dispatch(
+      setAuditTeamData({
+        ...auditTeamData,
+        [property]: "",
+      })
+    );
+  };
   // END CHANGE HANDLING
 
   // START SAVE DATA
@@ -211,6 +220,8 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, isMutate }) => {
             style={{ fontSize: "1.25rem" }}
             onChange={(e) => handleChangeText("name", e)}
             value={auditTeamData?.name}
+            placeholder={"Masukkan nama tim audit"}
+            handleClick={() => handleSetNull("name")}
           />
           {validationErrors.name && (
             <ErrorValidation message={validationErrors.name} />

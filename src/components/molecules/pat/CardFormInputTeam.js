@@ -12,6 +12,7 @@ import {
   TypeTeamSelect,
 } from "../commons";
 import Link from "next/link";
+import CustomSelect from "../commons/CustomSelect";
 
 const CardFormInputTeam = ({
   type,
@@ -25,6 +26,9 @@ const CardFormInputTeam = ({
   handlerChangeChild,
   validationErrors,
   property,
+  childProperty,
+  optionValue,
+  iconBeside,
 }) => {
   let textColor, buttonText;
   switch (type) {
@@ -235,48 +239,99 @@ const CardFormInputTeam = ({
               ) : (
                 data?.map((v, i) => {
                   return (
-                    <div key={i} className="my-3">
-                      <PekerjaSelect
-                        key={i}
-                        handleChange={(e) =>
-                          handlerChangeParent(property, i, e)
-                        }
-                        selectedValue={{
-                          label: `${v?.pn} - ${v?.nama}`,
-                          value: { v },
-                        }}
-                        customIcon={
-                          <ButtonIcon
-                            icon={<IconClose />}
-                            handleClick={() => handlerDeleteParent(property, i)}
+                    <div className="flex" key={i}>
+                      <div className="my-1.5 w-full">
+                        {optionValue ? (
+                          <CustomSelect
+                            key={i}
+                            handleChange={(e) =>
+                              handlerChangeParent(property, i, e)
+                            }
+                            optionValue={optionValue}
+                            selectedValue={{
+                              label: `${v?.pn} - ${v?.nama}`,
+                              value: { v },
+                            }}
+                            customIcon={
+                              <ButtonIcon
+                                icon={<IconClose />}
+                                handleClick={() =>
+                                  handlerDeleteParent(property, i)
+                                }
+                              />
+                            }
                           />
-                        }
-                      />
-                      {type === "Manajer Audit"
-                        ? validationErrors[`ref_tim_audit_ma[${i}].pn`] && (
-                            <ErrorValidation
-                              message={
-                                validationErrors[`ref_tim_audit_ma[${i}].pn`]
-                              }
-                            />
-                          )
-                        : type === "Ketua Tim Audit"
-                        ? validationErrors[`ref_tim_audit_kta[${i}].pn`] && (
-                            <ErrorValidation
-                              message={
-                                validationErrors[`ref_tim_audit_kta[${i}].pn`]
-                              }
-                            />
-                          )
-                        : type === "P.I.C"
-                        ? validationErrors[`penanggung_jawab[${i}].pn`] && (
-                            <ErrorValidation
-                              message={
-                                validationErrors[`penanggung_jawab[${i}].pn`]
-                              }
-                            />
-                          )
-                        : ""}
+                        ) : (
+                          <PekerjaSelect
+                            key={i}
+                            handleChange={(e) =>
+                              handlerChangeParent(property, i, e)
+                            }
+                            selectedValue={{
+                              label: `${v?.pn} - ${v?.nama}`,
+                              value: { v },
+                            }}
+                            customIcon={
+                              <ButtonIcon
+                                icon={<IconClose />}
+                                handleClick={() =>
+                                  handlerDeleteParent(property, i)
+                                }
+                              />
+                            }
+                          />
+                        )}
+                        {type === "Manajer Audit"
+                          ? validationErrors[`ref_tim_audit_ma[${i}].pn`] && (
+                              <ErrorValidation
+                                message={
+                                  validationErrors[`ref_tim_audit_ma[${i}].pn`]
+                                }
+                              />
+                            )
+                          : type === "Ketua Tim Audit"
+                          ? validationErrors[`ref_tim_audit_kta[${i}].pn`] && (
+                              <ErrorValidation
+                                message={
+                                  validationErrors[`ref_tim_audit_kta[${i}].pn`]
+                                }
+                              />
+                            )
+                          : type === "P.I.C"
+                          ? validationErrors[`penanggung_jawab[${i}].pn`] && (
+                              <ErrorValidation
+                                message={
+                                  validationErrors[`penanggung_jawab[${i}].pn`]
+                                }
+                              />
+                            )
+                          : type === "Approver"
+                          ? validationErrors[
+                              `ref_tim_audit_approver[${i}].pn`
+                            ] && (
+                              <ErrorValidation
+                                message={
+                                  validationErrors[
+                                    `ref_tim_audit_approver[${i}].pn`
+                                  ]
+                                }
+                              />
+                            )
+                          : type === "Signer"
+                          ? validationErrors[
+                              `ref_tim_audit_signer[${i}].pn`
+                            ] && (
+                              <ErrorValidation
+                                message={
+                                  validationErrors[
+                                    `ref_tim_audit_signer[${i}].pn`
+                                  ]
+                                }
+                              />
+                            )
+                          : ""}
+                      </div>
+                      {v[childProperty] && iconBeside ? iconBeside : ""}
                     </div>
                   );
                 })
@@ -288,7 +343,7 @@ const CardFormInputTeam = ({
               )}
             </>
           )}
-          {type !== "Tipe Tim" && (
+          {type !== "Maker" && type !== "Tipe Tim" && (
             <div className="flex w-full items-center gap-2">
               <div className="bg-none w-40 mt-3">
                 <ButtonField

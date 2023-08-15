@@ -12,10 +12,12 @@ const Content = ({ title, value }) => {
     <div className="my-5 leading-3">
       <p className="font-bold">{title}</p>
       <p className="font-light text-sm">
-        {value === null || value === ""
+        {!value || value === ""
           ? "-"
           : title === "Riwayat Addendum"
           ? `Addendum ke-${value}`
+          : title === "Status Approver"
+          ? `On ${value}`
           : value}
       </p>
     </div>

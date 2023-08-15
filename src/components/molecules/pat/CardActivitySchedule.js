@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Card, LinkIcon } from "@/components/atoms";
+import { ButtonIcon, Card } from "@/components/atoms";
 import { IconEdit, IconInfo, IconTrash } from "@/components/icons";
 import { useActivitySchedule, useKategoriAnggaran } from "@/data/pat";
 import { useDispatch } from "react-redux";
@@ -138,7 +138,7 @@ const CardActivitySchedule = ({
     });
 
     const mapping = {
-      jadwal_audit_id: jadwalData.id,
+      jadwal_sbp_id: jadwalData.id,
       pat_id: jadwalData.pat_id,
       nama: jadwalData.nama,
       ref_metode: jadwalData.ref_metode,
@@ -156,7 +156,6 @@ const CardActivitySchedule = ({
 
     dispatch(setActivityScheduleData(mapping));
     setTypeModal("update");
-    setScheduleId(jadwal_sbp_id);
     setShowModal(true);
   };
 
@@ -164,7 +163,7 @@ const CardActivitySchedule = ({
     deleteSwal(
       "Apakah anda yakin ingin menghapus data ini?",
       "Data ini dihapus seacara permanen",
-      `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/sbp?jadwal_sbp_id=${jadwal_sbp_id}`
+      `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/sbp?jadwal_sbp_id=${jadwal_sbp_id}&pat_id=${pat_id}`
     );
   };
 
@@ -192,22 +191,22 @@ const CardActivitySchedule = ({
               />
             )}
             <div className="flex w-14 justify-between">
-              <LinkIcon
+              <ButtonIcon
                 color={"blue"}
                 icon={<IconInfo size="medium" />}
-                handler={() => (
+                handleClick={() => (
                   setShowModalDetail(true), setScheduleId(jadwal_sbp_id)
                 )}
               />
-              <LinkIcon
+              <ButtonIcon
                 color={"yellow"}
                 icon={<IconEdit size="medium" />}
-                handler={handlerUpdate}
+                handleClick={handlerUpdate}
               />
-              <LinkIcon
+              <ButtonIcon
                 color={"red"}
                 icon={<IconTrash size="medium" />}
-                handler={() => handleDelete(jadwal_sbp_id)}
+                handleClick={() => handleDelete(jadwal_sbp_id, pat_id)}
               />
             </div>
           </div>
