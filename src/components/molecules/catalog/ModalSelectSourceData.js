@@ -55,12 +55,12 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
           <h3 className="p-3 font-semibold text-xl">
             {`Pustaka Dokumen ` + tag}
           </h3>
-          <div className="grid grid-cols-2">
+          <div className="grid grid-cols-2 gap-2">
             <div className="p-3">
               <Card>
                 <div className="p-5 text-center">
                   <p className="font-semibold text-lg">Brisma 1.0</p>
-                  <h5 className="text-atlasian-gray-dark mb-5 font-medium text-base italic">
+                  <h5 className="text-atlasian-gray-dark mb-5 font-medium text-base">
                     Pustaka Dokumen <br /> Tahun 2012 - 2022
                   </h5>
                   <Button
@@ -80,9 +80,9 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
               <Card>
                 <div className="p-5 text-center">
                   <p className="font-semibold text-lg">Brisma 2.0</p>
-                  <p className="text-atlasian-gray-dark mb-5 font-medium text-base italic">
+                  <h5 className="text-atlasian-gray-dark mb-5 font-medium text-base">
                     Pustaka Dokumen <br /> Tahun 2023 - Saat Ini
-                  </p>
+                  </h5>
                   <Button
                     appearance="primary"
                     onClick={() => {

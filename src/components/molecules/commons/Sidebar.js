@@ -1,6 +1,5 @@
 import {
   IconGraphBar,
-  IconPeople,
   IconMediaServicesDocument,
   IconMediaServicesSpreadsheet,
   IconFile,
@@ -54,14 +53,6 @@ const Sidebar = ({ handleSidebarItemClick }) => {
                 onClick={(e) => handleItemClick(e, "/dashboard")}
               >
                 <p className="text-base">Dashboard</p>
-              </ButtonItem>
-              <ButtonItem
-                iconBefore={<IconPeople label="" />}
-                href="/users"
-                isSelected={selectedItem === "/users"}
-                onClick={(e) => handleItemClick(e, "/users")}
-              >
-                <p className="text-base">Users</p>
               </ButtonItem>
               {/* <ButtonItem iconBefore={<MediaServicesDocumentIcon label="" />}>
                 P.A.T

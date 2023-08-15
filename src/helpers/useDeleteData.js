@@ -1,7 +1,7 @@
 import withTokenConfig from "./withTokenConfig";
 import successSwal from "./successSwal";
 
-const useDeleteData = async (url) => {
+const useDeleteData = async (url, body) => {
   try {
     const { headers } = withTokenConfig();
     const options = {
@@ -10,9 +10,11 @@ const useDeleteData = async (url) => {
         Authorization: headers.Authorization,
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(body),
     };
     const response = await fetch(url, options).then((res) => {
       if (!res.ok) {
+        console.log(res);
         throw new Error("Network response was not ok");
       }
       return res.json();
