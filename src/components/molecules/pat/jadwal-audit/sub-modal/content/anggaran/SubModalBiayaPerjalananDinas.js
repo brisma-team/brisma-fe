@@ -46,10 +46,17 @@ const SubModalBiayaPerjalananDinas = ({ typeModal }) => {
       }));
       setIsDisabled(false);
     } else {
-      setBudget((prevBudget) => ({
-        ...prevBudget,
-        [key]: value,
-      }));
+      if (isNaN(parseInt(value))) {
+        setBudget((prevBudget) => ({
+          ...prevBudget,
+          [key]: 0,
+        }));
+      } else {
+        setBudget((prevBudget) => ({
+          ...prevBudget,
+          [key]: value,
+        }));
+      }
     }
   };
 

@@ -162,7 +162,7 @@ const index = () => {
               showModal={showModal}
               setShowModal={setShowModal}
               typeModal={typeModal}
-              isMutate={auditTeamMutate}
+              mutate={auditTeamMutate}
             />
           </div>
         </div>

@@ -10,6 +10,7 @@ const BranchSelect = ({
   selectedValue,
   fieldsProps,
   customIcon,
+  isDisabled,
 }) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState("");
@@ -73,6 +74,7 @@ const BranchSelect = ({
       value={selectedValue}
       onInputChange={handleInputChange}
       components={customIcon && { DropdownIndicator }}
+      isDisabled={isDisabled}
     />
   );
 };

@@ -12,11 +12,18 @@ import { auditTeamSchema } from "@/helpers/schemas";
 import { useSelector, useDispatch } from "react-redux";
 import { setAuditTeamData } from "@/slices/pat/auditTeamSlice";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-const ModalAuditTeam = ({ showModal, setShowModal, typeModal, isMutate }) => {
+const ModalAuditTeam = ({ showModal, setShowModal, typeModal, mutate }) => {
   const { id } = useRouter().query;
   const dispatch = useDispatch();
   const auditTeamData = useSelector((state) => state.auditTeam.auditTeamData);
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  useEffect(() => {
+    console.log("TYPE MODAL => ", typeModal);
+    if (typeModal === "detail") setIsDisabled(true);
+  }, [typeModal]);
 
   // START ADD HANDLING
   const handleAdd = (property) => {
@@ -195,8 +202,8 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, isMutate }) => {
             data
           );
         }
+        mutate();
         setShowModal(false);
-        isMutate;
       })
       .catch((err) => {
         if (err.inner) {
@@ -222,6 +229,7 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, isMutate }) => {
             value={auditTeamData?.name}
             placeholder={"Masukkan nama tim audit"}
             handleClick={() => handleSetNull("name")}
+            isDisabled={isDisabled}
           />
           {validationErrors.name && (
             <ErrorValidation message={validationErrors.name} />
@@ -238,6 +246,7 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, isMutate }) => {
               handlerChangeParent={handleChange}
               validationErrors={validationErrors}
               property={"ref_tim_audit_ma"}
+              isDisabled={isDisabled}
             />
           </div>
           <div className="w-1/3">
@@ -250,6 +259,7 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, isMutate }) => {
               handlerChangeParent={handleChange}
               validationErrors={validationErrors}
               property={"ref_tim_audit_kta"}
+              isDisabled={isDisabled}
             />
           </div>
           <div className="w-1/3">
@@ -258,6 +268,7 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, isMutate }) => {
               data={auditTeamData?.ref_tipe_tim}
               placeholder={"Tipe Tim"}
               handlerChangeParent={handleChangeTypeTeam}
+              isDisabled={isDisabled}
             />
             {typeModal !== "detail" && (
               <div className="w-full flex justify-end">
@@ -281,6 +292,7 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, isMutate }) => {
             handlerChangeChild={handleChangeUkerATA}
             validationErrors={validationErrors}
             property={"ref_tim_audit_ata"}
+            isDisabled={isDisabled}
           />
         </div>
       </form>

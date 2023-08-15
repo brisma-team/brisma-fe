@@ -167,6 +167,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
           onChange={(e) => handleChange("name_kegiatan_audit", e.target.value)}
           value={auditScheduleData.name_kegiatan_audit}
           isDisabled={isDisabled}
+          placeholder={"Masukkan Nama Jadwal Audit"}
         />
         {validationErrors["name_kegiatan_audit"] && (
           <div className="mt-2">
@@ -196,6 +197,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               errors={validationErrors["ref_metode.kode"]}
+              widthFull={true}
             />
             <FormWithLabel
               label={"Tipe Audit"}
@@ -214,6 +216,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               errors={validationErrors["ref_tipe.kode"]}
+              widthFull={true}
             />
             <FormWithLabel
               label={"Jenis Audit"}
@@ -232,6 +235,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               errors={validationErrors["ref_jenis.kode"]}
+              widthFull={true}
             />
             <FormWithLabel
               label={"Tema Audit"}
@@ -249,6 +253,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                   isDisabled={isDisabled}
                 />
               }
+              widthFull={true}
             />
             <FormWithLabel
               label={"Deskripsi Kegiatan"}
@@ -295,6 +300,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               errors={validationErrors["pelaksanaan_end"]}
+              widthFull={true}
             />
           </CardBodyContent>
         </div>
