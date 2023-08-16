@@ -1,4 +1,4 @@
-import { Breadcrumbs, Card, PageTitle } from "@/components/atoms";
+import { Breadcrumbs, Card, DivButton, PageTitle } from "@/components/atoms";
 import { PrevNextNavigation } from "@/components/molecules/commons";
 import {
   ModalWorkflow,
@@ -59,6 +59,7 @@ const index = () => {
   const [showModal, setShowModal] = useState(false);
   const [openCardComment, setOpenCardComment] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndexComment, setActiveIndexComment] = useState(0);
   const activeDivRef = useRef(null);
   const [hitEndpointCount, setHitEndpointCount] = useState(0);
   const [doc, setDoc] = useState([]);
@@ -156,6 +157,7 @@ const index = () => {
           idx: hitEndpointCount,
           key: nav[hitEndpointCount].name,
           content: documentPAT?.data,
+          comment: documentPAT?.comments,
         },
       ]);
     }
@@ -178,6 +180,11 @@ const index = () => {
     });
   }, [workflow]);
 
+  const handleClickComment = (idx) => {
+    setOpenCardComment(true);
+    setActiveIndexComment(idx);
+  };
+
   return (
     <PatLandingLayout content={content} data={statusPat?.data}>
       <div className="pr-44">
@@ -193,7 +200,7 @@ const index = () => {
               <Card>
                 <div className="px-3 py-1 w-full">
                   <div className="text-xl">Daftar Isi</div>
-                  <div className="pl-2">
+                  <div className="pl-2 mt-0.5">
                     {nav.map((v, i) => {
                       return (
                         <DocumentItems
@@ -223,22 +230,25 @@ const index = () => {
                       tabIndex={i === activeIndex ? 0 : -1}
                       ref={i === activeIndex ? activeDivRef : null}
                     >
-                      <CardComment
-                        callbackRef={ref}
-                        onClickOutside={() => setOpenCardComment(false)}
-                        show={openCardComment}
-                      />
+                      {doc?.find((v) => v?.idx === activeIndexComment) &&
+                        openCardComment && (
+                          <CardComment
+                            callbackRef={ref}
+                            handleClickOutside={() => setOpenCardComment(false)}
+                            data={v.comment}
+                          />
+                        )}
                       {v.content && (
                         <div className="px-4 h-full w-full relative page-content-a4">
                           <div className="flex justify-between">
                             <div className="font-bold text-xl">{v.key}</div>
                             <div className="flex items-center" ref={ref}>
-                              <Link
+                              <DivButton
                                 href={"#"}
-                                onClick={() => setOpenCardComment(true)}
+                                onClick={() => handleClickComment(i)}
                               >
                                 <Image src={ImageChat} alt="chat" />
-                              </Link>
+                              </DivButton>
                             </div>
                           </div>
                           {v.idx === 2 ? (

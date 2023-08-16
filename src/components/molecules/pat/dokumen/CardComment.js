@@ -1,17 +1,8 @@
 import { useEffect } from "react";
-import { ButtonField, Card } from "@/components/atoms";
+import { ButtonField, Card, DivButton } from "@/components/atoms";
 import Image from "next/image";
 import { ImageAvatar } from "@/helpers/imagesUrl";
-
-const Button = ({ bgColor, buttonText }) => {
-  return (
-    <div
-      className={`rounded ${bgColor} text-white mt-2 w-36 h-10 flex justify-center items-center`}
-    >
-      <ButtonField text={buttonText} />
-    </div>
-  );
-};
+import { convertDate } from "@/helpers";
 
 const CommentDetail = ({
   textColor,
@@ -55,19 +46,20 @@ const Comment = ({
           />
           <div className="my-2">
             <Card>
-              <div className="py-1 px-4">
+              <div className="py-1 px-4 w-full">
                 <p className="text-justify text-xs font-semibold">
                   {comment_description}
                 </p>
               </div>
             </Card>
           </div>
-          <div className="w-full flex justify-end gap-3">
-            <Button
-              bgColor={"bg-atlasian-blue-light"}
-              buttonText={"Tautkan Comment"}
-            />
-            <Button bgColor={"bg-atlasian-green"} buttonText={"Resolve"} />
+          <div className="w-full flex justify-end gap-3 mt-4">
+            <div className="w-40 h-10 bg-atlasian-blue-light rounded flex items-center">
+              <ButtonField text={"Tautkan Comment"} name={"tautkan"} />
+            </div>
+            <div className="w-40 h-10 bg-atlasian-green rounded flex items-center">
+              <ButtonField text={"Resolve"} name={"resolve"} />
+            </div>
           </div>
           <></>
         </div>
@@ -76,25 +68,46 @@ const Comment = ({
   );
 };
 
-const CardComment = ({ show, onClickOutside, callbackRef }) => {
+const CardComment = ({
+  data,
+  handleClick,
+  handleClickOutside,
+  callbackRef,
+}) => {
   const ref = callbackRef;
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const clickOutside = (event) => {
       if (ref.current && !ref.current.contains(event.target)) {
-        onClickOutside && onClickOutside();
+        handleClickOutside && handleClickOutside();
       }
     };
-    document.addEventListener("click", handleClickOutside, true);
+    document.addEventListener("click", clickOutside, true);
     return () => {
-      document.removeEventListener("click", handleClickOutside, true);
+      document.removeEventListener("click", clickOutside, true);
     };
-  }, [onClickOutside]);
+  }, [handleClickOutside]);
 
-  if (!show) return null;
+  const commentItems = [];
+
+  if (data?.length) {
+    data.forEach((innerArray) => {
+      innerArray.forEach((v, i) => {
+        commentItems.push(
+          <Comment
+            key={i}
+            image_url={ImageAvatar}
+            comment_by={`${v.pn_create_by} - ${v.nama_create_by}`}
+            comment_at={convertDate(v.create_at, "-", "d")}
+            comment_description={v.deskripsi}
+          />
+        );
+      });
+    });
+  }
 
   return (
-    <div className="w-full">
+    <DivButton className="w-full" handleClick={handleClick}>
       <div className="w-[29.18rem] max-h-[45.58rem] overflow-y-scroll overflow-x-hidden flex-shrink-0 absolute z-50 bg-white -my-2 -ml-2">
         <div className="px-2 pb-2">
           <Card>
@@ -105,30 +118,8 @@ const CardComment = ({ show, onClickOutside, callbackRef }) => {
                   <ButtonField text={"Tambah Comment"} />
                 </div>
               </div>
-              <Comment
-                image_url={ImageAvatar}
-                comment_by={"7581702 - Eky Gunawan"}
-                comment_at={"22-Juni-2023"}
-                comment_description={
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dignissim non nulla quis aliquet. Nullam posuere dui sit amet orci fringilla, congue porttitor tellus malesuada. Proin aliquet laoreet lectus, vel dapibus mi congue ut. Aenean ornare efficitur iaculis"
-                }
-              />
-              <Comment
-                image_url={ImageAvatar}
-                comment_by={"7581702 - Eky Gunawan"}
-                comment_at={"22-Juni-2023"}
-                comment_description={
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dignissim non nulla quis aliquet. Nullam posuere dui sit amet orci fringilla, congue porttitor tellus malesuada. Proin aliquet laoreet lectus, vel dapibus mi congue ut. Aenean ornare efficitur iaculis"
-                }
-              />
-              <Comment
-                image_url={ImageAvatar}
-                comment_by={"7581702 - Eky Gunawan"}
-                comment_at={"22-Juni-2023"}
-                comment_description={
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dignissim non nulla quis aliquet. Nullam posuere dui sit amet orci fringilla, congue porttitor tellus malesuada. Proin aliquet laoreet lectus, vel dapibus mi congue ut. Aenean ornare efficitur iaculis"
-                }
-              />
+              {commentItems}
+
               <div className="">
                 <CommentDetail
                   style={"h-[3.375rem] px-3 bg-atlasian-green"}
@@ -149,7 +140,7 @@ const CardComment = ({ show, onClickOutside, callbackRef }) => {
           </Card>
         </div>
       </div>
-    </div>
+    </DivButton>
   );
 };
 

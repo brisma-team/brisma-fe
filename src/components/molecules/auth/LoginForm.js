@@ -93,8 +93,6 @@ const LoginForm = () => {
     );
   }
 
-  console.log("env", process.env);
-
   return (
     <SideNavigation label="Project navigation" testId="side-navigation">
       <NavigationHeader>

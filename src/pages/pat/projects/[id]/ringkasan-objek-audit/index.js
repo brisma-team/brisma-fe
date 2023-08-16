@@ -41,10 +41,62 @@ const index = () => {
   const [content, setContent] = useState([]);
   const [uker, setUker] = useState([]);
   const [echannel, setEchannel] = useState([]);
+  const [totalUker, setTotalUker] = useState({
+    existing: "0",
+    target: "0",
+    presentase: "0%",
+  });
+  const [totalEchannel, setTotalEchannel] = useState({
+    existing: "0",
+    target: "0",
+    presentase: "0%",
+  });
+
+  useEffect(() => {
+    const totalUkerExisting = uker.reduce(
+      (total, item) => total + parseInt(item["Uker Eksisting"]),
+      0
+    );
+    const totalUkerAudit = uker.reduce(
+      (total, item) => total + parseInt(item["Uker Audit"]),
+      0
+    );
+    const totalUkerPresentase =
+      totalUkerExisting !== 0
+        ? ((totalUkerAudit / totalUkerExisting) * 100).toFixed(2) + "%"
+        : "0%";
+
+    setTotalUker({
+      existing: totalUkerExisting.toString(),
+      target: totalUkerAudit.toString(),
+      presentase: totalUkerPresentase,
+    });
+  }, [uker]);
+
+  useEffect(() => {
+    const totalEchannelExisting = echannel.reduce(
+      (total, item) => total + parseInt(item["Eksisting"]),
+      0
+    );
+    const totalEchannelAudit = echannel.reduce(
+      (total, item) => total + parseInt(item["Audit"]),
+      0
+    );
+    const totalEchannelPresentase =
+      totalEchannelExisting !== 0
+        ? ((totalEchannelAudit / totalEchannelExisting) * 100).toFixed(2) + "%"
+        : "0%";
+
+    setTotalEchannel({
+      existing: totalEchannelExisting.toString(),
+      target: totalEchannelAudit.toString(),
+      presentase: totalEchannelPresentase,
+    });
+  }, [echannel]);
 
   useEffect(() => {
     const objTargetAudit = auditTarget?.data.target_audit;
-    const objEchannel = auditTarget?.data.target_audit;
+    const objEchannel = auditTarget?.data.echannel;
 
     if (objTargetAudit?.length > 0) {
       const mappingUker = objTargetAudit?.map((v) => {
@@ -179,13 +231,13 @@ const index = () => {
                       Total
                     </div>
                     <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-green">
-                      100
+                      {totalUker.existing}
                     </div>
                     <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-yellow">
-                      25
+                      {totalUker.target}
                     </div>
                     <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-dark">
-                      25%
+                      {totalUker.presentase}
                     </div>
                   </div>
                 </div>
@@ -220,13 +272,13 @@ const index = () => {
                       Total
                     </div>
                     <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-green">
-                      100
+                      {totalEchannel.existing}
                     </div>
                     <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-yellow">
-                      25
+                      {totalEchannel.target}
                     </div>
                     <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-dark">
-                      25%
+                      {totalEchannel.presentase}
                     </div>
                   </div>
                 </div>

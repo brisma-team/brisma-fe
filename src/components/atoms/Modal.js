@@ -6,6 +6,7 @@ const Modal = ({
   onClickOutside,
   header,
   footer,
+  withoutFooter,
   widthFullFooter,
   children,
 }) => {
@@ -49,17 +50,19 @@ const Modal = ({
               >
                 {children}
               </div>
-              {footer && (
-                <div className="mt-3 flex justify-end ">
-                  <div
-                    className={`relative p-4 bg-white rounded-md shadow-lg ${
-                      widthFullFooter && `w-full`
-                    }`}
-                  >
-                    {footer}
-                  </div>
-                </div>
-              )}
+              {withoutFooter
+                ? ""
+                : footer && (
+                    <div className="mt-3 flex justify-end ">
+                      <div
+                        className={`relative p-4 bg-white rounded-md shadow-lg ${
+                          widthFullFooter && `w-full`
+                        }`}
+                      >
+                        {footer}
+                      </div>
+                    </div>
+                  )}
             </div>
           </motion.div>
         </div>

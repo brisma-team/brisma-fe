@@ -19,6 +19,7 @@
     "@atlaskit/form": "^8.11.8",
     "@atlaskit/icon": "^21.12.4",
     "@atlaskit/inline-edit": "^12.3.4",
+    "@atlaskit/lozenge": "^11.4.3",
     "@atlaskit/menu": "^1.7.9",
     "@atlaskit/modal-dialog": "^12.6.2",
     "@atlaskit/navigation": "^37.0.2",

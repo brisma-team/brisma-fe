@@ -1,15 +1,16 @@
-import Link from "next/link";
+import { DivButton } from "@/components/atoms";
 
 const DocumentItems = ({ no, title, count, handleClick, activeIndex }) => {
   return (
-    <Link
-      className={`text-sm py-1 flex justify-between no-underline hover:no-underline text-brisma hover:text-brisma ${
-        activeIndex === no && `bg-atlasian-red`
+    <DivButton
+      className={`text-sm py-1 flex justify-between ${
+        activeIndex === no
+          ? `bg-atlasian-blue-light rounded text-white hover:text-white font-semibold`
+          : `text-brisma hover:text-brisma`
       }`}
-      href={"#"}
-      onClick={handleClick}
+      handleClick={handleClick}
     >
-      <div className="w-full flex">
+      <div className="w-full flex ml-1.5">
         <div>{no}.</div>
         <div className="ml-2">{title}</div>
       </div>
@@ -21,7 +22,7 @@ const DocumentItems = ({ no, title, count, handleClick, activeIndex }) => {
       >
         {count && count}
       </div>
-    </Link>
+    </DivButton>
   );
 };
 
