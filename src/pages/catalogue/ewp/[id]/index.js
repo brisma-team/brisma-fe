@@ -13,19 +13,19 @@ const approvalData = [
   {
     id: 1,
     part: "Entrance",
-    document_name: "EWP Serialize 1",
+    document_name: "Attendance",
     date: "10 Juli 2023",
   },
   {
     id: 2,
     part: "KKPA",
-    document_name: "EWP Serialize 2",
+    document_name: "Tahap 1",
     date: "10 Juli 2023",
   },
   {
     id: 3,
     part: "KKPT",
-    document_name: "EWP Serialize 3",
+    document_name: "Tahap 2",
     date: "10 Juli 2023",
   },
 ];
@@ -88,15 +88,6 @@ const index = ({ data = approvalData }) => {
     setSelectedItem(item);
     setShowModal(true);
   };
-  // const handlePreviewDocs = () => {
-  //   setShowPreview(true);
-  //   setShowHistory(false);
-  //   setShowModal(true);
-  // };
-
-  // const handleDownload = (id) => {
-
-  // }
 
   return (
     <MainLayout>
