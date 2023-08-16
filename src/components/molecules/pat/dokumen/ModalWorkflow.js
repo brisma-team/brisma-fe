@@ -1,14 +1,8 @@
-import {
-  Modal,
-  ButtonField,
-  TableField,
-  TextInput,
-  ButtonIcon,
-} from "@/components/atoms";
-import CardFormInputTeam from "../CardFormInputTeam";
+import { Modal, TableField } from "@/components/atoms";
 import { useDispatch, useSelector } from "react-redux";
 import {
   resetvalidationErrorsWorkflow,
+  resetWorkflowData,
   setWorkflowData,
   setvalidationErrorsWorkflow,
 } from "@/slices/pat/documentSlice";
@@ -16,164 +10,16 @@ import { useEffect, useState } from "react";
 import useUser from "@/data/useUser";
 import { useWorkflow } from "@/data/pat";
 import { useRouter } from "next/router";
-import { convertDate, setErrorValidation, usePostData } from "@/helpers";
-import { ImageCheck } from "@/helpers/imagesUrl";
-import Image from "next/image";
+import {
+  confirmationSwal,
+  convertDate,
+  setErrorValidation,
+  usePostData,
+} from "@/helpers";
 import _ from "lodash";
-import { CardFormInput } from "../../commons";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
-import { IconClose } from "@/components/icons";
-
-const Header = ({ data, dispatch, validationErrors }) => {
-  const [optionSigners, setOptionSigners] = useState([]);
-  useEffect(() => {
-    if (data.ref_tim_audit_approver.length) {
-      const mappingSigners = data.ref_tim_audit_approver?.map((v) => {
-        const { pn, nama } = v;
-        return { label: `${v.pn} - ${v.nama}`, value: { pn, name: nama } };
-      });
-      setOptionSigners(mappingSigners);
-    }
-  }, [data]);
-
-  const handleAdd = (property) => {
-    const newData = [...data[property]];
-    newData.push({
-      pn: "",
-      nama: "",
-      is_signed: false,
-    });
-    dispatch(setWorkflowData({ ...data, [property]: newData }));
-  };
-
-  const handleDelete = (property, idx) => {
-    const newData = { ...data };
-    if (newData[property].length > 1) {
-      const newData = [...data[property]];
-      newData.splice(idx, 1);
-      dispatch(setWorkflowData({ ...data, [property]: newData }));
-    }
-  };
-
-  const handleChange = (property, index, e) => {
-    const newData = [...data[property]];
-    const updated = { ...newData[index] };
-    updated["pn"] = e?.value?.pn;
-    updated["nama"] = e?.value?.name;
-    newData[index] = updated;
-    dispatch(
-      setWorkflowData({
-        ...data,
-        [property]: newData,
-      })
-    );
-  };
-
-  return (
-    <div className="w-[61rem]">
-      <div className="mx-3">
-        {/* <PageTitle text={"Workflow"} /> */}
-        <p className="font-bold text-xl text-brisma">Workflow</p>
-      </div>
-      <div className="flex w-full gap-4 p-3">
-        <div className="w-1/3">
-          <CardFormInput title={"Maker"}>
-            <TextInput
-              isDisabled={true}
-              value={data?.ref_tim_audit_maker}
-              className={"text-black"}
-            />
-          </CardFormInput>
-        </div>
-        <div className="w-1/3">
-          <CardFormInputTeam
-            data={data?.ref_tim_audit_approver}
-            type={"Approver"}
-            handlerAddParent={handleAdd}
-            handlerChangeParent={handleChange}
-            handlerDeleteParent={handleDelete}
-            property={"ref_tim_audit_approver"}
-            iconBeside={
-              <div className="my-3 ml-2 flex items-center">
-                <Image alt="" src={ImageCheck} />
-              </div>
-            }
-            childProperty={"is_signed"}
-            validationErrors={validationErrors}
-          />
-        </div>
-        <div className="w-1/3">
-          <CardFormInputTeam
-            data={data?.ref_tim_audit_signer}
-            type={"Signer"}
-            handlerAddParent={handleAdd}
-            handlerChangeParent={handleChange}
-            handlerDeleteParent={handleDelete}
-            property={"ref_tim_audit_signer"}
-            optionValue={optionSigners}
-            validationErrors={validationErrors}
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const Footer = ({ user, data, status, handleSubmit, handleChangeText }) => {
-  console.log("data => ", data);
-
-  console.log("user ", user);
-  let findApproval;
-
-  if (data?.statusApprover) {
-    findApproval = user.pn === data?.statusApprover?.pn;
-  }
-  console.log("findApprover ", findApproval);
-  if (status === "On Progress") {
-    return (
-      <div className="flex justify-end gap-3">
-        <div className="rounded w-32 bg-atlasian-red">
-          <ButtonField
-            text={"Reset Flow"}
-            name="reset"
-            handler={handleSubmit}
-          />
-        </div>
-        <div className="rounded w-32 bg-atlasian-blue-light">
-          <ButtonField
-            text={"Send Approval"}
-            name="sendApproval"
-            handler={handleSubmit}
-          />
-        </div>
-      </div>
-    );
-  } else if (status === "On Approver" && findApproval) {
-    return (
-      <div className="flex gap-3">
-        <div className="w-full">
-          <TextInput
-            placeholder={"Masukkan alasan"}
-            value={data.note}
-            icon={
-              <ButtonIcon
-                handleClick={() => handleChangeText("note", "")}
-                icon={<IconClose />}
-              />
-            }
-            onChange={(e) => handleChangeText("note", e.target.value)}
-          />
-        </div>
-        <div className="rounded w-32 bg-atlasian-red">
-          <ButtonField text={"Reject"} name="reject" handler={handleSubmit} />
-        </div>
-        <div className="rounded w-32 bg-atlasian-green">
-          <ButtonField text={"Approve"} name="approve" handler={handleSubmit} />
-        </div>
-      </div>
-    );
-  }
-};
+import ModalHeader from "./ModalHeader";
+import ModalFooter from "./ModalFooter";
 
 const ModalWorkflow = ({ showModal, setShowModal }) => {
   const { id } = useRouter().query;
@@ -187,6 +33,12 @@ const ModalWorkflow = ({ showModal, setShowModal }) => {
   const { user } = useUser();
   const { workflow, workflowMutate } = useWorkflow("log", { id });
   const workflowDetail = useWorkflow("detail", { id });
+
+  let workflowResponse = workflowDetail?.workflow?.data,
+    findApproval;
+  if (workflowResponse?.status_approver) {
+    findApproval = user?.data?.pn == workflowResponse?.status_approver?.pn;
+  }
 
   useEffect(() => {
     if (workflow?.data?.log?.length) {
@@ -221,6 +73,7 @@ const ModalWorkflow = ({ showModal, setShowModal }) => {
       mappingMaker = `${maker?.pn} - ${maker?.nama}`;
     }
     newWorkflowData.ref_tim_audit_maker = mappingMaker;
+    newWorkflowData.maker = maker?.pn;
 
     if (approvers?.length) {
       const mappingApprovers = _.map(approvers, ({ pn, nama, is_signed }) => ({
@@ -251,6 +104,7 @@ const ModalWorkflow = ({ showModal, setShowModal }) => {
       let type, data;
       switch (e.target.offsetParent.name) {
         case "reset":
+          resetWorkflowData;
           type = "reset";
           data = { pat_id: id };
           break;
@@ -275,10 +129,21 @@ const ModalWorkflow = ({ showModal, setShowModal }) => {
           };
           break;
       }
+
+      if (type === "reset") {
+        const confirm = await confirmationSwal(
+          "Terkait dengan workflow ini, apakah Anda yakin ingin melakukan pengaturan ulang?"
+        );
+
+        if (!confirm.value) {
+          return;
+        }
+      }
       await usePostData(
         `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/workflow/${type}`,
         data
       );
+
       workflowMutate();
       workflowDetail.workflowMutate();
     }
@@ -303,14 +168,15 @@ const ModalWorkflow = ({ showModal, setShowModal }) => {
       showModal={showModal}
       onClickOutside={() => setShowModal(false)}
       header={
-        <Header
+        <ModalHeader
           data={workflowData}
+          status={workflowData?.statusPat}
           dispatch={dispatch}
           validationErrors={validationErrors}
         />
       }
       footer={
-        <Footer
+        <ModalFooter
           user={user?.data}
           data={workflowData}
           handleSubmit={handleSubmit}
@@ -318,7 +184,19 @@ const ModalWorkflow = ({ showModal, setShowModal }) => {
           handleChangeText={handleChangeText}
         />
       }
-      widthFullFooter={workflowData?.statusPat === "On Approver" && true}
+      widthFullFooter={
+        workflowData?.statusPat === "On Approver" && findApproval && true
+      }
+      withoutFooter={
+        workflowData?.statusPat === "On Progress"
+          ? false
+          : workflowData?.statusPat === "On Approver" && findApproval
+          ? false
+          : workflowData?.maker === user?.data?.pn &&
+            workflowData?.statusPat === "On Approver"
+          ? false
+          : true
+      }
     >
       <div className="w-[61rem]">
         <div className="px-3">

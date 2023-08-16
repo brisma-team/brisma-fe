@@ -11,6 +11,7 @@ const TextInput = ({
   isDisabled,
   handleClick,
   onKeyDown,
+  isNumber,
 }) => {
   return (
     <Textfield
@@ -24,6 +25,7 @@ const TextInput = ({
       className={className}
       style={style}
       isDisabled={isDisabled}
+      type={isNumber ? "number" : "text"}
     />
   );
 };

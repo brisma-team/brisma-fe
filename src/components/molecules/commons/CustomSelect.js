@@ -9,6 +9,7 @@ const CustomSelect = ({
   fieldsProps,
   customIcon,
   optionValue,
+  isDisabled,
 }) => {
   const DropdownIndicator = (props) => {
     return (
@@ -26,6 +27,7 @@ const CustomSelect = ({
       isSearchable={isSearchable}
       value={selectedValue}
       components={customIcon && { DropdownIndicator }}
+      isDisabled={isDisabled}
     />
   );
 };

@@ -1,12 +1,12 @@
+import React, { useEffect, useState } from "react";
 import { Modal, Card, TextInput, Select } from "@/components/atoms";
 import { IconArrowLeft, IconArrowRight } from "@/components/icons";
 import Button from "@atlaskit/button";
 import Search from "@atlaskit/icon/glyph/editor/search";
-import { useEffect, useState } from "react";
 
 const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
   const [menu, setMenu] = useState(0);
-  const [tag, setTag] = useState("P.A.T");
+  const [tag, setTag] = useState("");
   const [source, setSource] = useState(1);
   const [arr, setArr] = useState(0);
   const [url, setUrl] = useState("");
@@ -49,7 +49,11 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
   ];
 
   return (
-    <Modal showModal={showModal} onClickOutside={() => setShowModal(false)}>
+    <Modal
+      showModal={showModal}
+      positionCenter={true}
+      onClickOutside={() => setShowModal(false)}
+    >
       {menu == 0 && (
         <div className="w-[48rem] h-modal p-5">
           <h3 className="p-3 font-semibold text-xl">
@@ -158,7 +162,10 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                   </div>
                   <div className="p-3 font-semibold text-sm">Fase Addendum</div>
                   <div className="p-1 pl-10 col-span-3">
-                    <TextInput placeholder="Masukkan Fase Addendum" />
+                    <TextInput
+                      isNumber={true}
+                      placeholder="Masukkan Fase Addendum"
+                    />
                   </div>
                   <div className="p-3"></div>
                   <div className="flex gap-2 p-1 pl-10 col-span-3 py-3">

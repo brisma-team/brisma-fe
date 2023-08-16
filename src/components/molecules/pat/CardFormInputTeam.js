@@ -30,6 +30,7 @@ const CardFormInputTeam = ({
   optionValue,
   iconBeside,
   isDisabled,
+  withoutButtonAdd,
 }) => {
   let textColor, buttonText;
   switch (type) {
@@ -350,7 +351,7 @@ const CardFormInputTeam = ({
               )}
             </>
           )}
-          {type !== "Maker" && type !== "Tipe Tim" && (
+          {type !== "Maker" && type !== "Tipe Tim" && !withoutButtonAdd && (
             <div className="flex w-full items-center gap-2">
               <div className="bg-none w-40 mt-3">
                 <ButtonField
