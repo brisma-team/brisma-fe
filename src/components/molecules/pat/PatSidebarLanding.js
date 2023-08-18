@@ -26,7 +26,7 @@ const Content = ({ title, value }) => {
 
 const PatSidebarLanding = ({ data, content }) => {
   return (
-    <div className="fixed h-screen w-64 pt-16 shadow">
+    <div className="fixed h-screen w-64 pt-14 shadow z-10">
       <SideNavigation label="project" testId="side-navigation">
         <NavigationHeader>
           <ProfileDetail />

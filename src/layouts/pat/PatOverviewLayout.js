@@ -4,8 +4,7 @@ import { Loader } from "@/components/atoms";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { PatSidebarOverview } from "@/components/molecules/pat";
-import { NavbarField } from "@/components/molecules/commons";
-import CardApprovalList from "@/components/molecules/pat/CardApprovalList";
+import { NavbarField, CardApprovalList } from "@/components/molecules/commons";
 
 const PatOverviewLayout = ({ children, withContent = true, data }) => {
   const router = useRouter();
