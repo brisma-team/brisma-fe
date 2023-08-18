@@ -68,7 +68,7 @@ const index = () => {
   const [content, setContent] = useState(null);
 
   const [type, setType] = useState("ltb");
-  const { documentPAT } = useDocument(type, { id });
+  const { documentPAT, documentPATMutate } = useDocument(type, { id });
 
   const handleScrollHitEndpoint = () => {
     const parentContainer = document.querySelector(".parent");
@@ -161,7 +161,7 @@ const index = () => {
         },
       ]);
     }
-  }, [documentPAT]);
+  }, [documentPAT, documentPATMutate]);
 
   useEffect(() => {
     const mappingChecker = workflow?.data?.approvers?.map((v) => {
@@ -209,6 +209,7 @@ const index = () => {
                           title={v.name}
                           handleClick={() => setActiveIndex(i)}
                           activeIndex={currentPosition}
+                          count={100}
                         />
                       );
                     })}
@@ -220,6 +221,14 @@ const index = () => {
           <div>
             <Card>
               <div className="overflow-y-scroll my-2 parent max-h-[40rem]">
+                <CardComment
+                  callbackRef={ref}
+                  show={openCardComment}
+                  handleClickOutside={() => {
+                    setOpenCardComment(false);
+                  }}
+                  activeIndexBab={activeIndexComment + 1}
+                />
                 {doc.map((v, i) => {
                   return (
                     <div
@@ -230,22 +239,13 @@ const index = () => {
                       tabIndex={i === activeIndex ? 0 : -1}
                       ref={i === activeIndex ? activeDivRef : null}
                     >
-                      {doc?.find((v) => v?.idx === activeIndexComment) &&
-                        openCardComment && (
-                          <CardComment
-                            callbackRef={ref}
-                            handleClickOutside={() => setOpenCardComment(false)}
-                            data={v.comment}
-                          />
-                        )}
                       {v.content && (
                         <div className="px-4 h-full w-full relative page-content-a4">
                           <div className="flex justify-between">
                             <div className="font-bold text-xl">{v.key}</div>
                             <div className="flex items-center" ref={ref}>
                               <DivButton
-                                href={"#"}
-                                onClick={() => handleClickComment(i)}
+                                handleClick={() => handleClickComment(i)}
                               >
                                 <Image src={ImageChat} alt="chat" />
                               </DivButton>

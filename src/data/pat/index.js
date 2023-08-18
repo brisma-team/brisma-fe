@@ -11,6 +11,7 @@ import useAuditTarget from "./useAuditTarget";
 import useDocument from "./useDocument";
 import useWorkflow from "./useWorkflow";
 import useSumberInformasiPAT from "./useSumberInformasiPAT";
+import useCommentPAT from "./useCommentPAT";
 
 export {
   useApprovalPat,
@@ -26,4 +27,5 @@ export {
   useDocument,
   useWorkflow,
   useSumberInformasiPAT,
+  useCommentPAT,
 };

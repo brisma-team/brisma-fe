@@ -13,6 +13,16 @@ const initialState = {
     ref_tim_audit_signer: [],
     note: "",
   },
+  commentData: {
+    ref_bab_pat_kode: "",
+    deskripsi: "",
+    parent_comment_id: "",
+  },
+  commentDefaultData: {
+    ref_bab_pat_kode: "",
+    deskripsi: "",
+    parent_comment_id: "",
+  },
   validationErrorsWorkflow: {},
 };
 
@@ -26,19 +36,27 @@ export const documentSlice = createSlice({
     setvalidationErrorsWorkflow: (state, action) => {
       state.validationErrorsWorkflow = action.payload;
     },
+    setCommentData: (state, action) => {
+      state.commentData = action.payload;
+    },
     resetWorkflowData: (state) => {
       state.workflowData = { ...state.workflowDefaultData };
     },
     resetvalidationErrorsWorkflow: (state) => {
       state.validationErrorsWorkflow = {};
     },
+    resetCommentData: (state) => {
+      state.commentData = { ...state.commentDefaultData };
+    },
   },
 });
 
 export const {
   setWorkflowData,
+  setCommentData,
   setvalidationErrorsWorkflow,
   resetWorkflowData,
+  resetCommentData,
   resetvalidationErrorsWorkflow,
 } = documentSlice.actions;
 

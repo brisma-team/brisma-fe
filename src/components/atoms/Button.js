@@ -10,6 +10,7 @@ const ButtonField = ({
   disabled,
   type,
   name,
+  style,
 }) => {
   let txtColor;
   switch (textColor) {
@@ -44,7 +45,7 @@ const ButtonField = ({
       <p
         className={`${
           textColor ? txtColor : `text-white`
-        } flex items-center justify-center`}
+        } flex items-center justify-center ${style && style}`}
       >
         {text && text}
       </p>

@@ -1,28 +1,34 @@
 import { Card } from "@/components/atoms";
 const CardApprovalList = ({ data }) => {
   return (
-    <div>
+    <div className="px-5">
       <div className="w-full">
         <Card>
-          <p className="text-3xl font-semibold">{data && data.newApproval}</p>
+          <p className="text-atlasian-purple text-3xl font-semibold">
+            {data && data.newApproval}
+          </p>
           <p className="text-atlasian-purple text-base font-semibold -mt-1">
             New
           </p>
         </Card>
       </div>
-      <div className=" w-full my-3">
+      <div className="w-full my-3 ">
         <Card>
-          <p className="text-3xl font-semibold">{data && data.totalReject}</p>
+          <p className="text-atlasian-green text-3xl font-semibold">
+            {data && data.totalApprove}
+          </p>
           <p className="text-atlasian-green text-base font-semibold -mt-1">
-            Reject
+            Approve
           </p>
         </Card>
       </div>
-      <div className="w-full my-3">
+      <div className=" w-full my-3">
         <Card>
-          <p className="text-3xl font-semibold">{data && data.totalApprove}</p>
+          <p className="text-atlasian-red text-3xl font-semibold">
+            {data && data.totalReject}
+          </p>
           <p className="text-atlasian-red text-base font-semibold -mt-1">
-            Approve
+            Reject
           </p>
         </Card>
       </div>

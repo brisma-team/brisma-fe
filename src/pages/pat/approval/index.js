@@ -3,12 +3,12 @@ import { PatOverviewLayout } from "@/layouts/pat";
 import useApproval from "@/data/pat/approval/useApproval";
 import { Breadcrumbs } from "@/components/atoms";
 import {
-  CardApprovalList,
   CardApprovalQueue,
   CardApprovalHistory,
 } from "@/components/molecules/pat";
 import Button from "@atlaskit/button";
 import useApprovalHistory from "@/data/pat/approval/useApprovalHistory";
+import { CardApprovalList } from "@/components/molecules/commons";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
