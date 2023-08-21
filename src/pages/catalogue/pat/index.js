@@ -2,21 +2,34 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/layouts";
 import { Breadcrumbs, Card, TableField } from "@/components/atoms";
-import { IconArrowRight, IconClose, IconPlus } from "@/components/icons";
+import {
+  IconArrowRight,
+  // IconClose, IconPlus
+} from "@/components/icons";
 import Button from "@atlaskit/button";
-import Textfield from "@atlaskit/textfield";
+// import Textfield from "@atlaskit/textfield";
 import useCatalogPAT from "@/data/catalog/useCatalogPAT";
 import EditorPanelIcon from "@atlaskit/icon/glyph/editor/panel";
+import ModalInfo from "@/components/molecules/catalog/ModalInfo";
 
 const index = () => {
-  const [showFilter, setShowFilter] = useState(false);
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "P.A.T", path: "/catalogue/pat" },
   ];
-  const [catPat, setCatPat] = useState([]);
+
   const { data } = useCatalogPAT();
+
+  const [showModal, setShowModal] = useState(false);
+  // const [showFilter, setShowFilter] = useState(false);
+  const [catPat, setCatPat] = useState([]);
+  const [info, setInfo] = useState({});
+
+  const handleModalInfo = async (dump) => {
+    setShowModal(true);
+    setInfo(dump);
+  };
   useEffect(() => {
     if (data != undefined) {
       const mappingCatPat = data?.data.map((v, key) => {
@@ -34,7 +47,7 @@ const index = () => {
                   <Button
                     appearance="default"
                     shouldFitContainer
-                    onClick={() => alert("info")}
+                    onClick={() => handleModalInfo(d)}
                     iconBefore={
                       <EditorPanelIcon primaryColor="#0051CB" size="large" />
                     }
@@ -63,6 +76,7 @@ const index = () => {
       setCatPat(mappingCatPat);
     }
   }, [data]);
+
   return (
     <MainLayout>
       <div className="px-5">
@@ -73,7 +87,7 @@ const index = () => {
           <div className="text-3xl font-bold">Catalogue P.A.T</div>
         </div>
         {/* Start Filter */}
-        <div className="my-3 w-40">
+        {/* <div className="my-3 w-40">
           <Button
             appearance="primary"
             iconBefore={IconPlus}
@@ -136,7 +150,7 @@ const index = () => {
               </div>
             </Card>
           </div>
-        )}
+        )} */}
         {/* End Filter */}
 
         <div className="mt-5 mr-40">
@@ -150,21 +164,11 @@ const index = () => {
                     "Nama Project",
                     "Kantor Audit",
                     "Tahun Audit",
-                    // "Periode Audit",
                     "Tim Audit",
                     "Addendum Ke",
                     "Aksi",
                   ]}
-                  columnWidths={[
-                    "5%",
-                    "23%",
-                    "20%",
-                    "15%",
-                    // "15%",
-                    "18%",
-                    "12%",
-                    "7%",
-                  ]}
+                  columnWidths={["5%", "23%", "20%", "15%", "18%", "12%", "7%"]}
                   items={catPat}
                 />
               </div>
@@ -175,6 +179,13 @@ const index = () => {
           </Card>
         </div>
       </div>
+      {showModal && (
+        <ModalInfo
+          showModal={showModal}
+          setShowModal={setShowModal}
+          data={info}
+        />
+      )}
     </MainLayout>
   );
 };

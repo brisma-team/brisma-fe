@@ -1,37 +1,6 @@
 import Link from "next/link";
 import React from "react";
 
-/* 
-    Format for CardDashboard using object
-
-    const example = {
-        title: "Example Title",
-        content: [
-            {
-                subtitle: "Header title",
-                subcontent: [
-                { title: "Content 1 title", description: "Content 1 description.", url: "/content1" },
-                { title: "Content 2 title", description: "Content 2 description.", url: "/content2" },
-                ],
-            },
-            {
-                subtitle: "Header title",
-                subcontent: [
-                { title: "Content 1 title", description: "Content 1 description.", url: "/content1" },
-                { title: "Content 2 title", description: "Content 2 description.", url: "/content2" },
-                ],
-            },
-            {
-                subtitle: "Header title",
-                subcontent: [
-                { title: "Content 1 title", description: "Content 1 description.", url: "/content1" },
-                { title: "Content 2 title", description: "Content 2 description.", url: "/content2" },
-                ],
-            },
-        ],
-    }
-*/
-
 const CardDashboard = ({ data }) => {
   return (
     <div className="p-5">

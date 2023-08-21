@@ -29,7 +29,7 @@ const CardFilterLanding = () => {
     setOmniparam("");
   };
   return (
-    <div className="grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-4 mb-3">
+    <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-2 mb-3">
       <div className="flex gap-4">
         <div className="w-1/3">
           <Select

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Card, TextInput, Select } from "@/components/atoms";
+import { Modal, Card, TextInput } from "@/components/atoms";
 import { IconArrowLeft, IconArrowRight } from "@/components/icons";
 import Button from "@atlaskit/button";
 import Search from "@atlaskit/icon/glyph/editor/search";
@@ -10,6 +10,23 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
   const [source, setSource] = useState(1);
   const [arr, setArr] = useState(0);
   const [url, setUrl] = useState("");
+
+  const ar = [
+    [
+      "Data 2012",
+      "Data 2013",
+      "Data 2014",
+      "Data 2015",
+      "Data 2016",
+      "Data 2017",
+      "Data 2018",
+      "Data 2019",
+      "Data 2020",
+      "Data 2021",
+      "Data 2022",
+    ],
+    ["Data 2022", "Data 2023"],
+  ];
   useEffect(() => {
     switch (sourceType) {
       case 1:
@@ -31,23 +48,6 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
     }
   }, [sourceType]);
 
-  const ar = [
-    [
-      "Data 2012",
-      "Data 2013",
-      "Data 2014",
-      "Data 2015",
-      "Data 2016",
-      "Data 2017",
-      "Data 2018",
-      "Data 2019",
-      "Data 2020",
-      "Data 2021",
-      "Data 2022",
-    ],
-    ["Data 2022", "Data 2023"],
-  ];
-
   return (
     <Modal
       showModal={showModal}
@@ -57,7 +57,7 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
       {menu == 0 && (
         <div className="w-[48rem] h-modal p-5">
           <h3 className="p-3 font-semibold text-xl">
-            {`Pustaka Dokumen ` + tag}
+            {`Pustaka Dokumen ${tag}`}
           </h3>
           <div className="grid grid-cols-2 gap-2">
             <div className="p-3">
@@ -133,9 +133,10 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                 <div className="grid grid-cols-4">
                   <div className="p-3 font-semibold text-sm">Nama Project</div>
                   <div className="p-1 pl-10 col-span-3">
-                    <TextInput placeholder="Masukkan nama" />
+                    <TextInput placeholder="Masukkan Nama Project" />
                   </div>
-                  <div className="p-3 font-semibold text-sm">Periode Audit</div>
+                  {/* Additional Filter (Periode Audit, Jenis Audit) */}
+                  {/* <div className="p-3 font-semibold text-sm">Periode Audit</div>
                   <div className="p-1 pl-10 col-span-3">
                     <Select
                       optionValue={[
@@ -159,7 +160,7 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                       placeholder="Pilih Jenis"
                       isSearchable={false}
                     />
-                  </div>
+                  </div> */}
                   <div className="p-3 font-semibold text-sm">Fase Addendum</div>
                   <div className="p-1 pl-10 col-span-3">
                     <TextInput
