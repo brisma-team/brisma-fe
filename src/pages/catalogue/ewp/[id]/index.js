@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { MainLayout } from "@/layouts";
 import { Breadcrumbs, Card, Pagination } from "@/components/atoms";
 import Button from "@atlaskit/button";
@@ -8701,9 +8701,9 @@ const index = ({ data = ewpDetailData }) => {
     { name: id, path: "/catalogue/ewp/" + id },
     { name: "Daftar Dokumen", path: "/catalogue/ewp/" + id },
   ];
-  const selectedData = useMemo(() => {
-    return data.filter((items) => items.ewp_id == id)[0];
-  }, []);
+  // const selectedData = useMemo(() => {
+  //   return data.filter((items) => items.ewp_id == id)[0];
+  // }, [data]);
   useEffect(() => {
     const mappingCatEwp = data
       ?.filter((items) => items.ewp_id === id)[0]
@@ -8750,7 +8750,7 @@ const index = ({ data = ewpDetailData }) => {
           </div>
         </div>
         {/* End Modal */}
-        <div className="mt-5 mr-40">
+        {/* <div className="mt-5 mr-40">
           <Card>
             <div className="w-full p-5">
               <div className="flex flex-row justify-between mb-6">
@@ -8776,7 +8776,7 @@ const index = ({ data = ewpDetailData }) => {
               </div>
             </div>
           </Card>
-        </div>
+        </div> */}
 
         <div className="mt-5 mr-40">
           <Card>
