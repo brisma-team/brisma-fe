@@ -24,6 +24,8 @@ import ErrorValidation from "./ErrorValidation";
 import DivButton from "./DivButton";
 import TableField from "./Table";
 import ButtonIcon from "./ButtonIcon";
+import Spinner from "@atlaskit/spinner";
+import RadioField from "./Radio";
 
 export {
   AvatarDefaultExample,
@@ -52,4 +54,6 @@ export {
   DivButton,
   TableField,
   ButtonIcon,
+  Spinner,
+  RadioField,
 };

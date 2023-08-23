@@ -1,7 +1,7 @@
 import { ButtonField, ButtonIcon, TextInput } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
 
-const ModalFooter = ({
+const ModalFooterWorkflowPAT = ({
   user,
   data,
   status,
@@ -66,4 +66,4 @@ const ModalFooter = ({
   }
 };
 
-export default ModalFooter;
+export default ModalFooterWorkflowPAT;

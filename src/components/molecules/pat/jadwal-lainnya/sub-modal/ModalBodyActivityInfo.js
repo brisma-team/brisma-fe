@@ -194,7 +194,8 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               errors={validationErrors["ref_metode.kode"]}
-              widthFull={true}
+              widthLabel={"w-2/5"}
+              widthForm={"w-3/5"}
             />
             <FormWithLabel
               label={"Tipe Kegiatan"}
@@ -213,7 +214,8 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               errors={validationErrors["ref_tipe.kode"]}
-              widthFull={true}
+              widthLabel={"w-2/5"}
+              widthForm={"w-3/5"}
             />
             <FormWithLabel
               label={"Jenis Kegiatan"}
@@ -232,7 +234,8 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               errors={validationErrors["ref_jenis.kode"]}
-              widthFull={true}
+              widthLabel={"w-2/5"}
+              widthForm={"w-3/5"}
             />
             <FormWithLabel
               label={"Tema Kegiatan"}
@@ -250,7 +253,8 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
                   isDisabled={isDisabled}
                 />
               }
-              widthFull={true}
+              widthLabel={"w-2/5"}
+              widthForm={"w-3/5"}
             />
             <FormWithLabel
               label={"Periode Kegiatan"}
@@ -269,7 +273,8 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
                   isDisabled={isDisabled}
                 />
               }
-              widthFull={true}
+              widthLabel={"w-2/5"}
+              widthForm={"w-3/5"}
               errors={validationErrors["pelaksanaan_start"]}
             />
             <FormWithLabel
@@ -284,7 +289,8 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               labelPositionTop={true}
-              widthFull={true}
+              widthLabel={"w-2/5"}
+              widthForm={"w-3/5"}
             />
           </CardBodyContent>
         </div>

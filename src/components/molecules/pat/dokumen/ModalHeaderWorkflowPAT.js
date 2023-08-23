@@ -6,7 +6,12 @@ import CardFormInputTeam from "../CardFormInputTeam";
 import Image from "next/image";
 import { ImageCheck } from "@/helpers/imagesUrl";
 
-const ModalHeader = ({ data, status, dispatch, validationErrors }) => {
+const ModalHeaderWorkflowPAT = ({
+  data,
+  status,
+  dispatch,
+  validationErrors,
+}) => {
   const [optionSigners, setOptionSigners] = useState([]);
 
   useEffect(() => {
@@ -106,4 +111,4 @@ const ModalHeader = ({ data, status, dispatch, validationErrors }) => {
   );
 };
 
-export default ModalHeader;
+export default ModalHeaderWorkflowPAT;

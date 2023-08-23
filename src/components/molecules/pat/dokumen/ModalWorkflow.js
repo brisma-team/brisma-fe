@@ -18,8 +18,8 @@ import {
 } from "@/helpers";
 import _ from "lodash";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
-import ModalHeader from "./ModalHeader";
-import ModalFooter from "./ModalFooter";
+import ModalHeaderWorkflowPAT from "./ModalHeaderWorkflowPAT";
+import ModalFooterWorkflowPAT from "./ModalFooterWorkflowPAT";
 
 const ModalWorkflow = ({ showModal, setShowModal }) => {
   const { id } = useRouter().query;
@@ -168,7 +168,7 @@ const ModalWorkflow = ({ showModal, setShowModal }) => {
       showModal={showModal}
       onClickOutside={() => setShowModal(false)}
       header={
-        <ModalHeader
+        <ModalHeaderWorkflowPAT
           data={workflowData}
           status={workflowData?.statusPat}
           dispatch={dispatch}
@@ -176,7 +176,7 @@ const ModalWorkflow = ({ showModal, setShowModal }) => {
         />
       }
       footer={
-        <ModalFooter
+        <ModalFooterWorkflowPAT
           user={user?.data}
           data={workflowData}
           handleSubmit={handleSubmit}

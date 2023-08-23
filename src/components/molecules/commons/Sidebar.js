@@ -35,15 +35,6 @@ const Sidebar = ({ handleSidebarItemClick }) => {
           testId="nestable-navigation-content"
         >
           <Section>
-            {/* <NestingItem
-              id="4"
-              iconBefore={<DropboxIcon label="" />}
-              title="Dropbox"
-              testId="dropbox-nesting-item"
-            >
-              <span />
-            </NestingItem> */}
-
             <div className="items-center justify-center p-8">
               <h3 className="px-2 mb-2">Menu</h3>
               <ButtonItem
@@ -54,9 +45,6 @@ const Sidebar = ({ handleSidebarItemClick }) => {
               >
                 <p className="text-base">Dashboard</p>
               </ButtonItem>
-              {/* <ButtonItem iconBefore={<MediaServicesDocumentIcon label="" />}>
-                P.A.T
-              </ButtonItem> */}
               <LinkItem
                 href="/pat"
                 iconBefore={<IconMediaServicesDocument label="" />}
@@ -64,7 +52,7 @@ const Sidebar = ({ handleSidebarItemClick }) => {
                 <p className="text-base">P.A.T</p>
               </LinkItem>
               <LinkItem
-                href="#"
+                href="/ewp"
                 iconBefore={<IconMediaServicesDocument label="" />}
               >
                 <p className="text-base">E.W.P</p>
@@ -80,7 +68,7 @@ const Sidebar = ({ handleSidebarItemClick }) => {
               </LinkItem>
               <ButtonItem
                 iconBefore={<IconMediaServicesSpreadsheet label="" />}
-                href="/users"
+                href="/catalogue"
                 isSelected={selectedItem === "/catalogue"}
                 onClick={(e) => handleItemClick(e, "/catalogue")}
               >

@@ -30,13 +30,19 @@ const Modal = ({
     showModal && (
       <>
         <div
-          className={`${
-            !positionCenter ? "fixed" : ""
-          } inset-0 z-20 flex justify-center items-start py-8`}
+          className={`$ fixed inset-0 z-20 ${
+            !positionCenter
+              ? "flex justify-center items-start py-8"
+              : "overflow-y-auto"
+          }`}
         >
           <div className="absolute inset-0 w-full h-full bg-black opacity-80"></div>
           <motion.div
-            className="flex flex-col min-h-full max-h-[55rem] overflow-y-scroll"
+            className={`flex flex-col ${
+              !positionCenter
+                ? "min-h-full max-h-[55rem] overflow-y-scroll"
+                : "justify-center items-center min-h-screen"
+            }`}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{

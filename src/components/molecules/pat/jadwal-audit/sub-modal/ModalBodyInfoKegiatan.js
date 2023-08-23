@@ -197,7 +197,8 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               errors={validationErrors["ref_metode.kode"]}
-              widthFull={true}
+              widthLabel={"w-2/5"}
+              widthForm={"w-3/5"}
             />
             <FormWithLabel
               label={"Tipe Audit"}
@@ -216,7 +217,8 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               errors={validationErrors["ref_tipe.kode"]}
-              widthFull={true}
+              widthLabel={"w-2/5"}
+              widthForm={"w-3/5"}
             />
             <FormWithLabel
               label={"Jenis Audit"}
@@ -235,7 +237,8 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               errors={validationErrors["ref_jenis.kode"]}
-              widthFull={true}
+              widthLabel={"w-2/5"}
+              widthForm={"w-3/5"}
             />
             <FormWithLabel
               label={"Tema Audit"}
@@ -253,7 +256,8 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                   isDisabled={isDisabled}
                 />
               }
-              widthFull={true}
+              widthLabel={"w-2/5"}
+              widthForm={"w-3/5"}
             />
             <FormWithLabel
               label={"Deskripsi Kegiatan"}
@@ -268,7 +272,8 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               labelPositionTop={true}
-              widthFull={true}
+              widthLabel={"w-2/5"}
+              widthForm={"w-3/5"}
             />
             <FormWithLabel
               label={"Periode Kegiatan"}
@@ -287,7 +292,8 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                   isDisabled={isDisabled}
                 />
               }
-              widthFull={true}
+              widthLabel={"w-2/5"}
+              widthForm={"w-3/5"}
               errors={validationErrors["pelaksanaan_start"]}
             />
             <FormWithLabel
@@ -300,7 +306,8 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                 />
               }
               errors={validationErrors["pelaksanaan_end"]}
-              widthFull={true}
+              widthLabel={"w-2/5"}
+              widthForm={"w-3/5"}
             />
           </CardBodyContent>
         </div>

@@ -1,9 +1,30 @@
-const { ProgressTracker } = require("@atlaskit/progress-tracker");
+import { ProgressTracker } from "@atlaskit/progress-tracker";
+import { confirmationSwal } from "@/helpers";
+import { DivButton } from "@/components/atoms";
+import Image from "next/image";
+import { ImageClose } from "@/helpers/imagesUrl";
 
-const ModalHeader = ({ headerText, progressItems }) => {
+const ModalHeader = ({ headerText, progressItems, setShowModal }) => {
+  const confirmCloseModal = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
+    setShowModal(false);
+  };
+
   return (
     <div className="text-center" style={{ width: "31rem" }}>
-      <p className="text-3xl font-semibold">{headerText}</p>
+      <div className="w-full flex justify-end -mt-1">
+        <DivButton handleClick={confirmCloseModal}>
+          <Image src={ImageClose} alt="chat" />
+        </DivButton>
+      </div>
+      <div className="text-3xl font-semibold">{headerText}</div>
       <div className="w-full -mt-4">
         <ProgressTracker items={progressItems} />
       </div>

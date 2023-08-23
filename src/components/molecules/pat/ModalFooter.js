@@ -1,5 +1,4 @@
-const { ButtonField } = require("@/components/atoms");
-
+import { ButtonField } from "@/components/atoms";
 const ModalFooter = ({
   currentModalStage,
   handleSubmit,
