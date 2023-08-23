@@ -131,7 +131,8 @@ const SubModalBiayaSelamaKegiatan = ({ typeModal }) => {
                 handleChange={(e) => handleChangeActivityCategory(e)}
               />
             }
-            widthFull={true}
+            widthLabel={"w-2/5"}
+            widthForm={"w-3/5"}
           />
           {optionSubActivityCategory?.ref_sub_kategori_anggarans?.length
             ? optionSubActivityCategory?.ref_sub_kategori_anggarans?.map(
@@ -153,7 +154,8 @@ const SubModalBiayaSelamaKegiatan = ({ typeModal }) => {
                             value={v.amount}
                           />
                         }
-                        widthFull={true}
+                        widthLabel={"w-2/5"}
+                        widthForm={"w-3/5"}
                       />
                     </div>
                   );

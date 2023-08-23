@@ -4,7 +4,7 @@ import { DivButton } from "@/components/atoms";
 import Image from "next/image";
 import { ImageClose } from "@/helpers/imagesUrl";
 
-const ModalHeader = ({ headerText, progressItems, setShowModal }) => {
+const ModalHeader = ({ headerText, progressItems, handleCloseModal }) => {
   const confirmCloseModal = async () => {
     const confirm = await confirmationSwal(
       "Apakah Anda ingin menutup modal ini?"
@@ -14,7 +14,7 @@ const ModalHeader = ({ headerText, progressItems, setShowModal }) => {
       return;
     }
 
-    setShowModal(false);
+    handleCloseModal();
   };
 
   return (

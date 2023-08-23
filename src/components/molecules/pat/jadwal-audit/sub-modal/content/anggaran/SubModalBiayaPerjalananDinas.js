@@ -126,14 +126,16 @@ const SubModalBiayaPerjalananDinas = ({ typeModal }) => {
                 }}
               />
             }
-            widthFull={true}
+            widthLabel={"w-2/5"}
+            widthForm={"w-3/5"}
           />
           <FormWithLabel
             label={"Posisi Jabatan"}
             form={
               <TextInput isDisabled={true} value={budget.pn_auditor.jabatan} />
             }
-            widthFull={true}
+            widthLabel={"w-2/5"}
+            widthForm={"w-3/5"}
           />
           <FormWithLabel
             label={"Tiket PP"}
@@ -145,7 +147,8 @@ const SubModalBiayaPerjalananDinas = ({ typeModal }) => {
                 }
               />
             }
-            widthFull={true}
+            widthLabel={"w-2/5"}
+            widthForm={"w-3/5"}
           />
           <FormWithLabel
             label={"Transport Lokal"}
@@ -160,7 +163,8 @@ const SubModalBiayaPerjalananDinas = ({ typeModal }) => {
                 }
               />
             }
-            widthFull={true}
+            widthLabel={"w-2/5"}
+            widthForm={"w-3/5"}
           />
           <FormWithLabel
             label={"Uang Harian"}
@@ -175,7 +179,8 @@ const SubModalBiayaPerjalananDinas = ({ typeModal }) => {
                 }
               />
             }
-            widthFull={true}
+            widthLabel={"w-2/5"}
+            widthForm={"w-3/5"}
           />
           <FormWithLabel
             label={"Biaya Akomodasi"}
@@ -187,7 +192,8 @@ const SubModalBiayaPerjalananDinas = ({ typeModal }) => {
                 }
               />
             }
-            widthFull={true}
+            widthLabel={"w-2/5"}
+            widthForm={"w-3/5"}
           />
         </CardBodyContent>
       </div>

@@ -1,12 +1,12 @@
 import useUser from "@/data/useUser";
-import { Loader } from "@/components/atoms";
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { PatSidebarOverview } from "@/components/molecules/pat";
-import { NavbarField, CardApprovalList } from "@/components/molecules/commons";
+import { NavbarField } from "@/components/molecules/commons";
+import { Loader } from "@/components/atoms";
+import { PatSidebarLanding } from "@/components/molecules/pat";
 
-const PatOverviewLayout = ({ children, withContent = true, data }) => {
+const PatOverviewLayout = ({ data, content, children }) => {
   const router = useRouter();
 
   const { user, userError } = useUser();
@@ -37,20 +37,9 @@ const PatOverviewLayout = ({ children, withContent = true, data }) => {
   return (
     <div>
       <NavbarField />
-      <PatSidebarOverview>
-        {withContent && (
-          <div>
-            <div className="text-center text-base font-bold mt-4">
-              Approval Information
-            </div>
-            <div className="px-10 mt-5">
-              <CardApprovalList data={data} />
-            </div>
-          </div>
-        )}
-      </PatSidebarOverview>
+      <PatSidebarLanding data={data} content={content} />
       <div className="flex">
-        <div className="flex-1 mt-16 " style={{ marginLeft: "260px" }}>
+        <div className="flex-1 mt-16" style={{ marginLeft: "260px" }}>
           <div className="main">
             <div className="px-5 py-4 w-full">{children}</div>
           </div>

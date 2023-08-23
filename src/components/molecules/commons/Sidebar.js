@@ -64,7 +64,7 @@ const Sidebar = ({ handleSidebarItemClick }) => {
                 <p className="text-base">P.A.T</p>
               </LinkItem>
               <LinkItem
-                href="#"
+                href="/ewp"
                 iconBefore={<IconMediaServicesDocument label="" />}
               >
                 <p className="text-base">E.W.P</p>

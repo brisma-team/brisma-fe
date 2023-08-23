@@ -1,3 +1,4 @@
+// PAT
 import userSKAIReducer from "./slices/userSKAISlice";
 import jadwalAuditReducer from "./slices/jadwalAuditSlice";
 import projectOverviewReducer from "./slices/pat/projectOverviewSlice";
@@ -7,6 +8,9 @@ import auditScheduleReducer from "./slices/pat/auditScheduleSlice";
 import activityScheduleReducer from "./slices/pat/activityScheduleSlice";
 import activityScheduleOtherReducer from "./slices/pat/activityScheduleOtherSlice";
 import documentPATReducer from "./slices/pat/documentSlice";
+
+// EWP
+import projectOverviewEWPReducer from "./slices/ewp/projectOverviewEWPSlice";
 
 import { configureStore } from "@reduxjs/toolkit";
 
@@ -21,5 +25,6 @@ export const store = configureStore({
     activitySchedule: activityScheduleReducer,
     activityScheduleOther: activityScheduleOtherReducer,
     documentPAT: documentPATReducer,
+    projectOverviewEWP: projectOverviewEWPReducer,
   },
 });

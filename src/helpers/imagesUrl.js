@@ -5,6 +5,7 @@ import ImageAvatar from "../../public/images/avatar.png";
 import ImageCheck from "../../public/images/icon-check.png";
 import ImageGroup from "../../public/images/icon-group.png";
 import ImageKliping from "../../public/images/icon-kliping.png";
+import ImageClose from "../../public/images/icon-close.png";
 
 export {
   ImageBrismaVertical,
@@ -14,4 +15,5 @@ export {
   ImageCheck,
   ImageGroup,
   ImageKliping,
+  ImageClose,
 };

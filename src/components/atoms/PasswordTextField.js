@@ -4,10 +4,12 @@ import { useState } from "react";
 import { IconEye, IconEyeOff } from "../icons";
 
 const PasswordTextField = ({
+  id,
   placeholder,
   handleChange,
   isDisabled,
   value,
+  props,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -17,6 +19,8 @@ const PasswordTextField = ({
 
   return (
     <Textfield
+      {...props}
+      id={id}
       placeholder={placeholder}
       isDisabled={isDisabled}
       type={showPassword ? "text" : "password"}
@@ -28,9 +32,13 @@ const PasswordTextField = ({
           handleClick={toggleShowPassword}
           icon={
             showPassword ? (
-              <IconEye label="Hide Password" />
+              <div className="mx-1">
+                <IconEye label="Hide Password" size="small" />
+              </div>
             ) : (
-              <IconEyeOff label="Show Password" />
+              <div className="mx-1">
+                <IconEyeOff label="Show Password" size="small" />
+              </div>
             )
           }
         />

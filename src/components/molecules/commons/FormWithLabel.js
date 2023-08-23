@@ -4,7 +4,10 @@ const FormWithLabel = ({
   label,
   form,
   labelPositionTop,
-  widthFull,
+  widthLabel,
+  widthForm,
+  classNameLabel,
+  classNameForm,
   errors,
 }) => {
   return (
@@ -12,10 +15,14 @@ const FormWithLabel = ({
       <div
         className={`flex ${
           labelPositionTop ? `items-start` : `items-center`
-        } my-4`}
+        } my-3`}
       >
-        <div className="w-2/5 text-sm font-semibold">{label}</div>
-        <div className={widthFull ? `w-3/5` : `w-32 pr-2.5`}>{form}</div>
+        <div
+          className={`${widthLabel} ${classNameLabel} text-sm text-brisma font-semibold`}
+        >
+          {label}
+        </div>
+        <div className={`${widthForm} ${classNameForm} ml-2`}>{form}</div>
       </div>
       {errors && (
         <div className="-mt-4">
