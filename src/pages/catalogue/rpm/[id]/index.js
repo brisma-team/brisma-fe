@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card, Modal } from "@/components/atoms";
+import { Breadcrumbs, Card, Modal, Pagination } from "@/components/atoms";
 import Button from "@atlaskit/button";
-import Select from "@atlaskit/select";
-import Textfield from "@atlaskit/textfield";
-import { IconClose, IconPlus } from "@/components/icons";
+// import Select from "@atlaskit/select";
+// import Textfield from "@atlaskit/textfield";
+// import { IconClose, IconPlus } from "@/components/icons";
 import { useRouter } from "next/router";
 import DocumentIcon from "@atlaskit/icon/glyph/document";
 
@@ -56,7 +56,8 @@ const histories = [
 const index = ({ data = approvalData }) => {
   const id = useRouter().query.id;
   const [showModal, setShowModal] = useState(false);
-  const [showFilter, setShowFilter] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  // const [showFilter, setShowFilter] = useState(false);
   const [selectedItem, setSelectedItem] = useState({
     id: 0,
     document_name: "No Document",
@@ -95,7 +96,7 @@ const index = ({ data = approvalData }) => {
           </div>
         </div>
         {/* Start Filter */}
-        <div className="my-3 w-40">
+        {/* <div className="my-3 w-40">
           <Button
             appearance="primary"
             iconBefore={IconPlus}
@@ -140,15 +141,16 @@ const index = ({ data = approvalData }) => {
               </div>
             </Card>
           </div>
-        )}
+        )} */}
         {/* End Filter */}
         {/* Start Modal */}
         {selectedItem && (
           <Modal
             showModal={showModal}
+            positionCenter={true}
             onClickOutside={() => setShowModal(false)}
           >
-            <div className="w-full p-5">
+            <div className="w-[40rem] p-5">
               <div className="text-xl font-bold text-atlasian-blue-dark mb-5">
                 Download History
               </div>
@@ -207,7 +209,8 @@ const index = ({ data = approvalData }) => {
               <div className="leading-3">
                 <div>
                   <div className="mt-2 px-6 py-3 border-b-[1px] hover:bg-gray-100 border-gray-300 font-bold">
-                    <div className="grid grid-cols-10">
+                    <div className="grid grid-cols-11">
+                      <div>No</div>
                       <div className="col-span-2">Part</div>
                       <div className="col-span-2">Nama Dokumen</div>
                       <div>Tanggal</div>
@@ -222,7 +225,8 @@ const index = ({ data = approvalData }) => {
                         className="px-6 py-5 border-b-[1px] border-gray-300 hover:bg-gray-100"
                         key={key}
                       >
-                        <div className="grid grid-cols-10">
+                        <div className="grid grid-cols-11">
+                          <div className="my-auto">{key + 1}</div>
                           <div className="col-span-2 my-auto">{item.part}</div>
                           <div className="col-span-2 my-auto">
                             {item.document_name}
@@ -242,12 +246,20 @@ const index = ({ data = approvalData }) => {
                               </Button>
                             </div>
                             <div className="align-middle px-2">
-                              <Button shouldFitContainer appearance="primary">
+                              <Button
+                                shouldFitContainer
+                                isDisabled
+                                appearance="primary"
+                              >
                                 Preview
                               </Button>
                             </div>
                             <div className="align-middle px-2 ">
-                              <Button shouldFitContainer appearance="primary">
+                              <Button
+                                shouldFitContainer
+                                isDisabled
+                                appearance="primary"
+                              >
                                 Download
                               </Button>
                             </div>
@@ -258,15 +270,9 @@ const index = ({ data = approvalData }) => {
                   })}
                 </div>
               </div>
-              {/* <div className="flex justify-center mt-4">
-                <Pagination
-                  nextLabel="Next"
-                  label="Page"
-                  pageLabel="Page"
-                  pages={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-                  previousLabel="Previous"
-                />
-              </div> */}
+              <div className="flex justify-center mt-4">
+                <Pagination pages={1} setCurrentPage={setCurrentPage} />
+              </div>
             </div>
           </Card>
         </div>

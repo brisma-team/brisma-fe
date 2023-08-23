@@ -26,7 +26,7 @@ const CardCatalog = ({ data }) => {
         setShowModal={setShowModal}
         sourceType={selectedSourceType}
       />
-      <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-4">
+      <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-2">
         {data?.content.map((items, itemsKey) => {
           return (
             items && (

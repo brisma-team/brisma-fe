@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card, TableField } from "@/components/atoms";
-import Button from "@atlaskit/button";
+import {
+  Breadcrumbs,
+  Card,
+  TableField,
+  ButtonField,
+  Pagination,
+} from "@/components/atoms";
 import { IconPlus } from "@/components/icons";
 import useDashboardList from "@/data/dashboard/useDashboardList";
 import {
@@ -17,13 +22,14 @@ const index = () => {
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Reference", path: "/reference" },
-    { name: "Dashboard", path: "/reference/dashboard" },
+    { name: "Dashboard", path: "/reference/active-dashboard" },
   ];
 
   const [showModal, setShowModal] = useState(false);
   const [dashboard, setDashboard] = useState([]);
   const [data, setData] = useState({ embedId: "", name: "" });
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const { dashboardList, dashboardListMutate } = useDashboardList();
 
   const fetchData = async () => {
@@ -43,30 +49,17 @@ const index = () => {
     }
   };
 
-  const handleActivate = async (id, dashboardid) => {
-    const confirm = await confirmationSwal(
-      "Apakah Anda yakin untuk mengaktifkan Dashboard ID " + dashboardid + " ?"
-    );
+  const handleToggleActivate = async (id, dashboardid, state) => {
+    const confirmMessage = state
+      ? `Apakah anda yakin untuk mengaktifkan Dashboard ID : ${dashboardid} ?`
+      : `Apakah anda yakin untuk tidak mengaktifkan Dashboard ID : ${dashboardid} ?`;
+
+    const confirm = await confirmationSwal(confirmMessage);
 
     if (confirm.value) {
       loadingSwal();
       const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/updateDashboard`;
-      await useUpdateData(url, { id: id, state: confirm.value });
-      fetchData();
-    }
-  };
-
-  const handleInActivate = async (id, dashboardid) => {
-    const confirm = await confirmationSwal(
-      "Apakah Anda yakin untuk tidak mengaktifkan Dashboard ID " +
-        dashboardid +
-        " ?"
-    );
-
-    if (confirm.value) {
-      loadingSwal();
-      const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/updateDashboard`;
-      await useUpdateData(url, { id: id, state: false });
+      await useUpdateData(url, { id: id, state: state });
       fetchData();
     }
   };
@@ -81,55 +74,63 @@ const index = () => {
 
   useEffect(() => {
     if (dashboardList) {
-      setDashboard(
-        dashboardList.list
-          ?.sort((a, b) =>
-            (b["_created_at"] || "").localeCompare(a["_created_at"] || "")
-          )
-          .map((v, key) => ({
-            No: key + 1,
-            "Dashboard ID": v?.superset_embed_id,
-            "Nama Dashboard": v?.dashboard_name,
-            Status: (
-              <div
-                className={`my-auto ${
-                  v?.is_active ? "text-lime-600" : "text-red-500"
-                }`}
-              >
-                {v?.is_active ? "Active" : "In-active"}
-              </div>
-            ),
-            "Tanggal Dibuat": v?._created_at,
-            Aksi: (
-              <div className="flex justify-between text-center">
-                <div className="min-w-[7rem] px-2">
-                  <Button
-                    appearance={v.is_active ? "warning" : "primary"}
-                    shouldFitContainer
-                    onClick={() =>
-                      v.is_active
-                        ? handleInActivate(v?._id, v?.superset_embed_id)
-                        : handleActivate(v?._id, v?.superset_embed_id)
+      const total =
+        dashboardList.list.length > 5 ? (dashboardList.list.length % 5) + 1 : 1;
+      setTotalPages(total);
+      const sortedDashboard = dashboardList.list
+        ?.sort((a, b) =>
+          (b["_created_at"] || "").localeCompare(a["_created_at"] || "")
+        )
+        .map((v, key) => ({
+          No: key + 1,
+          "Dashboard ID": v?.superset_embed_id,
+          "Nama Dashboard": v?.dashboard_name,
+          Status: (
+            <div
+              className={`my-auto ${
+                v?.is_active ? "text-lime-600" : "text-red-500"
+              }`}
+            >
+              {v?.is_active ? "Aktif" : "Tidak Aktif"}
+            </div>
+          ),
+          "Tanggal Dibuat": v?._created_at,
+          Aksi: (
+            <div className="flex justify-between text-center">
+              <div className="min-w-[7rem] px-2">
+                <div
+                  className={`${
+                    v.is_active
+                      ? `bg-atlasian-yellow text-white`
+                      : `bg-atlasian-blue-light text-white`
+                  } font-semibold rounded`}
+                >
+                  <ButtonField
+                    text={v.is_active ? "Non-aktif" : "Aktifkan"}
+                    handler={() =>
+                      handleToggleActivate(
+                        v?._id,
+                        v?.superset_embed_id,
+                        !v.is_active
+                      )
                     }
-                  >
-                    <span className="text-white">
-                      {v.is_active ? "In-activate" : "Activate"}
-                    </span>
-                  </Button>
-                </div>
-                <div className="min-w-[7rem] px-2">
-                  <Button
-                    shouldFitContainer
-                    onClick={() => handleDelete(v?._id)}
-                    appearance="danger"
-                  >
-                    Delete
-                  </Button>
+                  />
                 </div>
               </div>
-            ),
-          }))
-      );
+              <div className="min-w-[7rem] px-2">
+                <div
+                  className={`bg-atlasian-red text-white font-semibold rounded`}
+                >
+                  <ButtonField
+                    text={"Hapus"}
+                    handler={() => handleDelete(v?._id)}
+                  />
+                </div>
+              </div>
+            </div>
+          ),
+        }));
+      setDashboard(sortedDashboard);
     }
   }, [dashboardList]);
 
@@ -148,14 +149,15 @@ const index = () => {
             <div className="w-full h-full px-6">
               <div className="text-xl font-bold p-5">Pustaka Dashboard</div>
               <div className="px-5 pb-5 w-[13rem]">
-                <Button
-                  appearance="primary"
-                  iconBefore={IconPlus}
-                  shouldFitContainer
-                  onClick={() => setShowModal(true)}
+                <div
+                  className={`bg-atlasian-blue-dark text-white font-semibold rounded`}
                 >
-                  Tambah Dashboard
-                </Button>
+                  <ButtonField
+                    text={"Tambah Dashboard"}
+                    icon={IconPlus}
+                    handler={() => setShowModal(true)}
+                  />
+                </div>
               </div>
               <div className="max-h-[60rem] px-2 mb-5">
                 <TableField
@@ -171,9 +173,12 @@ const index = () => {
                   items={dashboard}
                 />
               </div>
-              {/* <div className="flex justify-center mt-5">
-                <Pagination totalPages={3} setCurrentPage={() => 1} />
-              </div> */}
+              <div className="flex justify-center mt-5">
+                <Pagination
+                  pages={totalPages}
+                  setCurrentPage={setCurrentPage}
+                />
+              </div>
             </div>
           </Card>
         </div>
