@@ -93,6 +93,7 @@ const index = () => {
             title: "Manajemen Dashboard",
             description: "Pengaturan konfigurasi untuk Dashboard.",
             url: "/reference/manage-dashboard",
+            isBlank: true,
           },
         ],
       },

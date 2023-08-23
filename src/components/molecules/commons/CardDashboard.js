@@ -30,6 +30,7 @@ const CardDashboard = ({ data }) => {
                   return (
                     item && (
                       <Link
+                        target={`${item.isBlank ? "_blank" : ""}`}
                         href={item.url ? item.url : "#"}
                         key={key}
                         style={{
