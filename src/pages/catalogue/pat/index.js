@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card, TableField } from "@/components/atoms";
+import { Breadcrumbs, Card, TableField, Pagination } from "@/components/atoms";
 import {
   IconArrowRight,
   // IconClose, IconPlus
@@ -25,7 +25,7 @@ const index = () => {
   // const [showFilter, setShowFilter] = useState(false);
   const [catPat, setCatPat] = useState([]);
   const [info, setInfo] = useState({});
-
+  const [currentPage, setCurrentPage] = useState(1);
   const handleModalInfo = async (dump) => {
     setShowModal(true);
     setInfo(dump);
@@ -172,9 +172,9 @@ const index = () => {
                   items={catPat}
                 />
               </div>
-              {/* <div className="flex justify-center mt-5">
-                <Pagination totalPages={3} setCurrentPage={setCurrentPage} />
-              </div> */}
+              <div className="flex justify-center mt-5">
+                <Pagination pages={1} setCurrentPage={setCurrentPage} />
+              </div>
             </div>
           </Card>
         </div>

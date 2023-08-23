@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card, TableField, Modal } from "@/components/atoms";
+import {
+  Breadcrumbs,
+  Card,
+  TableField,
+  Modal,
+  Pagination,
+} from "@/components/atoms";
 import Button from "@atlaskit/button";
 import useCatalogPATById from "@/data/catalog/useCatalogPATById";
 import { useRouter } from "next/router";
@@ -15,16 +21,17 @@ const index = () => {
     { name: "P.A.T Detail", path: "/catalogue/pat/" + router.query.id },
   ];
   const [catPat, setCatPat] = useState([]);
-
+  const [currentPage, setCurrentPage] = useState(1);
   const { data } = useCatalogPATById(router.query.id);
 
   useEffect(() => {
     if (data != undefined) {
       const mappingCatPat = data?.data[0].project_documents.map((v, key) => {
+        const datePart = v?.tanggal_document.split("T")[0];
         return {
           No: key + 1,
           "Nama Dokumen": v?.dokumen,
-          "Tanggal Dibuat": v?.tanggal_document,
+          "Tanggal Dibuat": datePart,
           Aksi: (
             <div className="grid grid-cols-3 text-center col-span-3">
               <div className="align-middle px-2">
@@ -43,6 +50,7 @@ const index = () => {
                 <Button
                   shouldFitContainer
                   appearance="primary"
+                  isDisabled
                   onClick={() => {
                     setShowModalPreview(true);
                     setSelectedDocument(v?.document_location);
@@ -52,7 +60,7 @@ const index = () => {
                 </Button>
               </div>
               <div className="align-middle px-2 ">
-                <Button shouldFitContainer appearance="primary">
+                <Button shouldFitContainer isDisabled appearance="primary">
                   Download
                 </Button>
               </div>
@@ -155,9 +163,9 @@ const index = () => {
                   items={catPat}
                 />
               </div>
-              {/* <div className="flex justify-center mt-5">
-                <Pagination totalPages={3} setCurrentPage={setCurrentPage} />
-              </div> */}
+              <div className="flex justify-center mt-5">
+                <Pagination pages={1} setCurrentPage={setCurrentPage} />
+              </div>
             </div>
           </Card>
         </div>

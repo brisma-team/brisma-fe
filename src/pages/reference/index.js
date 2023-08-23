@@ -85,9 +85,14 @@ const index = () => {
             url: "#",
           },
           {
-            title: "Dashboard",
+            title: "Aktivasi Dashboard",
+            description: "Pengaturan konfigurasi untuk Aktivasi Dashboard.",
+            url: "/reference/active-dashboard",
+          },
+          {
+            title: "Manajemen Dashboard",
             description: "Pengaturan konfigurasi untuk Dashboard.",
-            url: "/reference/dashboard",
+            url: "/reference/manage-dashboard",
           },
         ],
       },
