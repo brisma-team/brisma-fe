@@ -13,7 +13,12 @@ import {
 } from "@/components/atoms";
 import { PrevNextNavigation } from "@/components/molecules/commons";
 import { IconInfo } from "@/components/icons";
-import { usePostData, usePostFileData, loadingSwal } from "@/helpers";
+import {
+  usePostData,
+  usePostFileData,
+  loadingSwal,
+  copyToClipboard,
+} from "@/helpers";
 import { useStatusPat, useSumberInformasiPAT } from "@/data/pat";
 
 import { setImageClipList } from "@/slices/pat/sumberInformasiSlice";
@@ -145,10 +150,11 @@ const index = () => {
                   >
                     {imageClipList.map((v, i) => {
                       return (
-                        <div
+                        <button
                           key={i}
                           className="m-2 border-2 shadow-sm rounded-lg p-3"
                           style={{ width: "6.25rem", height: "6.25rem" }}
+                          onClick={() => copyToClipboard(v.url.src)}
                         >
                           <Image
                             src={v.url}
@@ -156,7 +162,7 @@ const index = () => {
                             width={200}
                             height={200}
                           />
-                        </div>
+                        </button>
                       );
                     })}
                   </div>
