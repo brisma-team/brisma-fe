@@ -13,7 +13,12 @@ import dynamic from "next/dynamic";
 import { PrevNextNavigation } from "@/components/molecules/commons";
 import useLatarBelakangTujuanPat from "@/data/pat/useLatarBelakangTujuanPat";
 import { useRouter } from "next/router";
-import { loadingSwal, usePostData, usePostFileData } from "@/helpers";
+import {
+  copyToClipboard,
+  loadingSwal,
+  usePostData,
+  usePostFileData,
+} from "@/helpers";
 import { useStatusPat } from "@/data/pat";
 import { useDispatch, useSelector } from "react-redux";
 import { setImageClipList } from "@/slices/pat/latarBelakangSlice";
@@ -55,9 +60,7 @@ const index = () => {
   ];
 
   const { latarBelakangTujuanPat } = useLatarBelakangTujuanPat(id);
-  useEffect(() => {
-    console.log("img:", imageClipList);
-  }, [imageClipList]);
+
   const [data, setData] = useState({
     pat_id: id,
     latar_belakang: "",
@@ -144,10 +147,11 @@ const index = () => {
                   >
                     {imageClipList?.map((v, i) => {
                       return (
-                        <div
+                        <button
                           key={i}
                           className="m-2 border-2 shadow-sm rounded-lg p-3"
                           style={{ width: "6.25rem", height: "6.25rem" }}
+                          onClick={() => copyToClipboard(v.url.src)}
                         >
                           <Image
                             src={v.url}
@@ -155,7 +159,7 @@ const index = () => {
                             width={200}
                             height={200}
                           />
-                        </div>
+                        </button>
                       );
                     })}
                   </div>
