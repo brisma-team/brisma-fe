@@ -7,6 +7,7 @@ import convertToRupiah from "./convertToRupiah";
 import usePostData from "./usePostData";
 import useUpdateData from "./useUpdateData";
 import useDeleteData from "./useDeleteData";
+import usePostFileData from "./usePostFileData";
 import deleteSwal from "./deleteSwal";
 import calculatePercentage from "./calculatePercent";
 import parseDate from "./parseDate";
@@ -26,6 +27,7 @@ export {
   usePostData,
   useUpdateData,
   useDeleteData,
+  usePostFileData,
   deleteSwal,
   calculatePercentage,
   parseDate,
