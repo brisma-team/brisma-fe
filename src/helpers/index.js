@@ -16,6 +16,7 @@ import splitWord from "./splitWord";
 import numberWithCommas from "./numberWithCommas";
 import decimalToPercentage from "./decimalToPercentage";
 import setErrorValidation from "./setErrorValidation";
+import copyToClipboard from "./copyToClipboard";
 
 export {
   loadingSwal,
@@ -36,4 +37,5 @@ export {
   numberWithCommas,
   decimalToPercentage,
   setErrorValidation,
+  copyToClipboard,
 };
