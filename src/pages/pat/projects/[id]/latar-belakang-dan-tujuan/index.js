@@ -159,7 +159,7 @@ const index = () => {
                       );
                     })}
                   </div>
-                  <div className="py-2 bg-none w-full justify-center">
+                  <div className="mt-4 px-8 py-2 bg-none w-full justify-center">
                     <UploadButton
                       text={"Tambah Kliping +"}
                       fileAccept={"image/png, image/gif, image/jpeg"}
