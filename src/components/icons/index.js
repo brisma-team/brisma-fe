@@ -22,6 +22,7 @@ import IconAttachment from "@atlaskit/icon/glyph/attachment";
 import IconCrossCircle from "@atlaskit/icon/glyph/cross-circle";
 import IconEye from "@atlaskit/icon/glyph/watch";
 import IconEyeOff from "@atlaskit/icon/glyph/watch-filled";
+import IconSetting from "@atlaskit/icon/glyph/settings";
 
 export {
   IconPlus,
@@ -48,4 +49,5 @@ export {
   IconCrossCircle,
   IconEye,
   IconEyeOff,
+  IconSetting,
 };
