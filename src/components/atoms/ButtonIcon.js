@@ -13,6 +13,9 @@ const ButtonIcon = ({ color, icon, handleClick }) => {
     case "purple":
       iconColor = "text-atlasian-purple";
       break;
+    case "gray":
+      iconColor = "text-atlasian-gray-dark";
+      break;
     default:
       iconColor = "text-black";
   }
