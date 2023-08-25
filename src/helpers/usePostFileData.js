@@ -1,5 +1,4 @@
 import withTokenConfig from "./withTokenConfig";
-import successSwal from "./successSwal";
 const usePostFileData = async (url, content) => {
   const formData = new FormData();
   formData.append("file", content.file);
@@ -19,7 +18,6 @@ const usePostFileData = async (url, content) => {
       }
       return res.json();
     });
-    successSwal(response.message);
     return response;
   } catch (e) {
     throw new Error(e);
