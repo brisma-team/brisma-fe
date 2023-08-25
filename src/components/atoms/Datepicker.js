@@ -1,17 +1,19 @@
-import { useState } from "react";
-import DatePicker from "react-datepicker";
+import { DatePicker } from "@atlaskit/datetime-picker";
 
-const DatepickerField = ({ format, placeholder }) => {
-  const [selectedYear, setSelectedYear] = useState(null);
-
+const DatepickerField = ({
+  format,
+  placeholder,
+  handleChange,
+  value,
+  isDisabled,
+}) => {
   return (
     <DatePicker
-      selected={selectedYear}
-      onChange={(value) => setSelectedYear(value)}
-      className="w-full border-[#DFE1E6] bg-[#F5F6F8] rounded shadow-md text-sm font-medium text-[#091E42]"
-      placeholderText={placeholder}
+      placeholder={placeholder}
+      onChange={handleChange}
+      value={value}
       dateFormat={format}
-      showYearPicker
+      isDisabled={isDisabled}
     />
   );
 };
