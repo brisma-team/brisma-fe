@@ -4,47 +4,74 @@ import {
   ModalBodySource,
   ModalBodySchedulePAT,
   ModalBodySummaryPAT,
+  ModalBodyDocumentNonPAT,
+  ModalBodyScheduleNonPAT,
+  ModalBodySummaryNonPAT,
 } from "./sub-modal";
 import { ModalFooterEWP, ModalHeaderEWP } from "../..";
 import {
   resetProjectOverviewData,
-  setProjectOverviewData,
+  setValidationErrorsSchedulePAT,
+  setValidationErrorsSummaryPAT,
+  setValidationErrorsDocumentNonPAT,
+  setValidationErrorsScheduleNonPAT,
+  resetValidationErrorsSchedulePAT,
+  resetValidationErrorsSummaryPAT,
+  resetValidationErrorsDocumentNonPAT,
+  resetValidationErrorsScheduleNonPAT,
 } from "@/slices/ewp/projectOverviewEWPSlice";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  schedulePATSchema,
+  summaryPATSchema,
+  scheduleNonPATSchema,
+  documentNonPATSchema,
+} from "@/helpers/schemas/ewp/konvensional/projectOverviewEWPSchema";
+import {
+  confirmationSwal,
+  setErrorValidation,
+  usePostData,
+  useUpdateData,
+} from "@/helpers";
+import _ from "lodash";
 
-const ModalAddProjectEWP = ({ showModal, setShowModal, typeModal, mutate }) => {
+const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
   const dispatch = useDispatch();
   const [currentModalStage, setCurrentModalStage] = useState(1);
   const [isPat, setIsPat] = useState(true);
   const [maxStage, setMaxStage] = useState(null);
   const [isFormDisabled, setIsFormDisabled] = useState(false);
+  const [differentKTA, setDifferentKTA] = useState(true);
   const projectOverviewData = useSelector(
     (state) => state.projectOverviewEWP.projectOverviewData
   );
 
-  //   const schemaMappings = {
-  //     1: {
-  //       schema: activityInfoSchema,
-  //       resetErrors: resetvalidationErrorsAI,
-  //       setErrors: setvalidationErrorsAI,
-  //     },
-  //     2: {
-  //       schema: activityObjectSchema,
-  //       resetErrors: resetvalidationErrorsAO,
-  //       setErrors: setvalidationErrorsAO,
-  //     },
-  //     3: {
-  //       schema: activityObjectSchema,
-  //       resetErrors: resetvalidationErrorsAO,
-  //       setErrors: setvalidationErrorsAO,
-  //     },
-  //   };
-
-  useEffect(() => {
-    if (typeModal === "detail") {
-      setIsFormDisabled(true);
-    }
-  }, []);
+  const schemaMappings = {
+    true: {
+      2: {
+        schema: schedulePATSchema,
+        resetErrors: resetValidationErrorsSchedulePAT,
+        setErrors: setValidationErrorsSchedulePAT,
+      },
+      3: {
+        schema: summaryPATSchema,
+        resetErrors: resetValidationErrorsSummaryPAT,
+        setErrors: setValidationErrorsSummaryPAT,
+      },
+    },
+    false: {
+      2: {
+        schema: scheduleNonPATSchema,
+        resetErrors: resetValidationErrorsScheduleNonPAT,
+        setErrors: setValidationErrorsScheduleNonPAT,
+      },
+      3: {
+        schema: documentNonPATSchema,
+        resetErrors: resetValidationErrorsDocumentNonPAT,
+        setErrors: setValidationErrorsDocumentNonPAT,
+      },
+    },
+  };
 
   useEffect(() => {
     if (isPat) {
@@ -56,46 +83,31 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, typeModal, mutate }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const buttonName = e.target.textContent;
-    dispatch(
-      setProjectOverviewData((prev) => {
-        return { ...prev, is_pat: isPat };
-      })
+    const buttonName = e.target.offsetParent.name;
+    const data = {
+      ...projectOverviewData,
+      is_pat: isPat,
+      audit_year: !isPat
+        ? parseInt(new Date().getFullYear())
+        : projectOverviewData.audit_year,
+    };
+
+    const validate = setErrorValidation(
+      data,
+      dispatch,
+      schemaMappings[isPat][currentModalStage]
     );
-    console.log("projectOverviewData => ", projectOverviewData);
-    // const combinedActivityBudget =
-    //   activityScheduleOtherData.anggaran_kegiatan.reduce((result, item) => {
-    //     return [...result, ...item.ref_sub_kategori_anggarans];
-    //   }, []);
 
-    // const data = {
-    //   ...activityScheduleOtherData,
-    //   anggaran_kegiatan: combinedActivityBudget,
-    // };
-
-    // const validate = setErrorValidation(
-    //   data,
-    //   dispatch,
-    //   schemaMappings[currentModalStage]
-    // );
-
-    // if ((validate && currentModalStage > 1) || currentModalStage === 3) {
-    //   if (buttonName === "Simpan") {
-    //     if (typeModal === "update") {
-    //       await useUpdateData(
-    //         `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/lain`,
-    //         data
-    //       );
-    //     } else {
-    //       await usePostData(
-    //         `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/lain/create`,
-    //         data
-    //       );
-    //     }
-    //     mutate();
-    //     setShowModal(false);
-    //   }
-    // }
+    if (validate) {
+      if (buttonName === "saveButton" || buttonName === "sendApprovalButton") {
+        await usePostData(
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/ewp/auditor/create`,
+          _.omit(data, ["tim_audit"])
+        );
+        mutate();
+        handleCloseModal();
+      }
+    }
   };
 
   const handlePrevStage = async () => {
@@ -103,16 +115,41 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, typeModal, mutate }) => {
   };
 
   const handleNextStage = async () => {
-    setCurrentModalStage(currentModalStage + 1);
+    const data = {
+      ...projectOverviewData,
+      is_pat: isPat,
+    };
+
+    const validate = setErrorValidation(
+      data,
+      dispatch,
+      schemaMappings[isPat][currentModalStage]
+    );
+
+    if (validate) {
+      setCurrentModalStage(currentModalStage + 1);
+    }
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
     setShowModal(false);
     setCurrentModalStage(1);
     setIsPat(true);
-    setMaxStage(0);
-    setIsFormDisabled(false);
     dispatch(resetProjectOverviewData());
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape") {
+      return handleCloseModal();
+    }
   };
 
   const generateProgressItems = () => {
@@ -143,32 +180,31 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, typeModal, mutate }) => {
     } else {
       return [
         {
-          id: "step-1",
+          id: "step-4",
           label: <span>Sumber</span>,
           percentageComplete: currentModalStage > 1 ? 100 : 0,
           status: currentModalStage === 1 ? "current" : "unvisited",
           href: "#",
         },
         {
-          id: "step-2",
+          id: "step-5",
           label: <span>Jadwal</span>,
           percentageComplete: currentModalStage > 2 ? 100 : 0,
           status: currentModalStage === 2 ? "current" : "unvisited",
           href: "#",
         },
         {
-          id: "step-3",
+          id: "step-6",
           label: <span>Surat</span>,
-          percentageComplete: 0,
+          percentageComplete: currentModalStage > 3 ? 100 : 0,
           status: currentModalStage === 3 ? "current" : "unvisited",
           href: "#",
         },
-
         {
-          id: "step-3",
+          id: "step-7",
           label: <span>Ringkasan</span>,
           percentageComplete: 0,
-          status: currentModalStage === 3 ? "current" : "unvisited",
+          status: currentModalStage === 4 ? "current" : "unvisited",
           href: "#",
         },
       ];
@@ -186,6 +222,7 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, typeModal, mutate }) => {
           progressItems={progressItems}
           setShowModal={setShowModal}
           handleCloseModal={handleCloseModal}
+          handleKeyDown={handleKeyDown}
         />
       }
       footer={
@@ -195,9 +232,15 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, typeModal, mutate }) => {
           handlePrevStage={handlePrevStage}
           handleNextStage={handleNextStage}
           maxStage={maxStage}
+          differentKTA={differentKTA}
+          isDisabled={isFormDisabled}
+          isPat={isPat}
         />
       }
       withoutFooter={currentModalStage < 2 && true}
+      widthFullFooter={
+        differentKTA && isPat && currentModalStage === maxStage && true
+      }
     >
       {
         currentModalStage === 1 ? (
@@ -212,32 +255,35 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, typeModal, mutate }) => {
             <ModalBodySchedulePAT
               setCurrentModalStage={setCurrentModalStage}
               isDisabled={isFormDisabled}
+              setDifferentKTA={setDifferentKTA}
             />
           ) : (
             currentModalStage === 3 && (
               <ModalBodySummaryPAT
                 setCurrentModalStage={setCurrentModalStage}
                 isDisabled={isFormDisabled}
+                isPat={isPat}
               />
             )
           )
         ) : // End Submodal sumber audit PAT
         // Start Submodal sumber audit Non-PAT
         currentModalStage === 2 ? (
-          <ModalBodySchedulePAT
+          <ModalBodyScheduleNonPAT
             setCurrentModalStage={setCurrentModalStage}
             isDisabled={isFormDisabled}
           />
         ) : currentModalStage === 3 ? (
-          <ModalBodySchedulePAT
+          <ModalBodyDocumentNonPAT
             setCurrentModalStage={setCurrentModalStage}
             isDisabled={isFormDisabled}
           />
         ) : (
           currentModalStage === 4 && (
-            <ModalBodySummaryPAT
+            <ModalBodySummaryNonPAT
               setCurrentModalStage={setCurrentModalStage}
               isDisabled={isFormDisabled}
+              isPat={isPat}
             />
           )
         )

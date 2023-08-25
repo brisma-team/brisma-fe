@@ -1,81 +1,123 @@
 import { ButtonIcon, Card, Select, TextInput } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
-import { PekerjaSelect } from "../../commons";
+import {
+  CategorySelect,
+  MetodeSelect,
+  TemaSelect,
+  TypeSelect,
+} from "@/components/molecules/commons";
+import { useState } from "react";
 
-const CardFilterProjectOverview = ({ openFilter, filter, setFilter }) => {
-  const handleChangePekerja = (e) => {
-    setFilter({ ...filter, status_approver: e.value.pn });
+const CardFilterProjectOverview = ({ showFilter, filter, setFilter }) => {
+  const [selectedValue, setSelectedValue] = useState({
+    name: "",
+    is_audited: false,
+    ref_metode: "",
+    ref_tipe: "",
+    ref_jenis: "",
+    ref_tema: "",
+  });
+
+  const handleChangeTextInput = (property, value) => {
+    setSelectedValue({ ...selectedValue, [property]: value });
+    setFilter({ ...filter, [property]: value });
   };
 
-  const handleStatusPAT = (e) => {
-    setFilter({ ...filter, status_pat: e?.value });
+  const handleChangeSelect = (property, e) => {
+    setSelectedValue({ ...selectedValue, [property]: e });
+    setFilter({ ...filter, [property]: e.value });
   };
 
-  const handleYear = (e) => {
-    setFilter({ ...filter, year: e.target.value });
-  };
-
-  const handleProjectName = (e) => {
-    setFilter({ ...filter, project_name: e.target.value });
-  };
-
-  const setNullYear = () => {
-    setFilter({ ...filter, year: "" });
-  };
-
-  const setNullProjectName = () => {
-    setFilter({ ...filter, project_name: "" });
+  const handleResetSelected = (property) => {
+    handleChangeSelect(property, "");
   };
 
   return (
-    openFilter && (
-      <div>
+    showFilter && (
+      <div className="rounded absolute z-20 bg-white top-4">
         <Card>
           <div className="px-2">
-            <div className="flex m-2 w-[26rem] gap-4">
-              <div className="w-1/2">
+            <div className="flex m-2 w-[39rem] gap-4">
+              <div className="w-1/3">
                 <TextInput
-                  placeholder="Nama Proyek"
+                  placeholder="Judul Jadwal"
                   icon={
                     <ButtonIcon
-                      handleClick={setNullProjectName}
+                      handleClick={() => handleChangeTextInput("name", "")}
                       icon={<IconClose size="large" />}
                     />
                   }
-                  onChange={handleProjectName}
-                  value={filter.project_name}
+                  onChange={(e) =>
+                    handleChangeTextInput("name", e.target.value)
+                  }
+                  value={selectedValue.name}
                 />
               </div>
-              <div className="w-1/2">
-                <Select
-                  optionValue={[
-                    { label: "Final", value: "Final" },
-                    { label: "On Progress", value: "On_Progress" },
-                    { label: "On Approver", value: "On_Approver" },
-                    { label: "On Addendum", value: "On_Addendum" },
-                  ]}
-                  placeholder="Status PAT"
-                  onChange={handleStatusPAT}
-                  isSearchable={false}
+              <div className="w-1/3">
+                <MetodeSelect
+                  placeholder={"Metode Audit"}
+                  customIcon={
+                    <ButtonIcon
+                      icon={<IconClose />}
+                      handleClick={() => handleResetSelected("ref_metode")}
+                    />
+                  }
+                  handleChange={(e) => handleChangeSelect("ref_metode", e)}
+                  selectedValue={selectedValue.ref_metode}
+                />
+              </div>
+              <div className="w-1/3">
+                <CategorySelect
+                  placeholder={"Jenis Audit"}
+                  customIcon={
+                    <ButtonIcon
+                      icon={<IconClose />}
+                      handleClick={() => handleResetSelected("ref_jenis")}
+                    />
+                  }
+                  handleChange={(e) => handleChangeSelect("ref_jenis", e)}
+                  selectedValue={selectedValue.ref_jenis}
                 />
               </div>
             </div>
-            <div className="flex m-2 w-[26rem] gap-4">
-              <div className="w-1/2">
-                <TextInput
-                  placeholder="Tahun"
-                  icon={
-                    <ButtonIcon
-                      handleClick={setNullYear}
-                      icon={<IconClose size="large" />}
-                    />
-                  }
-                  onChange={handleYear}
-                  value={filter.year}
+            <div className="flex m-2 w-[39rem] gap-4">
+              <div className="w-1/3">
+                <Select
+                  optionValue={[
+                    { label: "Sudah di-Audit", value: "true" },
+                    { label: "Belum di-Audit", value: "false" },
+                  ]}
+                  placeholder="Status Audit"
+                  onChange={(e) => handleChangeSelect("is_audited", e)}
+                  isSearchable={false}
+                  value={selectedValue.is_audited}
                 />
               </div>
-              <div className="w-1/2">
-                <PekerjaSelect handleChange={handleChangePekerja} />
+              <div className="w-1/3">
+                <TypeSelect
+                  placeholder={"Tipe Audit"}
+                  customIcon={
+                    <ButtonIcon
+                      icon={<IconClose />}
+                      handleClick={() => handleResetSelected("ref_tipe")}
+                    />
+                  }
+                  handleChange={(e) => handleChangeSelect("ref_tipe", e)}
+                  selectedValue={selectedValue.ref_tipe}
+                />
+              </div>
+              <div className="w-1/3">
+                <TemaSelect
+                  placeholder={"Tema Audit"}
+                  customIcon={
+                    <ButtonIcon
+                      icon={<IconClose />}
+                      handleClick={() => handleResetSelected("ref_tema")}
+                    />
+                  }
+                  handleChange={(e) => handleChangeSelect("ref_tema", e)}
+                  selectedValue={selectedValue.ref_tema}
+                />
               </div>
             </div>
           </div>

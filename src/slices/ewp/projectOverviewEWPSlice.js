@@ -22,13 +22,17 @@ const initialState = {
       kode: "",
       nama: "",
     },
-    audit_year: null,
+    audit_year: "",
     pn_approver: "",
     nama_approver: "",
     no_surat: "",
     perihal: "",
     tanggal_surat: "",
     is_pat: false,
+    tim_audit: null,
+    url_file_surat: "",
+    nama_file_surat: "",
+    audited: false,
   },
   defaultData: {
     project_name: "",
@@ -51,16 +55,23 @@ const initialState = {
       kode: "",
       nama: "",
     },
-    audit_year: null,
+    audit_year: "",
     pn_approver: "",
     nama_approver: "",
     no_surat: "",
     perihal: "",
     tanggal_surat: "",
     is_pat: false,
+    tim_audit: null,
+    url_file_surat: "",
+    nama_file_surat: "",
+    audited: false,
   },
-  validationErrorsSchedule: {},
-  validationErrorsSummary: {},
+  validationErrorsSchedulePAT: {},
+  validationErrorsSummaryPAT: {},
+  validationErrorsDocumentNonPAT: {},
+  validationErrorsScheduleNonPAT: {},
+  validationErrorsSummaryNonPAT: {},
 };
 
 export const projectOverviewEWPSlice = createSlice({
@@ -70,17 +81,35 @@ export const projectOverviewEWPSlice = createSlice({
     setProjectOverviewData: (state, action) => {
       state.projectOverviewData = action.payload;
     },
-    setValidationErrorsSchedule: (state, action) => {
-      state.validationErrorsSchedule = action.payload;
+    setValidationErrorsSchedulePAT: (state, action) => {
+      state.validationErrorsSchedulePAT = action.payload;
     },
-    setValidationErrorsSummary: (state, action) => {
-      state.validationErrorsSummary = action.payload;
+    setValidationErrorsSummaryPAT: (state, action) => {
+      state.validationErrorsSummaryPAT = action.payload;
     },
-    resetValidationErrorsSchedule: (state) => {
-      state.validationErrorsSchedule = {};
+    setValidationErrorsDocumentNonPAT: (state, action) => {
+      state.validationErrorsDocumentNonPAT = action.payload;
     },
-    resetValidationErrorsSummary: (state) => {
-      state.validationErrorsSummary = {};
+    setValidationErrorsScheduleNonPAT: (state, action) => {
+      state.validationErrorsScheduleNonPAT = action.payload;
+    },
+    setValidationErrorsSummaryNonPAT: (state, action) => {
+      state.validationErrorsSummaryNonPAT = action.payload;
+    },
+    resetValidationErrorsSchedulePAT: (state) => {
+      state.validationErrorsSchedulePAT = {};
+    },
+    resetValidationErrorsSummaryPAT: (state) => {
+      state.validationErrorsSummaryPAT = {};
+    },
+    resetValidationErrorsDocumentNonPAT: (state) => {
+      state.validationErrorsDocumentNonPAT = {};
+    },
+    resetValidationErrorsScheduleNonPAT: (state) => {
+      state.validationErrorsScheduleNonPAT = {};
+    },
+    resetValidationErrorsSummaryNonPAT: (state) => {
+      state.validationErrorsSummaryNonPAT = {};
     },
     resetProjectOverviewData: (state) => {
       state.projectOverviewData = { ...state.defaultData };
@@ -90,10 +119,16 @@ export const projectOverviewEWPSlice = createSlice({
 
 export const {
   setProjectOverviewData,
-  setValidationErrorsSchedule,
-  setValidationErrorsSummary,
-  resetValidationErrorsSchedule,
-  resetValidationErrorsSummary,
+  setValidationErrorsSchedulePAT,
+  setValidationErrorsSummaryPAT,
+  setValidationErrorsDocumentNonPAT,
+  setValidationErrorsScheduleNonPAT,
+  setValidationErrorsSummaryNonPAT,
+  resetValidationErrorsSchedulePAT,
+  resetValidationErrorsSummaryPAT,
+  resetValidationErrorsDocumentNonPAT,
+  resetValidationErrorsScheduleNonPAT,
+  resetValidationErrorsSummaryNonPAT,
   resetProjectOverviewData,
 } = projectOverviewEWPSlice.actions;
 
