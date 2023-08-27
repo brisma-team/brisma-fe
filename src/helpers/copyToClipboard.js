@@ -16,7 +16,7 @@ const copyToClipboard = (target) => {
   document.body.removeChild(textarea);
 
   // Tampilkan pesan sukses (opsional)
-  return successSwal("Sukses menyalin data.");
+  return successSwal("Copy to clipboard");
 };
 
 export default copyToClipboard;
