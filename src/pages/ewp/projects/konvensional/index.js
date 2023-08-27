@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { EwpOverviewLayout } from "@/layouts/ewp";
+import { OverviewLayoutEWP } from "@/layouts/ewp";
 import { IconFile, IconPlus } from "@/components/icons";
 import {
   Breadcrumbs,
@@ -142,7 +142,7 @@ const index = () => {
             : ``,
           addendum: v?.number_adendum.toString(),
           needApproval: v?.need_approved,
-          href: `/ewp/projects/konvensional/${v?.id}`,
+          href: `/ewp/projects/konvensional/${v?.id}/info`,
         };
       });
       setData(mapping);
@@ -151,7 +151,7 @@ const index = () => {
   }, [overviewEWP]);
 
   return (
-    <EwpOverviewLayout data={approvalEWP?.data?.header}>
+    <OverviewLayoutEWP data={approvalEWP?.data?.header}>
       <div className="pr-40">
         {/* Start Breadcrumbs */}
         <Breadcrumbs data={breadcrumbs} />
@@ -224,7 +224,7 @@ const index = () => {
         <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
         {/* End Content */}
       </div>
-    </EwpOverviewLayout>
+    </OverviewLayoutEWP>
   );
 };
 

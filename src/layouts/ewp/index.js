@@ -1,4 +1,4 @@
-import EwpOverviewLayout from "./EwpOverviewLayout";
-import EwpLandingLayout from "./EwpLandingLayout";
+import LandingLayoutEWP from "./LandingLayoutEWP";
+import OverviewLayoutEWP from "./OverviewLayoutEWP";
 
-export { EwpOverviewLayout, EwpLandingLayout };
+export { LandingLayoutEWP, OverviewLayoutEWP };

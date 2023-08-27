@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { PatSidebarOverview } from "@/components/molecules/pat";
 import { NavbarField, CardApprovalList } from "@/components/molecules/commons";
 
-const PatOverviewLayout = ({ children, withContent = true, data }) => {
+const OverviewLayoutEWP = ({ children, withContent = true, data }) => {
   const router = useRouter();
 
   const { user, userError } = useUser();
@@ -60,4 +60,4 @@ const PatOverviewLayout = ({ children, withContent = true, data }) => {
   );
 };
 
-export default PatOverviewLayout;
+export default OverviewLayoutEWP;
