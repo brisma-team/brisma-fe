@@ -6,6 +6,11 @@ import ImageCheck from "../../public/images/icon-check.png";
 import ImageGroup from "../../public/images/icon-group.png";
 import ImageKliping from "../../public/images/icon-kliping.png";
 import ImageClose from "../../public/images/icon-close.png";
+import ImageEclipseYellow from "../../public/images/icon-eclipse-yellow.png";
+import ImageEclipseRed from "../../public/images/icon-eclipse-red.png";
+import ImageEclipseGray from "../../public/images/icon-eclipse-gray.png";
+import ImageCircleCheck from "../../public/images/icon-circle-check.png";
+import ImageBar from "../../public/images/icon-bar.png";
 
 export {
   ImageBrismaVertical,
@@ -16,4 +21,9 @@ export {
   ImageGroup,
   ImageKliping,
   ImageClose,
+  ImageEclipseYellow,
+  ImageEclipseRed,
+  ImageEclipseGray,
+  ImageCircleCheck,
+  ImageBar,
 };

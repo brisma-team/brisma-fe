@@ -27,6 +27,7 @@ import ButtonIcon from "./ButtonIcon";
 import Spinner from "@atlaskit/spinner";
 import RadioField from "./Radio";
 import UploadButton from "./UploadButton";
+import AvatarGroupField from "./AvatarGroup";
 export {
   AvatarDefaultExample,
   Breadcrumbs,
@@ -57,4 +58,5 @@ export {
   Spinner,
   RadioField,
   UploadButton,
+  AvatarGroupField,
 };
