@@ -3,7 +3,7 @@ const UploadButton = ({ text, fileAccept, handleUpload }) => {
     <>
       <label
         htmlFor="fileInput"
-        className="cursor-pointer max-w-full bg-neutral-50 hover:bg-neutral-100 font-semibold py-2 px-5 rounded-md border-[1.95px] active:bg-neutral-200"
+        className="cursor-pointer bg-neutral-50 hover:bg-neutral-100 font-semibold py-2 px-5 rounded-md border-[1.95px] active:bg-neutral-200"
       >
         {text}
       </label>
