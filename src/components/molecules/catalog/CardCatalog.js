@@ -48,7 +48,7 @@ const CardCatalog = ({ data }) => {
                           onClick={() => openModalForSourceType(key + 1)}
                           className="w-full text-left"
                         >
-                          <div className="rounded-[10px] border border-[#00000033] my-4 shadow bg-gray-50 hover:bg-gray-200 text-atlasian-gray-light p-5">
+                          <div className="rounded-[10px] border border-[#00000033] my-4 shadow bg-gray-50 hover:bg-gray-200 text-atlasian-blue-baby p-5">
                             <h3>{item.title ? item.title : "Content Title"}</h3>
                             <div className="mt-3 mb-3">
                               {item.description || "Content Description"}
