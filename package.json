@@ -11,6 +11,7 @@
   "dependencies": {
     "@atlaskit/atlassian-navigation": "^2.6.5",
     "@atlaskit/avatar": "^21.3.4",
+    "@atlaskit/avatar-group": "^9.4.1",
     "@atlaskit/breadcrumbs": "^11.10.4",
     "@atlaskit/button": "^16.7.6",
     "@atlaskit/checkbox": "^12.6.3",
