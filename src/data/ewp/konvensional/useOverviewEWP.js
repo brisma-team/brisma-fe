@@ -2,14 +2,26 @@ import withTokenFetcher from "@/fetchers/withTokenFetcher";
 import useSWR from "swr";
 
 const useOverviewEWP = (type, params) => {
-  let { pages, limit } = params;
+  let {
+    pages,
+    limit,
+    tahun,
+    name,
+    is_audited,
+    ref_metode,
+    ref_tipe,
+    ref_jenis,
+    ref_tema,
+    sortBy,
+  } = params;
+
   let query = "";
   switch (type) {
     case "all":
-      query = `?page=${pages}&limit=${limit}`;
+      query = `?page=${pages}&limit=${limit}&sortBy=name ${sortBy}&name=${name}&is_audited=${is_audited}&ref_metode=${ref_metode}&ref_tipe=${ref_tipe}&ref_jenis=${ref_jenis}&ref_tema=${ref_tema}`;
       break;
     case "jadwal_pat":
-      query = `/pat_jadwal?tahun=2024`;
+      query = `/pat_jadwal?tahun=${tahun}&name=${name}&is_audited=${is_audited}&ref_metode=${ref_metode}&ref_tipe=${ref_tipe}&ref_jenis=${ref_jenis}&ref_tema=${ref_tema}`;
       break;
     case "tahun_pat":
       query = `/pat_year`;

@@ -1,15 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Breadcrumbs, ButtonField, Card, PageTitle } from "@/components/atoms";
-import { PatLandingLayout } from "@/layouts/pat";
-import Button from "@atlaskit/button";
+import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
-import { IconInfo, IconPlus } from "@/components/icons";
 import dynamic from "next/dynamic";
-import { ImageBrismaHorizontal } from "@/helpers/imagesUrl";
-import { PrevNextNavigation } from "@/components/molecules/commons";
 import { useRouter } from "next/router";
-import { usePostData } from "@/helpers";
+import { PatLandingLayout } from "@/layouts/pat";
+import {
+  Breadcrumbs,
+  ButtonField,
+  Card,
+  PageTitle,
+  UploadButton,
+} from "@/components/atoms";
+import { PrevNextNavigation } from "@/components/molecules/commons";
+import { IconInfo } from "@/components/icons";
+import {
+  usePostData,
+  usePostFileData,
+  loadingSwal,
+  copyToClipboard,
+} from "@/helpers";
 import { useStatusPat, useSumberInformasiPAT } from "@/data/pat";
+
+import { setImageClipList } from "@/slices/pat/sumberInformasiSlice";
 
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
@@ -28,6 +40,11 @@ const routes = [
 ];
 
 const index = () => {
+  const dispatch = useDispatch();
+
+  const imageClipList = useSelector(
+    (state) => state.sumberInformasi.imageClipList
+  );
   const { id } = useRouter().query;
   const baseUrl = `/pat/projects/${id}`;
   const { statusPat } = useStatusPat(id);
@@ -50,13 +67,6 @@ const index = () => {
     sumber_informasi: "",
   });
 
-  const pictures = [
-    {
-      alt: "brisma",
-      url: ImageBrismaHorizontal,
-    },
-  ];
-
   const handlePost = async () => {
     try {
       return await usePostData(
@@ -65,6 +75,24 @@ const index = () => {
       );
     } catch (e) {
       throw new Error(e);
+    }
+  };
+
+  const handleUpload = async (e) => {
+    loadingSwal();
+    if (e.target.files) {
+      const url = `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/cdn/upload`;
+
+      const response = await usePostFileData(url, {
+        file: e.target.files[0],
+        modul: "pat",
+      });
+      dispatch(
+        setImageClipList([
+          ...imageClipList,
+          { url: response.url[0], name: e.target.files[0].name },
+        ])
+      );
     }
   };
 
@@ -120,26 +148,30 @@ const index = () => {
                     className="grid grid-cols-2 -mx-1 mt-2 overflow-scroll overflow-x-hidden"
                     style={{ maxHeight: "37rem" }}
                   >
-                    {pictures.map((v, i) => {
+                    {imageClipList.map((v, i) => {
                       return (
-                        <div
+                        <button
                           key={i}
-                          className="m-1"
+                          className="m-2 border-2 shadow-sm rounded-lg p-3"
                           style={{ width: "6.25rem", height: "6.25rem" }}
+                          onClick={() => copyToClipboard(v.url.src)}
                         >
-                          <Image src={v.url} />
-                        </div>
+                          <Image
+                            src={v.url}
+                            alt={v.name}
+                            width={200}
+                            height={200}
+                          />
+                        </button>
                       );
                     })}
                   </div>
-                  <div className="py-2 bg-none w-40">
-                    <Button
-                      iconAfter={<IconPlus size="medium" />}
-                      shouldFitContainer
-                      style={{ color: "yellow" }}
-                    >
-                      Tambah Kliping
-                    </Button>
+                  <div className="mt-4 px-8 py-2 bg-none w-full justify-center">
+                    <UploadButton
+                      text={"Tambah Kliping +"}
+                      fileAccept={"image/png, image/gif, image/jpeg"}
+                      handleUpload={handleUpload}
+                    />
                   </div>
                   {/* End Kliping Gambar */}
                 </div>

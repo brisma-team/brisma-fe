@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { EwpOverviewLayout } from "@/layouts/ewp";
-import { IconPlus } from "@/components/icons";
+import { OverviewLayoutEWP } from "@/layouts/ewp";
+import { IconFile, IconPlus } from "@/components/icons";
 import {
   Breadcrumbs,
   PageTitle,
@@ -11,10 +11,14 @@ import {
   CardOverview,
   ModalAddProjectEWP,
 } from "@/components/molecules/ewp/konvensional/overview";
-import { DataNotFound } from "@/components/molecules/commons";
+import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
 import { useOverviewEWP } from "@/data/ewp/konvensional";
 import { convertDate } from "@/helpers";
 import Button from "@atlaskit/button";
+import _ from "lodash";
+import CardFilterProjectOverview from "@/components/molecules/ewp/konvensional/overview/CardFilterProjectOverview";
+import { useApprovalEWP } from "@/data/ewp";
+import { useRef } from "react";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -58,48 +62,61 @@ const convertProgressAndPercent = (status) => {
 };
 
 const index = () => {
+  const ref = useRef(null);
+  const [showFilter, setShowFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [openFilter, setOpenFilter] = useState(false);
-  const [typeModal, setTypeModal] = useState(null);
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  // const [params, setParams] = useState({
-  //   project_name: "",
-  //   status_approver: "",
-  //   status_pat: "",
-  //   sortBy: "",
-  //   year: "",
-  // });
-  // const [filter, setFilter] = useState({
-  //   project_name: "",
-  //   status_approver: "",
-  //   status_pat: "",
-  //   sortBy: "",
-  //   year: "",
-  // });
-
-  const {
-    overviewEWP,
-    overviewEWPIsLoading,
-    overviewEWPError,
-    overviewEWPMutate,
-  } = useOverviewEWP("all", {
-    pages: currentPage,
-    limit: 8,
+  const [sortBy, setSortBy] = useState("ASC");
+  const [filter, setFilter] = useState({
+    name: "",
+    is_audited: false,
+    ref_metode: "",
+    ref_tipe: "",
+    ref_jenis: "",
+    ref_tema: "",
+  });
+  const [params, setParams] = useState({
+    name: "",
+    is_audited: false,
+    ref_metode: "",
+    ref_tipe: "",
+    ref_jenis: "",
+    ref_tema: "",
   });
 
-  // useEffect(() => {
-  //   const handleSearch = () => {
-  //     setParams(filter);
-  //     projectOverviewMutate;
-  //   };
-  //   const debouncedSearch = _.debounce(handleSearch, 800);
-  //   debouncedSearch();
-  //   return () => {
-  //     debouncedSearch.cancel();
-  //   };
-  // }, [filter]);
+  const { overviewEWP, overviewEWPError, overviewEWPMutate } = useOverviewEWP(
+    "all",
+    {
+      ...params,
+      pages: currentPage,
+      limit: 8,
+      sortBy,
+    }
+  );
+
+  const { approvalEWP } = useApprovalEWP("ewp");
+
+  const handleChangeSortBy = (e) => {
+    setSortBy(e.value);
+  };
+
+  useEffect(() => {
+    console.log("ref => ", ref);
+  }, [ref]);
+
+  useEffect(() => {
+    const handleSearch = () => {
+      setParams(filter);
+      overviewEWPMutate();
+    };
+    const debouncedSearch = _.debounce(handleSearch, 800);
+    debouncedSearch();
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [filter]);
 
   useEffect(() => {
     if (overviewEWP) {
@@ -124,7 +141,8 @@ const index = () => {
             ? `On ${v?.status_approver?.pn}`
             : ``,
           addendum: v?.number_adendum.toString(),
-          href: `/ewp/projects/konvensional/${v?.id}`,
+          needApproval: v?.need_approved,
+          href: `/ewp/projects/konvensional/${v?.id}/info`,
         };
       });
       setData(mapping);
@@ -133,7 +151,7 @@ const index = () => {
   }, [overviewEWP]);
 
   return (
-    <EwpOverviewLayout>
+    <OverviewLayoutEWP data={approvalEWP?.data?.header}>
       <div className="pr-40">
         {/* Start Breadcrumbs */}
         <Breadcrumbs data={breadcrumbs} />
@@ -141,16 +159,16 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Project Overview"} />
         </div>
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-end">
           {/* Start Filter */}
           <div className="flex justify-between items-center gap-2">
             <div className="w-36">
               <Button
                 appearance="primary"
-                onClick={() => setOpenFilter(!openFilter)}
+                onClick={() => setShowFilter(!showFilter)}
                 shouldFitContainer
               >
-                Tampilkan Filter
+                {showFilter ? `Tutup Filter` : `Tampilkan Filter`}
               </Button>
             </div>
             <div className="w-36">
@@ -165,20 +183,30 @@ const index = () => {
               <ModalAddProjectEWP
                 showModal={showModal}
                 setShowModal={setShowModal}
-                typeModal={typeModal}
                 mutate={overviewEWPMutate}
               />
             </div>
           </div>
-          <div className="w-40">
+          <div className="w-24">
             <Button
               appearance="primary"
               onClick={() => setShowModal(true)}
               shouldFitContainer
+              iconBefore={<IconFile />}
             >
               Arsip
             </Button>
           </div>
+        </div>
+        <div className="relative">
+          <CardFilterProjectOverview
+            showFilter={showFilter}
+            filter={filter}
+            setFilter={setFilter}
+          />
+        </div>
+        <div className="w-full min-h-[8.8rem] flex items-end justify-end">
+          <SelectSortFilter change={handleChangeSortBy} />
         </div>
         {/* End Filter */}
         {/* Start Content */}
@@ -187,7 +215,7 @@ const index = () => {
             <DataNotFound />
           ) : data?.length ? (
             data.map((v, i) => {
-              return <CardOverview key={i} data={v} />;
+              return <CardOverview key={i} data={v} callbackRef={ref} />;
             })
           ) : (
             <Spinner />
@@ -196,7 +224,7 @@ const index = () => {
         <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
         {/* End Content */}
       </div>
-    </EwpOverviewLayout>
+    </OverviewLayoutEWP>
   );
 };
 

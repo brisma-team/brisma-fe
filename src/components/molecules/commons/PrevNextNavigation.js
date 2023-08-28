@@ -13,18 +13,19 @@ const PrevNextNavigation = ({ baseUrl, routes, prevUrl, nextUrl }) => {
 
   return (
     <div className="my-3 w-24">
-      <div className="flex justify-between w-24">
-        <div className="rounded-full overflow-hidden border-4 border-atlasian-blue-light w-7 h-7 flex justify-center items-center">
-          <LinkIcon
-            href={`${baseUrl}${prevUrl}`}
-            icon={
-              <div className="mt-1">
-                <IconArrowLeft primaryColor="#0C66E4" size="medium" />
-              </div>
-            }
-            isDisabled={prevUrl ? false : true}
-          />
-        </div>
+      <div className="flex justify-end gap-1.5">
+        {prevUrl && (
+          <div className="rounded-full overflow-hidden border-4 border-atlasian-blue-light w-7 h-7 flex justify-center items-center">
+            <LinkIcon
+              href={`${baseUrl}${prevUrl}`}
+              icon={
+                <div className="mt-1">
+                  <IconArrowLeft primaryColor="#0C66E4" size="medium" />
+                </div>
+              }
+            />
+          </div>
+        )}
         <div
           className="rounded-full border-4 border-atlasian-blue-light w-7 h-7"
           ref={ref}
@@ -52,17 +53,18 @@ const PrevNextNavigation = ({ baseUrl, routes, prevUrl, nextUrl }) => {
             </div>
           )}
         </div>
-        <div className="rounded-full overflow-hidden border-4 border-atlasian-blue-light w-7 h-7 flex justify-center items-center">
-          <LinkIcon
-            href={`${baseUrl}${nextUrl}`}
-            icon={
-              <div className="mt-1">
-                <IconArrowRight primaryColor="#0C66E4" size="medium" />
-              </div>
-            }
-            isDisabled={nextUrl ? false : true}
-          />
-        </div>
+        {nextUrl && (
+          <div className="rounded-full overflow-hidden border-4 border-atlasian-blue-light w-7 h-7 flex justify-center items-center">
+            <LinkIcon
+              href={`${baseUrl}${nextUrl}`}
+              icon={
+                <div className="mt-1">
+                  <IconArrowRight primaryColor="#0C66E4" size="medium" />
+                </div>
+              }
+            />
+          </div>
+        )}
       </div>
     </div>
   );

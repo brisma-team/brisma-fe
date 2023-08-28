@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 // import DocumentIcon from "@atlaskit/icon/glyph/document";
 // import { Worker, Viewer } from "@react-pdf-viewer/core";
 import { TableField } from "@/components/atoms";
+import { IconPlus, IconClose } from "@/components/icons";
+import Textfield from "@atlaskit/textfield";
 const ewpDetailData = [
   {
     ewp_id: "32",
@@ -8694,6 +8696,7 @@ const index = ({ data = ewpDetailData }) => {
   const id = useRouter().query.id;
   const [catDetailEwp, setCatDetailEwp] = useState([]);
   const [currentPage, setCurrentPage] = useState([]);
+  const [showFilter, setShowFilter] = useState(false);
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
@@ -8703,7 +8706,7 @@ const index = ({ data = ewpDetailData }) => {
   ];
   // const selectedData = useMemo(() => {
   //   return data.filter((items) => items.ewp_id == id)[0];
-  // }, [data]);
+  // }, []);
   useEffect(() => {
     const mappingCatEwp = data
       ?.filter((items) => items.ewp_id === id)[0]
@@ -8744,6 +8747,72 @@ const index = ({ data = ewpDetailData }) => {
         {/* Start Breadcrumbs */}
         <Breadcrumbs data={breadcrumbs} />
         {/* End Breadcrumbs */}
+        {/* Start Filter */}
+        <div className="my-3 w-40">
+          <Button
+            appearance="primary"
+            iconBefore={IconPlus}
+            shouldFitContainer
+            onClick={() => setShowFilter(!showFilter)}
+          >
+            Tampilkan Filter
+          </Button>
+        </div>
+        {showFilter && (
+          <div className="flex justify-between w-96">
+            <Card>
+              <div className="flex p-2">
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="ID Projek"
+                    className="mr-1"
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="Nama Projek"
+                    className="ml-1"
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+              </div>
+              <div className="flex p-2">
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="Kantor Audit"
+                    className="mr-1"
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="Triwulan"
+                    className="ml-1"
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+        {/* End Filter */}
         <div className="flex justify-between items-center mb-6">
           <div className="flex-1">
             <div className="text-3xl font-bold">Catalogue E.W.P</div>

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ButtonField } from "@/components/atoms";
+import { ButtonField, ErrorValidation, Pagination } from "@/components/atoms";
 import { useState } from "react";
 import { useOverviewEWP } from "@/data/ewp/konvensional";
 import _ from "lodash";
@@ -7,34 +7,66 @@ import { CardTypeCount, DataNotFound } from "@/components/molecules/commons";
 import { useDispatch, useSelector } from "react-redux";
 import { setProjectOverviewData } from "@/slices/ewp/projectOverviewEWPSlice";
 import CustomSelect from "@/components/molecules/commons/CustomSelect";
-import RowTable from "./RowTable";
+import RowTable from "../RowTable";
+import useUser from "@/data/useUser";
+import CardFilterProjectOverview from "../../CardFilterProjectOverview";
 
-const ModalBodySchedulePAT = ({ setCurrentModalStage, typeModal }) => {
+const ModalBodySchedulePAT = ({ setCurrentModalStage, setDifferentKTA }) => {
   const dispatch = useDispatch();
   const projectOverviewData = useSelector(
     (state) => state.projectOverviewEWP.projectOverviewData
   );
+  const validationErrors = useSelector(
+    (state) => state.projectOverviewEWP.validationErrorsSchedulePAT
+  );
+
   const isDisabled = false;
+  const [showFilter, setShowFilter] = useState(false);
   const [schedulePAT, setSchedulePAT] = useState([]);
   const [yearOption, setYearOption] = useState([]);
   const [countStatus, setCountStatus] = useState([]);
-  const yearPAT = useOverviewEWP("tahun_pat", { pages: 1, limit: 1 });
-  const { overviewEWP, overviewEWPMutate } = useOverviewEWP("jadwal_pat", {
-    pages: 1,
-    limit: 1,
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filter, setFilter] = useState({
+    name: "",
+    is_audited: false,
+    ref_metode: "",
+    ref_tipe: "",
+    ref_jenis: "",
+    ref_tema: "",
+  });
+  const [params, setParams] = useState({
+    name: "",
+    is_audited: false,
+    ref_metode: "",
+    ref_tipe: "",
+    ref_jenis: "",
+    ref_tema: "",
   });
 
-  useEffect(() => {
-    console.log("yearPAT => ", yearPAT.overviewEWP);
-    // if (yearPAT.overviewEWP.data) {
-    //   const mappingYear = yearPAT.overviewEWP.data.map((v) => {
-    //     return v.tahun;
-    //   });
+  const yearPAT = useOverviewEWP("tahun_pat", { pages: 1, limit: 1 });
+  const { overviewEWP, overviewEWPMutate } = useOverviewEWP("jadwal_pat", {
+    ...params,
+    pages: currentPage,
+    limit: 6,
+    tahun: projectOverviewData.audit_year,
+  });
+  const { user } = useUser();
 
-    //   setYearOption(mappingYear);
-    // }
+  useEffect(() => {
     setCurrentModalStage(2);
   }, []);
+
+  useEffect(() => {
+    const handleSearch = () => {
+      setParams(filter);
+      overviewEWPMutate();
+    };
+    const debouncedSearch = _.debounce(handleSearch, 800);
+    debouncedSearch();
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [filter]);
 
   useEffect(() => {
     if (yearPAT.overviewEWP?.data) {
@@ -79,24 +111,13 @@ const ModalBodySchedulePAT = ({ setCurrentModalStage, typeModal }) => {
     }
   }, [overviewEWP]);
 
-  useEffect(() => {
-    console.log("projectOVerview Data => ", projectOverviewData);
-  }, [projectOverviewData]);
-
-  useEffect(() => {
-    console.log("countStatus => ", countStatus);
-  }, [countStatus]);
-
-  useEffect(() => {
-    console.log("yearOption => ", yearOption);
-  }, [yearOption]);
-
   const handleChangeFilterYear = (e) => {
     const updatedData = {
       ...projectOverviewData,
       audit_year: e.value,
     };
     dispatch(setProjectOverviewData(updatedData));
+    overviewEWPMutate();
   };
 
   const handleClick = (value) => {
@@ -107,7 +128,10 @@ const ModalBodySchedulePAT = ({ setCurrentModalStage, typeModal }) => {
       ref_jenis,
       ref_tipe,
       ref_tema,
+      tim_audit,
+      audited,
     } = value;
+
     const updatedData = {
       ...projectOverviewData,
       project_name: name_kegiatan_audit,
@@ -116,51 +140,79 @@ const ModalBodySchedulePAT = ({ setCurrentModalStage, typeModal }) => {
       ref_jenis,
       ref_tipe,
       ref_tema,
+      tim_audit,
+      audited,
     };
     dispatch(setProjectOverviewData(updatedData));
+
+    const result = tim_audit?.kta?.find((v) => v?.pn_kta == user?.data?.pn);
+
+    if (result) {
+      setDifferentKTA(false);
+    }
   };
 
   return (
     <div className="w-[71rem] px-4 py-2">
       <p className="text-brisma text-lg font-bold">RAO Tangerang Selatan</p>
       <div className="w-full flex justify-between items-center my-3">
-        <div className="flex justify-between gap-3">
-          <CustomSelect
-            placeholder="Pilih tahun"
-            isSearchable={false}
-            optionValue={yearOption}
-            handleChange={handleChangeFilterYear}
-            selectedValue={
-              projectOverviewData.audit_year
-                ? {
-                    label: projectOverviewData.audit_year,
-                    value: projectOverviewData.audit_year,
-                  }
-                : ""
-            }
-          />
-          <div className="bg-atlasian-blue-light w-32 rounded flex items-center">
-            <ButtonField
-              text="Tampilkan Filter"
-              handler={() => console.log("test")}
-            />
+        <div className="flex w-full justify-between">
+          <div className="flex gap-3">
+            <div>
+              <CustomSelect
+                placeholder="Pilih tahun"
+                isSearchable={false}
+                optionValue={yearOption}
+                handleChange={handleChangeFilterYear}
+                selectedValue={
+                  projectOverviewData.audit_year
+                    ? {
+                        label: projectOverviewData.audit_year,
+                        value: projectOverviewData.audit_year,
+                      }
+                    : ""
+                }
+              />
+              {validationErrors["audit_year"] && (
+                <ErrorValidation message={validationErrors["audit_year"]} />
+              )}
+            </div>
+            <div>
+              <div className="bg-atlasian-blue-light w-32 h-8 rounded flex items-center mt-1">
+                <ButtonField
+                  text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
+                  handler={() => setShowFilter(!showFilter)}
+                />
+              </div>
+              <div className="relative">
+                <CardFilterProjectOverview
+                  showFilter={showFilter}
+                  filter={filter}
+                  setFilter={setFilter}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-end">
+            {countStatus?.length ? (
+              <div className="flex gap-2">
+                {countStatus.map((v, i) => {
+                  return (
+                    <CardTypeCount
+                      key={i}
+                      title={v.status}
+                      total={v.count}
+                      percent={v.percent}
+                      width={"w-[12.8rem]"}
+                    />
+                  );
+                })}
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
-        {countStatus?.length && (
-          <div className="flex gap-2">
-            {countStatus.map((v, i) => {
-              return (
-                <CardTypeCount
-                  key={i}
-                  title={v.status}
-                  total={v.count}
-                  percent={v.percent}
-                  width={"w-[12.8rem]"}
-                />
-              );
-            })}
-          </div>
-        )}
       </div>
       <div className="w-full text-sm mt-6">
         <div className="border-2 border-[#DFE1E6] rounded-xl">
@@ -213,6 +265,14 @@ const ModalBodySchedulePAT = ({ setCurrentModalStage, typeModal }) => {
             {/* End Table */}
           </div>
         </div>
+        {validationErrors["pat_jadwal_audit_id"] && (
+          <ErrorValidation message={validationErrors["pat_jadwal_audit_id"]} />
+        )}
+
+        {validationErrors["audited"] && (
+          <ErrorValidation message={validationErrors["audited"]} />
+        )}
+        <Pagination setCurrentPage={setCurrentPage} pages={1} />
       </div>
     </div>
   );

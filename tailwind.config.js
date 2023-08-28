@@ -25,14 +25,14 @@ module.exports = {
           blue: {
             dark: "#09326C",
             light: "#0C66E4",
-            baby: "#DFE1E6",
+            baby: "#172B4D", // 172B4D
           },
           red: "#CA3521",
           yellow: "#E2B203",
           green: "#1F845A",
           gray: {
             dark: "#97A0AF",
-            light: "#172B4D",
+            light: "#DFE1E6", // DFE1E6
           },
         },
         brisma: "#09326C",

@@ -11,7 +11,6 @@ import { convertDate, usePostData, useUpdateData } from "@/helpers";
 import { useState } from "react";
 import { useCommentPAT } from "@/data/pat";
 import { useRouter } from "next/router";
-import _ from "lodash";
 
 const CommentDetail = ({ mutate, babCode, data }) => {
   const [open, setOpen] = useState(false);

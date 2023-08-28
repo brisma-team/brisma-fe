@@ -1,10 +1,12 @@
-import { ButtonIcon, Card } from "@/components/atoms";
-import { IconEdit, IconInfo, IconTrash } from "@/components/icons";
-import Link from "next/link";
+import { ButtonIcon, DivButton } from "@/components/atoms";
+import { IconTrash } from "@/components/icons";
+import { DropdownIcon } from "@/components/molecules/commons";
 import ProgressBar from "@atlaskit/progress-bar";
+import { N800 } from "@atlaskit/theme/colors";
+import { token } from "@atlaskit/tokens";
+import { useRouter } from "next/router";
 
 const CardBody = ({ title, value, textColor, className }) => {
-  console.log("text => ", value);
   switch (title) {
     case "Manajer Audit":
       textColor = "text-atlasian-blue-light";
@@ -44,6 +46,7 @@ const CardBody = ({ title, value, textColor, className }) => {
 };
 
 const CardOverview = ({ data }) => {
+  const router = useRouter();
   const {
     jenis,
     projectId,
@@ -58,24 +61,41 @@ const CardOverview = ({ data }) => {
     approvalStatus,
     addendum,
     href,
+    needApproval,
   } = data;
 
   return (
-    <Link
+    <DivButton
       className="m-2 hover:bg-gray-100 hover:rounded-[10px] hover:no-underline w-[21.875rem]"
       href={href}
+      handleClick={(e) => (e.stopPropagation(), router.push(href))}
     >
-      <Card>
-        <div className="w-full px-4 pb-2">
+      <div
+        className={`w-full rounded flex flex-col items-center h-full border-2 ${
+          needApproval && `border-atlasian-yellow`
+        } relative`}
+        style={{
+          color: token("color.text", N800),
+          borderRadius: "10px",
+          boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.25)",
+        }}
+      >
+        {needApproval && (
+          <div className="absolute whitespace-normal flex justify-center items-center h-full w-full">
+            <p className="font-bold text-xl text-atlasian-yellow">
+              Menunggu Approval K.T.A
+            </p>
+          </div>
+        )}
+        <div className={`w-full px-4 pb-4 ${needApproval && `opacity-20`}`}>
           <div className="flex justify-between">
             <div
-              className={`text-base font-semibold rounded-tl-lg text-brisma bg-blue-300 -ml-4 -mt-2 px-5 h-9 flex items-center justify-center`}
+              className={`text-base font-semibold rounded-tl-lg text-brisma bg-blue-300 -ml-4 px-5 h-9 flex items-center justify-center`}
             >
               <p>{jenis}</p>
             </div>
-            <div className="flex w-24 gap-2">
-              <ButtonIcon color={"blue"} icon={<IconInfo size="medium" />} />
-              <ButtonIcon color={"yellow"} icon={<IconEdit size="medium" />} />
+            <div className="flex items-center justify-end w-20 gap-1 pt-2">
+              <DropdownIcon />
               <ButtonIcon color={"red"} icon={<IconTrash size="medium" />} />
             </div>
           </div>
@@ -104,8 +124,8 @@ const CardOverview = ({ data }) => {
           <CardBody title={"Status Persetujuan"} value={approvalStatus} />
           <CardBody title={"Addendum"} value={addendum} />
         </div>
-      </Card>
-    </Link>
+      </div>
+    </DivButton>
   );
 };
 

@@ -1,9 +1,13 @@
 import { useEffect } from "react";
 import { CardHeaderContent } from "@/components/molecules/commons";
+import { resetProjectOverviewData } from "@/slices/ewp/projectOverviewEWPSlice";
+import { useDispatch } from "react-redux";
 
 const ModalBodySource = ({ setCurrentModalStage, setIsPat, typeModal }) => {
+  const dispatch = useDispatch();
   useEffect(() => {
     setCurrentModalStage(1);
+    dispatch(resetProjectOverviewData());
   }, []);
 
   const handleClick = (value) => {

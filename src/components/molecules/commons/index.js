@@ -35,6 +35,7 @@ import TemaSelect from "./TemaSelect";
 import CardFormInput from "./CardFormInput";
 import CardApprovalList from "./CardApprovalList";
 import CardHeaderContent from "./CardHeaderContent";
+import DropdownIcon from "./DropdownIcon";
 
 export {
   BackButton,
@@ -74,4 +75,5 @@ export {
   CardFormInput,
   CardApprovalList,
   CardHeaderContent,
+  DropdownIcon,
 };

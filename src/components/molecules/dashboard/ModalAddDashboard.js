@@ -1,3 +1,4 @@
+import React from "react";
 import { Modal, TextInput } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import Close from "@atlaskit/icon/glyph/editor/close";
@@ -10,8 +11,23 @@ const ModalAddDashboard = ({
   setData,
   handleSubmit,
 }) => {
+  const handleEmbedIdChange = (e) => {
+    setData({ ...data, embedId: e.target.value });
+  };
+
+  const handleNameChange = (e) => {
+    setData({ ...data, name: e.target.value });
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
   return (
-    <Modal showModal={showModal} onClickOutside={() => setShowModal(false)}>
+    <Modal
+      showModal={showModal}
+      onClickOutside={closeModal}
+      positionCenter={true}
+    >
       <div className="w-[32rem] h-modal p-4">
         <h3 className="p-3 font-bold text-xl mb-3">Form Dashboard</h3>
         <div className="grid grid-cols-3">
@@ -21,9 +37,7 @@ const ModalAddDashboard = ({
               <div className="p-1 pl-10 col-span-2">
                 <TextInput
                   placeholder="Masukkan Superset ID"
-                  onChange={(e) =>
-                    setData({ ...data, embedId: e.target.value })
-                  }
+                  onChange={handleEmbedIdChange}
                 />
               </div>
               <div className="p-3 text-base">Dashboard Name</div>
@@ -31,7 +45,7 @@ const ModalAddDashboard = ({
               <div className="p-1 pl-10 col-span-2">
                 <TextInput
                   placeholder="Masukkan Nama Dashboard"
-                  onChange={(e) => setData({ ...data, name: e.target.value })}
+                  onChange={handleNameChange}
                 />
               </div>
               <div className="p-3"></div>
@@ -39,7 +53,7 @@ const ModalAddDashboard = ({
                 <Button
                   appearance="default"
                   shouldFitContainer
-                  onClick={() => setShowModal(false)}
+                  onClick={closeModal}
                   iconBefore={<Close size="medium" />}
                 >
                   Tutup

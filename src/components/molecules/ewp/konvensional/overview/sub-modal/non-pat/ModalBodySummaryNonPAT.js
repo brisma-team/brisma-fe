@@ -3,16 +3,27 @@ import { FormWithLabel } from "@/components/molecules/commons";
 import { DatepickerStartEnd, TextInput } from "@/components/atoms";
 import { useDispatch, useSelector } from "react-redux";
 import { setProjectOverviewData } from "@/slices/ewp/projectOverviewEWPSlice";
+import useUser from "@/data/useUser";
 
-const ModalBodySummary = ({ setCurrentModalStage, isDisabled }) => {
+const ModalBodySummaryNonPAT = ({
+  setCurrentModalStage,
+  isDisabled,
+  isPat,
+}) => {
   const dispatch = useDispatch();
   const projectOverviewData = useSelector(
     (state) => state.projectOverviewEWP.projectOverviewData
   );
 
+  const { user } = useUser();
+
   useEffect(() => {
-    setCurrentModalStage(3);
+    setCurrentModalStage(4);
   }, []);
+
+  useEffect(() => {
+    console.log("projectOverviewData => ", projectOverviewData);
+  }, [projectOverviewData]);
 
   const handleChange = (property, value) => {
     const updatedData = {
@@ -20,6 +31,16 @@ const ModalBodySummary = ({ setCurrentModalStage, isDisabled }) => {
       [property]: value,
     };
     dispatch(setProjectOverviewData(updatedData));
+  };
+
+  const findKTA = () => {
+    const result = projectOverviewData.tim_audit?.kta?.find(
+      (v) => v.pn_kta === user.data.pn
+    );
+    if (result) {
+      return result.nama_kta;
+    }
+    return user.data.fullName;
   };
 
   return (
@@ -42,7 +63,7 @@ const ModalBodySummary = ({ setCurrentModalStage, isDisabled }) => {
           form={
             <div className="w-36">
               <TextInput
-                value={projectOverviewData.project_name}
+                value={new Date().getFullYear().toString()}
                 placeholder="Tahun Audit"
                 isDisabled={true}
               />
@@ -117,7 +138,19 @@ const ModalBodySummary = ({ setCurrentModalStage, isDisabled }) => {
           </div>
         </div>
         <FormWithLabel
-          form={<TextInput placeholder="Ketua Tim Audit" isDisabled={true} />}
+          form={
+            <TextInput
+              placeholder="Ketua Tim Audit"
+              value={
+                isPat
+                  ? projectOverviewData.tim_audit
+                    ? findKTA()
+                    : ""
+                  : user.data.fullName
+              }
+              isDisabled={true}
+            />
+          }
           label="Ketua Tim Audit"
           widthLabel={"w-3/12"}
           widthForm={"w-9/12"}
@@ -136,7 +169,7 @@ const ModalBodySummary = ({ setCurrentModalStage, isDisabled }) => {
                 }
                 placeholderStart="Pilih Tanggal"
                 placeholderEnd="Pilih Tanggal"
-                isDisabled={isDisabled}
+                isDisabled={true}
               />
             </div>
           }
@@ -149,4 +182,4 @@ const ModalBodySummary = ({ setCurrentModalStage, isDisabled }) => {
   );
 };
 
-export default ModalBodySummary;
+export default ModalBodySummaryNonPAT;
