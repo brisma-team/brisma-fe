@@ -1,0 +1,15 @@
+version: "3"
+services:
+  brisma-api:
+    image: localhost/brisma-fe-202
+    build: .
+    container_name: brisma-fe-202
+    restart: unless-stopped
+    volumes:
+      - .env.local:/app/.env.local
+      - ./src:/app/src
+      - ./out:/app/out
+      - ./public:/app/public
+    ports:
+      - "3030:3000"
+    command: npm start
