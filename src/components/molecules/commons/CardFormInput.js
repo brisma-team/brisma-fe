@@ -11,13 +11,14 @@ const CardFormInput = ({
   buttonBottom,
   buttonText,
   handleClickButtonBottom,
+  className,
 }) => {
   return (
     <div>
       <Card>
-        <div className="w-full -mx-3 -mt-3">
+        <div className="w-full -mt-3">
           <div className="w-full px-2 mb-4">
-            <p className={`font-semibold text-sm`}>{title}</p>
+            <p className={`font-semibold text-sm ${className}`}>{title}</p>
           </div>
           <div className={`${!isDataArray && `flex`}`}>
             {children}
