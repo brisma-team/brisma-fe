@@ -71,7 +71,7 @@ const index = () => {
   useEffect(() => {
     setData({
       ...data,
-      latar_belakang: mapaEWP?.data,
+      latar_belakang: mapaEWP?.data ? mapaEWP?.data : "",
     });
   }, [mapaEWP]);
 
@@ -105,10 +105,6 @@ const index = () => {
     loadingSwal("close");
   };
 
-  useEffect(() => {
-    console.log("imageCliplist => ", imageClipList);
-  }, [imageClipList]);
-
   return (
     <LandingLayoutEWP>
       <div className="pr-16">
@@ -121,7 +117,7 @@ const index = () => {
             baseUrl={baseUrl}
             routes={routes}
             prevUrl={false}
-            nextUrl={"/sumber-informasi"}
+            nextUrl={"/tujuan"}
           />
         </div>
         {/* Start Content */}
