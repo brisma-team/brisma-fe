@@ -1,8 +1,5 @@
 import { Breadcrumbs, Card, PageTitle, TableField } from "@/components/atoms";
-import {
-  CardTypeCount,
-  PrevNextNavigation,
-} from "@/components/molecules/commons";
+import { PrevNextNavigation } from "@/components/molecules/commons";
 import { PatLandingLayout } from "@/layouts/pat";
 import { useEffect } from "react";
 import { useAuditTarget, useStatusPat } from "@/data/pat";
@@ -103,8 +100,8 @@ const index = () => {
         if (!parseInt(v?.existing)) {
           return {
             "Tipe Uker": v?.name,
-            "Uker Eksisting": "0",
-            "Uker Audit": "0",
+            "Uker Eksisting": v?.existing.toString(),
+            "Uker Audit": v?.target.toString(),
             Presentase: "0%",
           };
         } else {
@@ -127,8 +124,8 @@ const index = () => {
         if (!parseInt(v?.existing)) {
           return {
             "Tipe E-Channel": v?.name,
-            Eksisting: "0",
-            Audit: "0",
+            Eksisting: v?.existing.toString(),
+            Audit: v?.target.toString(),
             Presentase: "0%",
           };
         } else {
@@ -166,39 +163,6 @@ const index = () => {
             routes={routes}
             prevUrl={"/jadwal-lainnya"}
             nextUrl={"/dokumen"}
-          />
-        </div>
-        <div className="flex justify-end items-end gap-2">
-          <CardTypeCount
-            title={"REGULER"}
-            total={2}
-            percent={75}
-            width={"w-[12.8rem]"}
-          />
-          <CardTypeCount
-            title={"SPECIAL"}
-            total={1}
-            percent={25}
-            width={"w-[12.8rem]"}
-          />
-          <CardTypeCount
-            title={"TEMATIK"}
-            total={1}
-            percent={25}
-            width={"w-[12.8rem]"}
-          />
-          <CardTypeCount
-            title={"KONSULTING"}
-            total={1}
-            percent={25}
-            width={"w-[12.8rem]"}
-          />
-
-          <CardTypeCount
-            title={"LAIN-LAIN"}
-            total={1}
-            percent={25}
-            width={"w-[12.8rem]"}
           />
         </div>
         {/* Start Content */}
