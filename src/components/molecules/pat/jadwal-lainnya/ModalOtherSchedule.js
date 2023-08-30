@@ -19,6 +19,7 @@ import {
   setvalidationErrorsAO,
   resetvalidationErrorsAI,
   resetvalidationErrorsAO,
+  resetOtherScheduleData,
 } from "@/slices/pat/activityScheduleOtherSlice";
 import { useEffect } from "react";
 
@@ -102,6 +103,11 @@ const ModalOtherSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
     }
   };
 
+  const handleCloseModal = async () => {
+    setShowModal(false);
+    dispatch(resetOtherScheduleData());
+  };
+
   const items = [
     {
       id: "step-1",
@@ -141,11 +147,11 @@ const ModalOtherSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
   return (
     <Modal
       showModal={showModal}
-      onClickOutside={() => setShowModal(false)}
       header={
         <ModalHeader
           headerText={"Buat Jadwal Kegiatan Lain"}
           progressItems={items}
+          handleCloseModal={handleCloseModal}
         />
       }
       footer={

@@ -19,6 +19,7 @@ import {
   setvalidationErrorsAO,
   resetvalidationErrorsAI,
   resetvalidationErrorsAO,
+  resetActivityScheduleData,
 } from "@/slices/pat/activityScheduleSlice";
 import { useEffect } from "react";
 
@@ -107,6 +108,11 @@ const ModalActivitySchedule = ({
     }
   };
 
+  const handleCloseModal = async () => {
+    setShowModal(false);
+    dispatch(resetActivityScheduleData());
+  };
+
   const items = [
     {
       id: "step-1",
@@ -146,7 +152,6 @@ const ModalActivitySchedule = ({
   return (
     <Modal
       showModal={showModal}
-      onClickOutside={() => setShowModal(false)}
       header={
         <ModalHeader
           headerText={
@@ -155,6 +160,7 @@ const ModalActivitySchedule = ({
               : "Buat Jadwal Kegiatan"
           }
           progressItems={items}
+          handleCloseModal={handleCloseModal}
         />
       }
       footer={

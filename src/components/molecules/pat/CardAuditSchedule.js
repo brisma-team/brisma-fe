@@ -44,8 +44,8 @@ const CardAuditSchedule = ({
   const { kategoriAnggaran } = useKategoriAnggaran();
 
   const handlerUpdate = () => {
-    const jadwalData = auditSchedule.data.jadwal;
-    const mappingEchannel = auditSchedule.data.echannel.map((v) => {
+    const jadwalData = auditSchedule?.data?.jadwal;
+    const mappingEchannel = auditSchedule?.data?.echannel?.map((v) => {
       return {
         ref_echanel_type_kode: {
           kode: v.ref_echanel_type_kode.kode,
@@ -57,7 +57,7 @@ const CardAuditSchedule = ({
       };
     });
 
-    const mappingUker = auditSchedule.data.auditee_jadwal_audit.map((v) => {
+    const mappingUker = auditSchedule?.data?.auditee_jadwal_audit?.map((v) => {
       return {
         ref_auditee_orgeh_kode: v.ref_auditee_orgeh_kode,
         ref_auditee_orgeh_name: v.ref_auditee_orgeh_name,
@@ -68,7 +68,7 @@ const CardAuditSchedule = ({
       };
     });
 
-    const mappingAnggaranKegiatan = auditSchedule.data.anggaran_kegiatan.map(
+    const mappingAnggaranKegiatan = auditSchedule?.data?.anggaran_kegiatan?.map(
       (v) => {
         return {
           ref_sub_kategori_anggaran_kode: v.ref_sub_kategori_anggaran_kode,
@@ -78,7 +78,7 @@ const CardAuditSchedule = ({
     );
 
     const getDataFromKategori = (ref_sub_kategori_anggaran_kode) => {
-      const dataKategori = kategoriAnggaran.data.find((data) =>
+      const dataKategori = kategoriAnggaran?.data?.find((data) =>
         data.ref_sub_kategori_anggarans.some(
           (item) =>
             item.nama ===
@@ -88,7 +88,7 @@ const CardAuditSchedule = ({
       return dataKategori ? dataKategori.nama : null;
     };
 
-    const anggaranKegiatan = mappingAnggaranKegiatan.reduce((result, data) => {
+    const anggaranKegiatan = mappingAnggaranKegiatan?.reduce((result, data) => {
       const { ref_sub_kategori_anggaran_kode, amount } = data;
       const nama = getDataFromKategori(ref_sub_kategori_anggaran_kode);
 
@@ -116,38 +116,40 @@ const CardAuditSchedule = ({
       return result;
     }, []);
 
-    const mappingAnggaranDinas = auditSchedule.data.anggaran_dinas.map((v) => {
-      const {
-        pn_auditor,
-        biaya_tiket_pp,
-        biaya_transport_lokal,
-        biaya_perjalanan_hari,
-        biaya_akomodasi,
-      } = v;
+    const mappingAnggaranDinas = auditSchedule?.data?.anggaran_dinas?.map(
+      (v) => {
+        const {
+          pn_auditor,
+          biaya_tiket_pp,
+          biaya_transport_lokal,
+          biaya_perjalanan_hari,
+          biaya_akomodasi,
+        } = v;
 
-      return {
-        pn_auditor,
-        biaya_tiket_pp: parseInt(biaya_tiket_pp),
-        biaya_transport_lokal: parseInt(biaya_transport_lokal),
-        biaya_perjalanan_hari: parseInt(biaya_perjalanan_hari),
-        biaya_akomodasi: parseInt(biaya_akomodasi),
-      };
-    });
+        return {
+          pn_auditor,
+          biaya_tiket_pp: parseInt(biaya_tiket_pp),
+          biaya_transport_lokal: parseInt(biaya_transport_lokal),
+          biaya_perjalanan_hari: parseInt(biaya_perjalanan_hari),
+          biaya_akomodasi: parseInt(biaya_akomodasi),
+        };
+      }
+    );
 
     const mapping = {
-      jadwal_audit_id: jadwalData.id,
-      pat_id: jadwalData.pat_id,
-      name_kegiatan_audit: jadwalData.name_kegiatan_audit,
-      ref_metode: jadwalData.ref_metode,
-      ref_tipe: jadwalData.ref_tipe,
-      ref_jenis: jadwalData.ref_jenis,
-      ref_tema: jadwalData.ref_tema,
-      pelaksanaan_start: jadwalData.pelaksanaan_start,
-      pelaksanaan_end: jadwalData.pelaksanaan_end,
-      deskripsi: jadwalData.deskripsi,
+      jadwal_audit_id: jadwalData?.id,
+      pat_id: jadwalData?.pat_id,
+      name_kegiatan_audit: jadwalData?.name_kegiatan_audit,
+      ref_metode: jadwalData?.ref_metode,
+      ref_tipe: jadwalData?.ref_tipe,
+      ref_jenis: jadwalData?.ref_jenis,
+      ref_tema: jadwalData?.ref_tema,
+      pelaksanaan_start: jadwalData?.pelaksanaan_start,
+      pelaksanaan_end: jadwalData?.pelaksanaan_end,
+      deskripsi: jadwalData?.deskripsi,
       uker: mappingUker,
       echannel: mappingEchannel,
-      tim_audit_id: jadwalData.tim_audit_id,
+      tim_audit_id: jadwalData?.tim_audit_id,
       anggaran_kegiatan: anggaranKegiatan,
       anggaran_dinas: mappingAnggaranDinas,
     };

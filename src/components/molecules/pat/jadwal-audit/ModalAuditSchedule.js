@@ -19,6 +19,7 @@ import {
   setvalidationErrorsAO,
   resetvalidationErrorsAI,
   resetvalidationErrorsAO,
+  resetAuditScheduleData,
 } from "@/slices/pat/auditScheduleSlice";
 
 const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
@@ -107,6 +108,11 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
     }
   };
 
+  const handleCloseModal = async () => {
+    setShowModal(false);
+    dispatch(resetAuditScheduleData());
+  };
+
   const items = [
     {
       id: "step-1",
@@ -146,9 +152,12 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
   return (
     <Modal
       showModal={showModal}
-      onClickOutside={() => setShowModal(false)}
       header={
-        <ModalHeader headerText={"Buat Jadwal Audit"} progressItems={items} />
+        <ModalHeader
+          headerText={"Buat Jadwal Audit"}
+          progressItems={items}
+          handleCloseModal={handleCloseModal}
+        />
       }
       footer={
         <ModalFooter
