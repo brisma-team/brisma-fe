@@ -9,7 +9,7 @@ import { ProfileDetail } from "../commons";
 
 const Content = ({ title, value }) => {
   return (
-    <div className="my-5 leading-3">
+    <div className="my-5">
       <p className="font-bold">{title}</p>
       <p className="font-light text-sm">
         {!value || value === ""

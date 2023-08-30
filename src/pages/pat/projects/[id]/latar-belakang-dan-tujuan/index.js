@@ -92,6 +92,7 @@ const index = () => {
         ])
       );
     }
+    loadingSwal("close");
   };
   useEffect(() => {
     setContent([
