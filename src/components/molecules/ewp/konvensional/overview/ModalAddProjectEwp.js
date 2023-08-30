@@ -27,12 +27,7 @@ import {
   scheduleNonPATSchema,
   documentNonPATSchema,
 } from "@/helpers/schemas/ewp/konvensional/projectOverviewEWPSchema";
-import {
-  confirmationSwal,
-  setErrorValidation,
-  usePostData,
-  useUpdateData,
-} from "@/helpers";
+import { confirmationSwal, setErrorValidation, usePostData } from "@/helpers";
 import _ from "lodash";
 
 const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
