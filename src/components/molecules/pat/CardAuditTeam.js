@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { ButtonIcon, Card } from "@/components/atoms";
 import { IconEdit, IconTrash } from "@/components/icons";
-import { useEffect } from "react";
-import { useState } from "react";
 import { deleteSwal } from "@/helpers";
 import useAuditTeam from "@/data/pat/useAuditTeam";
 import { useRouter } from "next/router";
@@ -80,24 +78,6 @@ const CardAuditTeam = ({
 }) => {
   const router = useRouter().query;
   const dispatch = useDispatch();
-  const [ma, setMa] = useState([]);
-  const [kta, setKta] = useState([]);
-  const [ata, setAta] = useState([]);
-  useEffect(() => {
-    const mappedMA = manajer_audit?.map((v) => {
-      return v.nama_ma;
-    });
-    const mappedKTA = ketua_tim_audit?.map((v) => {
-      return v.nama_kta;
-    });
-    const mappedATA = anggota_tim_audit?.map((v) => {
-      return { name: v?.nama_ata, uker: v?.ref_ata_ukers };
-    });
-
-    setMa(mappedMA);
-    setKta(mappedKTA);
-    setAta(mappedATA);
-  }, []);
 
   const { auditTeam } = useAuditTeam("detail", {
     id: router.id,
@@ -180,10 +160,28 @@ const CardAuditTeam = ({
               text={created_at}
               width={"w-3/5"}
             />
-            <CardBody title={"Manajer Audit"} text={ma} width={"w-2/5"} />
-            <CardBody title={"Ketua Tim Audit"} text={kta} width={"w-3/5"} />
+            <CardBody
+              title={"Manajer Audit"}
+              text={manajer_audit?.map((v) => {
+                return v.nama_ma;
+              })}
+              width={"w-2/5"}
+            />
+            <CardBody
+              title={"Ketua Tim Audit"}
+              text={ketua_tim_audit?.map((v) => {
+                return v.nama_kta;
+              })}
+              width={"w-3/5"}
+            />
           </div>
-          <CardBody title={"Anggota Tim Audit"} text={ata} width={"w-full"} />
+          <CardBody
+            title={"Anggota Tim Audit"}
+            text={anggota_tim_audit?.map((v) => {
+              return { name: v?.nama_ata, uker: v?.ref_ata_ukers };
+            })}
+            width={"w-full"}
+          />
         </div>
       </Card>
     </Link>
