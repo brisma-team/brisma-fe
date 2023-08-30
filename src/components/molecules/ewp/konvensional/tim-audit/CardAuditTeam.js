@@ -177,6 +177,10 @@ const CardAuditTeam = () => {
             isSearchable={false}
             handleChange={(e) => handleChange("ref_tipe_tim", e.value)}
             placeholder={"Tipe Tim"}
+            selectedValue={{
+              label: auditTeamData?.ref_tipe_tim?.nama,
+              value: auditTeamData?.ref_tipe_tim,
+            }}
           />
         </div>
       </CardFormInput>
