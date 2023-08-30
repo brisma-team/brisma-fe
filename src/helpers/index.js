@@ -17,6 +17,7 @@ import numberWithCommas from "./numberWithCommas";
 import decimalToPercentage from "./decimalToPercentage";
 import setErrorValidation from "./setErrorValidation";
 import copyToClipboard from "./copyToClipboard";
+import errorSwalTimeout from "./errorSwalTimeout";
 
 export {
   loadingSwal,
@@ -38,4 +39,5 @@ export {
   decimalToPercentage,
   setErrorValidation,
   copyToClipboard,
+  errorSwalTimeout,
 };

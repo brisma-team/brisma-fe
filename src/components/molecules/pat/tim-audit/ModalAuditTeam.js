@@ -3,16 +3,27 @@ import {
   ButtonField,
   TextInput,
   ErrorValidation,
+  DivButton,
 } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
 import CardFormInputTeam from "../CardFormInputTeam";
-import { usePostData, useUpdateData } from "@/helpers";
+import {
+  confirmationSwal,
+  errorSwalTimeout,
+  usePostData,
+  useUpdateData,
+} from "@/helpers";
 import { useState } from "react";
 import { auditTeamSchema } from "@/helpers/schemas";
 import { useSelector, useDispatch } from "react-redux";
-import { setAuditTeamData } from "@/slices/pat/auditTeamSlice";
+import {
+  setAuditTeamData,
+  resetAuditTeamData,
+} from "@/slices/pat/auditTeamSlice";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { ImageClose } from "@/helpers/imagesUrl";
+import Image from "next/image";
 
 const ModalAuditTeam = ({ showModal, setShowModal, typeModal, mutate }) => {
   const { id } = useRouter().query;
@@ -21,7 +32,13 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, mutate }) => {
   const [isDisabled, setIsDisabled] = useState(false);
 
   useEffect(() => {
-    console.log("TYPE MODAL => ", typeModal);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
     if (typeModal === "detail") setIsDisabled(true);
   }, [typeModal]);
 
@@ -190,20 +207,23 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, mutate }) => {
       .validate(data, { abortEarly: false })
       .then(async () => {
         setValidationErrors({});
-        if (typeModal === "update") {
-          await useUpdateData(
-            `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/tim_audit`,
-            data
-          );
-        } else {
-          console.log("CREATE");
-          await usePostData(
-            `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/tim_audit/create`,
-            data
-          );
+        try {
+          if (typeModal === "update") {
+            await useUpdateData(
+              `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/tim_audit`,
+              data
+            );
+          } else {
+            await usePostData(
+              `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/tim_audit/create`,
+              data
+            );
+          }
+          mutate();
+          setShowModal(false);
+        } catch (err) {
+          await errorSwalTimeout(err);
         }
-        mutate();
-        setShowModal(false);
       })
       .catch((err) => {
         if (err.inner) {
@@ -217,9 +237,37 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, mutate }) => {
       });
   };
   // END SAVE DATA
+
+  const handleCloseModal = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
+    setShowModal(false);
+    dispatch(resetAuditTeamData());
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape") {
+      return handleCloseModal();
+    }
+  };
+
   return (
-    <Modal showModal={showModal} onClickOutside={() => setShowModal(false)}>
-      <form className="w-[63rem]" onSubmit={handleSubmit}>
+    <Modal showModal={showModal}>
+      <form className="w-[63rem] relative" onSubmit={handleSubmit}>
+        <div className="absolute w-full flex justify-end -mt-1">
+          <DivButton
+            handleClick={handleCloseModal}
+            handleKeyDown={handleKeyDown}
+          >
+            <Image src={ImageClose} alt="chat" />
+          </DivButton>
+        </div>
         <div className="w-2/3">
           <TextInput
             icon={<IconClose size="medium" />}
