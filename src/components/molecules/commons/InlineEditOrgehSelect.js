@@ -28,6 +28,8 @@ const InlineEditOrgehSelect = ({
   handleConfirm,
   value,
   isDisabled,
+  handleMenuOpen,
+  handleMenuClose,
 }) => {
   const [editValue, setEditValue] = useState(value);
 
@@ -48,6 +50,8 @@ const InlineEditOrgehSelect = ({
             fieldsProps={fieldProps}
             handleChange={handleChange}
             selectedValue={value}
+            handleMenuOpen={handleMenuOpen}
+            handleMenuClose={handleMenuClose}
           />
         )}
         readView={() =>
@@ -66,6 +70,7 @@ const InlineEditOrgehSelect = ({
         onConfirm={handleConfirm}
         readViewFitContainerWidth
         hideActionButtons
+        on
       />
     </Box>
   );

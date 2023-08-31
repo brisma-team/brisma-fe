@@ -11,6 +11,8 @@ const OrgehSelect = ({
   customIcon,
   fieldsProps,
   isDisabled,
+  handleMenuOpen,
+  handleMenuClose,
 }) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState("");
@@ -75,6 +77,8 @@ const OrgehSelect = ({
       onInputChange={handleInputChange}
       components={customIcon && { DropdownIndicator }}
       isDisabled={isDisabled}
+      onMenuOpen={handleMenuOpen}
+      onMenuClose={handleMenuClose}
     />
   );
 };
