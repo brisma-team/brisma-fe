@@ -77,7 +77,7 @@ const index = () => {
             baseUrl={baseUrl}
             routes={routes}
             prevUrl={"/sumber-informasi"}
-            nextUrl={"/tim-audit"}
+            nextUrl={"/uker-assessment"}
           />
         </div>
         <div className="mt-7">
