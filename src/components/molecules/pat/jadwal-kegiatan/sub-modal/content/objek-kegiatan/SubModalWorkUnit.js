@@ -132,11 +132,6 @@ const SubModalWorkUnit = ({ isDisabled }) => {
     setOpenTipeUkerIdx(null);
   };
 
-  const findUkerType = (kode) => {
-    const find = ukerType?.data?.find((v) => v.kode == kode);
-    return { label: find?.name, value: find?.kode };
-  };
-
   return (
     <div>
       <div className="w-full p-4">
@@ -236,9 +231,7 @@ const SubModalWorkUnit = ({ isDisabled }) => {
                         optionValue={optionUkerType}
                         isSearchable={false}
                         onChange={(e) => handleChangeTipeUker(e.value, i)}
-                        value={
-                          v.tipe_uker !== "" ? findUkerType(v.tipe_uker) : ""
-                        }
+                        value={v.tipe_uker}
                         isDisabled={isDisabled}
                         handleMenuOpen={() => handleMenuOpen(i)}
                         handleMenuClose={handleMenuClose}
