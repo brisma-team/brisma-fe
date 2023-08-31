@@ -27,7 +27,7 @@ const readViewContainerStyles = xcss({
 });
 
 const InlineEditField = ({ isDisabled, value, placeholder, handleConfirm }) => {
-  const [editValue, setEditValue] = useState(value);
+  const [editValue, setEditValue] = useState(value || "");
   const handleChange = (e) => {
     setEditValue(e.target.value);
   };
@@ -36,17 +36,26 @@ const InlineEditField = ({ isDisabled, value, placeholder, handleConfirm }) => {
     <Box xcss={containerStyles}>
       <InlineEdit
         defaultValue={editValue}
-        editView={({ ...fieldProps }, ref) => (
+        editView={({ errorMessage, ...fieldProps }) => (
           <Textfield
             {...fieldProps}
-            ref={ref}
             isDisabled={isDisabled}
             value={editValue}
-            placeholder={placeholder}
             onChange={handleChange}
           />
         )}
-        readView={() => <Box xcss={readViewContainerStyles}>{editValue}</Box>}
+        readView={() =>
+          !editValue || editValue === "" ? (
+            <div
+              className="flex items-center pl-3"
+              style={{ color: "#ccc", minHeight: "40px" }}
+            >
+              {placeholder}
+            </div>
+          ) : (
+            <Box xcss={readViewContainerStyles}>{editValue}</Box>
+          )
+        }
         onConfirm={() => handleConfirm(editValue)}
         readViewFitContainerWidth
         hideActionButtons
