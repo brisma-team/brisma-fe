@@ -87,21 +87,16 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
         : projectOverviewData.audit_year,
     };
 
-    const validate = setErrorValidation(
-      data,
-      dispatch,
-      schemaMappings[isPat][currentModalStage]
-    );
-
-    if (validate) {
-      if (buttonName === "saveButton" || buttonName === "sendApprovalButton") {
-        await usePostData(
-          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/ewp/auditor/create`,
-          _.omit(data, ["tim_audit"])
-        );
-        mutate();
-        handleCloseModal();
-      }
+    if (buttonName === "saveButton" || buttonName === "sendApprovalButton") {
+      await usePostData(
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/ewp/auditor/create`,
+        _.omit(data, ["tim_audit"])
+      );
+      mutate();
+      setShowModal(false);
+      setCurrentModalStage(1);
+      setIsPat(true);
+      dispatch(resetProjectOverviewData());
     }
   };
 
@@ -120,6 +115,12 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
       dispatch,
       schemaMappings[isPat][currentModalStage]
     );
+
+    // console.log("validate => ", validate);
+    // console.log("isPat => ", isPat);
+
+    // console.log("schemaMappings => ", schemaMappings[isPat][currentModalStage]);
+    // console.log("currentModalStage => ", currentModalStage);
 
     if (validate) {
       setCurrentModalStage(currentModalStage + 1);
