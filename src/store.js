@@ -14,6 +14,7 @@ import sumberInformasiReducer from "./slices/pat/sumberInformasiSlice";
 // EWP
 import projectOverviewEWPReducer from "./slices/ewp/projectOverviewEWPSlice";
 import auditTeamMapaEWPReducer from "./slices/ewp/konvensional/mapa/auditTeamMapaEWPSlice";
+import ukerAssessmentMapaEWPReducer from "./slices/ewp/konvensional/mapa/ukerAssessmentMapaEWPSlice";
 
 import { configureStore } from "@reduxjs/toolkit";
 
@@ -32,5 +33,6 @@ export const store = configureStore({
     sumberInformasi: sumberInformasiReducer,
     projectOverviewEWP: projectOverviewEWPReducer,
     auditTeamMapaEWP: auditTeamMapaEWPReducer,
+    ukerAssessmentMapaEWP: ukerAssessmentMapaEWPReducer,
   },
 });
