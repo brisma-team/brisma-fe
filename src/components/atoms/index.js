@@ -28,6 +28,10 @@ import Spinner from "@atlaskit/spinner";
 import RadioField from "./Radio";
 import UploadButton from "./UploadButton";
 import AvatarGroupField from "./AvatarGroup";
+import CheckboxField from "./Checkbox";
+import LozengeField from "./Lozenge";
+import CloseModal from "./CloseModal";
+
 export {
   AvatarDefaultExample,
   Breadcrumbs,
@@ -59,4 +63,7 @@ export {
   RadioField,
   UploadButton,
   AvatarGroupField,
+  CheckboxField,
+  LozengeField,
+  CloseModal,
 };
