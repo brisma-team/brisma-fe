@@ -45,7 +45,7 @@ const ButtonField = ({
       <p
         className={`${
           textColor ? txtColor : `text-white`
-        } flex items-center justify-center ${style && style}`}
+        } flex items-center justify-center font-semibold ${style && style}`}
       >
         {text && text}
       </p>
