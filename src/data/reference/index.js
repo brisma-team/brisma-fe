@@ -5,6 +5,10 @@ import useTema from "./useTema";
 import useUkerType from "./useUkerType";
 import useEchannel from "./useEchannel";
 import useTypeTeam from "./useTypeTeam";
+import useActivity from "./useActivity";
+import useSubActivity from "./useSubActivity";
+import useSubMajor from "./useSubMajor";
+import useRiskIssue from "./useRiskIssue";
 
 export {
   useMetode,
@@ -14,4 +18,8 @@ export {
   useUkerType,
   useEchannel,
   useTypeTeam,
+  useActivity,
+  useSubActivity,
+  useSubMajor,
+  useRiskIssue,
 };
