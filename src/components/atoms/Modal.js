@@ -64,9 +64,9 @@ const Modal = ({
               {withoutFooter
                 ? ""
                 : footer && (
-                    <div className="mt-3 flex justify-end ">
+                    <div className="relative flex justify-end mt-3">
                       <div
-                        className={`relative p-4 bg-white rounded-md shadow-lg ${
+                        className={`p-4 bg-white rounded-md shadow-lg ${
                           widthFullFooter && `w-full`
                         }`}
                       >
