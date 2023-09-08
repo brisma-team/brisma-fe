@@ -38,6 +38,10 @@ import CardHeaderContent from "./CardHeaderContent";
 import DropdownIcon from "./DropdownIcon";
 import UkerTypeSelect from "./UkerTypeSelect";
 import DescriptionModal from "./DescriptionModal";
+import ActivitySelect from "./ActivitySelect";
+import SubActivitySelect from "./SubActivitySelect";
+import SubMajorSelect from "./SubMajorSelect";
+import RiskIssueSelect from "./RiskIssueSelect";
 
 export {
   BackButton,
@@ -80,4 +84,8 @@ export {
   DropdownIcon,
   UkerTypeSelect,
   DescriptionModal,
+  ActivitySelect,
+  SubActivitySelect,
+  SubMajorSelect,
+  RiskIssueSelect,
 };
