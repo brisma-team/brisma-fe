@@ -27,7 +27,9 @@ const PrevNextNavigation = ({ baseUrl, routes, prevUrl, nextUrl }) => {
           </div>
         )}
         <div
-          className="rounded-full border-4 border-atlasian-blue-light w-7 h-7"
+          className={`rounded-full border-4 border-atlasian-blue-light w-7 h-7 ${
+            !routes && `opacity-30`
+          }`}
           ref={ref}
         >
           <Button
@@ -37,6 +39,7 @@ const PrevNextNavigation = ({ baseUrl, routes, prevUrl, nextUrl }) => {
             }
             className="bottom-1.5"
             onClick={() => setShowDropdown(!showDropdown)}
+            isDisabled={routes ? false : true}
           />
           {showDropdown && (
             <div
