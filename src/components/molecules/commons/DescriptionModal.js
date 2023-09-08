@@ -1,13 +1,15 @@
-import { ButtonField, Modal, TextAreaField } from "@/components/atoms";
+import {
+  ButtonField,
+  CloseModal,
+  Modal,
+  TextAreaField,
+} from "@/components/atoms";
 import { useEffect } from "react";
 import { useState } from "react";
 
-const ModalFooter = ({ handleCancel, handleConfirm }) => {
+const ModalFooter = ({ handleConfirm }) => {
   return (
-    <div className="w-full flex justify-end gap-3 -my-1">
-      <div className="rounded w-28 bg-atlasian-blue-light">
-        <ButtonField text="Cancel" handler={handleCancel} />
-      </div>
+    <div className="w-full flex justify-end -my-1">
       <div className="rounded w-28 bg-atlasian-green">
         <ButtonField text="Simpan" handler={handleConfirm} />
       </div>
@@ -27,12 +29,12 @@ const DescriptionModal = ({
     setEditValue(value || "");
   }, [value]);
 
-  const handleCancel = () => {
+  const handleConfirmWithClose = () => {
+    handleConfirm(editValue);
     setShowModal(false);
   };
 
-  const handleConfirmWithClose = () => {
-    handleConfirm(editValue);
+  const handleCloseModal = () => {
     setShowModal(false);
   };
 
@@ -40,14 +42,10 @@ const DescriptionModal = ({
     <Modal
       showModal={showModal}
       positionCenter
-      footer={
-        <ModalFooter
-          handleCancel={handleCancel}
-          handleConfirm={handleConfirmWithClose}
-        />
-      }
+      footer={<ModalFooter handleConfirm={handleConfirmWithClose} />}
     >
       <div className="w-[37.5rem] relative">
+        <CloseModal handleCloseModal={handleCloseModal} />
         <div className="mb-2">Deskripsi Kegiatan</div>
         <TextAreaField
           handleChange={(e) => setEditValue(e.target.value)}
