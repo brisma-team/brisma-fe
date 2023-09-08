@@ -11,6 +11,8 @@ import ImageEclipseRed from "../../public/images/icon-eclipse-red.png";
 import ImageEclipseGray from "../../public/images/icon-eclipse-gray.png";
 import ImageCircleCheck from "../../public/images/icon-circle-check.png";
 import ImageBar from "../../public/images/icon-bar.png";
+import ImageCircleArrowYellow from "../../public/images/icon-circle-arrow-yellow.png";
+import ImageCircleArrowRed from "../../public/images/icon-circle-arrow-red.png";
 
 export {
   ImageBrismaVertical,
@@ -26,4 +28,6 @@ export {
   ImageEclipseGray,
   ImageCircleCheck,
   ImageBar,
+  ImageCircleArrowYellow,
+  ImageCircleArrowRed,
 };
