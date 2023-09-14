@@ -24,6 +24,7 @@ import IconEye from "@atlaskit/icon/glyph/watch";
 import IconEyeOff from "@atlaskit/icon/glyph/watch-filled";
 import IconSetting from "@atlaskit/icon/glyph/settings";
 import IconChevronRight from "@atlaskit/icon/glyph/chevron-right";
+import IconArrowBottomCircle from "@atlaskit/icon/glyph/arrow-down-circle";
 
 export {
   IconPlus,
@@ -52,4 +53,5 @@ export {
   IconEyeOff,
   IconSetting,
   IconChevronRight,
+  IconArrowBottomCircle,
 };
