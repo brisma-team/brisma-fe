@@ -1,9 +1,13 @@
-const UploadButton = ({ text, fileAccept, handleUpload }) => {
+const UploadButton = ({ text, fileAccept, handleUpload, className }) => {
   return (
     <>
       <label
         htmlFor="fileInput"
-        className="cursor-pointer bg-neutral-50 hover:bg-neutral-100 font-semibold py-2 px-5 rounded-md border-[1.95px] active:bg-neutral-200"
+        className={`cursor-pointer ${
+          className
+            ? className
+            : `bg-neutral-50 hover:bg-neutral-100 active:bg-neutral-200 py-2 px-5`
+        }  font-semibold rounded-md border-[1.95px] `}
       >
         {text}
       </label>
