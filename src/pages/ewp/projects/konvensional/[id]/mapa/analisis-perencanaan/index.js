@@ -250,7 +250,6 @@ const index = () => {
   };
 
   const handleDeleteActivity = async (activityId) => {
-    console.log("activityId => ", activityId);
     const confirm = await confirmationSwal(
       "Menghapus Aktifitas akan menghapus seluruh Sub-Aktifitas terkait."
     );

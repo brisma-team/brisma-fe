@@ -1,55 +1,41 @@
 import { Modal } from "@/components/atoms";
 import { useState } from "react";
 import Link from "next/link";
-import {
-  SubModalRiskIssue,
-  SubModalAuditProgram,
-  SubModalAuditCriteria,
-} from "./sub-modal";
-import {
-  confirmationSwal,
-  setErrorValidation,
-  usePostData,
-  useUpdateData,
-} from "@/helpers";
-import { useRouter } from "next/router";
+import { confirmationSwal, setErrorValidation, usePostData } from "@/helpers";
 import { useDispatch, useSelector } from "react-redux";
-import ModalHeader from "./ModalHeader";
-import ModalFooter from "./ModalFooter";
 import {
   resetPayloadRiskIssue,
+  resetValidationErrorsPayloadRiskIssue,
   setPayloadRiskIssue,
+  setValidationErrorsRiskIssue,
 } from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
+import { addRiskIssueMapaEWPSchema } from "@/helpers/schemas/ewp/konvensional/mapa/planningAnalysisMapaEWPSchema";
+import _ from "lodash";
+import {
+  ModalFooter,
+  ModalHeader,
+  SubModalAuditCriteria,
+  SubModalAuditProgram,
+  SubModalRiskIssue,
+} from "./modal/risk-issue";
+import { useRouter } from "next/router";
 
 const ModalAddRiskIssue = ({ showModal, setShowModal, mutate }) => {
-  const { id } = useRouter().query;
   const dispatch = useDispatch();
+  const { id } = useRouter().query;
 
   const [currentModalStage, setCurrentModalStage] = useState(1);
   const payloadRiskIssue = useSelector(
     (state) => state.planningAnalysisMapaEWP.payloadRiskIssue
   );
+  const riskIssueInfo = useSelector(
+    (state) => state.planningAnalysisMapaEWP.riskIssueInfo
+  );
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  };
-
-  const handleNextStage = async () => {
-    setCurrentModalStage(currentModalStage + 1);
-  };
-
-  const handleCloseModal = async () => {
-    const confirm = await confirmationSwal(
-      "Apakah Anda ingin menutup modal ini?"
-    );
-
-    if (!confirm.value) {
-      return;
-    }
-
-    setCurrentModalStage(1);
-    setShowModal(false);
-    dispatch(resetPayloadRiskIssue());
+  const schemaMappings = {
+    schema: addRiskIssueMapaEWPSchema,
+    resetErrors: resetValidationErrorsPayloadRiskIssue,
+    setErrors: setValidationErrorsRiskIssue,
   };
 
   const items = [
@@ -113,6 +99,58 @@ const ModalAddRiskIssue = ({ showModal, setShowModal, mutate }) => {
         break;
     }
     dispatch(setPayloadRiskIssue(updatedData));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const payload = {
+      ...payloadRiskIssue,
+      ..._.pick(riskIssueInfo, [
+        "mapa_uker_id",
+        "ref_sub_aktivitas_kode",
+        "ref_sub_aktivitas_name",
+      ]),
+    };
+    const validate = setErrorValidation(payload, dispatch, schemaMappings);
+
+    if (validate) {
+      await usePostData(
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/risk?sub_kode=${payload?.ref_sub_aktivitas_kode}&uker_id=${payload?.mapa_uker_id}`,
+        payload
+      );
+      mutate();
+      setShowModal(false);
+    }
+  };
+
+  const handleNextStage = async () => {
+    const validate = setErrorValidation(
+      payloadRiskIssue,
+      dispatch,
+      schemaMappings
+    );
+
+    if (currentModalStage === 1) {
+      if (validate) {
+        setCurrentModalStage(currentModalStage + 1);
+      }
+    } else {
+      setCurrentModalStage(currentModalStage + 1);
+    }
+  };
+
+  const handleCloseModal = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
+    setCurrentModalStage(1);
+    setShowModal(false);
+    dispatch(resetPayloadRiskIssue());
   };
 
   return (

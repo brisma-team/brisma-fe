@@ -11,6 +11,13 @@ const SubModalRiskIssue = ({ setCurrentModalStage, handleChange }) => {
   const payloadRiskIssue = useSelector(
     (state) => state.planningAnalysisMapaEWP.payloadRiskIssue
   );
+  const validationErrors = useSelector(
+    (state) => state.planningAnalysisMapaEWP.validationErrorsPayloadRiskIssue
+  );
+
+  useEffect(() => {
+    console.log("validationErrors => ", validationErrors);
+  }, [validationErrors]);
 
   useEffect(() => {
     setCurrentModalStage(1);
@@ -39,6 +46,7 @@ const SubModalRiskIssue = ({ setCurrentModalStage, handleChange }) => {
               label="Sub-Major"
               widthLabel={"w-2/5"}
               widthForm={"w-1/3"}
+              errors={validationErrors.ref_sub_major_kode}
             />
             <FormWithLabel
               form={
@@ -57,6 +65,7 @@ const SubModalRiskIssue = ({ setCurrentModalStage, handleChange }) => {
               label="Risk Issue"
               widthLabel={"w-2/5"}
               widthForm={"w-1/3"}
+              errors={validationErrors.ref_risk_issue_kode}
             />
             <FormWithLabel
               form={
@@ -73,6 +82,7 @@ const SubModalRiskIssue = ({ setCurrentModalStage, handleChange }) => {
               widthLabel={"w-2/5"}
               widthForm={"w-3/5"}
               labelPositionTop={true}
+              errors={validationErrors.deskripsi}
             />
           </div>
         </Card>

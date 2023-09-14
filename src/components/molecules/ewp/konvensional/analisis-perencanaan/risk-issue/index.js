@@ -1,3 +1,4 @@
 import ModalAddRiskIssue from "./ModalAddRiskIssue";
+import TableRiskIssue from "./TableRiskIssue";
 
-export { ModalAddRiskIssue };
+export { ModalAddRiskIssue, TableRiskIssue };

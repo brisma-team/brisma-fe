@@ -1,8 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  // data
   planningAnalysisData: {},
   riskIssueData: [],
+  riskIssueInfo: {},
+  dataTables: {
+    fileName: "",
+    tableRows: [],
+    tableValues: [],
+  },
+
+  // payload
   payloadActivity: {},
   payloadSubActivity: {
     aktivitas_id: "",
@@ -20,8 +29,15 @@ const initialState = {
     program_audit: "",
     kriteria: "",
   },
-  payloadSample: {},
-  payloadControl: {},
+  payloadSample: {
+    url: "",
+    filename: "",
+    values: [],
+    jumlah_baris: "",
+    uniq_column: "",
+  },
+
+  // default data
   defaultPayloadRiskIssue: {
     mapa_uker_id: "",
     ref_sub_aktivitas_kode: "",
@@ -34,18 +50,43 @@ const initialState = {
     program_audit: "",
     kriteria: "",
   },
+  defaultPayloadSample: {
+    url: "",
+    filename: "",
+    values: [],
+    jumlah_baris: "",
+    uniq_column: "",
+  },
+  defaultDataTables: {
+    fileName: "",
+    tableRows: [],
+    tableValues: [],
+  },
+
+  //validation
+  validationErrorsPayloadRiskIssue: {},
+  validationErrorsPayloadSample: {},
 };
 
 export const planningAnalysisMapaEWPSlice = createSlice({
   name: "planningAnalysisMapaEWP",
   initialState,
   reducers: {
+    // data
     setPlanningAnalysisData: (state, action) => {
       state.planningAnalysisData = action.payload;
     },
     setRiskIssueData: (state, action) => {
       state.riskIssueData = action.payload;
     },
+    setRiskIssueInfo: (state, action) => {
+      state.riskIssueInfo = action.payload;
+    },
+    setDataTables: (state, action) => {
+      state.dataTables = action.payload;
+    },
+
+    // payload
     setPayloadActivity: (state, action) => {
       state.payloadActivity = action.payload;
     },
@@ -58,24 +99,42 @@ export const planningAnalysisMapaEWPSlice = createSlice({
     setPayloadSample: (state, action) => {
       state.payloadSample = action.payload;
     },
-    setPayloadControl: (state, action) => {
-      state.payloadControl = action.payload;
+
+    // validation
+    setValidationErrorsRiskIssue: (state, action) => {
+      state.validationErrorsPayloadRiskIssue = action.payload;
     },
+
+    // reset
     resetPayloadRiskIssue: (state) => {
       state.payloadRiskIssue = { ...state.defaultPayloadRiskIssue };
+    },
+    resetPayloadSample: (state) => {
+      state.payloadSample = { ...state.defaultPayloadSample };
+    },
+    resetValidationErrorsPayloadRiskIssue: (state) => {
+      state.validationErrorsPayloadRiskIssue = {};
+    },
+    resetDataTables: (state) => {
+      state.dataTables = { ...state.defaultDataTables };
     },
   },
 });
 
 export const {
   setPlanningAnalysisData,
+  setRiskIssueData,
+  setRiskIssueInfo,
+  setDataTables,
   setPayloadActivity,
   setPayloadSubActivity,
-  setRiskIssueData,
   setPayloadRiskIssue,
   setPayloadSample,
-  setPayloadControl,
+  setValidationErrorsRiskIssue,
   resetPayloadRiskIssue,
+  resetPayloadSample,
+  resetValidationErrorsPayloadRiskIssue,
+  resetDataTables,
 } = planningAnalysisMapaEWPSlice.actions;
 
 export default planningAnalysisMapaEWPSlice.reducer;
