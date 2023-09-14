@@ -19,7 +19,7 @@ const TableField = ({
     <TableTree>
       <Headers>
         {headers.map((header, index) => (
-          <Header key={index} width={columnWidths[index]}>
+          <Header key={index} width={columnWidths[index] || 100}>
             <p className="font-semibold text-base text-brisma">{header}</p>
           </Header>
         ))}
