@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import CardFilterLanding from "../catalog/CardFilterLanding";
 import ModalSelectSourceData from "../catalog/ModalSelectSourceData";
+import { useRouter } from "next/router";
 
 const CardCatalog = ({ data }) => {
+  const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [selectedSourceType, setSelectedSourceType] = useState(1);
 
@@ -45,7 +47,11 @@ const CardCatalog = ({ data }) => {
                       item && (
                         <button
                           key={key}
-                          onClick={() => openModalForSourceType(key + 1)}
+                          onClick={() =>
+                            item.withModal == false
+                              ? router.push(item.withUrl)
+                              : openModalForSourceType(key + 1)
+                          }
                           className="w-full text-left"
                         >
                           <div className="rounded-[10px] border border-[#00000033] my-4 shadow bg-gray-50 hover:bg-gray-200 text-atlasian-blue-baby p-5">

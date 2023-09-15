@@ -26,6 +26,25 @@ const index = () => {
           },
         ],
       },
+      {
+        subtitle: "Advance Filtering",
+        subcontent: [
+          {
+            title: "Cari KKPA",
+            description: "Pencarian Pustaka Dokumen KKPA.",
+            id: 1,
+            withModal: false,
+            withUrl: "/catalogue/advance-filter/kkpa",
+          },
+          {
+            title: "Cari KKPT",
+            description: "Pencarian Pustaka Dokumen KKPT.",
+            id: 2,
+            withModal: false,
+            withUrl: "/catalogue/advance-filter/kkpt",
+          },
+        ],
+      },
     ],
   };
   return (
