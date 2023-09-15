@@ -3,29 +3,74 @@ import { Modal, Card, TextInput } from "@/components/atoms";
 import { IconArrowLeft, IconArrowRight } from "@/components/icons";
 import Button from "@atlaskit/button";
 import Search from "@atlaskit/icon/glyph/editor/search";
+import { useRouter } from "next/router";
+import { stubFalse } from "lodash";
 
 const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
+  const router = useRouter()
   const [menu, setMenu] = useState(0);
   const [tag, setTag] = useState("");
   const [source, setSource] = useState(1);
+  const [year, setYear] = useState("")
   const [arr, setArr] = useState(0);
   const [url, setUrl] = useState("");
 
   const ar = [
     [
-      "Data 2012",
-      "Data 2013",
-      "Data 2014",
-      "Data 2015",
-      "Data 2016",
-      "Data 2017",
-      "Data 2018",
-      "Data 2019",
-      "Data 2020",
-      "Data 2021",
-      "Data 2022",
+      {
+        tahun: "2012",
+        is_disabled: true,
+      },
+      {
+        tahun: "2013",
+        is_disabled: true,
+      },
+      {
+        tahun: "2014",
+        is_disabled: true,
+      },
+      {
+        tahun: "2015",
+        is_disabled: true,
+      },
+      {
+        tahun: "2016",
+        is_disabled: true,
+      },
+      {
+        tahun: "2017",
+        is_disabled: true,
+      },
+      {
+        tahun: "2018",
+        is_disabled: true,
+      },
+      {
+        tahun: "2019",
+        is_disabled: true,
+      },
+      {
+        tahun: "2020",
+        is_disabled: false,
+      },
+      {
+        tahun: "2021",
+        is_disabled: false,
+      },
+      {
+        tahun: "2022",
+        is_disabled: false,
+      },
     ],
-    ["Data 2022", "Data 2023"],
+    [
+      {
+        tahun: "2022",
+        is_disabled: false,
+      },
+      {
+        tahun: "2023",
+        is_disabled: false,
+      },],
   ];
   useEffect(() => {
     switch (sourceType) {
@@ -48,6 +93,10 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
     }
   }, [sourceType]);
 
+  const handleClickYear = (tahun, i) => {
+    setYear(tahun)
+    setArr(i)
+  }
   return (
     <Modal
       showModal={showModal}
@@ -73,6 +122,7 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                       setSource(1);
                       setMenu(1);
                     }}
+                    isDisabled={sourceType !== 2 ? true : false}
                     iconAfter={<IconArrowRight size="medium" />}
                   >
                     <p className="text-base p-1">Akses Data</p>
@@ -114,13 +164,14 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                   {ar[source - 1].map((item, i) => {
                     return (
                       <button
-                        className={`p-3 text-sm border border-slate-300 rounded-md shadow-sm hover:text-white hover:bg-gray-800 ${
-                          arr == i ? "bg-gray-800 text-white" : ""
+                        className={`p-3 text-sm border border-slate-300 rounded-md shadow-sm ${item.is_disabled ? "opacity-50": "hover:text-white hover:bg-gray-800"} ${
+                          arr == i && i != 0 ? "bg-gray-800 text-white" : ""
                         }`}
                         key={i}
-                        onClick={() => setArr(i)}
+                        onClick={() => handleClickYear(item.tahun, i)}
+                        disabled={item.is_disabled}
                       >
-                        {item}
+                        Data {item.tahun}
                       </button>
                     );
                   })}
