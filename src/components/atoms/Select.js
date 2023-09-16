@@ -4,6 +4,7 @@ const Select = ({
   placeholder,
   optionValue,
   isSearchable,
+  isMulti,
   style,
   onChange,
   value,
@@ -16,6 +17,7 @@ const Select = ({
       onChange={onChange}
       options={optionValue}
       isSearchable={isSearchable}
+      isMulti={isMulti}
       placeholder={placeholder}
       className={style}
       value={value && value}

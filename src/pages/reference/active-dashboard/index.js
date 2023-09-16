@@ -17,6 +17,8 @@ import {
   loadingSwal,
 } from "@/helpers";
 import ModalAddDashboard from "@/components/molecules/dashboard/ModalAddDashboard";
+import useUkaList from "@/data/dashboard/useUkaList";
+import useRoleList from "@/data/dashboard/useRoleList";
 
 const index = () => {
   const breadcrumbs = [
@@ -24,6 +26,9 @@ const index = () => {
     { name: "Reference", path: "/reference" },
     { name: "Dashboard", path: "/reference/active-dashboard" },
   ];
+  const { uka } = useUkaList();
+  const { role } = useRoleList();
+  // const [selected, setSelected] = useState();
 
   const [showModal, setShowModal] = useState(false);
   const [dashboard, setDashboard] = useState([]);
@@ -31,6 +36,17 @@ const index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const { dashboardList, dashboardListMutate } = useDashboardList();
+
+  const [ukaMapping, setUkaMapping] = useState([]);
+  const [roleMapping, setRoleMapping] = useState([]);
+
+  useEffect(() => {
+    if (uka != undefined) setUkaMapping(uka.uka);
+  }, [uka]);
+
+  useEffect(() => {
+    if (role != undefined) setRoleMapping(role.userRole);
+  }, [role]);
 
   const fetchData = async () => {
     await dashboardListMutate({ ...dashboardList });
@@ -59,7 +75,7 @@ const index = () => {
     if (confirm.value) {
       loadingSwal();
       const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/updateDashboard`;
-      await useUpdateData(url, { id: id, state: state });
+      await useUpdateData(url, { id: id, isActive: state });
       fetchData();
     }
   };
@@ -94,6 +110,24 @@ const index = () => {
               {v?.is_active ? "Aktif" : "Tidak Aktif"}
             </div>
           ),
+          "Ditujukan Kepada":
+            v.allow_list == null ? (
+              <p>Belum ditujukan</p>
+            ) : (
+              v.allow_list != null &&
+              v.allow_list.map(
+                (x, key) => (
+                  <p key={key}>
+                    {ukaMapping &&
+                      ukaMapping.find((item) => item.kode === x.uka_code) +
+                        " - "}
+                  </p>
+                )
+                // x.role_code.map((index) => {
+                //   roleMapping.find((item) => index === item.kode);
+                // })
+              )
+            ),
           "Tanggal Dibuat": v?._created_at,
           Aksi: (
             <div className="flex justify-between text-center">
@@ -109,7 +143,7 @@ const index = () => {
                     text={v.is_active ? "Non-aktif" : "Aktifkan"}
                     handler={() =>
                       handleToggleActivate(
-                        v?._id,
+                        v?.id,
                         v?.superset_embed_id,
                         !v.is_active
                       )
@@ -123,7 +157,7 @@ const index = () => {
                 >
                   <ButtonField
                     text={"Hapus"}
-                    handler={() => handleDelete(v?._id)}
+                    handler={() => handleDelete(v?.id)}
                   />
                 </div>
               </div>
@@ -165,11 +199,11 @@ const index = () => {
                     "No",
                     "Dashboard ID",
                     "Nama Dashboard",
+                    "Ditujukan Kepada",
                     "Status",
-                    "Tanggal Dibuat",
                     "Aksi",
                   ]}
-                  columnWidths={["5%", "26%", "20%", "10%", "15%", "25%"]}
+                  columnWidths={["5%", "20%", "20%", "20%", "10%", "25%"]}
                   items={dashboard}
                 />
               </div>

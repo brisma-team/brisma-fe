@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { embedDashboard } from "@superset-ui/embedded-sdk";
-import useGetToken from "@/data/dashboard/useGetToken";
 
-const SupersetDashboard = () => {
-  const { data } = useGetToken();
-  const [token, setToken] = useState("");
-  const [dashboardid, setDashboardId] = useState("");
-  useEffect(() => {
-    if (data && data) {
-      setToken(data.token);
-      setDashboardId(data.id);
-    }
-  }, [data]);
+const SupersetDashboard = ({ id, token }) => {
+  // const [ctoken, setCtoken] = useState("");
+  // const [cid, setCid] = useState("");
+  // useEffect(() => {
+  //   if (id && token) {
+  //     // setCtoken(token);
+  //     // setCid(id);
+  //   }
+  // }, [id, token]);
+  console.log(`id : ${id}`, `token: ${token}`);
 
   useEffect(() => {
     const embed = async () => {
       const dashboard = document.getElementById("dashboard");
       if (dashboard && token != null) {
         const config = {
-          id: dashboardid,
+          id: id,
           supersetDomain: process.env.NEXT_PUBLIC_API_URL_SUPERSET,
           mountPoint: dashboard,
           fetchGuestToken: () => token,
