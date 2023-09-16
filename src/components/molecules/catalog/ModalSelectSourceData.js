@@ -5,16 +5,21 @@ import Button from "@atlaskit/button";
 import Search from "@atlaskit/icon/glyph/editor/search";
 import { useRouter } from "next/router";
 import { stubFalse } from "lodash";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { setSearchParamsCATEWP } from "@/slices/catalog/ewp/catalogEWPSlice";
 
 const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
   const router = useRouter()
+  const dispatch = useDispatch()
   const [menu, setMenu] = useState(0);
   const [tag, setTag] = useState("");
   const [source, setSource] = useState(1);
   const [year, setYear] = useState("")
   const [arr, setArr] = useState(0);
   const [url, setUrl] = useState("");
-
+  const [projectName, setProjectName] = useState("")
+  const [faseAdendum, setFaseAdendum] = useState(0)
   const ar = [
     [
       {
@@ -96,6 +101,21 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
   const handleClickYear = (tahun, i) => {
     setYear(tahun)
     setArr(i)
+  }
+
+  const handleSubmitCatalogEWP = (url) => {
+    // Dapatkan nilai dari state di sini
+    const searchParamsCatEWP = {
+      year,
+      source,
+      projectName,
+      faseAdendum,
+      sourceType
+    };
+    // Kirim data ke Redux
+    dispatch(setSearchParamsCATEWP(searchParamsCatEWP));
+    console.log("state => ", searchParamsCatEWP);
+    router.push(url)
   }
   return (
     <Modal
@@ -184,7 +204,9 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                 <div className="grid grid-cols-4">
                   <div className="p-3 font-semibold text-sm">Nama Project</div>
                   <div className="p-1 pl-10 col-span-3">
-                    <TextInput placeholder="Masukkan Nama Project" />
+                    <TextInput onChange={(e) => {
+                      setProjectName(e.target.value)
+                    } } placeholder="Masukkan Nama Project" />
                   </div>
                   {/* Additional Filter (Periode Audit, Jenis Audit) */}
                   {/* <div className="p-3 font-semibold text-sm">Periode Audit</div>
@@ -216,6 +238,9 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                   <div className="p-1 pl-10 col-span-3">
                     <TextInput
                       isNumber={true}
+                      onChange={(e) => {
+                        setFaseAdendum(e.target.value)
+                      }}
                       placeholder="Masukkan Fase Addendum"
                     />
                   </div>
@@ -230,7 +255,7 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                     </Button>
                     <Button
                       appearance="primary"
-                      href={url}
+                      onClick={() => handleSubmitCatalogEWP(url)}
                       iconBefore={<Search size="medium" />}
                     >
                       Tampilkan

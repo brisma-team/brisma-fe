@@ -4,9 +4,13 @@ import { MainLayout } from "@/layouts";
 import { Breadcrumbs, Card, Pagination, TableField } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import {
-  IconArrowRight,
+  IconArrowRight, IconPlus,
   // IconClose, IconPlus
 } from "@/components/icons";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+import useCatalogEWP from "@/data/catalog/useCatalogEWP";
+import ModalSelectSourceData from "@/components/molecules/catalog/ModalSelectSourceData";
 // import Select from "@atlaskit/select";
 // import Textfield from "@atlaskit/textfield";
 
@@ -8739,15 +8743,26 @@ const ewpData = [
 //     addendum_phase: "0",
 //   },
 // ];
-const index = ({ data = ewpData }) => {
+const index = () => {
   // const [showFilter, setShowFilter] = useState(false);
+  const router = useRouter()
   const [catEwp, setCatEwp] = useState([]);
+  const [showFilter, setShowFilter] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: "/catalogue/ewp" },
   ];
+  const searchParamObject = useSelector(
+    (state) => state.catalogEWP.searchParamObjectCAT
+  );
+  if(!searchParamObject){
+    setShowFilter(true)
+  }
+  const { data, error, mutate } = useCatalogEWP(searchParamObject.year, searchParamObject.source);
+  console.log("params",searchParamObject)
+  console.log("data",data)
 
   useEffect(() => {
     const mappingCatEwp = data?.map((EwpList, key) => {
@@ -8784,6 +8799,11 @@ const index = ({ data = ewpData }) => {
   }, []);
   return (
     <MainLayout>
+      <ModalSelectSourceData
+        showModal={showFilter}
+        setShowModal={setShowFilter}
+        sourceType={searchParamObject.sourceType}
+      />
       <div className="px-5">
         {/* Start Breadcrumbs */}
         <Breadcrumbs data={breadcrumbs} />
@@ -8793,9 +8813,7 @@ const index = ({ data = ewpData }) => {
             <div className="text-3xl font-bold">Catalogue E.W.P</div>
           </div>
         </div>
-        {/* Start Filter */}
-        {/* <div className="my-3 w-40">
-          <Button
+        <Button
             appearance="primary"
             iconBefore={IconPlus}
             shouldFitContainer
@@ -8803,6 +8821,9 @@ const index = ({ data = ewpData }) => {
           >
             Tampilkan Filter
           </Button>
+        {/* Start Filter */}
+        {/* <div className="my-3 w-40">
+
         </div>
         {showFilter && (
           <div className="flex justify-between w-96">
