@@ -164,8 +164,7 @@ const index = () => {
           Aksi: (
             <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
               <Link
-                // href={"/catalogue/advance-filter/kkpt/" + v?.KKPTID}
-                href={"#"}
+                href={"/catalogue/advance-filter/kkpt/" + v?.KKPTID}
                 prefetch={false}
               >
                 <Button

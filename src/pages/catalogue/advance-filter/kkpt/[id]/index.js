@@ -2,6 +2,7 @@ import { Breadcrumbs, Card, PageTitle } from "@/components/atoms";
 import { DocumentItems } from "@/components/molecules/pat/dokumen";
 import { MainLayout } from "@/layouts";
 import { useRef, useState, useEffect } from "react";
+import { Worker, Viewer } from "@react-pdf-viewer/core";
 
 const index = () => {
   const breadcrumbs = [
@@ -137,17 +138,17 @@ const index = () => {
             <Card>
               <div className="overflow-y-scroll my-2 parent max-h-[40rem]">
                 <div className={`page-container-a4 shrink-0`}>
-                  <div className="px-4 h-full w-full relative page-content-a4">
-                    <div className="flex justify-between">
-                      <div className="font-bold text-xl">Document</div>
-                    </div>
-                    <div
+                  <div className="h-full w-full relative page-content-a4">
+                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.9.179/build/pdf.worker.min.js">
+                      <Viewer fileUrl={"/kkpt.pdf"} />
+                    </Worker>
+                    {/* <div
                       className="mt-4"
                       dangerouslySetInnerHTML={{
                         __html:
                           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sit amet lacus elit. Quisque elementum, dui vitae gravida egestas, magna diam tincidunt ipsum, a interdum odio nulla sed ante. Vivamus sit amet convallis tellus. Suspendisse imperdiet mattis porta. Sed non arcu tempor, consectetur purus ut, mollis mi. Sed congue vestibulum nibh vel pharetra. Praesent pulvinar sapien eget ante pharetra, a dapibus libero ullamcorper. Aenean rutrum fringilla lectus, et tempus tellus fermentum id. Sed sed urna at eros venenatis iaculis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae",
                       }}
-                    />
+                    /> */}
                   </div>
                 </div>
               </div>
