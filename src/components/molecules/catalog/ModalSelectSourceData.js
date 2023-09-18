@@ -4,22 +4,21 @@ import { IconArrowLeft, IconArrowRight } from "@/components/icons";
 import Button from "@atlaskit/button";
 import Search from "@atlaskit/icon/glyph/editor/search";
 import { useRouter } from "next/router";
-import { stubFalse } from "lodash";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
 import { setSearchParamsCATEWP } from "@/slices/catalog/ewp/catalogEWPSlice";
+import { loadingSwal, successSwal } from "@/helpers";
 
 const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
-  const router = useRouter()
-  const dispatch = useDispatch()
+  const router = useRouter();
+  const dispatch = useDispatch();
   const [menu, setMenu] = useState(0);
   const [tag, setTag] = useState("");
   const [source, setSource] = useState(1);
-  const [year, setYear] = useState("")
+  const [year, setYear] = useState("");
   const [arr, setArr] = useState(0);
   const [url, setUrl] = useState("");
-  const [projectName, setProjectName] = useState("")
-  const [faseAdendum, setFaseAdendum] = useState(0)
+  const [projectName, setProjectName] = useState("");
+  const [faseAdendum, setFaseAdendum] = useState(0);
   const ar = [
     [
       {
@@ -75,7 +74,8 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
       {
         tahun: "2023",
         is_disabled: false,
-      },],
+      },
+    ],
   ];
   useEffect(() => {
     switch (sourceType) {
@@ -99,9 +99,9 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
   }, [sourceType]);
 
   const handleClickYear = (tahun, i) => {
-    setYear(tahun)
-    setArr(i)
-  }
+    setYear(tahun);
+    setArr(i);
+  };
 
   const handleSubmitCatalogEWP = (url) => {
     // Dapatkan nilai dari state di sini
@@ -110,13 +110,15 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
       source,
       projectName,
       faseAdendum,
-      sourceType
+      sourceType,
     };
     // Kirim data ke Redux
     dispatch(setSearchParamsCATEWP(searchParamsCatEWP));
-    console.log("state => ", searchParamsCatEWP);
-    router.push(url)
-  }
+    loadingSwal();
+    setShowModal(false);
+    successSwal("Pencarian berhasil.");
+    router.push(url);
+  };
   return (
     <Modal
       showModal={showModal}
@@ -184,7 +186,11 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                   {ar[source - 1].map((item, i) => {
                     return (
                       <button
-                        className={`p-3 text-sm border border-slate-300 rounded-md shadow-sm ${item.is_disabled ? "opacity-50": "hover:text-white hover:bg-gray-800"} ${
+                        className={`p-3 text-sm border border-slate-300 rounded-md shadow-sm ${
+                          item.is_disabled
+                            ? "opacity-50"
+                            : "hover:text-white hover:bg-gray-800"
+                        } ${
                           arr == i && i != 0 ? "bg-gray-800 text-white" : ""
                         }`}
                         key={i}
@@ -204,9 +210,12 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                 <div className="grid grid-cols-4">
                   <div className="p-3 font-semibold text-sm">Nama Project</div>
                   <div className="p-1 pl-10 col-span-3">
-                    <TextInput onChange={(e) => {
-                      setProjectName(e.target.value)
-                    } } placeholder="Masukkan Nama Project" />
+                    <TextInput
+                      onChange={(e) => {
+                        setProjectName(e.target.value);
+                      }}
+                      placeholder="Masukkan Nama Project"
+                    />
                   </div>
                   {/* Additional Filter (Periode Audit, Jenis Audit) */}
                   {/* <div className="p-3 font-semibold text-sm">Periode Audit</div>
@@ -239,7 +248,7 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                     <TextInput
                       isNumber={true}
                       onChange={(e) => {
-                        setFaseAdendum(e.target.value)
+                        setFaseAdendum(e.target.value);
                       }}
                       placeholder="Masukkan Fase Addendum"
                     />

@@ -17,8 +17,6 @@ import {
   loadingSwal,
 } from "@/helpers";
 import ModalAddDashboard from "@/components/molecules/dashboard/ModalAddDashboard";
-import useUkaList from "@/data/dashboard/useUkaList";
-import useRoleList from "@/data/dashboard/useRoleList";
 
 const index = () => {
   const breadcrumbs = [
@@ -26,8 +24,6 @@ const index = () => {
     { name: "Reference", path: "/reference" },
     { name: "Dashboard", path: "/reference/active-dashboard" },
   ];
-  const { uka } = useUkaList();
-  const { role } = useRoleList();
   // const [selected, setSelected] = useState();
 
   const [showModal, setShowModal] = useState(false);
@@ -36,17 +32,6 @@ const index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const { dashboardList, dashboardListMutate } = useDashboardList();
-
-  const [ukaMapping, setUkaMapping] = useState([]);
-  const [roleMapping, setRoleMapping] = useState([]);
-
-  useEffect(() => {
-    if (uka != undefined) setUkaMapping(uka.uka);
-  }, [uka]);
-
-  useEffect(() => {
-    if (role != undefined) setRoleMapping(role.userRole);
-  }, [role]);
 
   const fetchData = async () => {
     await dashboardListMutate({ ...dashboardList });
@@ -90,9 +75,8 @@ const index = () => {
 
   useEffect(() => {
     if (dashboardList) {
-      const total =
-        dashboardList.list.length > 5 ? (dashboardList.list.length % 5) + 1 : 1;
-      setTotalPages(total);
+      setTotalPages(dashboardList.totalPages);
+      console.log(currentPage);
       const sortedDashboard = dashboardList.list
         ?.sort((a, b) =>
           (b["_created_at"] || "").localeCompare(a["_created_at"] || "")
@@ -112,21 +96,25 @@ const index = () => {
           ),
           "Ditujukan Kepada":
             v.allow_list == null ? (
-              <p>Belum ditujukan</p>
+              v.is_public == true ? (
+                <p>Belum ditujukan</p>
+              ) : (
+                <p>Belum ditujukan</p>
+              )
             ) : (
               v.allow_list != null &&
-              v.allow_list.map(
-                (x, key) => (
-                  <p key={key}>
-                    {ukaMapping &&
-                      ukaMapping.find((item) => item.kode === x.uka_code) +
-                        " - "}
-                  </p>
-                )
-                // x.role_code.map((index) => {
-                //   roleMapping.find((item) => index === item.kode);
-                // })
-              )
+              v.allow_list.map((x, key) => (
+                <p key={key}>
+                  {
+                    "-" + x.uka_code
+                    // +
+                    //   " - " +
+                    //   x.role_code.map((index) => {
+                    //     roleMapping && finding(roleMapping, index);
+                    //   })
+                  }
+                </p>
+              ))
             ),
           "Tanggal Dibuat": v?._created_at,
           Aksi: (

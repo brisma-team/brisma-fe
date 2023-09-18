@@ -2,16 +2,6 @@ import React, { useEffect } from "react";
 import { embedDashboard } from "@superset-ui/embedded-sdk";
 
 const SupersetDashboard = ({ id, token }) => {
-  // const [ctoken, setCtoken] = useState("");
-  // const [cid, setCid] = useState("");
-  // useEffect(() => {
-  //   if (id && token) {
-  //     // setCtoken(token);
-  //     // setCid(id);
-  //   }
-  // }, [id, token]);
-  console.log(`id : ${id}`, `token: ${token}`);
-
   useEffect(() => {
     const embed = async () => {
       const dashboard = document.getElementById("dashboard");
@@ -38,7 +28,7 @@ const SupersetDashboard = ({ id, token }) => {
     };
 
     embed();
-  }, [token]);
+  }, [id, token]);
 
   return (
     <div className="superset">

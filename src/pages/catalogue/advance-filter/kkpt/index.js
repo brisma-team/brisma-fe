@@ -4,7 +4,9 @@ import { MainLayout } from "@/layouts";
 import { Breadcrumbs, ButtonField, Card, TableField } from "@/components/atoms";
 import { IconArrowRight } from "@/components/icons";
 import Button from "@atlaskit/button";
-import useCatalogPAT from "@/data/catalog/useCatalogPAT";
+import { loadingSwal, successSwal } from "@/helpers";
+import usePostKKPTQuery from "@/helpers/usePostKKPTQuery";
+import * as XLSX from "xlsx";
 
 const index = () => {
   const breadcrumbs = [
@@ -16,40 +18,150 @@ const index = () => {
     },
   ];
 
-  const { data } = useCatalogPAT();
-
   const [catPat, setCatPat] = useState([]);
+  const [whereClause, setWhereClause] = useState([]);
+  const [dataList, setDataList] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(2022);
   const few = [
     {
-      "Nama Kolom": "Judul KKPT",
+      "Nama Kolom": "kkptid",
+      "Tipe Data": "UUID",
+    },
+    {
+      "Nama Kolom": "auditprojectid",
+      "Tipe Data": "UUID",
+    },
+    {
+      "Nama Kolom": "audityear",
+      "Tipe Data": "Int16",
+    },
+    {
+      "Nama Kolom": "auditprojectname",
       "Tipe Data": "String",
     },
     {
-      "Nama Kolom": "Fase Addendum",
+      "Nama Kolom": "audittypename",
       "Tipe Data": "String",
     },
+    {
+      "Nama Kolom": "riskissuecode",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "riskissuename",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "submajorprocesscode",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "submajorprocessname",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "majorprocessname",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "megaprocessname",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "functionalactivity2name",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "functionalactivity1name",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "organizationcode",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "organizationname",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "personalnumber",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "personname",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "kkpttitle",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "findinglevelname",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "findingtypename",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "refrisktypename",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "productname",
+      "Tipe Data": "String",
+    },
+    {
+      "Nama Kolom": "samplenumber",
+      "Tipe Data": "Int32",
+    },
+    {
+      "Nama Kolom": "impactscore",
+      "Tipe Data": "Int32",
+    },
+    {
+      "Nama Kolom": "likelihoodscore",
+      "Tipe Data": "Int32",
+    },
   ];
+  const exportToExcel = () => {
+    const dataToExport = [...dataList]; // Data yang akan diekspor
+
+    // Membuat workheet baru
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+
+    // Membuat workbook baru
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "KKPT Data"); // Nama sheet
+
+    // Menghasilkan file Excel (blob)
+    const blob = XLSX.write(wb, { bookType: "xlsx", type: "blob" });
+
+    // Membuat URL untuk blob
+    const url = URL.createObjectURL(blob);
+
+    // Membuat link untuk mengunduh file Excel
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "kkpt_inquiry_log.xlsx"; // Nama file
+    a.click();
+
+    // Membersihkan URL
+    URL.revokeObjectURL(url);
+  };
+
   useEffect(() => {
-    if (data != undefined) {
-      const mappingCatPat = data?.data.map((v, key) => {
+    if (dataList != undefined) {
+      const mappingCatPat = dataList.map((v, key) => {
         return {
           No: key + 1,
-          "Nama Project": v?.project_name,
-          "Kantor Audit":
-            v?.audit_office.uka_kode + " - " + v?.audit_office.uka_name,
-          "Tahun Audit": v?.audit_year,
-          "Tim Audit": v?.audit_team.map((d, key) => {
-            return (
-              <div key={key} className="flex justify-between">
-                <p className="mr-2">{d.name}</p>
-              </div>
-            );
-          }),
-          "Addendum Ke": "Fase ke - " + v?.addendum_phase,
+          KKPTID: v?.KKPTID,
+          "Nama Project": v?.ProjectName,
+          "Tahun Audit": v?.ProjectYear,
           Aksi: (
             <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
               <Link
-                href={"/catalogue/advance-filter/kkpt/" + v?._id}
+                href={"/catalogue/advance-filter/kkpt/" + v?.KKPTID}
                 prefetch={false}
               >
                 <Button
@@ -66,7 +178,19 @@ const index = () => {
       });
       setCatPat(mappingCatPat);
     }
-  }, [data]);
+  }, [dataList]);
+
+  const handleSubmit = async () => {
+    loadingSwal();
+    const url = `${process.env.NEXT_PUBLIC_API_URL_CATALOG}/catalog/advfilter/kkpt`;
+    await usePostKKPTQuery(url, {
+      whereclause: `WHERE ` + whereClause,
+      year: selectedYear,
+    }).then((res) => {
+      successSwal(res.messages);
+      setDataList(res.data);
+    });
+  };
 
   return (
     <MainLayout>
@@ -80,11 +204,11 @@ const index = () => {
         <div className="mt-5 mr-40 grid grid-cols-4 mb-20">
           <div className="col-span-1">
             <div className="mb-2 text-lg">
-              <div className="pt-4 font-bold">Kolom Pilihan</div>
+              <div className="pt-4 font-bold">Kolom Kunci</div>
             </div>
             <Card>
               <div className="w-full h-full px-2">
-                <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
+                <div className="max-h-[22rem] overflow-y-scroll px-2 p-5">
                   <TableField
                     headers={["Nama Kolom", "Tipe Data"]}
                     columnWidths={["55%", "45%"]}
@@ -99,7 +223,7 @@ const index = () => {
               <div className="pt-4 font-bold">Kolom Pencarian</div>
               <div>
                 <div className="bg-green-500 shadow rounded-md">
-                  <ButtonField text={"Eksekusi"} />
+                  <ButtonField text={"Eksekusi"} handler={handleSubmit} />
                 </div>
               </div>
             </div>
@@ -107,9 +231,22 @@ const index = () => {
               rows={10}
               placeholder="Masukkan batasan data yang diperlukan..."
               className="p-6 w-full h-full rounded-lg border-[1.5px] border-[#83606025]"
+              onChange={(e) => setWhereClause(e.target.value)}
               style={{ boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.20)" }}
             ></textarea>
           </div>
+        </div>
+        <div className="mt-5 mr-40 flex gap-1">
+          <div className="w-[8rem]">
+            <div className="bg-slate-800 shadow rounded-md p-1.5">
+              <p className="text-white px-6">{catPat.length} KKPTs</p>
+            </div>
+          </div>
+          {/* <div className="w-[12rem]">
+            <div className="bg-green-500 shadow rounded-md">
+              <ButtonField text={"Export to Excel"} handler={exportToExcel} />
+            </div>
+          </div> */}
         </div>
         <div className="mt-5 mr-40">
           <Card>
@@ -119,14 +256,12 @@ const index = () => {
                 <TableField
                   headers={[
                     "No",
+                    "KKPTID",
                     "Nama Project",
-                    "Kantor Audit",
                     "Tahun Audit",
-                    "Tim Audit",
-                    "Addendum Ke",
                     "Aksi",
                   ]}
-                  columnWidths={["5%", "23%", "20%", "15%", "18%", "12%", "7%"]}
+                  columnWidths={["5%", "25%", "30%", "30%", "10%"]}
                   items={catPat}
                 />
               </div>

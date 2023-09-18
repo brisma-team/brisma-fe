@@ -18,6 +18,8 @@ const ModalAddDashboard = ({
   // const [selected, setSelected] = useState();
   const [ukaMapping, setUkaMapping] = useState();
   const [roleMapping, setRoleMapping] = useState();
+  const [roles, setRoles] = useState();
+  const [ukas, setUkas] = useState();
 
   const handleEmbedIdChange = (e) => {
     setData({ ...data, embedId: e.target.value });
@@ -55,6 +57,18 @@ const ModalAddDashboard = ({
     }
   }, [role]);
 
+  useEffect(() => {
+    setData({
+      ...data,
+      allowlist: [
+        {
+          uka_code: ukas,
+          role_code: roles,
+        },
+      ],
+    });
+  }, [ukas, roles]);
+
   return (
     <Modal
       showModal={showModal}
@@ -89,7 +103,7 @@ const ModalAddDashboard = ({
                 <Select
                   optionValue={ukaMapping}
                   placeholder="Pilih Uka"
-                  // onChange={(e) => setSelected(e)}
+                  onChange={(e) => setUkas(e.value)}
                   isSearchable={true}
                 />
               </div>
@@ -97,7 +111,7 @@ const ModalAddDashboard = ({
                 <Select
                   optionValue={roleMapping}
                   placeholder="Pilih Role"
-                  // onChange={(e) => setSelected(e)}
+                  onChange={(e) => setRoles(e.map((obj) => obj.value))}
                   isSearchable={true}
                   isMulti={true}
                 />
