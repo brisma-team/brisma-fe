@@ -158,6 +158,9 @@ const index = () => {
           KKPTID: v?.KKPTID,
           "Nama Project": v?.ProjectName,
           "Tahun Audit": v?.ProjectYear,
+          "Tipe Audit": v?.AuditType,
+          Aktivitas: v?.Activity,
+          "Sub Aktivitas": v?.SubActivity,
           Aksi: (
             <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
               <Link
@@ -185,7 +188,7 @@ const index = () => {
     loadingSwal();
     const url = `${process.env.NEXT_PUBLIC_API_URL_CATALOG}/catalog/advfilter/kkpt`;
     await usePostKKPTQuery(url, {
-      whereclause: `WHERE ` + whereClause,
+      whereclause: whereClause != "" ? `WHERE ` + whereClause : "",
       year: selectedYear,
     }).then((res) => {
       successSwal(res.messages);
@@ -257,12 +260,24 @@ const index = () => {
                 <TableField
                   headers={[
                     "No",
+                    "Aksi",
                     "KKPTID",
                     "Nama Project",
                     "Tahun Audit",
-                    "Aksi",
+                    "Tipe Audit",
+                    "Aktivitas",
+                    "Sub Aktivitas",
                   ]}
-                  columnWidths={["5%", "25%", "30%", "30%", "10%"]}
+                  columnWidths={[
+                    "5%",
+                    "10%",
+                    "20%",
+                    "20%",
+                    "10%",
+                    "10%",
+                    "10%",
+                    "15%",
+                  ]}
                   items={catPat}
                 />
               </div>
