@@ -14,6 +14,7 @@ const index = () => {
   const id = useRouter().query.id;
 
   const [catDetailEwp, setCatDetailEwp] = useState([]);
+  const [selectedId, setSelectedId] = useState("");
   const [currentPage, setCurrentPage] = useState([]);
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
@@ -24,10 +25,15 @@ const index = () => {
   ];
 
   const { ewpDetailData } = useCatalogEWPById(
-    id.split("x1c-")[2],
-    id.split("x1c-")[0],
-    id.split("x1c-")[1]
+    selectedId.split("x1c-")[2],
+    selectedId.split("x1c-")[0],
+    selectedId.split("x1c-")[1]
   );
+
+  useState(() => {
+    id && setSelectedId(id);
+  }, [id]);
+
   useEffect(() => {
     if (ewpDetailData != undefined) {
       const mappingCatEwp = ewpDetailData.data.map((v, key) => {
