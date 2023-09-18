@@ -116,8 +116,8 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
     dispatch(setSearchParamsCATEWP(searchParamsCatEWP));
     loadingSwal();
     setShowModal(false);
-    successSwal("Pencarian berhasil.");
     router.push(url);
+    successSwal("Pencarian berhasil.");
   };
   return (
     <Modal

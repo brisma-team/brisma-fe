@@ -6,7 +6,7 @@ import { IconArrowRight } from "@/components/icons";
 import Button from "@atlaskit/button";
 import { loadingSwal, successSwal } from "@/helpers";
 import usePostKKPTQuery from "@/helpers/usePostKKPTQuery";
-import * as XLSX from "xlsx";
+// import * as XLSX from "xlsx";
 
 const index = () => {
   const breadcrumbs = [
@@ -124,31 +124,31 @@ const index = () => {
       "Tipe Data": "Int32",
     },
   ];
-  const exportToExcel = () => {
-    const dataToExport = [...dataList]; // Data yang akan diekspor
+  // const exportToExcel = () => {
+  //   const dataToExport = [...dataList]; // Data yang akan diekspor
 
-    // Membuat workheet baru
-    const ws = XLSX.utils.json_to_sheet(dataToExport);
+  //   // Membuat workheet baru
+  //   const ws = XLSX.utils.json_to_sheet(dataToExport);
 
-    // Membuat workbook baru
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "KKPT Data"); // Nama sheet
+  //   // Membuat workbook baru
+  //   const wb = XLSX.utils.book_new();
+  //   XLSX.utils.book_append_sheet(wb, ws, "KKPT Data"); // Nama sheet
 
-    // Menghasilkan file Excel (blob)
-    const blob = XLSX.write(wb, { bookType: "xlsx", type: "blob" });
+  //   // Menghasilkan file Excel (blob)
+  //   const blob = XLSX.write(wb, { bookType: "xlsx", type: "blob" });
 
-    // Membuat URL untuk blob
-    const url = URL.createObjectURL(blob);
+  //   // Membuat URL untuk blob
+  //   const url = URL.createObjectURL(blob);
 
-    // Membuat link untuk mengunduh file Excel
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "kkpt_inquiry_log.xlsx"; // Nama file
-    a.click();
+  //   // Membuat link untuk mengunduh file Excel
+  //   const a = document.createElement("a");
+  //   a.href = url;
+  //   a.download = "kkpt_inquiry_log.xlsx"; // Nama file
+  //   a.click();
 
-    // Membersihkan URL
-    URL.revokeObjectURL(url);
-  };
+  //   // Membersihkan URL
+  //   URL.revokeObjectURL(url);
+  // };
 
   useEffect(() => {
     if (dataList != undefined) {
@@ -161,7 +161,8 @@ const index = () => {
           Aksi: (
             <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
               <Link
-                href={"/catalogue/advance-filter/kkpt/" + v?.KKPTID}
+                // href={"/catalogue/advance-filter/kkpt/" + v?.KKPTID}
+                href={"#"}
                 prefetch={false}
               >
                 <Button
