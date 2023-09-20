@@ -42,6 +42,9 @@ import ActivitySelect from "./ActivitySelect";
 import SubActivitySelect from "./SubActivitySelect";
 import SubMajorSelect from "./SubMajorSelect";
 import RiskIssueSelect from "./RiskIssueSelect";
+import ModalHeader from "./ModalHeader";
+import ModalFooter from "./ModalFooter";
+import BudgetCategorySelect from "./BudgetCategorySelect";
 
 export {
   BackButton,
@@ -88,4 +91,7 @@ export {
   SubActivitySelect,
   SubMajorSelect,
   RiskIssueSelect,
+  ModalHeader,
+  ModalFooter,
+  BudgetCategorySelect,
 };
