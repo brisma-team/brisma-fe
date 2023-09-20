@@ -8,7 +8,8 @@ const initialState = {
   dataTables: {
     fileName: "",
     tableRows: [],
-    tableValues: [],
+    tableColumns: {},
+    tableSelectedRows: [],
   },
 
   // payload
@@ -29,12 +30,22 @@ const initialState = {
     program_audit: "",
     kriteria: "",
   },
-  payloadSample: {
+  payloadUploadSample: {
     url: "",
     filename: "",
     values: [],
     jumlah_baris: "",
     uniq_column: "",
+  },
+  payloadSample: {
+    sample_sumber_info: "",
+    sample_jumlah_populasi: "",
+    sample_jumlah_sample: "",
+    sample_periode_start: "",
+    sample_periode_end: "",
+    sample_uraian: "",
+    sample_ref_teknik_sampling_kode: "",
+    sample_ref_teknik_sampling_name: "",
   },
 
   // default data
@@ -50,22 +61,33 @@ const initialState = {
     program_audit: "",
     kriteria: "",
   },
-  defaultPayloadSample: {
+  defaultPayloadUploadSample: {
     url: "",
     filename: "",
     values: [],
     jumlah_baris: "",
     uniq_column: "",
   },
+  defaultPayloadSample: {
+    sample_sumber_info: "",
+    sample_jumlah_populasi: "",
+    sample_jumlah_sample: "",
+    sample_periode_start: "",
+    sample_periode_end: "",
+    sample_uraian: "",
+    sample_ref_teknik_sampling_kode: "",
+    sample_ref_teknik_sampling_name: "",
+  },
   defaultDataTables: {
     fileName: "",
     tableRows: [],
-    tableValues: [],
+    tableColumns: {},
+    tableSelectedRows: [],
   },
 
   //validation
   validationErrorsPayloadRiskIssue: {},
-  validationErrorsPayloadSample: {},
+  validationErrorsPayloadUploadSample: {},
 };
 
 export const planningAnalysisMapaEWPSlice = createSlice({
@@ -96,6 +118,9 @@ export const planningAnalysisMapaEWPSlice = createSlice({
     setPayloadRiskIssue: (state, action) => {
       state.payloadRiskIssue = action.payload;
     },
+    setPayloadUploadSample: (state, action) => {
+      state.payloadUploadSample = action.payload;
+    },
     setPayloadSample: (state, action) => {
       state.payloadSample = action.payload;
     },
@@ -108,6 +133,9 @@ export const planningAnalysisMapaEWPSlice = createSlice({
     // reset
     resetPayloadRiskIssue: (state) => {
       state.payloadRiskIssue = { ...state.defaultPayloadRiskIssue };
+    },
+    resetPayloadUploadSample: (state) => {
+      state.payloadUploadSample = { ...state.defaultPayloadUploadSample };
     },
     resetPayloadSample: (state) => {
       state.payloadSample = { ...state.defaultPayloadSample };
@@ -129,9 +157,11 @@ export const {
   setPayloadActivity,
   setPayloadSubActivity,
   setPayloadRiskIssue,
+  setPayloadUploadSample,
   setPayloadSample,
   setValidationErrorsRiskIssue,
   resetPayloadRiskIssue,
+  resetPayloadUploadSample,
   resetPayloadSample,
   resetValidationErrorsPayloadRiskIssue,
   resetDataTables,

@@ -16,6 +16,9 @@ import projectOverviewEWPReducer from "./slices/ewp/projectOverviewEWPSlice";
 import auditTeamMapaEWPReducer from "./slices/ewp/konvensional/mapa/auditTeamMapaEWPSlice";
 import ukerAssessmentMapaEWPReducer from "./slices/ewp/konvensional/mapa/ukerAssessmentMapaEWPSlice";
 import planningAnalysisMapaEWPReducer from "./slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
+import assignmentMapaEWPReducer from "./slices/ewp/konvensional/mapa/assignmentMapaEWPSlice";
+import auditScheduleMapaEWPReducer from "./slices/ewp/konvensional/mapa/auditScheduleMapaEWPSlice";
+import budgetMapaEWPReducer from "./slices/ewp/konvensional/mapa/budgetMapaEWPSlice";
 
 import { configureStore } from "@reduxjs/toolkit";
 
@@ -36,5 +39,8 @@ export const store = configureStore({
     auditTeamMapaEWP: auditTeamMapaEWPReducer,
     ukerAssessmentMapaEWP: ukerAssessmentMapaEWPReducer,
     planningAnalysisMapaEWP: planningAnalysisMapaEWPReducer,
+    assignmentMapaEWP: assignmentMapaEWPReducer,
+    auditScheduleMapaEWP: auditScheduleMapaEWPReducer,
+    budgetMapaEWP: budgetMapaEWPReducer,
   },
 });
