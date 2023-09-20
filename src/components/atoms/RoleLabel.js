@@ -9,7 +9,7 @@ const RoleLabel = ({ text }) => {
         borderRadius: "3px",
       }}
     >
-      <p className="text-base text-white">{text}</p>
+      <p className="text-sm text-white text-center">{text}</p>
     </div>
   );
 };
