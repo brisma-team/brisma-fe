@@ -85,6 +85,7 @@ const index = () => {
         file: e.target.files[0],
         modul: "pat",
       });
+
       dispatch(
         setImageClipList([
           ...imageClipList,
@@ -152,7 +153,7 @@ const index = () => {
                           key={i}
                           className="m-2 border-2 shadow-sm rounded-lg p-3"
                           style={{ width: "6.25rem", height: "6.25rem" }}
-                          onClick={() => copyToClipboard(v.url.src)}
+                          onClick={() => copyToClipboard(v.url)}
                         >
                           <Image
                             src={v.url}
@@ -164,11 +165,12 @@ const index = () => {
                       );
                     })}
                   </div>
-                  <div className="mt-4 px-8 py-2 bg-none w-full justify-center">
+                  <div className="mt-4 py-2 bg-none w-full justify-start">
                     <UploadButton
                       text={"Tambah Kliping +"}
                       fileAccept={"image/png, image/gif, image/jpeg"}
                       handleUpload={handleUpload}
+                      className={"text-atlasian-purple text-sm"}
                     />
                   </div>
                   {/* End Kliping Gambar */}
@@ -177,12 +179,16 @@ const index = () => {
             </div>
           </div>
           <div>
-            <Editor
-              contentData={data.latar_belakang}
-              disabled={false}
-              ready={true}
-              onChange={(value) => setData({ ...data, latar_belakang: value })}
-            />
+            <div className="ckeditor-latar-belakang-pat overflow-x-hidden">
+              <Editor
+                contentData={data.latar_belakang}
+                disabled={false}
+                ready={true}
+                onChange={(value) =>
+                  setData({ ...data, latar_belakang: value })
+                }
+              />
+            </div>
             <div className="mt-3 flex justify-end">
               <div className="w-[7.75rem] h-10 bg-atlasian-green rounded flex items-center">
                 <ButtonField text={"Simpan"} handler={handlePost} />

@@ -17,3 +17,15 @@
   width: 210mm;
   overflow-y: scroll;
 }
+
+/* START CKEditor PAT */
+.ckeditor-latar-belakang-pat div div div .ck-blurred {
+  overflow-y: scroll;
+  max-height: 36rem !important;
+}
+
+.ckeditor-sumber-informasi-pat div div div .ck-blurred {
+  overflow-y: scroll;
+  max-height: 36rem !important;
+}
+/* END CKEditor PAT */

@@ -1,12 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ImageBrismaHorizontal } from "@/helpers/imagesUrl";
 const initialState = {
-  imageClipList: [
-    {
-      name: "brisma",
-      url: ImageBrismaHorizontal,
-    },
-  ],
+  imageClipList: [],
 };
 
 export const sumberInformasiSlice = createSlice({
