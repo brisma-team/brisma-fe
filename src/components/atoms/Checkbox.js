@@ -1,13 +1,12 @@
 import { Checkbox } from "@atlaskit/checkbox";
 
-const CheckboxField = ({ isChecked, handleChange, label }) => {
+const CheckboxField = ({ isChecked, handleChange, label, className }) => {
   return (
     <Checkbox
       isChecked={isChecked}
       onChange={handleChange}
       label={label}
-      name="checkbox-default"
-      testId="cb-default"
+      className={className}
     />
   );
 };

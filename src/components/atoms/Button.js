@@ -11,6 +11,7 @@ const ButtonField = ({
   type,
   name,
   style,
+  className,
 }) => {
   let txtColor;
   switch (textColor) {
@@ -33,6 +34,7 @@ const ButtonField = ({
 
   return (
     <Button
+      className={className}
       href={url && url}
       iconBefore={icon}
       iconAfter={iconAfter}

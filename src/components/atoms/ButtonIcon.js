@@ -1,4 +1,4 @@
-const ButtonIcon = ({ color, icon, handleClick }) => {
+const ButtonIcon = ({ color, icon, handleClick, className }) => {
   let iconColor;
   switch (color) {
     case "red":
@@ -24,7 +24,7 @@ const ButtonIcon = ({ color, icon, handleClick }) => {
     <span
       role="button"
       tabIndex={0}
-      className={`${iconColor}`}
+      className={`${className} ${iconColor}`}
       onClick={handleClick}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === "Space") {
