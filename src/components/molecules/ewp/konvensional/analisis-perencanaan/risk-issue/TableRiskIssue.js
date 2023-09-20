@@ -15,7 +15,6 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ModalAddSampleRisk from "./ModalAddSampleRisk";
-import { setPayloadSample } from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
 
 const TableRiskIssue = ({
   selectedRiskIssue,
@@ -27,8 +26,8 @@ const TableRiskIssue = ({
   const riskIssueData = useSelector(
     (state) => state.planningAnalysisMapaEWP.riskIssueData
   );
-  const payloadSample = useSelector(
-    (state) => state.planningAnalysisMapaEWP.payloadSample
+  const payloadUploadSample = useSelector(
+    (state) => state.planningAnalysisMapaEWP.payloadUploadSample
   );
 
   const [showModalCreateSample, setShowModalCreateSample] = useState(false);

@@ -20,6 +20,7 @@ import { FormWithLabel } from "@/components/molecules/commons";
 import { setPayloadSample } from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
 import { SubModalPickDataCSV } from "./modal/sample-risk/sample-csv";
 import { useSampleUploadMapaEWP } from "@/data/ewp/konvensional/mapa/analisis-perencanaan";
+import { useEffect } from "react";
 
 const ModalAddSampleRisk = ({
   showModal,
@@ -44,15 +45,11 @@ const ModalAddSampleRisk = ({
       mapa_uker_mcr_id: selectedRiskIssue,
     });
 
-  // const handleChange = (property, value) => {
-  //   const updatedData = {
-  //     ...payloadSample,
-  //     [property]: value,
-  //   };
-  //   dispatch(setPayloadSample(updatedData));
-  // };
+  useEffect(() => {
+    console.log("payloadSample => ", payloadSample);
+  }, [payloadSample]);
 
-  const handleChangePeriod = (property, value) => {
+  const handleChange = (property, value) => {
     const updatedData = {
       ...payloadSample,
       [property]: value,
@@ -60,27 +57,15 @@ const ModalAddSampleRisk = ({
     dispatch(setPayloadSample(updatedData));
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const payload = {
-  //     ...payloadRiskIssue,
-  //     ..._.pick(riskIssueInfo, [
-  //       "mapa_uker_id",
-  //       "ref_sub_aktivitas_kode",
-  //       "ref_sub_aktivitas_name",
-  //     ]),
-  //   };
-  //   const validate = setErrorValidation(payload, dispatch, schemaMappings);
-
-  //   if (validate) {
-  //     await usePostData(
-  //       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/1/risk?sub_kode=${payload?.ref_sub_aktivitas_kode}&uker_id=${payload?.mapa_uker_id}`,
-  //       payload
-  //     );
-  //     mutate();
-  //     setShowModal(false);
-  //   }
-  // };
+  const handleChangeTehnikSampling = (value) => {
+    console.log("e => ", value);
+    const updatedData = {
+      ...payloadSample,
+      sample_ref_teknik_sampling_kode: value.kode,
+      sample_ref_teknik_sampling_name: value.nama,
+    };
+    dispatch(setPayloadSample(updatedData));
+  };
 
   const handleCloseModal = async () => {
     const confirm = await confirmationSwal(
@@ -94,6 +79,8 @@ const ModalAddSampleRisk = ({
     setCurrentModalStage(1);
     setShowModal(false);
   };
+
+  const optionValue = [{ label: "Test", value: { kode: "1", nama: "Test" } }];
 
   return (
     <Modal
@@ -138,13 +125,26 @@ const ModalAddSampleRisk = ({
                     Likuidutas
                   </div>
                   <FormWithLabel
-                    form={<TextInput placeholder="Sumber Informasi" />}
+                    form={
+                      <TextInput
+                        placeholder="Sumber Informasi"
+                        onChange={(e) =>
+                          handleChange("sample_sumber_info", e.target.value)
+                        }
+                        value={payloadSample?.sample_sumber_info}
+                      />
+                    }
                     label="Sumber Informasi"
                     widthLabel={"w-2/5"}
                     widthForm={"w-3/5"}
                   />
                   <FormWithLabel
-                    form={<TextInput placeholder="Jumlah Populasi" />}
+                    form={
+                      <TextInput
+                        placeholder="Jumlah Populasi"
+                        isDisabled={true}
+                      />
+                    }
                     label="Jumlah Populasi"
                     widthLabel={"w-2/5"}
                     widthForm={"w-3/5"}
@@ -155,11 +155,13 @@ const ModalAddSampleRisk = ({
                         placeholderStart="Tanggal"
                         placeholderEnd="Tanggal"
                         handlerChangeStart={(e) =>
-                          handleChangePeriod("sample_periode_start", e)
+                          handleChange("sample_periode_start", e)
                         }
                         handlerChangeEnd={(e) =>
-                          handleChangePeriod("sample_periode_end", e)
+                          handleChange("sample_periode_end", e)
                         }
+                        valueStart={payloadSample?.sample_periode_start}
+                        valueEnd={payloadSample?.sample_periode_end}
                       />
                     }
                     label="Periode"
@@ -168,14 +170,33 @@ const ModalAddSampleRisk = ({
                     labelPositionTop={true}
                   />
                   <FormWithLabel
-                    form={<TextInput isDisabled={true} />}
+                    form={
+                      <TextInput
+                      // isDisabled={true}
+                      // onChange={(e) =>
+                      //   handleChange("sample_jumlah_sample", e.target.value)
+                      // }
+                      // value={payloadSample.sample_jumlah_sample}
+                      />
+                    }
                     label="Jumlah Sample"
                     widthLabel={"w-2/5"}
                     widthForm={"w-3/5"}
                   />
                   <FormWithLabel
                     form={
-                      <Select optionValue={[]} placeholder="Tehnik Sampling" />
+                      <Select
+                        optionValue={optionValue}
+                        placeholder="Tehnik Sampling"
+                        onChange={(e) => handleChangeTehnikSampling(e.value)}
+                        value={{
+                          label: payloadSample.sample_ref_teknik_sampling_name,
+                          value: {
+                            kode: payloadSample.sample_ref_teknik_sampling_kode,
+                            name: payloadSample.sample_ref_teknik_sampling_name,
+                          },
+                        }}
+                      />
                     }
                     label="Tehnik Sampling"
                     widthLabel={"w-2/5"}
@@ -186,6 +207,10 @@ const ModalAddSampleRisk = ({
                       <TextAreaField
                         placeholder="Uraian Sample.."
                         resize="auto"
+                        handleChange={(e) =>
+                          handleChange("sample_uraian", e.target.value)
+                        }
+                        value={payloadSample?.sample_uraian}
                       />
                     }
                     label="Uraian Sample"
@@ -236,6 +261,7 @@ const ModalAddSampleRisk = ({
                 <ContentSampleCSV
                   data={sampleUploadMapaEWP?.data?.csv}
                   setCurrentModalStage={setCurrentModalStage}
+                  mutate={sampleUploadMapaEWPMutate}
                 />
                 <div className="px-4 flex justify-between w-full">
                   <div className="w-[7.5rem] bg-atlasian-blue-light rounded">

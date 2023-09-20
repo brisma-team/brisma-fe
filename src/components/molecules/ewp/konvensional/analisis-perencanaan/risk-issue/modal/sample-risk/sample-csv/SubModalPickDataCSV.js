@@ -16,13 +16,10 @@ const SubModalPickDataCSV = ({
   const classNavbar = `font-semibold text-base z-10 flex justify-center pb-1`;
   const classNavbarActive = `border-b-[5px] border-atlasian-blue-light text-atlasian-blue-light`;
 
-  const { samplePoolMapaEWP, samplePoolMapaEWPMutate } = useSamplePoolMapaEWP(
-    "sample_csv",
-    {
-      id,
-      mapa_uker_mcr_id: selectedRiskIssue,
-    }
-  );
+  const { samplePoolMapaEWP } = useSamplePoolMapaEWP("sample_csv", {
+    id,
+    mapa_uker_mcr_id: selectedRiskIssue,
+  });
 
   return (
     <Card>

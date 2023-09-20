@@ -1,31 +1,8 @@
-import {
-  ButtonField,
-  ButtonIcon,
-  CheckboxField,
-  Pagination,
-  TableField,
-} from "@/components/atoms";
-import { withTokenConfig } from "@/helpers";
-import TableTree, {
-  Cell,
-  Header,
-  Headers,
-  Row,
-  Rows,
-} from "@atlaskit/table-tree";
+import { ButtonField } from "@/components/atoms";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Papa from "papaparse";
-import {
-  resetDataTables,
-  resetPayloadSample,
-  setDataTables,
-} from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
-import _ from "lodash";
-import { IconArrowBottomCircle, IconCrossCircle } from "@/components/icons";
+import { useDispatch } from "react-redux";
+import { resetDataTables } from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
 import { useState } from "react";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
 import DynamicTable from "@atlaskit/dynamic-table";
 
 const ContentExistingSampleCSV = ({
@@ -152,7 +129,7 @@ const ContentExistingSampleCSV = ({
     setIsSelectedSamplePool(true);
     setCurrentSubModalStage(1);
     dispatch(resetDataTables());
-    dispatch(resetPayloadSample());
+    // dispatch(resetPayloadSample());
   };
 
   return (

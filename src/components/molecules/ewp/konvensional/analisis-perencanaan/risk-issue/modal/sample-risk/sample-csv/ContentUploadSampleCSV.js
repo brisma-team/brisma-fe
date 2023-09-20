@@ -1,36 +1,52 @@
-import { CheckboxField, Pagination } from "@/components/atoms";
-import TableTree, {
-  Cell,
-  Header,
-  Headers,
-  Row,
-  Rows,
-} from "@atlaskit/table-tree";
+import { Pagination } from "@/components/atoms";
 import { useDispatch, useSelector } from "react-redux";
 import ContentPickSampleCSV from "./ContentPickSampleCSV";
-import { setPayloadSample } from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
+import {
+  setDataTables,
+  setPayloadUploadSample,
+} from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
+import DynamicTable from "@atlaskit/dynamic-table";
+
+const extendRows = (rows, onClick) => {
+  return rows.map((row, index) => ({
+    ...row,
+    onClick: (e) => onClick(e, row?.cells[0]?.content, index),
+  }));
+};
 
 const ContentUploadSampleCSV = ({ isSelectedSamplePool }) => {
   const dispatch = useDispatch();
   const dataTables = useSelector(
     (state) => state.planningAnalysisMapaEWP.dataTables
   );
-  const payloadSample = useSelector(
-    (state) => state.planningAnalysisMapaEWP.payloadSample
+  const payloadUploadSample = useSelector(
+    (state) => state.planningAnalysisMapaEWP.payloadUploadSample
   );
 
-  const handleChangeCheckbox = (isChecked, id) => {
-    const values = [...payloadSample.values];
-    if (isChecked) {
-      values.push(id);
+  const handleRowClick = (e, key, index) => {
+    const updateDataTables = [...dataTables.tableSelectedRows];
+    const updatePayloadSample = [...payloadUploadSample.values];
+    const existingIndex = updateDataTables.findIndex((item) => {
+      return item === index;
+    });
+
+    if (existingIndex > -1) {
+      updatePayloadSample.splice(existingIndex, 1);
+      updateDataTables.splice(existingIndex, 1);
     } else {
-      const index = payloadSample.values.indexOf(id);
-      if (index > -1) {
-        values.splice(index, 1);
-      }
+      updatePayloadSample.push(key);
+      updateDataTables.push(index);
     }
 
-    dispatch(setPayloadSample({ ...payloadSample, values }));
+    dispatch(
+      setDataTables({ ...dataTables, tableSelectedRows: updateDataTables })
+    );
+    dispatch(
+      setPayloadUploadSample({
+        ...payloadUploadSample,
+        values: updatePayloadSample,
+      })
+    );
   };
 
   if (isSelectedSamplePool) {
@@ -41,57 +57,16 @@ const ContentUploadSampleCSV = ({ isSelectedSamplePool }) => {
     <div className="px-4 py-2">
       <p>{dataTables.fileName}</p>
       <div className="my-2" />
-      {dataTables.tableValues.length ? (
+      {dataTables.tableRows.length ? (
         <div>
           <div className="w-full p-4 overflow-y-scroll max-h-[40rem]">
-            <TableTree>
-              <Headers>
-                <Header className="border-x border-t rounded-ss-xl">
-                  <p className="font-bold text-brisma">Aksi</p>
-                </Header>
-                {dataTables.tableRows.map((v, i) => {
-                  return (
-                    <Header
-                      className={`border-t border-r ${
-                        i === dataTables.tableRows.length - 1
-                          ? "rounded-se-xl"
-                          : ""
-                      }`}
-                      key={i}
-                    >
-                      <p className="font-bold text-brisma">{v}</p>
-                    </Header>
-                  );
-                })}
-              </Headers>
-              <Rows
-                items={dataTables.tableValues}
-                render={(data) => (
-                  <Row>
-                    <Cell className="border-x">
-                      <div className="flex -ml-2.5">
-                        <CheckboxField
-                          isChecked={payloadSample.values.includes(
-                            data[dataTables.tableRows[0]]
-                          )}
-                          handleChange={(e) =>
-                            handleChangeCheckbox(
-                              e.target.checked,
-                              data[dataTables.tableRows[0]]
-                            )
-                          }
-                        />
-                      </div>
-                    </Cell>
-                    {dataTables.tableRows.map((rowData, idx) => (
-                      <Cell className="border-r" key={idx}>
-                        <p className="text-xs">{data[rowData]}</p>
-                      </Cell>
-                    ))}
-                  </Row>
-                )}
+            <div className="dataTables">
+              <DynamicTable
+                head={dataTables.tableColumns}
+                highlightedRowIndex={dataTables.tableSelectedRows}
+                rows={extendRows(dataTables.tableRows, handleRowClick)}
               />
-            </TableTree>
+            </div>
           </div>
           <Pagination pages={1} />
         </div>
