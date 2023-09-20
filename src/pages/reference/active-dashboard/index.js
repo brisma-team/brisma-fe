@@ -24,6 +24,7 @@ const index = () => {
     { name: "Reference", path: "/reference" },
     { name: "Dashboard", path: "/reference/active-dashboard" },
   ];
+  // const [selected, setSelected] = useState();
 
   const [showModal, setShowModal] = useState(false);
   const [dashboard, setDashboard] = useState([]);
@@ -59,7 +60,7 @@ const index = () => {
     if (confirm.value) {
       loadingSwal();
       const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/updateDashboard`;
-      await useUpdateData(url, { id: id, state: state });
+      await useUpdateData(url, { id: id, isActive: state });
       fetchData();
     }
   };
@@ -74,9 +75,8 @@ const index = () => {
 
   useEffect(() => {
     if (dashboardList) {
-      const total =
-        dashboardList.list.length > 5 ? (dashboardList.list.length % 5) + 1 : 1;
-      setTotalPages(total);
+      setTotalPages(dashboardList.totalPages);
+      console.log(currentPage);
       const sortedDashboard = dashboardList.list
         ?.sort((a, b) =>
           (b["_created_at"] || "").localeCompare(a["_created_at"] || "")
@@ -94,6 +94,28 @@ const index = () => {
               {v?.is_active ? "Aktif" : "Tidak Aktif"}
             </div>
           ),
+          "Ditujukan Kepada":
+            v.allow_list == null ? (
+              v.is_public == true ? (
+                <p>Belum ditujukan</p>
+              ) : (
+                <p>Belum ditujukan</p>
+              )
+            ) : (
+              v.allow_list != null &&
+              v.allow_list.map((x, key) => (
+                <p key={key}>
+                  {
+                    "-" + x.uka_code
+                    // +
+                    //   " - " +
+                    //   x.role_code.map((index) => {
+                    //     roleMapping && finding(roleMapping, index);
+                    //   })
+                  }
+                </p>
+              ))
+            ),
           "Tanggal Dibuat": v?._created_at,
           Aksi: (
             <div className="flex justify-between text-center">
@@ -109,7 +131,7 @@ const index = () => {
                     text={v.is_active ? "Non-aktif" : "Aktifkan"}
                     handler={() =>
                       handleToggleActivate(
-                        v?._id,
+                        v?.id,
                         v?.superset_embed_id,
                         !v.is_active
                       )
@@ -123,7 +145,7 @@ const index = () => {
                 >
                   <ButtonField
                     text={"Hapus"}
-                    handler={() => handleDelete(v?._id)}
+                    handler={() => handleDelete(v?.id)}
                   />
                 </div>
               </div>
@@ -165,11 +187,11 @@ const index = () => {
                     "No",
                     "Dashboard ID",
                     "Nama Dashboard",
+                    "Ditujukan Kepada",
                     "Status",
-                    "Tanggal Dibuat",
                     "Aksi",
                   ]}
-                  columnWidths={["5%", "26%", "20%", "10%", "15%", "25%"]}
+                  columnWidths={["5%", "20%", "20%", "20%", "10%", "25%"]}
                   items={dashboard}
                 />
               </div>

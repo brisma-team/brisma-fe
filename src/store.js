@@ -20,6 +20,9 @@ import assignmentMapaEWPReducer from "./slices/ewp/konvensional/mapa/assignmentM
 import auditScheduleMapaEWPReducer from "./slices/ewp/konvensional/mapa/auditScheduleMapaEWPSlice";
 import budgetMapaEWPReducer from "./slices/ewp/konvensional/mapa/budgetMapaEWPSlice";
 
+// CATALOG
+import catalogEWPReducer from "./slices/catalog/ewp/catalogEWPSlice";
+
 import { configureStore } from "@reduxjs/toolkit";
 
 export const store = configureStore({
@@ -39,6 +42,7 @@ export const store = configureStore({
     auditTeamMapaEWP: auditTeamMapaEWPReducer,
     ukerAssessmentMapaEWP: ukerAssessmentMapaEWPReducer,
     planningAnalysisMapaEWP: planningAnalysisMapaEWPReducer,
+    catalogEWP: catalogEWPReducer,
     assignmentMapaEWP: assignmentMapaEWPReducer,
     auditScheduleMapaEWP: auditScheduleMapaEWPReducer,
     budgetMapaEWP: budgetMapaEWPReducer,

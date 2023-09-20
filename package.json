@@ -86,6 +86,7 @@
     "sweetalert2": "^11.7.2",
     "sweetalert2-react-content": "^5.0.7",
     "swr": "^2.0.4",
+    "xlsx": "^0.18.5",
     "yup": "^1.0.2"
   },
   "devDependencies": {

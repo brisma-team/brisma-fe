@@ -77,23 +77,18 @@ const index = () => {
         ],
       },
       {
-        subtitle: "Manajemen Aplikasi",
+        subtitle: "Manajemen Dashboard",
         subcontent: [
           {
-            title: "Bulletin",
-            description: "Pengaturan data untuk bulletin.",
-            url: "#",
+            title: "Kelola Dashboard",
+            description: "Pengaturan untuk Mengelola Dashboard.",
+            url: "/reference/manage-dashboard",
+            isBlank: true,
           },
           {
             title: "Aktivasi Dashboard",
-            description: "Pengaturan konfigurasi untuk Aktivasi Dashboard.",
+            description: "Pengaturan untuk Aktivasi Dashboard.",
             url: "/reference/active-dashboard",
-          },
-          {
-            title: "Manajemen Dashboard",
-            description: "Pengaturan konfigurasi untuk Dashboard.",
-            url: "/reference/manage-dashboard",
-            isBlank: true,
           },
         ],
       },

@@ -1,4 +1,3 @@
-// import { MainLayout } from "@/layouts";
 import useApacheToken from "@/data/dashboard/useApacheToken";
 import { useEffect, useState } from "react";
 
@@ -11,8 +10,7 @@ const index = () => {
   }, [apacheToken]);
 
   return (
-    // <MainLayout>
-    <div className="">
+    <div>
       <iframe
         title="superset"
         src={`https://139.59.104.214/login?token=${token}`}
@@ -20,7 +18,6 @@ const index = () => {
         width="100%"
       />
     </div>
-    // </MainLayout>
   );
 };
 
