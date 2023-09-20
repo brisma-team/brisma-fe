@@ -21,7 +21,7 @@ const ButtonIcon = ({ color, icon, handleClick, className }) => {
   }
 
   return (
-    <span
+    <div
       role="button"
       tabIndex={0}
       className={`${className} ${iconColor}`}
@@ -33,7 +33,7 @@ const ButtonIcon = ({ color, icon, handleClick, className }) => {
       }}
     >
       {icon}
-    </span>
+    </div>
   );
 };
 

@@ -1,5 +1,10 @@
 import { ButtonIcon, Card } from "@/components/atoms";
-import { IconEdit, IconSuccess } from "@/components/icons";
+import {
+  IconEdit,
+  IconMore,
+  IconSetting,
+  IconSuccess,
+} from "@/components/icons";
 import Link from "next/link";
 import ProgressBar from "@atlaskit/progress-bar";
 
@@ -29,7 +34,7 @@ const CardOverview = ({
 }) => {
   return (
     <Link
-      className="m-2 hover:bg-gray-100 hover:rounded-[10px] hover:no-underline w-[21.875rem] h-[10.5rem]"
+      className="m-2 hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
       href={href}
     >
       <Card>
@@ -38,11 +43,17 @@ const CardOverview = ({
             <div className="text-base font-bold text-atlasian-blue-dark">
               {title}
             </div>
-            <ButtonIcon
-              color={"yellow"}
-              icon={<IconEdit size="medium" />}
-              handleClick={() => console.log("TEST")}
-            />
+            <div className="h-6 w-6 flex justify-center items-center bg-white rounded hover:border-atlasian-blue-light border border-transparent">
+              <ButtonIcon
+                color={"blue"}
+                icon={
+                  <div className="flex justify-center items-center p-1">
+                    <IconMore size="medium" />
+                  </div>
+                }
+                handleClick={() => console.log("TEST")}
+              />
+            </div>
           </div>
           <div className="text-sm font-bold">{year}</div>
           <div className="flex flex-row justify-between leading-3 mt-2 items-center">

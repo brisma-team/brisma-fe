@@ -121,7 +121,7 @@ const index = () => {
         <div className="my-3 w-40">
           <Button
             appearance="primary"
-            iconBefore={IconPlus}
+            iconBefore={<IconPlus />}
             onClick={() => setOpenFilter(!openFilter)}
             shouldFitContainer
           >
@@ -140,7 +140,7 @@ const index = () => {
         </div>
         {/* End Filter */}
         {/* Start Content */}
-        <div className="flex flex-wrap my-4 overflow-hidden -ml-2">
+        <div className="grid grid-cols-4 my-4 overflow-hidden -ml-2">
           {projectOverviewError ? (
             <DataNotFound />
           ) : (
