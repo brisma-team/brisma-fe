@@ -1,4 +1,5 @@
 import SelectInput from "@atlaskit/select";
+import { useState } from "react";
 
 const Select = ({
   placeholder,
@@ -9,22 +10,33 @@ const Select = ({
   onChange,
   value,
   isDisabled,
-  handleMenuOpen,
-  handleMenuClose,
+  positionAbsolute,
 }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
-    <SelectInput
-      onChange={onChange}
-      options={optionValue}
-      isSearchable={isSearchable}
-      isMulti={isMulti}
-      placeholder={placeholder}
-      className={style}
-      value={value && value}
-      isDisabled={isDisabled}
-      onMenuOpen={handleMenuOpen}
-      onMenuClose={handleMenuClose}
-    />
+    <div className={positionAbsolute && open ? "z-50 absolute" : ""}>
+      <SelectInput
+        onChange={onChange}
+        options={optionValue}
+        isSearchable={isSearchable}
+        isMulti={isMulti}
+        placeholder={placeholder}
+        className={style && style}
+        value={value && value}
+        isDisabled={isDisabled}
+        onMenuOpen={handleOpen}
+        onMenuClose={handleClose}
+      />
+    </div>
   );
 };
 
