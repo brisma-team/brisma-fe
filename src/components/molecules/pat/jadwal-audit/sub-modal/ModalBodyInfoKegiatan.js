@@ -290,6 +290,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                   valueStart={auditScheduleData.pelaksanaan_start}
                   valueEnd={auditScheduleData.pelaksanaan_end}
                   isDisabled={isDisabled}
+                  pastDate={true}
                 />
               }
               widthLabel={"w-2/5"}
@@ -322,6 +323,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
             manajer_audit={auditTeam?.data?.ref_tim_audit_mas}
             ketua_tim_audit={auditTeam?.data?.ref_tim_audit_kta}
             anggota_tim_audit={auditTeam?.data?.ref_tim_audit_ata}
+            withoutLabel={true}
           />
         </div>
       </div>
