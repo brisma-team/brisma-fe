@@ -7,10 +7,6 @@ import {
 import InlineEdit from "@atlaskit/inline-edit";
 import OrgehSelect from "./OrgehSelect";
 
-const containerStyles = xcss({
-  width: "100%",
-});
-
 const fontSize = getFontSize();
 const gridSize = getGridSize();
 const minRows = 2;
@@ -42,7 +38,7 @@ const InlineEditOrgehSelect = ({
   };
 
   return (
-    <Box xcss={containerStyles}>
+    <div className="inline-edit-orgeh-select">
       <InlineEdit
         defaultValue={editValue}
         editView={(fieldProps) => (
@@ -70,9 +66,8 @@ const InlineEditOrgehSelect = ({
         onConfirm={handleConfirm}
         readViewFitContainerWidth
         hideActionButtons
-        on
       />
-    </Box>
+    </div>
   );
 };
 
