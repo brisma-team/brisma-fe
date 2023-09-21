@@ -38,7 +38,18 @@
   cursor: pointer;
 }
 
-/* START Custom table atlaskit */
+/* ************************************************************* */
+/* START custom component common */
+
+/* .inline-edit-orgeh-select form div div {
+  position: unset !important;
+} */
+
+/* END custom component common */
+/* ************************************************************* */
+
+
+/* START custom table atlaskit */
 .dataTables-custom div div div {
   padding: 0
 }
@@ -60,7 +71,7 @@
 }
 /* END Custom table atlaskit */
 
-/* START Jadwal Audit MAPA EWP*/
+/* START custom style EWP*/
 .dataTables-jadwal-audit-mapa-ewp div div div div {
   padding: 0
 }
