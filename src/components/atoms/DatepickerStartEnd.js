@@ -1,3 +1,4 @@
+import { dateNow } from "@/helpers";
 import { DatePicker } from "@atlaskit/datetime-picker";
 
 const DatepickerStartEnd = ({
@@ -9,6 +10,7 @@ const DatepickerStartEnd = ({
   valueEnd,
   format,
   isDisabled,
+  pastDate,
 }) => {
   return (
     <div className="flex">
@@ -19,6 +21,7 @@ const DatepickerStartEnd = ({
           value={valueStart}
           dateFormat={format}
           isDisabled={isDisabled}
+          minDate={pastDate && dateNow()}
         />
       </div>
       <div className="text-center mx-2">
@@ -31,6 +34,7 @@ const DatepickerStartEnd = ({
           value={valueEnd}
           dateFormat={format}
           isDisabled={isDisabled}
+          minDate={pastDate && valueStart}
         />
       </div>
     </div>
