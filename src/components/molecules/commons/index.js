@@ -45,6 +45,7 @@ import RiskIssueSelect from "./RiskIssueSelect";
 import ModalHeader from "./ModalHeader";
 import ModalFooter from "./ModalFooter";
 import BudgetCategorySelect from "./BudgetCategorySelect";
+import PopupKlipping from "./PopupKlipping";
 
 export {
   BackButton,
@@ -94,4 +95,5 @@ export {
   ModalHeader,
   ModalFooter,
   BudgetCategorySelect,
+  PopupKlipping,
 };
