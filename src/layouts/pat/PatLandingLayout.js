@@ -6,7 +6,7 @@ import { NavbarField } from "@/components/molecules/commons";
 import { Loader } from "@/components/atoms";
 import { PatSidebarLanding } from "@/components/molecules/pat";
 
-const PatOverviewLayout = ({ data, content, children }) => {
+const PatLandingLayout = ({ data, content, children }) => {
   const router = useRouter();
 
   const { user, userError } = useUser();
@@ -41,7 +41,7 @@ const PatOverviewLayout = ({ data, content, children }) => {
       <div className="flex">
         <div className="flex-1 mt-16" style={{ marginLeft: "260px" }}>
           <div className="main">
-            <div className="px-5 py-4 w-full">{children}</div>
+            <div className="pl-5 pr-16 py-4 w-full">{children}</div>
           </div>
         </div>
       </div>
@@ -49,4 +49,4 @@ const PatOverviewLayout = ({ data, content, children }) => {
   );
 };
 
-export default PatOverviewLayout;
+export default PatLandingLayout;
