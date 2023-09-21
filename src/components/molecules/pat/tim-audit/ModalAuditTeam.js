@@ -318,9 +318,16 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, mutate }) => {
               handlerChangeParent={handleChangeTypeTeam}
               isDisabled={isDisabled}
             />
+            {validationErrors["ref_tipe_tim.kode"] && (
+              <div className="pl-2">
+                <ErrorValidation
+                  message={validationErrors?.["ref_tipe_tim.kode"]}
+                />
+              </div>
+            )}
             {typeModal !== "detail" && (
               <div className="w-full flex justify-end">
-                <div className="w-[7.75rem] h-[2.4rem] bg-atlasian-green rounded mt-5 flex justify-center">
+                <div className="w-[7.75rem] bg-atlasian-green rounded mt-5 flex justify-center">
                   <ButtonField text={"Simpan"} type={"submit"} />
                 </div>
               </div>

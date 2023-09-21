@@ -4,7 +4,7 @@ const initialState = {
   auditTeamData: {
     pat_id: "",
     name: "",
-    ref_tipe_tim: [{ kode: "", nama: "" }],
+    ref_tipe_tim: { kode: "", nama: "" },
     ref_tim_audit_ma: [{ pn: "", nama: "", jabatan: "" }],
     ref_tim_audit_kta: [{ pn: "", nama: "", jabatan: "" }],
     ref_tim_audit_ata: [
@@ -26,7 +26,7 @@ const initialState = {
   defaultData: {
     pat_id: "",
     name: "",
-    ref_tipe_tim: [{ kode: "", nama: "" }],
+    ref_tipe_tim: { kode: "", nama: "" },
     ref_tim_audit_ma: [{ pn: "", nama: "", jabatan: "" }],
     ref_tim_audit_kta: [{ pn: "", nama: "", jabatan: "" }],
     ref_tim_audit_ata: [
