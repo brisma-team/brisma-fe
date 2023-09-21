@@ -32,7 +32,7 @@
     "@atlaskit/page-header": "^10.4.4",
     "@atlaskit/page-layout": "^1.6.5",
     "@atlaskit/pagination": "^14.4.8",
-    "@atlaskit/popup": "^1.6.4",
+    "@atlaskit/popup": "^1.10.0",
     "@atlaskit/primitives": "^1.0.2",
     "@atlaskit/progress-bar": "^0.6.2",
     "@atlaskit/progress-tracker": "^8.5.2",
