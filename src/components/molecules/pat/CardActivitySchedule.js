@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { ButtonIcon, Card } from "@/components/atoms";
+import { ButtonIcon, Card, DivButton } from "@/components/atoms";
 import { IconEdit, IconInfo, IconTrash } from "@/components/icons";
 import { useActivitySchedule, useKategoriAnggaran } from "@/data/pat";
 import { useDispatch } from "react-redux";
@@ -168,17 +167,19 @@ const CardActivitySchedule = ({
   };
 
   return (
-    <Link
-      className="m-2 hover:bg-gray-100 hover:rounded-[10px] hover:no-underline w-[29rem]"
-      href={"#"}
+    <DivButton
+      className="my-2 hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
+      handleClick={() => console.log("test")}
     >
       <Card>
         <div className="w-full px-5 py-3">
-          <div className="flex mb-2 justify-between">
+          <div className="flex mb-2 justify-between items-end -ml-5 -mt-5">
             <div
               className={`text-base font-semibold rounded-tl-lg text-brisma ${
-                type === "lain-lain" ? "bg-[#C094C4]" : "bg-[#AED3C3]"
-              } -ml-5 -mt-5 px-5 h-9 flex items-center justify-center`}
+                type?.toLowerCase() === "lain-lain"
+                  ? "bg-[#C094C4]"
+                  : "bg-[#AED3C3]"
+              } px-5 h-9 flex items-center justify-center`}
             >
               <p>{type.toUpperCase()}</p>
             </div>
@@ -190,7 +191,7 @@ const CardActivitySchedule = ({
                 setShowModal={setShowModalDetail}
               />
             )}
-            <div className="flex w-14 justify-between">
+            <div className="flex w-20 justify-between -mb-1.5">
               <ButtonIcon
                 color={"blue"}
                 icon={<IconInfo size="medium" />}
@@ -210,14 +211,14 @@ const CardActivitySchedule = ({
               />
             </div>
           </div>
-          <div className="flex flex-row justify-between mb-6">
+          <div className="flex flex-row justify-between mb-3">
             <div className="text-xl font-bold text-atlasian-blue-dark">
               {title}
             </div>
           </div>
           <div className="leading-3">
             <div className="w-full">
-              <div className="flex justify-between">
+              <div className="flex justify-between gap-2">
                 <Content title={"Maker"} text={maker} />
                 <Content title={"Periode Kegiatan"} text={audit_period} />
               </div>
@@ -231,7 +232,7 @@ const CardActivitySchedule = ({
           </div>
         </div>
       </Card>
-    </Link>
+    </DivButton>
   );
 };
 

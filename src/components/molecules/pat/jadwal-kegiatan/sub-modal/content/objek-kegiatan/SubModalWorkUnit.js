@@ -4,6 +4,7 @@ import {
   ErrorValidation,
   Select,
   ButtonIcon,
+  UploadButton,
 } from "@/components/atoms";
 import {
   IconAttachment,
@@ -14,15 +15,27 @@ import {
 } from "@/components/icons";
 import {
   CardTypeCount,
+  DescriptionModal,
   InlineEditBranchSelect,
-  InlineEditOrgehSelect,
+  OrgehSelect,
 } from "@/components/molecules/commons";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setActivityScheduleData } from "@/slices/pat/activityScheduleSlice";
 import { useUkerType } from "@/data/reference";
+import { loadingSwal, usePostFileData } from "@/helpers";
+import ModalAssessmentInfo from "@/components/molecules/pat/ModalAssessmentInfo";
 
 const SubModalWorkUnit = ({ isDisabled }) => {
+  const [showModalDesc, setShowModalDesc] = useState(false);
+  const [selectedIdxDesc, setSelectedIdxDesc] = useState(null);
+
+  const [showModalAssessmentInfo, setShowModalAssessmentInfo] = useState(false);
+  const [selectedIdxAssessmentInfo, setSelectedIdxAssessmentInfo] =
+    useState(null);
+
+  const [selectedIdxAttachments, setSelectedIdxAttachments] = useState(null);
+
   const [showBranch, setShowBranch] = useState(false);
   const [countType, setCountType] = useState([]);
   const dispatch = useDispatch();
@@ -31,7 +44,6 @@ const SubModalWorkUnit = ({ isDisabled }) => {
   );
   const { ukerType } = useUkerType("list");
   const [optionUkerType, setOptionUkerType] = useState([]);
-  const [openTipeUkerIdx, setOpenTipeUkerIdx] = useState(null);
   const validationErrors = useSelector(
     (state) => state.activitySchedule.validationErrorsAO
   );
@@ -69,14 +81,30 @@ const SubModalWorkUnit = ({ isDisabled }) => {
     setOptionUkerType(mapping);
   }, [ukerType]);
 
+  const findUkerType = (kode) => {
+    const find = ukerType?.data?.find((v) => v.kode == kode);
+    return { label: find?.name, value: find?.kode };
+  };
+
   const handleDeleteUker = (idx) => {
     const newData = [...activityScheduleData.uker];
-    if (activityScheduleData.uker.length > 1) {
-      newData.splice(idx, 1);
-      dispatch(
-        setActivityScheduleData({ ...activityScheduleData, uker: newData })
-      );
-    }
+    newData.splice(idx, 1);
+    dispatch(
+      setActivityScheduleData({ ...activityScheduleData, uker: newData })
+    );
+  };
+
+  const handleChange = (property, value, idx) => {
+    const ukerData = [...activityScheduleData.uker];
+    const updatedUker = { ...ukerData[idx] };
+    updatedUker[property] = value;
+    ukerData[idx] = updatedUker;
+    const updatedData = {
+      ...activityScheduleData,
+      uker: ukerData,
+    };
+
+    dispatch(setActivityScheduleData(updatedData));
   };
 
   const handleChangeOrgeh = (value, idx) => {
@@ -116,6 +144,7 @@ const SubModalWorkUnit = ({ isDisabled }) => {
         ref_auditee_branch_name: value.branch_name,
         tipe_uker: "",
         attachments: [""],
+        deskripsi: "",
       });
       dispatch(
         setActivityScheduleData({ ...activityScheduleData, uker: newData })
@@ -124,12 +153,19 @@ const SubModalWorkUnit = ({ isDisabled }) => {
     }
   };
 
-  const handleMenuOpen = (idx) => {
-    setOpenTipeUkerIdx(idx);
-  };
+  const handleUpload = async (e, idx) => {
+    loadingSwal();
+    if (e.target.files) {
+      const url = `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/cdn/upload`;
 
-  const handleMenuClose = () => {
-    setOpenTipeUkerIdx(null);
+      const response = await usePostFileData(url, {
+        file: e.target.files[0],
+        modul: "pat",
+      });
+
+      handleChange("attachments", response.url, idx);
+    }
+    loadingSwal("close");
   };
 
   return (
@@ -140,7 +176,7 @@ const SubModalWorkUnit = ({ isDisabled }) => {
             return (
               <CardTypeCount
                 key={i}
-                title={v.type}
+                title={v.type?.toUpperCase()}
                 total={v.count}
                 percent={v.percent}
                 width={"w-[12rem]"}
@@ -152,7 +188,7 @@ const SubModalWorkUnit = ({ isDisabled }) => {
       </div>
       <div className="w-full font-bold text-sm px-4">
         <div className="border-2 border-[#DFE1E6] rounded-xl">
-          <div className="overflow-y-scroll max-h-56">
+          <div className="overflow-y-scroll max-h-80">
             <div className="flex h-14">
               <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
                 <p>Aksi</p>
@@ -192,67 +228,96 @@ const SubModalWorkUnit = ({ isDisabled }) => {
                       />
                     </div>
                   </div>
-                  <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center justify-center text-justify p-3">
-                    <div className="-mb-3 -mx-2 -mt-5 w-full">
-                      <InlineEditOrgehSelect
-                        placeholder="Select an option"
-                        handleConfirm={(e) => handleChangeOrgeh(e, i)}
-                        value={{
-                          label: v.ref_auditee_orgeh_name,
-                          value: {
-                            orgeh_kode: v.ref_auditee_orgeh_kode,
-                            orgeh_name: v.ref_auditee_orgeh_name,
-                          },
-                        }}
-                        isDisabled={isDisabled}
-                      />
-                      {validationErrors[
-                        `uker[${i}].ref_auditee_orgeh_kode`
-                      ] && (
-                        <div className="px-1 py-0.5">
-                          <ErrorValidation
-                            message={
-                              validationErrors[
-                                `uker[${i}].ref_auditee_orgeh_kode`
-                              ]
-                            }
-                          />
-                        </div>
-                      )}
-                    </div>
+                  <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex-row items-center text-justify p-3">
+                    <OrgehSelect
+                      width="w-[17rem]"
+                      handleChange={(e) => handleChangeOrgeh(e.value, i)}
+                      selectedValue={{
+                        label: v.ref_auditee_orgeh_name,
+                        value: {
+                          orgeh_kode: v.ref_auditee_orgeh_kode,
+                          orgeh_name: v.ref_auditee_orgeh_name,
+                        },
+                      }}
+                      isDisabled={isDisabled}
+                      positionAbsolute={true}
+                    />
+                    {validationErrors[`uker[${i}].ref_auditee_orgeh_kode`] && (
+                      <div className="px-1 py-0.5 w-">
+                        <ErrorValidation
+                          message={
+                            validationErrors[
+                              `uker[${i}].ref_auditee_orgeh_kode`
+                            ]
+                          }
+                        />
+                      </div>
+                    )}
                   </div>
-                  <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[14%] flex items-center px-2 py-3">
-                    <div
-                      className={
-                        i == openTipeUkerIdx ? `z-50 absolute` : `w-full`
-                      }
-                    >
-                      <Select
-                        optionValue={optionUkerType}
-                        isSearchable={false}
-                        onChange={(e) => handleChangeTipeUker(e.value, i)}
-                        value={v.tipe_uker}
-                        isDisabled={isDisabled}
-                        handleMenuOpen={() => handleMenuOpen(i)}
-                        handleMenuClose={handleMenuClose}
-                      />
-                      {validationErrors[`uker[${i}].tipe_uker`] && (
-                        <div className="px-1 py-0.5">
-                          <ErrorValidation
-                            message={validationErrors[`uker[${i}].tipe_uker`]}
-                          />
-                        </div>
-                      )}
-                    </div>
+                  <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[14%] flex-row items-center px-2 py-3">
+                    <Select
+                      optionValue={optionUkerType}
+                      isSearchable={false}
+                      onChange={(e) => handleChangeTipeUker(e.value, i)}
+                      value={v.tipe_uker ? findUkerType(v.tipe_uker) : ""}
+                      isDisabled={isDisabled}
+                      positionAbsolute={true}
+                    />
+                    {validationErrors[`uker[${i}].tipe_uker`] && (
+                      <div className="px-1 py-0.5">
+                        <ErrorValidation
+                          message={validationErrors[`uker[${i}].tipe_uker`]}
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[10%] flex items-center">
                     <div className="flex w-full justify-center gap-1">
-                      <ButtonIcon color={"yellow"} icon={<IconInfo />} />
-                      <ButtonIcon color={"blue"} icon={<IconQuestions />} />
+                      <ButtonIcon
+                        color={"yellow"}
+                        icon={<IconInfo />}
+                        handleClick={() => (
+                          setShowModalAssessmentInfo(true),
+                          setSelectedIdxAssessmentInfo(i)
+                        )}
+                      />
+                      <ButtonIcon
+                        color={"blue"}
+                        icon={<IconQuestions />}
+                        handleClick={() => (
+                          setShowModalDesc(true), setSelectedIdxDesc(i)
+                        )}
+                      />
+                      <DescriptionModal
+                        showModal={showModalDesc}
+                        setShowModal={setShowModalDesc}
+                        value={
+                          activityScheduleData?.uker[selectedIdxDesc]?.deskripsi
+                        }
+                        handleConfirm={(e) =>
+                          handleChange("deskripsi", e, selectedIdxDesc)
+                        }
+                      />
+                      <ModalAssessmentInfo
+                        showModal={showModalAssessmentInfo}
+                        setShowModal={setShowModalAssessmentInfo}
+                      />
                     </div>
                   </div>
                   <div className="border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
-                    <ButtonIcon color={"purple"} icon={<IconAttachment />} />
+                    <UploadButton
+                      text={
+                        <ButtonIcon
+                          color={"purple"}
+                          icon={<IconAttachment />}
+                          handleClick={() => setSelectedIdxAttachments(i)}
+                        />
+                      }
+                      className={"border-none"}
+                      handleUpload={(e) =>
+                        handleUpload(e, selectedIdxAttachments)
+                      }
+                    />
                   </div>
                 </div>
               );
@@ -280,6 +345,11 @@ const SubModalWorkUnit = ({ isDisabled }) => {
               </div>
             )}
           </div>
+          {validationErrors["uker"] && (
+            <div className="-mt-1 mx-3 mb-2">
+              <ErrorValidation message={validationErrors["uker"]} />
+            </div>
+          )}
         </div>
       </div>
     </div>

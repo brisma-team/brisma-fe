@@ -1,6 +1,5 @@
-import { Modal } from "@/components/atoms";
+import { DivButton, Modal } from "@/components/atoms";
 import { useState } from "react";
-import Link from "next/link";
 import {
   ModalBodyActivityInfo,
   ModalBodyActivityObject,
@@ -91,7 +90,7 @@ const ModalActivitySchedule = ({
           );
         }
         mutate();
-        setShowModal(false);
+        handleCloseModal();
       }
     }
   };
@@ -110,6 +109,9 @@ const ModalActivitySchedule = ({
 
   const handleCloseModal = async () => {
     setShowModal(false);
+    setCurrentModalStage(1);
+    dispatch(resetvalidationErrorsAI());
+    dispatch(resetvalidationErrorsAO());
     dispatch(resetActivityScheduleData());
   };
 
@@ -117,35 +119,32 @@ const ModalActivitySchedule = ({
     {
       id: "step-1",
       label: (
-        <Link href="#" onClick={() => setCurrentModalStage(1)}>
+        <DivButton handleClick={() => setCurrentModalStage(1)}>
           Info Kegiatan
-        </Link>
+        </DivButton>
       ),
       percentageComplete: currentModalStage > 1 ? 100 : 0,
-      status: currentModalStage === 1 ? "current" : "unvisited",
-      href: "#",
+      status: currentModalStage === 1 ? "current" : "visited",
     },
     {
       id: "step-2",
       label: (
-        <Link href="#" onClick={() => setCurrentModalStage(2)}>
-          Objek Kegiatan
-        </Link>
+        <DivButton handleClick={() => setCurrentModalStage(2)}>
+          Objek Audit
+        </DivButton>
       ),
       percentageComplete: currentModalStage > 2 ? 100 : 0,
-      status: currentModalStage === 2 ? "current" : "unvisited",
-      href: "#",
+      status: currentModalStage === 2 ? "current" : "visited",
     },
     {
       id: "step-3",
       label: (
-        <Link href="#" onClick={() => setCurrentModalStage(3)}>
+        <DivButton handleClick={() => setCurrentModalStage(3)}>
           Anggaran
-        </Link>
+        </DivButton>
       ),
       percentageComplete: 0,
-      status: currentModalStage === 3 ? "current" : "unvisited",
-      href: "#",
+      status: currentModalStage === 3 ? "current" : "visited",
     },
   ];
 
