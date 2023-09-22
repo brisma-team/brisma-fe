@@ -230,38 +230,39 @@ const index = () => {
       {/* End of Filter */}
 
       {/* Start Content */}
-      <div className="grid grid-cols-4 gap-4 px-0.5 py-2">
-        {auditScheduleError ? (
-          <DataNotFound />
-        ) : (
-          data?.length &&
-          data.map((v, i) => {
-            return (
-              <CardAuditSchedule
-                key={i}
-                pat_id={id}
-                jadwal_id={v.id}
-                type={v.type}
-                title={v.title}
-                maker={v.maker}
-                audit_team={v.audit_team}
-                start_date={v.start_date}
-                end_date={v.end_date}
-                budget={v.budget}
-                audit_type={v.audit_type}
-                tema={v.tema}
-                desc={v.desc}
-                setShowModal={setShowModal}
-                setTypeModal={setTypeModal}
-                showModalDetail={showModalDetail}
-                setShowModalDetail={setShowModalDetail}
-                scheduleId={scheduleId}
-                setScheduleId={setScheduleId}
-              />
-            );
-          })
-        )}
-      </div>
+      {auditScheduleError ? (
+        <DataNotFound />
+      ) : (
+        data?.length && (
+          <div className="grid grid-cols-4 gap-4 px-0.5 py-2">
+            {data.map((v, i) => {
+              return (
+                <CardAuditSchedule
+                  key={i}
+                  pat_id={id}
+                  jadwal_id={v.id}
+                  type={v.type}
+                  title={v.title}
+                  maker={v.maker}
+                  audit_team={v.audit_team}
+                  start_date={v.start_date}
+                  end_date={v.end_date}
+                  budget={v.budget}
+                  audit_type={v.audit_type}
+                  tema={v.tema}
+                  desc={v.desc}
+                  setShowModal={setShowModal}
+                  setTypeModal={setTypeModal}
+                  showModalDetail={showModalDetail}
+                  setShowModalDetail={setShowModalDetail}
+                  scheduleId={scheduleId}
+                  setScheduleId={setScheduleId}
+                />
+              );
+            })}
+          </div>
+        )
+      )}
       <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
       {/* End Content */}
     </PatLandingLayout>
