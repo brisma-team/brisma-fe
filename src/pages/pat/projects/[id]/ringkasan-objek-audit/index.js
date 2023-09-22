@@ -154,104 +154,102 @@ const index = () => {
 
   return (
     <PatLandingLayout data={statusPat} content={content}>
-      <div className="pr-44">
-        <Breadcrumbs data={breadcrumbs} />
-        <div className="flex justify-between items-center mb-6">
-          <PageTitle text={"Ringkasan Objek Audit"} />
-          <PrevNextNavigation
-            baseUrl={baseUrl}
-            routes={routes}
-            prevUrl={"/jadwal-lainnya"}
-            nextUrl={"/dokumen"}
-          />
-        </div>
-        {/* Start Content */}
-        <div className="flex gap-3 mt-6">
-          <div className="w-[52rem] -my-3">
-            <div className="h-[35rem] my-3">
-              <Card>
-                <div className="w-full h-full px-6">
-                  <div className="text-xl font-bold p-2">Unit Kerja Audit</div>
-                  <div className="mt-6 max-h-[29rem] overflow-y-scroll px-2">
-                    <TableField
-                      headers={[
-                        "Tipe Uker",
-                        "Uker Eksisting",
-                        "Uker Audit",
-                        "Presentase",
-                      ]}
-                      columnWidths={["40%", "20%", "20%", "20%"]}
-                      items={uker}
-                    />
-                  </div>
-                </div>
-              </Card>
-            </div>
-            <div className="h-[5rem] my-3">
-              <Card>
-                <div className="w-full h-full px-6 flex items-center">
-                  <div className="w-full h-[3.125rem] flex text-lg border-y border-[#DFE1E6]">
-                    <div className="w-2/5 ml-8 font-black flex items-center">
-                      Total
-                    </div>
-                    <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-green">
-                      {totalUker.existing}
-                    </div>
-                    <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-yellow">
-                      {totalUker.target}
-                    </div>
-                    <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-dark">
-                      {totalUker.presentase}
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </div>
-          <div className="w-[37rem] -my-3">
-            <div className="h-[16.5rem] my-3">
-              <Card>
-                <div className="w-full h-full px-6">
-                  <div className="text-xl font-bold p-2">E-Channel Audit</div>
-                  <div className="mt-6 max-h-[10.5rem] overflow-y-scroll px-2">
-                    <TableField
-                      headers={[
-                        "Tipe E-Channel",
-                        "Eksisting",
-                        "Audit",
-                        "Presentase",
-                      ]}
-                      columnWidths={["40%", "20%", "20%", "20%"]}
-                      items={echannel}
-                    />
-                  </div>
-                </div>
-              </Card>
-            </div>
-            <div className="h-[5rem] my-3">
-              <Card>
-                <div className="w-full h-full px-6 flex items-center">
-                  <div className="w-full h-[3.125rem] flex text-base border-y border-[#DFE1E6]">
-                    <div className="w-2/5 ml-8 font-black flex items-center">
-                      Total
-                    </div>
-                    <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-green">
-                      {totalEchannel.existing}
-                    </div>
-                    <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-yellow">
-                      {totalEchannel.target}
-                    </div>
-                    <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-dark">
-                      {totalEchannel.presentase}
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </div>
-        </div>
-        {/* End Content */}
+      <Breadcrumbs data={breadcrumbs} />
+      <div className="flex justify-between items-center mb-6">
+        <PageTitle text={"Ringkasan Objek Audit"} />
+        <PrevNextNavigation
+          baseUrl={baseUrl}
+          routes={routes}
+          prevUrl={"/jadwal-lainnya"}
+          nextUrl={"/dokumen"}
+        />
       </div>
+      {/* Start Content */}
+      <div className="flex gap-3 mt-6">
+        <div className="w-[52rem] -my-3">
+          <div className="h-[35rem] my-3">
+            <Card>
+              <div className="w-full h-full px-6">
+                <div className="text-xl font-bold p-2">Unit Kerja Audit</div>
+                <div className="mt-6 max-h-[29rem] overflow-y-scroll px-2">
+                  <TableField
+                    headers={[
+                      "Tipe Uker",
+                      "Uker Eksisting",
+                      "Uker Audit",
+                      "Presentase",
+                    ]}
+                    columnWidths={["40%", "20%", "20%", "20%"]}
+                    items={uker}
+                  />
+                </div>
+              </div>
+            </Card>
+          </div>
+          <div className="h-[5rem] my-3">
+            <Card>
+              <div className="w-full h-full px-6 flex items-center">
+                <div className="w-full h-[3.125rem] flex text-lg border-y border-[#DFE1E6]">
+                  <div className="w-2/5 ml-8 font-black flex items-center">
+                    Total
+                  </div>
+                  <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-green">
+                    {totalUker.existing}
+                  </div>
+                  <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-yellow">
+                    {totalUker.target}
+                  </div>
+                  <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-dark">
+                    {totalUker.presentase}
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+        <div className="w-[37rem] -my-3">
+          <div className="h-[16.5rem] my-3">
+            <Card>
+              <div className="w-full h-full px-6">
+                <div className="text-xl font-bold p-2">E-Channel Audit</div>
+                <div className="mt-6 max-h-[10.5rem] overflow-y-scroll px-2">
+                  <TableField
+                    headers={[
+                      "Tipe E-Channel",
+                      "Eksisting",
+                      "Audit",
+                      "Presentase",
+                    ]}
+                    columnWidths={["40%", "20%", "20%", "20%"]}
+                    items={echannel}
+                  />
+                </div>
+              </div>
+            </Card>
+          </div>
+          <div className="h-[5rem] my-3">
+            <Card>
+              <div className="w-full h-full px-6 flex items-center">
+                <div className="w-full h-[3.125rem] flex text-base border-y border-[#DFE1E6]">
+                  <div className="w-2/5 ml-8 font-black flex items-center">
+                    Total
+                  </div>
+                  <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-green">
+                    {totalEchannel.existing}
+                  </div>
+                  <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-yellow">
+                    {totalEchannel.target}
+                  </div>
+                  <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-dark">
+                    {totalEchannel.presentase}
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+      {/* End Content */}
     </PatLandingLayout>
   );
 };

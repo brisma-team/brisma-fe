@@ -271,6 +271,7 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
                   valueStart={activityScheduleOtherData.pelaksanaan_start}
                   valueEnd={activityScheduleOtherData.pelaksanaan_end}
                   isDisabled={isDisabled}
+                  pastDate={true}
                 />
               }
               widthLabel={"w-2/5"}

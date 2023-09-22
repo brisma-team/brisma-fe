@@ -90,7 +90,7 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
           );
         }
         mutate();
-        setShowModal(false);
+        handleCloseModal();
       }
     }
   };

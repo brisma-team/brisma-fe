@@ -257,6 +257,7 @@ const index = () => {
                   setShowModalDetail={setShowModalDetail}
                   scheduleId={scheduleId}
                   setScheduleId={setScheduleId}
+                  mutate={auditScheduleMutate}
                 />
               );
             })}

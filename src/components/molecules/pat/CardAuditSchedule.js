@@ -34,6 +34,7 @@ const CardAuditSchedule = ({
   setShowModalDetail,
   scheduleId,
   setScheduleId,
+  mutate,
 }) => {
   const dispatch = useDispatch();
   const { auditSchedule } = useAuditSchedule("detail", {
@@ -164,6 +165,7 @@ const CardAuditSchedule = ({
       "Data ini dihapus seacara permanen",
       `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/audit?jadwal_id=${jadwal_id}&pat_id=${pat_id}`
     );
+    mutate();
   };
 
   return (

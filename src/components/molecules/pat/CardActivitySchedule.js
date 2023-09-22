@@ -41,6 +41,7 @@ const CardActivitySchedule = ({
   setShowModalDetail,
   scheduleId,
   setScheduleId,
+  mutate,
 }) => {
   const dispatch = useDispatch();
   const { activitySchedule } = useActivitySchedule("detail", {
@@ -164,6 +165,7 @@ const CardActivitySchedule = ({
       "Data ini dihapus seacara permanen",
       `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/sbp?jadwal_sbp_id=${jadwal_sbp_id}&pat_id=${pat_id}`
     );
+    mutate();
   };
 
   return (

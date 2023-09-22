@@ -31,6 +31,7 @@ import AvatarGroupField from "./AvatarGroup";
 import CheckboxField from "./Checkbox";
 import LozengeField from "./Lozenge";
 import CloseModal from "./CloseModal";
+import Badge from "./Badge";
 
 export {
   AvatarDefaultExample,
@@ -66,4 +67,5 @@ export {
   CheckboxField,
   LozengeField,
   CloseModal,
+  Badge,
 };
