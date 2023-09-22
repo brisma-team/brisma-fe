@@ -9,6 +9,8 @@ import {
 } from "@/components/atoms";
 import { IconPlus } from "@/components/icons";
 import useDashboardList from "@/data/dashboard/useDashboardList";
+import useUkaList from "@/data/dashboard/useUkaList";
+import useRoleList from "@/data/dashboard/useRoleList";
 import {
   usePostData,
   useUpdateData,
@@ -26,12 +28,76 @@ const index = () => {
   ];
   // const [selected, setSelected] = useState();
 
+  const { dashboardList, dashboardListMutate } = useDashboardList();
+  const { uka } = useUkaList();
+  const { role } = useRoleList();
+
+  const [combinedData, setCombinedData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [dashboard, setDashboard] = useState([]);
   const [data, setData] = useState({ embedId: "", name: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const { dashboardList, dashboardListMutate } = useDashboardList();
+
+  const [mappedDashboard, setMappedDashboard] = useState([]);
+  const [mappedUka, setMappedUka] = useState([]);
+  const [mappedRole, setMappedRole] = useState([]);
+
+  useEffect(() => {
+    if (dashboardList) {
+      setMappedDashboard(dashboardList.list);
+      setTotalPages(dashboardList.totalPages);
+    }
+  }, [dashboardList]);
+
+  useEffect(() => {
+    if (uka) {
+      setMappedUka(uka.uka);
+    }
+  }, [uka]);
+
+  useEffect(() => {
+    if (role) {
+      setMappedRole(role.userRole);
+    }
+  }, [role]);
+
+  useEffect(() => {
+    // Simulasikan penggabungan data di sini
+    if (
+      mappedDashboard.length !== 0 &&
+      mappedUka.length !== 0 &&
+      mappedRole.length !== 0
+    ) {
+      const combinedData = mappedDashboard.map((list) => {
+        const combinedAllowList =
+          list.allow_list !== null
+            ? list.allow_list.map((alist) => {
+                const rUka = mappedUka.find(
+                  (item) => alist.uka_code === item.kode
+                );
+                const rRole = alist.role_code.map((dlist) => {
+                  const fRole = mappedRole.find((item) =>
+                    dlist.includes(item.kode)
+                  );
+                  return fRole.name;
+                });
+
+                return {
+                  mapped_uka: rUka.name,
+                  mapped_role: rRole,
+                };
+              })
+            : null;
+
+        return {
+          ...list,
+          allow_list: combinedAllowList,
+        };
+      });
+      setCombinedData(combinedData);
+    }
+  }, [mappedDashboard, mappedUka, mappedUka]);
 
   const fetchData = async () => {
     await dashboardListMutate({ ...dashboardList });
@@ -74,13 +140,12 @@ const index = () => {
   };
 
   useEffect(() => {
-    if (dashboardList) {
-      setTotalPages(dashboardList.totalPages);
-      console.log(currentPage);
-      const sortedDashboard = dashboardList.list
-        ?.sort((a, b) =>
-          (b["_created_at"] || "").localeCompare(a["_created_at"] || "")
-        )
+    if (combinedData.length !== 0) {
+      console.log(combinedData);
+      const sortedDashboard = combinedData
+        // ?.sort((a, b) =>
+        //   (b["_created_at"] || "").localeCompare(a["_created_at"] || "")
+        // )
         .map((v, key) => ({
           No: key + 1,
           "Dashboard ID": v?.superset_embed_id,
@@ -97,23 +162,14 @@ const index = () => {
           "Ditujukan Kepada":
             v.allow_list == null ? (
               v.is_public == true ? (
-                <p>Belum ditujukan</p>
+                <p>Public</p>
               ) : (
                 <p>Belum ditujukan</p>
               )
             ) : (
               v.allow_list != null &&
               v.allow_list.map((x, key) => (
-                <p key={key}>
-                  {
-                    "-" + x.uka_code
-                    // +
-                    //   " - " +
-                    //   x.role_code.map((index) => {
-                    //     roleMapping && finding(roleMapping, index);
-                    //   })
-                  }
-                </p>
+                <p key={key}>{x.mapped_uka + " - " + x.mapped_role}</p>
               ))
             ),
           "Tanggal Dibuat": v?._created_at,
@@ -154,7 +210,7 @@ const index = () => {
         }));
       setDashboard(sortedDashboard);
     }
-  }, [dashboardList]);
+  }, [combinedData]);
 
   return (
     <MainLayout>
@@ -191,7 +247,7 @@ const index = () => {
                     "Status",
                     "Aksi",
                   ]}
-                  columnWidths={["5%", "20%", "20%", "20%", "10%", "25%"]}
+                  columnWidths={["5%", "20%", "20%", "25%", "10%", "20%"]}
                   items={dashboard}
                 />
               </div>
