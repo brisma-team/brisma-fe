@@ -28,6 +28,8 @@ const index = () => {
     }
   }, [searchParamObject]);
 
+  console.log(currentPage);
+
   const { ewpData } = useCatalogEWP(
     searchParamObject.year,
     searchParamObject.source
@@ -42,9 +44,8 @@ const index = () => {
           EwpList?.ProjectName.length > 35
             ? EwpList?.ProjectName.substring(0, 35) + "..."
             : EwpList?.ProjectName,
-        "Kantor Audit": EwpList?.OfficeName,
         "Tahun Audit": EwpList?.Year,
-        "Objek Audit": EwpList?.ObjectName,
+        "Tipe Audit": EwpList?.ProjectType,
         Aksi: (
           <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
             <Link
@@ -107,21 +108,11 @@ const index = () => {
                     "No",
                     "Project ID",
                     "Nama Project",
-                    "Kantor Audit",
                     "Tahun Audit",
-                    "Objek Audit",
+                    "Tipe Audit",
                     "Aksi",
                   ]}
-                  columnWidths={[
-                    "5%",
-                    "15%",
-                    "40%",
-                    "20%",
-                    "16%",
-                    "20%",
-                    // "14%",
-                    "7%",
-                  ]}
+                  columnWidths={["5%", "25%", "40%", "16%", "20%", "17%"]}
                   items={catEwp}
                 />
               </div>
