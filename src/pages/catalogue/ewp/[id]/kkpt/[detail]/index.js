@@ -30,10 +30,11 @@ const index = () => {
   useEffect(() => {
     if (kkptDetail != undefined) {
       const mappingKKPT = kkptDetail.data.map((data, key) => {
+        const datePart = data?.CreatedAt.split(".")[0];
         return {
           No: key + 1,
           "Nama Dokumen": data.DocumentName,
-          "Tanggal Dibuat": data.CreatedAt,
+          "Tanggal Dibuat": datePart,
           Aksi: (
             <div className="text-center col-span-3">
               <div className="">

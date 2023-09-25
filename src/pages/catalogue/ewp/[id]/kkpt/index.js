@@ -5,6 +5,7 @@ import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
 import { TableField } from "@/components/atoms";
 import useCatalogEWPKKPTList from "@/data/catalog/useCatalogEWPKKPTList";
+import Link from "next/link";
 
 const index = () => {
   const id = useRouter().query.id;
@@ -28,10 +29,11 @@ const index = () => {
   useEffect(() => {
     if (kkptList != undefined) {
       const mappingKKPT = kkptList.data.map((data, key) => {
+        const datePart = data?.CreatedAt.split(".")[0];
         return {
           No: key + 1,
           "Judul KKPT": data.KKPTTitle,
-          "Tanggal Dibuat": data.CreatedAt,
+          "Tanggal Dibuat": datePart,
           Aksi: (
             <div className="text-center col-span-3">
               <div className="">
@@ -39,9 +41,10 @@ const index = () => {
                   href={"/catalogue/ewp/" + id + "/kkpt/" + data.KKPTID}
                   prefetch={true}
                   shouldFitContainer
+                  isDisabled
                   appearance="primary"
                 >
-                  Buka KKPT
+                  Lihat Dokumen
                 </Button>
               </div>
             </div>
@@ -67,6 +70,9 @@ const index = () => {
           <Card>
             <div className="w-full h-full px-6">
               <div className="text-xl font-bold p-5">Pustaka Dokumen</div>
+              <Link className="pl-5 underline" href={"#"}>
+                Lihat Seluruh Dokumen
+              </Link>
               <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
                 <TableField
                   headers={["No", "Judul KKPT", "Tanggal Dibuat", "Aksi"]}

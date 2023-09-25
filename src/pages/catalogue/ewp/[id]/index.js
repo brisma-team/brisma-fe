@@ -5,11 +5,17 @@ import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
 import { TableField } from "@/components/atoms";
 import useCatalogEWPById from "@/data/catalog/useCatalogEWPById";
+import shortenWord from "@/helpers/shortenWord";
 
 const index = () => {
   const id = useRouter().query.id;
 
   const [typeList, setTypeList] = useState([]);
+  const [catDetailEwp, setCatDetailEwp] = useState([]);
+  const [selectedId, setSelectedId] = useState(id || "");
+
+  const idToUse = selectedId ? selectedId : "";
+
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
@@ -35,7 +41,7 @@ const index = () => {
       jenis: "KKPA",
       jumlah: "-----",
       url: `${id}/kkpa`,
-      isDisabled: true,
+      isDisabled: false,
     },
     {
       jenis: "KKPT",
@@ -52,7 +58,7 @@ const index = () => {
   ];
 
   useEffect(() => {
-    if (type_list != undefined) {
+    if (type_list) {
       const mappingTypeList = type_list.map((data, key) => {
         return {
           No: key + 1,
@@ -71,12 +77,8 @@ const index = () => {
       });
       setTypeList(mappingTypeList);
     }
-  }, [type_list]);
+  }, []);
 
-  const [catDetailEwp, setCatDetailEwp] = useState([]);
-  const [selectedId, setSelectedId] = useState("");
-
-  const idToUse = selectedId ? selectedId : "";
   const { ewpDetailData } = useCatalogEWPById(
     idToUse.split("x1c-")[2],
     idToUse.split("x1c-")[0],
@@ -84,7 +86,7 @@ const index = () => {
   );
 
   useState(() => {
-    id && setSelectedId(id);
+    if (id !== undefined) setSelectedId(id);
   }, [id]);
 
   useEffect(() => {
@@ -93,7 +95,7 @@ const index = () => {
         const datePart = v?.CreatedAt.split(".")[0];
         return {
           No: key + 1,
-          "Nama Dokumen": v?.AttachmentName,
+          "Nama Dokumen": shortenWord(v?.AttachmentName, 0, 45),
           "Tanggal Dibuat": datePart,
           Aksi: (
             <div className="grid grid-cols-3 text-center col-span-3">
@@ -119,6 +121,7 @@ const index = () => {
       setCatDetailEwp(mappingCatEwp);
     }
   }, [ewpDetailData]);
+
   return (
     <MainLayout>
       <div className="px-5">
