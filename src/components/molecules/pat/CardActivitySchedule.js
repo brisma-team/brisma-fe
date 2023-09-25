@@ -178,9 +178,9 @@ const CardActivitySchedule = ({
           <div className="flex mb-2 justify-between items-end -ml-5 -mt-5">
             <div
               className={`text-base font-semibold rounded-tl-lg text-brisma ${
-                type?.toLowerCase() === "lain-lain"
-                  ? "bg-[#C094C4]"
-                  : "bg-[#AED3C3]"
+                type?.toLowerCase() === "individual"
+                  ? "bg-blue-300"
+                  : "bg-[#F4E3A4]"
               } px-5 h-9 flex items-center justify-center`}
             >
               <p>{type.toUpperCase()}</p>

@@ -71,110 +71,229 @@ const auditTarget = (data) => {
   }
 
   const arrData = [];
+
   for (const typeKey in data) {
     const typeIndex = Object.keys(data).indexOf(typeKey);
     const typeLetter = letters[Object.keys(data).indexOf(typeKey)];
+    const outsideLoopHTML = `
+    <div class="sub_section_ruang_lingkup" style="margin-bottom: 30px;">
+      <h4 style="line-height: 6px;">${typeLetter}. Audit ${typeKey}</h4>
+    </div>
+  `;
+    arrData.push(outsideLoopHTML); // Menambahkan kode HTML di luar looping
+
     for (const categoryKey in data[typeKey]) {
-      // const categoryIndex = Object.keys(data[typeKey]).indexOf(categoryKey);
+      const categoryIndex = Object.keys(data[typeKey]).indexOf(categoryKey);
       data[typeKey][categoryKey].map((v) => {
-        arrData.push(
-          `<div class="sub_section_ruang_lingkup" style="margin-bottom: 30px;">
-          <h4 style="line-height: 6px;">${typeLetter}. ${typeKey}</h4>
-          <h4 style="line-height: 6px;">${typeLetter}.${
-            typeIndex + 1
-          } ${categoryKey}</h4>
-          <h4 style="line-height: 6px;">${typeLetter}.${
-            typeIndex + 1
-          }.1 Detail Jadwal Audit</h4>
-          <table>
-            <thead>
-              <tr>
-                  <th rowspan="2" style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">No</p>
-                  </th>
-                  <th rowspan="2" style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">Uker Audit</p>
-                  </th>
-                  <th rowspan="2" style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">Deskripsi</p>
-                  </th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
-          <h4 style="line-height: 6px;">a.1.2 Rekapan Objek Audit</h4>
-          <table border="1" cellspacing="0" cellpadding="6">
-            <thead>
-              <tr>
-                  <th rowspan="2" style="background-color: #3C64B1; color: white;">
-                      <p style="text-align:center;">
-                          No
-                      </p>
-                  </th>
-                  <th rowspan="2" style="background-color: #3C64B1; color: white;">
-                      <p style="text-align:center;">
-                          Objek Audit
-                      </p>
-                  </th>
-                  <th rowspan="2" style="background-color: #3C64B1; color: white;">
-                      <p style="text-align:center;">
-                          ∑ Uker
-                      </p>
-                  </th>
-                  <th colspan="2" style="background-color: #3C64B1; color: white;">
-                      <p style="text-align:center;">
-                          Target Audit
-                      </p>
-                  </th>
-              </tr>
-              <tr>
-                  <th style="background-color: #3C64B1; color: white;">
-                      <p style="text-align:center;">
-                          ∑ Objek Audit
-                      </p>
-                  </th>
-                  <th style="background-color: #3C64B1; color: white;">
-                      <p style="text-align:center;">
-                          % Objek Audit
-                      </p>
-                  </th>
-              </tr>
-            </thead>
-            <tbody>
-              ${v.count_target_jenis_auditee.map((x, idx) => {
-                return `<tr>
-                  <td>
-                    <p style="text-align:center;">${idx + 1}</p>
-                  </td>
-                  <td>
-                      <p style="text-align:left;">${x.name}</p>
-                  </td>
-                  <td>
-                      <p style="text-align:center;">${x.existing}</p>
-                  </td>
-                  <td>
-                      <p style="text-align:center;">${x.target}</p>
-                  </td>
-                  <td>
-                      <p style="text-align:center;">${
-                        x.existing
-                          ? (parseInt(x.target) * parseInt(x.existing)) / 100
-                          : 0
-                      } %</p>
-                  </td>
-                </tr>`;
-              })}
-            </tbody>
-          </table>
-        </div>`
-        );
+        // Kode HTML yang berada dalam looping
+        const innerLoopHTML = `
+        <h4 style="line-height: 6px;">${typeLetter}.${
+          categoryIndex + 1
+        } ${categoryKey} Audit</h4>
+        <h4 style="line-height: 6px;">${typeLetter}.${
+          categoryIndex + 1
+        }.1 Detail Jadwal Audit</h4>
+        <table>
+          <thead>
+            <tr>
+                <th rowspan="2" style="background-color: #3C64B1; color: white;">
+                  <p style="text-align:center;">No</p>
+                </th>
+                <th rowspan="2" style="background-color: #3C64B1; color: white;">
+                  <p style="text-align:center;">Uker Audit</p>
+                </th>
+                <th rowspan="2" style="background-color: #3C64B1; color: white;">
+                  <p style="text-align:center;">Deskripsi</p>
+                </th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+        <h4 style="line-height: 6px;">a.1.2 Rekapan Objek Audit</h4>
+        <table border="1" cellspacing="0" cellpadding="6">
+          <thead>
+            <tr>
+                <th rowspan="2" style="background-color: #3C64B1; color: white;">
+                    <p style="text-align:center;">
+                        No
+                    </p>
+                </th>
+                <th rowspan="2" style="background-color: #3C64B1; color: white;">
+                    <p style="text-align:center;">
+                        Objek Audit
+                    </p>
+                </th>
+                <th rowspan="2" style="background-color: #3C64B1; color: white;">
+                    <p style="text-align:center;">
+                        ∑ Uker
+                    </p>
+                </th>
+                <th colspan="2" style="background-color: #3C64B1; color: white;">
+                    <p style="text-align:center;">
+                        Target Audit
+                    </p>
+                </th>
+            </tr>
+            <tr>
+                <th style="background-color: #3C64B1; color: white;">
+                    <p style="text-align:center;">
+                        ∑ Objek Audit
+                    </p>
+                </th>
+                <th style="background-color: #3C64B1; color: white;">
+                    <p style="text-align:center;">
+                        % Objek Audit
+                    </p>
+                </th>
+            </tr>
+          </thead>
+          <tbody>
+            ${v.count_target_jenis_auditee.map((x, idx) => {
+              return `<tr>
+                <td>
+                  <p style="text-align:center;">${idx + 1}</p>
+                </td>
+                <td>
+                    <p style="text-align:left;">${x.name}</p>
+                </td>
+                <td>
+                    <p style="text-align:center;">${x.existing}</p>
+                </td>
+                <td>
+                    <p style="text-align:center;">${x.target}</p>
+                </td>
+                <td>
+                    <p style="text-align:center;">${
+                      x.existing
+                        ? (parseInt(x.target) * parseInt(x.existing)) / 100
+                        : 0
+                    } %</p>
+                </td>
+              </tr>`;
+            })}
+          </tbody>
+        </table>
+        `;
+        arrData.push(innerLoopHTML);
       });
     }
   }
 
   return arrData.join("");
 };
+
+// const auditTarget = (data) => {
+//   const letters = "abcdefghijklmnopqrstuvwxyz";
+//   if (!data) {
+//     return "";
+//   }
+
+//   const arrData = [];
+//   for (const typeKey in data) {
+//     const typeIndex = Object.keys(data).indexOf(typeKey);
+//     const typeLetter = letters[Object.keys(data).indexOf(typeKey)];
+//     for (const categoryKey in data[typeKey]) {
+//       const categoryIndex = Object.keys(data[typeKey]).indexOf(categoryKey);
+//       data[typeKey][categoryKey].map((v) => {
+//         arrData.push(
+//           `<div class="sub_section_ruang_lingkup" style="margin-bottom: 30px;">
+//           <h4 style="line-height: 6px;">${typeLetter}. Audit ${typeKey}</h4>
+//           <h4 style="line-height: 6px;">${typeLetter}.${
+//             categoryIndex + 1
+//           } ${categoryKey}</h4>
+//           <h4 style="line-height: 6px;">${typeLetter}.${
+//             categoryIndex + 1
+//           }.1 Detail Jadwal Audit</h4>
+//           <table>
+//             <thead>
+//               <tr>
+//                   <th rowspan="2" style="background-color: #3C64B1; color: white;">
+//                     <p style="text-align:center;">No</p>
+//                   </th>
+//                   <th rowspan="2" style="background-color: #3C64B1; color: white;">
+//                     <p style="text-align:center;">Uker Audit</p>
+//                   </th>
+//                   <th rowspan="2" style="background-color: #3C64B1; color: white;">
+//                     <p style="text-align:center;">Deskripsi</p>
+//                   </th>
+//               </tr>
+//             </thead>
+//             <tbody>
+//             </tbody>
+//           </table>
+//           <h4 style="line-height: 6px;">a.1.2 Rekapan Objek Audit</h4>
+//           <table border="1" cellspacing="0" cellpadding="6">
+//             <thead>
+//               <tr>
+//                   <th rowspan="2" style="background-color: #3C64B1; color: white;">
+//                       <p style="text-align:center;">
+//                           No
+//                       </p>
+//                   </th>
+//                   <th rowspan="2" style="background-color: #3C64B1; color: white;">
+//                       <p style="text-align:center;">
+//                           Objek Audit
+//                       </p>
+//                   </th>
+//                   <th rowspan="2" style="background-color: #3C64B1; color: white;">
+//                       <p style="text-align:center;">
+//                           ∑ Uker
+//                       </p>
+//                   </th>
+//                   <th colspan="2" style="background-color: #3C64B1; color: white;">
+//                       <p style="text-align:center;">
+//                           Target Audit
+//                       </p>
+//                   </th>
+//               </tr>
+//               <tr>
+//                   <th style="background-color: #3C64B1; color: white;">
+//                       <p style="text-align:center;">
+//                           ∑ Objek Audit
+//                       </p>
+//                   </th>
+//                   <th style="background-color: #3C64B1; color: white;">
+//                       <p style="text-align:center;">
+//                           % Objek Audit
+//                       </p>
+//                   </th>
+//               </tr>
+//             </thead>
+//             <tbody>
+//               ${v.count_target_jenis_auditee.map((x, idx) => {
+//                 return `<tr>
+//                   <td>
+//                     <p style="text-align:center;">${idx + 1}</p>
+//                   </td>
+//                   <td>
+//                       <p style="text-align:left;">${x.name}</p>
+//                   </td>
+//                   <td>
+//                       <p style="text-align:center;">${x.existing}</p>
+//                   </td>
+//                   <td>
+//                       <p style="text-align:center;">${x.target}</p>
+//                   </td>
+//                   <td>
+//                       <p style="text-align:center;">${
+//                         x.existing
+//                           ? (parseInt(x.target) * parseInt(x.existing)) / 100
+//                           : 0
+//                       } %</p>
+//                   </td>
+//                 </tr>`;
+//               })}
+//             </tbody>
+//           </table>
+//         </div>`
+//         );
+//       });
+//     }
+//   }
+
+//   return arrData.join("");
+// };
 
 // for (const categoryKey in data[typeKey]) {
 //   const categoryIndex = Object.keys(data[typeKey]).indexOf(categoryKey);
