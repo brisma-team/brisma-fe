@@ -13,12 +13,15 @@ const OrgehSelect = ({
   isDisabled,
   handleMenuOpen,
   handleMenuClose,
+  width,
+  positionAbsolute,
 }) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState("");
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState(false);
   const { orgeh, orgehMutate } = useOrgeh(keyword);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (search) {
@@ -58,6 +61,16 @@ const OrgehSelect = ({
     }
   }
 
+  const handleOpen = () => {
+    setOpen(true);
+    if (handleMenuOpen) handleMenuOpen();
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    if (handleMenuClose) handleMenuClose();
+  };
+
   const DropdownIndicator = (props) => {
     return (
       <components.DropdownIndicator {...props}>
@@ -67,19 +80,25 @@ const OrgehSelect = ({
   };
 
   return (
-    <Select
-      {...fieldsProps}
-      placeholder={placeholder}
-      options={options}
-      onChange={handleChange}
-      isSearchable={isSearchable}
-      value={selectedValue}
-      onInputChange={handleInputChange}
-      components={customIcon && { DropdownIndicator }}
-      isDisabled={isDisabled}
-      onMenuOpen={handleMenuOpen}
-      onMenuClose={handleMenuClose}
-    />
+    <div
+      className={`${positionAbsolute && open ? `z-50 absolute` : ``} ${
+        width && width
+      }`}
+    >
+      <Select
+        {...fieldsProps}
+        placeholder={placeholder}
+        options={options}
+        onChange={handleChange}
+        isSearchable={isSearchable}
+        value={selectedValue}
+        onInputChange={handleInputChange}
+        components={customIcon && { DropdownIndicator }}
+        isDisabled={isDisabled}
+        onMenuOpen={handleOpen}
+        onMenuClose={handleClose}
+      />
+    </div>
   );
 };
 

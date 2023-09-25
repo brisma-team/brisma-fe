@@ -29,6 +29,7 @@ const CommentDetail = ({ mutate, babCode, data }) => {
             parent_comment_id: parent_id,
           }
         );
+        setCommentTextChild("");
         break;
       case "done":
         await useUpdateData(
@@ -209,6 +210,7 @@ const CardComment = ({
 
     commentPATMutate();
     setNewComment(false);
+    setCommentTextParent("");
   };
 
   if (!show) return;

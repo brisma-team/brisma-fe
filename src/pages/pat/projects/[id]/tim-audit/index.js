@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Breadcrumbs, PageTitle, Pagination } from "@/components/atoms";
+import {
+  Breadcrumbs,
+  ButtonField,
+  PageTitle,
+  Pagination,
+} from "@/components/atoms";
 import { PatLandingLayout } from "@/layouts/pat";
 import Button from "@atlaskit/button";
 import {
@@ -93,6 +98,7 @@ const index = () => {
         manajer_audit: v.ref_tim_audit_mas,
         ketua_tim_audit: v.ref_tim_audit_kta,
         anggota_tim_audit: v.ref_tim_audit_ata,
+        tipe_tim: v.ref_tipe_tim.nama,
       };
     });
 
@@ -123,69 +129,62 @@ const index = () => {
 
   return (
     <PatLandingLayout data={statusPat?.data} content={content}>
-      <div className="pr-44">
-        {/* Start Breadcrumbs */}
-        <Breadcrumbs data={breadcrumbs} />
-        {/* End Breadcrumbs */}
-        <div className="flex justify-between items-center mb-6">
-          <PageTitle text={"Tim Audit"} />
-          <PrevNextNavigation
-            baseUrl={baseUrl}
-            routes={routes}
-            prevUrl={"/sumber-informasi"}
-            nextUrl={"/jadwal-audit"}
+      {/* Start Breadcrumbs */}
+      <Breadcrumbs data={breadcrumbs} />
+      {/* End Breadcrumbs */}
+      <div className="flex justify-between items-center mb-6">
+        <PageTitle text={"Tim Audit"} />
+        <PrevNextNavigation
+          baseUrl={baseUrl}
+          routes={routes}
+          prevUrl={"/sumber-informasi"}
+          nextUrl={"/jadwal-audit"}
+        />
+      </div>
+      {/* Start Filter */}
+      <div
+        className="flex justify-between items-center mb-6"
+        style={{ maxWidth: "21rem" }}
+      >
+        <div className="w-40">
+          <Button
+            appearance="primary"
+            onClick={() => setShowFilter(!showFilter)}
+            shouldFitContainer
+          >
+            Tampilkan Filter
+          </Button>
+        </div>
+        <div className="w-40 rounded bg-atlasian-purple">
+          <ButtonField handler={handleCreateButton} text={"Buat Tim Audit"} />
+        </div>
+        <ModalAuditTeam
+          showModal={showModal}
+          setShowModal={setShowModal}
+          typeModal={typeModal}
+          mutate={auditTeamMutate}
+        />
+      </div>
+      <div className="flex justify-between items-end">
+        <div className="w-[27rem]">
+          <CardFilterTimAudit
+            showFilter={showFilter}
+            filter={filter}
+            setFilter={setFilter}
           />
         </div>
-        {/* Start Filter */}
-        <div
-          className="flex justify-between items-center mb-6"
-          style={{ maxWidth: "21rem" }}
-        >
-          <div className="w-40">
-            <Button
-              appearance="primary"
-              onClick={() => setShowFilter(!showFilter)}
-              shouldFitContainer
-            >
-              Tampilkan Filter
-            </Button>
-          </div>
-          <div className="w-40">
-            <Button
-              appearance="danger"
-              onClick={handleCreateButton}
-              shouldFitContainer
-            >
-              Buat Tim Audit
-            </Button>
-            <ModalAuditTeam
-              showModal={showModal}
-              setShowModal={setShowModal}
-              typeModal={typeModal}
-              mutate={auditTeamMutate}
-            />
-          </div>
+        <div className="flex justify-end items-end rounded-full">
+          <SelectSortFilter change={handleChangeSortBy} />
         </div>
-        <div className="flex justify-between items-end">
-          <div className="w-[27rem]">
-            <CardFilterTimAudit
-              showFilter={showFilter}
-              filter={filter}
-              setFilter={setFilter}
-            />
-          </div>
-          <div className="flex justify-end items-end rounded-full">
-            <SelectSortFilter change={handleChangeSortBy} />
-          </div>
-        </div>
-        {/* End Filter */}
-        {/* Start Content */}
-        <div className="flex flex-wrap my-4 overflow-hidden -ml-2 p-2 gap-3">
-          {auditTeamError ? (
-            <DataNotFound />
-          ) : (
-            data?.length &&
-            data?.map((v, i) => {
+      </div>
+      {/* End Filter */}
+      {/* Start Content */}
+      {auditTeamError ? (
+        <DataNotFound />
+      ) : (
+        data?.length && (
+          <div className="grid grid-cols-3 my-4 -ml-2 p-2 gap-3">
+            {data?.map((v, i) => {
               return (
                 <CardAuditTeam
                   key={i}
@@ -197,18 +196,19 @@ const index = () => {
                   manajer_audit={v.manajer_audit}
                   ketua_tim_audit={v.ketua_tim_audit}
                   anggota_tim_audit={v.anggota_tim_audit}
+                  tipe_tim={v.tipe_tim}
                   button={true}
                   setShowModal={setShowModal}
                   isMutate={auditTeamMutate}
                   setTypeModal={setTypeModal}
                 />
               );
-            })
-          )}
-        </div>
-        <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
-        {/* End Content */}
-      </div>
+            })}
+          </div>
+        )
+      )}
+      <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
+      {/* End Content */}
     </PatLandingLayout>
   );
 };

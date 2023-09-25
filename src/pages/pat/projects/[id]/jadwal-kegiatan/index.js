@@ -1,4 +1,9 @@
-import { Breadcrumbs, PageTitle, Pagination } from "@/components/atoms";
+import {
+  Breadcrumbs,
+  ButtonField,
+  PageTitle,
+  Pagination,
+} from "@/components/atoms";
 import {
   CardTypeCount,
   DataNotFound,
@@ -83,7 +88,7 @@ const index = () => {
       ...params,
       id,
       pages: currentPage,
-      limit: 6,
+      limit: 4,
     });
 
   useEffect(() => {
@@ -154,90 +159,86 @@ const index = () => {
 
   return (
     <PatLandingLayout data={statusPat} content={content}>
-      <div className="pr-44">
-        <Breadcrumbs data={breadcrumbs} />
-        <div className="flex justify-between items-center mb-6">
-          <PageTitle text={"Jadwal Kegiatan"} />
-          <PrevNextNavigation
-            baseUrl={baseUrl}
-            routes={routes}
-            prevUrl={"/jadwal-audit"}
-            nextUrl={"/jadwal-lainnya"}
+      <Breadcrumbs data={breadcrumbs} />
+      <div className="flex justify-between items-center mb-6">
+        <PageTitle text={"Jadwal Kegiatan"} />
+        <PrevNextNavigation
+          baseUrl={baseUrl}
+          routes={routes}
+          prevUrl={"/jadwal-audit"}
+          nextUrl={"/jadwal-lainnya"}
+        />
+      </div>
+
+      {/* Start Filter */}
+      <div
+        className="flex justify-between items-center mb-6 gap-3"
+        style={{ maxWidth: "21rem" }}
+      >
+        <div className="w-40">
+          <Button
+            appearance="primary"
+            onClick={() => setShowFilter(!showFilter)}
+            shouldFitContainer
+          >
+            Tampilkan Filter
+          </Button>
+        </div>
+        <div className="w-44 rounded bg-atlasian-purple">
+          <ButtonField
+            handler={handleCreateButton}
+            text={"Buat Jadwal Kegiatan"}
           />
         </div>
-
-        {/* Start Filter */}
+        <ModalActivitySchedule
+          showModal={showModal}
+          setShowModal={setShowModal}
+          typeModal={typeModal}
+          mutate={activityScheduleMutate}
+        />
+      </div>
+      <div className="flex justify-between items-end relative">
+        <div className="flex justify-center absolute z-10 bg-white top-0">
+          <CardFilterActivitySchedule
+            showFilter={showFilter}
+            params={filter}
+            setParams={setFilter}
+          />
+        </div>
         <div
-          className="flex justify-between items-center mb-6"
-          style={{ maxWidth: "21rem" }}
+          className={`w-full flex justify-end items-end gap-2 ${
+            showFilter && `pt-[92px]`
+          }`}
         >
-          <div className="w-40">
-            <Button
-              appearance="primary"
-              onClick={() => setShowFilter(!showFilter)}
-              shouldFitContainer
-            >
-              Tampilkan Filter
-            </Button>
-          </div>
-          <div className="w-40">
-            <Button
-              appearance="danger"
-              onClick={handleCreateButton}
-              shouldFitContainer
-            >
-              Buat Jadwal Kegiatan
-            </Button>
-            <ModalActivitySchedule
-              showModal={showModal}
-              setShowModal={setShowModal}
-              typeModal={typeModal}
-              mutate={activityScheduleMutate}
-            />
-          </div>
+          {countType?.length && (
+            <div className="mb-1 flex gap-2">
+              {countType.map((v, i) => {
+                return (
+                  <CardTypeCount
+                    key={i}
+                    title={v.type}
+                    total={v.count}
+                    percent={v.percent}
+                    width={"w-[12.8rem]"}
+                  />
+                );
+              })}
+            </div>
+          )}
+          <SelectSortFilter
+            change={(e) => setParams({ ...params, sort_by: e.value })}
+          />
         </div>
-        <div className="flex justify-between items-end relative">
-          <div className="flex justify-center absolute z-10 bg-white top-0">
-            <CardFilterActivitySchedule
-              showFilter={showFilter}
-              params={filter}
-              setParams={setFilter}
-            />
-          </div>
-          <div
-            className={`w-full flex justify-end items-end gap-2 ${
-              showFilter && `pt-[92px]`
-            }`}
-          >
-            {countType?.length && (
-              <div className="mb-1 flex gap-2">
-                {countType.map((v, i) => {
-                  return (
-                    <CardTypeCount
-                      key={i}
-                      title={v.type}
-                      total={v.count}
-                      percent={v.percent}
-                      width={"w-[12.8rem]"}
-                    />
-                  );
-                })}
-              </div>
-            )}
-            <SelectSortFilter
-              change={(e) => setParams({ ...params, sort_by: e.value })}
-            />
-          </div>
-        </div>
-        {/* End of Filter */}
+      </div>
+      {/* End of Filter */}
 
-        {/* Start Content */}
-        <div className="flex flex-wrap my-4 overflow-hidden -mx-2">
-          {activityScheduleError ? (
-            <DataNotFound />
-          ) : (
-            data?.length &&
-            data.map((v, i) => {
+      {/* Start Content */}
+      {activityScheduleError ? (
+        <DataNotFound />
+      ) : (
+        data?.length && (
+          <div className="grid grid-cols-4 gap-4 px-0.5 py-2">
+            {data.map((v, i) => {
               return (
                 <CardActivitySchedule
                   key={i}
@@ -256,14 +257,15 @@ const index = () => {
                   setShowModalDetail={setShowModalDetail}
                   scheduleId={scheduleId}
                   setScheduleId={setScheduleId}
+                  mutate={activityScheduleMutate}
                 />
               );
-            })
-          )}
-        </div>
-        <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
-        {/* End Content */}
-      </div>
+            })}
+          </div>
+        )
+      )}
+      <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
+      {/* End Content */}
     </PatLandingLayout>
   );
 };

@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { Card, LinkIcon } from "@/components/atoms";
+import { Card, DivButton, LinkIcon } from "@/components/atoms";
 import { IconEdit, IconInfo, IconTrash } from "@/components/icons";
 import { useActivityScheduleOther, useKategoriAnggaran } from "@/data/pat";
 import { useDispatch } from "react-redux";
@@ -66,6 +65,7 @@ const CardOtherSchedule = ({
   setShowModalDetail,
   scheduleId,
   setScheduleId,
+  mutate,
 }) => {
   const dispatch = useDispatch();
   const { activityScheduleOther } = useActivityScheduleOther("detail", {
@@ -191,20 +191,23 @@ const CardOtherSchedule = ({
       "Data ini dihapus seacara permanen",
       `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/lain?kegiatan_lain_id=${kegiatan_lain_id}`
     );
+    mutate();
   };
 
   return (
-    <Link
-      className="m-2 hover:bg-gray-100 hover:rounded-[10px] hover:no-underline w-[29rem]"
-      href={"#"}
+    <DivButton
+      className="my-2 hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
+      handleClick={() => console.log("test")}
     >
       <Card>
         <div className="w-full px-5 py-3">
-          <div className="flex mb-2 justify-between">
+          <div className="flex mb-2 justify-between items-end -ml-5 -mt-5">
             <div
               className={`text-base font-semibold rounded-tl-lg text-brisma ${
-                type === "lain-lain" ? "bg-[#C094C4]" : "bg-[#AED3C3]"
-              } -ml-5 -mt-5 px-5 h-9 flex items-center justify-center`}
+                type?.toLowerCase() === "lain-lain"
+                  ? "bg-[#C094C4]"
+                  : "bg-[#AED3C3]"
+              } px-5 h-9 flex items-center justify-center`}
             >
               <p>{type.toUpperCase()}</p>
             </div>
@@ -216,7 +219,7 @@ const CardOtherSchedule = ({
                 setShowModal={setShowModalDetail}
               />
             )}
-            <div className="flex w-14 justify-between">
+            <div className="flex w-20 justify-between -mb-1.5">
               <LinkIcon
                 color={"blue"}
                 icon={<IconInfo size="medium" />}
@@ -236,28 +239,30 @@ const CardOtherSchedule = ({
               />
             </div>
           </div>
-          <div className="flex flex-row justify-between mb-6">
+          <div className="flex flex-row justify-between mb-3">
             <div className="text-xl font-bold text-atlasian-blue-dark">
               {title}
             </div>
           </div>
           <div className="leading-3">
-            <div className="w-full">
-              <div className="flex justify-between">
+            <div className="w-full flex">
+              <div className="w-8/12">
                 <Content title={"Maker"} text={maker} />
+              </div>
+              <div className="w-4/12">
                 <Content title={"Periode Kegiatan"} text={audit_period} />
               </div>
-              <Content
-                title={"Anggaran"}
-                text={`Rp. ${convertToRupiah(budget)}`}
-              />
-              <Content title={"P.I.C"} text={pic} />
-              <Content title={"Deskripsi"} text={desc} textJustify={true} />
             </div>
+            <Content
+              title={"Anggaran"}
+              text={`Rp. ${convertToRupiah(budget)}`}
+            />
+            <Content title={"P.I.C"} text={pic} />
+            <Content title={"Deskripsi"} text={desc} textJustify={true} />
           </div>
         </div>
       </Card>
-    </Link>
+    </DivButton>
   );
 };
 

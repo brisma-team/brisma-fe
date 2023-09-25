@@ -1,7 +1,8 @@
-import { ButtonIcon, Card } from "@/components/atoms";
-import { IconEdit, IconSuccess } from "@/components/icons";
-import Link from "next/link";
+import { Card, DivButton } from "@/components/atoms";
+import { IconSuccess } from "@/components/icons";
 import ProgressBar from "@atlaskit/progress-bar";
+import { useRouter } from "next/router";
+import DropdownCard from "./DropdownCard";
 
 const CardBody = ({ title, value, icon }) => {
   return (
@@ -27,10 +28,17 @@ const CardOverview = ({
   addendum,
   href,
 }) => {
+  const router = useRouter();
+
+  const handleClickCard = () => {
+    router.push(href);
+  };
+
   return (
-    <Link
-      className="m-2 hover:bg-gray-100 hover:rounded-[10px] hover:no-underline w-[21.875rem] h-[10.5rem]"
-      href={href}
+    <DivButton
+      handleClick={handleClickCard}
+      className="m-2 hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
+      // href={href}
     >
       <Card>
         <div className="w-full px-4 pb-2">
@@ -38,11 +46,9 @@ const CardOverview = ({
             <div className="text-base font-bold text-atlasian-blue-dark">
               {title}
             </div>
-            <ButtonIcon
-              color={"yellow"}
-              icon={<IconEdit size="medium" />}
-              handleClick={() => console.log("TEST")}
-            />
+            <div className="w-7">
+              <DropdownCard />
+            </div>
           </div>
           <div className="text-sm font-bold">{year}</div>
           <div className="flex flex-row justify-between leading-3 mt-2 items-center">
@@ -70,7 +76,7 @@ const CardOverview = ({
           </div>
         </div>
       </Card>
-    </Link>
+    </DivButton>
   );
 };
 

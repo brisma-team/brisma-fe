@@ -12,6 +12,7 @@ import CardCostDetail from "./CardCostDetail";
 import CardActivityExpense from "./CardActivityExpense";
 import CardTravelExpense from "./CardTravelExpense";
 import CardFilterAuditSchedule from "./CardFilterAuditSchedule";
+import ModalAssessmentInfo from "./ModalAssessmentInfo";
 
 export {
   PatSidebarOverview,
@@ -29,4 +30,5 @@ export {
   CardActivityExpense,
   CardTravelExpense,
   CardFilterAuditSchedule,
+  ModalAssessmentInfo,
 };

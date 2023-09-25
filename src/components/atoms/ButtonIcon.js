@@ -1,4 +1,12 @@
-const ButtonIcon = ({ color, icon, handleClick, className }) => {
+const ButtonIcon = ({
+  color,
+  icon,
+  handleClick,
+  className,
+  props,
+  handleMouseEnter,
+  handleMouseLeave,
+}) => {
   let iconColor;
   switch (color) {
     case "red":
@@ -21,7 +29,8 @@ const ButtonIcon = ({ color, icon, handleClick, className }) => {
   }
 
   return (
-    <span
+    <div
+      {...props}
       role="button"
       tabIndex={0}
       className={`${className} ${iconColor}`}
@@ -31,9 +40,11 @@ const ButtonIcon = ({ color, icon, handleClick, className }) => {
           return;
         }
       }}
+      onMouseEnter={handleMouseEnter && handleMouseEnter}
+      onMouseLeave={handleMouseLeave && handleMouseLeave}
     >
       {icon}
-    </span>
+    </div>
   );
 };
 

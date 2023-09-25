@@ -7,11 +7,11 @@ const CardTypeCount = ({ title, total, percent, width, style }) => {
     >
       <div className="w-full flex justify-between px-2 text-sm">
         <p className="font-semibold">{title}</p>
-        <div className="w-16 flex justify-between">
-          <div className="rounded bg-atlasian-gray-light w-5 items-center justify-center flex">
+        <div className="flex justify-between gap-1.5">
+          <div className="rounded bg-atlasian-gray-light items-center justify-center flex px-1.5">
             {total}
           </div>
-          <div className="rounded bg-atlasian-gray-light w-10 items-center justify-center flex">
+          <div className="rounded bg-atlasian-gray-light items-center justify-center flex px-1.5">
             {percent} %
           </div>
         </div>

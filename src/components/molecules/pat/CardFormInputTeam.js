@@ -4,7 +4,7 @@ import {
   Card,
   ErrorValidation,
 } from "@/components/atoms";
-import { IconClose, IconPlus } from "@/components/icons";
+import { IconChevronDown, IconClose, IconPlus } from "@/components/icons";
 import {
   PekerjaSelect,
   OrgehSelect,
@@ -232,16 +232,19 @@ const CardFormInputTeam = ({
                 <p className={`font-semibold text-sm ${textColor}`}>{type}</p>
               </div>
               {type === "Tipe Tim" ? (
-                <TypeTeamSelect
-                  isSearchable={false}
-                  handleChange={handlerChangeParent}
-                  placeholder={placeholder}
-                  selectedValue={{
-                    label: data?.nama,
-                    value: data,
-                  }}
-                  isDisabled={isDisabled}
-                />
+                <div className="mt-3 pt-0.5 w-full">
+                  <TypeTeamSelect
+                    isSearchable={false}
+                    handleChange={handlerChangeParent}
+                    placeholder={placeholder}
+                    selectedValue={{
+                      label: data?.nama,
+                      value: data,
+                    }}
+                    isDisabled={isDisabled}
+                    customIcon={<ButtonIcon icon={<IconChevronDown />} />}
+                  />
+                </div>
               ) : (
                 data?.map((v, i) => {
                   return (

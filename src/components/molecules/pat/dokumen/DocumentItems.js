@@ -1,4 +1,4 @@
-import { DivButton } from "@/components/atoms";
+import { Badge, DivButton } from "@/components/atoms";
 
 const DocumentItems = ({ no, title, count, handleClick, activeIndex }) => {
   return (
@@ -10,18 +10,17 @@ const DocumentItems = ({ no, title, count, handleClick, activeIndex }) => {
       }`}
       handleClick={handleClick}
     >
-      <div className="w-full flex ml-1.5">
+      <div className="w-full flex px-1.5">
         <div>{no}.</div>
         <div className="ml-2">{title}</div>
       </div>
-      <div
-        className={`w-5 h-[1.12rem] font-bold text-white flex justify-center items-center pb-0.5 ${
-          count && `bg-atlasian-red`
-        } rounded-full`}
-        style={{ fontSize: "0.65rem" }}
-      >
-        {count && count}
-      </div>
+      {count ? (
+        <div>
+          <Badge appearance={"important"} text={count} />
+        </div>
+      ) : (
+        ""
+      )}
     </DivButton>
   );
 };

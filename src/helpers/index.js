@@ -18,6 +18,7 @@ import decimalToPercentage from "./decimalToPercentage";
 import setErrorValidation from "./setErrorValidation";
 import copyToClipboard from "./copyToClipboard";
 import errorSwalTimeout from "./errorSwalTimeout";
+import dateNow from "./dateNow";
 
 export {
   loadingSwal,
@@ -40,4 +41,5 @@ export {
   setErrorValidation,
   copyToClipboard,
   errorSwalTimeout,
+  dateNow,
 };

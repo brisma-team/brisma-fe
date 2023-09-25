@@ -11,10 +11,16 @@ import { ImageChat } from "@/helpers/imagesUrl";
 import { PatLandingLayout } from "@/layouts/pat";
 import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
-import { useDocument, useStatusPat, useWorkflow } from "@/data/pat";
+import {
+  useCommentPAT,
+  useDocument,
+  useStatusPat,
+  useWorkflow,
+} from "@/data/pat";
 import { useRouter } from "next/router";
 import { getAuditTeamTable } from "@/helpers/templates/auditTeam";
 import { getAuditTargetTable } from "@/helpers/templates/auditTarget";
+import { comment } from "postcss";
 
 const routes = [
   {
@@ -66,9 +72,11 @@ const index = () => {
   const [workflowDetail, setWorkflowDetail] = useState({});
   const [currentPosition, setCurrentPosition] = useState(0);
   const [content, setContent] = useState(null);
+  const [totalComment, setTotalComment] = useState([]);
 
   const [type, setType] = useState("ltb");
   const { documentPAT, documentPATMutate } = useDocument(type, { id });
+  const { commentPAT } = useCommentPAT("total", { id });
 
   const handleScrollHitEndpoint = () => {
     const parentContainer = document.querySelector(".parent");
@@ -104,6 +112,22 @@ const index = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (commentPAT?.data?.length) {
+      const mappingTotalComment = commentPAT?.data?.map((v) => {
+        const bab = v?.ref_bab_pat_kode;
+        const total = v?.data?.filter((item) => !item?.is_closed).length;
+        return { bab, total };
+      });
+
+      setTotalComment(mappingTotalComment);
+    }
+  }, [commentPAT]);
+
+  useEffect(() => {
+    console.log("totalComment => ", totalComment);
+  }, [totalComment]);
 
   useEffect(() => {
     setContent([
@@ -185,136 +209,146 @@ const index = () => {
     setActiveIndexComment(idx);
   };
 
+  const findTotalComment = (idx) => {
+    const correspondingTotal = totalComment?.find(
+      (item) => item.bab === idx + 1
+    );
+    const count = correspondingTotal ? correspondingTotal.total : 0;
+    return count;
+  };
+
   return (
     <PatLandingLayout content={content} data={statusPat?.data}>
-      <div className="pr-44">
-        <Breadcrumbs data={breadcrumbs} />
-        <div className="flex justify-between items-center mb-6">
-          <PageTitle text={"Dokumen"} />
-          <PrevNextNavigation baseUrl={baseUrl} routes={routes} />
+      <Breadcrumbs data={breadcrumbs} />
+      <div className="flex justify-between items-center mb-6">
+        <PageTitle text={"Dokumen"} />
+        <PrevNextNavigation
+          baseUrl={baseUrl}
+          routes={routes}
+          prevUrl={"/ringkasan-objek-audit"}
+        />
+      </div>
+      {/* Start Content */}
+      <div className="flex w-full gap-6">
+        <div className="w-[15rem]">
+          <div>
+            <Card>
+              <div className="px-3 py-1 w-full">
+                <div className="text-xl">Daftar Isi</div>
+                <div className="pl-2 mt-0.5">
+                  {nav.map((v, i) => {
+                    return (
+                      <DocumentItems
+                        key={i}
+                        no={i + 1}
+                        title={v.name}
+                        handleClick={() => setActiveIndex(i)}
+                        activeIndex={currentPosition}
+                        count={findTotalComment(i)}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            </Card>
+          </div>
         </div>
-        {/* Start Content */}
-        <div className="flex w-full gap-6">
-          <div className="w-[15rem]">
+        <div>
+          <Card>
+            <div className="overflow-y-scroll my-2 parent max-h-[40rem]">
+              <CardComment
+                callbackRef={ref}
+                show={openCardComment}
+                handleClickOutside={() => {
+                  setOpenCardComment(false);
+                }}
+                activeIndexBab={activeIndexComment + 1}
+              />
+              {doc.map((v, i) => {
+                return (
+                  <div
+                    key={i}
+                    className={`page-container-a4 shrink-0 ${
+                      i === activeIndex ? "active" : ""
+                    }`}
+                    tabIndex={i === activeIndex ? 0 : -1}
+                    ref={i === activeIndex ? activeDivRef : null}
+                  >
+                    {v.content && (
+                      <div className="px-4 h-full w-full relative page-content-a4">
+                        <div className="flex justify-between">
+                          <div className="font-bold text-xl">{v.key}</div>
+                          <div className="flex items-center" ref={ref}>
+                            <DivButton
+                              handleClick={() => handleClickComment(i)}
+                            >
+                              <Image src={ImageChat} alt="chat" />
+                            </DivButton>
+                          </div>
+                        </div>
+                        {v.idx === 2 ? (
+                          <div
+                            className="mt-4"
+                            dangerouslySetInnerHTML={{
+                              __html: getAuditTargetTable(v.content),
+                            }}
+                          />
+                        ) : v.idx === 6 ? (
+                          <div
+                            className="mt-4"
+                            dangerouslySetInnerHTML={{
+                              __html: getAuditTeamTable(v.content),
+                            }}
+                          />
+                        ) : (
+                          <div
+                            className="mt-4"
+                            dangerouslySetInnerHTML={{ __html: v.content }}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
+        </div>
+        <div className="w-[11rem]">
+          <Link
+            href={"#"}
+            onClick={() => (setShowModal(true), setHitEndpointCount(7))}
+            className="no-underline hover:no-underline h-auto"
+          >
             <div>
               <Card>
-                <div className="px-3 py-1 w-full">
-                  <div className="text-xl">Daftar Isi</div>
-                  <div className="pl-2 mt-0.5">
-                    {nav.map((v, i) => {
-                      return (
-                        <DocumentItems
-                          key={i}
-                          no={i + 1}
-                          title={v.name}
-                          handleClick={() => setActiveIndex(i)}
-                          activeIndex={currentPosition}
-                          count={100}
-                        />
-                      );
-                    })}
+                <div className="w-full">
+                  <div className="px-3">
+                    <p className="text-brisma font-bold text-xl">
+                      Approval UKA
+                    </p>
+                    <ApprovalUkaItems
+                      title={"Maker"}
+                      text={workflowDetail?.maker}
+                    />
+                    <ApprovalUkaItems
+                      title={"Checker"}
+                      text={workflowDetail?.checker}
+                      data={workflowDetail}
+                    />
+                    <ApprovalUkaItems
+                      title={"Signer"}
+                      text={workflowDetail?.signer}
+                    />
                   </div>
                 </div>
               </Card>
             </div>
-          </div>
-          <div>
-            <Card>
-              <div className="overflow-y-scroll my-2 parent max-h-[40rem]">
-                <CardComment
-                  callbackRef={ref}
-                  show={openCardComment}
-                  handleClickOutside={() => {
-                    setOpenCardComment(false);
-                  }}
-                  activeIndexBab={activeIndexComment + 1}
-                />
-                {doc.map((v, i) => {
-                  return (
-                    <div
-                      key={i}
-                      className={`page-container-a4 shrink-0 ${
-                        i === activeIndex ? "active" : ""
-                      }`}
-                      tabIndex={i === activeIndex ? 0 : -1}
-                      ref={i === activeIndex ? activeDivRef : null}
-                    >
-                      {v.content && (
-                        <div className="px-4 h-full w-full relative page-content-a4">
-                          <div className="flex justify-between">
-                            <div className="font-bold text-xl">{v.key}</div>
-                            <div className="flex items-center" ref={ref}>
-                              <DivButton
-                                handleClick={() => handleClickComment(i)}
-                              >
-                                <Image src={ImageChat} alt="chat" />
-                              </DivButton>
-                            </div>
-                          </div>
-                          {v.idx === 2 ? (
-                            <div
-                              className="mt-4"
-                              dangerouslySetInnerHTML={{
-                                __html: getAuditTargetTable(v.content),
-                              }}
-                            />
-                          ) : v.idx === 6 ? (
-                            <div
-                              className="mt-4"
-                              dangerouslySetInnerHTML={{
-                                __html: getAuditTeamTable(v.content),
-                              }}
-                            />
-                          ) : (
-                            <div
-                              className="mt-4"
-                              dangerouslySetInnerHTML={{ __html: v.content }}
-                            />
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </Card>
-          </div>
-          <div className="w-[11rem]">
-            <Link
-              href={"#"}
-              onClick={() => (setShowModal(true), setHitEndpointCount(7))}
-              className="no-underline hover:no-underline h-auto"
-            >
-              <div>
-                <Card>
-                  <div className="w-full">
-                    <div className="px-3">
-                      <p className="text-brisma font-bold text-xl">
-                        Approval UKA
-                      </p>
-                      <ApprovalUkaItems
-                        title={"Maker"}
-                        text={workflowDetail?.maker}
-                      />
-                      <ApprovalUkaItems
-                        title={"Checker"}
-                        text={workflowDetail?.checker}
-                        data={workflowDetail}
-                      />
-                      <ApprovalUkaItems
-                        title={"Signer"}
-                        text={workflowDetail?.signer}
-                      />
-                    </div>
-                  </div>
-                </Card>
-              </div>
-            </Link>
-            <ModalWorkflow setShowModal={setShowModal} showModal={showModal} />
-          </div>
+          </Link>
+          <ModalWorkflow setShowModal={setShowModal} showModal={showModal} />
         </div>
-        {/* End Content */}
       </div>
+      {/* End Content */}
     </PatLandingLayout>
   );
 };

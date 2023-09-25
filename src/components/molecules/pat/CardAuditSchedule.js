@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { ButtonIcon, Card } from "@/components/atoms";
+import { ButtonIcon, Card, DivButton } from "@/components/atoms";
 import { IconEdit, IconInfo, IconTrash } from "@/components/icons";
 import { convertDate, convertToRupiah, deleteSwal, splitWord } from "@/helpers";
 import { setAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
@@ -35,6 +34,7 @@ const CardAuditSchedule = ({
   setShowModalDetail,
   scheduleId,
   setScheduleId,
+  mutate,
 }) => {
   const dispatch = useDispatch();
   const { auditSchedule } = useAuditSchedule("detail", {
@@ -165,20 +165,23 @@ const CardAuditSchedule = ({
       "Data ini dihapus seacara permanen",
       `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/audit?jadwal_id=${jadwal_id}&pat_id=${pat_id}`
     );
+    mutate();
   };
 
   return (
-    <Link
-      className="m-2 hover:bg-gray-100 hover:rounded-[10px] hover:no-underline w-[29rem]"
-      href={"#"}
+    <DivButton
+      className="my-2 hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
+      handleClick={() => console.log("test")}
     >
       <Card>
         <div className="w-full px-5 py-3">
-          <div className="flex mb-2 justify-between">
+          <div className="flex mb-2 justify-between items-end -ml-5 -mt-5">
             <div
               className={`text-base font-semibold rounded-tl-lg text-brisma ${
-                type === "individual" ? "bg-blue-300" : "bg-[#F4E3A4]"
-              } -ml-5 -mt-5 px-5 h-9 flex items-center justify-center`}
+                type?.toLowerCase() === "individual"
+                  ? "bg-blue-300"
+                  : "bg-[#F4E3A4]"
+              } px-5 h-9 flex items-center justify-center`}
             >
               <p>{type?.toUpperCase()}</p>
             </div>
@@ -190,7 +193,7 @@ const CardAuditSchedule = ({
                 setShowModal={setShowModalDetail}
               />
             )}
-            <div className="flex w-20 justify-between">
+            <div className="flex w-20 justify-between -mb-1.5">
               <ButtonIcon
                 color={"blue"}
                 icon={<IconInfo size="medium" />}
@@ -219,7 +222,21 @@ const CardAuditSchedule = ({
             <div className="w-full flex">
               <div className="w-8/12">
                 <CardBodyContent title={"Maker"} text={maker} />
+              </div>
+              <div className="w-4/12">
+                <CardBodyContent title={"Jenis Audit"} text={audit_type} />
+              </div>
+            </div>
+            <div className="w-full flex">
+              <div className="w-8/12">
                 <CardBodyContent title={"Tim Audit"} text={audit_team} />
+              </div>
+              <div className="w-4/12">
+                <CardBodyContent title={"Tema"} text={tema} />
+              </div>
+            </div>
+            <div className="w-full flex">
+              <div className="w-8/12">
                 <CardBodyContent
                   title={"Periode Kegiatan"}
                   text={`${convertDate(start_date, "-")} s/d ${convertDate(
@@ -229,8 +246,6 @@ const CardAuditSchedule = ({
                 />
               </div>
               <div className="w-4/12">
-                <CardBodyContent title={"Jenis Audit"} text={audit_type} />
-                <CardBodyContent title={"Tema"} text={tema} />
                 <CardBodyContent
                   title={"Anggaran"}
                   text={`Rp. ${convertToRupiah(budget)}`}
@@ -247,7 +262,7 @@ const CardAuditSchedule = ({
           </div>
         </div>
       </Card>
-    </Link>
+    </DivButton>
   );
 };
 

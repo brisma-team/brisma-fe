@@ -78,6 +78,11 @@ const SubModalActivityExpense = ({ typeModal }) => {
                 ...item,
                 amount: 0,
               };
+            } else if (parseInt(e.target.value) > 2000000000) {
+              return {
+                ...item,
+                amount: 2000000000,
+              };
             } else {
               return {
                 ...item,

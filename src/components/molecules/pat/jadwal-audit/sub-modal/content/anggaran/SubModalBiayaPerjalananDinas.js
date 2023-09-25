@@ -51,6 +51,11 @@ const SubModalBiayaPerjalananDinas = ({ typeModal }) => {
           ...prevBudget,
           [key]: 0,
         }));
+      } else if (parseInt(value) > 2000000000) {
+        setBudget((prevBudget) => ({
+          ...prevBudget,
+          [key]: 2000000000,
+        }));
       } else {
         setBudget((prevBudget) => ({
           ...prevBudget,

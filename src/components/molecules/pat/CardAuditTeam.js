@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { setAuditTeamData } from "@/slices/pat/auditTeamSlice";
 
-const CardBody = ({ title, text, width }) => {
+const CardBody = ({ title, text, width, paddingLeft }) => {
   let textColor;
   switch (title) {
     case "Manajer Audit":
@@ -25,7 +25,7 @@ const CardBody = ({ title, text, width }) => {
   }
 
   return (
-    <div className={`mt-4 leading-normal text-base ${width}`}>
+    <div className={`mt-4 leading-normal text-base ${width} ${paddingLeft}`}>
       <div className={`${textColor} font-semibold`}>{title}</div>
       {title === "Anggota Tim Audit" ? (
         <div>
@@ -71,10 +71,12 @@ const CardAuditTeam = ({
   manajer_audit,
   ketua_tim_audit,
   anggota_tim_audit,
+  tipe_tim,
   button,
   setShowModal,
   isMutate,
   setTypeModal,
+  withoutLabel,
 }) => {
   const router = useRouter().query;
   const dispatch = useDispatch();
@@ -120,16 +122,22 @@ const CardAuditTeam = ({
   return (
     <Link
       className={
-        "hover:bg-gray-100 hover:rounded-[10px] hover:no-underline w-[29.4rem] relative cursor-pointer"
+        "hover:bg-gray-100 hover:rounded-[10px] hover:no-underline relative cursor-pointer"
       }
       href={"#"}
     >
       <Card>
         <div className="w-full px-4 py-2">
-          <div className="flex flex-row justify-between">
-            <div className="text-xl font-bold text-atlasian-blue-dark">
-              {header_title}
-            </div>
+          <div className="flex justify-between">
+            {!withoutLabel && (
+              <div
+                className={`text-base font-semibold rounded-tl-lg text-brisma ${
+                  tipe_tim === "Original Team" ? "bg-blue-300" : "bg-[#F4E3A4]"
+                } -ml-4 -mt-4 px-5 h-9 flex items-center justify-center`}
+              >
+                <p>{tipe_tim?.split(" ")[0].toUpperCase()}</p>
+              </div>
+            )}
             {button && (
               <div className="flex w-14 justify-between">
                 <ButtonIcon
@@ -152,13 +160,16 @@ const CardAuditTeam = ({
               </div>
             )}
           </div>
-
+          <div className="text-xl font-bold text-atlasian-blue-dark">
+            {header_title}
+          </div>
           <div className="flex flex-wrap">
             <CardBody title={"Maker"} text={maker} width={"w-2/5"} />
             <CardBody
               title={"Tanggal Buat"}
               text={created_at}
               width={"w-3/5"}
+              paddingLeft={"pl-2"}
             />
             <CardBody
               title={"Manajer Audit"}
@@ -173,6 +184,7 @@ const CardAuditTeam = ({
                 return v.nama_kta;
               })}
               width={"w-3/5"}
+              paddingLeft={"pl-2"}
             />
           </div>
           <CardBody

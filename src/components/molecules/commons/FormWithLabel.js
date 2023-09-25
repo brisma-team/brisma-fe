@@ -18,11 +18,15 @@ const FormWithLabel = ({
         } my-3`}
       >
         <div
-          className={`${widthLabel} ${classNameLabel} text-sm text-brisma font-semibold`}
+          className={`${widthLabel && widthLabel} ${
+            classNameLabel && classNameLabel
+          } text-sm text-brisma font-semibold`}
         >
           {label}
         </div>
-        <div className={`${widthForm} ${classNameForm} ml-2`}>{form}</div>
+        <div className={`${widthForm} ${classNameForm && classNameForm} ml-2`}>
+          {form}
+        </div>
       </div>
       {errors && (
         <div className="-mt-4">
