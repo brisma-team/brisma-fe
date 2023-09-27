@@ -6,6 +6,7 @@ import { IconArrowRight } from "@/components/icons";
 import Button from "@atlaskit/button";
 import { loadingSwal, successSwal } from "@/helpers";
 import usePostKKPTQuery from "@/helpers/usePostKKPTQuery";
+import shortenWord from "@/helpers/shortenWord";
 // import * as XLSX from "xlsx";
 
 const index = () => {
@@ -156,7 +157,7 @@ const index = () => {
         return {
           No: key + 1,
           KKPTID: v?.KKPTID,
-          "Nama Project": v?.ProjectName,
+          "Nama Project": shortenWord(v?.ProjectName, 0, 20),
           "Tahun Audit": v?.ProjectYear,
           "Tipe Audit": v?.AuditType,
           Aktivitas: v?.Activity,
@@ -240,9 +241,9 @@ const index = () => {
           </div>
         </div>
         <div className="mt-5 mr-40 flex gap-1">
-          <div className="w-[8rem]">
+          <div className="w-[10rem]">
             <div className="bg-slate-800 shadow rounded-md p-1.5">
-              <p className="text-white px-6">{catPat.length} KKPTs</p>
+              <p className="text-white px-10">{catPat.length} KKPTs</p>
             </div>
           </div>
           {/* <div className="w-[12rem]">
@@ -258,8 +259,8 @@ const index = () => {
               <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
                 <TableField
                   headers={[
-                    "No",
                     "Aksi",
+                    "No",
                     "KKPTID",
                     "Nama Project",
                     "Tahun Audit",
@@ -268,8 +269,8 @@ const index = () => {
                     "Sub Aktivitas",
                   ]}
                   columnWidths={[
-                    "5%",
                     "10%",
+                    "5%",
                     "20%",
                     "20%",
                     "10%",
