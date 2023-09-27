@@ -83,10 +83,10 @@ const ModalAddSubActivity = ({
   return (
     <Modal
       showModal={showModal}
-      positionCenter
+      positionCenter={true}
       footer={<ModalFooter handleConfirm={handleConfirmWithClose} />}
     >
-      <div className="w-[35rem] relative py-1.5">
+      <div className="w-[20rem] relative">
         <CloseModal handleCloseModal={handleCloseModal} />
         <div className="mb-2 font-semibold">Sub Aktifitas</div>
         <div className="max-h-[25rem] overflow-y-scroll">
@@ -98,8 +98,8 @@ const ModalAddSubActivity = ({
               name_pic_analisa,
             } = v;
             return (
-              <div className="mb-2 flex gap-3" key={i}>
-                <div className="w-full">
+              <div className="mb-2 flex justify-between gap-3" key={i}>
+                <div className="w-1/2">
                   <SubActivitySelect
                     selectedValue={{
                       label: mtd_sub_aktivitas_name,
@@ -110,9 +110,10 @@ const ModalAddSubActivity = ({
                       handleChangeSelect("sub_aktivitas", i, e)
                     }
                     placeholder={"Masukan Sub Aktivitas"}
+                    width={"w-[9.5rem]"}
                   />
                 </div>
-                <div className="w-full">
+                <div className="w-1/2">
                   <SelectAuditTeamEWP
                     selectedValue={{
                       label: `${pn_pic_analisa} - ${name_pic_analisa}`,
@@ -122,6 +123,7 @@ const ModalAddSubActivity = ({
                       handleChangeSelect("pic_analisa", i, e)
                     }
                     placeholder={"Masukan P.I.C (default K.T.A)"}
+                    width={"w-[9.5rem]"}
                   />
                 </div>
               </div>
@@ -138,6 +140,7 @@ const ModalAddSubActivity = ({
             text={`Tambah Sub Aktifitas`}
             textColor={"purple"}
             handler={() => handleAddSubActivity()}
+            className={"button"}
           />
         </div>
       </div>

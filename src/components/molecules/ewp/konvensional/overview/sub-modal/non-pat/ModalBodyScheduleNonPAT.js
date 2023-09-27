@@ -217,6 +217,7 @@ const ModalBodyScheduleNonPAT = ({ setCurrentModalStage, isDisabled }) => {
               placeholderStart="Pilih Tanggal"
               placeholderEnd="Pilih Tanggal"
               isDisabled={isDisabled}
+              pastDate={true}
             />
           }
           label="Periode Kegiatan"

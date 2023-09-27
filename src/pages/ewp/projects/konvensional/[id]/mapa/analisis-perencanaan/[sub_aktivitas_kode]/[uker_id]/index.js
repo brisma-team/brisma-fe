@@ -88,40 +88,38 @@ const index = () => {
 
   return (
     <LandingLayoutEWP>
-      <div className="w-[80.5rem]">
-        {/* Start Breadcrumbs */}
-        <Breadcrumbs data={breadcrumbs} />
-        {/* End Breadcrumbs */}
-        <div className="flex justify-between items-center">
-          <PageTitle text="Set Risk Issue" />
-          <PrevNextNavigation
-            baseUrl={baseUrl}
-            prevUrl={"/analisis-perencanaan"}
-          />
-        </div>
-        <div className="mb-6 text-base">{`${riskIssueInfo?.ref_auditee_branch_name} / ${riskIssueInfo?.ref_aktivitas_name} / ${riskIssueInfo?.ref_sub_aktivitas_name}`}</div>
-        <div className="w-44">
-          <Button
-            appearance="primary"
-            iconBefore={<IconPlus />}
-            onClick={() => setShowModalCreateRiskIssue(true)}
-            shouldFitContainer
-          >
-            Tambah Risk Issue
-          </Button>
-          <ModalAddRiskIssue
-            showModal={showModalCreateRiskIssue}
-            setShowModal={setShowModalCreateRiskIssue}
-            mutate={planningAnalysisEWPMutate}
-          />
-        </div>
-        <div className="my-3" />
-        <TableRiskIssue
-          selectedRiskIssue={selectedRiskIssue}
-          setSelectedRiskIssue={setSelectedRiskIssue}
+      {/* Start Breadcrumbs */}
+      <Breadcrumbs data={breadcrumbs} />
+      {/* End Breadcrumbs */}
+      <div className="flex justify-between items-center">
+        <PageTitle text="Set Risk Issue" />
+        <PrevNextNavigation
+          baseUrl={baseUrl}
+          prevUrl={"/analisis-perencanaan"}
+        />
+      </div>
+      <div className="mb-6 text-base">{`${riskIssueInfo?.ref_auditee_branch_name} / ${riskIssueInfo?.ref_aktivitas_name} / ${riskIssueInfo?.ref_sub_aktivitas_name}`}</div>
+      <div className="w-44">
+        <Button
+          appearance="primary"
+          iconBefore={<IconPlus />}
+          onClick={() => setShowModalCreateRiskIssue(true)}
+          shouldFitContainer
+        >
+          Tambah Risk Issue
+        </Button>
+        <ModalAddRiskIssue
+          showModal={showModalCreateRiskIssue}
+          setShowModal={setShowModalCreateRiskIssue}
           mutate={planningAnalysisEWPMutate}
         />
       </div>
+      <div className="my-3" />
+      <TableRiskIssue
+        selectedRiskIssue={selectedRiskIssue}
+        setSelectedRiskIssue={setSelectedRiskIssue}
+        mutate={planningAnalysisEWPMutate}
+      />
     </LandingLayoutEWP>
   );
 };

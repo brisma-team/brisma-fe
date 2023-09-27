@@ -17,8 +17,11 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { setAuditorInfo } from "@/slices/ewp/auditorInfoEWPSlice";
 
 const SidebarLandingEWP = () => {
+  const dispatch = useDispatch();
   const { id } = useRouter().query;
   const baseUrl = `/ewp/projects/konvensional/${id}`;
   const [data, setData] = useState();
@@ -36,6 +39,13 @@ const SidebarLandingEWP = () => {
         : `-`,
       addendum: `Addendum ke-${projectInfo?.number_adendum.toString()}`,
     });
+
+    dispatch(
+      setAuditorInfo({
+        kta: projectInfo?.info_team_audit?.kta,
+        initiator: projectInfo?.info_team_audit,
+      })
+    );
   }, [auditorEWP]);
 
   const arrAvatars = [];

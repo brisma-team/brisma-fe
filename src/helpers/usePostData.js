@@ -1,5 +1,6 @@
 import withTokenConfig from "./withTokenConfig";
 import successSwal from "./successSwal";
+import errorSwal from "./errorSwal";
 
 const usePostData = async (url, body) => {
   try {
@@ -17,7 +18,7 @@ const usePostData = async (url, body) => {
     if (!response.ok) {
       const errorData = await response.json();
       const errorMessage = errorData?.message || "Unknown error";
-      throw new Error(errorMessage);
+      return await errorSwal(errorMessage);
     }
 
     const responseData = await response.json();

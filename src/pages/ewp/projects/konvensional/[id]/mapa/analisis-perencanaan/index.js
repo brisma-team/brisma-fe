@@ -282,102 +282,112 @@ const index = () => {
     loadingSwal("close");
   };
 
+  const positionCenter = `w-full h-full flex justify-center items-center`;
+
   return (
     <LandingLayoutEWP>
-      <div className="w-[80.5rem]">
-        {/* Start Breadcrumbs */}
-        <Breadcrumbs data={breadcrumbs} />
-        {/* End Breadcrumbs */}
-        <div className="flex justify-between items-center mb-6">
-          <PageTitle text="Analisis Perencanaan" />
-          <PrevNextNavigation
-            baseUrl={baseUrl}
-            routes={routes}
-            prevUrl={"/uker-assessment"}
-            nextUrl={"/penugasan"}
-          />
-        </div>
-        <div className="w-64"></div>
-        <Card>
-          <div className="w-full px-6 py-4 overflow-y-scroll max-h-[40rem]">
-            <TableTree>
-              <Headers>
-                <Header className="!hidden" />
-                <Header width="7%" className="border-x border-t rounded-ss-xl">
-                  Review
-                </Header>
-                <Header width="6%" className="border-t border-r">
-                  Aksi
-                </Header>
-                <Header width="27%" className="border-t border-r">
-                  UKER, AKTIFITAS dan SUB-AKTIFITAS
-                </Header>
-                <Header
-                  width="20%"
-                  className="border-t border-r flex justify-center"
+      {/* Start Breadcrumbs */}
+      <Breadcrumbs data={breadcrumbs} />
+      {/* End Breadcrumbs */}
+      <div className="flex justify-between items-center mb-6">
+        <PageTitle text="Analisis Perencanaan" />
+        <PrevNextNavigation
+          baseUrl={baseUrl}
+          routes={routes}
+          prevUrl={"/uker-assessment"}
+          nextUrl={"/penugasan"}
+        />
+      </div>
+      <div className="w-64"></div>
+      <Card>
+        <div className="w-full px-6 py-4 overflow-y-scroll max-h-[40rem]">
+          <TableTree>
+            <Headers>
+              <Header className="!hidden" />
+              <Header width="7%" className="border-x border-t rounded-ss-xl">
+                Review
+              </Header>
+              <Header width="6%" className="border-t border-r">
+                Aksi
+              </Header>
+              <Header width="27%" className="border-t border-r">
+                UKER, AKTIFITAS dan SUB-AKTIFITAS
+              </Header>
+              <Header
+                width="20%"
+                className="border-t border-r flex justify-center"
+              >
+                PIC
+              </Header>
+              <Header
+                width="8%"
+                className="border-t border-r flex justify-center"
+              >
+                Risk
+              </Header>
+              <Header
+                width="8%"
+                className="border-t border-r flex justify-center"
+              >
+                Analisa
+              </Header>
+              <Header
+                width="8%"
+                className="border-t border-r flex justify-center"
+              >
+                Status
+              </Header>
+              <Header
+                width="8%"
+                className="border-t border-r flex justify-center"
+              >
+                Approval
+              </Header>
+              <Header width="8%" className="border-t border-r rounded-se-xl">
+                Comment
+              </Header>
+            </Headers>
+            <Rows
+              items={planningAnalysisData}
+              render={({
+                id,
+                role,
+                parent_id,
+                kode,
+                name,
+                risk,
+                pic_pn,
+                pic_name,
+                status_approval_kode,
+                status_approval_name,
+                deskripsi,
+                children = [],
+              }) => (
+                <Row
+                  itemId={id}
+                  role={role}
+                  items={children}
+                  hasChildren={children.length > 0}
+                  isExpanded={Boolean(expansionMap[`${id}-${role}`])}
                 >
-                  PIC
-                </Header>
-                <Header
-                  width="8%"
-                  className="border-t border-r flex justify-center"
-                >
-                  Risk
-                </Header>
-                <Header
-                  width="8%"
-                  className="border-t border-r flex justify-center"
-                >
-                  Analisa
-                </Header>
-                <Header
-                  width="8%"
-                  className="border-t border-r flex justify-center"
-                >
-                  Status
-                </Header>
-                <Header
-                  width="8%"
-                  className="border-t border-r flex justify-center"
-                >
-                  Approval
-                </Header>
-                <Header width="8%" className="border-t border-r rounded-se-xl">
-                  Comment
-                </Header>
-              </Headers>
-              <Rows
-                items={planningAnalysisData}
-                render={({
-                  id,
-                  role,
-                  parent_id,
-                  kode,
-                  name,
-                  risk,
-                  pic_pn,
-                  pic_name,
-                  status_approval_kode,
-                  status_approval_name,
-                  deskripsi,
-                  children = [],
-                }) => (
-                  <Row
-                    itemId={id}
-                    role={role}
-                    items={children}
-                    hasChildren={children.length > 0}
-                    isExpanded={Boolean(expansionMap[`${id}-${role}`])}
+                  <Cell className="!hidden" />
+                  <Cell
+                    width="7%"
+                    className={`border-x cell-width-full-height-full`}
                   >
-                    <Cell className="!hidden" />
-                    <Cell width="7%" className="border-x">
+                    <div className={positionCenter}>
                       <CheckboxField />
-                    </Cell>
-                    <Cell width="6%" className="border-r">
-                      {levelMap[`${id}-${role}`] > 0 && (
+                    </div>
+                  </Cell>
+                  <Cell
+                    width="6%"
+                    className={`border-r cell-width-full-height-full`}
+                  >
+                    {levelMap[`${id}-${role}`] > 0 && (
+                      <div className={positionCenter}>
                         <ButtonIcon
                           icon={
-                            <div className="rounded-full border border-atlasian-red w-5 h-5 flex items-center justify-center p-1">
+                            <div className="rounded-full border border-atlasian-red w-5 h-5 p-1">
                               <Image src={ImageClose} alt="" />
                             </div>
                           }
@@ -388,160 +398,177 @@ const index = () => {
                               : handleDeleteSubActivity(id)
                           }
                         />
-                      )}
-                    </Cell>
-                    <Cell width="27%" className="border-r">
-                      <div
-                        className={`w-full flex pt-2 ${
-                          levelMap[`${id}-${role}`] === 1
-                            ? `ml-6`
-                            : levelMap[`${id}-${role}`] === 2
-                            ? `ml-12`
-                            : `ml-0`
-                        }`}
-                      >
-                        {children.length > 0 ? (
-                          <ButtonIcon
-                            handleClick={() =>
-                              toggleExpansion(id, role, kode, parent_id)
-                            }
-                            icon={
-                              expansionMap[`${id}-${role}`] ? (
-                                <IconChevronDown />
-                              ) : (
-                                <IconChevronRight />
-                              )
-                            }
-                          />
-                        ) : (
-                          <div className="ml-5" />
-                        )}
-                        <div className={`flex items-center gap-2 ml-2`}>
-                          <div
-                            className={`${
-                              levelMap[`${id}-${role}`] === 1
-                                ? `w-[12.7rem]`
-                                : levelMap[`${id}-${role}`] === 2
-                                ? `w-[11.4rem]`
-                                : `w-[14.5rem]`
-                            }`}
-                          >
-                            {`${kode} - ${name}`}
-                          </div>
-                          {levelMap[`${id}-${role}`] < 2 && (
-                            <>
-                              <ButtonIcon
-                                icon={<Image src={ImageGroup} alt="" />}
-                                handleClick={() =>
-                                  handleAddActivity(
-                                    id,
-                                    name,
-                                    parent_id,
-                                    kode,
-                                    role
-                                  )
-                                }
-                              />
-                              <ModalAddActivity
-                                showModal={showModalAddActivity}
-                                setShowModal={setShowModalAddActivitiy}
-                                mutate={mapaEWPMutate}
-                                ukerValue={selectedUker}
-                              />
-                              <ModalAddSubActivity
-                                showModal={showModalAddSubActivity}
-                                setShowModal={setShowModalAddSubActivitiy}
-                                mutate={mapaEWPMutate}
-                                activityId={selectedActivityId}
-                              />
-                            </>
-                          )}
-                        </div>
                       </div>
-                    </Cell>
-                    <Cell width="15%" className="border-r">
-                      {levelMap[`${id}-${role}`] === 2 && (
-                        <div className="w-36">{pic_name}</div>
-                      )}
-                    </Cell>
-                    <Cell
-                      width="5%"
-                      className="border-r flex justify-center items-center"
+                    )}
+                  </Cell>
+                  <Cell
+                    width="27%"
+                    className="border-r cell-width-full-height-full cell-custom-dataTables flex justify-between items-center"
+                  >
+                    <div
+                      className={`w-full flex pt-1 ${
+                        levelMap[`${id}-${role}`] === 1
+                          ? `pl-6`
+                          : levelMap[`${id}-${role}`] === 2
+                          ? `pl-12`
+                          : `pl-0`
+                      }`}
                     >
-                      {levelMap[`${id}-${role}`] === 2 && (
-                        <div className="flex justify-center items-center w-7">
-                          <ButtonIcon
-                            icon={<IconQuestions />}
-                            color={"blue"}
-                            handleClick={() => setShowModalDesc(true)}
-                          />
-                          <DescriptionModal
-                            showModal={showModalDesc}
-                            setShowModal={setShowModalDesc}
-                            value={deskripsi}
-                          />
-                        </div>
+                      {children.length > 0 ? (
+                        <ButtonIcon
+                          handleClick={() =>
+                            toggleExpansion(id, role, kode, parent_id)
+                          }
+                          icon={
+                            expansionMap[`${id}-${role}`] ? (
+                              <IconChevronDown />
+                            ) : (
+                              <IconChevronRight />
+                            )
+                          }
+                        />
+                      ) : (
+                        <div className="ml-5" />
                       )}
-                    </Cell>
-                    <Cell width="8%" className="border-r">
-                      {risk}
-                    </Cell>
-                    <Cell width="8%" className="border-r">
-                      {levelMap[`${id}-${role}`] === 2 && (
-                        <div className="-ml-4">
-                          <LozengeField appreance="inprogress" isBold={true}>
-                            <Link
-                              href={`/ewp/projects/konvensional/${routeParamId}/mapa/analisis-perencanaan/${kode}/${parent_id}`}
-                              className="text-white hover:text-white no-underline hover:no-underline"
-                            >
-                              Set Risk Issue
-                            </Link>
-                          </LozengeField>
-                        </div>
-                      )}
-                    </Cell>
-                    <Cell width="8%" className="border-r">
-                      {levelMap[`${id}-${role}`] === 2 && (
+                      <div
+                        className={`flex items-center w-full justify-between ml-2`}
+                      >
+                        <div>{`${kode} - ${name}`}</div>
+                        {levelMap[`${id}-${role}`] < 2 && (
+                          <>
+                            <ButtonIcon
+                              icon={<Image src={ImageGroup} alt="" />}
+                              handleClick={() =>
+                                handleAddActivity(
+                                  id,
+                                  name,
+                                  parent_id,
+                                  kode,
+                                  role
+                                )
+                              }
+                            />
+                            <ModalAddActivity
+                              showModal={showModalAddActivity}
+                              setShowModal={setShowModalAddActivitiy}
+                              mutate={mapaEWPMutate}
+                              ukerValue={selectedUker}
+                            />
+                            <ModalAddSubActivity
+                              showModal={showModalAddSubActivity}
+                              setShowModal={setShowModalAddSubActivitiy}
+                              mutate={mapaEWPMutate}
+                              activityId={selectedActivityId}
+                            />
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </Cell>
+                  <Cell
+                    width="15%"
+                    className="border-r cell-width-full-height-full cell-custom-dataTables"
+                  >
+                    {levelMap[`${id}-${role}`] === 2 && (
+                      <div className="w-full h-full flex items-center">
+                        {pic_name}
+                      </div>
+                    )}
+                  </Cell>
+                  <Cell
+                    width="5%"
+                    className="border-r cell-width-full-height-full cell-custom-dataTables"
+                  >
+                    {levelMap[`${id}-${role}`] === 2 && (
+                      <div className={positionCenter}>
+                        <ButtonIcon
+                          icon={<IconQuestions />}
+                          color={"blue"}
+                          handleClick={() => setShowModalDesc(true)}
+                        />
+                        <DescriptionModal
+                          showModal={showModalDesc}
+                          setShowModal={setShowModalDesc}
+                          value={deskripsi}
+                        />
+                      </div>
+                    )}
+                  </Cell>
+                  <Cell
+                    width="8%"
+                    className="border-r cell-width-full-height-full cell-custom-dataTables"
+                  >
+                    <div className={positionCenter}>{risk}</div>
+                  </Cell>
+                  <Cell
+                    width="8%"
+                    className="border-r cell-width-full-height-full cell-custom-dataTables"
+                  >
+                    {levelMap[`${id}-${role}`] === 2 && (
+                      <div className={positionCenter}>
+                        <LozengeField appreance="inprogress" isBold={true}>
+                          <Link
+                            href={`/ewp/projects/konvensional/${routeParamId}/mapa/analisis-perencanaan/${kode}/${parent_id}`}
+                            className="text-white hover:text-white no-underline hover:no-underline"
+                          >
+                            Set Risk Issue
+                          </Link>
+                        </LozengeField>
+                      </div>
+                    )}
+                  </Cell>
+                  <Cell
+                    width="8%"
+                    className="border-r cell-width-full-height-full cell-custom-dataTables"
+                  >
+                    {levelMap[`${id}-${role}`] === 2 && (
+                      <div className={positionCenter}>
                         <LozengeField appreance="removed" isBold={true}>
                           {status_approval_name}
                         </LozengeField>
-                      )}
-                    </Cell>
-                    <Cell width="8%" className="border-r">
-                      {levelMap[`${id}-${role}`] === 2 && (
-                        <div className="w-16 flex items-center">
-                          <LozengeField appreance="moved" isBold={true}>
-                            <div className="flex gap-1 py-0.5">
-                              <Image src={ImageCircleArrowYellow} alt="" />
-                              <div>Send</div>
-                            </div>
-                          </LozengeField>
-                        </div>
-                      )}
-                    </Cell>
-                    <Cell width="8%" className="border-r">
-                      {levelMap[`${id}-${role}`] === 2 && (
-                        <div className="flex justify-center items-center w-7">
-                          <ButtonIcon
-                            icon={<IconQuestions />}
-                            color={"blue"}
-                            handleClick={() => setShowModalDesc(true)}
-                          />
-                          <DescriptionModal
-                            showModal={showModalDesc}
-                            setShowModal={setShowModalDesc}
-                            value={deskripsi}
-                          />
-                        </div>
-                      )}
-                    </Cell>
-                  </Row>
-                )}
-              />
-            </TableTree>
-          </div>
-        </Card>
-      </div>
+                      </div>
+                    )}
+                  </Cell>
+                  <Cell
+                    width="8%"
+                    className="border-r cell-width-full-height-full cell-custom-dataTables"
+                  >
+                    {levelMap[`${id}-${role}`] === 2 && (
+                      <div className={positionCenter}>
+                        <LozengeField appreance="moved" isBold={true}>
+                          <div className="flex gap-1 py-0.5">
+                            <Image src={ImageCircleArrowYellow} alt="" />
+                            <div>Send</div>
+                          </div>
+                        </LozengeField>
+                      </div>
+                    )}
+                  </Cell>
+                  <Cell
+                    width="8%"
+                    className="border-r cell-width-full-height-full cell-custom-dataTables"
+                  >
+                    {levelMap[`${id}-${role}`] === 2 && (
+                      <div className={positionCenter}>
+                        <ButtonIcon
+                          icon={<IconQuestions />}
+                          color={"blue"}
+                          handleClick={() => setShowModalDesc(true)}
+                        />
+                        <DescriptionModal
+                          showModal={showModalDesc}
+                          setShowModal={setShowModalDesc}
+                          value={deskripsi}
+                        />
+                      </div>
+                    )}
+                  </Cell>
+                </Row>
+              )}
+            />
+          </TableTree>
+        </div>
+      </Card>
     </LandingLayoutEWP>
   );
 };

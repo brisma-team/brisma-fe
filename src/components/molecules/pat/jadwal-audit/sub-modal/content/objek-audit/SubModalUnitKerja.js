@@ -15,9 +15,9 @@ import {
 } from "@/components/icons";
 import {
   CardTypeCount,
-  InlineEditBranchSelect,
   OrgehSelect,
   DescriptionModal,
+  BranchSelect,
 } from "@/components/molecules/commons";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
@@ -335,9 +335,9 @@ const SubModalUnitKerja = ({ isDisabled }) => {
             </div>
             {showBranch && (
               <div className="w-40 mb-2">
-                <InlineEditBranchSelect
+                <BranchSelect
                   placeholder="Select an option"
-                  handleConfirm={handleAddUker}
+                  handleChange={handleAddUker}
                 />
               </div>
             )}

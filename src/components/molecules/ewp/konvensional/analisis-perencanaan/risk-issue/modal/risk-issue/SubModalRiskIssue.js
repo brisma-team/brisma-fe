@@ -16,10 +16,6 @@ const SubModalRiskIssue = ({ setCurrentModalStage, handleChange }) => {
   );
 
   useEffect(() => {
-    console.log("validationErrors => ", validationErrors);
-  }, [validationErrors]);
-
-  useEffect(() => {
     setCurrentModalStage(1);
   }, []);
 

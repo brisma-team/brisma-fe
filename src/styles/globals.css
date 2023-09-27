@@ -65,7 +65,7 @@
   padding-bottom: 6px !important;
 }
 
-.cell-width-full-height-full span {
+.cell-width-full-height-full .css-0 {
   width: 100%;
   height: 100%;
 }

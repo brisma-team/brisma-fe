@@ -5,13 +5,26 @@ import {
   RealizationTable,
 } from "@/components/molecules/ewp/konvensional/info";
 import { useAuditorEWP } from "@/data/ewp/konvensional";
+import { errorSwalTimeout } from "@/helpers";
 import { LandingLayoutEWP } from "@/layouts/ewp";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const index = () => {
   const { id } = useRouter().query;
 
-  const { auditorEWP } = useAuditorEWP({ id });
+  const [isError, setIsError] = useState(false);
+  const { auditorEWP, auditorEWPError } = useAuditorEWP({ id });
+
+  useEffect(() => {
+    if (auditorEWPError) {
+      setIsError(true);
+    }
+  }, [auditorEWPError]);
+
+  if (isError) {
+    errorSwalTimeout(auditorEWPError, "/ewp/projects/konvensional");
+  }
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },

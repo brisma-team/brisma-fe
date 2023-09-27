@@ -2,12 +2,17 @@ import { useMapaEWP } from "@/data/ewp/konvensional/mapa";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useEffect } from "react";
+import Select from "@atlaskit/select";
 
-const { Select } = require("@/components/atoms");
-
-const SelectAuditTeamEWP = ({ selectedValue, handleChange, placeholder }) => {
+const SelectAuditTeamEWP = ({
+  selectedValue,
+  handleChange,
+  placeholder,
+  width,
+}) => {
   const { id } = useRouter().query;
   const { mapaEWP } = useMapaEWP("tim_audit", { id });
+  const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
 
   const arrUser = [];
@@ -25,13 +30,25 @@ const SelectAuditTeamEWP = ({ selectedValue, handleChange, placeholder }) => {
     setOptions(arrUser.flat());
   }, [mapaEWP]);
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
-    <Select
-      optionValue={options}
-      value={selectedValue}
-      onChange={handleChange}
-      placeholder={placeholder}
-    />
+    <div className={`${open ? "z-50 absolute" : ""} ${width && width}`}>
+      <Select
+        options={options}
+        value={selectedValue}
+        onChange={handleChange}
+        placeholder={placeholder}
+        onMenuOpen={handleOpen}
+        onMenuClose={handleClose}
+      />
+    </div>
   );
 };
 

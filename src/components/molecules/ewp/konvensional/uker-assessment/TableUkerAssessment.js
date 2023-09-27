@@ -4,12 +4,8 @@ import {
   InlineEditText,
 } from "@/components/atoms";
 import { IconCrossCircle, IconInfo, IconQuestions } from "@/components/icons";
-import {
-  InlineEditOrgehSelect,
-  UkerTypeSelect,
-} from "@/components/molecules/commons";
+import { OrgehSelect, UkerTypeSelect } from "@/components/molecules/commons";
 import { setUkerAssessmentData } from "@/slices/ewp/konvensional/mapa/ukerAssessmentMapaEWPSlice";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const TableUkerAssessment = ({
@@ -18,8 +14,6 @@ const TableUkerAssessment = ({
   setOpenDescIdx,
 }) => {
   const dispatch = useDispatch();
-  const [openOrgehIdx, setOpenOrgehIdx] = useState(null);
-  const [openTipeUkerIdx, setOpenTipeUkerIdx] = useState(null);
   const validationErrors = useSelector(
     (state) => state.ukerAssessmentMapaEWP.validationErrors
   );
@@ -41,8 +35,6 @@ const TableUkerAssessment = ({
     newData.splice(idx, 1);
     dispatch(setUkerAssessmentData(newData));
   };
-
-  //   console.log("countTypeUker => ", countTypeUker);
 
   return (
     <div className="border-2 border-[#DFE1E6] rounded-xl overflow-y-scroll font-bold text-sm">
@@ -86,58 +78,42 @@ const TableUkerAssessment = ({
                     />
                   </div>
                 </div>
-                <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center justify-center text-justify px-2 pb-1">
-                  <div
-                    className={`-mt-0.5 ${
-                      i == openOrgehIdx ? `z-20 absolute w-[22rem]` : `w-full`
-                    }`}
-                  >
-                    <InlineEditOrgehSelect
-                      placeholder="Select an option"
-                      handleConfirm={(e) => handleChangeOrgeh(e, i)}
-                      value={{
-                        label: v.ref_auditee_orgeh_name,
-                        value: {
-                          orgeh_kode: v.ref_auditee_orgeh_kode,
-                          orgeh_name: v.ref_auditee_orgeh_name,
-                        },
-                      }}
-                      handleMenuOpen={() => setOpenOrgehIdx(i)}
-                      handleMenuClose={() => setOpenOrgehIdx(null)}
-                    />
-                    {validationErrors[`[${i}].ref_auditee_orgeh_kode`] && (
-                      <div className="px-1 py-0.5">
-                        <ErrorValidation
-                          message={
-                            validationErrors[`[${i}].ref_auditee_orgeh_kode`]
-                          }
-                        />
-                      </div>
-                    )}
-                  </div>
+                <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center justify-center text-justify px-2 py-1">
+                  <OrgehSelect
+                    width="w-[20rem]"
+                    handleChange={(e) => handleChangeOrgeh(e.value, i)}
+                    selectedValue={{
+                      label: v.ref_auditee_orgeh_name,
+                      value: {
+                        orgeh_kode: v.ref_auditee_orgeh_kode,
+                        orgeh_name: v.ref_auditee_orgeh_name,
+                      },
+                    }}
+                    positionAbsolute={true}
+                  />
+                  {validationErrors[`[${i}].ref_auditee_orgeh_kode`] && (
+                    <div className="px-1 py-0.5">
+                      <ErrorValidation
+                        message={
+                          validationErrors[`[${i}].ref_auditee_orgeh_kode`]
+                        }
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[13%] flex justify-center items-center px-2 py-1">
-                  <div
-                    className={
-                      i == openTipeUkerIdx ? `z-20 absolute w-[7.5%]` : `w-full`
-                    }
-                  >
-                    <UkerTypeSelect
-                      handleChange={(e) =>
-                        handleChange("tipe_uker", i, e.value)
-                      }
-                      selectedValue={v.tipe_uker}
-                      handleMenuOpen={() => setOpenTipeUkerIdx(i)}
-                      handleMenuClose={() => setOpenTipeUkerIdx(null)}
-                    />
-                    {validationErrors[`[${i}].tipe_uker`] && (
-                      <div className="px-1 py-0.5">
-                        <ErrorValidation
-                          message={validationErrors[`[${i}].tipe_uker`]}
-                        />
-                      </div>
-                    )}
-                  </div>
+                  <UkerTypeSelect
+                    width="w-[8rem]"
+                    handleChange={(e) => handleChange("tipe_uker", i, e.value)}
+                    selectedValue={v.tipe_uker}
+                  />
+                  {validationErrors[`[${i}].tipe_uker`] && (
+                    <div className="px-1 py-0.5">
+                      <ErrorValidation
+                        message={validationErrors[`[${i}].tipe_uker`]}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[14%] flex items-center justify-center px-2 pb-1.5">
                   <div className="w-full">

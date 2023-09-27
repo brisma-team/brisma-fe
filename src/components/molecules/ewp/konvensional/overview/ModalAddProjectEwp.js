@@ -116,12 +116,6 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
       schemaMappings[isPat][currentModalStage]
     );
 
-    // console.log("validate => ", validate);
-    // console.log("isPat => ", isPat);
-
-    // console.log("schemaMappings => ", schemaMappings[isPat][currentModalStage]);
-    // console.log("currentModalStage => ", currentModalStage);
-
     if (validate) {
       setCurrentModalStage(currentModalStage + 1);
     }
@@ -155,22 +149,19 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
           id: "step-1",
           label: <span>Sumber</span>,
           percentageComplete: currentModalStage > 1 ? 100 : 0,
-          status: currentModalStage === 1 ? "current" : "unvisited",
-          href: "#",
+          status: currentModalStage === 1 ? "current" : "visited",
         },
         {
           id: "step-2",
           label: <span>Jadwal</span>,
           percentageComplete: currentModalStage > 2 ? 100 : 0,
-          status: currentModalStage === 2 ? "current" : "unvisited",
-          href: "#",
+          status: currentModalStage === 2 ? "current" : "visited",
         },
         {
           id: "step-3",
           label: <span>Ringkasan</span>,
           percentageComplete: 0,
-          status: currentModalStage === 3 ? "current" : "unvisited",
-          href: "#",
+          status: currentModalStage === 3 ? "current" : "visited",
         },
       ];
     } else {
@@ -179,29 +170,25 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
           id: "step-4",
           label: <span>Sumber</span>,
           percentageComplete: currentModalStage > 1 ? 100 : 0,
-          status: currentModalStage === 1 ? "current" : "unvisited",
-          href: "#",
+          status: currentModalStage === 1 ? "current" : "visited",
         },
         {
           id: "step-5",
           label: <span>Jadwal</span>,
           percentageComplete: currentModalStage > 2 ? 100 : 0,
-          status: currentModalStage === 2 ? "current" : "unvisited",
-          href: "#",
+          status: currentModalStage === 2 ? "current" : "visited",
         },
         {
           id: "step-6",
           label: <span>Surat</span>,
           percentageComplete: currentModalStage > 3 ? 100 : 0,
-          status: currentModalStage === 3 ? "current" : "unvisited",
-          href: "#",
+          status: currentModalStage === 3 ? "current" : "visited",
         },
         {
           id: "step-7",
           label: <span>Ringkasan</span>,
           percentageComplete: 0,
-          status: currentModalStage === 4 ? "current" : "unvisited",
-          href: "#",
+          status: currentModalStage === 4 ? "current" : "visited",
         },
       ];
     }

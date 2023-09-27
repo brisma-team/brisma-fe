@@ -10,7 +10,9 @@ const SubActivitySelect = ({
   fieldsProps,
   customIcon,
   activityId,
+  width,
 }) => {
+  const [open, setOpen] = useState(false);
   const [optionValue, setOptionValue] = useState([]);
 
   const { subActivity } = useSubActivity(activityId);
@@ -24,6 +26,14 @@ const SubActivitySelect = ({
     setOptionValue(mapping);
   }, [subActivity]);
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const DropdownIndicator = (props) => {
     return (
       <components.DropdownIndicator {...props}>
@@ -32,15 +42,19 @@ const SubActivitySelect = ({
     );
   };
   return (
-    <Select
-      {...fieldsProps}
-      placeholder={placeholder}
-      options={optionValue}
-      onChange={handleChange}
-      isSearchable={isSearchable}
-      value={selectedValue}
-      components={customIcon && { DropdownIndicator }}
-    />
+    <div className={`${open ? "z-50 absolute" : ""} ${width && width}`}>
+      <Select
+        {...fieldsProps}
+        placeholder={placeholder}
+        options={optionValue}
+        onChange={handleChange}
+        isSearchable={isSearchable}
+        value={selectedValue}
+        components={customIcon && { DropdownIndicator }}
+        onMenuOpen={handleOpen}
+        onMenuClose={handleClose}
+      />
+    </div>
   );
 };
 
