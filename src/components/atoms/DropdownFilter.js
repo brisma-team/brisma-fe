@@ -28,7 +28,7 @@ const DropdownFilter = ({
 
   return (
     <div
-      className="py-2 rounded flex flex-col items-center fixed z-10  bg-white"
+      className="py-2 rounded flex flex-col items-center absolute z-10  bg-white"
       style={{
         color: token("color.text", N800),
         borderRadius: "10px",

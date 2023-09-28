@@ -42,7 +42,7 @@ const Modal = ({
               !positionCenter
                 ? "min-h-full max-h-[55rem] overflow-y-scroll"
                 : "justify-center items-center min-h-screen"
-            }`}
+            } overflow-x-hidden`}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{

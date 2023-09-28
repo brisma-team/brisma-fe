@@ -4,7 +4,7 @@ export default async function withTokenFetcher(url) {
   const { headers } = withTokenConfig();
   const response = await fetch(url, { method: "GET", headers }).then((res) => {
     if (!res.ok) {
-      throw new Error("Network response was not ok");
+      throw new Error(res?.statusText || "Network response was not ok");
     }
     return res.json();
   });

@@ -18,12 +18,14 @@ const SubModalAuditCriteria = ({ setCurrentModalStage, handleChange }) => {
       <div className="px-3 pb-2 h-full">
         <p className="font-bold text-xl text-brisma">Kriteria Audit</p>
         <div className="my-2" />
-        <Editor
-          contentData={payloadRiskIssue.kriteria}
-          disabled={false}
-          ready={true}
-          onChange={(value) => handleChange("kriteria", value)}
-        />
+        <div className="ckeditor-modal-set-risk-issue">
+          <Editor
+            contentData={payloadRiskIssue.kriteria}
+            disabled={false}
+            ready={true}
+            onChange={(value) => handleChange("kriteria", value)}
+          />
+        </div>
       </div>
     </div>
   );

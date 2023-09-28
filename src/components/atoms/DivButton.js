@@ -7,7 +7,7 @@ const DivButton = ({ className, handleClick, children }) => {
   };
 
   return (
-    <span
+    <div
       role="button"
       tabIndex={0}
       className={className}
@@ -19,7 +19,7 @@ const DivButton = ({ className, handleClick, children }) => {
       }}
     >
       {children}
-    </span>
+    </div>
   );
 };
 

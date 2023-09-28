@@ -96,43 +96,35 @@ const index = () => {
         status: mapaStatusEWP?.data?.doc_mapa ? "success" : "failed",
         url: `/ewp/projects/konvensional/${id}/mapa/dokumen-mapa`,
       },
-      {
-        title: "Surat Perintah Audit",
-        description: "Generate Documents dan approval.",
-        status: mapaStatusEWP?.data?.pic_document ? "success" : "failed",
-        url: `/ewp/projects/konvensional/${id}/mapa/surat-perintah-audit`,
-      },
     ]);
   }, [mapaStatusEWP]);
 
   return (
     <LandingLayoutEWP>
-      <div className="w-[71.5rem]">
-        {/* Start Breadcrumbs */}
-        <Breadcrumbs data={breadcrumbs} />
-        {/* End Breadcrumbs */}
-        <div className="flex justify-between items-center mb-7">
-          <PageTitle text="Memorandom Analisis Perancanaan Audit" />
-          <div className="my-3 w-40 bg-atlasian-red rounded">
-            <ButtonField text="Perubahan MAPA" />
-          </div>
+      {/* Start Breadcrumbs */}
+      <Breadcrumbs data={breadcrumbs} />
+      {/* End Breadcrumbs */}
+      <div className="flex justify-between items-center mb-7">
+        <PageTitle text="Memorandom Analisis Perancanaan Audit" />
+        <div className="my-3 w-40 bg-atlasian-red rounded">
+          <ButtonField text="Perubahan MAPA" />
         </div>
-        {/* Start Content */}
-        <div className="grid grid-cols-4 my-4 -mx-3">
-          {data.map((v, i) => {
-            return (
-              <CardLanding
-                key={i}
-                title={v.title}
-                description={v.description}
-                status={v.status}
-                url={v.url}
-              />
-            );
-          })}
-        </div>
-        {/* End Content */}
       </div>
+      {/* Start Content */}
+      <div className="grid grid-cols-4 my-4 -mx-3">
+        {data.map((v, i) => {
+          return (
+            <CardLanding
+              key={i}
+              title={v.title}
+              description={v.description}
+              status={v.status}
+              url={v.url}
+            />
+          );
+        })}
+      </div>
+      {/* End Content */}
     </LandingLayoutEWP>
   );
 };

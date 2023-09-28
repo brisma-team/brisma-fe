@@ -43,7 +43,7 @@ const ModalBodySchedulePAT = ({ setCurrentModalStage, setDifferentKTA }) => {
     ref_tema: "",
   });
 
-  const yearPAT = useOverviewEWP("tahun_pat", { pages: 1, limit: 1 });
+  const yearPAT = useOverviewEWP("tahun_pat", {});
   const { overviewEWP, overviewEWPMutate } = useOverviewEWP("jadwal_pat", {
     ...params,
     pages: currentPage,

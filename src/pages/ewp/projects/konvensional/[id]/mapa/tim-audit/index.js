@@ -67,37 +67,33 @@ const index = () => {
 
   return (
     <LandingLayoutEWP>
-      <div className="w-[80.5rem]">
-        {/* Start Breadcrumbs */}
-        <Breadcrumbs data={breadcrumbs} />
-        {/* End Breadcrumbs */}
-        <div className="flex justify-between items-center mb-6">
-          <PageTitle text="Tim Audit" />
-          <PrevNextNavigation
-            baseUrl={baseUrl}
-            routes={routes}
-            prevUrl={"/sumber-informasi"}
-            nextUrl={"/uker-assessment"}
-          />
-        </div>
-        <div className="mt-7">
-          <Card>
-            <CardAuditTeam />
-          </Card>
-          <form
-            className="w-full flex justify-end mt-4"
-            onSubmit={handleSubmit}
-          >
-            <div className="w-28 h-8 bg-atlasian-green rounded">
-              <ButtonField
-                text={"Simpan"}
-                type={"submit"}
-                name={"save"}
-                handler={handleSubmit}
-              />
-            </div>
-          </form>
-        </div>
+      {/* Start Breadcrumbs */}
+      <Breadcrumbs data={breadcrumbs} />
+      {/* End Breadcrumbs */}
+      <div className="flex justify-between items-center mb-6">
+        <PageTitle text="Tim Audit" />
+        <PrevNextNavigation
+          baseUrl={baseUrl}
+          routes={routes}
+          prevUrl={"/pemetaan-prioritas"}
+          nextUrl={"/uker-assessment"}
+          marginLeft={"-60px"}
+        />
+      </div>
+      <div className="mt-7 w-[80.5rem]">
+        <Card>
+          <CardAuditTeam />
+        </Card>
+        <form className="w-full flex justify-end mt-4" onSubmit={handleSubmit}>
+          <div className="w-28 h-8 bg-atlasian-green rounded">
+            <ButtonField
+              text={"Simpan"}
+              type={"submit"}
+              name={"save"}
+              handler={handleSubmit}
+            />
+          </div>
+        </form>
       </div>
     </LandingLayoutEWP>
   );

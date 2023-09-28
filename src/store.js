@@ -12,6 +12,7 @@ import latarBelakangReducer from "./slices/pat/latarBelakangSlice";
 import sumberInformasiReducer from "./slices/pat/sumberInformasiSlice";
 
 // EWP
+import auditorInfoEWPReducer from "./slices/ewp/auditorInfoEWPSlice";
 import projectOverviewEWPReducer from "./slices/ewp/projectOverviewEWPSlice";
 import auditTeamMapaEWPReducer from "./slices/ewp/konvensional/mapa/auditTeamMapaEWPSlice";
 import ukerAssessmentMapaEWPReducer from "./slices/ewp/konvensional/mapa/ukerAssessmentMapaEWPSlice";
@@ -38,6 +39,7 @@ export const store = configureStore({
     documentPAT: documentPATReducer,
     latarBelakang: latarBelakangReducer,
     sumberInformasi: sumberInformasiReducer,
+    auditorInfoEWP: auditorInfoEWPReducer,
     projectOverviewEWP: projectOverviewEWPReducer,
     auditTeamMapaEWP: auditTeamMapaEWPReducer,
     ukerAssessmentMapaEWP: ukerAssessmentMapaEWPReducer,

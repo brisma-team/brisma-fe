@@ -19,6 +19,7 @@ import setErrorValidation from "./setErrorValidation";
 import copyToClipboard from "./copyToClipboard";
 import errorSwalTimeout from "./errorSwalTimeout";
 import dateNow from "./dateNow";
+import findDataFromArray from "./findDataFromArray";
 
 export {
   loadingSwal,
@@ -42,4 +43,5 @@ export {
   copyToClipboard,
   errorSwalTimeout,
   dateNow,
+  findDataFromArray,
 };

@@ -9,6 +9,7 @@ import TableTree, {
   Rows,
 } from "@atlaskit/table-tree";
 import { IconEdit } from "@/components/icons";
+import { DataNotFound } from "@/components/molecules/commons";
 
 const ContentSampleCSV = ({ data, setCurrentModalStage }) => {
   const payloadRiskIssue = useSelector(
@@ -18,56 +19,64 @@ const ContentSampleCSV = ({ data, setCurrentModalStage }) => {
     setCurrentModalStage(1);
   }, []);
 
-  // const data = [
-  //   {
-  //     sample_name: "Sampling BRISMA 2.0.2 2023-001.csv",
-  //     total_row: "65",
-  //     total_sample: "5",
-  //   },
-  // ];
+  const customHeader = `w-full h-full flex items-center text-brisma font-bold`;
+  const customCell = `cell-width-full-height-full cell-custom-dataTables`;
+  const positionCenter = `w-full h-full flex justify-center items-center`;
 
   return (
     <div className="w-full p-4 overflow-y-scroll max-h-[40rem]">
       <TableTree>
         <Headers>
           <Header width="13%" className="border-x border-t rounded-ss-xl">
-            <p className="font-bold text-brisma">Aksi</p>
+            <div className={`${customHeader} justify-center text-center`}>
+              Aksi
+            </div>
           </Header>
           <Header width="57%" className="border-t border-r">
-            <p className="font-bold text-brisma">Nama File Sample</p>
+            <div className={customHeader}>Nama File Sample</div>
           </Header>
           <Header width="15%" className="border-t border-r">
-            <p className="font-bold text-brisma">Jumlah Baris</p>
+            <div className={`${customHeader} justify-center text-center`}>
+              Jumlah Baris
+            </div>
           </Header>
           <Header width="15%" className="border-t border-r rounded-se-xl">
-            <p className="font-bold text-brisma">Jumlah Sample</p>
+            <div className={`${customHeader} justify-center text-center`}>
+              Jumlah Sample
+            </div>
           </Header>
         </Headers>
-        <Rows
-          items={data}
-          render={({ directory, filename, jumlah_baris, jumlah_sample }) => (
-            <Row>
-              <Cell width="13%" className="border-x">
-                <div className="flex gap-0.5 -ml-2.5">
-                  <CheckboxField />
-                  <ButtonIcon
-                    icon={<IconEdit size="medium" />}
-                    color="yellow"
-                  />
-                </div>
-              </Cell>
-              <Cell width="57%" className="border-r">
-                <p className="text-xs">{filename}</p>
-              </Cell>
-              <Cell width="15%" className="border-r">
-                <p className="text-xs">{jumlah_baris}</p>
-              </Cell>
-              <Cell width="15%" className="border-r">
-                <p className="text-xs">{jumlah_sample}</p>
-              </Cell>
-            </Row>
-          )}
-        />
+        {data?.length ? (
+          <Rows
+            items={data}
+            render={({ directory, filename, jumlah_baris, jumlah_sample }) => (
+              <Row>
+                <Cell width="13%" className={`border-x ${customCell}`}>
+                  <div className="flex gap-0.5 -ml-2.5">
+                    <CheckboxField />
+                    <ButtonIcon
+                      icon={<IconEdit size="medium" />}
+                      color="yellow"
+                    />
+                  </div>
+                </Cell>
+                <Cell width="57%" className={`border-r ${customCell}`}>
+                  <p className="text-xs">{filename}</p>
+                </Cell>
+                <Cell width="15%" className={`border-r ${customCell}`}>
+                  <p className="text-xs">{jumlah_baris}</p>
+                </Cell>
+                <Cell width="15%" className={`border-r ${customCell}`}>
+                  <p className="text-xs">{jumlah_sample}</p>
+                </Cell>
+              </Row>
+            )}
+          />
+        ) : (
+          <div className="w-full border-x border-b rounded-es-xl rounded-ee-xl pb-4">
+            <DataNotFound />
+          </div>
+        )}
       </TableTree>
     </div>
   );

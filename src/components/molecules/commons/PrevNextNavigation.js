@@ -7,7 +7,13 @@ import {
 import Button from "@atlaskit/button";
 import { DropdownFilter, LinkIcon } from "@/components/atoms";
 
-const PrevNextNavigation = ({ baseUrl, routes, prevUrl, nextUrl }) => {
+const PrevNextNavigation = ({
+  baseUrl,
+  routes,
+  prevUrl,
+  nextUrl,
+  marginLeft,
+}) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const ref = useRef(null);
 
@@ -43,8 +49,8 @@ const PrevNextNavigation = ({ baseUrl, routes, prevUrl, nextUrl }) => {
           />
           {showDropdown && (
             <div
-              className="mt-2 flex flex-col w-40"
-              style={{ marginLeft: "-90px" }}
+              className="mt-2 flex flex-col w-40 fixed"
+              style={{ marginLeft: marginLeft || "-90px" }}
             >
               <DropdownFilter
                 show={showDropdown}

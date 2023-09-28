@@ -8,7 +8,6 @@ import {
 } from "@/components/molecules/pat/dokumen";
 import Image from "next/image";
 import { ImageChat } from "@/helpers/imagesUrl";
-import { PatLandingLayout } from "@/layouts/pat";
 import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
 import {
@@ -20,17 +19,25 @@ import {
 import { useRouter } from "next/router";
 import { getAuditTeamTable } from "@/helpers/templates/auditTeam";
 import { getAuditTargetTable } from "@/helpers/templates/auditTarget";
+import { LandingLayoutEWP } from "@/layouts/ewp";
 
 const routes = [
   {
-    name: "Latar Belakang dan Tujuan",
-    slug: "latar-belakang-dan-tujuan",
+    name: "Latar Belakang",
+    slug: "latar-belakang",
+  },
+  {
+    name: "Tujuan",
+    slug: "tujuan",
   },
   { name: "Sumber Informasi", slug: "sumber-informasi" },
   { name: "Tim Audit", slug: "tim-audit" },
-  { name: "Target Audit", slug: "ringkasan-objek-audit" },
+  { name: "UKER Assessment", slug: "uker-assessment" },
+  { name: "Analisis", slug: "analisis" },
+  { name: "Penugasan", slug: "penugasan" },
   { name: "Jadwal Audit", slug: "jadwal-audit" },
-  { name: "Jadwal Kegiatan", slug: "jadwal-kegiatan" },
+  { name: "Anggaran", slug: "anggaran" },
+  { name: "Dokumen", slug: "dokumen" },
 ];
 
 const index = () => {
@@ -217,7 +224,7 @@ const index = () => {
   };
 
   return (
-    <PatLandingLayout content={content} data={statusPat?.data}>
+    <LandingLayoutEWP content={content} data={statusPat?.data}>
       <Breadcrumbs data={breadcrumbs} />
       <div className="flex justify-between items-center mb-6">
         <PageTitle text={"Dokumen"} />
@@ -348,7 +355,7 @@ const index = () => {
         </div>
       </div>
       {/* End Content */}
-    </PatLandingLayout>
+    </LandingLayoutEWP>
   );
 };
 
