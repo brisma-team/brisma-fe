@@ -39,7 +39,6 @@ const index = () => {
               <div className="">
                 <Button
                   href={"/catalogue/ewp/" + id + "/kkpa/" + data.KKPAID}
-                  prefetch={true}
                   shouldFitContainer
                   isDisabled
                   appearance="primary"

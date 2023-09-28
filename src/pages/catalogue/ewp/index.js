@@ -61,7 +61,6 @@ const index = () => {
                   "x1c-" +
                   searchParamObject.year
                 }
-                prefetch={true}
               >
                 <Button
                   shouldFitContainer
