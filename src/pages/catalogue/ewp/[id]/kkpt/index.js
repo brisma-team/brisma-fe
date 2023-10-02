@@ -28,10 +28,10 @@ const index = () => {
 
   useEffect(() => {
     if (kkptList != undefined) {
-      const mappingKKPT = kkptList.data.map((data, key) => {
+      const mappingKKPT = kkptList.data.kkpt_list.map((data, key) => {
         return {
           No: key + 1,
-          "Judul KKPT": "Judul KKPT",
+          "Judul KKPT": data.KKPTTitle,
           Aktivitas: data.Activity,
           "Sub Aktivitas": data.SubActivity,
           "Sub Major": data.SubMajorCode + " - " + data.SubMajor,
@@ -78,6 +78,7 @@ const index = () => {
                 <TableField
                   headers={[
                     "No",
+                    "Judul KKPT",
                     "Aktivitas",
                     "Sub Aktivitas",
                     "Sub Major",
@@ -85,7 +86,16 @@ const index = () => {
                     "Auditor",
                     "Aksi",
                   ]}
-                  columnWidths={["5%", "8%", "20%", "25%", "10%", "17%", "15%"]}
+                  columnWidths={[
+                    "3%",
+                    "20%",
+                    "8%",
+                    "12%",
+                    "20%",
+                    "10%",
+                    "15%",
+                    "12%",
+                  ]}
                   items={kkpt}
                 />
               </div>

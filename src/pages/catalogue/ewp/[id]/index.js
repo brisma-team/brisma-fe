@@ -127,7 +127,7 @@ const index = () => {
 
   useEffect(() => {
     if (ewpDetailData != undefined) {
-      const mappingCatEwp = ewpDetailData.data.map((v, key) => {
+      const mappingCatEwp = ewpDetailData.data.all_attachment.map((v, key) => {
         const datePart = v?.CreatedAt.split(".")[0];
         return {
           No: key + 1,

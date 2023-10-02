@@ -28,12 +28,16 @@ const index = () => {
 
   useEffect(() => {
     if (kkpaList != undefined) {
-      const mappingKKPA = kkpaList.data.map((data, key) => {
+      const mappingKKPA = kkpaList.data.kkpa_list.map((data, key) => {
         const datePart = data?.CreatedAt.split(".")[0];
         return {
           No: key + 1,
-          "Judul KKPA": data.KKPAName,
-          "Tanggal Dibuat": datePart,
+          "Judul KKPT": "Judul KKPT",
+          Aktivitas: data.Activity,
+          "Sub Aktivitas": data.SubActivity,
+          "Sub Major": data.SubMajorCode + " - " + data.SubMajor,
+          "Risk Issue": data.RiskIssueCode,
+          Auditor: data.PICAuditorPN + " - " + data.PICAuditorName,
           Aksi: (
             <div className="text-center col-span-3">
               <div className="">
@@ -74,8 +78,16 @@ const index = () => {
               </Link>
               <div className="max-h-[29rem] overflow-y-scroll mb-5">
                 <TableField
-                  headers={["No", "Judul KKPA", "Tanggal Dibuat", "Aksi"]}
-                  columnWidths={["5%", "35%", "30%", "30%"]}
+                  headers={[
+                    "No",
+                    "Aktivitas",
+                    "Sub Aktivitas",
+                    "Sub Major",
+                    "Risk Issue",
+                    "Auditor",
+                    "Aksi",
+                  ]}
+                  columnWidths={["5%", "8%", "20%", "25%", "10%", "17%", "15%"]}
                   items={kkpa}
                 />
               </div>
