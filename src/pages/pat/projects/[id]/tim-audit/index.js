@@ -139,6 +139,8 @@ const index = () => {
           routes={routes}
           prevUrl={"/sumber-informasi"}
           nextUrl={"/jadwal-audit"}
+          marginLeft={"-90px"}
+          widthDropdown={"w-56"}
         />
       </div>
       {/* Start Filter */}
@@ -201,6 +203,7 @@ const index = () => {
                   setShowModal={setShowModal}
                   isMutate={auditTeamMutate}
                   setTypeModal={setTypeModal}
+                  typeModal={typeModal}
                 />
               );
             })}
