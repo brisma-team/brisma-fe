@@ -7,6 +7,9 @@ import Button from "@atlaskit/button";
 import { loadingSwal, successSwal } from "@/helpers";
 import usePostKKPTQuery from "@/helpers/usePostKKPTQuery";
 import shortenWord from "@/helpers/shortenWord";
+import CodeMirror from "@uiw/react-codemirror";
+import { StandardSQL, sql } from "@codemirror/lang-sql";
+import { xcodeLight } from "@uiw/codemirror-theme-xcode";
 // import * as XLSX from "xlsx";
 
 const index = () => {
@@ -125,6 +128,13 @@ const index = () => {
       "Tipe Data": "Int32",
     },
   ];
+
+  // It works, but it's supposed to accomodate whole schema, not just columns.
+  const colObject = {};
+  few.forEach((v) => {
+    colObject[v["Nama Kolom"]] = []
+  });
+
   // const exportToExcel = () => {
   //   const dataToExport = [...dataList]; // Data yang akan diekspor
 
@@ -164,10 +174,7 @@ const index = () => {
           "Sub Aktivitas": v?.SubActivity,
           Aksi: (
             <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
-              <Link
-                href={"/catalogue/advance-filter/kkpt/" + v?.KKPTID}
-                prefetch={false}
-              >
+              <Link href={"/catalogue/advance-filter/kkpt/" + v?.KKPTID}>
                 <Button
                   shouldFitContainer
                   iconBefore={
@@ -231,13 +238,37 @@ const index = () => {
                 </div>
               </div>
             </div>
-            <textarea
+            <div 
+              className="p-6 w-full h-full rounded-lg border-[1.5px] border-[#83606025]" 
+              style={{ boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.20)" }}
+            >
+              <CodeMirror  
+                value="audityear = ..."
+                height="300px" 
+                theme={xcodeLight}
+                extensions={[ 
+                  sql({ 
+                    upperCaseKeywords: true,
+                    dialect: StandardSQL,
+                    schema: colObject
+                  })
+                ]}
+                onChange={(e) => setWhereClause(e)}
+                basicSetup={{
+                  lineNumbers: false,
+                  foldGutter: false,
+                  highlightActiveLine: false,
+                }}
+              />
+            </div>
+            {/* <textarea
               rows={10}
               placeholder="Masukkan batasan data yang diperlukan..."
               className="p-6 w-full h-full rounded-lg border-[1.5px] border-[#83606025]"
               onChange={(e) => setWhereClause(e.target.value)}
               style={{ boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.20)" }}
-            ></textarea>
+            >
+            </textarea> */}
           </div>
         </div>
         <div className="mt-5 mr-40 flex gap-1">

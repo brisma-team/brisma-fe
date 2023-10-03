@@ -26,7 +26,6 @@ const CustomHome = () => (
         width={1000}
         height={0}
         alt="test"
-        priority={true}
       ></Image>
     </Link>
   </div>

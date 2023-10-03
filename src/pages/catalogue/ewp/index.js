@@ -38,10 +38,12 @@ const index = () => {
 
   useEffect(() => {
     if (ewpData != undefined) {
-      const mappingCatEwp = ewpData.data
+      const mappingCatEwp = ewpData.data.ewp_list
         .filter(
           (list) =>
-            list.ProjectID.toLowerCase().includes(searchFilter.toLowerCase()) ||
+            list.ProjectID.toString()
+              .toLowerCase()
+              .includes(searchFilter.toLowerCase()) ||
             list.ProjectName.toLowerCase().includes(searchFilter.toLowerCase())
         )
         .map((EwpList, key) => ({
@@ -61,7 +63,6 @@ const index = () => {
                   "x1c-" +
                   searchParamObject.year
                 }
-                prefetch={true}
               >
                 <Button
                   shouldFitContainer

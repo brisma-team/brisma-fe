@@ -2513,7 +2513,7 @@ const index = ({ data = rpmData }) => {
         Auditee: v?.rpm.pic_auditee.name,
         Aksi: (
           <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
-            <Link href={"/catalogue/rpm/" + v.rpm.project_id} prefetch={true}>
+            <Link href={"/catalogue/rpm/" + v.rpm.project_id}>
               <Button
                 shouldFitContainer
                 iconBefore={

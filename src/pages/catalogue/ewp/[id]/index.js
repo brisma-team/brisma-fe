@@ -38,6 +38,24 @@ const index = () => {
       isDisabled: true,
     },
     {
+      jenis: "Entrance Attendance",
+      jumlah: "-----",
+      url: `${id}/entrance-attendance`,
+      isDisabled: true,
+    },
+    {
+      jenis: "Entrance Notulen",
+      jumlah: "-----",
+      url: `${id}/entrance-notulen`,
+      isDisabled: true,
+    },
+    {
+      jenis: "Entrance Berita Acara",
+      jumlah: "-----",
+      url: `${id}/entrance-berita-acara`,
+      isDisabled: true,
+    },
+    {
       jenis: "KKPA",
       jumlah: "-----",
       url: `${id}/kkpa`,
@@ -48,6 +66,24 @@ const index = () => {
       jumlah: "-----",
       url: `${id}/kkpt`,
       isDisabled: false,
+    },
+    {
+      jenis: "Exit Attendance",
+      jumlah: "-----",
+      url: `${id}/entrance-berita-acara`,
+      isDisabled: true,
+    },
+    {
+      jenis: "Exit Notulen",
+      jumlah: "-----",
+      url: `${id}/entrance-berita-acara`,
+      isDisabled: true,
+    },
+    {
+      jenis: "Exit Berita Acara",
+      jumlah: "-----",
+      url: `${id}/entrance-berita-acara`,
+      isDisabled: true,
     },
     {
       jenis: "Berita Acara",
@@ -91,7 +127,7 @@ const index = () => {
 
   useEffect(() => {
     if (ewpDetailData != undefined) {
-      const mappingCatEwp = ewpDetailData.data.map((v, key) => {
+      const mappingCatEwp = ewpDetailData.data.all_attachment.map((v, key) => {
         const datePart = v?.CreatedAt.split(".")[0];
         return {
           No: key + 1,
