@@ -124,7 +124,7 @@ const index = () => {
 
     setData({
       ...data,
-      sumber_informasi: sumberInformasiPAT?.data?.sumber_informasi,
+      sumber_informasi: sumberInformasiPAT?.data?.sumber_informasi || "",
     });
   }, [sumberInformasiPAT]);
 

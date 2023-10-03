@@ -122,7 +122,7 @@ const index = () => {
 
     setData({
       ...data,
-      latar_belakang: latarBelakangTujuanPat?.data?.latar_belakang,
+      latar_belakang: latarBelakangTujuanPat?.data?.latar_belakang || "",
     });
   }, [latarBelakangTujuanPat]);
 
