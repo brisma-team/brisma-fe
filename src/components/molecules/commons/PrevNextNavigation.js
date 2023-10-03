@@ -13,6 +13,7 @@ const PrevNextNavigation = ({
   prevUrl,
   nextUrl,
   marginLeft,
+  widthDropdown,
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const ref = useRef(null);
@@ -49,7 +50,9 @@ const PrevNextNavigation = ({
           />
           {showDropdown && (
             <div
-              className="mt-2 flex flex-col w-40 fixed"
+              className={`mt-2 flex flex-col ${
+                widthDropdown || `w-48`
+              } absolute`}
               style={{ marginLeft: marginLeft || "-90px" }}
             >
               <DropdownFilter
