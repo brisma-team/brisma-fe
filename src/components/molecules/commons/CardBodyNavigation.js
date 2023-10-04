@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { DivButton } from "@/components/atoms";
 
 const Navigation = ({
   currentStage,
@@ -13,9 +13,8 @@ const Navigation = ({
         currentStage === stageNumber && `border-${active} border-b-4`
       }`}
     >
-      <Link
-        href="#"
-        onClick={() => setCurrentStage(stageNumber)}
+      <DivButton
+        handleClick={() => setCurrentStage(stageNumber)}
         className={`no-underline hover:no-underline ${
           currentStage === stageNumber
             ? `text-${active}`
@@ -23,7 +22,7 @@ const Navigation = ({
         }`}
       >
         {stageTitle}
-      </Link>
+      </DivButton>
     </div>
   );
 };

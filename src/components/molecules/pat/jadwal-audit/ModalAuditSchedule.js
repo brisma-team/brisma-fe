@@ -6,7 +6,13 @@ import {
   ModalBodyAnggaran,
 } from "./sub-modal";
 import { useSelector, useDispatch } from "react-redux";
-import { setErrorValidation, usePostData, useUpdateData } from "@/helpers";
+import {
+  confirmationSwal,
+  setErrorValidation,
+  splitWord,
+  usePostData,
+  useUpdateData,
+} from "@/helpers";
 import { useRouter } from "next/router";
 import { ModalHeader, ModalFooter } from "@/components/molecules/pat";
 import {
@@ -19,9 +25,17 @@ import {
   resetvalidationErrorsAI,
   resetvalidationErrorsAO,
   resetAuditScheduleData,
+  setAuditScheduleData,
 } from "@/slices/pat/auditScheduleSlice";
+import { useAuditSchedule, useKategoriAnggaran } from "@/data/pat";
 
-const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
+const ModalAuditSchedule = ({
+  showModal,
+  setShowModal,
+  typeModal,
+  mutate,
+  selectedScheduleId,
+}) => {
   const { id } = useRouter().query;
   const dispatch = useDispatch();
 
@@ -30,6 +44,13 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
   const auditScheduleData = useSelector(
     (state) => state.auditSchedule.auditScheduleData
   );
+
+  const { auditSchedule } = useAuditSchedule("detail", {
+    id,
+    jadwal_id: selectedScheduleId,
+  });
+  const { kategoriAnggaran } = useKategoriAnggaran();
+
   const schemaMappings = {
     1: {
       schema: activityInfoSchema,
@@ -46,8 +67,124 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
   useEffect(() => {
     if (typeModal === "detail") {
       setIsFormDisabled(true);
+    } else if (typeModal === "update") {
+      const jadwalData = auditSchedule?.data?.jadwal;
+      const mappingEchannel = auditSchedule?.data?.echannel?.map((v) => {
+        return {
+          ref_echanel_type_kode: {
+            kode: v.ref_echanel_type_kode.kode,
+            name: splitWord(v.ref_echanel_type_kode.name, "."),
+          },
+          jumlah_existing: v.jumlah_existing,
+          jumlah_target: v.jumlah_target,
+          posisi_data: v.posisi_data,
+        };
+      });
+
+      const mappingUker = auditSchedule?.data?.auditee_jadwal_audit?.map(
+        (v) => {
+          return {
+            ref_auditee_orgeh_kode: v.ref_auditee_orgeh_kode,
+            ref_auditee_orgeh_name: v.ref_auditee_orgeh_name,
+            ref_auditee_branch_kode: v.ref_auditee_branch_kode,
+            ref_auditee_branch_name: v.ref_auditee_branch_name,
+            tipe_uker: v.tipe_uker,
+            attachments: v.attachments,
+          };
+        }
+      );
+
+      const mappingAnggaranKegiatan =
+        auditSchedule?.data?.anggaran_kegiatan?.map((v) => {
+          return {
+            ref_sub_kategori_anggaran_kode: v.ref_sub_kategori_anggaran_kode,
+            amount: parseInt(v.amount),
+          };
+        });
+
+      const getDataFromKategori = (ref_sub_kategori_anggaran_kode) => {
+        const dataKategori = kategoriAnggaran?.data?.find((data) =>
+          data.ref_sub_kategori_anggarans.some(
+            (item) =>
+              item.nama ===
+              ref_sub_kategori_anggaran_kode.ref_sub_kategori_anggaran_name
+          )
+        );
+        return dataKategori ? dataKategori.nama : null;
+      };
+
+      const anggaranKegiatan = mappingAnggaranKegiatan?.reduce(
+        (result, data) => {
+          const { ref_sub_kategori_anggaran_kode, amount } = data;
+          const nama = getDataFromKategori(ref_sub_kategori_anggaran_kode);
+
+          if (nama) {
+            const existingData = result.find((item) => item.nama === nama);
+
+            if (existingData) {
+              existingData.ref_sub_kategori_anggarans.push({
+                ref_sub_kategori_anggaran_kode,
+                amount: parseInt(amount),
+              });
+            } else {
+              result.push({
+                nama,
+                ref_sub_kategori_anggarans: [
+                  {
+                    ref_sub_kategori_anggaran_kode,
+                    amount: parseInt(amount),
+                  },
+                ],
+              });
+            }
+          }
+
+          return result;
+        },
+        []
+      );
+
+      const mappingAnggaranDinas = auditSchedule?.data?.anggaran_dinas?.map(
+        (v) => {
+          const {
+            pn_auditor,
+            biaya_tiket_pp,
+            biaya_transport_lokal,
+            biaya_perjalanan_hari,
+            biaya_akomodasi,
+          } = v;
+
+          return {
+            pn_auditor,
+            biaya_tiket_pp: parseInt(biaya_tiket_pp),
+            biaya_transport_lokal: parseInt(biaya_transport_lokal),
+            biaya_perjalanan_hari: parseInt(biaya_perjalanan_hari),
+            biaya_akomodasi: parseInt(biaya_akomodasi),
+          };
+        }
+      );
+
+      const mapping = {
+        jadwal_audit_id: jadwalData?.id,
+        pat_id: jadwalData?.pat_id,
+        name_kegiatan_audit: jadwalData?.name_kegiatan_audit,
+        ref_metode: jadwalData?.ref_metode,
+        ref_tipe: jadwalData?.ref_tipe,
+        ref_jenis: jadwalData?.ref_jenis,
+        ref_tema: jadwalData?.ref_tema,
+        pelaksanaan_start: jadwalData?.pelaksanaan_start,
+        pelaksanaan_end: jadwalData?.pelaksanaan_end,
+        deskripsi: jadwalData?.deskripsi,
+        uker: mappingUker,
+        echannel: mappingEchannel,
+        tim_audit_id: jadwalData?.tim_audit_id,
+        anggaran_kegiatan: anggaranKegiatan,
+        anggaran_dinas: mappingAnggaranDinas,
+      };
+
+      dispatch(setAuditScheduleData(mapping));
     }
-  }, []);
+  }, [auditSchedule, typeModal, showModal]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,7 +227,11 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
           );
         }
         mutate();
-        handleCloseModal();
+        setShowModal(false);
+        setCurrentModalStage(1);
+        dispatch(resetvalidationErrorsAI());
+        dispatch(resetvalidationErrorsAO());
+        dispatch(resetAuditScheduleData());
       }
     }
   };
@@ -108,6 +249,14 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
   };
 
   const handleCloseModal = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
     setShowModal(false);
     setCurrentModalStage(1);
     dispatch(resetvalidationErrorsAI());
@@ -156,6 +305,7 @@ const ModalAuditSchedule = ({ showModal, setShowModal, typeModal, mutate }) => {
           headerText={"Buat Jadwal Audit"}
           progressItems={items}
           handleCloseModal={handleCloseModal}
+          showModal={showModal}
         />
       }
       footer={

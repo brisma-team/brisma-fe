@@ -1,8 +1,8 @@
-import { InlineEditText } from "@/components/atoms";
+import { TextInput } from "@/components/atoms";
 import { DatePicker } from "@atlaskit/datetime-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
-import { convertDate, parseDate } from "@/helpers";
+import { convertDate, parseDate, parseInteger } from "@/helpers";
 import { useEchannel } from "@/data/reference";
 import { useEffect } from "react";
 
@@ -15,24 +15,24 @@ const RowDatatable = ({ idx, handleChange, value, isDisabled }) => {
         </div>
       </div>
       <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[25%] flex items-center text-justify p-1">
-        <div className="-mt-2 w-full">
-          <InlineEditText
-            handleConfirm={(e) =>
-              handleChange("jumlah_existing", parseInt(e), idx)
-            }
+        <div className="w-full">
+          <TextInput
             value={value?.jumlah_existing?.toString()}
             isDisabled={isDisabled}
+            onChange={(e) =>
+              handleChange("jumlah_existing", parseInteger(e.target.value), idx)
+            }
           />
         </div>
       </div>
       <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[25%] flex items-center p-1">
-        <div className="-mt-2 w-full">
-          <InlineEditText
-            handleConfirm={(e) =>
-              handleChange("jumlah_target", parseInt(e), idx)
-            }
+        <div className="w-full">
+          <TextInput
             value={value?.jumlah_target?.toString()}
             isDisabled={isDisabled}
+            onChange={(e) =>
+              handleChange("jumlah_target", parseInteger(e.target.value), idx)
+            }
           />
         </div>
       </div>
@@ -67,18 +67,23 @@ const SubModalEChannel = ({ isDisabled }) => {
   const { echannel } = useEchannel();
 
   useEffect(() => {
-    const mapping = echannel?.data.map((v) => {
-      return {
-        ref_echanel_type_kode: v,
-        jumlah_existing: "",
-        jumlah_target: "",
-        posisi_data: "",
-      };
-    });
-    dispatch(setAuditScheduleData({ ...auditScheduleData, echannel: mapping }));
+    if (!auditScheduleData.echannel?.length) {
+      const mapping = echannel?.data.map((v) => {
+        return {
+          ref_echanel_type_kode: v,
+          jumlah_existing: 0,
+          jumlah_target: 0,
+          posisi_data: "",
+        };
+      });
+      dispatch(
+        setAuditScheduleData({ ...auditScheduleData, echannel: mapping })
+      );
+    }
   }, [echannel]);
 
   const handleChange = (property, value, idx) => {
+    console.log("value => ", value);
     const echannelData = [...auditScheduleData.echannel];
     const updatedUker = { ...echannelData[idx] };
     updatedUker[property] = value;

@@ -165,7 +165,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
           className={"font-bold text-5xl rounded text-brisma"}
           style={{ fontSize: "1.25rem" }}
           onChange={(e) => handleChange("name_kegiatan_audit", e.target.value)}
-          value={auditScheduleData.name_kegiatan_audit}
+          value={auditScheduleData.name_kegiatan_audit || ""}
           isDisabled={isDisabled}
           placeholder={"Masukkan Nama Jadwal Audit"}
         />
@@ -189,8 +189,8 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                   onChange={(e) => handleChangeRef("ref_metode", e.value)}
                   value={
                     auditScheduleData.ref_metode?.nama !== "" && {
-                      label: auditScheduleData.ref_metode?.nama,
-                      value: auditScheduleData.ref_metode?.kode,
+                      label: auditScheduleData.ref_metode?.nama || "",
+                      value: auditScheduleData.ref_metode?.kode || "",
                     }
                   }
                   isDisabled={isDisabled}
@@ -209,8 +209,8 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                   onChange={(e) => handleChangeRef("ref_tipe", e.value)}
                   value={
                     auditScheduleData.ref_tipe?.nama !== "" && {
-                      label: auditScheduleData.ref_tipe?.nama,
-                      value: auditScheduleData.ref_tipe?.kode,
+                      label: auditScheduleData.ref_tipe?.nama || "",
+                      value: auditScheduleData.ref_tipe?.kode || "",
                     }
                   }
                   isDisabled={isDisabled}
@@ -229,8 +229,8 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                   onChange={(e) => handleChangeRef("ref_jenis", e.value)}
                   value={
                     auditScheduleData.ref_jenis?.nama !== "" && {
-                      label: auditScheduleData.ref_jenis?.nama,
-                      value: auditScheduleData.ref_jenis?.kode,
+                      label: auditScheduleData.ref_jenis?.nama || "",
+                      value: auditScheduleData.ref_jenis?.kode || "",
                     }
                   }
                   isDisabled={isDisabled}
@@ -249,8 +249,8 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                   onChange={(e) => handleChangeRef("ref_tema", e.value)}
                   value={
                     auditScheduleData.ref_tema?.nama !== "" && {
-                      label: auditScheduleData.ref_tema?.nama,
-                      value: auditScheduleData.ref_tema?.kode,
+                      label: auditScheduleData.ref_tema?.nama || "",
+                      value: auditScheduleData.ref_tema?.kode || "",
                     }
                   }
                   isDisabled={isDisabled}
@@ -267,7 +267,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                   handleChange={(e) =>
                     handleChange("deskripsi", e.target.value)
                   }
-                  value={auditScheduleData.deskripsi}
+                  value={auditScheduleData.deskripsi || ""}
                   isDisabled={isDisabled}
                 />
               }
@@ -287,8 +287,8 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                   handlerChangeEnd={(e) =>
                     handleChangePeriodActivity("pelaksanaan_end", e)
                   }
-                  valueStart={auditScheduleData.pelaksanaan_start}
-                  valueEnd={auditScheduleData.pelaksanaan_end}
+                  valueStart={auditScheduleData.pelaksanaan_start || ""}
+                  valueEnd={auditScheduleData.pelaksanaan_end || ""}
                   isDisabled={isDisabled}
                   pastDate={true}
                 />
@@ -303,7 +303,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                 <AuditTeamSelect
                   handleChange={handleChangeAuditTeam}
                   isDisabled={isDisabled}
-                  selectedValue={auditScheduleData.tim_audit_id}
+                  selectedValue={auditScheduleData.tim_audit_id || ""}
                 />
               }
               errors={validationErrors["pelaksanaan_end"]}

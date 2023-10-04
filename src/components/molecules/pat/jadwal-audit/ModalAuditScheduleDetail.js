@@ -1,16 +1,17 @@
-import { Modal, PageTitle, TableField } from "@/components/atoms";
+import { CloseModal, Modal, PageTitle, TableField } from "@/components/atoms";
 import { useEffect, useState } from "react";
 import { useAuditSchedule } from "@/data/pat";
 import { useRouter } from "next/router";
+import { confirmationSwal } from "@/helpers";
 
 const ModalAuditScheduleDetail = ({ showModal, setShowModal, scheduleId }) => {
-  console.log("scheduleId => ", scheduleId);
   const { id } = useRouter().query;
   const [items, setItems] = useState([]);
   const { auditSchedule } = useAuditSchedule("detail", {
     jadwal_id: scheduleId,
     id,
   });
+
   useEffect(() => {
     const jenisAuditee = auditSchedule?.data.jadwal?.count_target_jenis_auditee;
     if (jenisAuditee?.length > 0) {
@@ -40,9 +41,22 @@ const ModalAuditScheduleDetail = ({ showModal, setShowModal, scheduleId }) => {
     }
   }, [auditSchedule]);
 
+  const handleCloseModal = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
+    setShowModal(false);
+  };
+
   return (
-    <Modal showModal={showModal} onClickOutside={() => setShowModal(false)}>
-      <div className="w-[50rem]">
+    <Modal showModal={showModal}>
+      <div className="w-[50rem] relative">
+        <CloseModal handleCloseModal={handleCloseModal} showModal={showModal} />
         <div className="mb-2">
           <PageTitle text={auditSchedule?.data.jadwal?.name_kegiatan_audit} />
         </div>

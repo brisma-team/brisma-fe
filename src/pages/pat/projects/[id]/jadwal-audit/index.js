@@ -14,13 +14,17 @@ import { PatLandingLayout } from "@/layouts/pat";
 import Button from "@atlaskit/button";
 import CardAuditSchedule from "@/components/molecules/pat/CardAuditSchedule";
 import { useEffect, useState } from "react";
-import { ModalBuatJadwalAudit } from "@/components/molecules/pat/jadwal-audit";
+import {
+  ModalAuditScheduleDetail,
+  ModalBuatJadwalAudit,
+} from "@/components/molecules/pat/jadwal-audit";
 import { CardFilterAuditSchedule } from "@/components/molecules/pat";
 import { useRouter } from "next/router";
 import { useStatusPat, useAuditSchedule } from "@/data/pat";
 import _ from "lodash";
 import { useDispatch } from "react-redux";
 import { resetAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
+import { deleteSwal } from "@/helpers";
 
 const routes = [
   {
@@ -89,7 +93,7 @@ const index = () => {
   const [data, setData] = useState([]);
   const [countType, setCountType] = useState({});
   const [typeModal, setTypeModal] = useState(null);
-  const [scheduleId, setScheduleId] = useState(null);
+  const [selectedScheduleId, setSelectedScheduleId] = useState(null);
 
   useEffect(() => {
     setContent([
@@ -154,6 +158,28 @@ const index = () => {
     dispatch(resetAuditScheduleData());
   };
 
+  const handleClickInfo = (scheduleId) => {
+    setShowModalDetail(true);
+    setSelectedScheduleId(scheduleId);
+  };
+
+  const handleClickUpdate = (e, scheduleId) => {
+    e.stopPropagation();
+    setSelectedScheduleId(scheduleId);
+    setShowModal(true);
+    setTypeModal("update");
+  };
+
+  const handleClickDelete = async (e, scheduleId) => {
+    e.stopPropagation();
+    await deleteSwal(
+      "Apakah anda yakin ingin menghapus data ini?",
+      "Data ini dihapus seacara permanen",
+      `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/audit?jadwal_id=${scheduleId}&pat_id=${id}`
+    );
+    auditScheduleMutate();
+  };
+
   return (
     <PatLandingLayout content={content} data={statusPat?.data}>
       <Breadcrumbs data={breadcrumbs} />
@@ -164,6 +190,7 @@ const index = () => {
           routes={routes}
           prevUrl={"/tim-audit"}
           nextUrl={"/jadwal-kegiatan"}
+          widthDropdown={"w-56"}
         />
       </div>
 
@@ -192,6 +219,12 @@ const index = () => {
           setShowModal={setShowModal}
           typeModal={typeModal}
           mutate={auditScheduleMutate}
+          selectedScheduleId={selectedScheduleId}
+        />
+        <ModalAuditScheduleDetail
+          scheduleId={selectedScheduleId}
+          showModal={showModalDetail}
+          setShowModal={setShowModalDetail}
         />
       </div>
       <div className="flex justify-between items-end relative">
@@ -234,12 +267,11 @@ const index = () => {
         <DataNotFound />
       ) : (
         data?.length && (
-          <div className="grid grid-cols-4 gap-4 px-0.5 py-2">
+          <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 px-0.5 py-2">
             {data.map((v, i) => {
               return (
                 <CardAuditSchedule
                   key={i}
-                  pat_id={id}
                   jadwal_id={v.id}
                   type={v.type}
                   title={v.title}
@@ -251,13 +283,9 @@ const index = () => {
                   audit_type={v.audit_type}
                   tema={v.tema}
                   desc={v.desc}
-                  setShowModal={setShowModal}
-                  setTypeModal={setTypeModal}
-                  showModalDetail={showModalDetail}
-                  setShowModalDetail={setShowModalDetail}
-                  scheduleId={scheduleId}
-                  setScheduleId={setScheduleId}
-                  mutate={auditScheduleMutate}
+                  handleClickInfo={handleClickInfo}
+                  handleClickUpdate={handleClickUpdate}
+                  handleClickDelete={handleClickDelete}
                 />
               );
             })}

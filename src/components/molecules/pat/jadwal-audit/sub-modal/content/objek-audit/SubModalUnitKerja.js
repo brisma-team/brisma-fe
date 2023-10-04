@@ -132,14 +132,14 @@ const SubModalUnitKerja = ({ isDisabled }) => {
     dispatch(setAuditScheduleData(updatedData));
   };
 
-  const handleAddUker = (value) => {
-    if (value) {
+  const handleAddUker = (e) => {
+    if (e?.value) {
       const newData = [...auditScheduleData.uker];
       newData.push({
         ref_auditee_orgeh_kode: "",
         ref_auditee_orgeh_name: "",
-        ref_auditee_branch_kode: value.branch_kode,
-        ref_auditee_branch_name: value.branch_name,
+        ref_auditee_branch_kode: e?.value.branch_kode,
+        ref_auditee_branch_name: e?.value.branch_name,
         tipe_uker: "",
         attachments: [""],
         deskripsi: "",

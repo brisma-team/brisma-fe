@@ -18,7 +18,7 @@ const CloseModal = ({ handleCloseModal, showModal }) => {
   };
 
   return (
-    <div className="absolute w-full flex justify-end -mt-1">
+    <div className="absolute w-full flex justify-end -mt-1 z-10">
       <DivButton handleClick={handleCloseModal} handleKeyDown={handleKeyDown}>
         <Image src={ImageClose} alt="chat" />
       </DivButton>
