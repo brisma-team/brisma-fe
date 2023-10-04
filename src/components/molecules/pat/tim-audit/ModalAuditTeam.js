@@ -3,7 +3,7 @@ import {
   ButtonField,
   TextInput,
   ErrorValidation,
-  DivButton,
+  CloseModal,
 } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
 import CardFormInputTeam from "../CardFormInputTeam";
@@ -22,25 +22,59 @@ import {
 } from "@/slices/pat/auditTeamSlice";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { ImageClose } from "@/helpers/imagesUrl";
-import Image from "next/image";
+import { useAuditTeam } from "@/data/pat";
 
-const ModalAuditTeam = ({ showModal, setShowModal, typeModal, mutate }) => {
+const ModalAuditTeam = ({
+  showModal,
+  setShowModal,
+  typeModal,
+  mutate,
+  selectedTeamId,
+}) => {
   const { id } = useRouter().query;
   const dispatch = useDispatch();
   const auditTeamData = useSelector((state) => state.auditTeam.auditTeamData);
   const [isDisabled, setIsDisabled] = useState(false);
 
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  const { auditTeam, auditTeamMutate } = useAuditTeam("detail", {
+    id: id,
+    tim_id: selectedTeamId,
+  });
 
   useEffect(() => {
-    if (typeModal === "detail") setIsDisabled(true);
-  }, [typeModal]);
+    if (typeModal === "detail") {
+      setIsDisabled(true);
+    } else if (typeModal === "update") {
+      const mapppedData = {
+        pat_id: auditTeam?.data?.pat_id,
+        tim_audit_id: auditTeam?.data?.id,
+        name: auditTeam?.data?.name,
+        ref_tipe_tim: auditTeam?.data?.ref_tipe_tim,
+        ref_tim_audit_ma: auditTeam?.data?.ref_tim_audit_mas?.map((v) => ({
+          pn: v?.pn_ma,
+          nama: v?.nama_ma,
+          jabatan: v?.jabatan,
+        })),
+        ref_tim_audit_kta: auditTeam?.data?.ref_tim_audit_kta?.map((v) => ({
+          pn: v?.pn_kta,
+          nama: v?.nama_kta,
+          jabatan: v?.jabatan,
+        })),
+        ref_tim_audit_ata: auditTeam?.data?.ref_tim_audit_ata?.map((v) => ({
+          pn: v?.pn_ata,
+          nama: v?.nama_ata,
+          jabatan: v?.jabatan,
+          uker_binaans: v?.ref_ata_ukers?.map((x) => ({
+            orgeh_kode: x?.orgeh_kode,
+            orgeh_name: x?.orgeh_name,
+            branch_kode: x?.branch_kode,
+            branch_name: x?.branch_name,
+          })),
+        })),
+      };
+      dispatch(setAuditTeamData(mapppedData));
+    }
+  }, [auditTeam, showModal, typeModal]);
 
   // START ADD HANDLING
   const handleAdd = (property) => {
@@ -91,12 +125,9 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, mutate }) => {
 
   // START DELETE HANDLING
   const handleDelete = (property, idx) => {
-    const newData = { ...auditTeamData };
-    if (newData[property].length > 1) {
-      const newData = [...auditTeamData[property]];
-      newData.splice(idx, 1);
-      dispatch(setAuditTeamData({ ...auditTeamData, [property]: newData }));
-    }
+    const newData = [...auditTeamData[property]];
+    newData.splice(idx, 1);
+    dispatch(setAuditTeamData({ ...auditTeamData, [property]: newData }));
   };
 
   const handleDeleteUkerATA = (idxATA, idxUker) => {
@@ -213,6 +244,7 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, mutate }) => {
               `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/tim_audit`,
               data
             );
+            auditTeamMutate();
           } else {
             await usePostData(
               `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/tim_audit/create`,
@@ -221,6 +253,7 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, mutate }) => {
           }
           mutate();
           setShowModal(false);
+          dispatch(resetAuditTeamData());
         } catch (err) {
           await errorSwalTimeout(err);
         }
@@ -251,23 +284,10 @@ const ModalAuditTeam = ({ showModal, setShowModal, typeModal, mutate }) => {
     dispatch(resetAuditTeamData());
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Escape") {
-      return handleCloseModal();
-    }
-  };
-
   return (
     <Modal showModal={showModal}>
       <form className="w-[63rem] relative" onSubmit={handleSubmit}>
-        <div className="absolute w-full flex justify-end -mt-1">
-          <DivButton
-            handleClick={handleCloseModal}
-            handleKeyDown={handleKeyDown}
-          >
-            <Image src={ImageClose} alt="chat" />
-          </DivButton>
-        </div>
+        <CloseModal handleCloseModal={handleCloseModal} showModal={showModal} />
         <div className="w-2/3">
           <TextInput
             icon={<IconClose size="medium" />}
