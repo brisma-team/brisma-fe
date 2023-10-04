@@ -19,10 +19,6 @@ const index = () => {
     { name: "PAT", path: "/pat" },
     { name: "Overview", path: "/pat/projects" },
     { name: statusPat?.data?.pat_name, path: `/pat/projects/${id}` },
-    {
-      name: "Tim Audit",
-      path: `/pat/projects/${id}/tim-audit`,
-    },
   ];
 
   useEffect(() => {

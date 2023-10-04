@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 import useDeleteData from "./useDeleteData";
 
-const deleteSwal = (title, text, url, isMutate) => {
+const deleteSwal = async (title, text, url) => {
   return Swal.fire({
     title,
     text,
@@ -11,10 +11,9 @@ const deleteSwal = (title, text, url, isMutate) => {
     cancelButtonColor: "#d33",
     cancelButtonText: "Batal",
     confirmButtonText: "Ya, hapus!",
-  }).then((result) => {
+  }).then(async (result) => {
     if (result.isConfirmed) {
-      useDeleteData(url);
-      isMutate;
+      await useDeleteData(url);
     }
   });
 };

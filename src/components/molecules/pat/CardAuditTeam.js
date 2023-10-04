@@ -1,12 +1,5 @@
 import { ButtonIcon, Card, DivButton } from "@/components/atoms";
 import { IconEdit, IconTrash } from "@/components/icons";
-import { deleteSwal } from "@/helpers";
-import useAuditTeam from "@/data/pat/useAuditTeam";
-import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
-import { setAuditTeamData } from "@/slices/pat/auditTeamSlice";
-import { useEffect } from "react";
-import { useState } from "react";
 
 const CardBody = ({ title, text, width, paddingLeft }) => {
   let textColor;
@@ -64,8 +57,6 @@ const CardBody = ({ title, text, width, paddingLeft }) => {
 };
 
 const CardAuditTeam = ({
-  tim_id,
-  pat_id,
   header_title,
   maker,
   created_at,
@@ -74,67 +65,16 @@ const CardAuditTeam = ({
   anggota_tim_audit,
   tipe_tim,
   button,
-  setShowModal,
-  isMutate,
-  setTypeModal,
   withoutLabel,
-  typeModal,
+  handleUpdate,
+  handleDelete,
 }) => {
-  const router = useRouter().query;
-  const dispatch = useDispatch();
-  const [selectedTeamId, setSelectedTeamId] = useState(null);
-
-  const { auditTeam, auditTeamMutate } = useAuditTeam("detail", {
-    id: router.id,
-    tim_id: selectedTeamId,
-  });
-
-  useEffect(() => {
-    if (auditTeam) {
-      const mapppedData = {
-        pat_id: pat_id,
-        tim_audit_id: tim_id,
-        name: auditTeam?.data?.name,
-        ref_tipe_tim: auditTeam?.data?.ref_tipe_tim,
-        ref_tim_audit_ma: auditTeam?.data?.ref_tim_audit_mas?.map((v) => ({
-          pn: v?.pn_ma,
-          nama: v?.nama_ma,
-          jabatan: v?.jabatan,
-        })),
-        ref_tim_audit_kta: auditTeam?.data?.ref_tim_audit_kta?.map((v) => ({
-          pn: v?.pn_kta,
-          nama: v?.nama_kta,
-          jabatan: v?.jabatan,
-        })),
-        ref_tim_audit_ata: auditTeam?.data?.ref_tim_audit_ata?.map((v) => ({
-          pn: v?.pn_ata,
-          nama: v?.nama_ata,
-          jabatan: v?.jabatan,
-          uker_binaans: v?.ref_ata_ukers?.map((x) => ({
-            orgeh_kode: x?.orgeh_kode,
-            orgeh_name: x?.orgeh_name,
-            branch_kode: x?.branch_kode,
-            branch_name: x?.branch_name,
-          })),
-        })),
-      };
-      dispatch(setAuditTeamData(mapppedData));
-    }
-  }, [auditTeam, typeModal]);
-
-  const handleDetail = (e, teamId, type) => {
-    e.stopPropagation();
-    auditTeamMutate();
-    setSelectedTeamId(teamId);
-    setShowModal(true);
-    setTypeModal(type);
-  };
-
   return (
     <DivButton
       className={
         "hover:bg-gray-100 hover:rounded-[10px] hover:no-underline relative cursor-pointer"
       }
+      handleClick={() => console.log("klik")}
     >
       <Card>
         <div className="w-full px-4 py-2">
@@ -151,20 +91,12 @@ const CardAuditTeam = ({
             {button && (
               <div className="flex w-14 justify-between">
                 <ButtonIcon
-                  handleClick={(e) => handleDetail(e, tim_id, "update")}
+                  handleClick={handleUpdate}
                   color={"yellow"}
                   icon={<IconEdit size="medium" />}
                 />
                 <ButtonIcon
-                  handleClick={(e) => (
-                    e.stopPropagation(),
-                    deleteSwal(
-                      "Apakah anda yakin ingin menghapus data ini?",
-                      "Data ini dihapus seacara permanen",
-                      `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/tim_audit?tim_id=${tim_id}&pat_id=${pat_id}`,
-                      isMutate()
-                    )
-                  )}
+                  handleClick={handleDelete}
                   color={"red"}
                   icon={<IconTrash size="medium" />}
                 />

@@ -22,7 +22,7 @@ import { useRouter } from "next/router";
 import { useStatusPat } from "@/data/pat";
 import { useDispatch } from "react-redux";
 import _ from "lodash";
-import { convertDate } from "@/helpers";
+import { convertDate, deleteSwal } from "@/helpers";
 import { resetAuditTeamData } from "@/slices/pat/auditTeamSlice";
 
 const routes = [
@@ -57,6 +57,7 @@ const index = () => {
   const [typeModal, setTypeModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [sortBy, setSortBy] = useState("ASC");
+  const [selectedTeamId, setSelectedTeamId] = useState(0);
   const [filter, setFilter] = useState({
     tim_name: "",
     nama_ma: "",
@@ -127,6 +128,23 @@ const index = () => {
     setShowModal(true);
   };
 
+  const handleUpdate = (e, teamId) => {
+    e.stopPropagation();
+    setSelectedTeamId(teamId);
+    setShowModal(true);
+    setTypeModal("update");
+  };
+
+  const handleDelete = async (e, teamId) => {
+    e.stopPropagation();
+    await deleteSwal(
+      "Apakah anda yakin ingin menghapus data ini?",
+      "Data ini dihapus seacara permanen",
+      `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/tim_audit?tim_id=${teamId}&pat_id=${id}`
+    );
+    auditTeamMutate();
+  };
+
   return (
     <PatLandingLayout data={statusPat?.data} content={content}>
       {/* Start Breadcrumbs */}
@@ -165,6 +183,7 @@ const index = () => {
           setShowModal={setShowModal}
           typeModal={typeModal}
           mutate={auditTeamMutate}
+          selectedTeamId={selectedTeamId}
         />
       </div>
       <div className="flex justify-between items-end">
@@ -190,8 +209,6 @@ const index = () => {
               return (
                 <CardAuditTeam
                   key={i}
-                  tim_id={v.id}
-                  pat_id={id}
                   header_title={v.header_title}
                   maker={v.maker}
                   created_at={v.created_at}
@@ -200,10 +217,8 @@ const index = () => {
                   anggota_tim_audit={v.anggota_tim_audit}
                   tipe_tim={v.tipe_tim}
                   button={true}
-                  setShowModal={setShowModal}
-                  isMutate={auditTeamMutate}
-                  setTypeModal={setTypeModal}
-                  typeModal={typeModal}
+                  handleUpdate={(e) => handleUpdate(e, v.id)}
+                  handleDelete={(e) => handleDelete(e, v.id)}
                 />
               );
             })}
