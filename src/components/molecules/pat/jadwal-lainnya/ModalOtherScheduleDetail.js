@@ -1,7 +1,8 @@
-import { Modal, TableField } from "@/components/atoms";
+import { CloseModal, Modal, TableField } from "@/components/atoms";
 import { useEffect, useState } from "react";
 import { useActivityScheduleOther } from "@/data/pat";
 import { useRouter } from "next/router";
+import { confirmationSwal } from "@/helpers";
 
 const ModalOtherScheduleDetail = ({ showModal, setShowModal, scheduleId }) => {
   const { id } = useRouter().query;
@@ -40,10 +41,22 @@ const ModalOtherScheduleDetail = ({ showModal, setShowModal, scheduleId }) => {
     }
   }, [activityScheduleOther]);
 
+  const handleCloseModal = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
+    setShowModal(false);
+  };
+
   return (
     <Modal showModal={showModal} onClickOutside={() => setShowModal(false)}>
-      <div className="w-[50rem]">
-        <div className="">Percobaan</div>
+      <div className="w-[50rem] relative">
+        <CloseModal handleCloseModal={handleCloseModal} showModal={showModal} />
         <TableField
           headers={["Objek Audit", "Eksisting", "Target", "Presentase"]}
           columnWidths={["40%", "20%", "20%", "20%"]}

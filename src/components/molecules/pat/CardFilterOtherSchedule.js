@@ -14,7 +14,7 @@ import {
 } from "../commons";
 import { useState } from "react";
 
-const CardFilterActivitySchedule = ({ showFilter, params, setParams }) => {
+const CardFilterOtherSchedule = ({ showFilter, params, setParams }) => {
   const [selectedValue, setSelectedValue] = useState({
     metode: "",
     tipe: "",
@@ -53,7 +53,7 @@ const CardFilterActivitySchedule = ({ showFilter, params, setParams }) => {
               <TextInput
                 placeholder="Nama Proyek"
                 onChange={(e) => handleChangeParams("nama", e.target.value)}
-                value={params.project_name}
+                value={params.nama}
                 icon={
                   <ButtonIcon
                     icon={<IconClose size="medium" />}
@@ -161,4 +161,4 @@ const CardFilterActivitySchedule = ({ showFilter, params, setParams }) => {
   );
 };
 
-export default CardFilterActivitySchedule;
+export default CardFilterOtherSchedule;

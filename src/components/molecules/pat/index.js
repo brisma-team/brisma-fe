@@ -5,6 +5,7 @@ import CardAuditTeam from "./CardAuditTeam";
 import CardActivitySchedule from "./CardActivitySchedule";
 import CardFormInputTeam from "./CardFormInputTeam";
 import CardFilterActivitySchedule from "./CardFilterActivitySchedule";
+import CardFilterOtherSchedule from "./CardFilterOtherSchedule";
 import CardOtherSchedule from "./CardOtherSchedule";
 import ModalHeader from "./ModalHeader";
 import ModalFooter from "./ModalFooter";
@@ -23,6 +24,7 @@ export {
   CardActivitySchedule,
   CardFormInputTeam,
   CardFilterActivitySchedule,
+  CardFilterOtherSchedule,
   CardOtherSchedule,
   ModalHeader,
   ModalFooter,

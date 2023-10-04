@@ -13,12 +13,15 @@ import {
 import { PatLandingLayout } from "@/layouts/pat";
 import Button from "@atlaskit/button";
 import {
-  CardFilterActivitySchedule,
+  CardFilterOtherSchedule,
   CardOtherSchedule,
 } from "@/components/molecules/pat";
 import { useState, useEffect } from "react";
-import { ModalOtherSchedule } from "@/components/molecules/pat/jadwal-lainnya";
-import { convertDate } from "@/helpers";
+import {
+  ModalOtherSchedule,
+  ModalOtherScheduleDetail,
+} from "@/components/molecules/pat/jadwal-lainnya";
+import { convertDate, deleteSwal } from "@/helpers";
 import { useRouter } from "next/router";
 import { useActivityScheduleOther, useStatusPat } from "@/data/pat";
 import { resetOtherScheduleData } from "@/slices/pat/activityScheduleOtherSlice";
@@ -59,7 +62,7 @@ const index = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [data, setData] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
-  const [scheduleId, setScheduleId] = useState(null);
+  const [selectedScheduleId, setSelectedScheduleId] = useState(null);
   const [params, setParams] = useState({
     nama: "",
     metode: "",
@@ -91,7 +94,7 @@ const index = () => {
     ...params,
     id,
     pages: currentPage,
-    limit: 4,
+    limit: 3,
   });
 
   useEffect(() => {
@@ -160,6 +163,28 @@ const index = () => {
     dispatch(resetOtherScheduleData());
   };
 
+  const handleClickInfo = (scheduleId) => {
+    setShowModalDetail(true);
+    setSelectedScheduleId(scheduleId);
+  };
+
+  const handleClickUpdate = (e, scheduleId) => {
+    e.stopPropagation();
+    setSelectedScheduleId(scheduleId);
+    setShowModal(true);
+    setTypeModal("update");
+  };
+
+  const handleClickDelete = async (e, scheduleId) => {
+    e.stopPropagation();
+    await deleteSwal(
+      "Apakah anda yakin ingin menghapus data ini?",
+      "Data ini dihapus seacara permanen",
+      `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/sbp?jadwal_sbp_id=${scheduleId}&pat_id=${id}`
+    );
+    activityScheduleOtherMutate();
+  };
+
   return (
     <PatLandingLayout data={statusPat} content={content}>
       <Breadcrumbs data={breadcrumbs} />
@@ -170,6 +195,7 @@ const index = () => {
           routes={routes}
           prevUrl={"/jadwal-kegiatan"}
           nextUrl={"/ringkasan-objek-audit"}
+          widthDropdown={"w-56"}
         />
       </div>
 
@@ -195,11 +221,17 @@ const index = () => {
           setShowModal={setShowModal}
           typeModal={typeModal}
           mutate={activityScheduleOtherMutate}
+          selectedScheduleId={selectedScheduleId}
+        />
+        <ModalOtherScheduleDetail
+          scheduleId={selectedScheduleId}
+          showModal={showModalDetail}
+          setShowModal={setShowModalDetail}
         />
       </div>
       <div className="flex justify-between items-end relative">
         <div className="flex justify-center absolute z-10 bg-white top-0">
-          <CardFilterActivitySchedule
+          <CardFilterOtherSchedule
             showFilter={showFilter}
             params={filter}
             setParams={setFilter}
@@ -237,13 +269,12 @@ const index = () => {
         <DataNotFound />
       ) : (
         data?.length && (
-          <div className="grid grid-cols-4 gap-4 px-0.5 py-2">
+          <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 px-0.5 py-2">
             {data.map((v, i) => {
               return (
                 <CardOtherSchedule
                   key={i}
                   kegiatan_lain_id={v.id}
-                  pat_id={id}
                   type={v.type}
                   title={v.title}
                   maker={v.maker}
@@ -251,13 +282,9 @@ const index = () => {
                   budget={v.budget}
                   pic={v.pic}
                   desc={v.desc}
-                  setShowModal={setShowModal}
-                  setTypeModal={setTypeModal}
-                  showModalDetail={showModalDetail}
-                  setShowModalDetail={setShowModalDetail}
-                  scheduleId={scheduleId}
-                  setScheduleId={setScheduleId}
-                  mutate={activityScheduleOtherMutate}
+                  handleClickInfo={handleClickInfo}
+                  handleClickUpdate={handleClickUpdate}
+                  handleClickDelete={handleClickDelete}
                 />
               );
             })}

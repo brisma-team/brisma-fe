@@ -14,9 +14,9 @@ import {
   IconQuestions,
 } from "@/components/icons";
 import {
+  BranchSelect,
   CardTypeCount,
   DescriptionModal,
-  InlineEditBranchSelect,
   OrgehSelect,
 } from "@/components/molecules/commons";
 import { useEffect, useState } from "react";
@@ -137,14 +137,14 @@ const SubModalWorkUnit = ({ isDisabled }) => {
     dispatch(setActivityScheduleOtherData(updatedData));
   };
 
-  const handleAddUker = (value) => {
-    if (value) {
+  const handleAddUker = (e) => {
+    if (e?.value) {
       const newData = [...activityScheduleOtherData.uker];
       newData.push({
         ref_auditee_orgeh_kode: "",
         ref_auditee_orgeh_name: "",
-        ref_auditee_branch_kode: value.branch_kode,
-        ref_auditee_branch_name: value.branch_name,
+        ref_auditee_branch_kode: e?.value.branch_kode,
+        ref_auditee_branch_name: e?.value.branch_name,
         tipe_uker: "",
         attachments: [""],
         deskripsi: "",
@@ -346,9 +346,9 @@ const SubModalWorkUnit = ({ isDisabled }) => {
             </div>
             {showBranch && (
               <div className="w-40 mb-2">
-                <InlineEditBranchSelect
+                <BranchSelect
                   placeholder="Select an option"
-                  handleConfirm={handleAddUker}
+                  handleChange={handleAddUker}
                 />
               </div>
             )}
