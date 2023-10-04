@@ -74,7 +74,7 @@ const ModalAuditTeam = ({
       };
       dispatch(setAuditTeamData(mapppedData));
     }
-  }, [auditTeam, showModal, typeModal]);
+  }, [auditTeam]);
 
   // START ADD HANDLING
   const handleAdd = (property) => {
