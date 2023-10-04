@@ -17,13 +17,16 @@ import {
   CardFilterActivitySchedule,
 } from "@/components/molecules/pat";
 import { useEffect, useState } from "react";
-import { ModalActivitySchedule } from "@/components/molecules/pat/jadwal-kegiatan";
+import {
+  ModalActivitySchedule,
+  ModalActivityScheduleDetail,
+} from "@/components/molecules/pat/jadwal-kegiatan";
 import { useRouter } from "next/router";
 import { useActivitySchedule, useStatusPat } from "@/data/pat";
 import _ from "lodash";
-import { convertDate } from "@/helpers";
+import { convertDate, deleteSwal } from "@/helpers";
 import { useDispatch } from "react-redux";
-import { resetAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
+import { resetActivityScheduleData } from "@/slices/pat/activityScheduleSlice";
 
 const routes = [
   {
@@ -59,7 +62,7 @@ const index = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [data, setData] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
-  const [scheduleId, setScheduleId] = useState(null);
+  const [selectedScheduleId, setSelectedScheduleId] = useState(null);
   const [params, setParams] = useState({
     nama_sbp: "",
     metode: "",
@@ -88,7 +91,7 @@ const index = () => {
       ...params,
       id,
       pages: currentPage,
-      limit: 4,
+      limit: 3,
     });
 
   useEffect(() => {
@@ -154,7 +157,29 @@ const index = () => {
   const handleCreateButton = () => {
     setShowModal(true);
     setTypeModal("create");
-    dispatch(resetAuditScheduleData());
+    dispatch(resetActivityScheduleData());
+  };
+
+  const handleClickInfo = (scheduleId) => {
+    setShowModalDetail(true);
+    setSelectedScheduleId(scheduleId);
+  };
+
+  const handleClickUpdate = (e, scheduleId) => {
+    e.stopPropagation();
+    setSelectedScheduleId(scheduleId);
+    setShowModal(true);
+    setTypeModal("update");
+  };
+
+  const handleClickDelete = async (e, scheduleId) => {
+    e.stopPropagation();
+    await deleteSwal(
+      "Apakah anda yakin ingin menghapus data ini?",
+      "Data ini dihapus seacara permanen",
+      `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/sbp?jadwal_sbp_id=${scheduleId}&pat_id=${id}`
+    );
+    activityScheduleMutate();
   };
 
   return (
@@ -167,6 +192,7 @@ const index = () => {
           routes={routes}
           prevUrl={"/jadwal-audit"}
           nextUrl={"/jadwal-lainnya"}
+          widthDropdown={"w-56"}
         />
       </div>
 
@@ -195,6 +221,12 @@ const index = () => {
           setShowModal={setShowModal}
           typeModal={typeModal}
           mutate={activityScheduleMutate}
+          selectedScheduleId={selectedScheduleId}
+        />
+        <ModalActivityScheduleDetail
+          scheduleId={selectedScheduleId}
+          showModal={showModalDetail}
+          setShowModal={setShowModalDetail}
         />
       </div>
       <div className="flex justify-between items-end relative">
@@ -237,13 +269,12 @@ const index = () => {
         <DataNotFound />
       ) : (
         data?.length && (
-          <div className="grid grid-cols-4 gap-4 px-0.5 py-2">
+          <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 px-0.5 py-2">
             {data.map((v, i) => {
               return (
                 <CardActivitySchedule
                   key={i}
                   jadwal_sbp_id={v.id}
-                  pat_id={id}
                   type={v.type}
                   title={v.title}
                   maker={v.maker}
@@ -251,13 +282,9 @@ const index = () => {
                   budget={v.budget}
                   pic={v.pic}
                   desc={v.desc}
-                  setShowModal={setShowModal}
-                  setTypeModal={setTypeModal}
-                  showModalDetail={showModalDetail}
-                  setShowModalDetail={setShowModalDetail}
-                  scheduleId={scheduleId}
-                  setScheduleId={setScheduleId}
-                  mutate={activityScheduleMutate}
+                  handleClickInfo={handleClickInfo}
+                  handleClickUpdate={handleClickUpdate}
+                  handleClickDelete={handleClickDelete}
                 />
               );
             })}

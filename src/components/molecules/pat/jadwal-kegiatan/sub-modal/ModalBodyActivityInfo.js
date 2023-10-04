@@ -101,17 +101,14 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
   };
 
   const handleDelete = (property, idx) => {
-    const newData = { ...activityScheduleData };
-    if (newData[property].length > 1) {
-      const newData = [...activityScheduleData[property]];
-      newData.splice(idx, 1);
-      dispatch(
-        setActivityScheduleData({
-          ...activityScheduleData,
-          [property]: newData,
-        })
-      );
-    }
+    const newData = [...activityScheduleData[property]];
+    newData.splice(idx, 1);
+    dispatch(
+      setActivityScheduleData({
+        ...activityScheduleData,
+        [property]: newData,
+      })
+    );
   };
 
   const handleChange = (props, value) => {
