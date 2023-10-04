@@ -3,7 +3,7 @@ import DivButton from "./DivButton";
 import { ImageClose } from "@/helpers/imagesUrl";
 import { useEffect } from "react";
 
-const CloseModal = ({ handleCloseModal }) => {
+const CloseModal = ({ handleCloseModal, showModal }) => {
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);
     return () => {
@@ -12,7 +12,7 @@ const CloseModal = ({ handleCloseModal }) => {
   }, []);
 
   const handleKeyDown = (e) => {
-    if (e.key === "Escape") {
+    if (e.key === "Escape" && showModal) {
       return handleCloseModal();
     }
   };
