@@ -8,10 +8,9 @@ import { useRouter } from "next/router";
 
 const routes = [
   {
-    name: "Latar Belakang",
-    slug: "latar-belakang",
+    name: "Latar Belakang dan Tujuan",
+    slug: "latar-belakang-dan-tujuan",
   },
-  { name: "Tujuan", slug: "tujuan" },
   { name: "Sumber Informasi", slug: "sumber-informasi" },
   { name: "Tim Audit", slug: "tim-audit" },
   { name: "Target Audit", slug: "ringkasan-objek-audit" },
@@ -162,6 +161,7 @@ const index = () => {
           routes={routes}
           prevUrl={"/jadwal-lainnya"}
           nextUrl={"/dokumen"}
+          widthDropdown={"w-56"}
         />
       </div>
       {/* Start Content */}
