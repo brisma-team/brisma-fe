@@ -9,7 +9,6 @@ import {
 import Image from "next/image";
 import { ImageChat } from "@/helpers/imagesUrl";
 import { PatLandingLayout } from "@/layouts/pat";
-import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
 import {
   useCommentPAT,
@@ -34,6 +33,7 @@ const routes = [
 ];
 
 const index = () => {
+  const router = useRouter();
   const { id } = useRouter().query;
   const baseUrl = `/pat/projects/${id}`;
   const { statusPat } = useStatusPat(id);
@@ -125,10 +125,6 @@ const index = () => {
   }, [commentPAT]);
 
   useEffect(() => {
-    console.log("totalComment => ", totalComment);
-  }, [totalComment]);
-
-  useEffect(() => {
     setContent([
       { title: "Riwayat Addendum", value: statusPat?.data?.riwayat_adendum },
       { title: "Status Approver", value: statusPat?.data?.status_approver },
@@ -148,6 +144,7 @@ const index = () => {
   }, [activeIndex]);
 
   useEffect(() => {
+    if (router.query?.openModal) setShowModal(true);
     const addScrollListener = () => {
       const parentContainer = document.querySelector(".parent");
       if (parentContainer) {
@@ -314,9 +311,8 @@ const index = () => {
           </Card>
         </div>
         <div className="w-[11rem]">
-          <Link
-            href={"#"}
-            onClick={() => (setShowModal(true), setHitEndpointCount(7))}
+          <DivButton
+            handleClick={() => (setShowModal(true), setHitEndpointCount(7))}
             className="no-underline hover:no-underline h-auto"
           >
             <div>
@@ -343,7 +339,7 @@ const index = () => {
                 </div>
               </Card>
             </div>
-          </Link>
+          </DivButton>
           <ModalWorkflow setShowModal={setShowModal} showModal={showModal} />
         </div>
       </div>

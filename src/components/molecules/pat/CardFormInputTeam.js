@@ -31,6 +31,7 @@ const CardFormInputTeam = ({
   iconBeside,
   isDisabled,
   withoutButtonAdd,
+  isButtonChange,
 }) => {
   let textColor, buttonText;
   switch (type) {
@@ -289,7 +290,7 @@ const CardFormInputTeam = ({
                                 }
                               />
                             }
-                            isDisabled={isDisabled}
+                            isDisabled={isDisabled || v[childProperty]}
                           />
                         )}
                         {type === "Manajer Audit"
@@ -363,7 +364,7 @@ const CardFormInputTeam = ({
                       <IconPlus size="medium" />
                     </div>
                   }
-                  text={`Tambah ${buttonText}`}
+                  text={`${isButtonChange || `Tambah`} ${buttonText}`}
                   textColor={"brisma"}
                   handler={() => handlerAddParent(property)}
                   disabled={isDisabled}

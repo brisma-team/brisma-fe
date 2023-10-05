@@ -15,6 +15,7 @@ import {
   convertDate,
   setErrorValidation,
   usePostData,
+  useUpdateData,
 } from "@/helpers";
 import _ from "lodash";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
@@ -103,8 +104,15 @@ const ModalWorkflow = ({ showModal, setShowModal }) => {
     if (validate) {
       let type, data;
       switch (e.target.offsetParent.name) {
+        case "update":
+          type = "update";
+          data = {
+            pat_id: id,
+            approvers: workflowData.ref_tim_audit_approver,
+            signers: workflowData.ref_tim_audit_signer,
+          };
+          break;
         case "reset":
-          resetWorkflowData;
           type = "reset";
           data = { pat_id: id };
           break;
@@ -139,13 +147,24 @@ const ModalWorkflow = ({ showModal, setShowModal }) => {
           return;
         }
       }
-      await usePostData(
-        `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/workflow/${type}`,
-        data
-      );
 
+      if (type === "update") {
+        const response = await useUpdateData(
+          `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/workflow`,
+          data
+        );
+        if (!response.isDismissed) return;
+      } else {
+        await usePostData(
+          `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/workflow/${type}`,
+          data
+        );
+      }
+
+      dispatch(resetWorkflowData());
       workflowMutate();
       workflowDetail.workflowMutate();
+      setShowModal(false);
     }
   };
 
@@ -158,6 +177,18 @@ const ModalWorkflow = ({ showModal, setShowModal }) => {
     );
   };
 
+  const handleCloseModal = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin untuk mengahapus data ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
+    setShowModal(false);
+  };
+
   const statusColors = {
     Approved: "text-atlasian-green",
     Rejected: "text-atlasian-red",
@@ -166,13 +197,15 @@ const ModalWorkflow = ({ showModal, setShowModal }) => {
   return (
     <Modal
       showModal={showModal}
-      onClickOutside={() => setShowModal(false)}
       header={
         <ModalHeaderWorkflowPAT
+          user={user?.data}
           data={workflowData}
           status={workflowData?.statusPat}
           dispatch={dispatch}
           validationErrors={validationErrors}
+          handleCloseModal={handleCloseModal}
+          showModal={showModal}
         />
       }
       footer={

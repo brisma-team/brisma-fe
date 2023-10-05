@@ -61,6 +61,9 @@ const ModalFooterWorkflowPAT = ({
             handler={handleSubmit}
           />
         </div>
+        <div className="rounded w-32 bg-atlasian-yellow">
+          <ButtonField text={"Simpan"} name="update" handler={handleSubmit} />
+        </div>
       </div>
     );
   }

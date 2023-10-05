@@ -1,16 +1,19 @@
 import { setWorkflowData } from "@/slices/pat/documentSlice";
 import { useEffect, useState } from "react";
 import { CardFormInput } from "../../commons";
-import { TextInput } from "@/components/atoms";
+import { CloseModal, TextInput } from "@/components/atoms";
 import CardFormInputTeam from "../CardFormInputTeam";
 import Image from "next/image";
 import { ImageCheck } from "@/helpers/imagesUrl";
 
 const ModalHeaderWorkflowPAT = ({
+  user,
   data,
   status,
   dispatch,
   validationErrors,
+  handleCloseModal,
+  showModal,
 }) => {
   const [optionSigners, setOptionSigners] = useState([]);
 
@@ -58,7 +61,8 @@ const ModalHeaderWorkflowPAT = ({
   };
 
   return (
-    <div className="w-[61rem]">
+    <div className="w-[61rem] relative">
+      <CloseModal handleCloseModal={handleCloseModal} showModal={showModal} />
       <div className="mx-3">
         {/* <PageTitle text={"Workflow"} /> */}
         <p className="font-bold text-xl text-brisma">Workflow</p>
@@ -88,8 +92,15 @@ const ModalHeaderWorkflowPAT = ({
             }
             childProperty={"is_signed"}
             validationErrors={validationErrors}
-            withoutButtonAdd={status !== "On Progress" && true}
-            isDisabled={status !== "On Progress" && true}
+            withoutButtonAdd={
+              status !== "On Progress" && data?.maker !== user?.pn && true
+            }
+            isDisabled={
+              status !== "On Progress" && data?.maker !== user?.pn && true
+            }
+            isButtonChange={
+              status === "On Approver" && data?.maker === user?.pn && "Ganti"
+            }
           />
         </div>
         <div className="w-1/3">
@@ -102,8 +113,15 @@ const ModalHeaderWorkflowPAT = ({
             property={"ref_tim_audit_signer"}
             optionValue={optionSigners}
             validationErrors={validationErrors}
-            withoutButtonAdd={status !== "On Progress" && true}
-            isDisabled={status !== "On Progress" && true}
+            withoutButtonAdd={
+              status !== "On Progress" && data?.maker !== user?.pn && true
+            }
+            isDisabled={
+              status !== "On Progress" && data?.maker !== user?.pn && true
+            }
+            isButtonChange={
+              status === "On Approver" && data?.maker === user?.pn && "Ganti"
+            }
           />
         </div>
       </div>
