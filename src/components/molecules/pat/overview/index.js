@@ -1,4 +1,5 @@
 import CardOverview from "./CardOverview";
 import CardFilterProjectOverview from "./CardFilterProjectOverview";
+import ModalCreateProjectPAT from "./ModalCreateProjectPAT";
 
-export { CardOverview, CardFilterProjectOverview };
+export { CardOverview, CardFilterProjectOverview, ModalCreateProjectPAT };

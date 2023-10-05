@@ -19,6 +19,7 @@ const CardBody = ({ title, value, icon }) => {
 };
 
 const CardOverview = ({
+  id,
   title,
   year,
   progress,
@@ -34,11 +35,14 @@ const CardOverview = ({
     router.push(href);
   };
 
+  const handeClickDropdown = () => {
+    router.push(`/pat/projects/${id}/dokumen?openModal=true`);
+  };
+
   return (
     <DivButton
       handleClick={handleClickCard}
       className="m-2 hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
-      // href={href}
     >
       <Card>
         <div className="w-full px-4 pb-2">
@@ -47,7 +51,7 @@ const CardOverview = ({
               {title}
             </div>
             <div className="w-7">
-              <DropdownCard />
+              <DropdownCard handleClick={handeClickDropdown} />
             </div>
           </div>
           <div className="text-sm font-bold">{year}</div>

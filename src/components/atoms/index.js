@@ -32,6 +32,7 @@ import CheckboxField from "./Checkbox";
 import LozengeField from "./Lozenge";
 import CloseModal from "./CloseModal";
 import Badge from "./Badge";
+import YearPicker from "./YearPicker";
 
 export {
   AvatarDefaultExample,
@@ -68,4 +69,5 @@ export {
   LozengeField,
   CloseModal,
   Badge,
+  YearPicker,
 };

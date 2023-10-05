@@ -6,12 +6,8 @@ import DropdownMenu, {
 import Button from "@atlaskit/button/standard-button";
 import { IconMore } from "@/components/icons";
 
-const DropdownCard = () => {
+const DropdownCard = ({ handleClick }) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const closeDropdown = () => {
-    setIsOpen(false);
-  };
 
   return (
     <DropdownMenu
@@ -26,14 +22,7 @@ const DropdownCard = () => {
       onOpenChange={(e) => (setIsOpen(e.isOpen), e.event.stopPropagation())}
     >
       <DropdownItemGroup>
-        <DropdownItem onClick={closeDropdown}>Change Initiator</DropdownItem>
-        <DropdownItem onClick={closeDropdown}>
-          Reset Approval PAT RAO
-        </DropdownItem>
-        <DropdownItem onClick={closeDropdown}>
-          Reset Approval PAT HOA
-        </DropdownItem>
-        <DropdownItem onClick={closeDropdown}>Riwayat Dokumen</DropdownItem>
+        <DropdownItem onClick={handleClick}>Workflow Approval</DropdownItem>
       </DropdownItemGroup>
     </DropdownMenu>
   );
