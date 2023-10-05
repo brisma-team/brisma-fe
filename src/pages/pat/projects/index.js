@@ -161,29 +161,30 @@ const index = () => {
       </div>
       {/* End Filter */}
       {/* Start Content */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 my-4 overflow-hidden -ml-2">
-        {projectOverviewError ? (
-          <DataNotFound />
-        ) : (
-          data?.length &&
-          data.map((v, i) => {
-            return (
-              <CardOverview
-                key={i}
-                id={v.id}
-                title={v.title}
-                year={v.year}
-                progress={v.progress}
-                percent={v.percent}
-                documentStatus={v.documentStatus}
-                apporovalStatus={v.apporovalStatus}
-                addendum={v.addendum}
-                href={v.href}
-              />
-            );
-          })
-        )}
-      </div>
+      {projectOverviewError ? (
+        <DataNotFound />
+      ) : (
+        data?.length && (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 my-4 overflow-hidden -ml-2">
+            {data.map((v, i) => {
+              return (
+                <CardOverview
+                  key={i}
+                  id={v.id}
+                  title={v.title}
+                  year={v.year}
+                  progress={v.progress}
+                  percent={v.percent}
+                  documentStatus={v.documentStatus}
+                  apporovalStatus={v.apporovalStatus}
+                  addendum={v.addendum}
+                  href={v.href}
+                />
+              );
+            })}
+          </div>
+        )
+      )}
       <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
       {/* End Content */}
     </PatOverviewLayout>

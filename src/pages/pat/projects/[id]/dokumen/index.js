@@ -222,6 +222,7 @@ const index = () => {
           baseUrl={baseUrl}
           routes={routes}
           prevUrl={"/ringkasan-objek-audit"}
+          widthDropdown={"w-56"}
         />
       </div>
       {/* Start Content */}
