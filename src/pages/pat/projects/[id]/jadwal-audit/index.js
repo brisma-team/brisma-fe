@@ -87,7 +87,7 @@ const index = () => {
       ...params,
       id,
       pages: currentPage,
-      limit: 4,
+      limit: 3,
     });
 
   const [data, setData] = useState([]);
