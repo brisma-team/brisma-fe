@@ -20,6 +20,9 @@ import copyToClipboard from "./copyToClipboard";
 import errorSwalTimeout from "./errorSwalTimeout";
 import dateNow from "./dateNow";
 import findDataFromArray from "./findDataFromArray";
+import convertToNominal from "./convertToNominal";
+import parseInteger from "./parseInteger";
+import inputSwal from "./inputSwal";
 
 export {
   loadingSwal,
@@ -44,4 +47,7 @@ export {
   errorSwalTimeout,
   dateNow,
   findDataFromArray,
+  convertToNominal,
+  parseInteger,
+  inputSwal,
 };

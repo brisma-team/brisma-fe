@@ -62,7 +62,7 @@ const index = () => {
         title: "UKER Assessment",
         description: "Pembentukan tim audit.",
         status: mapaStatusEWP?.data?.uker_assesment ? "success" : "failed",
-        url: `/ewp/projects/konvensional/${id}/mapa/uker-asessment`,
+        url: `/ewp/projects/konvensional/${id}/mapa/uker-assessment`,
       },
       {
         title: "Analisis Perencanaan",
@@ -94,7 +94,7 @@ const index = () => {
         title: "Dokumen M.A.P.A",
         description: "Melihat ringkasan objek audit.",
         status: mapaStatusEWP?.data?.doc_mapa ? "success" : "failed",
-        url: `/ewp/projects/konvensional/${id}/mapa/dokumen-mapa`,
+        url: `/ewp/projects/konvensional/${id}/mapa/dokumen`,
       },
     ]);
   }, [mapaStatusEWP]);

@@ -2,9 +2,11 @@ import {
   ButtonIcon,
   ErrorValidation,
   InlineEditText,
+  TextInput,
 } from "@/components/atoms";
 import { IconCrossCircle, IconInfo, IconQuestions } from "@/components/icons";
 import { OrgehSelect, UkerTypeSelect } from "@/components/molecules/commons";
+import { convertToNominal } from "@/helpers";
 import { setUkerAssessmentData } from "@/slices/ewp/konvensional/mapa/ukerAssessmentMapaEWPSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -80,7 +82,7 @@ const TableUkerAssessment = ({
                 </div>
                 <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center justify-center text-justify px-2 py-1">
                   <OrgehSelect
-                    width="w-[20rem]"
+                    width="w-[25rem]"
                     handleChange={(e) => handleChangeOrgeh(e.value, i)}
                     selectedValue={{
                       label: v.ref_auditee_orgeh_name,
@@ -103,7 +105,7 @@ const TableUkerAssessment = ({
                 </div>
                 <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[13%] flex justify-center items-center px-2 py-1">
                   <UkerTypeSelect
-                    width="w-[8rem]"
+                    width="w-[10rem]"
                     handleChange={(e) => handleChange("tipe_uker", i, e.value)}
                     selectedValue={v.tipe_uker}
                   />
@@ -115,11 +117,17 @@ const TableUkerAssessment = ({
                     </div>
                   )}
                 </div>
-                <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[14%] flex items-center justify-center px-2 pb-1.5">
+                <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[14%] flex items-center justify-center px-2 py-1.5">
                   <div className="w-full">
-                    <InlineEditText
-                      handleConfirm={(e) => handleChange("gross_profit", i, e)}
-                      placeholder="Gross Profit"
+                    <TextInput
+                      onChange={(e) =>
+                        handleChange(
+                          "gross_profit",
+                          i,
+                          convertToNominal(e.target.value)
+                        )
+                      }
+                      placeholder={"Gross Profit"}
                       value={v.gross_profit}
                     />
                     {validationErrors[`[${i}].gross_profit`] && (

@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 import { getAuditTeamTable } from "@/helpers/templates/auditTeam";
 import { getAuditTargetTable } from "@/helpers/templates/auditTarget";
 import { LandingLayoutEWP } from "@/layouts/ewp";
+import { useAuditorEWP } from "@/data/ewp/konvensional";
 
 const routes = [
   {
@@ -45,13 +46,20 @@ const index = () => {
   const baseUrl = `/pat/projects/${id}`;
   const { statusPat } = useStatusPat(id);
   const { workflow } = useWorkflow("detail", { id });
+  const { auditorEWP } = useAuditorEWP({ id });
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
-    { name: "PAT", path: "/pat" },
-    { name: "Overview", path: "/pat/projects" },
-    { name: statusPat?.data?.pat_name, path: `/pat/projects/${id}` },
-    { name: "Dokumen", path: `/pat/projects/${id}/dokumen` },
+    { name: "EWP", path: "/ewp" },
+    {
+      name: `${auditorEWP?.data?.project_info?.project_id} / MAPA`,
+      path: `${baseUrl}`,
+    },
+    {
+      name: "Pemetaan Prioritas",
+      path: `${baseUrl}/pemetaan-prioritas`,
+    },
   ];
+
   const nav = [
     { idx: 0, name: "Latar Belakang dan Tujuan", url: "ltb" },
     { idx: 1, name: "Sumber Informasi", url: "si" },

@@ -26,7 +26,7 @@ const routes = [
   { name: "Penugasan", slug: "penugasan" },
   { name: "Jadwal Audit", slug: "jadwal-audit" },
   { name: "Anggaran", slug: "anggaran" },
-  { name: "Dokumen", slug: "dokument" },
+  { name: "Dokumen", slug: "dokumen" },
 ];
 
 const index = () => {

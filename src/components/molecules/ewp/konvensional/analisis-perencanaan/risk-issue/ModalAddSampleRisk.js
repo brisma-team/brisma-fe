@@ -8,19 +8,34 @@ import {
   TextAreaField,
   TextInput,
 } from "@/components/atoms";
-import { useState } from "react";
-import { confirmationSwal } from "@/helpers";
+import { useState, useEffect } from "react";
+import {
+  confirmationSwal,
+  errorSwal,
+  loadingSwal,
+  parseInteger,
+  useDeleteData,
+} from "@/helpers";
 import { useDispatch, useSelector } from "react-redux";
 import {
   ModalHeader,
   ModalFooter,
   ContentSampleCSV,
+  ContentSampleFile,
 } from "./modal/sample-risk";
 import { FormWithLabel } from "@/components/molecules/commons";
-import { setPayloadSample } from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
+import {
+  setPayloadSample,
+  setDataTables,
+  setPayloadUploadSample,
+  resetPayloadUploadSample,
+} from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
 import { SubModalPickDataCSV } from "./modal/sample-risk/sample-csv";
-import { useSampleUploadMapaEWP } from "@/data/ewp/konvensional/mapa/analisis-perencanaan";
-import { useEffect } from "react";
+import {
+  useSamplePoolMapaEWP,
+  useSampleUploadMapaEWP,
+} from "@/data/ewp/konvensional/mapa/analisis-perencanaan";
+import { useRouter } from "next/router";
 
 const ModalAddSampleRisk = ({
   showModal,
@@ -28,6 +43,7 @@ const ModalAddSampleRisk = ({
   mutate,
   selectedRiskIssue,
 }) => {
+  const { id } = useRouter().query;
   const classNavbar = `font-semibold text-base z-10 flex justify-center pb-1`;
   const classNavbarActive = `border-b-[5px] border-atlasian-blue-light text-atlasian-blue-light`;
   const dispatch = useDispatch();
@@ -36,8 +52,17 @@ const ModalAddSampleRisk = ({
   const [currentSubModalStage, setCurrentSubModalStage] = useState(1);
   const [isPickDataModal, setIsPickDataModal] = useState(false);
   const [isSelectedSamplePool, setIsSelectedSamplePool] = useState(false);
+  const [selectedDeleteSample, setSelectedDeleteSample] = useState([]);
+  const [typeSamplePool, setTypeSamplePool] = useState("sample_csv"); // default csv
+
+  const dataTables = useSelector(
+    (state) => state.planningAnalysisMapaEWP.dataTables
+  );
   const payloadSample = useSelector(
     (state) => state.planningAnalysisMapaEWP.payloadSample
+  );
+  const payloadUploadSample = useSelector(
+    (state) => state.planningAnalysisMapaEWP.payloadUploadSample
   );
 
   const { sampleUploadMapaEWP, sampleUploadMapaEWPMutate } =
@@ -45,9 +70,65 @@ const ModalAddSampleRisk = ({
       mapa_uker_mcr_id: selectedRiskIssue,
     });
 
+  const { samplePoolMapaEWP, samplePoolMapaEWPMutate } = useSamplePoolMapaEWP(
+    typeSamplePool,
+    {
+      id,
+      mapa_uker_mcr_id: selectedRiskIssue,
+    }
+  );
+
+  // useEffect(() => {
+  //   setCurrentModalStage(1);
+  //   setCurrentSubModalStage(1);
+  //   setIsPickDataModal(false);
+  //   setIsSelectedSamplePool(false);
+  //   setIsSelectedSamplePool(false);
+  //   setSelectedDeleteSample([]);
+  // }, []);
+
   useEffect(() => {
-    console.log("payloadSample => ", payloadSample);
-  }, [payloadSample]);
+    let type;
+    switch (currentModalStage) {
+      case 1:
+        type = "sample_csv";
+        break;
+      case 2:
+        type = "sample_file";
+        break;
+      case 3:
+        type = "sample_frd";
+        break;
+      case 4:
+        type = "sample_monber";
+        break;
+    }
+    setTypeSamplePool(type);
+  }, [currentModalStage]);
+
+  useEffect(() => {
+    console.log("sampleUploadMapaEWP => ", sampleUploadMapaEWP);
+    const calculateTotalJumlahSample = () => {
+      let total = 0;
+      if (sampleUploadMapaEWP?.data) {
+        const keys = Object.keys(sampleUploadMapaEWP.data);
+
+        keys.forEach((key) => {
+          if (sampleUploadMapaEWP.data[key]) {
+            sampleUploadMapaEWP.data[key].forEach((item) => {
+              if (item?.jumlah_sample) {
+                total += item.jumlah_sample;
+              }
+            });
+          }
+        });
+      }
+
+      return total;
+    };
+
+    handleChange("sample_jumlah_sample", calculateTotalJumlahSample());
+  }, [sampleUploadMapaEWP]);
 
   const handleChange = (property, value) => {
     const updatedData = {
@@ -58,7 +139,6 @@ const ModalAddSampleRisk = ({
   };
 
   const handleChangeTehnikSampling = (value) => {
-    console.log("e => ", value);
     const updatedData = {
       ...payloadSample,
       sample_ref_teknik_sampling_kode: value.kode,
@@ -78,6 +158,125 @@ const ModalAddSampleRisk = ({
 
     setCurrentModalStage(1);
     setShowModal(false);
+    setIsPickDataModal(false);
+    dispatch(resetPayloadUploadSample());
+  };
+
+  // Untuk delete sample
+  const handleDeleteSample = async () => {
+    if (!selectedDeleteSample.length) {
+      await errorSwal("Silahkan pilih data yang ingin dihapus");
+      return;
+    }
+
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin untuk mengahapus data ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+
+    let url;
+    switch (currentModalStage) {
+      case 1:
+        url = `sample_csv`;
+        break;
+      case 2:
+        url = `sample_file`;
+        break;
+    }
+    await useDeleteData(
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/${selectedRiskIssue}/${url}`,
+      selectedDeleteSample
+    );
+
+    loadingSwal("close");
+    sampleUploadMapaEWPMutate();
+  };
+
+  // Untuk hapus sample pool
+  const handleClickDeleteSamplePool = async (samplePoolId) => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin untuk mengahapus sample data ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
+    let type;
+    switch (currentModalStage) {
+      case 1:
+        type = "sample_csv";
+        break;
+      case 2:
+        type = "sample_file";
+        break;
+    }
+
+    loadingSwal();
+    await useDeleteData(
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${samplePoolId}/${type}/pool`
+    );
+    samplePoolMapaEWPMutate();
+    loadingSwal("close");
+  };
+
+  // Untuk pilih sample data dengan komponen checkbox yang akan di hapus
+  const handleSelectedSample = (isChecked, sampleId) => {
+    if (isChecked) {
+      const findId = selectedDeleteSample.some(
+        (objek) => objek.objek_sample_id === sampleId
+      );
+      if (!findId) {
+        setSelectedDeleteSample((prevState) => [
+          ...prevState,
+          { objek_sample_id: sampleId },
+        ]);
+      }
+    } else {
+      setSelectedDeleteSample((prevState) =>
+        prevState.filter((objek) => objek.objek_sample_id !== sampleId)
+      );
+    }
+  };
+
+  // Untuk custom agar bisa menyisipkan data kedalam state yang di klik pada DynamicTable
+  const extendRows = (rows, onClick) => {
+    return rows.map((row, index) => ({
+      ...row,
+      onClick: (e) => onClick(e, row?.cells[0]?.content, index),
+    }));
+  };
+
+  // Untuk pilih sample data yang ada di DynamicTable yang mana samplenya akan di upload
+  const handleRowClick = (e, key, index) => {
+    const updateDataTables = [...dataTables.tableSelectedRows];
+    const updatePayloadSample = [...payloadUploadSample.values];
+    const existingIndex = updateDataTables.findIndex((item) => {
+      return item === index;
+    });
+
+    if (existingIndex > -1) {
+      updatePayloadSample.splice(existingIndex, 1);
+      updateDataTables.splice(existingIndex, 1);
+    } else {
+      updatePayloadSample.push(key);
+      updateDataTables.push(index);
+    }
+
+    dispatch(
+      setDataTables({ ...dataTables, tableSelectedRows: updateDataTables })
+    );
+    dispatch(
+      setPayloadUploadSample({
+        ...payloadUploadSample,
+        values: updatePayloadSample,
+      })
+    );
   };
 
   const optionValue = [{ label: "Test", value: { kode: "1", nama: "Test" } }];
@@ -89,6 +288,7 @@ const ModalAddSampleRisk = ({
         <ModalHeader
           headerText={"Tambah Sample Risk"}
           handleCloseModal={handleCloseModal}
+          showModal={showModal}
         />
       }
       footer={
@@ -96,6 +296,8 @@ const ModalAddSampleRisk = ({
           isPickDataModal={isPickDataModal}
           setIsPickDataModal={setIsPickDataModal}
           isSelectedSamplePool={isSelectedSamplePool}
+          setIsSelectedSamplePool={setIsSelectedSamplePool}
+          currentModalStage={currentModalStage}
           setCurrentModalStage={setCurrentModalStage}
           currentSubModalStage={currentSubModalStage}
           setCurrentSubModalStage={setCurrentSubModalStage}
@@ -103,123 +305,142 @@ const ModalAddSampleRisk = ({
           mutate={mutate}
           setShowModal={setShowModal}
           sampleMutate={sampleUploadMapaEWPMutate}
+          typeSamplePool={typeSamplePool}
         />
+      }
+      withoutFooter={
+        (!isSelectedSamplePool && currentSubModalStage === 1) ||
+        (isSelectedSamplePool && currentSubModalStage === 1)
+          ? false
+          : true
       }
     >
       <div className="w-[67rem]">
         {isPickDataModal ? (
           <SubModalPickDataCSV
             currentSubModalStage={currentSubModalStage}
+            currentModalStage={currentModalStage}
             setCurrentSubModalStage={setCurrentSubModalStage}
             setIsPickDataModal={setIsPickDataModal}
             isSelectedSamplePool={isSelectedSamplePool}
             setIsSelectedSamplePool={setIsSelectedSamplePool}
-            selectedRiskIssue={selectedRiskIssue}
+            samplePoolData={samplePoolMapaEWP?.data}
+            handleClickDeleteSamplePool={handleClickDeleteSamplePool}
+            handleRowClick={handleRowClick}
+            extendRows={extendRows}
           />
         ) : (
           <div className="px-3 py-1 flex gap-3">
             <div className="w-2/5">
-              <Card>
-                <div className="px-6 w-full">
-                  <div className="mb-4 text-base font-semibold text-atlasian-blue-light">
-                    Likuidutas
+              <div>
+                <Card>
+                  <div className="px-6 w-full">
+                    <div className="mb-4 text-base font-semibold text-atlasian-blue-light">
+                      Likuidutas
+                    </div>
+                    <FormWithLabel
+                      form={
+                        <TextInput
+                          placeholder="Sumber Informasi"
+                          onChange={(e) =>
+                            handleChange("sample_sumber_info", e.target.value)
+                          }
+                          value={payloadSample?.sample_sumber_info}
+                        />
+                      }
+                      label="Sumber Informasi"
+                      widthLabel={"w-2/5"}
+                      widthForm={"w-3/5"}
+                    />
+                    <FormWithLabel
+                      form={
+                        <TextInput
+                          placeholder="Jumlah Populasi"
+                          onChange={(e) =>
+                            handleChange(
+                              "sample_jumlah_populasi",
+                              parseInteger(e.target.value).toString()
+                            )
+                          }
+                          value={payloadSample.sample_jumlah_populasi}
+                        />
+                      }
+                      label="Jumlah Populasi"
+                      widthLabel={"w-2/5"}
+                      widthForm={"w-3/5"}
+                    />
+                    <FormWithLabel
+                      form={
+                        <DatepickerStartEnd
+                          placeholderStart="Tanggal"
+                          placeholderEnd="Tanggal"
+                          handlerChangeStart={(e) =>
+                            handleChange("sample_periode_start", e)
+                          }
+                          handlerChangeEnd={(e) =>
+                            handleChange("sample_periode_end", e)
+                          }
+                          valueStart={payloadSample?.sample_periode_start}
+                          valueEnd={payloadSample?.sample_periode_end}
+                          pastDate={true}
+                          format={"DD/MM/YYYY"}
+                        />
+                      }
+                      label="Periode"
+                      widthLabel={"w-2/5"}
+                      widthForm={"w-3/5"}
+                      labelPositionTop={true}
+                    />
+                    <FormWithLabel
+                      form={
+                        <TextInput
+                          isDisabled={true}
+                          value={payloadSample.sample_jumlah_sample}
+                        />
+                      }
+                      label="Jumlah Sample"
+                      widthLabel={"w-2/5"}
+                      widthForm={"w-3/5"}
+                    />
+                    <FormWithLabel
+                      form={
+                        <Select
+                          optionValue={optionValue}
+                          placeholder="Tehnik Sampling"
+                          onChange={(e) => handleChangeTehnikSampling(e.value)}
+                          value={{
+                            label:
+                              payloadSample.sample_ref_teknik_sampling_name,
+                            value: {
+                              kode: payloadSample.sample_ref_teknik_sampling_kode,
+                              name: payloadSample.sample_ref_teknik_sampling_name,
+                            },
+                          }}
+                        />
+                      }
+                      label="Tehnik Sampling"
+                      widthLabel={"w-2/5"}
+                      widthForm={"w-3/5"}
+                    />
+                    <FormWithLabel
+                      form={
+                        <TextAreaField
+                          placeholder="Uraian Sample.."
+                          resize="auto"
+                          handleChange={(e) =>
+                            handleChange("sample_uraian", e.target.value)
+                          }
+                          value={payloadSample?.sample_uraian}
+                        />
+                      }
+                      label="Uraian Sample"
+                      widthLabel={"w-2/5"}
+                      widthForm={"w-3/5"}
+                      labelPositionTop={true}
+                    />
                   </div>
-                  <FormWithLabel
-                    form={
-                      <TextInput
-                        placeholder="Sumber Informasi"
-                        onChange={(e) =>
-                          handleChange("sample_sumber_info", e.target.value)
-                        }
-                        value={payloadSample?.sample_sumber_info}
-                      />
-                    }
-                    label="Sumber Informasi"
-                    widthLabel={"w-2/5"}
-                    widthForm={"w-3/5"}
-                  />
-                  <FormWithLabel
-                    form={
-                      <TextInput
-                        placeholder="Jumlah Populasi"
-                        isDisabled={true}
-                      />
-                    }
-                    label="Jumlah Populasi"
-                    widthLabel={"w-2/5"}
-                    widthForm={"w-3/5"}
-                  />
-                  <FormWithLabel
-                    form={
-                      <DatepickerStartEnd
-                        placeholderStart="Tanggal"
-                        placeholderEnd="Tanggal"
-                        handlerChangeStart={(e) =>
-                          handleChange("sample_periode_start", e)
-                        }
-                        handlerChangeEnd={(e) =>
-                          handleChange("sample_periode_end", e)
-                        }
-                        valueStart={payloadSample?.sample_periode_start}
-                        valueEnd={payloadSample?.sample_periode_end}
-                      />
-                    }
-                    label="Periode"
-                    widthLabel={"w-2/5"}
-                    widthForm={"w-3/5"}
-                    labelPositionTop={true}
-                  />
-                  <FormWithLabel
-                    form={
-                      <TextInput
-                      // isDisabled={true}
-                      // onChange={(e) =>
-                      //   handleChange("sample_jumlah_sample", e.target.value)
-                      // }
-                      // value={payloadSample.sample_jumlah_sample}
-                      />
-                    }
-                    label="Jumlah Sample"
-                    widthLabel={"w-2/5"}
-                    widthForm={"w-3/5"}
-                  />
-                  <FormWithLabel
-                    form={
-                      <Select
-                        optionValue={optionValue}
-                        placeholder="Tehnik Sampling"
-                        onChange={(e) => handleChangeTehnikSampling(e.value)}
-                        value={{
-                          label: payloadSample.sample_ref_teknik_sampling_name,
-                          value: {
-                            kode: payloadSample.sample_ref_teknik_sampling_kode,
-                            name: payloadSample.sample_ref_teknik_sampling_name,
-                          },
-                        }}
-                      />
-                    }
-                    label="Tehnik Sampling"
-                    widthLabel={"w-2/5"}
-                    widthForm={"w-3/5"}
-                  />
-                  <FormWithLabel
-                    form={
-                      <TextAreaField
-                        placeholder="Uraian Sample.."
-                        resize="auto"
-                        handleChange={(e) =>
-                          handleChange("sample_uraian", e.target.value)
-                        }
-                        value={payloadSample?.sample_uraian}
-                      />
-                    }
-                    label="Uraian Sample"
-                    widthLabel={"w-2/5"}
-                    widthForm={"w-3/5"}
-                    labelPositionTop={true}
-                  />
-                </div>
-              </Card>
+                </Card>
+              </div>
             </div>
             <div className="w-3/5">
               <Card>
@@ -258,12 +479,37 @@ const ModalAddSampleRisk = ({
                   </DivButton>
                 </div>
                 <div className="-mt-0.5 border-t border-[#00000040] border-t-opacity-100 w-full"></div>
-                <ContentSampleCSV
-                  data={sampleUploadMapaEWP?.data?.csv}
-                  setCurrentModalStage={setCurrentModalStage}
-                  mutate={sampleUploadMapaEWPMutate}
-                />
-                <div className="px-4 flex justify-between w-full">
+                {currentModalStage === 1 ? (
+                  <ContentSampleCSV
+                    data={sampleUploadMapaEWP?.data?.csv}
+                    setCurrentModalStage={setCurrentModalStage}
+                    handleSelectedSample={handleSelectedSample}
+                  />
+                ) : currentModalStage === 2 ? (
+                  <ContentSampleFile
+                    data={sampleUploadMapaEWP?.data?.file}
+                    setCurrentModalStage={setCurrentModalStage}
+                    handleSelectedSample={handleSelectedSample}
+                  />
+                ) : currentModalStage === 3 ? (
+                  // <ContentSampleCSV
+                  //   data={sampleUploadMapaEWP?.data?.csv}
+                  //   setCurrentModalStage={setCurrentModalStage}
+                  //   mutate={sampleUploadMapaEWPMutate}
+                  // />
+                  <div>test 3</div>
+                ) : (
+                  currentModalStage === 4 && (
+                    // <ContentSampleCSV
+                    //   data={sampleUploadMapaEWP?.data?.csv}
+                    //   setCurrentModalStage={setCurrentModalStage}
+                    //   mutate={sampleUploadMapaEWPMutate}
+                    // />
+
+                    <div>test 4</div>
+                  )
+                )}
+                <div className="px-4 pb-2 flex justify-between w-full">
                   <div className="w-[7.5rem] bg-atlasian-blue-light rounded">
                     <ButtonField
                       text="Pilih Data"
@@ -271,7 +517,7 @@ const ModalAddSampleRisk = ({
                     />
                   </div>
                   <div className="w-[7.5rem] bg-atlasian-red rounded">
-                    <ButtonField text="Hapus" />
+                    <ButtonField text="Hapus" handler={handleDeleteSample} />
                   </div>
                 </div>
               </Card>

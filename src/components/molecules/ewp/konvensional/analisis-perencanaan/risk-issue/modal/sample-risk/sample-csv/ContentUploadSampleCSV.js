@@ -1,20 +1,16 @@
-import { Pagination } from "@/components/atoms";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import ContentPickSampleCSV from "./ContentPickSampleCSV";
-import {
-  setDataTables,
-  setPayloadUploadSample,
-} from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
 import DynamicTable from "@atlaskit/dynamic-table";
+import { TextAreaField } from "@/components/atoms";
+import { useDispatch } from "react-redux";
+import { setPayloadUploadSample } from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
 
-const extendRows = (rows, onClick) => {
-  return rows.map((row, index) => ({
-    ...row,
-    onClick: (e) => onClick(e, row?.cells[0]?.content, index),
-  }));
-};
-
-const ContentUploadSampleCSV = ({ isSelectedSamplePool }) => {
+const ContentUploadSampleCSV = ({
+  currentModalStage,
+  isSelectedSamplePool,
+  extendRows,
+  handleRowClick,
+}) => {
   const dispatch = useDispatch();
   const dataTables = useSelector(
     (state) => state.planningAnalysisMapaEWP.dataTables
@@ -23,29 +19,9 @@ const ContentUploadSampleCSV = ({ isSelectedSamplePool }) => {
     (state) => state.planningAnalysisMapaEWP.payloadUploadSample
   );
 
-  const handleRowClick = (e, key, index) => {
-    const updateDataTables = [...dataTables.tableSelectedRows];
-    const updatePayloadSample = [...payloadUploadSample.values];
-    const existingIndex = updateDataTables.findIndex((item) => {
-      return item === index;
-    });
-
-    if (existingIndex > -1) {
-      updatePayloadSample.splice(existingIndex, 1);
-      updateDataTables.splice(existingIndex, 1);
-    } else {
-      updatePayloadSample.push(key);
-      updateDataTables.push(index);
-    }
-
+  const handleChange = (property, value) => {
     dispatch(
-      setDataTables({ ...dataTables, tableSelectedRows: updateDataTables })
-    );
-    dispatch(
-      setPayloadUploadSample({
-        ...payloadUploadSample,
-        values: updatePayloadSample,
-      })
+      setPayloadUploadSample({ ...payloadUploadSample, [property]: value })
     );
   };
 
@@ -55,23 +31,38 @@ const ContentUploadSampleCSV = ({ isSelectedSamplePool }) => {
 
   return (
     <div className="px-4 py-2">
-      <p>{dataTables.fileName}</p>
+      <p>{payloadUploadSample.filename}</p>
       <div className="my-2" />
-      {dataTables.tableRows.length ? (
-        <div>
-          <div className="w-full p-4 overflow-y-scroll max-h-[40rem]">
-            <div className="dataTables">
-              <DynamicTable
-                head={dataTables.tableColumns}
-                highlightedRowIndex={dataTables.tableSelectedRows}
-                rows={extendRows(dataTables.tableRows, handleRowClick)}
-              />
+      {currentModalStage === 1 ? (
+        dataTables.tableRows.length ? (
+          <div>
+            <div className="w-full p-4 overflow-y-scroll max-h-[40rem]">
+              <div className="dataTables">
+                {dataTables.tableColumns ? (
+                  <DynamicTable
+                    head={dataTables.tableColumns}
+                    highlightedRowIndex={dataTables.tableSelectedRows}
+                    rows={extendRows(dataTables.tableRows, handleRowClick)}
+                    rowsPerPage={50}
+                    defaultPage={1}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
             </div>
           </div>
-          <Pagination pages={1} />
-        </div>
+        ) : (
+          ""
+        )
       ) : (
-        ""
+        currentModalStage === 2 && (
+          <TextAreaField
+            value={payloadUploadSample?.description}
+            resize={"auto"}
+            handleChange={(e) => handleChange("description", e.target.value)}
+          />
+        )
       )}
     </div>
   );

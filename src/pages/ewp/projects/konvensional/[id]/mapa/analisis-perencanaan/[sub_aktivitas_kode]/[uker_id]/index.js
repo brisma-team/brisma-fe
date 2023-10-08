@@ -1,11 +1,9 @@
-import { Breadcrumbs, PageTitle } from "@/components/atoms";
+import { Breadcrumbs, ButtonField, PageTitle } from "@/components/atoms";
 import { useAuditorEWP } from "@/data/ewp/konvensional";
 import { LandingLayoutEWP } from "@/layouts/ewp";
 import { useState, useEffect } from "react";
 import { PrevNextNavigation } from "@/components/molecules/commons";
-import { IconPlus } from "@/components/icons";
 import { usePlanningAnalysisEWP } from "@/data/ewp/konvensional/mapa/analisis-perencanaan";
-import Button from "@atlaskit/button";
 import {
   ModalAddRiskIssue,
   TableRiskIssue,
@@ -99,15 +97,11 @@ const index = () => {
         />
       </div>
       <div className="mb-6 text-base">{`${riskIssueInfo?.ref_auditee_branch_name} / ${riskIssueInfo?.ref_aktivitas_name} / ${riskIssueInfo?.ref_sub_aktivitas_name}`}</div>
-      <div className="w-44">
-        <Button
-          appearance="primary"
-          iconBefore={<IconPlus />}
-          onClick={() => setShowModalCreateRiskIssue(true)}
-          shouldFitContainer
-        >
-          Tambah Risk Issue
-        </Button>
+      <div className="w-36 rounded bg-atlasian-purple">
+        <ButtonField
+          handler={() => setShowModalCreateRiskIssue(true)}
+          text={"Tambah Risk Issue"}
+        />
         <ModalAddRiskIssue
           showModal={showModalCreateRiskIssue}
           setShowModal={setShowModalCreateRiskIssue}

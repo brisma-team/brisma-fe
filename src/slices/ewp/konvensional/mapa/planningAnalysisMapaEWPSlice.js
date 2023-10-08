@@ -47,6 +47,10 @@ const initialState = {
     sample_ref_teknik_sampling_kode: "",
     sample_ref_teknik_sampling_name: "",
   },
+  payloadDescAnalysisSubActivity: {
+    sub_aktivitas_id: "",
+    deskripsi: "",
+  },
 
   // default data
   defaultPayloadRiskIssue: {
@@ -77,6 +81,10 @@ const initialState = {
     sample_uraian: "",
     sample_ref_teknik_sampling_kode: "",
     sample_ref_teknik_sampling_name: "",
+  },
+  defaultPayloadDescAnalysisSubActivity: {
+    sub_aktivitas_id: "",
+    deskripsi: "",
   },
   defaultDataTables: {
     fileName: "",
@@ -124,6 +132,9 @@ export const planningAnalysisMapaEWPSlice = createSlice({
     setPayloadSample: (state, action) => {
       state.payloadSample = action.payload;
     },
+    setPayloadDescAnalysisSubActivity: (state, action) => {
+      state.payloadDescAnalysisSubActivity = action.payload;
+    },
 
     // validation
     setValidationErrorsRiskIssue: (state, action) => {
@@ -139,6 +150,11 @@ export const planningAnalysisMapaEWPSlice = createSlice({
     },
     resetPayloadSample: (state) => {
       state.payloadSample = { ...state.defaultPayloadSample };
+    },
+    resetPayloadDescAnalysisSubActivity: (state) => {
+      state.payloadDescAnalysisSubActivity = {
+        ...state.defaultPayloadDescAnalysisSubActivity,
+      };
     },
     resetValidationErrorsPayloadRiskIssue: (state) => {
       state.validationErrorsPayloadRiskIssue = {};
@@ -159,10 +175,12 @@ export const {
   setPayloadRiskIssue,
   setPayloadUploadSample,
   setPayloadSample,
+  setPayloadDescAnalysisSubActivity,
   setValidationErrorsRiskIssue,
   resetPayloadRiskIssue,
   resetPayloadUploadSample,
   resetPayloadSample,
+  resetPayloadDescAnalysisSubActivity,
   resetValidationErrorsPayloadRiskIssue,
   resetDataTables,
 } = planningAnalysisMapaEWPSlice.actions;

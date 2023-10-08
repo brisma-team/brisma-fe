@@ -3,6 +3,7 @@ import { OverviewLayoutEWP } from "@/layouts/ewp";
 import { IconFile, IconPlus } from "@/components/icons";
 import {
   Breadcrumbs,
+  ButtonField,
   PageTitle,
   Pagination,
   Spinner,
@@ -103,10 +104,6 @@ const index = () => {
   };
 
   useEffect(() => {
-    console.log("ref => ", ref);
-  }, [ref]);
-
-  useEffect(() => {
     const handleSearch = () => {
       setParams(filter);
       overviewEWPMutate();
@@ -152,78 +149,72 @@ const index = () => {
 
   return (
     <OverviewLayoutEWP data={approvalEWP?.data?.header}>
-      <div className="pr-40">
-        {/* Start Breadcrumbs */}
-        <Breadcrumbs data={breadcrumbs} />
-        {/* End Breadcrumbs */}
-        <div className="flex justify-between items-center mb-6">
-          <PageTitle text={"Project Overview"} />
-        </div>
-        <div className="flex justify-between items-end">
-          {/* Start Filter */}
-          <div className="flex justify-between items-center gap-2">
-            <div className="w-36">
-              <Button
-                appearance="primary"
-                onClick={() => setShowFilter(!showFilter)}
-                shouldFitContainer
-              >
-                {showFilter ? `Tutup Filter` : `Tampilkan Filter`}
-              </Button>
-            </div>
-            <div className="w-36">
-              <Button
-                appearance="danger"
-                iconBefore={<IconPlus />}
-                onClick={() => setShowModal(true)}
-                shouldFitContainer
-              >
-                Buat Project
-              </Button>
-              <ModalAddProjectEWP
-                showModal={showModal}
-                setShowModal={setShowModal}
-                mutate={overviewEWPMutate}
-              />
-            </div>
-          </div>
-          <div className="w-24">
+      {/* Start Breadcrumbs */}
+      <Breadcrumbs data={breadcrumbs} />
+      {/* End Breadcrumbs */}
+      <div className="flex justify-between items-center mb-6">
+        <PageTitle text={"Project Overview"} />
+      </div>
+      <div className="flex justify-between items-end">
+        {/* Start Filter */}
+        <div className="flex justify-between items-center gap-2">
+          <div className="w-36">
             <Button
               appearance="primary"
-              onClick={() => setShowModal(true)}
+              onClick={() => setShowFilter(!showFilter)}
               shouldFitContainer
-              iconBefore={<IconFile />}
             >
-              Arsip
+              {showFilter ? `Tutup Filter` : `Tampilkan Filter`}
             </Button>
           </div>
+          <div className="w-36 rounded bg-atlasian-purple">
+            <ButtonField
+              handler={() => setShowModal(true)}
+              text={"Buat Project"}
+            />
+            <ModalAddProjectEWP
+              showModal={showModal}
+              setShowModal={setShowModal}
+              mutate={overviewEWPMutate}
+            />
+          </div>
         </div>
-        <div className="relative">
-          <CardFilterProjectOverview
-            showFilter={showFilter}
-            filter={filter}
-            setFilter={setFilter}
-          />
+        <div className="w-24">
+          <Button
+            appearance="primary"
+            onClick={() => setShowModal(true)}
+            shouldFitContainer
+            iconBefore={<IconFile />}
+          >
+            Arsip
+          </Button>
         </div>
-        <div className="w-full min-h-[8.8rem] flex items-end justify-end">
-          <SelectSortFilter change={handleChangeSortBy} />
-        </div>
-        {/* End Filter */}
-        {/* Start Content */}
-        <div className="flex flex-wrap my-4 overflow-hidden -ml-2">
-          {overviewEWPError ? (
-            <DataNotFound />
-          ) : data?.length ? (
-            data.map((v, i) => {
-              return <CardOverview key={i} data={v} callbackRef={ref} />;
-            })
-          ) : (
-            <Spinner />
-          )}
-        </div>
-        <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
-        {/* End Content */}
       </div>
+      <div className="relative">
+        <CardFilterProjectOverview
+          showFilter={showFilter}
+          filter={filter}
+          setFilter={setFilter}
+        />
+      </div>
+      <div className="w-full min-h-[8.8rem] flex items-end justify-end">
+        <SelectSortFilter change={handleChangeSortBy} />
+      </div>
+      {/* End Filter */}
+      {/* Start Content */}
+      <div className="grid grid-cols-4 gap-3 my-4 overflow-hidden -ml-2">
+        {overviewEWPError ? (
+          <DataNotFound />
+        ) : data?.length ? (
+          data.map((v, i) => {
+            return <CardOverview key={i} data={v} callbackRef={ref} />;
+          })
+        ) : (
+          <Spinner />
+        )}
+      </div>
+      <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
+      {/* End Content */}
     </OverviewLayoutEWP>
   );
 };

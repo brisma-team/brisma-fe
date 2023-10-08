@@ -1,5 +1,10 @@
 import { ButtonField, UploadButton } from "@/components/atoms";
-import { loadingSwal, usePostData, usePostFileData } from "@/helpers";
+import {
+  errorSwal,
+  loadingSwal,
+  usePostData,
+  usePostFileData,
+} from "@/helpers";
 import Papa from "papaparse";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,6 +19,8 @@ const ModalFooter = ({
   isPickDataModal,
   setIsPickDataModal,
   isSelectedSamplePool,
+  setIsSelectedSamplePool,
+  currentModalStage,
   setCurrentModalStage,
   currentSubModalStage,
   setCurrentSubModalStage,
@@ -21,6 +28,7 @@ const ModalFooter = ({
   mutate,
   setShowModal,
   sampleMutate,
+  typeSamplePool,
 }) => {
   const dispatch = useDispatch();
   const { id } = useRouter().query;
@@ -77,6 +85,17 @@ const ModalFooter = ({
   const handleUpload = async (e) => {
     loadingSwal();
     if (e?.target?.files) {
+      // Tidak bisa upload CSV jika currentStageModal === 2
+      if (currentModalStage === 2) {
+        if (
+          e.target.files[0]?.type === "application/vnd.ms-excel" ||
+          !e.target.files[0]?.type
+        ) {
+          await errorSwal(`Format .csv tidak didukung`);
+          return;
+        }
+      }
+
       const upload = await usePostFileData(
         `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/cdn/upload`,
         {
@@ -84,6 +103,19 @@ const ModalFooter = ({
           modul: "ewp",
         }
       );
+      switch (currentModalStage) {
+        case 1:
+          break;
+        case 2:
+          dispatch(
+            setPayloadUploadSample({
+              url: upload?.url[0],
+              filename: e?.target?.files[0]?.name,
+              description: "",
+            })
+          );
+          break;
+      }
       await handleConvertFromCSV(upload?.url[0], e?.target?.files[0]);
     }
 
@@ -92,19 +124,14 @@ const ModalFooter = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    setCurrentModalStage(1);
-    setCurrentSubModalStage(1);
-    dispatch(resetPayloadUploadSample());
-    dispatch(resetDataTables());
-
     if (isPickDataModal) {
       await usePostData(
-        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/${selectedRiskIssue}/sample_csv/upload`,
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/${selectedRiskIssue}/${typeSamplePool}/upload`,
         payloadUploadSample
       );
       sampleMutate();
       setIsPickDataModal(false);
+      setIsSelectedSamplePool(false);
     } else {
       await usePostData(
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/${selectedRiskIssue}/sample_info`,
@@ -113,6 +140,11 @@ const ModalFooter = ({
       mutate();
       setShowModal(false);
     }
+
+    setCurrentModalStage(1);
+    setCurrentSubModalStage(1);
+    dispatch(resetPayloadUploadSample());
+    dispatch(resetDataTables());
   };
 
   return (
@@ -122,21 +154,25 @@ const ModalFooter = ({
         currentSubModalStage === 1 && (
           <div>
             <UploadButton
-              fileAccept=".csv"
               handleUpload={handleUpload}
               text="Upload"
               className="rounded w-28 h-8 bg-atlasian-blue-light text-white flex justify-center items-center"
             />
           </div>
         )}
-      <div className="rounded w-28 bg-atlasian-green">
-        <ButtonField
-          text={"Simpan"}
-          handler={handleSubmit}
-          type={"submit"}
-          name={"saveButton"}
-        />
-      </div>
+      {(!isSelectedSamplePool && currentSubModalStage === 1) ||
+      (isSelectedSamplePool && currentSubModalStage === 1) ? (
+        <div className="rounded w-28 bg-atlasian-green">
+          <ButtonField
+            text={"Simpan"}
+            handler={handleSubmit}
+            type={"submit"}
+            name={"saveButton"}
+          />
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

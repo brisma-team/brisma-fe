@@ -1,6 +1,6 @@
 import { ButtonIcon, DivButton } from "@/components/atoms";
 import { IconTrash } from "@/components/icons";
-import { DropdownIcon } from "@/components/molecules/commons";
+import { DropdownCard } from "@/components/molecules/commons";
 import ProgressBar from "@atlaskit/progress-bar";
 import { N800 } from "@atlaskit/theme/colors";
 import { token } from "@atlaskit/tokens";
@@ -64,9 +64,16 @@ const CardOverview = ({ data }) => {
     needApproval,
   } = data;
 
+  const listDropdown = [
+    { label: "Change Initiator", action: "#" },
+    { label: "Reset Approval PAT RAO", action: "#" },
+    { label: "Reset Approval PAT HOA", action: "#" },
+    { label: "Riwayat Dokumen", action: "#" },
+  ];
+
   return (
     <DivButton
-      className="m-2 hover:bg-gray-100 hover:rounded-[10px] hover:no-underline w-[21.875rem]"
+      className="hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
       href={href}
       handleClick={(e) => (e.stopPropagation(), router.push(href))}
     >
@@ -95,7 +102,7 @@ const CardOverview = ({ data }) => {
               <p>{jenis}</p>
             </div>
             <div className="flex items-center justify-end w-20 gap-1 pt-2">
-              <DropdownIcon />
+              <DropdownCard action={listDropdown} />
               <ButtonIcon color={"red"} icon={<IconTrash size="medium" />} />
             </div>
           </div>

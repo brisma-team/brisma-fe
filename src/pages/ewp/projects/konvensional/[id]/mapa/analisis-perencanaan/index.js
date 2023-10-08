@@ -3,6 +3,7 @@ import {
   ButtonIcon,
   Card,
   CheckboxField,
+  DivButton,
   LozengeField,
   PageTitle,
 } from "@/components/atoms";
@@ -30,6 +31,7 @@ import {
 } from "@/components/icons";
 import Image from "next/image";
 import {
+  ImageCircleArrowRed,
   ImageCircleArrowYellow,
   ImageClose,
   ImageGroup,
@@ -43,8 +45,16 @@ import { usePlanningAnalysisEWP } from "@/data/ewp/konvensional/mapa/analisis-pe
 import {
   ModalAddActivity,
   ModalAddSubActivity,
+  ModalDescAnlysisSubActivity,
 } from "@/components/molecules/ewp/konvensional/analisis-perencanaan";
-import { confirmationSwal, loadingSwal, useDeleteData } from "@/helpers";
+import {
+  confirmationSwal,
+  inputSwal,
+  loadingSwal,
+  useDeleteData,
+  usePostData,
+} from "@/helpers";
+import useUser from "@/data/useUser";
 
 const routes = [
   {
@@ -73,6 +83,7 @@ const index = () => {
   const planningAnalysisData = useSelector(
     (state) => state.planningAnalysisMapaEWP.planningAnalysisData
   );
+
   const [expansionMap, setExpansionMap] = useState({});
   const [levelMap, setLevelMap] = useState({});
   const [childParams, setChildParams] = useState({
@@ -85,12 +96,18 @@ const index = () => {
   const [showModalAddActivity, setShowModalAddActivitiy] = useState(false);
   const [showModalAddSubActivity, setShowModalAddSubActivitiy] =
     useState(false);
+  const [showModalDescAnlysisSubActivity, setShowModalDescAnlysisSubActivity] =
+    useState(false);
+
   const [selectedUker, setSelectedUker] = useState({ id: "", name: "" });
-  const [selectedActivityId, setSelectedActivityId] = useState(0);
+  const [selectedActivityId, setSelectedActivityId] = useState(null);
+  const [selectedSubActivityId, setSelectedSubActivityId] = useState(null);
+  const [selectedDesc, setSelectedDesc] = useState("");
 
   const [showModalDesc, setShowModalDesc] = useState(false);
   const [type, setType] = useState("");
 
+  const { user } = useUser();
   const { mapaEWP, mapaEWPMutate } = useMapaEWP("analisis_perencanaan", { id });
   const { auditorEWP } = useAuditorEWP({ id });
   const { planningAnalysisEWP, planningAnalysisEWPMutate } =
@@ -125,6 +142,7 @@ const index = () => {
         return {
           id: v.id,
           parent_id: childParams.uker_id,
+          child_parent_id: childParams.aktivitas_id,
           kode: v.mtd_sub_aktivitas_kode,
           name: v.mtd_sub_aktivitas_name,
           status_approval_kode: v.stc_status_persetujuan_kode,
@@ -133,6 +151,7 @@ const index = () => {
           pic_pn: v.pn_pic_analisa,
           pic_name: v.name_pic_analisa,
           risk: v.total_risk_sub,
+          is_reviewed: v.is_reviewed,
           role: "child",
         };
       });
@@ -166,7 +185,9 @@ const index = () => {
               status_approval_name: aktivitas.stc_status_persetujuan_name,
               risk: aktivitas.jumlah_risk_aktivitas,
               role: "child-parent",
-              children: [{ role: "child" }],
+              deskripsi: aktivitas.deskripsi,
+              is_reviewed: aktivitas.is_reviewed,
+              children: [],
             }))
           : [],
       };
@@ -266,7 +287,6 @@ const index = () => {
   };
 
   const handleDeleteSubActivity = async (subActivityId) => {
-    console.log("subActivityId => ", subActivityId);
     const confirm = await confirmationSwal(
       "Menghapus Sub-Aktifitas akan menghapus seluruh Risk Issue terkait."
     );
@@ -278,6 +298,68 @@ const index = () => {
     loadingSwal();
     await useDeleteData(
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/sub_aktivitas?sub_aktivitas_id=${subActivityId}`
+    );
+    setType("listSubActivity");
+    planningAnalysisEWPMutate();
+    loadingSwal("close");
+  };
+
+  const handleClickDescAnalysisSubActivity = (subActivityId) => {
+    setSelectedSubActivityId(subActivityId);
+    setShowModalDescAnlysisSubActivity(true);
+  };
+
+  const handleModalAddSubActivity = () => {
+    setType("listSubActivity");
+    planningAnalysisEWPMutate();
+    setShowModalAddSubActivitiy(false);
+  };
+
+  const handleClickReview = async (isChecked, id, role) => {
+    const payload = { is_reviewed: isChecked };
+    if (role === "child-parent") {
+      payload.aktivitas_id = id;
+    } else if (role === "child") {
+      payload.sub_aktivitas_id = id;
+    }
+    await usePostData(
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/update_review_status`,
+      payload
+    );
+    mapaEWPMutate();
+    planningAnalysisEWPMutate();
+  };
+
+  const handleUpdateApprovalStatusSubActivity = async (
+    ukerId,
+    activityId,
+    subActivityId,
+    type
+  ) => {
+    const payload = {
+      aktivitas_kode: activityId,
+      sub_aktivitas_kode: subActivityId,
+      uker_id: ukerId,
+      alasan: "",
+      is_approved: "",
+    };
+
+    const result = await inputSwal();
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    loadingSwal();
+    if (type === "send") {
+      payload.is_approved = true;
+    } else {
+      payload.is_approved = false;
+      payload.alasan = result.value;
+    }
+    await usePostData(
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/sub_aktivitas/approval`,
+      payload
     );
     loadingSwal("close");
   };
@@ -353,12 +435,13 @@ const index = () => {
                 id,
                 role,
                 parent_id,
+                child_parent_id,
                 kode,
                 name,
                 risk,
                 pic_pn,
                 pic_name,
-                status_approval_kode,
+                is_reviewed,
                 status_approval_name,
                 deskripsi,
                 children = [],
@@ -376,7 +459,14 @@ const index = () => {
                     className={`border-x cell-width-full-height-full`}
                   >
                     <div className={positionCenter}>
-                      <CheckboxField />
+                      {role !== "parent" && (
+                        <CheckboxField
+                          isChecked={is_reviewed}
+                          handleChange={(e) =>
+                            handleClickReview(e.target.checked, id, role)
+                          }
+                        />
+                      )}
                     </div>
                   </Cell>
                   <Cell
@@ -414,7 +504,7 @@ const index = () => {
                           : `pl-0`
                       }`}
                     >
-                      {children.length > 0 ? (
+                      {role !== "child" ? (
                         <ButtonIcon
                           handleClick={() =>
                             toggleExpansion(id, role, kode, parent_id)
@@ -448,18 +538,6 @@ const index = () => {
                                 )
                               }
                             />
-                            <ModalAddActivity
-                              showModal={showModalAddActivity}
-                              setShowModal={setShowModalAddActivitiy}
-                              mutate={mapaEWPMutate}
-                              ukerValue={selectedUker}
-                            />
-                            <ModalAddSubActivity
-                              showModal={showModalAddSubActivity}
-                              setShowModal={setShowModalAddSubActivitiy}
-                              mutate={mapaEWPMutate}
-                              activityId={selectedActivityId}
-                            />
                           </>
                         )}
                       </div>
@@ -470,7 +548,7 @@ const index = () => {
                     className="border-r cell-width-full-height-full cell-custom-dataTables"
                   >
                     {levelMap[`${id}-${role}`] === 2 && (
-                      <div className="w-full h-full flex items-center">
+                      <div className="w-full h-full flex items-center justify-center">
                         {pic_name}
                       </div>
                     )}
@@ -484,12 +562,10 @@ const index = () => {
                         <ButtonIcon
                           icon={<IconQuestions />}
                           color={"blue"}
-                          handleClick={() => setShowModalDesc(true)}
-                        />
-                        <DescriptionModal
-                          showModal={showModalDesc}
-                          setShowModal={setShowModalDesc}
-                          value={deskripsi}
+                          handleClick={() => (
+                            handleClickDescAnalysisSubActivity(id),
+                            setSelectedDesc(deskripsi)
+                          )}
                         />
                       </div>
                     )}
@@ -509,9 +585,9 @@ const index = () => {
                         <LozengeField appreance="inprogress" isBold={true}>
                           <Link
                             href={`/ewp/projects/konvensional/${routeParamId}/mapa/analisis-perencanaan/${kode}/${parent_id}`}
-                            className="text-white hover:text-white no-underline hover:no-underline"
+                            className="text-white hover:text-white no-underline hover:no-underline py-[2.5px]"
                           >
-                            Set Risk Issue
+                            <div className="py-[2.5px]">Set Risk Issue</div>
                           </Link>
                         </LozengeField>
                       </div>
@@ -521,28 +597,66 @@ const index = () => {
                     width="8%"
                     className="border-r cell-width-full-height-full cell-custom-dataTables"
                   >
-                    {levelMap[`${id}-${role}`] === 2 && (
-                      <div className={positionCenter}>
-                        <LozengeField appreance="removed" isBold={true}>
-                          {status_approval_name}
-                        </LozengeField>
-                      </div>
-                    )}
+                    <div className={positionCenter}>
+                      {levelMap[`${id}-${role}`] === 2 &&
+                        (status_approval_name?.toLowerCase() === "on kta" ? (
+                          <LozengeField appreance="removed" isBold={true}>
+                            <div className="text-white py-[2.5px]">On KTA</div>
+                          </LozengeField>
+                        ) : status_approval_name?.toLowerCase() === "on ata" ? (
+                          <LozengeField appreance="moved" isBold={true}>
+                            <div className="text-white py-[2.5px]">On ATA</div>
+                          </LozengeField>
+                        ) : null)}
+                    </div>
                   </Cell>
                   <Cell
                     width="8%"
                     className="border-r cell-width-full-height-full cell-custom-dataTables"
                   >
-                    {levelMap[`${id}-${role}`] === 2 && (
-                      <div className={positionCenter}>
-                        <LozengeField appreance="moved" isBold={true}>
-                          <div className="flex gap-1 py-0.5">
-                            <Image src={ImageCircleArrowYellow} alt="" />
-                            <div>Send</div>
-                          </div>
-                        </LozengeField>
-                      </div>
-                    )}
+                    <div className={positionCenter}>
+                      {levelMap[`${id}-${role}`] === 2 &&
+                        (pic_pn === user.data.pn
+                          ? levelMap[`${id}-${role}`] === 2 &&
+                            (status_approval_name?.toLowerCase() ===
+                            "on kta" ? (
+                              <LozengeField appreance="removed" isBold={true}>
+                                <DivButton
+                                  className={"flex gap-1 py-0.5"}
+                                  handleClick={() =>
+                                    handleUpdateApprovalStatusSubActivity(
+                                      parent_id,
+                                      child_parent_id,
+                                      id,
+                                      "reject"
+                                    )
+                                  }
+                                >
+                                  <Image src={ImageCircleArrowRed} alt="" />
+                                  <div className="text-white">Reject</div>
+                                </DivButton>
+                              </LozengeField>
+                            ) : status_approval_name?.toLowerCase() ===
+                              "on ata" ? (
+                              <LozengeField appreance="moved" isBold={true}>
+                                <DivButton
+                                  className={"flex gap-1 py-0.5"}
+                                  handleClick={() =>
+                                    handleUpdateApprovalStatusSubActivity(
+                                      parent_id,
+                                      child_parent_id,
+                                      id,
+                                      "send"
+                                    )
+                                  }
+                                >
+                                  <Image src={ImageCircleArrowYellow} alt="" />
+                                  <div className="text-white">Send</div>
+                                </DivButton>
+                              </LozengeField>
+                            ) : null)
+                          : "")}
+                    </div>
                   </Cell>
                   <Cell
                     width="8%"
@@ -567,6 +681,28 @@ const index = () => {
               )}
             />
           </TableTree>
+          <ModalAddActivity
+            showModal={showModalAddActivity}
+            setShowModal={setShowModalAddActivitiy}
+            mutate={mapaEWPMutate}
+            ukerValue={selectedUker}
+          />
+          <ModalAddSubActivity
+            showModal={showModalAddSubActivity}
+            setShowModal={setShowModalAddSubActivitiy}
+            activityId={selectedActivityId}
+            handleSubmit={handleModalAddSubActivity}
+          />
+          <ModalDescAnlysisSubActivity
+            showModal={showModalDescAnlysisSubActivity}
+            subActivityId={selectedSubActivityId}
+            value={selectedDesc}
+            handleCloseModal={() => (
+              setSelectedDesc(""),
+              setShowModalDescAnlysisSubActivity(false),
+              planningAnalysisEWPMutate()
+            )}
+          />
         </div>
       </Card>
     </LandingLayoutEWP>

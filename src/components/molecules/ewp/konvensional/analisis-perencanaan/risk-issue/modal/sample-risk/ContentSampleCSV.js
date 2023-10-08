@@ -1,6 +1,5 @@
 import { ButtonIcon, CheckboxField } from "@/components/atoms";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
 import TableTree, {
   Cell,
   Header,
@@ -11,17 +10,18 @@ import TableTree, {
 import { IconEdit } from "@/components/icons";
 import { DataNotFound } from "@/components/molecules/commons";
 
-const ContentSampleCSV = ({ data, setCurrentModalStage }) => {
-  const payloadRiskIssue = useSelector(
-    (state) => state.planningAnalysisMapaEWP.payloadRiskIssue
-  );
+const ContentSampleCSV = ({
+  data,
+  setCurrentModalStage,
+  handleSelectedSample,
+}) => {
   useEffect(() => {
     setCurrentModalStage(1);
   }, []);
 
   const customHeader = `w-full h-full flex items-center text-brisma font-bold`;
   const customCell = `cell-width-full-height-full cell-custom-dataTables`;
-  const positionCenter = `w-full h-full flex justify-center items-center`;
+  const positionCenter = `w-full h-full flex items-center`;
 
   return (
     <div className="w-full p-4 overflow-y-scroll max-h-[40rem]">
@@ -32,7 +32,10 @@ const ContentSampleCSV = ({ data, setCurrentModalStage }) => {
               Aksi
             </div>
           </Header>
-          <Header width="57%" className="border-t border-r">
+          <Header
+            width="57%"
+            className="border-t border-r cell-custom-dataTables"
+          >
             <div className={customHeader}>Nama File Sample</div>
           </Header>
           <Header width="15%" className="border-t border-r">
@@ -49,11 +52,15 @@ const ContentSampleCSV = ({ data, setCurrentModalStage }) => {
         {data?.length ? (
           <Rows
             items={data}
-            render={({ directory, filename, jumlah_baris, jumlah_sample }) => (
+            render={({ id, filename, jumlah_baris, jumlah_sample }) => (
               <Row>
                 <Cell width="13%" className={`border-x ${customCell}`}>
-                  <div className="flex gap-0.5 -ml-2.5">
-                    <CheckboxField />
+                  <div className={`${positionCenter} justify-center gap-0.5`}>
+                    <CheckboxField
+                      handleChange={(e) =>
+                        handleSelectedSample(e.target.checked, id)
+                      }
+                    />
                     <ButtonIcon
                       icon={<IconEdit size="medium" />}
                       color="yellow"
@@ -61,13 +68,17 @@ const ContentSampleCSV = ({ data, setCurrentModalStage }) => {
                   </div>
                 </Cell>
                 <Cell width="57%" className={`border-r ${customCell}`}>
-                  <p className="text-xs">{filename}</p>
+                  <div className={`${positionCenter} text-xs`}>{filename}</div>
                 </Cell>
                 <Cell width="15%" className={`border-r ${customCell}`}>
-                  <p className="text-xs">{jumlah_baris}</p>
+                  <div className={`${positionCenter} justify-center text-xs`}>
+                    {jumlah_baris}
+                  </div>
                 </Cell>
                 <Cell width="15%" className={`border-r ${customCell}`}>
-                  <p className="text-xs">{jumlah_sample}</p>
+                  <div className={`${positionCenter} justify-center text-xs`}>
+                    {jumlah_sample}
+                  </div>
                 </Cell>
               </Row>
             )}

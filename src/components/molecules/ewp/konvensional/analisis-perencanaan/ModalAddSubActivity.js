@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import SelectAuditTeamEWP from "../../SelectAuditTeamEWP";
 import { IconPlus } from "@/components/icons";
-import { usePostData } from "@/helpers";
+import { confirmationSwal, usePostData } from "@/helpers";
 
 const ModalFooter = ({ handleConfirm }) => {
   return (
@@ -20,8 +20,8 @@ const ModalFooter = ({ handleConfirm }) => {
 const ModalAddSubActivity = ({
   showModal,
   setShowModal,
-  mutate,
   activityId,
+  handleSubmit,
 }) => {
   const { id } = useRouter().query;
   const dispatch = useDispatch();
@@ -29,18 +29,23 @@ const ModalAddSubActivity = ({
     (state) => state.planningAnalysisMapaEWP.payloadSubActivity
   );
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
     setShowModal(false);
   };
 
   const handleConfirmWithClose = async () => {
-    console.log("payloadSubActivity => ", payloadSubActivity);
     await usePostData(
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/sub_aktivitas`,
       payloadSubActivity
     );
-    mutate();
-    setShowModal(false);
+    handleSubmit();
   };
 
   const handleChangeSelect = (property, idx, e) => {
@@ -86,8 +91,8 @@ const ModalAddSubActivity = ({
       positionCenter={true}
       footer={<ModalFooter handleConfirm={handleConfirmWithClose} />}
     >
-      <div className="w-[20rem] relative">
-        <CloseModal handleCloseModal={handleCloseModal} />
+      <div className="w-[30rem] relative">
+        <CloseModal handleCloseModal={handleCloseModal} showModal={showModal} />
         <div className="mb-2 font-semibold">Sub Aktifitas</div>
         <div className="max-h-[25rem] overflow-y-scroll">
           {payloadSubActivity.sub_aktivitas?.map((v, i) => {
@@ -98,7 +103,10 @@ const ModalAddSubActivity = ({
               name_pic_analisa,
             } = v;
             return (
-              <div className="mb-2 flex justify-between gap-3" key={i}>
+              <div
+                className="mb-2 flex justify-between gap-3 overflow-x-hidden"
+                key={i}
+              >
                 <div className="w-1/2">
                   <SubActivitySelect
                     selectedValue={{
@@ -110,7 +118,7 @@ const ModalAddSubActivity = ({
                       handleChangeSelect("sub_aktivitas", i, e)
                     }
                     placeholder={"Masukan Sub Aktivitas"}
-                    width={"w-[9.5rem]"}
+                    width={"w-[14.5rem]"}
                   />
                 </div>
                 <div className="w-1/2">
@@ -123,7 +131,7 @@ const ModalAddSubActivity = ({
                       handleChangeSelect("pic_analisa", i, e)
                     }
                     placeholder={"Masukan P.I.C (default K.T.A)"}
-                    width={"w-[9.5rem]"}
+                    width={"w-[14.5rem]"}
                   />
                 </div>
               </div>

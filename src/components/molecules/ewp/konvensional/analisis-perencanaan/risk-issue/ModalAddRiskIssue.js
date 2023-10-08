@@ -161,6 +161,7 @@ const ModalAddRiskIssue = ({ showModal, setShowModal, mutate }) => {
           headerText={"Tambah Risk Issue"}
           progressItems={items}
           handleCloseModal={handleCloseModal}
+          showModal={showModal}
         />
       }
       footer={

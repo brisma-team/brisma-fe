@@ -46,6 +46,8 @@ import ModalHeader from "./ModalHeader";
 import ModalFooter from "./ModalFooter";
 import BudgetCategorySelect from "./BudgetCategorySelect";
 import PopupKlipping from "./PopupKlipping";
+import DropdownCard from "./DropdownCard";
+import TeknikSamplingSelect from "./TeknikSamplingSelect";
 
 export {
   BackButton,
@@ -96,4 +98,6 @@ export {
   ModalFooter,
   BudgetCategorySelect,
   PopupKlipping,
+  DropdownCard,
+  TeknikSamplingSelect,
 };

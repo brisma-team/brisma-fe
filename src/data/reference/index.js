@@ -9,6 +9,7 @@ import useActivity from "./useActivity";
 import useSubActivity from "./useSubActivity";
 import useSubMajor from "./useSubMajor";
 import useRiskIssue from "./useRiskIssue";
+import useTeknikSampling from "./useTeknikSampling";
 
 export {
   useMetode,
@@ -22,4 +23,5 @@ export {
   useSubActivity,
   useSubMajor,
   useRiskIssue,
+  useTeknikSampling,
 };

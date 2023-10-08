@@ -4,6 +4,7 @@ const ButtonIcon = ({
   handleClick,
   className,
   props,
+  isDisabled,
   handleMouseEnter,
   handleMouseLeave,
 }) => {
@@ -33,7 +34,9 @@ const ButtonIcon = ({
       {...props}
       role="button"
       tabIndex={0}
-      className={`${className} ${iconColor}`}
+      className={`${className} ${iconColor} ${
+        isDisabled && "cursor-not-allowed"
+      }`}
       onClick={handleClick}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === "Space") {

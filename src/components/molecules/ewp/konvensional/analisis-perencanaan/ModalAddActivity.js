@@ -1,6 +1,6 @@
 import { ButtonField, CloseModal, Modal, TextInput } from "@/components/atoms";
 import { ActivitySelect } from "@/components/molecules/commons";
-import { usePostData } from "@/helpers";
+import { confirmationSwal, usePostData } from "@/helpers";
 import { setPayloadActivity } from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,7 +22,14 @@ const ModalAddActivity = ({ showModal, setShowModal, mutate, ukerValue }) => {
     (state) => state.planningAnalysisMapaEWP.payloadActivity
   );
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
     setShowModal(false);
   };
 
@@ -52,7 +59,7 @@ const ModalAddActivity = ({ showModal, setShowModal, mutate, ukerValue }) => {
       footer={<ModalFooter handleConfirm={handleConfirmWithClose} />}
     >
       <div className="w-[19rem] relative">
-        <CloseModal handleCloseModal={handleCloseModal} />
+        <CloseModal handleCloseModal={handleCloseModal} showModal={showModal} />
         <div className="mb-2 font-semibold">Aktifitas</div>
         <div className="mb-2">
           <TextInput isDisabled={true} value={ukerValue.name} />

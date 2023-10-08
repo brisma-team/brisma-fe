@@ -10,11 +10,11 @@ import TableTree, {
   Rows,
 } from "@atlaskit/table-tree";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ModalAddSampleRisk from "./ModalAddSampleRisk";
+import ModalSelectControl from "./ModalSelectControl";
 
 const TableRiskIssue = ({
   selectedRiskIssue,
@@ -25,12 +25,9 @@ const TableRiskIssue = ({
   const riskIssueData = useSelector(
     (state) => state.planningAnalysisMapaEWP.riskIssueData
   );
-  const payloadUploadSample = useSelector(
-    (state) => state.planningAnalysisMapaEWP.payloadUploadSample
-  );
 
   const [showModalCreateSample, setShowModalCreateSample] = useState(false);
-  const [showModalCreateControl, setShowModalCreateControl] = useState(false);
+  const [showModalSelectControl, setShowModalSelectControl] = useState(false);
   const [expansionMap, setExpansionMap] = useState({});
   const [levelMap, setLevelMap] = useState({});
 
@@ -88,6 +85,11 @@ const TableRiskIssue = ({
 
   const handleCreateSample = (id) => {
     setShowModalCreateSample(true);
+    setSelectedRiskIssue(id);
+  };
+
+  const handleSelectControl = (id) => {
+    setShowModalSelectControl(true);
     setSelectedRiskIssue(id);
   };
 
@@ -158,7 +160,6 @@ const TableRiskIssue = ({
               id,
               kode,
               name,
-              uker_id,
               program_audit,
               kriteria,
               sample,
@@ -228,19 +229,13 @@ const TableRiskIssue = ({
                         </DivButton>
                       </LozengeField>
                       <LozengeField appreance="moved" isBold={true}>
-                        <Link
-                          href={"#"}
+                        <DivButton
                           className="text-white hover:text-white no-underline hover:no-underline"
+                          handleClick={() => handleSelectControl(id)}
                         >
                           Pilih Control
-                        </Link>
+                        </DivButton>
                       </LozengeField>
-                      <ModalAddSampleRisk
-                        showModal={showModalCreateSample}
-                        setShowModal={setShowModalCreateSample}
-                        mutate={mutate}
-                        selectedRiskIssue={selectedRiskIssue}
-                      />
                     </div>
                   )}
                 </Cell>
@@ -272,6 +267,16 @@ const TableRiskIssue = ({
             )}
           />
         </TableTree>
+        <ModalAddSampleRisk
+          showModal={showModalCreateSample}
+          setShowModal={setShowModalCreateSample}
+          mutate={mutate}
+          selectedRiskIssue={selectedRiskIssue}
+        />
+        <ModalSelectControl
+          showModal={showModalSelectControl}
+          handleCloseModal={() => setShowModalSelectControl(false)}
+        />
       </div>
     </Card>
   );

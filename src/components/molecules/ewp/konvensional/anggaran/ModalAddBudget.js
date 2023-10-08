@@ -19,7 +19,6 @@ import {
   setPayload,
 } from "@/slices/ewp/konvensional/mapa/budgetMapaEWPSlice";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const ModalAddBudget = ({
@@ -86,10 +85,6 @@ const ModalAddBudget = ({
     setSelectedId("");
     dispatch(resetPayload());
   };
-
-  useEffect(() => {
-    console.log("payload => ", payload);
-  }, [payload]);
 
   return (
     <Modal

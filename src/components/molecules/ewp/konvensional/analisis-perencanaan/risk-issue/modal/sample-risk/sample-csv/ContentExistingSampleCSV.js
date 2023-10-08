@@ -1,136 +1,137 @@
-import { ButtonField } from "@/components/atoms";
+import { ButtonField, ButtonIcon } from "@/components/atoms";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { resetDataTables } from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
+import {
+  setDataTables,
+  setPayloadUploadSample,
+} from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
 import { useState } from "react";
-import DynamicTable from "@atlaskit/dynamic-table";
+import TableTree, {
+  Cell,
+  Header,
+  Headers,
+  Row,
+  Rows,
+} from "@atlaskit/table-tree";
+import { DataNotFound } from "@/components/molecules/commons";
+import Image from "next/image";
+import { ImageClose } from "@/helpers/imagesUrl";
+import { IconArrowDown } from "@/components/icons";
+import { loadingSwal, withTokenConfig } from "@/helpers";
+import Papa from "papaparse";
+import { useSelector } from "react-redux";
 
 const ContentExistingSampleCSV = ({
   data,
+  currentModalStage,
   setCurrentSubModalStage,
   setIsSelectedSamplePool,
+  handleClickDeleteSamplePool,
 }) => {
   const dispatch = useDispatch();
-  const [head, setHead] = useState([]);
-  const [widthColumn, setWidthColumn] = useState([]);
   const [rows, setRows] = useState([]);
+  const dataTables = useSelector(
+    (state) => state.planningAnalysisMapaEWP.dataTables
+  );
 
   useEffect(() => {
     if (data?.length) {
-      const arrHead = [
-        "Nama File",
-        "Uploader",
-        "Risk Issue",
-        "Sub Aktifitas",
-        "Aktifitas",
-        "Nama File 1",
-        "Uploader 1",
-        "Risk Issue 1",
-        "Sub Aktifitas 1",
-        "Aktifitas 1",
-        "Nama File 2",
-        "Uploader 2",
-        "Risk Issue 2",
-        "Sub Aktifitas 2",
-        "Aktifitas 2",
-      ];
-      const mappingRows = data?.map((v, i) => {
+      const mappingRows = data?.map((v) => {
+        const { id, directory, filename } = v;
         return {
-          "Nama File": v.filename,
-          Uploader: v.name_uploader,
-          "Risk Issue": v.original_risk_issue_nama,
-          "Sub Aktifitas": v.original_sub_aktivitas_nama,
-          Aktifitas: v.original_aktivitas_nama,
-          "Nama File 1": v.filename,
-          "Uploader 1": v.name_uploader,
-          "Risk Issue 1": v.original_risk_issue_nama,
-          "Sub Aktifitas 1": v.original_sub_aktivitas_nama,
-          "Aktifitas 1": v.original_aktivitas_nama,
-          "Nama File 2": v.filename,
-          "Uploader 2": v.name_uploader,
-          "Risk Issue 2": v.original_risk_issue_nama,
-          "Sub Aktifitas 2": v.original_sub_aktivitas_nama,
-          "Aktifitas 2": v.original_aktivitas_nama,
+          id,
+          directory,
+          filename,
+          uploader: v.name_uploader,
+          risk_issue_kode: v.original_risk_issue_kode,
+          risk_issue_nama: v.original_risk_issue_nama,
+          aktivitas: v.original_aktivitas_nama,
+          sub_aktivitas: v.original_sub_aktivitas_nama,
         };
       });
 
-      const arrPages = [];
-      for (let i = 1; i <= data.length; i++) {
-        arrPages.push("100px");
-      }
-
-      setWidthColumn(arrPages);
-      setHead(arrHead);
       setRows(mappingRows);
     }
   }, [data]);
-  //   const dataTables = useSelector(
-  //     (state) => state.planningAnalysisMapaEWP.dataTables
-  //   );
 
-  //   const { headers } = withTokenConfig();
-  //   useEffect(() => {
-  //     const fetchData = async () => {
-  //       const response = await fetch(
-  //         "http://139.59.104.214:9000/ewp/1694506674235-sample_terbaru.csv",
-  //         {
-  //           method: "GET",
-  //           headers,
-  //         }
-  //       );
+  const { headers } = withTokenConfig();
+  const importDataFromUrl = async (directory, fileName) => {
+    if (currentModalStage === 1) {
+      const fetchData = async () => {
+        const response = await fetch(directory, {
+          method: "GET",
+          headers,
+        });
 
-  //       const csvFile = await response.text();
-  //       Papa.parse(csvFile, {
-  //         header: true,
-  //         dynamicTyping: true,
-  //         complete: function (result) {
-  //           const rowsArray = [];
-  //           const dataObj = result?.data?.map((value, index) => {
-  //             return { index, ...value };
-  //           });
+        const csvFile = await response.text();
+        Papa.parse(csvFile, {
+          header: true,
+          dynamicTyping: true,
+          complete: function (result) {
+            const arrColumns = Object.keys(result.data[0]);
+            const mappingColumns = arrColumns.map((column) => {
+              return { content: column };
+            });
 
-  //           const dataObjWithoutIndex = _.map(dataObj, (item) =>
-  //             _.omit(item, ["index"])
-  //           );
+            const mappingRows = result.data.map((item) => ({
+              cells: arrColumns.map((key) => ({
+                content: item[key],
+              })),
+            }));
 
-  //           dataObjWithoutIndex?.map((d) => {
-  //             rowsArray.push(Object.keys(d));
-  //           });
+            if (result?.data) {
+              dispatch(
+                setDataTables({
+                  ...dataTables,
+                  fileName,
+                  tableRows: mappingRows,
+                  tableColumns: { cells: mappingColumns },
+                })
+              );
 
-  //           if (result?.data) {
-  //             dispatch(
-  //               setDataTables({
-  //                 fileName: "test",
-  //                 tableObj: dataObj,
-  //                 tableValues: result.data,
-  //                 tableRows: rowsArray[0],
-  //               })
-  //             );
-  //           }
-  //         },
-  //         error: (error) => {
-  //           console.error("Error parsing CSV:", error.message);
-  //         },
-  //       });
-  //     };
+              dispatch(
+                setPayloadUploadSample({
+                  url: directory,
+                  filename: fileName,
+                  values: [],
+                  jumlah_baris: result?.data?.length.toString(),
+                  uniq_column: arrColumns[0],
+                })
+              );
+            }
+          },
+          error: (error) => {
+            console.error("Error parsing CSV:", error.message);
+          },
+        });
+      };
 
-  //     fetchData();
-  //   }, []);
+      fetchData();
+    } else {
+      dispatch(
+        setPayloadUploadSample({
+          url: directory,
+          filename: fileName,
+          description: "",
+        })
+      );
+    }
 
-  useEffect(() => {}, []);
-
-  const header = [
-    { field: "kode", header: "Kode" },
-    { field: "id", header: "Id" },
-  ];
-  const values = [{ kode: 1, id: 1 }];
-
-  const handleClickSample = () => {
-    setIsSelectedSamplePool(true);
-    setCurrentSubModalStage(1);
-    dispatch(resetDataTables());
-    // dispatch(resetPayloadSample());
+    loadingSwal();
+    loadingSwal("close");
   };
+
+  const handleSelectedSample = (directory, fileName) => {
+    importDataFromUrl(directory, fileName);
+    if (currentModalStage === 1) {
+      setIsSelectedSamplePool(true);
+    }
+    setCurrentSubModalStage(1);
+  };
+
+  const customHeader = `h-full flex items-center text-brisma`;
+  const customHeaderCenter = `flex justify-center py-0.5`;
+  const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
   return (
     <div className="px-4 py-2">
@@ -138,89 +139,138 @@ const ContentExistingSampleCSV = ({
         <ButtonField text="Tampilkan Filter" />
       </div>
       <div className="my-2" />
-      {data ? (
-        // <div>
-        //   <div className="w-full p-4 overflow-y-scroll max-h-[40rem]">
-        //     <TableTree>
-        //       <Headers>
-        //         <Header width="7%" className="border-x border-t rounded-ss-xl">
-        //           <p className="font-bold text-brisma">Aksi</p>
-        //         </Header>
-        //         <Header width="23%" className="border-t border-r">
-        //           <p className="font-bold text-brisma">Nama File</p>
-        //         </Header>
-        //         <Header width="70%" className="border-t border-r rounded-se-xl">
-        //           <div className="w-full bg-atlasian-yellow">
-        //             <div className="w-full">Original</div>
-        //             {/* <div className="w-full grid grid-cols-4">
-        //               <div>Uploader</div>
-        //               <div>Risk Issue</div>
-        //               <div>Sub Aktifitas</div>
-        //               <div>Aktifitas</div>
-        //             </div> */}
-        //           </div>
-        //         </Header>
-        //       </Headers>
-        //       <Rows
-        //         items={data}
-        //         render={({
-        //           id,
-        //           directory,
-        //           filename,
-        //           name_uploader,
-        //           original_risk_issue_nama,
-        //           original_aktivitas_nama,
-        //           original_sub_aktivitas_nama,
-        //         }) => (
-        //           <Row>
-        //             <Cell width="7%" className="border-x">
-        //               <div className="flex -ml-3">
-        //                 <ButtonIcon
-        //                   icon={<IconArrowBottomCircle size="medium" />}
-        //                   color={"blue"}
-        //                   handleClick={() => handleClickSample()}
-        //                 />
-        //                 <ButtonIcon
-        //                   icon={<IconCrossCircle size="medium" />}
-        //                   color={"red"}
-        //                   //   handleClick={() => handleDeleteRisk(id)}
-        //                 />
-        //               </div>
-        //             </Cell>
-        //             <Cell width="23%" className="border-x">
-        //               {filename}
-        //             </Cell>
-        //             <Cell width="70%" className="border-x">
-        //               {name_uploader}
-        //             </Cell>
-        //           </Row>
-        //         )}
-        //       />
-        //     </TableTree>
-        //   </div>
-        //   <Pagination pages={1} />
-        // </div>
-        // <div className="max-w-[65rem] overflow-x-scroll">
-        <div className="overflow-y-auto w-[96] relative">
-          {/* <DataTable value={rows} scrollable>
-            {head.map((v, i) => {
-              return (
-                <Column
-                  key={i}
-                  field={v}
-                  header={v}
-                  style={{ minWidth: "100px" }}
-                ></Column>
-              );
-            })}
-          </DataTable> */}
-
-          <DynamicTable head={head} rows={rows.slice(0, 10)} />
-        </div>
-      ) : (
-        // </div>
-        ""
-      )}
+      <div className="w-full p-4 overflow-y-scroll max-h-[35rem]">
+        <TableTree>
+          <Headers>
+            <Header
+              width="8%"
+              className="border-x border-t rounded-ss-xl header-width-full-height-full"
+            >
+              <div
+                className={`${customHeader} w-full justify-center text-center`}
+              >
+                Aksi
+              </div>
+            </Header>
+            <Header width="27%" className="border-t border-r">
+              <div className={`${customHeader} w-full`}>Nama File Sample</div>
+            </Header>
+            <Header
+              width="65%"
+              className="border-t border-r rounded-se-xl header-width-full-height-full"
+            >
+              <div className="w-full">
+                <div
+                  className={`${customHeader} ${customHeaderCenter} w-full border-b`}
+                >
+                  Original
+                </div>
+                <div className="w-full flex">
+                  <div
+                    className={`${customHeader} ${customHeaderCenter} w-[17%] border-r`}
+                  >
+                    Uploader
+                  </div>
+                  <div
+                    className={`${customHeader}  ${customHeaderCenter} w-[37%] border-r`}
+                  >
+                    Risk Issue
+                  </div>
+                  <div
+                    className={`${customHeader} ${customHeaderCenter} w-[23%] border-r`}
+                  >
+                    Sub Aktivitas
+                  </div>
+                  <div
+                    className={`${customHeader} ${customHeaderCenter} w-[23%]`}
+                  >
+                    Aktivitas
+                  </div>
+                </div>
+              </div>
+            </Header>
+          </Headers>
+          {rows?.length ? (
+            <Rows
+              items={rows}
+              render={({
+                id,
+                directory,
+                filename,
+                uploader,
+                risk_issue_kode,
+                risk_issue_nama,
+                sub_aktivitas,
+                aktivitas,
+              }) => (
+                <Row>
+                  <Cell width="8%" className={`border-x ${customCell}`}>
+                    <div className="flex items-center justify-center w-full h-full gap-0.5">
+                      <ButtonIcon
+                        icon={
+                          <div className="rounded-full border-2 border-atlasian-blue-light text-atlasian-blue-light w-5 h-5 flex items-center justify-center">
+                            <IconArrowDown size="small" />
+                          </div>
+                        }
+                        handleClick={() =>
+                          handleSelectedSample(directory, filename)
+                        }
+                      />
+                      <ButtonIcon
+                        icon={
+                          <div className="rounded-full border-2 border-atlasian-red w-5 h-5 flex items-center justify-center p-1">
+                            <Image src={ImageClose} alt="" />
+                          </div>
+                        }
+                        handleClick={() => handleClickDeleteSamplePool(id)}
+                      />
+                    </div>
+                  </Cell>
+                  <Cell width="27%" className={`border-r ${customCell} `}>
+                    <div className="text-xs h-full flex items-center">
+                      {filename}
+                    </div>
+                  </Cell>
+                  <Cell
+                    width="65%"
+                    className={`border-r cell-custom-dataTables-padding-0`}
+                  >
+                    <div className="w-full h-full flex">
+                      <div
+                        className={`w-[17%] border-r p-1.5 flex items-center text-xs font-semibold`}
+                      >
+                        {uploader}
+                      </div>
+                      <div
+                        className={`w-[37%] border-r p-1.5 flex items-center`}
+                      >
+                        <p className="text-xs">
+                          <span className="font-bold">{risk_issue_kode}</span> -{" "}
+                          <span>{risk_issue_nama}</span>
+                        </p>
+                      </div>
+                      <div
+                        className={`w-[23%] border-r p-1.5 flex items-center text-xs`}
+                      >
+                        {aktivitas}
+                      </div>
+                      <div
+                        className={`w-[23%] p-1.5 flex items-center text-xs`}
+                      >
+                        {sub_aktivitas}
+                      </div>
+                    </div>
+                  </Cell>
+                </Row>
+              )}
+            />
+          ) : (
+            <div className="w-full border-x border-b rounded-es-xl rounded-ee-xl pb-4">
+              <DataNotFound />
+            </div>
+          )}
+        </TableTree>
+      </div>
     </div>
   );
 };

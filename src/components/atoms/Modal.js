@@ -40,7 +40,7 @@ const Modal = ({
           <motion.div
             className={`flex flex-col ${
               !positionCenter
-                ? "min-h-full max-h-[55rem] overflow-y-scroll"
+                ? "min-h-full max-h-full overflow-y-hidden"
                 : "justify-center items-center min-h-screen"
             } overflow-x-hidden`}
             initial={{ opacity: 0, scale: 0.5 }}

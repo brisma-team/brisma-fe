@@ -65,9 +65,17 @@
   padding-bottom: 6px !important;
 }
 
+.cell-custom-dataTables-padding-0 {
+  padding: 0px !important;
+}
+
 .cell-width-full-height-full .css-0 {
   width: 100%;
   height: 100%;
+}
+
+.header-width-full-height-full {
+  padding: 0 !important;
 }
 /* END Custom table atlaskit */
 

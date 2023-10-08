@@ -38,7 +38,7 @@ const routes = [
   { name: "Penugasan", slug: "penugasan" },
   { name: "Jadwal Audit", slug: "jadwal-audit" },
   { name: "Anggaran", slug: "anggaran" },
-  { name: "Dokumen", slug: "dokument" },
+  { name: "Dokumen", slug: "dokumen" },
 ];
 
 const index = () => {
@@ -83,11 +83,13 @@ const index = () => {
         return { ...item, description: item.desc };
       });
     dispatch(setUkerAssessmentData(mapping));
+  }, [mapaEWP]);
 
-    const totalCount = mapaEWP?.data?.length;
+  useEffect(() => {
+    const totalCount = ukerAssessmentData?.length;
     if (totalCount) {
       const typeCounts = {};
-      mapaEWP?.data?.forEach((item) => {
+      ukerAssessmentData?.forEach((item) => {
         const type = item.tipe_uker;
         if (type) {
           typeCounts[type] = (typeCounts[type] || 0) + 1;
@@ -107,7 +109,7 @@ const index = () => {
 
       setCountType(result);
     }
-  }, [mapaEWP]);
+  }, [ukerAssessmentData]);
 
   const schemaMappings = {
     schema: ukerAssessmentMapaEWPSchema,
@@ -172,71 +174,73 @@ const index = () => {
           nextUrl={"/analisis-perencanaan"}
         />
       </div>
-      <Card>
-        <div className="w-full px-6 py-4">
-          <div className="w-full flex flex-wrap mb-4">
-            {countType.map((v, i) => {
-              return (
-                <CardTypeCount
-                  key={i}
-                  title={v.type}
-                  total={v.count}
-                  percent={v.percent}
-                  width={"w-[12rem]"}
-                  style={"m-1"}
-                />
-              );
-            })}
-          </div>
-          <TableUkerAssessment
-            handleChange={handleChange}
-            setOpenDescIdx={setOpenDescIdx}
-            setShowDescModal={setShowDescModal}
-          />
-          <DescriptionModal
-            showModal={showDescModal}
-            setShowModal={setShowDescModal}
-            value={
-              openDescIdx !== null
-                ? ukerAssessmentData[openDescIdx]?.description
-                : ""
-            }
-            handleConfirm={(value) =>
-              handleChange("description", openDescIdx, value)
-            }
-          />
-          <div className="flex gap-3 items-center mt-3">
-            <div className="w-40 text-sm font-semibold">
-              <ButtonField
-                iconAfter={
-                  <div className="text-atlasian-purple">
-                    <IconPlus size="medium" />
-                  </div>
-                }
-                text={"Tambah Uker"}
-                textColor={"purple"}
-                handler={() => setShowBranch(true)}
-              />
+      <div className="w-[90rem]">
+        <Card>
+          <div className="w-full px-6 py-4">
+            <div className="w-full flex flex-wrap mb-4">
+              {countType.map((v, i) => {
+                return (
+                  <CardTypeCount
+                    key={i}
+                    title={v.type?.toUpperCase()}
+                    total={v.count}
+                    percent={v.percent}
+                    width={"w-[12rem]"}
+                    style={"m-1"}
+                  />
+                );
+              })}
             </div>
-            {showBranch && (
-              <div className="w-40 mb-2">
-                <BranchSelect
-                  placeholder="Select an option"
-                  handleChange={handleAddUker}
+            <TableUkerAssessment
+              handleChange={handleChange}
+              setOpenDescIdx={setOpenDescIdx}
+              setShowDescModal={setShowDescModal}
+            />
+            <DescriptionModal
+              showModal={showDescModal}
+              setShowModal={setShowDescModal}
+              value={
+                openDescIdx !== null
+                  ? ukerAssessmentData[openDescIdx]?.description
+                  : ""
+              }
+              handleConfirm={(value) =>
+                handleChange("description", openDescIdx, value)
+              }
+            />
+            <div className="flex gap-3 items-center mt-3">
+              <div className="w-40 text-sm font-semibold">
+                <ButtonField
+                  iconAfter={
+                    <div className="text-atlasian-purple">
+                      <IconPlus size="medium" />
+                    </div>
+                  }
+                  text={"Tambah Uker"}
+                  textColor={"purple"}
+                  handler={() => setShowBranch(true)}
                 />
               </div>
-            )}
+              {showBranch && (
+                <div className="w-40 mb-2">
+                  <BranchSelect
+                    placeholder="Select an option"
+                    handleChange={handleAddUker}
+                  />
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </Card>
-      <div className="w-full flex justify-end mt-4">
-        <div className="w-32 text-sm font-bold bg-atlasian-green rounded ">
-          <ButtonField
-            text={"Simpan"}
-            type={"submit"}
-            name={"save"}
-            handler={handleSubmit}
-          />
+        </Card>
+        <div className="w-full flex justify-end mt-4">
+          <div className="w-32 text-sm font-bold bg-atlasian-green rounded ">
+            <ButtonField
+              text={"Simpan"}
+              type={"submit"}
+              name={"save"}
+              handler={handleSubmit}
+            />
+          </div>
         </div>
       </div>
     </LandingLayoutEWP>

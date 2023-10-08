@@ -28,7 +28,7 @@ const ModalBodySchedulePAT = ({ setCurrentModalStage, setDifferentKTA }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState({
     name: "",
-    is_audited: false,
+    is_audited: "",
     ref_metode: "",
     ref_tipe: "",
     ref_jenis: "",
@@ -36,7 +36,7 @@ const ModalBodySchedulePAT = ({ setCurrentModalStage, setDifferentKTA }) => {
   });
   const [params, setParams] = useState({
     name: "",
-    is_audited: false,
+    is_audited: "",
     ref_metode: "",
     ref_tipe: "",
     ref_jenis: "",

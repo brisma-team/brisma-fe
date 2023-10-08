@@ -3,23 +3,20 @@ import ContentUploadSampleCSV from "./ContentUploadSampleCSV";
 import ContentPickSampleCSV from "./ContentPickSampleCSV";
 import ContentExistingSampleCSV from "./ContentExistingSampleCSV";
 import ContentHistorySampleCSV from "./ContentHistorySampleCSV";
-import { useSamplePoolMapaEWP } from "@/data/ewp/konvensional/mapa/analisis-perencanaan";
-import { useRouter } from "next/router";
+
 const SubModalPickDataCSV = ({
   currentSubModalStage,
+  currentModalStage,
   setCurrentSubModalStage,
   isSelectedSamplePool,
   setIsSelectedSamplePool,
-  selectedRiskIssue,
+  samplePoolData,
+  handleClickDeleteSamplePool,
+  extendRows,
+  handleRowClick,
 }) => {
-  const { id } = useRouter().query;
   const classNavbar = `font-semibold text-base z-10 flex justify-center pb-1`;
   const classNavbarActive = `border-b-[5px] border-atlasian-blue-light text-atlasian-blue-light`;
-
-  const { samplePoolMapaEWP } = useSamplePoolMapaEWP("sample_csv", {
-    id,
-    mapa_uker_mcr_id: selectedRiskIssue,
-  });
 
   return (
     <Card>
@@ -67,17 +64,26 @@ const SubModalPickDataCSV = ({
         {/* Content Modal */}
         {isSelectedSamplePool ? (
           currentSubModalStage === 1 ? (
-            <ContentPickSampleCSV />
+            <ContentPickSampleCSV
+              extendRows={extendRows}
+              handleRowClick={handleRowClick}
+            />
           ) : (
             <ContentHistorySampleCSV />
           )
         ) : currentSubModalStage === 1 ? (
-          <ContentUploadSampleCSV isSelectedSamplePool={isSelectedSamplePool} />
+          <ContentUploadSampleCSV
+            currentModalStage={currentModalStage}
+            isSelectedSamplePool={isSelectedSamplePool}
+            extendRows={extendRows}
+            handleRowClick={handleRowClick}
+          />
         ) : (
           <ContentExistingSampleCSV
-            data={samplePoolMapaEWP?.data}
+            data={samplePoolData}
             setCurrentSubModalStage={setCurrentSubModalStage}
             setIsSelectedSamplePool={setIsSelectedSamplePool}
+            handleClickDeleteSamplePool={handleClickDeleteSamplePool}
           />
         )}
       </div>
