@@ -22,9 +22,11 @@ import { setAuditorInfo } from "@/slices/ewp/auditorInfoEWPSlice";
 
 const SidebarLandingEWP = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { id } = useRouter().query;
   const baseUrl = `/ewp/projects/konvensional/${id}`;
   const [data, setData] = useState();
+  const [currentPage, setCurrentPage] = useState(0);
   const { auditorEWP } = useAuditorEWP({ id });
 
   useEffect(() => {
@@ -77,6 +79,34 @@ const SidebarLandingEWP = () => {
     { name: "Dokumen", href: `/dokumen` },
   ];
 
+  useEffect(() => {
+    const getCurrentPage = () => {
+      const currentPath = router.asPath;
+
+      const regex = new RegExp(
+        `^${menu.map((item) => `(${item.href})`).join("|")}$`,
+        "i"
+      );
+
+      const match = currentPath.match(regex);
+
+      if (match) {
+        const matchedPath = match[0];
+        const matchedIndex = menu.findIndex(
+          (item) => item.href === matchedPath
+        );
+
+        if (matchedIndex !== -1) {
+          return matchedIndex;
+        }
+      }
+
+      return 0;
+    };
+
+    setCurrentPage(getCurrentPage());
+  }, []);
+
   return (
     <div className="fixed h-screen w-64 pt-8- shadow z-10">
       <SideNavigation label="project" testId="side-navigation">
@@ -116,7 +146,11 @@ const SidebarLandingEWP = () => {
                   <Link
                     key={i}
                     href={baseUrl + v.href}
-                    className="flex text-black gap-2 items-center hover:no-underline no-underline py-2 px-7"
+                    className={`flex ${
+                      currentPage === i
+                        ? `text-atlasian-blue-light`
+                        : `text-black`
+                    }  gap-2 items-center hover:no-underline no-underline py-2 px-7`}
                   >
                     <div>
                       <Image

@@ -45,7 +45,7 @@ const CardBody = ({ title, value, textColor, className }) => {
   );
 };
 
-const CardOverview = ({ data }) => {
+const CardOverview = ({ data, withoutButton, withoutHover }) => {
   const router = useRouter();
   const {
     jenis,
@@ -73,8 +73,10 @@ const CardOverview = ({ data }) => {
 
   return (
     <DivButton
-      className="hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
-      href={href}
+      className={`${
+        !withoutHover &&
+        `hover:bg-gray-100 hover:rounded-[10px] hover:no-underline`
+      }`}
       handleClick={(e) => (e.stopPropagation(), router.push(href))}
     >
       <div
@@ -101,10 +103,12 @@ const CardOverview = ({ data }) => {
             >
               <p>{jenis}</p>
             </div>
-            <div className="flex items-center justify-end w-20 gap-1 pt-2">
-              <DropdownCard action={listDropdown} />
-              <ButtonIcon color={"red"} icon={<IconTrash size="medium" />} />
-            </div>
+            {!withoutButton && (
+              <div className="flex items-center justify-end w-20 gap-1 pt-2">
+                <DropdownCard action={listDropdown} />
+                <ButtonIcon color={"red"} icon={<IconTrash size="medium" />} />
+              </div>
+            )}
           </div>
           <div className="text-lg font-bold text-atlasian-blue-dark">
             {projectId}
@@ -119,9 +123,13 @@ const CardOverview = ({ data }) => {
               {percent}
             </div>
           </div>
-          <div className="flex w-full gap-4">
-            <CardBody title={"Manajer Audit"} value={ma} />
-            <CardBody title={"Ketua Tim Audit"} value={kta} />
+          <div className="flex w-full">
+            <div className="w-1/2">
+              <CardBody title={"Manajer Audit"} value={ma} />
+            </div>
+            <div className="w-1/2">
+              <CardBody title={"Ketua Tim Audit"} value={kta} />
+            </div>
           </div>
           <CardBody title={"Anggota Tim Audit"} value={ata} />
           <CardBody

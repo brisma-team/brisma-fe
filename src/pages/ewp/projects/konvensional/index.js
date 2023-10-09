@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { OverviewLayoutEWP } from "@/layouts/ewp";
-import { IconFile, IconPlus } from "@/components/icons";
+import { IconFile } from "@/components/icons";
 import {
   Breadcrumbs,
   ButtonField,

@@ -13,6 +13,7 @@ import ImageCircleCheck from "../../public/images/icon-circle-check.png";
 import ImageBar from "../../public/images/icon-bar.png";
 import ImageCircleArrowYellow from "../../public/images/icon-circle-arrow-yellow.png";
 import ImageCircleArrowRed from "../../public/images/icon-circle-arrow-red.png";
+import ImageBrisma from "../../public/images/BRISMA-2.0.2.png";
 
 export {
   ImageBrismaVertical,
@@ -30,4 +31,5 @@ export {
   ImageBar,
   ImageCircleArrowYellow,
   ImageCircleArrowRed,
+  ImageBrisma,
 };

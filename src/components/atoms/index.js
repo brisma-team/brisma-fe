@@ -33,6 +33,7 @@ import LozengeField from "./Lozenge";
 import CloseModal from "./CloseModal";
 import Badge from "./Badge";
 import YearPicker from "./YearPicker";
+import QRGenerator from "./QRGenerator";
 
 export {
   AvatarDefaultExample,
@@ -70,4 +71,5 @@ export {
   CloseModal,
   Badge,
   YearPicker,
+  QRGenerator,
 };
