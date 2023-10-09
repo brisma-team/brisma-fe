@@ -2,7 +2,9 @@ import { ButtonField, Modal } from "@/components/atoms";
 import { confirmationSwal } from "@/helpers";
 import { ModalHeader } from "./modal/sample-risk";
 import { TableMasterData, TableSelectControl } from "./modal/select-risk";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRiskControl } from "@/data/reference";
+import { useRiskControlMapaEWP } from "@/data/ewp/konvensional/mapa/analisis-perencanaan";
 
 const ModalFooter = ({ handleSubmit }) => {
   return (
@@ -17,9 +19,54 @@ const ModalFooter = ({ handleSubmit }) => {
   );
 };
 
-const ModalSelectControl = ({ showModal, handleCloseModal }) => {
-  const [keywoardSelectControl, setKeywordSelectControl] = useState("");
-  const [keywoardMasterData, setKeywordMasterData] = useState("");
+const ModalSelectControl = ({
+  showModal,
+  handleCloseModal,
+  selectedRiskIssue,
+}) => {
+  const [keywordSelectControl, setKeywordSelectControl] = useState("");
+  const [keywordMasterData, setKeywordMasterData] = useState("");
+  const [data, setData] = useState({ select_control: [], master_data: [] });
+
+  const { riskControl } = useRiskControl("all");
+  const { riskControlMapaEWP } = useRiskControlMapaEWP({
+    risk_issue_id: selectedRiskIssue,
+  });
+
+  useEffect(() => {
+    if (riskControlMapaEWP?.data?.length) {
+      const mapping = riskControlMapaEWP?.data?.map((v, i) => {
+        return {
+          id: v?.id,
+          no: i + 1,
+          code: v?.mtd_control?.kode,
+          deskripsi: v?.mtd_control?.nama,
+          flag: v?.is_default,
+        };
+      });
+
+      setData((prev) => {
+        return { ...prev, select_control: mapping };
+      });
+    }
+  }, [riskControlMapaEWP]);
+
+  useEffect(() => {
+    const mapping = riskControl?.data?.map((v) => ({
+      code: v?.kode,
+      deskripsi: v?.nama,
+    }));
+
+    const filteredData = data.select_control.length
+      ? mapping.filter((item) => {
+          const existsInSelectControl = data.select_control.some(
+            (selectItem) => selectItem.code === item.code
+          );
+        })
+      : mapping;
+
+    setData((prev) => ({ ...prev, master_data: filteredData }));
+  }, [riskControl, keywordMasterData]);
 
   const handleClose = async () => {
     const confirm = await confirmationSwal(
@@ -37,22 +84,6 @@ const ModalSelectControl = ({ showModal, handleCloseModal }) => {
     handleCloseModal();
   };
 
-  const data = [
-    {
-      no: 1,
-      code: "dandy",
-      deskripsi:
-        "Pellentesque auctor ligula felis, et blandit neque tincidunt in. Quisque maximus neque sit amet fringilla imperdiet",
-      flag: "default",
-    },
-    {
-      no: 2,
-      code: "C609",
-      deskripsi: "Dandy",
-      flag: "default",
-    },
-  ];
-
   return (
     <Modal
       showModal={showModal}
@@ -69,7 +100,7 @@ const ModalSelectControl = ({ showModal, handleCloseModal }) => {
         <div className="flex gap-3 w-full">
           <div className="w-3/5">
             <TableSelectControl
-              data={data}
+              data={data.select_control}
               handleChangeKeyword={(e) =>
                 setKeywordSelectControl(e.target.value)
               }
@@ -77,10 +108,9 @@ const ModalSelectControl = ({ showModal, handleCloseModal }) => {
           </div>
           <div className="w-2/5">
             <TableMasterData
-              data={data}
-              handleChangeKeyword={(e) =>
-                setKeywordSelectControl(e.target.value)
-              }
+              data={data.master_data}
+              keywordMasterData={keywordMasterData}
+              handleChangeKeyword={(e) => setKeywordMasterData(e.target.value)}
             />
           </div>
         </div>

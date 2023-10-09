@@ -38,6 +38,7 @@ import {
 import { useRouter } from "next/router";
 
 const ModalAddSampleRisk = ({
+  headerTextRiskIssue,
   showModal,
   setShowModal,
   mutate,
@@ -78,15 +79,6 @@ const ModalAddSampleRisk = ({
     }
   );
 
-  // useEffect(() => {
-  //   setCurrentModalStage(1);
-  //   setCurrentSubModalStage(1);
-  //   setIsPickDataModal(false);
-  //   setIsSelectedSamplePool(false);
-  //   setIsSelectedSamplePool(false);
-  //   setSelectedDeleteSample([]);
-  // }, []);
-
   useEffect(() => {
     let type;
     switch (currentModalStage) {
@@ -107,7 +99,6 @@ const ModalAddSampleRisk = ({
   }, [currentModalStage]);
 
   useEffect(() => {
-    console.log("sampleUploadMapaEWP => ", sampleUploadMapaEWP);
     const calculateTotalJumlahSample = () => {
       let total = 0;
       if (sampleUploadMapaEWP?.data) {
@@ -336,7 +327,7 @@ const ModalAddSampleRisk = ({
                 <Card>
                   <div className="px-6 w-full">
                     <div className="mb-4 text-base font-semibold text-atlasian-blue-light">
-                      Likuidutas
+                      {headerTextRiskIssue}
                     </div>
                     <FormWithLabel
                       form={

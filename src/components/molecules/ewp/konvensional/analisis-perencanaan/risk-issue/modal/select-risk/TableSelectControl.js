@@ -24,7 +24,7 @@ const TableSelectControl = ({ data, handleChangeKeyword }) => {
       <div className="border-b-2 w-full flex px-4 py-2">
         <p className="text-base text-brisma font-semibold">Kontrol Terpilih</p>
       </div>
-      <div className="p-4">
+      <div className="p-4 w-full">
         <div className="w-4/5 mb-2">
           <TextInput
             placeholder={"Masukkan Code & Deskripsi"}
@@ -92,7 +92,9 @@ const TableSelectControl = ({ data, handleChangeKeyword }) => {
                     </div>
                   </Cell>
                   <Cell width="10%" className={`border-r ${customCell}`}>
-                    <div className={`${positionCenter} text-xs`}>{no}</div>
+                    <div className={`${positionCenter} justify-center text-xs`}>
+                      {no}
+                    </div>
                   </Cell>
                   <Cell width="15%" className={`border-r ${customCell}`}>
                     <div className={`${positionCenter} text-xs`}>{code}</div>
@@ -104,8 +106,13 @@ const TableSelectControl = ({ data, handleChangeKeyword }) => {
                   </Cell>
                   <Cell width="15%" className={`border-r ${customCell}`}>
                     <div className={`${positionCenter} justify-center text-xs`}>
-                      <LozengeField appreance="moved" isBold={true}>
-                        <div className="text-white">{flag}</div>
+                      <LozengeField
+                        appreance={flag ? "default" : "moved"}
+                        isBold={true}
+                      >
+                        <div className="text-white">
+                          {flag ? "Default" : "Ad Hoc"}
+                        </div>
                       </LozengeField>
                     </div>
                   </Cell>

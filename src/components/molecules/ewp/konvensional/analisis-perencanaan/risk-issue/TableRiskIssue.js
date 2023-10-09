@@ -12,11 +12,12 @@ import TableTree, {
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import ModalAddSampleRisk from "./ModalAddSampleRisk";
 import ModalSelectControl from "./ModalSelectControl";
 
 const TableRiskIssue = ({
+  headerTextRiskIssue,
   selectedRiskIssue,
   setSelectedRiskIssue,
   mutate,
@@ -268,6 +269,7 @@ const TableRiskIssue = ({
           />
         </TableTree>
         <ModalAddSampleRisk
+          headerTextRiskIssue={headerTextRiskIssue}
           showModal={showModalCreateSample}
           setShowModal={setShowModalCreateSample}
           mutate={mutate}
@@ -276,6 +278,7 @@ const TableRiskIssue = ({
         <ModalSelectControl
           showModal={showModalSelectControl}
           handleCloseModal={() => setShowModalSelectControl(false)}
+          selectedRiskIssue={selectedRiskIssue}
         />
       </div>
     </Card>

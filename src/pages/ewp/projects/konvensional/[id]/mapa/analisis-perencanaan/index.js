@@ -1,5 +1,6 @@
 import {
   Breadcrumbs,
+  ButtonField,
   ButtonIcon,
   Card,
   CheckboxField,
@@ -56,6 +57,9 @@ import {
 } from "@/helpers";
 import useUser from "@/data/useUser";
 
+const classNavbar = `font-semibold text-base flex justify-center pb-1`;
+const classNavbarActive = `border-b-[5px] border-atlasian-blue-light text-atlasian-blue-light`;
+
 const routes = [
   {
     name: "Latar Belakang",
@@ -84,6 +88,7 @@ const index = () => {
     (state) => state.planningAnalysisMapaEWP.planningAnalysisData
   );
 
+  const [currentContentStage, setCurrentContentStage] = useState(1);
   const [expansionMap, setExpansionMap] = useState({});
   const [levelMap, setLevelMap] = useState({});
   const [childParams, setChildParams] = useState({
@@ -371,7 +376,7 @@ const index = () => {
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-3">
         <PageTitle text="Analisis Perencanaan" />
         <PrevNextNavigation
           baseUrl={baseUrl}
@@ -380,7 +385,28 @@ const index = () => {
           nextUrl={"/penugasan"}
         />
       </div>
-      <div className="w-64"></div>
+      <div className="flex border-b-2 w-44 justify-between mb-4">
+        <DivButton
+          className={`${classNavbar} ${
+            currentContentStage === 1 && classNavbarActive
+          }`}
+          handleClick={() => setCurrentContentStage(1)}
+        >
+          Analisis
+        </DivButton>
+        <DivButton
+          className={`${classNavbar} ${
+            currentContentStage === 2 && classNavbarActive
+          }`}
+          handleClick={() => setCurrentContentStage(2)}
+        >
+          Ringkasan
+        </DivButton>
+      </div>
+      <div className="w-32 bg-atlasian-blue-light rounded">
+        <ButtonField text="Tampilkan Filter" />
+      </div>
+      <div className="mb-4" />
       <Card>
         <div className="w-full px-6 py-4 overflow-y-scroll max-h-[40rem]">
           <TableTree>

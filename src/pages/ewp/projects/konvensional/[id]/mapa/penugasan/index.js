@@ -24,6 +24,10 @@ import { setDataTables } from "@/slices/ewp/konvensional/mapa/assignmentMapaEWPS
 import { useSelector } from "react-redux";
 import { ModalSetAuditor } from "@/components/molecules/ewp/konvensional/penugasan";
 
+const customHeader = `w-full h-full flex items-center text-brisma font-bold px-3`;
+const customCell = `cell-width-full-height-full cell-custom-dataTables`;
+const positionCenter = `w-full h-full flex items-center`;
+
 const routes = [
   {
     name: "Latar Belakang",
@@ -99,10 +103,12 @@ const index = () => {
         const sample_jumlah_sample = v.sample_jumlah_sample;
         const mapa_uker_mcr_id = v.id;
 
-        const presentase =
-          ((filterData?.length / parseInt(sample_jumlah_sample)) * 100).toFixed(
-            2
-          ) + " %";
+        const presentase = sample_jumlah_sample
+          ? (
+              (filterData?.length / parseInt(sample_jumlah_sample)) *
+              100
+            ).toFixed(2) + " %"
+          : "";
 
         return {
           auditor,
@@ -157,8 +163,11 @@ const index = () => {
             <TableTree>
               <Headers>
                 <Header className="!hidden" />
-                <Header width="5%" className="border-t border-x rounded-ss-xl">
-                  Aksi
+                <Header
+                  width="5%"
+                  className={`border-t border-x rounded-ss-xl header-width-full-height-full`}
+                >
+                  <div className={`${customHeader} justify-center`}>Aksi</div>
                 </Header>
                 {tableColumns.map((column, index) => {
                   return (
@@ -170,12 +179,18 @@ const index = () => {
                           ? "14%"
                           : "13%"
                       }
-                      className={`border-t border-r ${
+                      className={`header-width-full-height-full border-t border-r ${
                         index + 1 >= tableColumns.length && `rounded-se-xl`
                       }`}
                       key={index}
                     >
-                      {column?.toUpperCase()}
+                      <div
+                        className={`${customHeader} ${
+                          [6, 7].includes(index) && `justify-center`
+                        }`}
+                      >
+                        {column?.toUpperCase()}
+                      </div>
                     </Header>
                   );
                 })}
@@ -185,27 +200,29 @@ const index = () => {
                 render={(data) => (
                   <Row>
                     <Cell className="!hidden" />
-                    <Cell width="5%" className="border-x">
-                      <ButtonIcon
-                        icon={<IconEdit />}
-                        color={"yellow"}
-                        handleClick={() => handleClick(data.mapa_uker_mcr_id)}
-                      />
+                    <Cell width="5%" className={`border-x ${customCell}`}>
+                      <div className={`${positionCenter} justify-center`}>
+                        <ButtonIcon
+                          icon={<IconEdit />}
+                          color={"yellow"}
+                          handleClick={() => handleClick(data.mapa_uker_mcr_id)}
+                        />
+                      </div>
                     </Cell>
                     {tableColumns.map((column, index) => {
                       return (
-                        <Cell
-                          key={index}
-                          width={
-                            [6, 7].includes(index)
-                              ? "8%"
-                              : index === 0
-                              ? "14%"
-                              : "13%"
-                          }
-                          className="border-r"
-                        >
-                          {data[column]}
+                        <Cell key={index} className={`border-r ${customCell}`}>
+                          {[4, 5].includes(index) ? (
+                            data[column]
+                          ) : (
+                            <div
+                              className={`${positionCenter} ${
+                                [6, 7].includes(index) && `justify-center`
+                              }`}
+                            >
+                              {data[column]}
+                            </div>
+                          )}
                         </Cell>
                       );
                     })}

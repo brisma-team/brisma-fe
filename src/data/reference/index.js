@@ -10,6 +10,7 @@ import useSubActivity from "./useSubActivity";
 import useSubMajor from "./useSubMajor";
 import useRiskIssue from "./useRiskIssue";
 import useTeknikSampling from "./useTeknikSampling";
+import useRiskControl from "./useRiskControl";
 
 export {
   useMetode,
@@ -24,4 +25,5 @@ export {
   useSubMajor,
   useRiskIssue,
   useTeknikSampling,
+  useRiskControl,
 };
