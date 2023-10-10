@@ -1,7 +1,7 @@
 import withTokenFetcher from "@/fetchers/withTokenFetcher";
 import useSWR from "swr";
 
-export default function useCatalogEWPKKPAList(year, type, id) {
+export default function useKKPAList(year, type, id) {
   let parameters = `year=${year}&source=${type}&id=${id}`;
   const path = `${process.env.NEXT_PUBLIC_API_URL_CATALOG}/catalog/ewp/kkpa?${parameters}`;
   const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);

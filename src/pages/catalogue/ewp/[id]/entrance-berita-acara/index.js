@@ -1,7 +1,7 @@
 import { Breadcrumbs, Card, PageTitle } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
-import { mapaHtml } from "@/templates/catalog/ewp/mapa";
+import { entBaHtml } from "@/templates/catalog/ewp/entrance-ba";
 import { useState, useEffect } from "react";
 
 const index = () => {
@@ -29,7 +29,10 @@ const index = () => {
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: baseUrl },
     { name: "Daftar Dokumen", path: baseUrl + "/" + id },
-    { name: "Dokumen MAPA", path: baseUrl + "/" + id + "/mapa" },
+    {
+      name: "Dokumen Entrance BA",
+      path: baseUrl + "/" + id + "/entrance-berita-acara",
+    },
   ];
 
   return (
@@ -37,7 +40,7 @@ const index = () => {
       <div className="px-5">
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">
-          <PageTitle text={"MAPA Dokumen"} />
+          <PageTitle text={"Entrance BA Dokumen"} />
         </div>
 
         {/* Start Content */}
@@ -51,7 +54,7 @@ const index = () => {
                       <div
                         className="mt-4 p-10"
                         dangerouslySetInnerHTML={{
-                          __html: mapaHtml(
+                          __html: entBaHtml(
                             params.year,
                             params.source,
                             params.id

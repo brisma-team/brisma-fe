@@ -28,14 +28,14 @@ export default function index() {
         };
       });
       setDashboardList(mapping);
-      if (selected == "") {
+      if (selected === "") {
         setTagName(mapping[0].label);
         setSelected(mapping[0].value);
       }
 
       setCtoken(data.token);
     }
-  }, [data]);
+  }, [data, selected]);
 
   const openKioskModeTab = () => {
     // URL untuk mode kiosk
@@ -43,6 +43,11 @@ export default function index() {
 
     // Membuka tab baru dengan URL mode kiosk
     window.open(kioskURL, "_blank");
+  };
+
+  const handleSelectChange = (selectedOption) => {
+    setSelected(selectedOption.value);
+    setTagName(selectedOption.label);
   };
 
   return (
@@ -56,7 +61,7 @@ export default function index() {
             <Select
               optionValue={dashboardList}
               placeholder="Pilih Jenis Dashboard"
-              onChange={(e) => setSelected(e.value)}
+              onChange={(e) => handleSelectChange(e)}
               isSearchable={true}
             />
           </div>

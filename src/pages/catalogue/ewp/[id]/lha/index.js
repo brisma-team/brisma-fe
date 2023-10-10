@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 import { MainLayout } from "@/layouts";
 import { Breadcrumbs, Card } from "@/components/atoms";
 import Button from "@atlaskit/button";
-import { useRouter } from "next/router";
 import { TableField } from "@/components/atoms";
 import useCatalogEWPById from "@/data/catalog/useCatalogEWPById";
 import shortenWord from "@/helpers/shortenWord";
 
 const index = () => {
-  const { id } = useRouter().query;
+  const router = useRouter();
+  const { id } = router.query;
 
   const [typeList, setTypeList] = useState([]);
   const [catDetailEwp, setCatDetailEwp] = useState([]);
@@ -23,79 +24,31 @@ const index = () => {
     { name: "Detail", path: "/catalogue/ewp/" + selectedId },
     { name: "Daftar Dokumen", path: "/catalogue/ewp/" + selectedId },
   ];
-  console.log(selectedId.split("x1c-")[0]);
+
   const type_list = [
     {
-      jenis: "MAPA",
+      jenis: "SHA",
       jumlah: "-----",
-      url: `${selectedId}/mapa`,
+      url: `${selectedId}/lha/sha`,
+      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
+    },
+    {
+      jenis: "LHA Eksum",
+      jumlah: "-----",
+      url: `${selectedId}/lha/eksum`,
+      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
+    },
+    {
+      jenis: "Risk Profile",
+      jumlah: "-----",
+      url: `${selectedId}/lha/risk-profile`,
       isDisabled: false,
     },
     {
-      jenis: "Addendum MAPA",
+      jenis: "RTA",
       jumlah: "-----",
-      url: `${selectedId}/addendum-mapa`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-    },
-    {
-      jenis: "Entrance Attendance",
-      jumlah: "-----",
-      url: `${selectedId}/entrance-attendance`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-    },
-    {
-      jenis: "Entrance Notulen",
-      jumlah: "-----",
-      url: `${selectedId}/entrance-notulen`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-    },
-    {
-      jenis: "Entrance Berita Acara",
-      jumlah: "-----",
-      url: `${selectedId}/entrance-berita-acara`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-    },
-    {
-      jenis: "KKPA",
-      jumlah: "-----",
-      url: `${selectedId}/kkpa`,
+      url: `${selectedId}/lha/rta`,
       isDisabled: false,
-    },
-    {
-      jenis: "KKPT",
-      jumlah: "-----",
-      url: `${selectedId}/kkpt`,
-      isDisabled: false,
-    },
-    {
-      jenis: "Exit Attendance",
-      jumlah: "-----",
-      url: `${selectedId}/exit-attendance`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-    },
-    {
-      jenis: "Exit Notulen",
-      jumlah: "-----",
-      url: `${selectedId}/exit-notulen`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-    },
-    {
-      jenis: "Exit Berita Acara",
-      jumlah: "-----",
-      url: `${selectedId}/exit-berita-acara`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-    },
-    {
-      jenis: "LHA",
-      jumlah: "-----",
-      url: `${selectedId}/lha`,
-      isDisabled: false,
-    },
-    {
-      jenis: "Berita Acara",
-      jumlah: "-----",
-      url: `${selectedId}/berita_acara`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
     },
   ];
 
@@ -120,6 +73,7 @@ const index = () => {
       setTypeList(mappingTypeList);
     }
   }, []);
+  console.log(selectedId);
 
   const { ewpDetailData } = useCatalogEWPById(
     idToUse.split("x1c-")[2],
@@ -127,13 +81,12 @@ const index = () => {
     idToUse.split("x1c-")[1]
   );
 
-  useState(() => {
+  useEffect(() => {
     if (id !== undefined) setSelectedId(id);
   }, [id]);
 
   useEffect(() => {
     if (ewpDetailData != undefined) {
-      console.log(ewpDetailData);
       const mappingCatEwp = ewpDetailData.data.all_attachment.map((v, key) => {
         const datePart = v?.CreatedAt.split(".")[0];
         return {
@@ -173,9 +126,7 @@ const index = () => {
         {/* End Breadcrumbs */}
         <div className="flex justify-between items-center mb-6">
           <div className="flex-1">
-            <div className="text-3xl font-bold">
-              Riwayat Dokumen Audit Project
-            </div>
+            <div className="text-3xl font-bold">Kumpulan Dokumen LHA</div>
           </div>
         </div>
         <div className="mt-5 mr-40">
@@ -197,7 +148,7 @@ const index = () => {
         <div className="mt-5 mr-40">
           <Card>
             <div className="w-full h-full px-6">
-              <div className="text-xl font-bold p-5">Pustaka Dokumen</div>
+              <div className="text-xl font-bold p-5">Pustaka Dokumen LHA</div>
               <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
                 <TableField
                   headers={["No", "Jenis Dokumen", "Jumlah Dokumen", "Aksi"]}
@@ -208,20 +159,6 @@ const index = () => {
               {/* <div className="flex justify-center mt-5">
                 <Pagination pages={1} setCurrentPage={setCurrentPage} />
               </div> */}
-            </div>
-          </Card>
-        </div>
-        <div className="mt-5 mr-40">
-          <Card>
-            <div className="w-full h-full px-6">
-              <div className="text-xl font-bold p-5">Seluruh Attachment</div>
-              <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
-                <TableField
-                  headers={["No", "Nama Dokumen", "Tanggal Dibuat", "Aksi"]}
-                  columnWidths={["5%", "35%", "30%", "30%"]}
-                  items={catDetailEwp}
-                />
-              </div>
             </div>
           </Card>
         </div>
