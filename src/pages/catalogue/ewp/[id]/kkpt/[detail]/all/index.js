@@ -1,40 +1,51 @@
 import { Breadcrumbs, Card, PageTitle } from "@/components/atoms";
 import useKKPTById from "@/data/catalog/useKKPTById";
-import { convertToRupiah } from "@/helpers";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
 
 import { useState, useEffect } from "react";
 
 const index = () => {
-  const kkptid = useRouter().query.id;
+  const kkptid = useRouter().query.detail;
+  const projectid = useRouter().query.id;
 
+  const [projectId, setProjectId] = useState("");
   const [kkptId, setKkptId] = useState("");
   const [data, setData] = useState({});
-  const [penyebabList, setPenyebabList] = useState([]);
-  const [rekomendasiList, setRekomendasiList] = useState([]);
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: "/catalogue/ewp" },
+    { name: "Daftar Dokumen", path: "/catalogue/ewp/" + projectId },
+    { name: "Riwayat KKPT", path: "/catalogue/ewp/" + projectId + "/kkpt" },
+    {
+      name: "Dokumen KKPT",
+      path: "/catalogue/ewp/" + projectId + "/kkpt/" + kkptId,
+    },
   ];
 
   useEffect(() => {
     if (kkptid !== undefined) setKkptId(kkptid);
   }, [kkptid]);
 
-  const { kkptDetail } = useKKPTById(2022, 1, kkptId);
+  useEffect(() => {
+    if (projectid !== undefined) setProjectId(projectid);
+  }, [projectid]);
+
+  const { kkptDetail } = useKKPTById(
+    projectId.split("x1c-")[2],
+    projectId.split("x1c-")[0],
+    kkptId
+  );
 
   useEffect(() => {
     if (kkptDetail !== undefined) {
+      console.log(kkptDetail);
       setData(kkptDetail.data.kkpt);
-      setPenyebabList(kkptDetail.data.penyebab);
-      setRekomendasiList(kkptDetail.data.rekomendasi);
     }
   }, [kkptDetail]);
   console.log(data);
-
   return (
     <MainLayout>
       <div className="px-5">
@@ -100,7 +111,7 @@ const index = () => {
                                 <div style="text-align:center">
                                   <h3 style="color:#000">Ref No: ${
                                     data?.AuditeeBranchCode
-                                  } - ${data?.MCAuditProjectCode} - ${
+                                  } - ** ${data?.MCAuditProjectCode} - ${
                           data?.RiskIssueCode
                         } </h3>
                                 </div>
@@ -157,14 +168,7 @@ const index = () => {
                                       <b>Focus Audit</b>
                                     </div>
                                     <div style="padding-left:10px">:</div>
-                                    <div style="padding-left:10px">${
-                                      data?.AuditFocusCode !== null &&
-                                      data?.AuditFocusName !== null
-                                        ? data?.AuditFocusCode +
-                                          " - " +
-                                          data?.AuditFocusName
-                                        : ""
-                                    }</div>
+                                    <div style="padding-left:10px">**</div>
                                   </div>
                                   <div style="display:flex;margin-bottom:10px">
                                     <div style="width:100px">
@@ -172,16 +176,28 @@ const index = () => {
                                     </div>
                                     <div style="padding-left:10px">:</div>
                                     <div style="padding-left:10px"> ${
-                                      data?.ProductCode ? data?.ProductCode : ""
+                                      data?.ProductCode +
+                                      " - " +
+                                      data?.ProductName
                                     } </div>
                                   </div>
                                 </article>
+                                ---------------------------
+                                <article>worksheetDoc(data.kkpt)</article>
+                                ---------------------------
                                 <article><p>
                                 <div style="display: flex;margin-bottom:10px;">
                                     <div style="width: 100px;"><b>Risk Issue</b></div>
                                     <div style="padding-left: 10px;">:</div>
                                     <div style="padding-left: 10px;">
                                     ${data?.RiskIssueName}
+                                    </div>
+                                </div>
+                                <div style="display: flex;margin-bottom:10px;">
+                                    <div style="width: 100px;"><b>Proses Major</b></div>
+                                    <div style="padding-left: 10px;">:</div>
+                                    <div style="padding-left: 10px;">
+                                    ${data?.MajorProcess}
                                     </div>
                                 </div>
                                 <div style="display: flex;margin-bottom:10px;">
@@ -195,13 +211,7 @@ const index = () => {
                                     <div style="width: 100px;"><b>Kategori Temuan</b></div>
                                     <div style="padding-left: 10px;">:</div>
                                     <div style="padding-left: 10px;">
-                                    ${
-                                      data?.KategoriTemuan == 1
-                                        ? "Minor"
-                                        : data?.KategoriTemuan == 2
-                                        ? "Moderate"
-                                        : "Major"
-                                    }
+                                    ${data?.KategoriTemuan}
                                     </div>
                                 </div>
                                 <div style="display: flex;margin-bottom:10px;">
@@ -245,85 +255,52 @@ const index = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    ${
-                                      penyebabList.length > 0
-                                        ? penyebabList.map((x) => {
-                                            return `<tr style="height: 18px;">
-                                          <td style="height: 18px;">
-                                            ${x.PenyebabKode}
-                                          </td>
-                                          <td style="height: 18px;">
-                                            ${x.PenyebabName}
-                                          </td>
-                                          <td style="height: 18px;">
-                                            ${x.PenyebabDesc}
-                                          </td>
-                                          <td style="height: 18px;">
-                                          ${x.PN.map(
-                                            (person) => `<li>
-                                              ${person.pn.pernr}
-                                            </li>`
-                                          )}
-                                            
-                                          </td>
-                                        </tr>`;
-                                          })
-                                        : `<tr style="height: 18px;">
-                                          <td style=" height: 18px;"></td>
-                                          <td style=" height: 18px;"></td>
-                                          <td style=" height: 18px;"></td>
-                                        </tr>`
-                                    }
-
-                                    
-                                        
+                                        <tr style="height: 18px;">
+                                    <td style="height: 18px;">item.penyebab_kode</td>
+                                    <td style="height: 18px;">item.penyebab_name</td>
+                                    <td style="height: 18px;">item.desc</td>
+                                    <td style="height: 18px;">
+                                        <li>item?.pn?.pernr + " - " + item?.pn?.sname</li>
+                                    </td>
+                                  </tr>
                                     </tbody>
                                 </table></article>
                                 <article><p lang="SV" dir="ltr"><strong><u>IV. DAMPAK</u></strong></p>
                                 <p><strong>A. Dampak Finansial</strong></p>
-                                <p>Skor Dampak Finansial : ${
-                                  data?.FinancialImpact
-                                    ? data.FinancialImpact
-                                    : ""
-                                }</p>
+                                <p>Skor Dampak Finansial : skorDampak(
+                                  value.financial_impact_kode
+                                )</p>
                                 <p>Total Kerugian: ${
-                                  data?.FinancialLoss ? data.FinancialLoss : "-"
+                                  data?.FinancialLoss
+                                    ? data.FinancialLoss
+                                    : "**"
                                 }</p>
-                                <p>Gross: ${
-                                  data?.Gross
-                                    ? "Rp. " +
-                                      convertToRupiah(data?.Gross) +
-                                      ",-"
-                                    : ""
-                                }</p>
+                                <p>Gross: value.gross</p>
                                 <p>Table List Kerugian:</p>
                                 <table style="border-collapse: collapse; width: 100%; height: 90px;" border="1">
-                                <thead>
-                                <tr style="height: 18px;">
-                                <th style=" height: 18px; text-align: center;background-color: #3C64B1; color: white;">Jumlah Kerugian</th>
-                                <th style=" height: 18px; text-align: center;background-color: #3C64B1; color: white;">jenis Kerugian</th>
-                                <th style=" height: 18px; text-align: center;background-color: #3C64B1; color: white;">Keteranagn</th>
-                                </tr>
-                                </thead>
+                              <thead>
+                              <tr style="height: 18px;">
+                               <th style=" height: 18px; text-align: center;background-color: #3C64B1; color: white;">Jumlah Kerugian</th>
+                               <th style=" height: 18px; text-align: center;background-color: #3C64B1; color: white;">jenis Kerugian</th>
+                               <th style=" height: 18px; text-align: center;background-color: #3C64B1; color: white;">Keteranagn</th>
+                               </tr>
+                              </thead>
                                <tbody>
-                               <tr style="height: 18px;">
-                                      <td style=" height: 18px;">
-                                      </td>
-                                      <td style=" height: 18px;">
-                                      </td>
-                                      <td style=" height: 18px;">
-                                      </td>
-                                 </tr>
-                                  
+                                  <tr style="height: 18px;">
+                                    <td style=" height: 18px;">
+                                      item.jumlah_kerugian</td>
+                                    <td style=" height: 18px;">item.jenis_kerugian</td>
+                                    <td style=" height: 18px;">item.keterangan</td>
+                                  </tr>
                                </tbody>
                                </table>
                                 <p>&nbsp;</p>
                                 <p><strong>B. Dampak Non Finansial</strong></p>
-                                <p>Skor Dampak Non-Finansial : ${
-                                  data?.NonFinancialImpact
-                                    ? data.NonFinancialImpact
-                                    : ""
-                                }</p>
+                                <p>Skor Dampak Non-Finansial :</p>
+                                <p>Skor Dampak item.nama: 
+                                  skorDampak(
+                                    skor.filter((e) => e.nonfinancial_type_impact_kode === item.kode)[0]
+                                      .mtd_stc_impact_kode</p>
                                 <p>&nbsp;</p>
                                 <p><strong>C. Kesimpulan Dampak</strong></p>
                                 <p>Skor Dampak&nbsp; &nbsp;: ${
@@ -334,6 +311,7 @@ const index = () => {
                                     ? data?.ImpactDescription
                                     : "**"
                                 }</p></article>
+                                -----------------------------------------------------
                                 <article><p lang="SV" dir="ltr"><strong><u>V. REKOMENDASI</u></strong></p>
                               <table style="border-collapse: collapse; width: 100%; height: 90px;" border="1">
                               <thead>
@@ -345,26 +323,16 @@ const index = () => {
                                </tr>
                               </thead>
                                <tbody>
-                               ${
-                                 rekomendasiList.length > 0
-                                   ? rekomendasiList.map((item) => {
-                                       return `<tr style="height: 18px;">
-                                <td style=" height: 18px;">${item.TipeRekomendasiName}</td>
-                                <td style=" height: 18px;">${item.BranchTujuan}</td>
-                                <td style=" height: 18px;">${item.OrgehTujuan}</td>
-                                <td style=" height: 18px;">${item.ItemDesc}</td>
-                              </tr>`;
-                                     })
-                                   : `<tr style="height: 18px;">
-                                     <td style=" height: 18px;"></td>
-                                     <td style=" height: 18px;"></td>
-                                     <td style=" height: 18px;"></td>
-                                   </tr>`
-                               }
-                                 
+                                 <tr style="height: 18px;">
+                                        <td style=" height: 18px;">item.tipe_rekomendasi_name</td>
+                                        <td style=" height: 18px;">item.ref_uker_tujuan_branch_name</td>
+                                        <td style=" height: 18px;">item.ref_uker_tujuan_orgeh_name</td>
+                                        <td style=" height: 18px;">item.desc</td>
+                                      </tr>
                                </tbody>
                                </table>
                                </article>
+                                -----------------------------------------------------
                               </section>
                             </main>
                           </body>

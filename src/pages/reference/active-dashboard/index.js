@@ -6,6 +6,7 @@ import {
   TableField,
   ButtonField,
   Pagination,
+  ButtonIcon,
 } from "@/components/atoms";
 import { IconPlus } from "@/components/icons";
 import useDashboardList from "@/data/dashboard/useDashboardList";
@@ -19,6 +20,11 @@ import {
   loadingSwal,
 } from "@/helpers";
 import ModalAddDashboard from "@/components/molecules/dashboard/ModalAddDashboard";
+import ModalEditDashboard from "@/components/molecules/dashboard/ModalEditDashboard";
+import SelectClearIcon from "@atlaskit/icon/glyph/select-clear";
+import CheckCircleOutlineIcon from "@atlaskit/icon/glyph/check-circle-outline";
+import EditIcon from "@atlaskit/icon/glyph/edit";
+import { IconTrash } from "@/components/icons";
 
 const index = () => {
   const breadcrumbs = [
@@ -28,25 +34,40 @@ const index = () => {
   ];
   // const [selected, setSelected] = useState();
 
-  const { dashboardList, dashboardListMutate } = useDashboardList();
-  const { uka } = useUkaList();
-  const { role } = useRoleList();
-
   const [combinedData, setCombinedData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [dashboard, setDashboard] = useState([]);
   const [data, setData] = useState({ embedId: "", name: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [index, setIndex] = useState(1);
 
   const [mappedDashboard, setMappedDashboard] = useState([]);
   const [mappedUka, setMappedUka] = useState([]);
   const [mappedRole, setMappedRole] = useState([]);
 
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  const [editData, setEditData] = useState(); // Menambah state untuk data yang akan diedit
+
+  const { dashboardList, dashboardListMutate } = useDashboardList(
+    currentPage,
+    5
+  );
+  const { uka } = useUkaList();
+  const { role } = useRoleList();
+
+  // Handler untuk memulai proses edit data dashboard
+  const handleEdit = (data) => {
+    setEditData(data); // Setel data yang akan diedit
+    setShowEditModal(true); // Tampilkan modal untuk mengedit data
+  };
+
   useEffect(() => {
     if (dashboardList) {
       setMappedDashboard(dashboardList.list);
       setTotalPages(dashboardList.totalPages);
+      setIndex(dashboardList.limit * dashboardList.page + 1);
     }
   }, [dashboardList]);
 
@@ -139,75 +160,92 @@ const index = () => {
     fetchData();
   };
 
+  const handleUpdate = async () => {
+    loadingSwal();
+    setShowEditModal(false);
+    const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/updateDashboard`;
+    await useUpdateData(url, data);
+    fetchData();
+  };
+
   useEffect(() => {
     if (combinedData.length !== 0) {
-      console.log(combinedData);
-      const sortedDashboard = combinedData
-        // ?.sort((a, b) =>
-        //   (b["_created_at"] || "").localeCompare(a["_created_at"] || "")
-        // )
-        .map((v, key) => ({
-          No: key + 1,
-          "Dashboard ID": v?.superset_embed_id,
-          "Nama Dashboard": v?.dashboard_name,
-          Status: (
-            <div
-              className={`my-auto ${
-                v?.is_active ? "text-lime-600" : "text-red-500"
-              }`}
-            >
-              {v?.is_active ? "Aktif" : "Tidak Aktif"}
-            </div>
-          ),
-          "Ditujukan Kepada":
-            v.allow_list == null ? (
-              v.is_public == true ? (
-                <p>Public</p>
-              ) : (
-                <p>Belum ditujukan</p>
-              )
+      const sortedDashboard = combinedData.map((v, key) => ({
+        No: index + key,
+        "Dashboard ID": v?.superset_embed_id,
+        "Nama Dashboard": v?.dashboard_name,
+        Status: (
+          <div
+            className={`my-auto ${
+              v?.is_active ? "text-lime-600" : "text-red-500"
+            }`}
+          >
+            {v?.is_active ? "Aktif" : "Tidak Aktif"}
+          </div>
+        ),
+        "Ditujukan Kepada":
+          v.allow_list == null ? (
+            v.is_public == true ? (
+              <p>Public</p>
             ) : (
-              v.allow_list != null &&
-              v.allow_list.map((x, key) => (
-                <p key={key}>{x.mapped_uka + " - " + x.mapped_role}</p>
-              ))
-            ),
-          "Tanggal Dibuat": v?._created_at,
-          Aksi: (
-            <div className="flex justify-between text-center">
-              <div className="min-w-[7rem] px-2">
-                <div
-                  className={`${
-                    v.is_active
-                      ? `bg-atlasian-yellow text-white`
-                      : `bg-atlasian-blue-light text-white`
-                  } font-semibold rounded`}
-                >
-                  <ButtonField
-                    text={v.is_active ? "Non-aktif" : "Aktifkan"}
-                    handler={() =>
-                      handleToggleActivate(
-                        v?.id,
-                        v?.superset_embed_id,
-                        !v.is_active
-                      )
-                    }
-                  />
-                </div>
-              </div>
-              <div className="min-w-[7rem] px-2">
-                <div
-                  className={`bg-atlasian-red text-white font-semibold rounded`}
-                >
-                  <ButtonField
-                    text={"Hapus"}
-                    handler={() => handleDelete(v?.id)}
-                  />
-                </div>
-              </div>
-            </div>
+              <p>Belum ditujukan</p>
+            )
+          ) : (
+            v.allow_list != null &&
+            v.allow_list.map((x, key) => (
+              <p key={key}>{x.mapped_uka + " - " + x.mapped_role}</p>
+            ))
           ),
-        }));
+        "Tanggal Dibuat": v?._created_at,
+        Aksi: (
+          <div className="flex justify-between text-center">
+            <div className="min-w-[3rem]">
+              <ButtonIcon
+                handleClick={() =>
+                  handleToggleActivate(
+                    v?.id,
+                    v?.superset_embed_id,
+                    !v.is_active
+                  )
+                }
+                icon={
+                  v.is_active ? (
+                    <SelectClearIcon
+                      primaryColor="maroon"
+                      secondaryColor="white"
+                      size="medium"
+                    />
+                  ) : (
+                    <CheckCircleOutlineIcon
+                      primaryColor="green"
+                      secondaryColor="white"
+                      size="medium"
+                    />
+                  )
+                }
+              />
+            </div>
+            <div className="min-w-[3rem]">
+              <ButtonIcon
+                handleClick={() => handleEdit(v)}
+                icon={
+                  <EditIcon
+                    primaryColor={"blue"}
+                    secondaryColor="white"
+                    size="medium"
+                  />
+                }
+              />
+            </div>
+            <div className="min-w-[3rem]">
+              <ButtonIcon
+                handleClick={() => handleDelete(v?.id)}
+                icon={<IconTrash primaryColor="red" size="medium" />}
+              />
+            </div>
+          </div>
+        ),
+      }));
       setDashboard(sortedDashboard);
     }
   }, [combinedData]);
@@ -267,6 +305,15 @@ const index = () => {
             setData={setData}
             handleSubmit={handleSubmit}
             data={data}
+          />
+        )}
+        {showEditModal && (
+          <ModalEditDashboard
+            showEditModal={showEditModal}
+            setShowEditModal={setShowEditModal}
+            handleUpdate={handleUpdate}
+            editData={editData}
+            setEditData={setEditData}
           />
         )}
       </div>
