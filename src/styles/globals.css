@@ -101,3 +101,12 @@
   width: 100%;
 }
 /* END Anggaran MAPA EWP*/
+
+
+.custom-table-header {
+  @apply w-full h-full flex items-center text-brisma;
+}
+
+.custom-table-position-center {
+  @apply w-full h-full flex items-center;
+}

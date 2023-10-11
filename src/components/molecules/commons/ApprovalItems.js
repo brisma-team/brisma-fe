@@ -1,11 +1,11 @@
 import { ImageCheck, ImageKliping } from "@/helpers/imagesUrl";
 import Image from "next/image";
 
-const ApprovalUkaItems = ({ title, text, data }) => {
+const ApprovalItems = ({ title, text, data }) => {
   let allSigned = false,
     findApproval = -1;
   if (text !== "-") {
-    if (title === "Maker" && text) {
+    if (["Maker", "P.I.C"].includes(title) && text) {
       allSigned = true;
     } else {
       const checkSigned = text?.every((item) => item.is_signed === true);
@@ -54,4 +54,4 @@ const ApprovalUkaItems = ({ title, text, data }) => {
   );
 };
 
-export default ApprovalUkaItems;
+export default ApprovalItems;

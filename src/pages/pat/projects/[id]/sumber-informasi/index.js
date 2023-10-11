@@ -138,6 +138,8 @@ const index = () => {
           routes={routes}
           prevUrl={"/latar-belakang-dan-tujuan"}
           nextUrl={"/tim-audit"}
+          marginLeft={"-90px"}
+          widthDropdown={"w-56"}
         />
       </div>
       {/* Start Content */}

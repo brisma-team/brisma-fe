@@ -20,7 +20,11 @@ const LinkIcon = ({ href, color, handler, icon, isDisabled }) => {
   }
 
   if (isDisabled) {
-    return <span className={`${iconColor}`}>{icon}</span>;
+    return (
+      <span className={`${isDisabled && `cursor-not-allowed`} ${iconColor}`}>
+        {icon}
+      </span>
+    );
   }
 
   return (

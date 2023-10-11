@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import useStatusPat from "@/data/pat/useStatusPat";
 import { setSearchParam } from "@/slices/pat/statusPatSlice";
 import { useDispatch } from "react-redux";
+import { convertDate } from "@/helpers";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -78,10 +79,21 @@ const index = () => {
       },
     ]);
 
+    console.log("status Pat => ", statusPat?.data);
+
     setContent([
       { title: "Riwayat Addendum", value: statusPat?.data?.riwayat_adendum },
       { title: "Status Approver", value: statusPat?.data?.status_approver?.pn },
       { title: "Status PAT", value: statusPat?.data?.status_pat },
+      { title: "Initiator", value: statusPat?.data?.create_by?.nama },
+      {
+        title: "Created",
+        value: convertDate(statusPat?.data?.createdAt, "-", "d"),
+      },
+      {
+        title: "Last Modified",
+        value: convertDate(statusPat?.data?.updatedAt, "-", "d"),
+      },
     ]);
   }, [statusPat]);
 

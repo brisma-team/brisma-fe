@@ -1,9 +1,11 @@
 import { Breadcrumbs, Card, DivButton, PageTitle } from "@/components/atoms";
-import { PrevNextNavigation } from "@/components/molecules/commons";
+import {
+  PrevNextNavigation,
+  ApprovalItems,
+} from "@/components/molecules/commons";
 import {
   ModalWorkflow,
   CardComment,
-  ApprovalUkaItems,
   DocumentItems,
 } from "@/components/molecules/pat/dokumen";
 import Image from "next/image";
@@ -323,16 +325,16 @@ const index = () => {
                     <p className="text-brisma font-bold text-xl">
                       Approval UKA
                     </p>
-                    <ApprovalUkaItems
+                    <ApprovalItems
                       title={"Maker"}
                       text={workflowDetail?.maker}
                     />
-                    <ApprovalUkaItems
+                    <ApprovalItems
                       title={"Checker"}
                       text={workflowDetail?.checker}
                       data={workflowDetail}
                     />
-                    <ApprovalUkaItems
+                    <ApprovalItems
                       title={"Signer"}
                       text={workflowDetail?.signer}
                     />

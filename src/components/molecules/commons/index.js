@@ -48,6 +48,8 @@ import BudgetCategorySelect from "./BudgetCategorySelect";
 import PopupKlipping from "./PopupKlipping";
 import DropdownCard from "./DropdownCard";
 import TeknikSamplingSelect from "./TeknikSamplingSelect";
+import ApprovalItems from "./ApprovalItems";
+import NavigationDocument from "./NavigationDocument";
 
 export {
   BackButton,
@@ -100,4 +102,6 @@ export {
   PopupKlipping,
   DropdownCard,
   TeknikSamplingSelect,
+  ApprovalItems,
+  NavigationDocument,
 };

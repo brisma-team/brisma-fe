@@ -119,6 +119,7 @@ const index = () => {
         value: latarBelakangTujuanPat?.data?.lb_updated_at,
       },
     ]);
+    console.log("latarBelakangTujuanPat => ", latarBelakangTujuanPat?.data);
 
     setData({
       ...data,
@@ -136,6 +137,8 @@ const index = () => {
           routes={routes}
           prevUrl={false}
           nextUrl={"/sumber-informasi"}
+          marginLeft={"-90px"}
+          widthDropdown={"w-56"}
         />
       </div>
       {/* Start Content */}

@@ -8,18 +8,24 @@ import {
 import { ProfileDetail } from "../commons";
 
 const Content = ({ title, value }) => {
+  let displayedValue = value;
+
+  if (title === "Riwayat Addendum") {
+    displayedValue = `Addendum ke-${value}`;
+  } else if (title === "Status Approver" && value) {
+    displayedValue = `On ${value?.pn}`;
+  } else if (!value || value === "") {
+    displayedValue = "-";
+  }
+
   return (
     <div className="my-5">
-      <p className="font-bold">{title}</p>
-      <p className="font-light text-sm">
-        {!value || value === ""
-          ? "-"
-          : title === "Riwayat Addendum"
-          ? `Addendum ke-${value}`
-          : title === "Status Approver"
-          ? `On ${value?.pn}`
-          : value}
-      </p>
+      <div className="font-bold">{title}</div>
+      <div className="font-light text-sm">
+        {typeof displayedValue === "object"
+          ? displayedValue?.nama
+          : displayedValue}
+      </div>
     </div>
   );
 };
@@ -45,7 +51,7 @@ const PatSidebarLanding = ({ data, content }) => {
               {content &&
                 Array.isArray(content) &&
                 content.map((v, i) => {
-                  return <Content key={i} title={v.title} value={v.value} />;
+                  return <Content key={i} title={v?.title} value={v?.value} />;
                 })}
             </div>
           </Section>

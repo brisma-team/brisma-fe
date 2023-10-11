@@ -1,7 +1,7 @@
-const PageTitle = ({ text }) => {
+const PageTitle = ({ text, className }) => {
   return (
     <div className="flex-1">
-      <div className="text-3xl font-bold">{text}</div>
+      <div className={`text-3xl font-bold ${className}`}>{text}</div>
     </div>
   );
 };
