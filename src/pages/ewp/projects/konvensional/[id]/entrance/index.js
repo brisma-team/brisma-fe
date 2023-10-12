@@ -3,17 +3,30 @@ import {
   ProjectValidation,
   EntranceLanding,
 } from "@/components/molecules/ewp/konvensional/entrance/landing";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLandingEntranceEWP } from "@/data/ewp/konvensional/entrance";
+import { useRouter } from "next/router";
 
 const index = () => {
-  const [isMapa, setIsMapa] = useState(false);
-
+  const { id } = useRouter().query;
+  const [isMapaFinal, setIsMapaFinal] = useState(false);
+  const { landingEntranceEWP, landingEntranceEWPError } = useLandingEntranceEWP(
+    { id }
+  );
+  useEffect(() => {
+    if (landingEntranceEWPError) {
+      setIsMapaFinal(false);
+    } else {
+      setIsMapaFinal(true);
+    }
+  }, [landingEntranceEWP]);
   return (
     <LandingLayoutEWP>
-      {/* Start Breadcrumbs */}
-      {isMapa ? <ProjectValidation /> : <EntranceLanding />}
-
-      {/* End Breadcrumbs */}
+      {!isMapaFinal ? (
+        <ProjectValidation />
+      ) : (
+        <EntranceLanding data={landingEntranceEWP?.data} />
+      )}
     </LandingLayoutEWP>
   );
 };

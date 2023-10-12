@@ -3,10 +3,10 @@ import { useRouter } from "next/router";
 import { useAuditorEWP } from "@/data/ewp/konvensional";
 import { useEffect, useState } from "react";
 
-const EntranceLanding = () => {
+const EntranceLanding = ({ data }) => {
   const { id } = useRouter().query;
-  const [data, setData] = useState([]);
-  const baseUrl = `/ewp/projects/konvensional/${id}/entrance`;
+  const [cards, setCards] = useState([]);
+  const baseUrl = `/ewp/projects/konvensional/${id}/entrance/${data?.attendance_id}`;
   const { auditorEWP } = useAuditorEWP({ id });
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
@@ -18,30 +18,30 @@ const EntranceLanding = () => {
   ];
 
   useEffect(() => {
-    setData([
+    setCards([
       {
         title: "Daftar Kehadiran",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
-        status: "success",
+        status: data?.status_filled?.attendance ? "success" : "failed",
         url: `${baseUrl}/attendance`,
       },
       {
         title: "Notulen",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
-        status: "failed",
+        status: data?.status_filled?.notulen ? "success" : "failed",
         url: `${baseUrl}/notulen`,
       },
       {
         title: "Berita Acara",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
-        status: "failed",
+        status: data?.status_filled?.berita_acara ? "success" : "failed",
         url: `${baseUrl}/berita-acara`,
       },
     ]);
-  }, []);
+  }, [data]);
 
   return (
     <>
@@ -50,7 +50,7 @@ const EntranceLanding = () => {
         <PageTitle text="Entrance" />
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-        {data.map((v, i) => {
+        {cards.map((v, i) => {
           return (
             <CardLanding
               key={i}

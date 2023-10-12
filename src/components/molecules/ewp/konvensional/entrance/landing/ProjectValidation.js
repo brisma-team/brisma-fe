@@ -1,24 +1,11 @@
 import { Breadcrumbs, ButtonField, Card, PageTitle } from "@/components/atoms";
 import TableProjectChecklist from "./TableProjectChecklist";
-import { PrevNextNavigation } from "@/components/molecules/commons";
 import { useRouter } from "next/router";
 import { useAuditorEWP } from "@/data/ewp/konvensional";
 
-const routes = [
-  {
-    name: "Daftar Kehadiran",
-    slug: "attendance",
-  },
-  {
-    name: "Notulen",
-    slug: "notulen",
-  },
-  { name: "Berita Acara", slug: "berita-acara" },
-];
-
 const ProjectValidation = () => {
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/projects/konvensional/${id}/mapa`;
+  const router = useRouter();
   const { auditorEWP } = useAuditorEWP({ id });
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
@@ -34,12 +21,6 @@ const ProjectValidation = () => {
       <Breadcrumbs data={breadcrumbs} />
       <div className="flex justify-between items-center mb-6">
         <PageTitle text="Entrance Meeting" />
-        <PrevNextNavigation
-          baseUrl={baseUrl}
-          routes={routes}
-          prevUrl={"/tim-audit"}
-          nextUrl={"/analisis-perencanaan"}
-        />
       </div>
       <div className="flex gap-3 w-[60rem]">
         <div className="w-7/12">
@@ -53,7 +34,12 @@ const ProjectValidation = () => {
           </Card>
           <div className="w-full flex gap-3 justify-end items-center mt-2">
             <div className="rounded w-28 bg-atlasian-blue-light">
-              <ButtonField text={"Project Info"} />
+              <ButtonField
+                text={"Project Info"}
+                handler={() =>
+                  router.push(`/ewp/projects/konvensional/${id}/info`)
+                }
+              />
             </div>
             <div className="rounded w-28 bg-atlasian-green">
               <ButtonField text={"Inisiasi"} />
