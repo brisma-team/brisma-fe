@@ -14,7 +14,10 @@ const SupersetDashboard = ({ id, token }) => {
           dashboardUiConfig: {
             hideTitle: true,
             hideChartControls: true,
-            hideTab: true,
+            hideTab: false,
+            filters: {
+              visible: true
+            }
           },
         };
         if (token) {
