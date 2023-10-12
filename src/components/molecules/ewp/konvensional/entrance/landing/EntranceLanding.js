@@ -24,21 +24,21 @@ const EntranceLanding = ({ data }) => {
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
         status: data?.status_filled?.attendance ? "success" : "failed",
-        url: `${baseUrl}/attendance`,
+        url: `${baseUrl}/attendance/${data?.attendance_id}`,
       },
       {
         title: "Notulen",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
         status: data?.status_filled?.notulen ? "success" : "failed",
-        url: `${baseUrl}/notulen`,
+        url: `${baseUrl}/notulen/${data?.notulen_id}`,
       },
       {
         title: "Berita Acara",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
         status: data?.status_filled?.berita_acara ? "success" : "failed",
-        url: `${baseUrl}/berita-acara`,
+        url: `${baseUrl}/berita-acara/${data?.ba_id}`,
       },
     ]);
   }, [data]);

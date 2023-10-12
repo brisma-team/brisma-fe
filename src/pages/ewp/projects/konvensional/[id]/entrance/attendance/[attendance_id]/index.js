@@ -4,6 +4,8 @@ import { useAuditorEWP } from "@/data/ewp/konvensional";
 import { useRouter } from "next/router";
 import { PrevNextNavigation } from "@/components/molecules/commons";
 import { TableAttendance } from "@/components/molecules/ewp/konvensional/entrance/attendance";
+import { useEffect, useState } from "react";
+import { useAttendanceEntranceEWP } from "@/data/ewp/konvensional/entrance/attendance";
 
 const routes = [
   {
@@ -18,20 +20,29 @@ const routes = [
 ];
 
 const index = () => {
-  const { id } = useRouter().query;
-  const baseUrl = `/ewp/projects/konvensional/${id}/entrance`;
+  const { id, attendance_id } = useRouter().query;
+  const pathName = `/ewp/projects/konvensional/${id}/entrance`;
+  const [valueQR, setValueQR] = useState("");
   const { auditorEWP } = useAuditorEWP({ id });
+  const { attendanceEntranceEWP } = useAttendanceEntranceEWP({ attendance_id });
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
     {
-      name: `${auditorEWP?.data?.project_info?.project_id} / Entrance Meeting`,
+      name: `${auditorEWP?.data?.project_info?.project_id} / Entrance`,
       path: `/ewp/projects/konvensional/${id}/entrance`,
+    },
+    {
+      name: `Attendance`,
+      path: `/ewp/projects/konvensional/${id}/entrance/attendance/${attendance_id}`,
     },
   ];
 
-  const valueQR =
-    "http://localhost:3000/ewp/projects/konvensional/13/entrance/attendance";
+  useEffect(() => {
+    setValueQR(
+      `${window.location.protocol}//${window.location.host}/ewp/projects/konvensional/${id}/entrance/attendance/${attendance_id}/${attendanceEntranceEWP?.data?.attendance_info?.meet_code}`
+    );
+  }, [attendanceEntranceEWP]);
 
   return (
     <LandingLayoutEWP>
@@ -41,7 +52,7 @@ const index = () => {
       <div className="flex justify-between items-center mb-3">
         <PageTitle text="Daftar Kehadiran" />
         <PrevNextNavigation
-          baseUrl={baseUrl}
+          baseUrl={pathName}
           routes={routes}
           prevUrl={""}
           nextUrl={"/notulen"}
