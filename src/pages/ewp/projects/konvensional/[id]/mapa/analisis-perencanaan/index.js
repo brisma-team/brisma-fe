@@ -76,7 +76,7 @@ const routes = [
   { name: "Penugasan", slug: "penugasan" },
   { name: "Jadwal Audit", slug: "jadwal-audit" },
   { name: "Anggaran", slug: "anggaran" },
-  { name: "Dokumen", slug: "dokument" },
+  { name: "Dokumen", slug: "dokumen" },
 ];
 
 const index = () => {
@@ -335,33 +335,36 @@ const index = () => {
     planningAnalysisEWPMutate();
   };
 
-  const handleUpdateApprovalStatusSubActivity = async (
-    ukerId,
-    activityId,
-    subActivityId,
-    type
-  ) => {
+  const handleUpdateApprovalStatusSubActivity = async (subActivityId, type) => {
     const payload = {
-      aktivitas_kode: activityId,
-      sub_aktivitas_kode: subActivityId,
-      uker_id: ukerId,
+      sub_aktivitas_id: subActivityId,
       alasan: "",
       is_approved: "",
     };
 
-    const result = await inputSwal();
-
-    if (!result.isConfirmed) {
-      return;
-    }
-
-    loadingSwal();
     if (type === "send") {
+      const result = await confirmationSwal(
+        `Apakah anda yakin ingin merubah status Sub-Aktivitas ini?`
+      );
+
+      if (!result.isConfirmed) {
+        return;
+      }
+
       payload.is_approved = true;
     } else {
+      const result = await inputSwal(
+        "Apakah anda yakin ingin merubah status Sub-Aktivitas ini?"
+      );
+
+      if (!result.isConfirmed) {
+        return;
+      }
       payload.is_approved = false;
       payload.alasan = result.value;
     }
+
+    loadingSwal();
     await usePostData(
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/sub_aktivitas/approval`,
       payload
@@ -461,7 +464,6 @@ const index = () => {
                 id,
                 role,
                 parent_id,
-                child_parent_id,
                 kode,
                 name,
                 risk,
@@ -651,8 +653,6 @@ const index = () => {
                                   className={"flex gap-1 py-0.5"}
                                   handleClick={() =>
                                     handleUpdateApprovalStatusSubActivity(
-                                      parent_id,
-                                      child_parent_id,
                                       id,
                                       "reject"
                                     )
@@ -669,8 +669,6 @@ const index = () => {
                                   className={"flex gap-1 py-0.5"}
                                   handleClick={() =>
                                     handleUpdateApprovalStatusSubActivity(
-                                      parent_id,
-                                      child_parent_id,
                                       id,
                                       "send"
                                     )

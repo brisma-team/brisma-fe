@@ -1,7 +1,6 @@
 import { Badge, DivButton } from "@/components/atoms";
 
 const NavigationDocument = ({ no, title, count, handleClick, activeIndex }) => {
-  console.log("active index => ", activeIndex);
   return (
     <DivButton
       className={`text-sm py-1 flex justify-between ${

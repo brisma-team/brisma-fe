@@ -60,7 +60,7 @@ const CardFormInputTeam = ({
       break;
     case "Approver":
       textColor = "text-atlasian-red";
-      buttonText = "Checker";
+      buttonText = "Approver";
       break;
     case "Signer":
       textColor = "text-atlasian-green";

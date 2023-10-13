@@ -20,6 +20,7 @@ import planningAnalysisMapaEWPReducer from "./slices/ewp/konvensional/mapa/plann
 import assignmentMapaEWPReducer from "./slices/ewp/konvensional/mapa/assignmentMapaEWPSlice";
 import auditScheduleMapaEWPReducer from "./slices/ewp/konvensional/mapa/auditScheduleMapaEWPSlice";
 import budgetMapaEWPReducer from "./slices/ewp/konvensional/mapa/budgetMapaEWPSlice";
+import documentMapaEWPReducer from "./slices/ewp/konvensional/mapa/documentMapaEWPSlice";
 
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
@@ -52,5 +53,6 @@ export const store = configureStore({
     auditScheduleMapaEWP: auditScheduleMapaEWPReducer,
     budgetMapaEWP: budgetMapaEWPReducer,
     notulenEntranceEWP: notulenEntranceEWPReducer,
+    documentMapaEWP: documentMapaEWPReducer,
   },
 });

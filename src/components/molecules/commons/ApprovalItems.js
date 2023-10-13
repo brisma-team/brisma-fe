@@ -4,18 +4,17 @@ import Image from "next/image";
 const ApprovalItems = ({ title, text, data }) => {
   let allSigned = false,
     findApproval = -1;
-  if (text !== "-") {
-    if (["Maker", "P.I.C"].includes(title) && text) {
-      allSigned = true;
-    } else {
-      const checkSigned = text?.every((item) => item.is_signed === true);
-      if (checkSigned && text?.length) allSigned = true;
-    }
+
+  if (["Maker", "P.I.C", "Signer"].includes(title) && text) {
+    allSigned = true;
+  } else {
+    const checkSigned = text?.every((item) => item.is_signed === true);
+    if (checkSigned && text?.length) allSigned = true;
   }
 
-  if (data?.statusApprover) {
+  if (data?.on_approver) {
     findApproval = text?.findIndex((v) => {
-      return v?.pn === data?.statusApprover?.pn;
+      return v?.pn === data?.on_approver?.pn;
     });
   }
 
