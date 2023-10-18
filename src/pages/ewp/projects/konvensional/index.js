@@ -6,7 +6,6 @@ import {
   ButtonField,
   PageTitle,
   Pagination,
-  Spinner,
 } from "@/components/atoms";
 import {
   CardOverview,
@@ -202,17 +201,17 @@ const index = () => {
       </div>
       {/* End Filter */}
       {/* Start Content */}
-      <div className="grid grid-cols-4 gap-3 my-4 overflow-hidden -ml-2">
-        {overviewEWPError ? (
-          <DataNotFound />
-        ) : data?.length ? (
-          data.map((v, i) => {
-            return <CardOverview key={i} data={v} callbackRef={ref} />;
-          })
-        ) : (
-          <Spinner />
-        )}
-      </div>
+      {overviewEWPError ? (
+        <DataNotFound />
+      ) : (
+        data?.length && (
+          <div className="grid grid-cols-4 gap-3 my-4 overflow-hidden -ml-2">
+            {data.map((v, i) => {
+              return <CardOverview key={i} data={v} callbackRef={ref} />;
+            })}
+          </div>
+        )
+      )}
       <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
       {/* End Content */}
     </OverviewLayoutEWP>
