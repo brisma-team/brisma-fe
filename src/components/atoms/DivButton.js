@@ -1,10 +1,14 @@
 import React from "react";
 
-const DivButton = ({ className, handleClick, children }) => {
+const DivButton = ({ className, handleClick, isDisabled, children }) => {
   const handleButtonClick = (e) => {
     e.stopPropagation();
     handleClick(e);
   };
+
+  if (isDisabled) {
+    return <div className={`${className} cursor-not-allowed`}>{children}</div>;
+  }
 
   return (
     <div

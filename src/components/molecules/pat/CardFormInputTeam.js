@@ -357,7 +357,7 @@ const CardFormInputTeam = ({
           )}
           {type !== "Maker" && type !== "Tipe Tim" && !withoutButtonAdd && (
             <div className="flex w-full items-center gap-2">
-              <div className="bg-none w-40 mt-3">
+              <div className="bg-none w-44 mt-3">
                 <ButtonField
                   iconAfter={
                     <div className="text-brisma">

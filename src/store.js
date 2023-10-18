@@ -24,6 +24,7 @@ import documentMapaEWPReducer from "./slices/ewp/konvensional/mapa/documentMapaE
 
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
+import beritaAcaraEntranceEWPReducer from "./slices/ewp/konvensional/entrance/beritaAcaraEntranceEWPSlice";
 
 // CATALOG
 import catalogEWPReducer from "./slices/catalog/ewp/catalogEWPSlice";
@@ -53,6 +54,7 @@ export const store = configureStore({
     auditScheduleMapaEWP: auditScheduleMapaEWPReducer,
     budgetMapaEWP: budgetMapaEWPReducer,
     notulenEntranceEWP: notulenEntranceEWPReducer,
+    beritaAcaraEntranceEWP: beritaAcaraEntranceEWPReducer,
     documentMapaEWP: documentMapaEWPReducer,
   },
 });

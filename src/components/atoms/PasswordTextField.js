@@ -7,6 +7,7 @@ const PasswordTextField = ({
   id,
   placeholder,
   handleChange,
+  handleKeyDown,
   isDisabled,
   value,
   props,
@@ -26,6 +27,7 @@ const PasswordTextField = ({
       type={showPassword ? "text" : "password"}
       value={value}
       onChange={handleChange}
+      onKeyDown={handleKeyDown}
       label="Password"
       elemAfterInput={
         <ButtonIcon

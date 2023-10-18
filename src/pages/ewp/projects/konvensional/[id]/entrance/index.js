@@ -10,15 +10,9 @@ import { useRouter } from "next/router";
 const index = () => {
   const { id } = useRouter().query;
   const [isMapaFinal, setIsMapaFinal] = useState(false);
-  const { landingEntranceEWP, landingEntranceEWPError } = useLandingEntranceEWP(
-    { id }
-  );
+  const { landingEntranceEWP } = useLandingEntranceEWP({ id });
   useEffect(() => {
-    if (landingEntranceEWPError) {
-      setIsMapaFinal(false);
-    } else {
-      setIsMapaFinal(true);
-    }
+    if (landingEntranceEWP?.data) setIsMapaFinal(true);
   }, [landingEntranceEWP]);
   return (
     <LandingLayoutEWP>

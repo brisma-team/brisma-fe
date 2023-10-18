@@ -2,6 +2,7 @@ import { Breadcrumbs, ButtonField, Card, PageTitle } from "@/components/atoms";
 import TableProjectChecklist from "./TableProjectChecklist";
 import { useRouter } from "next/router";
 import { useAuditorEWP } from "@/data/ewp/konvensional";
+import { usePostData } from "@/helpers";
 
 const ProjectValidation = () => {
   const { id } = useRouter().query;
@@ -15,6 +16,13 @@ const ProjectValidation = () => {
       path: `/ewp/projects/konvensional/${id}/entrance`,
     },
   ];
+
+  const handleSubmitInitiateEntrance = async () => {
+    await usePostData(
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/entrance/initiate/${id}`,
+      {}
+    );
+  };
 
   return (
     <>
@@ -42,7 +50,10 @@ const ProjectValidation = () => {
               />
             </div>
             <div className="rounded w-28 bg-atlasian-green">
-              <ButtonField text={"Inisiasi"} />
+              <ButtonField
+                text={"Inisiasi"}
+                handler={handleSubmitInitiateEntrance}
+              />
             </div>
           </div>
         </div>
