@@ -193,7 +193,7 @@ const index = () => {
           </div>
           {isKTA ? (
             <div className="mt-3 flex justify-end">
-              <div className="w-[7.75rem] h-10 bg-atlasian-green rounded flex items-center">
+              <div className="w-[7.75rem] bg-atlasian-green rounded flex items-center">
                 <ButtonField text={"Simpan"} handler={handlePost} />
               </div>
             </div>
