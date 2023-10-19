@@ -113,19 +113,10 @@ const RealizationTable = ({ data, currentStatusCode, handleClickInitiate }) => {
                         </DivButton>
                       </LozengeField>
                     )}
-                    {/* <p>{status_code.toString()}</p>
-                    <p>{is_open.toString()}</p>
-                    <p>{is_close.toString()}</p> */}
                   </div>
                 </Cell>
                 <Cell width="28%" className={`border-r ${customCell}`}>
-                  <div className="custom-table-position-center">
-                    {label}
-
-                    {/* {is_open.toString()}
-                          {currentStatusCode.toString()}
-                          {status_code.toString()} */}
-                  </div>
+                  <div className="custom-table-position-center">{label}</div>
                 </Cell>
                 <Cell width="14%" className={`border-r ${customCell}`}>
                   <div className="custom-table-position-center">
