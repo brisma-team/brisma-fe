@@ -49,8 +49,12 @@ const index = () => {
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
     {
-      name: `${auditorEWP?.data?.project_info?.project_id} / Info`,
-      path: `/ewp/projects/konvensional/${id}/info`,
+      name: `${auditorEWP?.data?.project_info?.project_id} / MAPA`,
+      path: `${baseUrl}`,
+    },
+    {
+      name: "Tim Audit",
+      path: `${baseUrl}/tim-audit`,
     },
   ];
 

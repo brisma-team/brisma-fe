@@ -9,7 +9,7 @@ import {
   setValidationErrors,
   resetValidationErrors,
 } from "@/slices/ewp/konvensional/mapa/ukerAssessmentMapaEWPSlice";
-import { setErrorValidation, usePostData } from "@/helpers";
+import { errorSwal, setErrorValidation, usePostData } from "@/helpers";
 import {
   BranchSelect,
   CardTypeCount,
@@ -60,8 +60,12 @@ const index = () => {
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
     {
-      name: `${auditorEWP?.data?.project_info?.project_id} / Info`,
-      path: `/ewp/projects/konvensional/${id}/info`,
+      name: `${auditorEWP?.data?.project_info?.project_id} / MAPA`,
+      path: `${baseUrl}`,
+    },
+    {
+      name: "UKER Assessment",
+      path: `${baseUrl}/uker-assessment`,
     },
   ];
 
@@ -126,6 +130,10 @@ const index = () => {
       schemaMappings
     );
 
+    if (!ukerAssessmentData?.length) {
+      await errorSwal("Minimal harus ada 1 data UKER");
+    }
+
     if (buttonName === "save" && validate) {
       await usePostData(
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/uker_assesment/${id}`,
@@ -142,21 +150,30 @@ const index = () => {
     dispatch(setUkerAssessmentData(ukerData));
   };
 
-  const handleAddUker = (e) => {
+  const handleAddUker = async (e) => {
     if (e?.value) {
-      const newData = [...ukerAssessmentData];
-      newData.push({
-        id: null,
-        ref_auditee_orgeh_kode: "",
-        ref_auditee_orgeh_name: "",
-        ref_auditee_branch_kode: e?.value?.branch_kode,
-        ref_auditee_branch_name: e?.value?.branch_name,
-        tipe_uker: "",
-        description: "",
-        gross_profit: "",
-      });
-      dispatch(setUkerAssessmentData(newData));
-      setShowBranch(false);
+      const branchKodeToAdd = e?.value?.branch_kode;
+      const isDuplicate = ukerAssessmentData.some(
+        (item) => item.ref_auditee_branch_kode === branchKodeToAdd
+      );
+
+      if (isDuplicate) {
+        await errorSwal("Branch yang anda pilih sudah terdaftar");
+      } else {
+        const newData = [...ukerAssessmentData];
+        newData.push({
+          id: null,
+          ref_auditee_orgeh_kode: "",
+          ref_auditee_orgeh_name: "",
+          ref_auditee_branch_kode: e?.value?.branch_kode,
+          ref_auditee_branch_name: e?.value?.branch_name,
+          tipe_uker: "",
+          description: "",
+          gross_profit: "",
+        });
+        dispatch(setUkerAssessmentData(newData));
+        setShowBranch(false);
+      }
     }
   };
 
@@ -172,9 +189,10 @@ const index = () => {
           routes={routes}
           prevUrl={"/tim-audit"}
           nextUrl={"/analisis-perencanaan"}
+          marginLeft={"-60px"}
         />
       </div>
-      <div className="w-[90rem]">
+      <div className="w-full">
         <Card>
           <div className="w-full px-6 py-4">
             <div className="w-full flex flex-wrap mb-4">
