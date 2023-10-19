@@ -12,6 +12,7 @@ const initialState = {
       ata: [],
     },
   },
+  validationErrors: {},
 };
 
 export const auditTeamMapaEWPSlice = createSlice({
@@ -21,9 +22,16 @@ export const auditTeamMapaEWPSlice = createSlice({
     setAuditTeamData: (state, action) => {
       state.auditTeamData = action.payload;
     },
+    setValidationErrors: (state, action) => {
+      state.validationErrors = action.payload;
+    },
+    resetValidationErrors: (state) => {
+      state.validationErrors = {};
+    },
   },
 });
 
-export const { setAuditTeamData } = auditTeamMapaEWPSlice.actions;
+export const { setAuditTeamData, setValidationErrors, resetValidationErrors } =
+  auditTeamMapaEWPSlice.actions;
 
 export default auditTeamMapaEWPSlice.reducer;
