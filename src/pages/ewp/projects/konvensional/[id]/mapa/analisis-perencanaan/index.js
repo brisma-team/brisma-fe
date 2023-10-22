@@ -47,6 +47,7 @@ import {
   ModalAddActivity,
   ModalAddSubActivity,
   ModalDescAnlysisSubActivity,
+  TableSummaryAnalysis,
 } from "@/components/molecules/ewp/konvensional/analisis-perencanaan";
 import {
   confirmationSwal,
@@ -386,6 +387,7 @@ const index = () => {
           routes={routes}
           prevUrl={"/uker-assessment"}
           nextUrl={"/penugasan"}
+          marginLeft={"-60px"}
         />
       </div>
       <div className="flex border-b-2 w-44 justify-between mb-4">
@@ -406,329 +408,353 @@ const index = () => {
           Ringkasan
         </DivButton>
       </div>
-      <div className="w-32 bg-atlasian-blue-light rounded">
-        <ButtonField text="Tampilkan Filter" />
-      </div>
-      <div className="mb-4" />
-      <Card>
-        <div className="w-full px-6 py-4 overflow-y-scroll max-h-[40rem]">
-          <TableTree>
-            <Headers>
-              <Header className="!hidden" />
-              <Header width="7%" className="border-x border-t rounded-ss-xl">
-                Review
-              </Header>
-              <Header width="6%" className="border-t border-r">
-                Aksi
-              </Header>
-              <Header width="27%" className="border-t border-r">
-                UKER, AKTIFITAS dan SUB-AKTIFITAS
-              </Header>
-              <Header
-                width="20%"
-                className="border-t border-r flex justify-center"
-              >
-                PIC
-              </Header>
-              <Header
-                width="8%"
-                className="border-t border-r flex justify-center"
-              >
-                Risk
-              </Header>
-              <Header
-                width="8%"
-                className="border-t border-r flex justify-center"
-              >
-                Analisa
-              </Header>
-              <Header
-                width="8%"
-                className="border-t border-r flex justify-center"
-              >
-                Status
-              </Header>
-              <Header
-                width="8%"
-                className="border-t border-r flex justify-center"
-              >
-                Approval
-              </Header>
-              <Header width="8%" className="border-t border-r rounded-se-xl">
-                Comment
-              </Header>
-            </Headers>
-            <Rows
-              items={planningAnalysisData}
-              render={({
-                id,
-                role,
-                parent_id,
-                kode,
-                name,
-                risk,
-                pic_pn,
-                pic_name,
-                is_reviewed,
-                status_approval_name,
-                deskripsi,
-                children = [],
-              }) => (
-                <Row
-                  itemId={id}
-                  role={role}
-                  items={children}
-                  hasChildren={children.length > 0}
-                  isExpanded={Boolean(expansionMap[`${id}-${role}`])}
-                >
-                  <Cell className="!hidden" />
-                  <Cell
+      {currentContentStage === 1 ? (
+        <>
+          <div className="w-32 bg-atlasian-blue-light rounded">
+            <ButtonField text="Tampilkan Filter" />
+          </div>
+          <div className="mb-4" />
+          <Card>
+            <div className="w-full px-6 py-4 overflow-y-scroll max-h-[40rem]">
+              <TableTree>
+                <Headers>
+                  <Header className="!hidden" />
+                  <Header
                     width="7%"
-                    className={`border-x cell-width-full-height-full`}
+                    className="border-x border-t rounded-ss-xl"
                   >
-                    <div className={positionCenter}>
-                      {role !== "parent" && (
-                        <CheckboxField
-                          isChecked={is_reviewed}
-                          handleChange={(e) =>
-                            handleClickReview(e.target.checked, id, role)
-                          }
-                        />
-                      )}
-                    </div>
-                  </Cell>
-                  <Cell
-                    width="6%"
-                    className={`border-r cell-width-full-height-full`}
+                    Review
+                  </Header>
+                  <Header width="6%" className="border-t border-r">
+                    Aksi
+                  </Header>
+                  <Header width="27%" className="border-t border-r">
+                    UKER, AKTIFITAS dan SUB-AKTIFITAS
+                  </Header>
+                  <Header
+                    width="19%"
+                    className="border-t border-r flex justify-center"
                   >
-                    {levelMap[`${id}-${role}`] > 0 && (
-                      <div className={positionCenter}>
-                        <ButtonIcon
-                          icon={
-                            <div className="rounded-full border border-atlasian-red w-5 h-5 p-1">
-                              <Image src={ImageClose} alt="" />
-                            </div>
-                          }
-                          color={"blue"}
-                          handleClick={() =>
-                            levelMap[`${id}-${role}`] === 1
-                              ? handleDeleteActivity(id)
-                              : handleDeleteSubActivity(id)
-                          }
-                        />
-                      </div>
-                    )}
-                  </Cell>
-                  <Cell
-                    width="27%"
-                    className="border-r cell-width-full-height-full cell-custom-dataTables flex justify-between items-center"
+                    PIC
+                  </Header>
+                  <Header
+                    width="8%"
+                    className="border-t border-r flex justify-center"
                   >
-                    <div
-                      className={`w-full flex pt-1 ${
-                        levelMap[`${id}-${role}`] === 1
-                          ? `pl-6`
-                          : levelMap[`${id}-${role}`] === 2
-                          ? `pl-12`
-                          : `pl-0`
-                      }`}
+                    Risk
+                  </Header>
+                  <Header
+                    width="9%"
+                    className="border-t border-r flex justify-center"
+                  >
+                    Analisa
+                  </Header>
+                  <Header
+                    width="8%"
+                    className="border-t border-r flex justify-center"
+                  >
+                    Status
+                  </Header>
+                  <Header
+                    width="8%"
+                    className="border-t border-r flex justify-center"
+                  >
+                    Approval
+                  </Header>
+                  <Header
+                    width="8%"
+                    className="border-t border-r rounded-se-xl"
+                  >
+                    Comment
+                  </Header>
+                </Headers>
+                <Rows
+                  items={planningAnalysisData}
+                  render={({
+                    id,
+                    role,
+                    parent_id,
+                    kode,
+                    name,
+                    risk,
+                    pic_pn,
+                    pic_name,
+                    is_reviewed,
+                    status_approval_name,
+                    deskripsi,
+                    children = [],
+                  }) => (
+                    <Row
+                      itemId={id}
+                      role={role}
+                      items={children}
+                      hasChildren={children.length > 0}
+                      isExpanded={Boolean(expansionMap[`${id}-${role}`])}
                     >
-                      {role !== "child" ? (
-                        <ButtonIcon
-                          handleClick={() =>
-                            toggleExpansion(id, role, kode, parent_id)
-                          }
-                          icon={
-                            expansionMap[`${id}-${role}`] ? (
-                              <IconChevronDown />
-                            ) : (
-                              <IconChevronRight />
-                            )
-                          }
-                        />
-                      ) : (
-                        <div className="ml-5" />
-                      )}
-                      <div
-                        className={`flex items-center w-full justify-between ml-2`}
+                      <Cell className="!hidden" />
+                      <Cell
+                        width="7%"
+                        className={`border-x cell-width-full-height-full`}
                       >
-                        <div>{`${kode} - ${name}`}</div>
-                        {levelMap[`${id}-${role}`] < 2 && (
-                          <>
+                        <div className={positionCenter}>
+                          {role !== "parent" && (
+                            <CheckboxField
+                              isChecked={is_reviewed}
+                              handleChange={(e) =>
+                                handleClickReview(e.target.checked, id, role)
+                              }
+                            />
+                          )}
+                        </div>
+                      </Cell>
+                      <Cell
+                        width="6%"
+                        className={`border-r cell-width-full-height-full`}
+                      >
+                        {levelMap[`${id}-${role}`] > 0 && (
+                          <div className={positionCenter}>
                             <ButtonIcon
-                              icon={<Image src={ImageGroup} alt="" />}
+                              icon={
+                                <div className="rounded-full border border-atlasian-red w-5 h-5 p-1">
+                                  <Image src={ImageClose} alt="" />
+                                </div>
+                              }
+                              color={"blue"}
                               handleClick={() =>
-                                handleAddActivity(
-                                  id,
-                                  name,
-                                  parent_id,
-                                  kode,
-                                  role
+                                levelMap[`${id}-${role}`] === 1
+                                  ? handleDeleteActivity(id)
+                                  : handleDeleteSubActivity(id)
+                              }
+                            />
+                          </div>
+                        )}
+                      </Cell>
+                      <Cell
+                        width="27%"
+                        className="border-r cell-width-full-height-full cell-custom-dataTables flex justify-between items-center"
+                      >
+                        <div
+                          className={`w-full flex pt-1 ${
+                            levelMap[`${id}-${role}`] === 1
+                              ? `pl-6`
+                              : levelMap[`${id}-${role}`] === 2
+                              ? `pl-12`
+                              : `pl-0`
+                          }`}
+                        >
+                          {role !== "child" ? (
+                            <ButtonIcon
+                              handleClick={() =>
+                                toggleExpansion(id, role, kode, parent_id)
+                              }
+                              icon={
+                                expansionMap[`${id}-${role}`] ? (
+                                  <IconChevronDown />
+                                ) : (
+                                  <IconChevronRight />
                                 )
                               }
                             />
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </Cell>
-                  <Cell
-                    width="15%"
-                    className="border-r cell-width-full-height-full cell-custom-dataTables"
-                  >
-                    {levelMap[`${id}-${role}`] === 2 && (
-                      <div className="w-full h-full flex items-center justify-center">
-                        {pic_name}
-                      </div>
-                    )}
-                  </Cell>
-                  <Cell
-                    width="5%"
-                    className="border-r cell-width-full-height-full cell-custom-dataTables"
-                  >
-                    {levelMap[`${id}-${role}`] === 2 && (
-                      <div className={positionCenter}>
-                        <ButtonIcon
-                          icon={<IconQuestions />}
-                          color={"blue"}
-                          handleClick={() => (
-                            handleClickDescAnalysisSubActivity(id),
-                            setSelectedDesc(deskripsi)
+                          ) : (
+                            <div className="ml-5" />
                           )}
-                        />
-                      </div>
-                    )}
-                  </Cell>
-                  <Cell
-                    width="8%"
-                    className="border-r cell-width-full-height-full cell-custom-dataTables"
-                  >
-                    <div className={positionCenter}>{risk}</div>
-                  </Cell>
-                  <Cell
-                    width="8%"
-                    className="border-r cell-width-full-height-full cell-custom-dataTables"
-                  >
-                    {levelMap[`${id}-${role}`] === 2 && (
-                      <div className={positionCenter}>
-                        <LozengeField appreance="inprogress" isBold={true}>
-                          <Link
-                            href={`/ewp/projects/konvensional/${routeParamId}/mapa/analisis-perencanaan/${kode}/${parent_id}`}
-                            className="text-white hover:text-white no-underline hover:no-underline py-[2.5px]"
+                          <div
+                            className={`flex items-center w-full justify-between ml-2`}
                           >
-                            <div className="py-[2.5px]">Set Risk Issue</div>
-                          </Link>
-                        </LozengeField>
-                      </div>
-                    )}
-                  </Cell>
-                  <Cell
-                    width="8%"
-                    className="border-r cell-width-full-height-full cell-custom-dataTables"
-                  >
-                    <div className={positionCenter}>
-                      {levelMap[`${id}-${role}`] === 2 &&
-                        (status_approval_name?.toLowerCase() === "on kta" ? (
-                          <LozengeField appreance="removed" isBold={true}>
-                            <div className="text-white py-[2.5px]">On KTA</div>
-                          </LozengeField>
-                        ) : status_approval_name?.toLowerCase() === "on ata" ? (
-                          <LozengeField appreance="moved" isBold={true}>
-                            <div className="text-white py-[2.5px]">On ATA</div>
-                          </LozengeField>
-                        ) : null)}
-                    </div>
-                  </Cell>
-                  <Cell
-                    width="8%"
-                    className="border-r cell-width-full-height-full cell-custom-dataTables"
-                  >
-                    <div className={positionCenter}>
-                      {levelMap[`${id}-${role}`] === 2 &&
-                        (pic_pn === user.data.pn
-                          ? levelMap[`${id}-${role}`] === 2 &&
+                            <div>{`${kode} - ${name}`}</div>
+                            {levelMap[`${id}-${role}`] < 2 && (
+                              <>
+                                <ButtonIcon
+                                  icon={<Image src={ImageGroup} alt="" />}
+                                  handleClick={() =>
+                                    handleAddActivity(
+                                      id,
+                                      name,
+                                      parent_id,
+                                      kode,
+                                      role
+                                    )
+                                  }
+                                />
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </Cell>
+                      <Cell
+                        width="14%"
+                        className="border-r cell-width-full-height-full cell-custom-dataTables"
+                      >
+                        {levelMap[`${id}-${role}`] === 2 && (
+                          <div className="w-full h-full flex items-center justify-center">
+                            {pic_name}
+                          </div>
+                        )}
+                      </Cell>
+                      <Cell
+                        width="5%"
+                        className="border-r cell-width-full-height-full cell-custom-dataTables"
+                      >
+                        {levelMap[`${id}-${role}`] === 2 && (
+                          <div className={positionCenter}>
+                            <ButtonIcon
+                              icon={<IconQuestions />}
+                              color={"blue"}
+                              handleClick={() => (
+                                handleClickDescAnalysisSubActivity(id),
+                                setSelectedDesc(deskripsi)
+                              )}
+                            />
+                          </div>
+                        )}
+                      </Cell>
+                      <Cell
+                        width="8%"
+                        className="border-r cell-width-full-height-full cell-custom-dataTables"
+                      >
+                        <div className={positionCenter}>{risk}</div>
+                      </Cell>
+                      <Cell
+                        width="9%"
+                        className="border-r cell-width-full-height-full cell-custom-dataTables"
+                      >
+                        {levelMap[`${id}-${role}`] === 2 && (
+                          <div className={positionCenter}>
+                            <LozengeField appreance="inprogress" isBold={true}>
+                              <Link
+                                href={`/ewp/projects/konvensional/${routeParamId}/mapa/analisis-perencanaan/${kode}/${parent_id}`}
+                                className="text-white hover:text-white no-underline hover:no-underline py-[2.5px]"
+                              >
+                                <div className="py-[2.5px]">Set Risk Issue</div>
+                              </Link>
+                            </LozengeField>
+                          </div>
+                        )}
+                      </Cell>
+                      <Cell
+                        width="8%"
+                        className="border-r cell-width-full-height-full cell-custom-dataTables"
+                      >
+                        <div className={positionCenter}>
+                          {levelMap[`${id}-${role}`] === 2 &&
                             (status_approval_name?.toLowerCase() ===
                             "on kta" ? (
                               <LozengeField appreance="removed" isBold={true}>
-                                <DivButton
-                                  className={"flex gap-1 py-0.5"}
-                                  handleClick={() =>
-                                    handleUpdateApprovalStatusSubActivity(
-                                      id,
-                                      "reject"
-                                    )
-                                  }
-                                >
-                                  <Image src={ImageCircleArrowRed} alt="" />
-                                  <div className="text-white">Reject</div>
-                                </DivButton>
+                                <div className="text-white py-[2.5px]">
+                                  On KTA
+                                </div>
                               </LozengeField>
                             ) : status_approval_name?.toLowerCase() ===
                               "on ata" ? (
                               <LozengeField appreance="moved" isBold={true}>
-                                <DivButton
-                                  className={"flex gap-1 py-0.5"}
-                                  handleClick={() =>
-                                    handleUpdateApprovalStatusSubActivity(
-                                      id,
-                                      "send"
-                                    )
-                                  }
-                                >
-                                  <Image src={ImageCircleArrowYellow} alt="" />
-                                  <div className="text-white">Send</div>
-                                </DivButton>
+                                <div className="text-white py-[2.5px]">
+                                  On ATA
+                                </div>
                               </LozengeField>
-                            ) : null)
-                          : "")}
-                    </div>
-                  </Cell>
-                  <Cell
-                    width="8%"
-                    className="border-r cell-width-full-height-full cell-custom-dataTables"
-                  >
-                    {levelMap[`${id}-${role}`] === 2 && (
-                      <div className={positionCenter}>
-                        <ButtonIcon
-                          icon={<IconQuestions />}
-                          color={"blue"}
-                          handleClick={() => setShowModalDesc(true)}
-                        />
-                        <DescriptionModal
-                          showModal={showModalDesc}
-                          setShowModal={setShowModalDesc}
-                          value={deskripsi}
-                        />
-                      </div>
-                    )}
-                  </Cell>
-                </Row>
-              )}
-            />
-          </TableTree>
-          <ModalAddActivity
-            showModal={showModalAddActivity}
-            setShowModal={setShowModalAddActivitiy}
-            mutate={mapaEWPMutate}
-            ukerValue={selectedUker}
-          />
-          <ModalAddSubActivity
-            showModal={showModalAddSubActivity}
-            setShowModal={setShowModalAddSubActivitiy}
-            activityId={selectedActivityId}
-            handleSubmit={handleModalAddSubActivity}
-          />
-          <ModalDescAnlysisSubActivity
-            showModal={showModalDescAnlysisSubActivity}
-            subActivityId={selectedSubActivityId}
-            value={selectedDesc}
-            handleCloseModal={() => (
-              setSelectedDesc(""),
-              setShowModalDescAnlysisSubActivity(false),
-              planningAnalysisEWPMutate()
-            )}
-          />
-        </div>
-      </Card>
+                            ) : null)}
+                        </div>
+                      </Cell>
+                      <Cell
+                        width="8%"
+                        className="border-r cell-width-full-height-full cell-custom-dataTables"
+                      >
+                        <div className={positionCenter}>
+                          {levelMap[`${id}-${role}`] === 2 &&
+                            (pic_pn === user.data.pn
+                              ? levelMap[`${id}-${role}`] === 2 &&
+                                (status_approval_name?.toLowerCase() ===
+                                "on kta" ? (
+                                  <LozengeField
+                                    appreance="removed"
+                                    isBold={true}
+                                  >
+                                    <DivButton
+                                      className={"flex gap-1 py-0.5"}
+                                      handleClick={() =>
+                                        handleUpdateApprovalStatusSubActivity(
+                                          id,
+                                          "reject"
+                                        )
+                                      }
+                                    >
+                                      <Image src={ImageCircleArrowRed} alt="" />
+                                      <div className="text-white">Reject</div>
+                                    </DivButton>
+                                  </LozengeField>
+                                ) : status_approval_name?.toLowerCase() ===
+                                  "on ata" ? (
+                                  <LozengeField appreance="moved" isBold={true}>
+                                    <DivButton
+                                      className={"flex gap-1 py-0.5"}
+                                      handleClick={() =>
+                                        handleUpdateApprovalStatusSubActivity(
+                                          id,
+                                          "send"
+                                        )
+                                      }
+                                    >
+                                      <Image
+                                        src={ImageCircleArrowYellow}
+                                        alt=""
+                                      />
+                                      <div className="text-white">Send</div>
+                                    </DivButton>
+                                  </LozengeField>
+                                ) : null)
+                              : "")}
+                        </div>
+                      </Cell>
+                      <Cell
+                        width="8%"
+                        className="border-r cell-width-full-height-full cell-custom-dataTables"
+                      >
+                        {levelMap[`${id}-${role}`] === 2 && (
+                          <div className={positionCenter}>
+                            <ButtonIcon
+                              icon={<IconQuestions />}
+                              color={"blue"}
+                              handleClick={() => setShowModalDesc(true)}
+                            />
+                            <DescriptionModal
+                              showModal={showModalDesc}
+                              setShowModal={setShowModalDesc}
+                              value={deskripsi}
+                            />
+                          </div>
+                        )}
+                      </Cell>
+                    </Row>
+                  )}
+                />
+              </TableTree>
+              <ModalAddActivity
+                showModal={showModalAddActivity}
+                setShowModal={setShowModalAddActivitiy}
+                mutate={mapaEWPMutate}
+                ukerValue={selectedUker}
+              />
+              <ModalAddSubActivity
+                showModal={showModalAddSubActivity}
+                setShowModal={setShowModalAddSubActivitiy}
+                activityId={selectedActivityId}
+                handleSubmit={handleModalAddSubActivity}
+              />
+              <ModalDescAnlysisSubActivity
+                showModal={showModalDescAnlysisSubActivity}
+                subActivityId={selectedSubActivityId}
+                value={selectedDesc}
+                handleCloseModal={() => (
+                  setSelectedDesc(""),
+                  setShowModalDescAnlysisSubActivity(false),
+                  planningAnalysisEWPMutate()
+                )}
+              />
+            </div>
+          </Card>{" "}
+        </>
+      ) : (
+        <TableSummaryAnalysis />
+      )}
     </LandingLayoutEWP>
   );
 };
