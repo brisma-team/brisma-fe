@@ -1,6 +1,5 @@
-import { Modal } from "@/components/atoms";
+import { DivButton, Modal } from "@/components/atoms";
 import { useState } from "react";
-import Link from "next/link";
 import { confirmationSwal, setErrorValidation, usePostData } from "@/helpers";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -42,9 +41,9 @@ const ModalAddRiskIssue = ({ showModal, setShowModal, mutate }) => {
     {
       id: "step-1",
       label: (
-        <Link href="#" onClick={() => setCurrentModalStage(1)}>
+        <DivButton handleClick={() => setCurrentModalStage(1)}>
           Risk Issue
-        </Link>
+        </DivButton>
       ),
       percentageComplete: currentModalStage > 1 ? 100 : 0,
       status: currentModalStage === 1 ? "current" : "unvisited",
@@ -53,9 +52,9 @@ const ModalAddRiskIssue = ({ showModal, setShowModal, mutate }) => {
     {
       id: "step-2",
       label: (
-        <Link href="#" onClick={() => setCurrentModalStage(2)}>
+        <DivButton handleClick={() => setCurrentModalStage(2)}>
           Program Audit
-        </Link>
+        </DivButton>
       ),
       percentageComplete: currentModalStage > 2 ? 100 : 0,
       status: currentModalStage === 2 ? "current" : "unvisited",
@@ -64,9 +63,9 @@ const ModalAddRiskIssue = ({ showModal, setShowModal, mutate }) => {
     {
       id: "step-3",
       label: (
-        <Link href="#" onClick={() => setCurrentModalStage(3)}>
+        <DivButton handleClick={() => setCurrentModalStage(3)}>
           Kriteria Audit
-        </Link>
+        </DivButton>
       ),
       percentageComplete: 0,
       status: currentModalStage === 3 ? "current" : "unvisited",
