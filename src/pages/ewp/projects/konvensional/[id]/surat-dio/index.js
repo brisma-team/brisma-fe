@@ -7,11 +7,6 @@ import {
 	Pagination,
 	Spinner,
 } from "@/components/atoms";
-import {
-	ProjectDetail,
-	InformativeLetter,
-	RealizationTable,
-} from "@/components/molecules/ewp/konvensional/info";
 import { useAuditorEWP } from "@/data/ewp/konvensional";
 import { convertDate, errorSwalTimeout } from "@/helpers";
 import SuratLayoutEWP from "@/layouts/ewp/SuratLayoutEWP";
@@ -21,7 +16,6 @@ import { useEffect, useRef, useState } from "react";
 import useOverviewSurat from "@/data/ewp/konvensional/useOverviewSurat";
 import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
 import CardSuratOverview from "@/components/molecules/ewp/konvensional/surat-dio/CardSuratOverview";
-import Drawer from "@atlaskit/drawer";
 import SuratDrawer from "@/components/molecules/ewp/konvensional/surat-dio/SuratDrawer";
 
 const convertProgressAndPercent = (status) => {
