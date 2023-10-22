@@ -29,6 +29,18 @@ const ButtonIcon = ({
       iconColor = "text-black";
   }
 
+  if (isDisabled) {
+    return (
+      <div
+        className={`${className} ${iconColor} ${
+          isDisabled && "cursor-not-allowed"
+        }`}
+      >
+        {icon}
+      </div>
+    );
+  }
+
   return (
     <div
       {...props}
