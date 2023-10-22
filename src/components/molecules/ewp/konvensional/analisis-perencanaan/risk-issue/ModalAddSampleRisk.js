@@ -4,7 +4,6 @@ import {
   DatepickerStartEnd,
   DivButton,
   Modal,
-  Select,
   TextAreaField,
   TextInput,
 } from "@/components/atoms";
@@ -23,7 +22,10 @@ import {
   ContentSampleCSV,
   ContentSampleFile,
 } from "./modal/sample-risk";
-import { FormWithLabel } from "@/components/molecules/commons";
+import {
+  FormWithLabel,
+  TeknikSamplingSelect,
+} from "@/components/molecules/commons";
 import {
   setPayloadSample,
   setDataTables,
@@ -53,6 +55,7 @@ const ModalAddSampleRisk = ({
   const [currentSubModalStage, setCurrentSubModalStage] = useState(1);
   const [isPickDataModal, setIsPickDataModal] = useState(false);
   const [isSelectedSamplePool, setIsSelectedSamplePool] = useState(false);
+  const [selectedSamplePoolId, setSelectedSamplePoolId] = useState(0);
   const [selectedDeleteSample, setSelectedDeleteSample] = useState([]);
   const [typeSamplePool, setTypeSamplePool] = useState("sample_csv"); // default csv
 
@@ -129,11 +132,11 @@ const ModalAddSampleRisk = ({
     dispatch(setPayloadSample(updatedData));
   };
 
-  const handleChangeTehnikSampling = (value) => {
+  const handleChangeTehnikSampling = (e) => {
     const updatedData = {
       ...payloadSample,
-      sample_ref_teknik_sampling_kode: value.kode,
-      sample_ref_teknik_sampling_name: value.nama,
+      sample_ref_teknik_sampling_kode: e.value,
+      sample_ref_teknik_sampling_name: e.label,
     };
     dispatch(setPayloadSample(updatedData));
   };
@@ -150,6 +153,7 @@ const ModalAddSampleRisk = ({
     setCurrentModalStage(1);
     setShowModal(false);
     setIsPickDataModal(false);
+    setIsSelectedSamplePool(false);
     dispatch(resetPayloadUploadSample());
   };
 
@@ -270,8 +274,6 @@ const ModalAddSampleRisk = ({
     );
   };
 
-  const optionValue = [{ label: "Test", value: { kode: "1", nama: "Test" } }];
-
   return (
     <Modal
       showModal={showModal}
@@ -309,12 +311,15 @@ const ModalAddSampleRisk = ({
       <div className="w-[67rem]">
         {isPickDataModal ? (
           <SubModalPickDataCSV
+            selectedRiskIssue={selectedRiskIssue}
             currentSubModalStage={currentSubModalStage}
             currentModalStage={currentModalStage}
             setCurrentSubModalStage={setCurrentSubModalStage}
             setIsPickDataModal={setIsPickDataModal}
             isSelectedSamplePool={isSelectedSamplePool}
             setIsSelectedSamplePool={setIsSelectedSamplePool}
+            selectedSamplePoolId={selectedSamplePoolId}
+            setSelectedSamplePoolId={setSelectedSamplePoolId}
             samplePoolData={samplePoolMapaEWP?.data}
             handleClickDeleteSamplePool={handleClickDeleteSamplePool}
             handleRowClick={handleRowClick}
@@ -395,18 +400,15 @@ const ModalAddSampleRisk = ({
                     />
                     <FormWithLabel
                       form={
-                        <Select
-                          optionValue={optionValue}
-                          placeholder="Tehnik Sampling"
-                          onChange={(e) => handleChangeTehnikSampling(e.value)}
-                          value={{
+                        <TeknikSamplingSelect
+                          handleChange={(e) => handleChangeTehnikSampling(e)}
+                          selectedValue={{
                             label:
                               payloadSample.sample_ref_teknik_sampling_name,
-                            value: {
-                              kode: payloadSample.sample_ref_teknik_sampling_kode,
-                              name: payloadSample.sample_ref_teknik_sampling_name,
-                            },
+                            value:
+                              payloadSample.sample_ref_teknik_sampling_name,
                           }}
+                          placeholder={"Tehnik Sampling"}
                         />
                       }
                       label="Tehnik Sampling"

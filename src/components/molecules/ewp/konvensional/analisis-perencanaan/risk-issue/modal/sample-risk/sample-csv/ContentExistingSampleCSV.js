@@ -26,6 +26,7 @@ const ContentExistingSampleCSV = ({
   currentModalStage,
   setCurrentSubModalStage,
   setIsSelectedSamplePool,
+  setSelectedSamplePoolId,
   handleClickDeleteSamplePool,
 }) => {
   const dispatch = useDispatch();
@@ -89,12 +90,16 @@ const ContentExistingSampleCSV = ({
                 })
               );
 
+              const dataLength = result.data?.filter(
+                (obj) => obj[arrColumns[0]] !== null
+              );
+
               dispatch(
                 setPayloadUploadSample({
                   url: directory,
                   filename: fileName,
                   values: [],
-                  jumlah_baris: result?.data?.length.toString(),
+                  jumlah_baris: dataLength?.length?.toString(),
                   uniq_column: arrColumns[0],
                 })
               );
@@ -121,11 +126,10 @@ const ContentExistingSampleCSV = ({
     loadingSwal("close");
   };
 
-  const handleSelectedSample = (directory, fileName) => {
-    importDataFromUrl(directory, fileName);
-    if (currentModalStage === 1) {
-      setIsSelectedSamplePool(true);
-    }
+  const handleSelectedSample = async (id, directory, fileName) => {
+    setSelectedSamplePoolId(id);
+    await importDataFromUrl(directory, fileName);
+    setIsSelectedSamplePool(true);
     setCurrentSubModalStage(1);
   };
 
@@ -213,7 +217,7 @@ const ContentExistingSampleCSV = ({
                           </div>
                         }
                         handleClick={() =>
-                          handleSelectedSample(directory, filename)
+                          handleSelectedSample(id, directory, filename)
                         }
                       />
                       <ButtonIcon
