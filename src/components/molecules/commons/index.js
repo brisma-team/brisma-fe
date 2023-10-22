@@ -50,6 +50,7 @@ import DropdownCard from "./DropdownCard";
 import TeknikSamplingSelect from "./TeknikSamplingSelect";
 import ApprovalItems from "./ApprovalItems";
 import NavigationDocument from "./NavigationDocument";
+import CardWithHeaderLine from "./CardWithHeaderLine";
 
 export {
   BackButton,
@@ -104,4 +105,5 @@ export {
   TeknikSamplingSelect,
   ApprovalItems,
   NavigationDocument,
+  CardWithHeaderLine
 };

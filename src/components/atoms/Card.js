@@ -8,7 +8,7 @@ const Card = ({ children }) => {
       style={{
         color: token("color.text", N800),
         borderRadius: "10px",
-        boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.25)",
+        boxShadow: "0px 0px 4px 0px rgba(0.25, 0.25, 0.25, 0.25)",
       }}
     >
       {children}

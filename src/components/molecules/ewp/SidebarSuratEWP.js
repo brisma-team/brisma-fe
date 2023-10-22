@@ -20,14 +20,13 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { setAuditorInfo } from "@/slices/ewp/auditorInfoEWPSlice";
 
-const SidebarLandingEWP = () => {
+const SidebarSuratEWP = ({ menu }) => {
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const { id } = useRouter().query;
 	const baseUrl = `/ewp/projects/konvensional/${id}`;
 	const [data, setData] = useState();
 	const [currentPage, setCurrentPage] = useState(0);
-	const [currentPageSub, setCurrentPageSub] = useState(0);
 	const { auditorEWP } = useAuditorEWP({ id });
 
 	useEffect(() => {
@@ -66,24 +65,6 @@ const SidebarLandingEWP = () => {
 	});
 
 	const allAvatars = arrAvatars.flat();
-
-	const menu = [
-		{ name: "Info", href: `/info` },
-		{ name: "M.A.P.A", href: `/mapa` },
-		{ name: "Entrance", href: `/entrance` },
-		{ name: "K.K.P.A", href: `/kkpa` },
-		{ name: "K.K.P.T", href: `/kkpt` },
-		{ name: "Exit", href: `/exit` },
-		{ name: "LHA", href: `/lha` },
-		{ name: "Dokumen", href: `/dokumen` },
-	];
-
-	const subMenu = [
-		{ name: "Surat", href: `/surat-dio` },
-		{ name: "NAF", href: `/naf` },
-		{ name: "Close", href: `/close` },
-	];
-
 	useEffect(() => {
 		const getCurrentPage = () => {
 			const currentPath = router.asPath;
@@ -108,34 +89,6 @@ const SidebarLandingEWP = () => {
 		};
 
 		setCurrentPage(getCurrentPage());
-	}, []);
-
-	useEffect(() => {
-		const getCurrentPageSub = () => {
-			const currentPath = router.asPath;
-
-			const regex = new RegExp(
-				`^${subMenu.map((item) => `(${item.href})`).join("|")}$`,
-				"i"
-			);
-
-			const match = currentPath.match(regex);
-
-			console.log(match);
-
-			if (match) {
-				const matchedPath = match[0];
-				const matchedIndex = menu.findIndex((item) => item.href === matchedPath);
-
-				if (matchedIndex !== -1) {
-					return matchedIndex;
-				}
-			}
-
-			return 0;
-		};
-
-		setCurrentPageSub(getCurrentPageSub());
 	}, []);
 
 	return (
@@ -170,52 +123,29 @@ const SidebarLandingEWP = () => {
 					</div>
 				</NavigationHeader>
 				<NavigationContent showTopScrollIndicator>
-					<div>
-						<Section>
-							<div className="-mx-2 pt-7">
-								{menu.map((v, i) => {
-									return (
-										<Link
-											key={i}
-											href={baseUrl + v.href}
-											className={`flex ${
-												currentPage === i ? `text-atlasian-blue-light` : `text-black`
-											}  gap-2 items-center hover:no-underline no-underline py-2 px-7`}
-										>
-											<div>
-												<Image src={v.name === "Dokumen" ? ImageCircleCheck : ImageBar} alt="" />
-											</div>
-											<div className="font-semibold text-base">{v.name}</div>
-										</Link>
-									);
-								})}
-							</div>
-						</Section>
-
-						<div className="border-b-2" />
-
-						<Section>
-							<div className="-mx-2 pt-7">
-								{subMenu.map((v, i) => {
-									return (
-										<Link
-											key={i}
-											href={baseUrl + v.href}
-											className={`flex text-black gap-2 items-center hover:no-underline no-underline py-2 px-7`}
-										>
-											<div>
-												<Image src={v.name === "Dokumen" ? ImageCircleCheck : ImageBar} alt="" />
-											</div>
-											<div className="font-semibold text-base">{v.name}</div>
-										</Link>
-									);
-								})}
-							</div>
-						</Section>
-					</div>
+					<Section>
+						<div className="-mx-2 pt-7">
+							{menu.map((v, i) => {
+								return (
+									<Link
+										key={i}
+										href={baseUrl + v.href}
+										className={`flex ${
+											currentPage === i ? `text-atlasian-blue-light` : `text-black`
+										}  gap-2 items-center hover:no-underline no-underline py-2 px-7`}
+									>
+										<div>
+											<Image src={v.name === "Dokumen" ? ImageCircleCheck : ImageBar} alt="" />
+										</div>
+										<div className="font-semibold text-base">{v.name}</div>
+									</Link>
+								);
+							})}
+						</div>
+					</Section>
 				</NavigationContent>
 			</SideNavigation>
 		</div>
 	);
 };
-export default SidebarLandingEWP;
+export default SidebarSuratEWP;

@@ -1,6 +1,6 @@
 import React from "react";
 
-const DivButton = ({ className, handleClick, children }) => {
+const DivButton = ({ className, handleClick, children, onMouseEnter, onMouseLeave }) => {
   const handleButtonClick = (e) => {
     e.stopPropagation();
     handleClick(e);
@@ -12,6 +12,8 @@ const DivButton = ({ className, handleClick, children }) => {
       tabIndex={0}
       className={className}
       onClick={handleButtonClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === "Space") {
           return;
