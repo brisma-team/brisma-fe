@@ -1,5 +1,6 @@
 import { ButtonIcon } from "@/components/atoms";
 import { DataNotFound } from "@/components/molecules/commons";
+import { convertDate } from "@/helpers";
 import { ImageClose } from "@/helpers/imagesUrl";
 import TableTree, {
   Cell,
@@ -9,32 +10,31 @@ import TableTree, {
   Rows,
 } from "@atlaskit/table-tree";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 const customHeader = `w-full h-full flex items-center text-brisma font-semibold `;
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 const positionCenter = `w-full h-full flex items-center text-xs`;
 
-const testData = [
-  {
-    ata: "123 - Test",
-    attendance_date: "02/02/2023",
-    jabatan: "Kepala Divisi",
-    uker: "HOA Sudirman Jakarta",
-  },
-  {
-    ata: "123 - Test",
-    attendance_date: "02/02/2023",
-    jabatan: "Kepala Divisi",
-    uker: "HOA Sudirman Jakarta",
-  },
-  {
-    ata: "123 - Test",
-    attendance_date: "02/02/2023",
-    jabatan: "Kepala Divisi",
-    uker: "HOA Sudirman Jakarta",
-  },
-];
+const TableAttendance = ({ data, handleDelete }) => {
+  const [dataTables, setDataTables] = useState([]);
 
-const TableAttendance = ({ data }) => {
+  useEffect(() => {
+    if (data) {
+      console.log("data test => ", data);
+      const mapping = data?.map((v) => {
+        return {
+          id: v?.id,
+          ata: `${v?.pn} - ${v?.nama}`,
+          attendance_date: convertDate(v.created_at, "/", "d"),
+          jabatan: v.jabatan,
+          uker: v.unit_kerja,
+        };
+      });
+
+      setDataTables(mapping);
+    }
+  }, [data]);
+
   return (
     <div>
       <TableTree>
@@ -69,11 +69,11 @@ const TableAttendance = ({ data }) => {
             <div className={`${customHeader}`}>UKER</div>
           </Header>
         </Headers>
-        {data?.length ? (
+        {dataTables?.length ? (
           <div className="max-h-[18rem] overflow-y-scroll">
             <Rows
-              items={testData}
-              render={({ ata, attendance_date, jabatan, uker }) => (
+              items={dataTables}
+              render={({ id, ata, attendance_date, jabatan, uker }) => (
                 <Row>
                   <Cell width="7%" className={`border-x ${customCell}`}>
                     <div className={`${positionCenter} justify-center`}>
@@ -83,6 +83,7 @@ const TableAttendance = ({ data }) => {
                             <Image src={ImageClose} alt="" />
                           </div>
                         }
+                        handleClick={() => handleDelete(id)}
                       />
                     </div>
                   </Cell>
@@ -108,7 +109,11 @@ const TableAttendance = ({ data }) => {
           </div>
         )}
       </TableTree>
-      <div className="w-full h-6 border-x border-b rounded-b-xl"></div>
+      {data?.length ? (
+        <div className="w-full h-9 border-x border-b rounded-b-xl" />
+      ) : (
+        ""
+      )}
     </div>
   );
 };

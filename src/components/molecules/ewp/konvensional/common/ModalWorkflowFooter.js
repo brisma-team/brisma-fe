@@ -7,12 +7,12 @@ const ModalWorkflowFooter = ({
   handleSubmit,
   handleChangeText,
 }) => {
-  let findApproval;
-  if (data?.on_approver) {
-    findApproval = user.pn === data?.on_approver?.pn;
-  }
-  if (data?.status_approver === "On Progress") {
-    // Jika status PAT nya on progress, maka hanya tampil button Send Approval
+  let isApprover, isInitiator;
+  isInitiator = user?.pn == data?.maker?.pn;
+  isApprover = user?.pn == data?.on_approver?.pn;
+
+  if (data?.status_approver === "On Progress" && isInitiator) {
+    // Jika status nya on progress dan yang sedang login adalah si Initiator, maka hanya tampil button Send Approval
     return (
       <div className="flex justify-end gap-3">
         <div className="rounded w-32 bg-atlasian-blue-light">
@@ -24,8 +24,8 @@ const ModalWorkflowFooter = ({
         </div>
       </div>
     );
-  } else if (data?.status_approver === "On Approver" && findApproval) {
-    // Jika status PAT nya On Approver dan status approver nya sesuai dengan yang login, maka hanya tampil button text input alasan, button reject dan approve
+  } else if (data?.status_approver === "On Approver" && isApprover) {
+    // Jika status nya On Approver dan status approver nya sesuai dengan yang login, maka hanya tampil button text input alasan, button reject dan approve
     return (
       <div className="flex gap-3 items-center">
         <div className="w-full">
@@ -57,11 +57,8 @@ const ModalWorkflowFooter = ({
         </div>
       </div>
     );
-  } else if (
-    data?.status_approver === "On Approver" &&
-    data?.maker?.pn === user?.pn
-  ) {
-    // Jika status PAT nya On Approver dan yang sedang login adalah seorang maker PAT, maka hanya tampil button reset flow
+  } else if (data?.status_approver === "On Approver" && isInitiator) {
+    // Jika status nya On Approver dan yang sedang login adalah seorang Initiator, maka hanya tampil button reset flow
     return (
       <div className="flex gap-3">
         <div className="rounded w-32 bg-atlasian-red">

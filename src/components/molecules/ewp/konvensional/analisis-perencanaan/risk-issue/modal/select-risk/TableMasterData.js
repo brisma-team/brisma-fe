@@ -13,24 +13,20 @@ const customHeader = `w-full h-full flex items-center text-brisma font-bold`;
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 const positionCenter = `w-full h-full flex items-center`;
 
-const TableMasterData = ({ data, keywordMasterData, handleChangeKeyword }) => {
+const TableMasterData = ({
+  data,
+  dataSelectControl,
+  handleChangeKeyword,
+  handleAddControl,
+}) => {
   const [masterData, setMasterData] = useState([]);
   useEffect(() => {
-    const keyword = keywordMasterData.toLowerCase();
-    if (keyword.length) {
-      const filteredData = data.filter((item) => {
-        return (
-          item.code.toLowerCase().includes(keyword) ||
-          item.deskripsi.toLowerCase().includes(keyword)
-        );
-      });
-    }
-
-    setMasterData((prev) => {
-      return { ...prev, master_data: filteredData };
-    });
-    return;
-  }, [data]);
+    const selectControlCodes = dataSelectControl?.map((item) => item.code);
+    const filteredMasterData = data?.filter(
+      (item) => !selectControlCodes?.includes(item.code)
+    );
+    setMasterData(filteredMasterData);
+  }, [dataSelectControl, data]);
 
   return (
     <div
@@ -78,10 +74,10 @@ const TableMasterData = ({ data, keywordMasterData, handleChangeKeyword }) => {
               <div className={`${customHeader}`}>Deskripsi</div>
             </Header>
           </Headers>
-          {data?.length ? (
-            <div className="max-h-[18rem] overflow-y-scroll">
+          {masterData?.length ? (
+            <div className="max-h-[23rem] overflow-y-scroll">
               <Rows
-                items={data}
+                items={masterData}
                 render={({ code, deskripsi }) => (
                   <Row>
                     <Cell width="15%" className={`border-x ${customCell}`}>
@@ -92,10 +88,7 @@ const TableMasterData = ({ data, keywordMasterData, handleChangeKeyword }) => {
                               <IconArrowLeft size="small" />
                             </div>
                           }
-                          handleClick={
-                            () => console.log("test")
-                            // handleSelectedSample(directory, filename)
-                          }
+                          handleClick={() => handleAddControl(code)}
                           isDisabled={false}
                         />
                       </div>

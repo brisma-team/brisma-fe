@@ -1,4 +1,4 @@
-import { ButtonIcon } from "@/components/atoms";
+import { ButtonIcon, ErrorValidation } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
 import {
   PekerjaSelect,
@@ -7,17 +7,15 @@ import {
 } from "@/components/molecules/commons";
 import { useSelector, useDispatch } from "react-redux";
 import { setAuditTeamData } from "@/slices/ewp/konvensional/mapa/auditTeamMapaEWPSlice";
-import { useEffect } from "react";
 
 const CardAuditTeam = () => {
   const dispatch = useDispatch();
   const auditTeamData = useSelector(
     (state) => state.auditTeamMapaEWP.auditTeamData
   );
-
-  useEffect(() => {
-    console.log("auditTeamData => ", auditTeamData);
-  }, [auditTeamData]);
+  const validationErrors = useSelector(
+    (state) => state.auditTeamMapaEWP.validationErrors
+  );
 
   const handleAdd = (property) => {
     const newTimAudit = [...auditTeamData.tim_audit[property]];
@@ -85,7 +83,7 @@ const CardAuditTeam = () => {
         handleClickButtonBottom={() => handleAdd("ma")}
       >
         <div className="w-full -mb-2">
-          {auditTeamData?.tim_audit?.ma.length
+          {auditTeamData?.tim_audit?.ma?.length
             ? auditTeamData?.tim_audit?.ma.map((v, i) => {
                 return (
                   <PekerjaSelect
@@ -106,6 +104,11 @@ const CardAuditTeam = () => {
                 );
               })
             : ""}
+          {validationErrors["tim_audit.ma"] && (
+            <div className="pl-2">
+              <ErrorValidation message={validationErrors["tim_audit.ma"]} />
+            </div>
+          )}
         </div>
       </CardFormInput>
       <CardFormInput
@@ -116,7 +119,7 @@ const CardAuditTeam = () => {
         handleClickButtonBottom={() => handleAdd("kta")}
       >
         <div className="w-full -mb-2">
-          {auditTeamData?.tim_audit?.kta.length
+          {auditTeamData?.tim_audit?.kta?.length
             ? auditTeamData?.tim_audit?.kta.map((v, i) => {
                 return (
                   <PekerjaSelect
@@ -138,6 +141,11 @@ const CardAuditTeam = () => {
                 );
               })
             : ""}
+          {validationErrors["tim_audit.kta"] && (
+            <div className="pl-2">
+              <ErrorValidation message={validationErrors["tim_audit.kta"]} />
+            </div>
+          )}
         </div>
       </CardFormInput>
       <CardFormInput
@@ -148,27 +156,41 @@ const CardAuditTeam = () => {
         handleClickButtonBottom={() => handleAdd("ata")}
       >
         <div className="w-full -mb-2">
-          {auditTeamData?.tim_audit?.ata.length
+          {auditTeamData?.tim_audit?.ata?.length
             ? auditTeamData?.tim_audit?.ata.map((v, i) => {
                 return (
-                  <PekerjaSelect
-                    key={i}
-                    customIcon={
-                      <ButtonIcon
-                        icon={<IconClose />}
-                        handleClick={() => handleDelete("ata", i)}
-                      />
-                    }
-                    handleChange={(e) => handleChangeAudit("ata", i, e)}
-                    className={"mb-2"}
-                    selectedValue={{
-                      label: `${v.pn} - ${v.nama}`,
-                      value: { v },
-                    }}
-                  />
+                  <div key={i}>
+                    <PekerjaSelect
+                      key={i}
+                      customIcon={
+                        <ButtonIcon
+                          icon={<IconClose />}
+                          handleClick={() => handleDelete("ata", i)}
+                        />
+                      }
+                      handleChange={(e) => handleChangeAudit("ata", i, e)}
+                      className={"mb-2"}
+                      selectedValue={{
+                        label: `${v.pn} - ${v.nama}`,
+                        value: { v },
+                      }}
+                    />
+                    {validationErrors[`ata[1].pn`] && (
+                      <div className="pl-2">
+                        <ErrorValidation
+                          message={validationErrors[`ata[1].pn`]}
+                        />
+                      </div>
+                    )}
+                  </div>
                 );
               })
             : ""}
+          {validationErrors["tim_audit.ata"] && (
+            <div className="pl-2">
+              <ErrorValidation message={validationErrors["tim_audit.ata"]} />
+            </div>
+          )}
         </div>
       </CardFormInput>
       <CardFormInput title={"Tipe Tim"} className={"text-atlasian-yellow"}>
@@ -182,6 +204,13 @@ const CardAuditTeam = () => {
               value: auditTeamData?.ref_tipe_tim,
             }}
           />
+          {validationErrors["ref_tipe_tim.kode"] && (
+            <div className="pl-2">
+              <ErrorValidation
+                message={validationErrors["ref_tipe_tim.kode"]}
+              />
+            </div>
+          )}
         </div>
       </CardFormInput>
     </div>

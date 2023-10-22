@@ -12,7 +12,11 @@ const customHeader = `w-full h-full flex items-center text-brisma font-bold`;
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 const positionCenter = `w-full h-full flex items-center`;
 
-const TableSelectControl = ({ data, handleChangeKeyword }) => {
+const TableSelectControl = ({
+  data,
+  handleChangeKeyword,
+  handleDeleteControl,
+}) => {
   return (
     <div
       className="w-full rounded flex flex-col items-center h-full border-slate-700"
@@ -71,54 +75,57 @@ const TableSelectControl = ({ data, handleChangeKeyword }) => {
             </Header>
           </Headers>
           {data?.length ? (
-            <Rows
-              items={data}
-              render={({ no, code, deskripsi, flag }) => (
-                <Row>
-                  <Cell width="10%" className={`border-x ${customCell}`}>
-                    <div className={`${positionCenter} justify-center`}>
-                      <ButtonIcon
-                        icon={
-                          <div className="rounded-full border-2 border-atlasian-blue-light text-atlasian-blue-light w-5 h-5 flex items-center justify-center">
-                            <IconArrowRight size="small" />
-                          </div>
-                        }
-                        handleClick={
-                          () => console.log("test")
-                          // handleSelectedSample(directory, filename)
-                        }
-                        isDisabled={false}
-                      />
-                    </div>
-                  </Cell>
-                  <Cell width="10%" className={`border-r ${customCell}`}>
-                    <div className={`${positionCenter} justify-center text-xs`}>
-                      {no}
-                    </div>
-                  </Cell>
-                  <Cell width="15%" className={`border-r ${customCell}`}>
-                    <div className={`${positionCenter} text-xs`}>{code}</div>
-                  </Cell>
-                  <Cell width="50%" className={`border-r ${customCell}`}>
-                    <div className={`${positionCenter} text-xs`}>
-                      {deskripsi}
-                    </div>
-                  </Cell>
-                  <Cell width="15%" className={`border-r ${customCell}`}>
-                    <div className={`${positionCenter} justify-center text-xs`}>
-                      <LozengeField
-                        appreance={flag ? "default" : "moved"}
-                        isBold={true}
+            <div className="max-h-[23rem] overflow-y-scroll">
+              <Rows
+                items={data}
+                render={({ no, code, deskripsi, flag }) => (
+                  <Row>
+                    <Cell width="10%" className={`border-x ${customCell}`}>
+                      <div className={`${positionCenter} justify-center`}>
+                        <ButtonIcon
+                          icon={
+                            <div className="rounded-full border-2 border-atlasian-blue-light text-atlasian-blue-light w-5 h-5 flex items-center justify-center">
+                              <IconArrowRight size="small" />
+                            </div>
+                          }
+                          handleClick={() => handleDeleteControl(code)}
+                          isDisabled={flag}
+                        />
+                      </div>
+                    </Cell>
+                    <Cell width="10%" className={`border-r ${customCell}`}>
+                      <div
+                        className={`${positionCenter} justify-center text-xs`}
                       >
-                        <div className="text-white">
-                          {flag ? "Default" : "Ad Hoc"}
-                        </div>
-                      </LozengeField>
-                    </div>
-                  </Cell>
-                </Row>
-              )}
-            />
+                        {no}
+                      </div>
+                    </Cell>
+                    <Cell width="15%" className={`border-r ${customCell}`}>
+                      <div className={`${positionCenter} text-xs`}>{code}</div>
+                    </Cell>
+                    <Cell width="50%" className={`border-r ${customCell}`}>
+                      <div className={`${positionCenter} text-xs`}>
+                        {deskripsi}
+                      </div>
+                    </Cell>
+                    <Cell width="15%" className={`border-r ${customCell}`}>
+                      <div
+                        className={`${positionCenter} justify-center text-xs`}
+                      >
+                        <LozengeField
+                          appreance={flag ? "default" : "moved"}
+                          isBold={true}
+                        >
+                          <div className="text-white">
+                            {flag ? "Default" : "Ad Hoc"}
+                          </div>
+                        </LozengeField>
+                      </div>
+                    </Cell>
+                  </Row>
+                )}
+              />
+            </div>
           ) : (
             <div className="w-full border-x border-b rounded-es-xl rounded-ee-xl pb-4">
               <DataNotFound />

@@ -5,11 +5,14 @@ import ContentExistingSampleCSV from "./ContentExistingSampleCSV";
 import ContentHistorySampleCSV from "./ContentHistorySampleCSV";
 
 const SubModalPickDataCSV = ({
+  selectedRiskIssue,
   currentSubModalStage,
   currentModalStage,
   setCurrentSubModalStage,
   isSelectedSamplePool,
   setIsSelectedSamplePool,
+  selectedSamplePoolId,
+  setSelectedSamplePoolId,
   samplePoolData,
   handleClickDeleteSamplePool,
   extendRows,
@@ -69,7 +72,10 @@ const SubModalPickDataCSV = ({
               handleRowClick={handleRowClick}
             />
           ) : (
-            <ContentHistorySampleCSV />
+            <ContentHistorySampleCSV
+              selectedRiskIssueId={selectedRiskIssue}
+              selectedSamplePoolId={selectedSamplePoolId}
+            />
           )
         ) : currentSubModalStage === 1 ? (
           <ContentUploadSampleCSV
@@ -81,8 +87,10 @@ const SubModalPickDataCSV = ({
         ) : (
           <ContentExistingSampleCSV
             data={samplePoolData}
+            currentModalStage={currentModalStage}
             setCurrentSubModalStage={setCurrentSubModalStage}
             setIsSelectedSamplePool={setIsSelectedSamplePool}
+            setSelectedSamplePoolId={setSelectedSamplePoolId}
             handleClickDeleteSamplePool={handleClickDeleteSamplePool}
           />
         )}

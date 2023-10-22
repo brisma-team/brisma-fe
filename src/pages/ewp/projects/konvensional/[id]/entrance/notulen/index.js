@@ -7,7 +7,7 @@ import {
   PageTitle,
   UploadButton,
 } from "@/components/atoms";
-import { useAuditorEWP } from "@/data/ewp/konvensional";
+import { useAuditorEWP, useWorkflowDetailEWP } from "@/data/ewp/konvensional";
 import { useRouter } from "next/router";
 import {
   PopupKlipping,
@@ -15,10 +15,32 @@ import {
   ApprovalItems,
 } from "@/components/molecules/commons";
 import dynamic from "next/dynamic";
-import { copyToClipboard } from "@/helpers";
+import {
+  confirmationSwal,
+  convertDate,
+  copyToClipboard,
+  errorSwal,
+  loadingSwal,
+  setErrorValidation,
+  usePostData,
+  usePostFileData,
+  useUpdateData,
+} from "@/helpers";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common";
+import { useLandingEntranceEWP } from "@/data/ewp/konvensional/entrance";
+import { useNotulenEntranceEWP } from "@/data/ewp/konvensional/entrance/notulen";
+import { useSelector } from "react-redux";
+import {
+  resetValidationErrorsWorkflow,
+  resetWorkflowData,
+  setValidationErrorsWorkflow,
+  setWorkflowData,
+} from "@/slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
+import { useDispatch } from "react-redux";
+import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
+import _ from "lodash";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -36,25 +58,250 @@ const routes = [
 ];
 
 const index = () => {
+  const dispatch = useDispatch();
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/projects/konvensional/${id}/entrance`;
+  const pathName = `/ewp/projects/konvensional/${id}/entrance`;
   const { auditorEWP } = useAuditorEWP({ id });
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
     {
-      name: `${auditorEWP?.data?.project_info?.project_id} / Entrance Meeting`,
-      path: `/ewp/projects/konvensional/${id}/entrance`,
+      name: `${auditorEWP?.data?.project_info?.project_id} / Entrance`,
+      path: pathName,
+    },
+    {
+      name: `Notulen`,
+      path: `${pathName}/notulen`,
     },
   ];
 
-  const [data, setData] = useState({ notulen: "" });
+  const { landingEntranceEWP } = useLandingEntranceEWP({ id });
+  const { notulenEntranceEWP } = useNotulenEntranceEWP({
+    notulen_id: landingEntranceEWP?.data?.notulen_id,
+  });
+
+  const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
+    "entrance_notulen",
+    { id: landingEntranceEWP?.data?.notulen_id }
+  );
+
+  const [content, setContent] = useState("");
   const [imageClipList, setImageClipList] = useState([]);
   const [showModalApproval, setShowModalApproval] = useState(false);
+  const [historyWorkflow, setHistoryWorkflow] = useState([]);
+
+  const workflowData = useSelector(
+    (state) => state.notulenEntranceEWP.workflowData
+  );
+  const validationErrorsWorkflow = useSelector(
+    (state) => state.notulenEntranceEWP.validationErrorsWorkflow
+  );
+
+  // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
+  // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
+  useEffect(() => {
+    const workflowInfo = workflowDetailEWP?.data?.info;
+    const maker = workflowDetailEWP?.data?.initiator;
+    const approvers = workflowDetailEWP?.data?.approver;
+    const signers = workflowDetailEWP?.data?.signer;
+
+    const newWorkflowData = {
+      ...workflowData,
+      status_approver:
+        workflowInfo?.status_persetujuan_name ||
+        workflowInfo?.status_persetujuan,
+      on_approver: workflowInfo?.status_approver,
+    };
+
+    newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.nama}`;
+    newWorkflowData.maker = maker;
+
+    if (approvers?.length) {
+      const mappingApprovers = _.map(approvers, ({ pn, nama, is_signed }) => ({
+        pn,
+        nama,
+        is_signed,
+      }));
+      newWorkflowData.ref_tim_audit_approver = mappingApprovers;
+    }
+
+    if (signers?.length) {
+      const mappingSigners = _.map(signers, ({ nama, pn }) => ({ nama, pn }));
+      newWorkflowData.ref_tim_audit_signer = mappingSigners;
+    }
+
+    if (workflowDetailEWP?.data?.log?.length) {
+      const mapping = workflowDetailEWP?.data?.log?.map((v) => {
+        return {
+          "P.I.C": v?.from?.pn + " - " + v?.from?.nama,
+          Alasan: v?.note,
+          Status:
+            v?.is_signed === true
+              ? "Approved"
+              : v?.is_signed === false
+              ? "Rejected"
+              : "",
+          Tanggal: convertDate(v?.created_at, "-", "d"),
+        };
+      });
+      setHistoryWorkflow(mapping);
+    }
+
+    dispatch(setWorkflowData(newWorkflowData));
+  }, [workflowDetailEWP]);
+
+  useEffect(() => {
+    setContent(notulenEntranceEWP?.data?.notulen_info?.content);
+  }, [notulenEntranceEWP]);
+  // [ END ]
 
   const openModalApproval = () => {
     setShowModalApproval(true);
   };
+
+  const handleUpload = async (e) => {
+    loadingSwal();
+    if (e.target.files) {
+      const url = `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/cdn/upload`;
+
+      const response = await usePostFileData(url, {
+        file: e.target.files[0],
+        modul: "ewp",
+      });
+
+      setImageClipList((prev) => [
+        ...prev,
+        { url: response.url[0], name: e.target.files[0].name },
+      ]);
+    }
+    loadingSwal("close");
+  };
+
+  const handleSubmit = async () => {
+    loadingSwal();
+    await usePostData(
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/entrance/notulen`,
+      { content, notulen_id: landingEntranceEWP?.data?.notulen_id }
+    );
+    loadingSwal("close");
+  };
+
+  // [ START ] function untuk Modal Workflow
+  const handleAdd = (property) => {
+    const newData = [...workflowData[property]];
+    newData.push({
+      pn: "",
+      nama: "",
+      is_signed: false,
+    });
+    dispatch(setWorkflowData({ ...workflowData, [property]: newData }));
+  };
+
+  const handleDelete = (property, idx) => {
+    const newData = [...workflowData[property]];
+    newData.splice(idx, 1);
+    dispatch(setWorkflowData({ ...workflowData, [property]: newData }));
+  };
+
+  const handleChangeText = (property, value) => {
+    dispatch(
+      setWorkflowData({
+        ...workflowData,
+        [property]: value,
+      })
+    );
+  };
+
+  const handleChangeSelect = (property, index, e) => {
+    const newData = [...workflowData[property]];
+    const updated = { ...newData[index] };
+    updated["pn"] = e?.value?.pn;
+    updated["nama"] = e?.value?.name;
+    newData[index] = updated;
+    dispatch(
+      setWorkflowData({
+        ...workflowData,
+        [property]: newData,
+      })
+    );
+  };
+
+  const handleSaveApproval = async (e) => {
+    e.preventDefault();
+    const schemaMapping = {
+      schema: workflowSchema,
+      resetErrors: resetValidationErrorsWorkflow,
+      setErrors: setValidationErrorsWorkflow,
+    };
+    const validate = setErrorValidation(workflowData, dispatch, schemaMapping);
+
+    if (validate) {
+      const actionType = e.target.offsetParent.name;
+      const data = {
+        sub_modul: "entrance_notulen",
+        sub_modul_id: landingEntranceEWP?.data?.notulen_id,
+      };
+
+      const signedCount = workflowData?.ref_tim_audit_approver?.filter(
+        (item) => item.is_signed
+      ).length;
+
+      switch (actionType) {
+        case "change":
+          data.approvers = workflowData.ref_tim_audit_approver;
+          data.signers = workflowData.ref_tim_audit_signer;
+          break;
+        case "create":
+          data.approvers = workflowData.ref_tim_audit_approver;
+          data.signers = workflowData.ref_tim_audit_signer;
+          break;
+        case "reject":
+          data.note = workflowData.note;
+          break;
+        case "approve":
+          if (signedCount < 2) {
+            data.data = "<p>pirli test</p>";
+          }
+          data.note = workflowData.note;
+          break;
+      }
+
+      if (actionType === "reset") {
+        const confirm = await confirmationSwal(
+          "Terkait dengan workflow ini, apakah Anda yakin ingin melakukan pengaturan ulang?"
+        );
+        if (!confirm.value) {
+          return;
+        }
+      }
+
+      if (actionType === "reject" && !workflowData.note) {
+        await errorSwal(
+          "Silakan berikan alasan mengapa Anda memilih untuk menolak."
+        );
+        return;
+      }
+
+      if (actionType === "change") {
+        const response = await useUpdateData(
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/change`,
+          data
+        );
+        if (!response.isDismissed) return;
+      } else {
+        await usePostData(
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/${actionType}`,
+          data
+        );
+      }
+
+      workflowDetailEWPMutate();
+      dispatch(resetWorkflowData());
+      setShowModalApproval(false);
+    }
+    workflowDetailEWPMutate();
+  };
+  // [ END ]
 
   return (
     <LandingLayoutEWP>
@@ -64,11 +311,11 @@ const index = () => {
       <div className="flex justify-between items-center mb-3">
         <PageTitle text="Notulen" />
         <PrevNextNavigation
-          baseUrl={baseUrl}
+          baseUrl={pathName}
           routes={routes}
           prevUrl={"/attendance"}
           nextUrl={"/berita-acara"}
-          marginLeft={"-60px"}
+          marginLeft={"-55px"}
         />
       </div>
       {/* Start Content */}
@@ -112,6 +359,7 @@ const index = () => {
                       text={"Tambah Kliping +"}
                       fileAccept={"image/png, image/gif, image/jpeg"}
                       className={"text-atlasian-purple text-sm"}
+                      handleUpload={handleUpload}
                     />
                   </div>
                   {/* End Kliping Gambar */}
@@ -122,10 +370,10 @@ const index = () => {
           <div>
             <div className="ckeditor-latar-belakang-mapa-ewp">
               <Editor
-                contentData={data.notulen}
+                contentData={content}
                 disabled={false}
                 ready={true}
-                onChange={(value) => setData({ ...data, notulen: value })}
+                onChange={(value) => setContent(value)}
               />
             </div>
             <div className="mt-3 flex justify-end">
@@ -134,7 +382,7 @@ const index = () => {
                   <ButtonField text={"Template"} />
                 </div>
                 <div className="w-[7.75rem] bg-atlasian-green rounded">
-                  <ButtonField text={"Simpan"} />
+                  <ButtonField text={"Simpan"} handler={handleSubmit} />
                 </div>
               </div>
             </div>
@@ -151,11 +399,18 @@ const index = () => {
                   <p className="text-brisma font-bold text-xl">
                     Approval Notulen Entrance
                   </p>
-                  <ApprovalItems title={"Maker"} text={"Annisa"} />
                   <ApprovalItems
-                    title={"Checker"}
-                    text={[{ nama: "Dandy" }, { nama: "Putra" }]}
-                    data={{ nama: "Bahrul Ulum" }}
+                    title={"P.I.C"}
+                    text={workflowData?.maker?.nama}
+                  />
+                  <ApprovalItems
+                    title={"Approver"}
+                    text={workflowData?.ref_tim_audit_approver}
+                    data={workflowData}
+                  />
+                  <ApprovalItems
+                    title={"Signer"}
+                    text={workflowData?.ref_tim_audit_signer}
                   />
                 </div>
               </div>
@@ -163,9 +418,17 @@ const index = () => {
           </DivButton>
         </div>
         <ModalWorkflowEWP
-          showModal={showModalApproval}
+          workflowData={workflowData}
+          historyWorkflow={historyWorkflow}
+          validationErrors={validationErrorsWorkflow}
           setShowModal={setShowModalApproval}
+          showModal={showModalApproval}
           headerTitle={"Approval Notulen Entrance"}
+          handleChange={handleChangeText}
+          handleChangeSelect={handleChangeSelect}
+          handleDelete={handleDelete}
+          handleAdd={handleAdd}
+          handleSubmit={handleSaveApproval}
         />
       </div>
       {/* End Content */}

@@ -6,9 +6,14 @@ import { CardAuditTeam } from "@/components/molecules/ewp/konvensional/tim-audit
 import { useMapaEWP } from "@/data/ewp/konvensional/mapa";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setAuditTeamData } from "@/slices/ewp/konvensional/mapa/auditTeamMapaEWPSlice";
-import { usePostData } from "@/helpers";
+import {
+  setAuditTeamData,
+  setValidationErrors,
+  resetValidationErrors,
+} from "@/slices/ewp/konvensional/mapa/auditTeamMapaEWPSlice";
+import { setErrorValidation, usePostData } from "@/helpers";
 import { PrevNextNavigation } from "@/components/molecules/commons";
+import auditTeamMapaEWPSchema from "@/helpers/schemas/ewp/konvensional/mapa/auditTeamMapaEWPSchema";
 
 const routes = [
   {
@@ -44,19 +49,47 @@ const index = () => {
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
     {
-      name: `${auditorEWP?.data?.project_info?.project_id} / Info`,
-      path: `/ewp/projects/konvensional/${id}/info`,
+      name: `${auditorEWP?.data?.project_info?.project_id} / MAPA`,
+      path: `${baseUrl}`,
+    },
+    {
+      name: "Tim Audit",
+      path: `${baseUrl}/tim-audit`,
     },
   ];
 
+  const schemaMappings = {
+    schema: auditTeamMapaEWPSchema,
+    resetErrors: resetValidationErrors,
+    setErrors: setValidationErrors,
+  };
+
   useEffect(() => {
-    dispatch(setAuditTeamData(mapaEWP?.data));
+    const mapping = {
+      ref_tipe_tim: mapaEWP?.data?.ref_tipe_tim || {
+        kode: "",
+        nama: "",
+      },
+      tim_audit: {
+        ma: mapaEWP?.data?.tim_audit?.ma,
+        kta: mapaEWP?.data?.tim_audit?.kta,
+        ata: mapaEWP?.data?.tim_audit?.ata,
+      },
+    };
+    dispatch(setAuditTeamData(mapping));
   }, [mapaEWP]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const buttonName = e.target.offsetParent.name;
-    if (buttonName === "save") {
+
+    const validate = setErrorValidation(
+      auditTeamData,
+      dispatch,
+      schemaMappings
+    );
+
+    if (buttonName === "save" && validate) {
       await usePostData(
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/tim_audit/${id}`,
         auditTeamData

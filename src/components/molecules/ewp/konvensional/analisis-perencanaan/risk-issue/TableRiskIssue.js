@@ -15,9 +15,11 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import ModalAddSampleRisk from "./ModalAddSampleRisk";
 import ModalSelectControl from "./ModalSelectControl";
+import { DataNotFound } from "@/components/molecules/commons";
 
 const TableRiskIssue = ({
   headerTextRiskIssue,
+  setHeaderTextRiskIssue,
   selectedRiskIssue,
   setSelectedRiskIssue,
   mutate,
@@ -84,9 +86,17 @@ const TableRiskIssue = ({
     loadingSwal("close");
   };
 
-  const handleCreateSample = (id) => {
+  const handleCreateSample = (
+    id,
+    subAktivitasName,
+    subMajorKode,
+    riskIssueKode
+  ) => {
     setShowModalCreateSample(true);
     setSelectedRiskIssue(id);
+    setHeaderTextRiskIssue(
+      `${subAktivitasName} / ${subMajorKode} / ${riskIssueKode}`
+    );
   };
 
   const handleSelectControl = (id) => {
@@ -111,7 +121,7 @@ const TableRiskIssue = ({
               <div className={`${customHeader} justify-center`}>Aksi</div>
             </Header>
             <Header
-              width="48%"
+              width="46%"
               className="border-t border-r cell-custom-dataTables"
             >
               <div className={`${customHeader} pl-2`}>
@@ -119,7 +129,7 @@ const TableRiskIssue = ({
               </div>
             </Header>
             <Header
-              width="15%"
+              width="17%"
               className="border-t border-r cell-custom-dataTables"
             >
               <div className={`${customHeader} justify-center`}>Tindakan</div>
@@ -155,118 +165,133 @@ const TableRiskIssue = ({
               <div className={`${customHeader} justify-center`}>Set Sample</div>
             </Header>
           </Headers>
-          <Rows
-            items={riskIssueData}
-            render={({
-              id,
-              kode,
-              name,
-              program_audit,
-              kriteria,
-              sample,
-              total_mapa_sample,
-              role,
-              children = [],
-            }) => (
-              <Row
-                itemId={kode}
-                role={role}
-                items={children}
-                hasChildren={children.length > 0}
-                isExpanded={Boolean(expansionMap[`${kode}-${role}`])}
-              >
-                <Cell className="!hidden" />
-                <Cell width="5%" className={`border-x ${customCell}`}>
-                  {levelMap[`${kode}-${role}`] === 1 && (
-                    <div className={positionCenter}>
-                      <ButtonIcon
-                        icon={
-                          <div className="rounded-full border border-atlasian-red w-5 h-5 flex items-center justify-center p-1">
-                            <Image src={ImageClose} alt="" />
-                          </div>
-                        }
-                        handleClick={() => handleDeleteRisk(id)}
-                      />
-                    </div>
-                  )}
-                </Cell>
-                <Cell width="48%" className={`border-r ${customCell}`}>
-                  <div
-                    className={`w-full h-full flex items-center ${
-                      levelMap[`${kode}-${role}`] === 1 ? `pl-6` : ``
-                    }`}
-                  >
-                    {children.length > 0 ? (
-                      <ButtonIcon
-                        handleClick={() => toggleExpansion(kode, role)}
-                        icon={
-                          expansionMap[`${kode}-${role}`] ? (
-                            <IconChevronDown />
-                          ) : (
-                            <IconChevronRight />
-                          )
-                        }
-                      />
-                    ) : (
-                      <div className="ml-5" />
+          {riskIssueData?.length ? (
+            <Rows
+              items={riskIssueData}
+              render={({
+                id,
+                kode,
+                name,
+                sub_aktivitas_name,
+                sub_major_kode,
+                program_audit,
+                kriteria,
+                sample,
+                total_mapa_sample,
+                role,
+                children = [],
+              }) => (
+                <Row
+                  itemId={kode}
+                  role={role}
+                  items={children}
+                  hasChildren={children.length > 0}
+                  isExpanded={Boolean(expansionMap[`${kode}-${role}`])}
+                >
+                  <Cell className="!hidden" />
+                  <Cell width="5%" className={`border-x ${customCell}`}>
+                    {levelMap[`${kode}-${role}`] === 1 && (
+                      <div className={positionCenter}>
+                        <ButtonIcon
+                          icon={
+                            <div className="rounded-full border border-atlasian-red w-5 h-5 flex items-center justify-center p-1">
+                              <Image src={ImageClose} alt="" />
+                            </div>
+                          }
+                          handleClick={() => handleDeleteRisk(id)}
+                        />
+                      </div>
                     )}
-                    <div>
-                      <p>
-                        <span className="font-semibold">{kode}</span> -{" "}
-                        <span>{name}</span>
-                      </p>
+                  </Cell>
+                  <Cell width="46%" className={`border-r ${customCell}`}>
+                    <div
+                      className={`w-full h-full flex items-center ${
+                        levelMap[`${kode}-${role}`] === 1 ? `pl-6` : ``
+                      }`}
+                    >
+                      {children.length > 0 ? (
+                        <ButtonIcon
+                          handleClick={() => toggleExpansion(kode, role)}
+                          icon={
+                            expansionMap[`${kode}-${role}`] ? (
+                              <IconChevronDown />
+                            ) : (
+                              <IconChevronRight />
+                            )
+                          }
+                        />
+                      ) : (
+                        <div className="ml-5" />
+                      )}
+                      <div>
+                        <p>
+                          <span className="font-semibold">{kode}</span> -{" "}
+                          <span>{name}</span>
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </Cell>
-                <Cell width="15%" className={`border-r ${customCell}`}>
-                  {levelMap[`${kode}-${role}`] === 1 && (
-                    <div className={`${positionCenter} gap-2`}>
-                      <LozengeField appreance="inprogress" isBold={true}>
-                        <DivButton
-                          className="text-white hover:text-white no-underline hover:no-underline"
-                          handleClick={() => handleCreateSample(id)}
-                        >
-                          Tambah Sample
-                        </DivButton>
-                      </LozengeField>
-                      <LozengeField appreance="moved" isBold={true}>
-                        <DivButton
-                          className="text-white hover:text-white no-underline hover:no-underline"
-                          handleClick={() => handleSelectControl(id)}
-                        >
-                          Pilih Control
-                        </DivButton>
-                      </LozengeField>
-                    </div>
-                  )}
-                </Cell>
-                <Cell width="8%" className={`border-r ${customCell}`}>
-                  <div className={positionCenter}>{total_mapa_sample}</div>
-                </Cell>
-                <Cell width="8%" className={`border-r ${customCell}`}>
-                  {levelMap[`${kode}-${role}`] === 1 && program_audit && (
-                    <div className={positionCenter}>
-                      <Image src={ImageCheck} alt="" />
-                    </div>
-                  )}
-                </Cell>
-                <Cell width="8%" className={`border-r ${customCell}`}>
-                  {levelMap[`${kode}-${role}`] === 1 && kriteria && (
-                    <div className={positionCenter}>
-                      <Image src={ImageCheck} alt="" />
-                    </div>
-                  )}
-                </Cell>
-                <Cell width="8%" className={`border-r ${customCell}`}>
-                  {levelMap[`${kode}-${role}`] === 1 && sample && (
-                    <div className={positionCenter}>
-                      <Image src={ImageCheck} alt="" />
-                    </div>
-                  )}
-                </Cell>
-              </Row>
-            )}
-          />
+                  </Cell>
+                  <Cell width="17%" className={`border-r ${customCell}`}>
+                    {levelMap[`${kode}-${role}`] === 1 && (
+                      <div className={`${positionCenter} gap-2`}>
+                        <LozengeField appreance="inprogress" isBold={true}>
+                          <DivButton
+                            className="text-white hover:text-white no-underline hover:no-underline"
+                            handleClick={() =>
+                              handleCreateSample(
+                                id,
+                                sub_aktivitas_name,
+                                sub_major_kode,
+                                kode
+                              )
+                            }
+                          >
+                            Tambah Sample
+                          </DivButton>
+                        </LozengeField>
+                        <LozengeField appreance="moved" isBold={true}>
+                          <DivButton
+                            className="text-white hover:text-white no-underline hover:no-underline"
+                            handleClick={() => handleSelectControl(id)}
+                          >
+                            Pilih Control
+                          </DivButton>
+                        </LozengeField>
+                      </div>
+                    )}
+                  </Cell>
+                  <Cell width="8%" className={`border-r ${customCell}`}>
+                    <div className={positionCenter}>{total_mapa_sample}</div>
+                  </Cell>
+                  <Cell width="8%" className={`border-r ${customCell}`}>
+                    {levelMap[`${kode}-${role}`] === 1 && program_audit && (
+                      <div className={positionCenter}>
+                        <Image src={ImageCheck} alt="" />
+                      </div>
+                    )}
+                  </Cell>
+                  <Cell width="8%" className={`border-r ${customCell}`}>
+                    {levelMap[`${kode}-${role}`] === 1 && kriteria && (
+                      <div className={positionCenter}>
+                        <Image src={ImageCheck} alt="" />
+                      </div>
+                    )}
+                  </Cell>
+                  <Cell width="8%" className={`border-r ${customCell}`}>
+                    {levelMap[`${kode}-${role}`] === 1 && sample && (
+                      <div className={positionCenter}>
+                        <Image src={ImageCheck} alt="" />
+                      </div>
+                    )}
+                  </Cell>
+                </Row>
+              )}
+            />
+          ) : (
+            <div className="w-full border-x border-b rounded-es-xl rounded-ee-xl pb-4">
+              <DataNotFound />
+            </div>
+          )}
         </TableTree>
         <ModalAddSampleRisk
           headerTextRiskIssue={headerTextRiskIssue}

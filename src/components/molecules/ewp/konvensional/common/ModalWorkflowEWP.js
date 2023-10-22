@@ -1,6 +1,6 @@
 import { Modal, TableField } from "@/components/atoms";
 import useUser from "@/data/useUser";
-import { confirmationSwal, convertDate } from "@/helpers";
+import { confirmationSwal } from "@/helpers";
 import ModalWorkflowHeader from "./ModalWorkflowHeader";
 import ModalWorkflowFooter from "./ModalWorkflowFooter";
 
@@ -18,10 +18,9 @@ const ModalWorkflowEWP = ({
   validationErrors,
 }) => {
   const { user } = useUser();
-  let findApproval;
-  if (workflowData?.on_approver) {
-    findApproval = user?.data?.pn == workflowData?.on_approver?.pn;
-  }
+  let isApproval, isInitiator;
+  isInitiator = user?.data?.pn == workflowData?.maker?.pn;
+  isApproval = user?.data?.pn == workflowData?.on_approver?.pn;
 
   const handleCloseModal = async () => {
     const confirm = await confirmationSwal(
@@ -65,12 +64,12 @@ const ModalWorkflowEWP = ({
         />
       }
       widthFullFooter={
-        workflowData?.status_approver === "On Approver" && findApproval && true
+        workflowData?.status_approver === "On Approver" && isApproval && true
       }
       withoutFooter={
-        workflowData?.status_approver === "On Progress"
+        workflowData?.status_approver === "On Progress" && isInitiator
           ? false
-          : workflowData?.status_approver === "On Approver" && findApproval
+          : workflowData?.status_approver === "On Approver" && isApproval
           ? false
           : workflowData?.maker?.pn === user?.data?.pn &&
             workflowData?.status_approver === "On Approver"

@@ -51,9 +51,9 @@
   max-height: 34.5rem !important;
 }
 
-.ckeditor-modal-set-risk-issue div div div .ck-content {
+.ckeditor-modal div div div .ck-content {
   overflow-y: scroll;
-  min-height: 30rem !important;
-  max-height: 30rem !important;
+  min-height: 23.5rem !important;
+  max-height: 23.5rem !important;
 }
 /* END CKEditor EWP */

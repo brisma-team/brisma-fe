@@ -16,8 +16,8 @@ const initialState = {
   validationErrorsWorkflow: {},
 };
 
-export const notulenEntranceEWPSlice = createSlice({
-  name: "notulenEntranceEWP",
+export const beritaAcaraEntranceEWPSlice = createSlice({
+  name: "beritaAcaraEntranceEWP",
   initialState,
   reducers: {
     setWorkflowData: (state, action) => {
@@ -40,6 +40,6 @@ export const {
   setValidationErrorsWorkflow,
   resetWorkflowData,
   resetValidationErrorsWorkflow,
-} = notulenEntranceEWPSlice.actions;
+} = beritaAcaraEntranceEWPSlice.actions;
 
-export default notulenEntranceEWPSlice.reducer;
+export default beritaAcaraEntranceEWPSlice.reducer;

@@ -22,7 +22,7 @@ const index = () => {
   const [showModalCreateRiskIssue, setShowModalCreateRiskIssue] =
     useState(false);
   const [selectedRiskIssue, setSelectedRiskIssue] = useState(null);
-  const [headerTextRiskIssue, setHeadetTextRiskIssue] = useState("");
+  const [headerTextRiskIssue, setHeaderTextRiskIssue] = useState("");
 
   const riskIssueInfo = useSelector(
     (state) => state.planningAnalysisMapaEWP.riskIssueInfo
@@ -61,6 +61,10 @@ const index = () => {
         uker_id: risk.mapa_uker_id,
         kode: risk.ref_risk_issue_kode,
         name: risk.ref_risk_issue_name,
+        sub_aktivitas_name:
+          header.mapa_uker_aktivitas?.[0]?.mapa_uker_pic_subaktivitas?.[0]
+            ?.sub_name,
+        sub_major_kode: item.ref_sub_major_kode,
         program_audit: Boolean(risk.program_audit),
         kriteria: Boolean(risk.kriteria),
         sample: Boolean(risk.sample),
@@ -82,9 +86,6 @@ const index = () => {
         ref_sub_aktivitas_kode: subAktivitas.sub_kode,
         ref_sub_aktivitas_name: subAktivitas.sub_name,
       })
-    );
-    setHeadetTextRiskIssue(
-      `${header.ref_auditee_branch_name} / ${aktivitas.mtd_aktivitas_name} / ${subAktivitas.sub_name}`
     );
   }, [planningAnalysisEWP]);
 
@@ -115,6 +116,7 @@ const index = () => {
       <div className="my-3" />
       <TableRiskIssue
         headerTextRiskIssue={headerTextRiskIssue}
+        setHeaderTextRiskIssue={setHeaderTextRiskIssue}
         selectedRiskIssue={selectedRiskIssue}
         setSelectedRiskIssue={setSelectedRiskIssue}
         mutate={planningAnalysisEWPMutate}

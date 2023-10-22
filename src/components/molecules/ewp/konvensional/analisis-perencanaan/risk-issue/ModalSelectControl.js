@@ -1,10 +1,16 @@
-import { ButtonField, Modal } from "@/components/atoms";
-import { confirmationSwal } from "@/helpers";
+import { ButtonField, Modal, Spinner } from "@/components/atoms";
+import {
+  confirmationSwal,
+  loadingSwal,
+  useDeleteData,
+  usePostData,
+} from "@/helpers";
 import { ModalHeader } from "./modal/sample-risk";
 import { TableMasterData, TableSelectControl } from "./modal/select-risk";
 import { useEffect, useState } from "react";
 import { useRiskControl } from "@/data/reference";
 import { useRiskControlMapaEWP } from "@/data/ewp/konvensional/mapa/analisis-perencanaan";
+import _ from "lodash";
 
 const ModalFooter = ({ handleSubmit }) => {
   return (
@@ -24,14 +30,53 @@ const ModalSelectControl = ({
   handleCloseModal,
   selectedRiskIssue,
 }) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [keywordSelectControl, setKeywordSelectControl] = useState("");
   const [keywordMasterData, setKeywordMasterData] = useState("");
+  const [paramsSelectControl, setParamsSelectControl] = useState({
+    search: "",
+    limit: 50,
+  });
+  const [paramsMasterData, setParamsMasterData] = useState({
+    search: "",
+    limit: 50,
+  });
   const [data, setData] = useState({ select_control: [], master_data: [] });
 
-  const { riskControl } = useRiskControl("all");
-  const { riskControlMapaEWP } = useRiskControlMapaEWP({
-    risk_issue_id: selectedRiskIssue,
-  });
+  const { riskControl, riskControlMutate } = useRiskControl(
+    "all",
+    paramsMasterData
+  );
+  const { riskControlMapaEWP, riskControlMapaEWPMutate } =
+    useRiskControlMapaEWP({
+      risk_issue_id: selectedRiskIssue,
+      ...paramsSelectControl,
+    });
+
+  useEffect(() => {
+    const handleSearch = () => {
+      setParamsSelectControl({
+        ...paramsSelectControl,
+        search: keywordSelectControl,
+      });
+    };
+    const debouncedSearch = _.debounce(handleSearch, 500);
+    debouncedSearch();
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [keywordSelectControl]);
+
+  useEffect(() => {
+    const handleSearch = () => {
+      setParamsMasterData({ ...paramsMasterData, search: keywordMasterData });
+    };
+    const debouncedSearch = _.debounce(handleSearch, 500);
+    debouncedSearch();
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [keywordMasterData]);
 
   useEffect(() => {
     if (riskControlMapaEWP?.data?.length) {
@@ -48,6 +93,8 @@ const ModalSelectControl = ({
       setData((prev) => {
         return { ...prev, select_control: mapping };
       });
+
+      setIsLoading(false);
     }
   }, [riskControlMapaEWP]);
 
@@ -57,16 +104,8 @@ const ModalSelectControl = ({
       deskripsi: v?.nama,
     }));
 
-    const filteredData = data.select_control.length
-      ? mapping.filter((item) => {
-          const existsInSelectControl = data.select_control.some(
-            (selectItem) => selectItem.code === item.code
-          );
-        })
-      : mapping;
-
-    setData((prev) => ({ ...prev, master_data: filteredData }));
-  }, [riskControl, keywordMasterData]);
+    setData((prev) => ({ ...prev, master_data: mapping }));
+  }, [riskControl]);
 
   const handleClose = async () => {
     const confirm = await confirmationSwal(
@@ -84,6 +123,28 @@ const ModalSelectControl = ({
     handleCloseModal();
   };
 
+  const handleAddControl = async (code) => {
+    loadingSwal();
+    await usePostData(
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${selectedRiskIssue}/risk_control`,
+      { mtd_control_kode: code }
+    );
+    riskControlMutate();
+    riskControlMapaEWPMutate();
+    loadingSwal("close");
+  };
+
+  const handleDeleteControl = async (code) => {
+    loadingSwal();
+    await useDeleteData(
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${selectedRiskIssue}/risk_control/${code}`,
+      {}
+    );
+    riskControlMutate();
+    riskControlMapaEWPMutate();
+    loadingSwal("close");
+  };
+
   return (
     <Modal
       showModal={showModal}
@@ -97,23 +158,34 @@ const ModalSelectControl = ({
       footer={<ModalFooter handleSubmit={handleSubmit} />}
     >
       <div className="w-[85rem] relative">
-        <div className="flex gap-3 w-full">
-          <div className="w-3/5">
-            <TableSelectControl
-              data={data.select_control}
-              handleChangeKeyword={(e) =>
-                setKeywordSelectControl(e.target.value)
-              }
-            />
+        {isLoading ? (
+          <div className="w-full h-full flex items-center justify-center">
+            <Spinner size="xlarge" />
           </div>
-          <div className="w-2/5">
-            <TableMasterData
-              data={data.master_data}
-              keywordMasterData={keywordMasterData}
-              handleChangeKeyword={(e) => setKeywordMasterData(e.target.value)}
-            />
+        ) : (
+          <div className="flex gap-3 w-full">
+            <div className="w-3/5">
+              <TableSelectControl
+                data={data.select_control}
+                handleChangeKeyword={(e) =>
+                  setKeywordSelectControl(e.target.value)
+                }
+                handleDeleteControl={handleDeleteControl}
+              />
+            </div>
+            <div className="w-2/5">
+              <TableMasterData
+                data={data.master_data}
+                dataSelectControl={data.select_control}
+                keywordMasterData={keywordMasterData}
+                handleChangeKeyword={(e) =>
+                  setKeywordMasterData(e.target.value)
+                }
+                handleAddControl={handleAddControl}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </Modal>
   );

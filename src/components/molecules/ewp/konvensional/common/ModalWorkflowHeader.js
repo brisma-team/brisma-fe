@@ -18,6 +18,10 @@ const ModalWorkflowHeader = ({
 }) => {
   const [optionSigners, setOptionSigners] = useState([]);
 
+  let isApprover, isInitiator;
+  isInitiator = user?.pn == data?.maker?.pn;
+  isApprover = user?.pn == data?.on_approver?.pn;
+
   useEffect(() => {
     if (data.ref_tim_audit_approver.length) {
       const mappingSigners = data.ref_tim_audit_approver?.map((v) => {
@@ -64,23 +68,22 @@ const ModalWorkflowHeader = ({
             childProperty={"is_signed"}
             validationErrors={validationErrors}
             withoutButtonAdd={
-              data?.status_approver !== "On Progress" &&
-              data?.maker?.pn !== user?.pn &&
-              true
+              (data?.status_approver === "On Progress" && isInitiator) ||
+              (data?.status_approver === "On Approver" && isInitiator)
+                ? false
+                : true
             }
             isDisabled={
-              data?.status_approver !== "On Progress" &&
-              data?.maker?.pn !== user?.pn &&
-              true
+              (data?.status_approver === "On Progress" && isInitiator) ||
+              (data?.status_approver === "On Approver" && isInitiator)
+                ? false
+                : true
             }
             isButtonChange={
-              data?.status_approver === "On Approver" &&
-              data?.maker?.pn === user?.pn &&
-              "Ganti"
+              data?.status_approver === "On Approver" && isInitiator && "Ganti"
             }
           />
         </div>
-
         <div className="w-1/3">
           <CardFormInputTeam
             data={data?.ref_tim_audit_signer}
@@ -92,23 +95,21 @@ const ModalWorkflowHeader = ({
             optionValue={optionSigners}
             validationErrors={validationErrors}
             withoutButtonAdd={
-              data?.status_approver !== "On Progress" &&
-              data?.maker?.pn !== user?.pn &&
-              true
+              data?.status_approver === "On Progress" && isInitiator
+                ? false
+                : true
             }
             isDisabled={
-              data?.status_approver !== "On Progress" &&
-              data?.maker?.pn !== user?.pn &&
-              true
+              (data?.status_approver === "On Progress" && isInitiator) ||
+              (data?.status_approver === "On Approver" && isApprover)
+                ? false
+                : true
             }
             isButtonChange={
-              data?.status_approver === "On Approver" &&
-              data?.maker?.pn === user?.pn &&
-              "Ganti"
+              data?.status_approver === "On Approver" && isInitiator && "Ganti"
             }
           />
         </div>
-        {console.log("maker => ", data?.maker)}
       </div>
     </div>
   );

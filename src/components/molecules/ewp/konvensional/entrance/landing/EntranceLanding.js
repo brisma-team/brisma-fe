@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 const EntranceLanding = ({ data }) => {
   const { id } = useRouter().query;
   const [cards, setCards] = useState([]);
-  const baseUrl = `/ewp/projects/konvensional/${id}/entrance/${data?.attendance_id}`;
+  const baseUrl = `/ewp/projects/konvensional/${id}/entrance`;
   const { auditorEWP } = useAuditorEWP({ id });
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
@@ -17,6 +17,8 @@ const EntranceLanding = ({ data }) => {
     },
   ];
 
+  console.log("data => ", data);
+
   useEffect(() => {
     setCards([
       {
@@ -24,21 +26,21 @@ const EntranceLanding = ({ data }) => {
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
         status: data?.status_filled?.attendance ? "success" : "failed",
-        url: `${baseUrl}/attendance/${data?.attendance_id}`,
+        url: `${baseUrl}/attendance`,
       },
       {
         title: "Notulen",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
         status: data?.status_filled?.notulen ? "success" : "failed",
-        url: `${baseUrl}/notulen/${data?.notulen_id}`,
+        url: `${baseUrl}/notulen`,
       },
       {
         title: "Berita Acara",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
         status: data?.status_filled?.berita_acara ? "success" : "failed",
-        url: `${baseUrl}/berita-acara/${data?.ba_id}`,
+        url: `${baseUrl}/berita-acara`,
       },
     ]);
   }, [data]);
