@@ -11,24 +11,18 @@ import { useRouter } from "next/router";
 import {
   PopupKlipping,
   PrevNextNavigation,
-  ApprovalItems,
 } from "@/components/molecules/commons";
 import dynamic from "next/dynamic";
 import {
-  confirmationSwal,
   convertDate,
   copyToClipboard,
-  errorSwal,
   loadingSwal,
-  setErrorValidation,
-  usePostData,
   usePostFileData,
   useUpdateData,
 } from "@/helpers";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { useLandingEntranceEWP } from "@/data/ewp/konvensional/entrance";
-import { useBeritaAcaraEntranceEWP } from "@/data/ewp/konvensional/entrance/berita-acara";
+import { useProgramAuditKKPA } from "@/data/ewp/konvensional/kkpa/program-audit";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -51,33 +45,36 @@ const routes = [
 
 const index = () => {
   const { id, kkpa_id } = useRouter().query;
-  const pathName = `/ewp/projects/konvensional/${id}/entrance`;
+  const router = useRouter();
+  const pathName = `/ewp/projects/konvensional/${id}/kkpa/audited/${kkpa_id}`;
   const { auditorEWP } = useAuditorEWP({ id });
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
     {
-      name: `${auditorEWP?.data?.project_info?.project_id}`,
-      path: `${pathName}`,
+      name: `${auditorEWP?.data?.project_info?.project_id} / KKPA`,
+      path: pathName,
     },
     {
-      name: "Detail KKPA",
-      path: `${pathName}/audited/${kkpa_id}/detail`,
+      name: "Program Audit",
+      path: `${pathName}/program-audit`,
     },
   ];
 
-  const { landingEntranceEWP } = useLandingEntranceEWP({ id });
-  const { beritaAcaraEntranceEWP } = useBeritaAcaraEntranceEWP({
-    ba_id: landingEntranceEWP?.data?.ba_id,
+  const { programAuditKKPA, programAuditKKPAMutate } = useProgramAuditKKPA({
+    kkpa_id,
   });
 
   const [content, setContent] = useState("");
-  const [isKTA, setIsKTA] = useState("");
   const [imageClipList, setImageClipList] = useState([]);
+  const [history, setHistory] = useState([]);
 
   useEffect(() => {
-    setContent(beritaAcaraEntranceEWP?.data?.berita_acara_info?.content);
-  }, [beritaAcaraEntranceEWP]);
+    if (programAuditKKPA?.data) {
+      setContent(programAuditKKPA?.data?.program_audit || "");
+      setHistory(programAuditKKPA?.data?.history);
+    }
+  }, [programAuditKKPA]);
   // [ END ]
 
   const handleUpload = async (e) => {
@@ -100,10 +97,15 @@ const index = () => {
 
   const handleSubmit = async () => {
     loadingSwal();
-    await usePostData(
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/entrance/ba`,
-      { content, ba_id: landingEntranceEWP?.data?.ba_id }
+    const upload = await useUpdateData(
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/kkpa/program-audit/update`,
+      { program_audit: content, kkpa_id }
     );
+    if (upload.isConfirmed) {
+      router.push(pathName);
+      return;
+    }
+    programAuditKKPAMutate();
     loadingSwal("close");
   };
 
@@ -113,13 +115,12 @@ const index = () => {
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
       <div className="flex justify-between items-center mb-3">
-        <PageTitle text="Berita Acara" />
+        <PageTitle text="Program Audit" />
         <PrevNextNavigation
           baseUrl={pathName}
           routes={routes}
-          prevUrl={"/attendance"}
-          nextUrl={"/berita-acara"}
-          marginLeft={"-55px"}
+          nextUrl={"/kriteria-audit"}
+          marginLeft={"-60px"}
         />
       </div>
       {/* Start Content */}
@@ -181,19 +182,36 @@ const index = () => {
               />
             </div>
             <div className="mt-3 flex justify-end">
-              <div className="flex justify-between gap-4">
-                <div className="w-[7.75rem] bg-atlasian-yellow rounded">
-                  <ButtonField text={"Template"} />
-                </div>
-                <div className="w-[7.75rem] bg-atlasian-green rounded">
-                  <ButtonField text={"Simpan"} handler={handleSubmit} />
-                </div>
+              <div className="w-[7.75rem] bg-atlasian-green rounded">
+                <ButtonField text={"Simpan"} handler={handleSubmit} />
               </div>
             </div>
           </div>
         </div>
-        <div className="w-56">
-          <Card></Card>
+        <div className="w-56 h-fit">
+          <Card>
+            <div className="w-full py-1">
+              <div className="px-3">
+                <p className="text-brisma font-bold text-xl">Riwayat</p>
+              </div>
+              <div className="flex flex-col gap-3 px-3 mt-4 max-h-[35rem] overflow-y-scroll">
+                {history.length
+                  ? history.map((v, i) => {
+                      return (
+                        <div key={i}>
+                          <div className="font-semibold">
+                            Disunting {convertDate(v.log_updated_at, "/", "d")}
+                          </div>
+                          <div className="font-medium">
+                            {v.pn} - {v.nama}
+                          </div>
+                        </div>
+                      );
+                    })
+                  : ""}
+              </div>
+            </div>
+          </Card>
         </div>
       </div>
       {/* End Content */}
