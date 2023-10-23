@@ -8,13 +8,26 @@ import TableTree, {
   Row,
   Rows,
 } from "@atlaskit/table-tree";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import _ from "lodash";
+import CardFilterSummary from "./CardFilterSummary";
+import { useRouter } from "next/router";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
 const TableSummaryAnalysis = () => {
+  const { id } = useRouter().query;
   const [data, setData] = useState([]);
+  const [showFilter, setShowFilter] = useState(false);
+  const [filter, setFilter] = useState({
+    uker_name: "",
+    uker_kode: "",
+    aktivitas: "",
+    sub_aktivitas: "",
+    sub_major: "",
+    risk: "",
+    tipe_uker: "",
+  });
   const [params, setParams] = useState({
     uker_name: "",
     uker_kode: "",
@@ -25,7 +38,18 @@ const TableSummaryAnalysis = () => {
     tipe_uker: "",
   });
 
-  const { summaryAnalysisEWP } = useSummaryAnalysisEWP({ id: 3, ...params });
+  const { summaryAnalysisEWP } = useSummaryAnalysisEWP({ id, ...params });
+
+  useEffect(() => {
+    const handleSearch = () => {
+      setParams(filter);
+    };
+    const debouncedSearch = _.debounce(handleSearch, 800);
+    debouncedSearch();
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [filter]);
 
   useEffect(() => {
     if (summaryAnalysisEWP?.data?.length) {
@@ -46,11 +70,26 @@ const TableSummaryAnalysis = () => {
       setData(mapping);
     }
   }, [summaryAnalysisEWP]);
+
+  const handleChange = (props, value) => {
+    setFilter((prev) => {
+      return { ...prev, [props]: value };
+    });
+  };
+
   return (
     <>
       <div className="w-32 bg-atlasian-blue-light rounded">
-        <ButtonField text="Tampilkan Filter" />
+        <ButtonField
+          text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
+          handler={() => setShowFilter(!showFilter)}
+        />
       </div>
+      <CardFilterSummary
+        showFilter={showFilter}
+        data={filter}
+        handleChangeFilter={handleChange}
+      />
       <div className="mb-4" />
       <Card>
         <div className="w-full px-6 py-4">
