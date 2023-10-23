@@ -129,7 +129,7 @@ const index = () => {
     { name: "EWP", path: "/ewp" },
     {
       name: `${auditorEWP?.data?.project_info?.project_id} / Analisis Perencanaan`,
-      path: `/ewp/projects/konvensional/${id}/analisis-perencanaan`,
+      path: `/ewp/projects/konvensional/${id}/mapa/analisis-perencanaan`,
     },
   ];
 
