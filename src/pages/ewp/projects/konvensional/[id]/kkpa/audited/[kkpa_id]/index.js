@@ -1,22 +1,23 @@
 import { Breadcrumbs, CardLanding, PageTitle } from "@/components/atoms";
 import { useAuditorEWP } from "@/data/ewp/konvensional";
-import { useMapaStatusEWP } from "@/data/ewp/konvensional/mapa";
+import { useKkpaStatusEWP } from "@/data/ewp/konvensional/kkpa";
 import { LandingLayoutEWP } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
 const index = () => {
   const { id, kkpa_id } = useRouter().query;
+  const baseUrl = `/ewp/projects/konvensional/${id}/kkpa/audited/${kkpa_id}`;
   const [data, setData] = useState([]);
   const { auditorEWP } = useAuditorEWP({ id });
-  const { mapaStatusEWP } = useMapaStatusEWP({ id });
+  const { kkpaStatusEWP } = useKkpaStatusEWP({ id: kkpa_id });
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
     {
       name: `${auditorEWP?.data?.project_info?.project_id} / KKPA`,
-      path: `/ewp/projects/konvensional/${id}/kkpa`,
+      path: baseUrl,
     },
   ];
 
@@ -26,52 +27,49 @@ const index = () => {
         title: "Program Audit",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt tristique elit ut bibendum. Quisque tellus lacus, rutrum vitae felis id, accumsan pharetra libero. Nullam quam odio, accumsan convallis velit et, ultrices sollicitudin lacus. Praesent tincidunt id mauris eu bibendum. Donec feugiat orci lorem, at sollicitudin erat vulputate sit amet. Nulla tincidunt mi nunc, nec malesuada mi interdum in. Quisque sollicitudin, dolor sed egestas accumsan, purus lacus hendrerit turpis, vel porttitor mi ligula id neque.",
-        status: "success",
-        url: `/ewp/projects/konvensional/${id}/kkpa/${kkpa_id}/program-audit`,
+        status: kkpaStatusEWP?.data?.program_audit ? "success" : "failed",
+        url: `${baseUrl}/program-audit`,
       },
       {
         title: "Kriteria",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt tristique elit ut bibendum. Quisque tellus lacus, rutrum vitae felis id, accumsan pharetra libero. Nullam quam odio, accumsan convallis velit et, ultrices sollicitudin lacus. Praesent tincidunt id mauris eu bibendum. Donec feugiat orci lorem, at sollicitudin erat vulputate sit amet. Nulla tincidunt mi nunc, nec malesuada mi interdum in. Quisque sollicitudin, dolor sed egestas accumsan, purus lacus hendrerit turpis, vel porttitor mi ligula id neque.",
-        status: "failed",
-        url: `/ewp/projects/konvensional/${id}/kkpa/${kkpa_id}/kriteria`,
+        status: kkpaStatusEWP?.data?.kriteria ? "success" : "failed",
+        url: `${baseUrl}/kriteria`,
       },
       {
         title: "Ruang Lingkup",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt tristique elit ut bibendum. Quisque tellus lacus, rutrum vitae felis id, accumsan pharetra libero. Nullam quam odio, accumsan convallis velit et, ultrices sollicitudin lacus. Praesent tincidunt id mauris eu bibendum. Donec feugiat orci lorem, at sollicitudin erat vulputate sit amet. Nulla tincidunt mi nunc, nec malesuada mi interdum in. Quisque sollicitudin, dolor sed egestas accumsan, purus lacus hendrerit turpis, vel porttitor mi ligula id neque.",
-        status: "success",
-        url: `/ewp/projects/konvensional/${id}/kkpa/${kkpa_id}/ruang-lingkup`,
+        url: `${baseUrl}/ruang-lingkup`,
       },
       {
         title: "Pengujian Sample",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt tristique elit ut bibendum. Quisque tellus lacus, rutrum vitae felis id, accumsan pharetra libero. Nullam quam odio, accumsan convallis velit et, ultrices sollicitudin lacus. Praesent tincidunt id mauris eu bibendum. Donec feugiat orci lorem, at sollicitudin erat vulputate sit amet. Nulla tincidunt mi nunc, nec malesuada mi interdum in. Quisque sollicitudin, dolor sed egestas accumsan, purus lacus hendrerit turpis, vel porttitor mi ligula id neque.",
-        status: "success",
-        url: `/ewp/projects/konvensional/${id}/kkpa/${kkpa_id}/pengujian-sample`,
+        status: kkpaStatusEWP?.data?.pengujian_sample ? "success" : "failed",
+        url: `${baseUrl}/pengujian-sample`,
       },
       {
         title: "Pengujian Kontrol",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt tristique elit ut bibendum. Quisque tellus lacus, rutrum vitae felis id, accumsan pharetra libero. Nullam quam odio, accumsan convallis velit et, ultrices sollicitudin lacus. Praesent tincidunt id mauris eu bibendum. Donec feugiat orci lorem, at sollicitudin erat vulputate sit amet. Nulla tincidunt mi nunc, nec malesuada mi interdum in. Quisque sollicitudin, dolor sed egestas accumsan, purus lacus hendrerit turpis, vel porttitor mi ligula id neque.",
-        status: "failed",
-        url: `/ewp/projects/konvensional/${id}/kkpa/${kkpa_id}/pengujian-kontrol`,
+        status: kkpaStatusEWP?.data?.pengujian_kontrol ? "success" : "failed",
+        url: `${baseUrl}/pengujian-kontrol`,
       },
 
       {
         title: "Kesimpulan",
-        description: "Pembentukan tim audit.",
-        status: "success",
-        url: `/ewp/projects/konvensional/${id}/kkpa/${kkpa_id}/kesimpulan`,
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        url: `${baseUrl}/kesimpulan`,
       },
       {
         title: "Dokumen KKPA",
-        description: "Pembentukan tim audit.",
-        status: "success",
-        url: `/ewp/projects/konvensional/${id}/mapa/dokumen`,
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        url: `${baseUrl}/dokumen`,
       },
     ]);
-  }, [mapaStatusEWP]);
+  }, [kkpaStatusEWP]);
 
   return (
     <LandingLayoutEWP>
