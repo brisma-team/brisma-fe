@@ -21,7 +21,8 @@ import assignmentMapaEWPReducer from "./slices/ewp/konvensional/mapa/assignmentM
 import auditScheduleMapaEWPReducer from "./slices/ewp/konvensional/mapa/auditScheduleMapaEWPSlice";
 import budgetMapaEWPReducer from "./slices/ewp/konvensional/mapa/budgetMapaEWPSlice";
 import documentMapaEWPReducer from "./slices/ewp/konvensional/mapa/documentMapaEWPSlice";
-
+import suratEWPReducer from "./slices/ewp/konvensional/surat/suratEWPSlice";
+import documentSuratEWPReducer from "./slices/ewp/konvensional/surat/documentSuratEWPSlice";
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
 import beritaAcaraEntranceEWPReducer from "./slices/ewp/konvensional/entrance/beritaAcaraEntranceEWPSlice";
@@ -32,29 +33,31 @@ import catalogEWPReducer from "./slices/catalog/ewp/catalogEWPSlice";
 import { configureStore } from "@reduxjs/toolkit";
 
 export const store = configureStore({
-  reducer: {
-    userSKAI: userSKAIReducer,
-    jadwalAudit: jadwalAuditReducer,
-    projectOverview: projectOverviewReducer,
-    statusPat: statusPatReducer,
-    auditTeam: auditTeamReducer,
-    auditSchedule: auditScheduleReducer,
-    activitySchedule: activityScheduleReducer,
-    activityScheduleOther: activityScheduleOtherReducer,
-    documentPAT: documentPATReducer,
-    latarBelakang: latarBelakangReducer,
-    sumberInformasi: sumberInformasiReducer,
-    auditorInfoEWP: auditorInfoEWPReducer,
-    projectOverviewEWP: projectOverviewEWPReducer,
-    auditTeamMapaEWP: auditTeamMapaEWPReducer,
-    ukerAssessmentMapaEWP: ukerAssessmentMapaEWPReducer,
-    planningAnalysisMapaEWP: planningAnalysisMapaEWPReducer,
-    catalogEWP: catalogEWPReducer,
-    assignmentMapaEWP: assignmentMapaEWPReducer,
-    auditScheduleMapaEWP: auditScheduleMapaEWPReducer,
-    budgetMapaEWP: budgetMapaEWPReducer,
-    notulenEntranceEWP: notulenEntranceEWPReducer,
-    beritaAcaraEntranceEWP: beritaAcaraEntranceEWPReducer,
-    documentMapaEWP: documentMapaEWPReducer,
-  },
+	reducer: {
+		userSKAI: userSKAIReducer,
+		jadwalAudit: jadwalAuditReducer,
+		projectOverview: projectOverviewReducer,
+		statusPat: statusPatReducer,
+		auditTeam: auditTeamReducer,
+		auditSchedule: auditScheduleReducer,
+		activitySchedule: activityScheduleReducer,
+		activityScheduleOther: activityScheduleOtherReducer,
+		documentPAT: documentPATReducer,
+		latarBelakang: latarBelakangReducer,
+		sumberInformasi: sumberInformasiReducer,
+		auditorInfoEWP: auditorInfoEWPReducer,
+		projectOverviewEWP: projectOverviewEWPReducer,
+		auditTeamMapaEWP: auditTeamMapaEWPReducer,
+		ukerAssessmentMapaEWP: ukerAssessmentMapaEWPReducer,
+		planningAnalysisMapaEWP: planningAnalysisMapaEWPReducer,
+		catalogEWP: catalogEWPReducer,
+		assignmentMapaEWP: assignmentMapaEWPReducer,
+		auditScheduleMapaEWP: auditScheduleMapaEWPReducer,
+		budgetMapaEWP: budgetMapaEWPReducer,
+		notulenEntranceEWP: notulenEntranceEWPReducer,
+		beritaAcaraEntranceEWP: beritaAcaraEntranceEWPReducer,
+		documentMapaEWP: documentMapaEWPReducer,
+		suratEWP: suratEWPReducer,
+		documentSuratEWP: documentSuratEWPReducer,
+	},
 });
