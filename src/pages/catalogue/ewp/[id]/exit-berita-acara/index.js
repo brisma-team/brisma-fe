@@ -1,8 +1,9 @@
-import { Breadcrumbs, Card, PageTitle } from "@/components/atoms";
+import { Breadcrumbs, PageTitle } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import { exitBaHtml } from "@/templates/catalog/ewp/exit-ba";
+import { exitBaHtml } from "@/templates/catalog/ewp";
+import { DocumentViewer } from "@/components/molecules/catalog";
 
 const index = () => {
   const { id } = useRouter().query;
@@ -42,33 +43,10 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Exit BA Dokumen"} />
         </div>
-
-        {/* Start Content */}
-        <div className="w-[70rem] gap-6">
-          <div>
-            <Card>
-              <div className="overflow-y-scroll my-2">
-                <div>
-                  <div className="h-full w-full">
-                    {params.id !== undefined && (
-                      <div
-                        className="mt-4 p-10"
-                        dangerouslySetInnerHTML={{
-                          __html: exitBaHtml(
-                            params.year,
-                            params.source,
-                            params.id
-                          ),
-                        }}
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
-        {/* End Content */}
+        <DocumentViewer
+          documentTitle="Exit BA"
+          documentHtml={exitBaHtml(params.year, params.source, params.id)}
+        />
       </div>
     </MainLayout>
   );

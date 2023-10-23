@@ -1,4 +1,4 @@
-export const rtaHtml = ({ data }) => {
+const rtaHtml = ({ data }) => {
   return `<!DOCTYPE html>
   <html lang="en">
     <head>
@@ -248,3 +248,5 @@ export const rtaHtml = ({ data }) => {
     </body>
   </html>`;
 };
+
+export default rtaHtml;

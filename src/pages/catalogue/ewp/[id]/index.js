@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card } from "@/components/atoms";
+import { Breadcrumbs, Card, TableField, Pagination } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
-import { TableField } from "@/components/atoms";
-import useCatalogEWPById from "@/data/catalog/useCatalogEWPById";
+import { useEWPAllAttachment } from "@/data/catalog";
 import shortenWord from "@/helpers/shortenWord";
 
 const index = () => {
   const { id } = useRouter().query;
 
   const [typeList, setTypeList] = useState([]);
-  const [catDetailEwp, setCatDetailEwp] = useState([]);
+  const [ewpAttachment, setEwpAttachment] = useState([]);
   const [selectedId, setSelectedId] = useState(id || "");
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    if (id !== undefined) setSelectedId(id);
+  }, [id]);
 
   const idToUse = selectedId ? selectedId : "";
 
@@ -23,7 +28,6 @@ const index = () => {
     { name: "Detail", path: "/catalogue/ewp/" + selectedId },
     { name: "Daftar Dokumen", path: "/catalogue/ewp/" + selectedId },
   ];
-  console.log(selectedId.split("x1c-")[0]);
   const type_list = [
     {
       jenis: "MAPA",
@@ -121,49 +125,51 @@ const index = () => {
     }
   }, []);
 
-  const { ewpDetailData } = useCatalogEWPById(
+  const { allAttachmentData } = useEWPAllAttachment(
     idToUse.split("x1c-")[2],
     idToUse.split("x1c-")[0],
-    idToUse.split("x1c-")[1]
+    idToUse.split("x1c-")[1],
+    currentPage
   );
 
-  useState(() => {
-    if (id !== undefined) setSelectedId(id);
-  }, [id]);
-
   useEffect(() => {
-    if (ewpDetailData != undefined) {
-      console.log(ewpDetailData);
-      const mappingCatEwp = ewpDetailData.data.all_attachment.map((v, key) => {
-        const datePart = v?.CreatedAt.split(".")[0];
-        return {
-          No: key + 1,
-          "Nama Dokumen": shortenWord(v?.AttachmentName, 0, 45),
-          "Tanggal Dibuat": datePart,
-          Aksi: (
-            <div className="grid grid-cols-3 text-center col-span-3">
-              <div className="align-middle px-2">
-                <Button shouldFitContainer isDisabled appearance="primary">
-                  History
-                </Button>
+    if (allAttachmentData != undefined) {
+      setTotalPages(allAttachmentData.data.total_page);
+      const mappingAttachment = allAttachmentData.data.all_attachment.map(
+        (v, key) => {
+          const datePart = v?.CreatedAt.split(".")[0];
+          return {
+            No: (currentPage - 1) * 5 + key + 1,
+            "Nama Dokumen":
+              idToUse.split("x1c-")[0] == 1
+                ? shortenWord(v?.AttachmentName, 0, 45)
+                : shortenWord(v?.AttachmentName.berkas, 0, 45),
+            "Tanggal Dibuat": datePart,
+            Aksi: (
+              <div className="grid grid-cols-3 text-center col-span-3">
+                <div className="align-middle px-2">
+                  <Button shouldFitContainer isDisabled appearance="primary">
+                    History
+                  </Button>
+                </div>
+                <div className="align-middle px-2">
+                  <Button shouldFitContainer isDisabled appearance="primary">
+                    Preview
+                  </Button>
+                </div>
+                <div className="align-middle px-2 ">
+                  <Button shouldFitContainer isDisabled appearance="primary">
+                    Download
+                  </Button>
+                </div>
               </div>
-              <div className="align-middle px-2">
-                <Button shouldFitContainer isDisabled appearance="primary">
-                  Preview
-                </Button>
-              </div>
-              <div className="align-middle px-2 ">
-                <Button shouldFitContainer isDisabled appearance="primary">
-                  Download
-                </Button>
-              </div>
-            </div>
-          ),
-        };
-      });
-      setCatDetailEwp(mappingCatEwp);
+            ),
+          };
+        }
+      );
+      setEwpAttachment(mappingAttachment);
     }
-  }, [ewpDetailData]);
+  }, [allAttachmentData]);
 
   return (
     <MainLayout>
@@ -180,22 +186,6 @@ const index = () => {
         </div>
         <div className="mt-5 mr-40">
           <Card>
-            <div className="w-full h-full px-6 p-5">
-              <div className="grid grid-cols-5">
-                <div className="col-span-1 font-bold text-lg">Projek ID</div>
-                <div className="col-span-4">: 001</div>
-                <div className="col-span-1 font-bold text-lg">Nama Projek</div>
-                <div className="col-span-4">: -</div>
-                <div className="col-span-1 font-bold text-lg">Tahun</div>
-                <div className="col-span-4">: 2023</div>
-                <div className="col-span-1 font-bold text-lg">Jenis Audit</div>
-                <div className="col-span-4">: Reguler</div>
-              </div>
-            </div>
-          </Card>
-        </div>
-        <div className="mt-5 mr-40">
-          <Card>
             <div className="w-full h-full px-6">
               <div className="text-xl font-bold p-5">Pustaka Dokumen</div>
               <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
@@ -205,9 +195,6 @@ const index = () => {
                   items={typeList}
                 />
               </div>
-              {/* <div className="flex justify-center mt-5">
-                <Pagination pages={1} setCurrentPage={setCurrentPage} />
-              </div> */}
             </div>
           </Card>
         </div>
@@ -219,7 +206,13 @@ const index = () => {
                 <TableField
                   headers={["No", "Nama Dokumen", "Tanggal Dibuat", "Aksi"]}
                   columnWidths={["5%", "35%", "30%", "30%"]}
-                  items={catDetailEwp}
+                  items={ewpAttachment}
+                />
+              </div>
+              <div className="flex justify-center mt-5">
+                <Pagination
+                  pages={totalPages}
+                  setCurrentPage={setCurrentPage}
                 />
               </div>
             </div>

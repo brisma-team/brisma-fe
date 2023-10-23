@@ -1,7 +1,11 @@
 import PaginationDefault from "@atlaskit/pagination";
+import { loadingSwal } from "@/helpers";
 
-const Pagination = ({ pages, setCurrentPage }) => {
+const Pagination = ({ pages, setCurrentPage, withLoading = false }) => {
   const handleChangePage = (value) => {
+    if (withLoading) {
+      loadingSwal();
+    }
     setCurrentPage(value);
   };
 

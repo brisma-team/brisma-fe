@@ -4,18 +4,16 @@ import { MainLayout } from "@/layouts";
 import { Breadcrumbs, Card } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { TableField } from "@/components/atoms";
-import useCatalogEWPById from "@/data/catalog/useCatalogEWPById";
-import shortenWord from "@/helpers/shortenWord";
 
 const index = () => {
-  const router = useRouter();
-  const { id } = router.query;
+  const { id } = useRouter().query;
 
   const [typeList, setTypeList] = useState([]);
-  const [catDetailEwp, setCatDetailEwp] = useState([]);
   const [selectedId, setSelectedId] = useState(id || "");
 
-  const idToUse = selectedId ? selectedId : "";
+  useEffect(() => {
+    if (id !== undefined) setSelectedId(id);
+  }, [id]);
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
@@ -73,50 +71,6 @@ const index = () => {
       setTypeList(mappingTypeList);
     }
   }, []);
-  console.log(selectedId);
-
-  const { ewpDetailData } = useCatalogEWPById(
-    idToUse.split("x1c-")[2],
-    idToUse.split("x1c-")[0],
-    idToUse.split("x1c-")[1]
-  );
-
-  useEffect(() => {
-    if (id !== undefined) setSelectedId(id);
-  }, [id]);
-
-  useEffect(() => {
-    if (ewpDetailData != undefined) {
-      const mappingCatEwp = ewpDetailData.data.all_attachment.map((v, key) => {
-        const datePart = v?.CreatedAt.split(".")[0];
-        return {
-          No: key + 1,
-          "Nama Dokumen": shortenWord(v?.AttachmentName, 0, 45),
-          "Tanggal Dibuat": datePart,
-          Aksi: (
-            <div className="grid grid-cols-3 text-center col-span-3">
-              <div className="align-middle px-2">
-                <Button shouldFitContainer isDisabled appearance="primary">
-                  History
-                </Button>
-              </div>
-              <div className="align-middle px-2">
-                <Button shouldFitContainer isDisabled appearance="primary">
-                  Preview
-                </Button>
-              </div>
-              <div className="align-middle px-2 ">
-                <Button shouldFitContainer isDisabled appearance="primary">
-                  Download
-                </Button>
-              </div>
-            </div>
-          ),
-        };
-      });
-      setCatDetailEwp(mappingCatEwp);
-    }
-  }, [ewpDetailData]);
 
   return (
     <MainLayout>
@@ -156,9 +110,6 @@ const index = () => {
                   items={typeList}
                 />
               </div>
-              {/* <div className="flex justify-center mt-5">
-                <Pagination pages={1} setCurrentPage={setCurrentPage} />
-              </div> */}
             </div>
           </Card>
         </div>
