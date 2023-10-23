@@ -39,7 +39,7 @@ const routes = [
   { name: "Sumber Informasi", slug: "sumber-informasi" },
   { name: "Tim Audit", slug: "tim-audit" },
   { name: "UKER Assessment", slug: "uker-assessment" },
-  { name: "Analisis", slug: "analisis" },
+  { name: "Analisis", slug: "analisis-perencanaan" },
   { name: "Penugasan", slug: "penugasan" },
   { name: "Jadwal Audit", slug: "jadwal-audit" },
   { name: "Anggaran", slug: "anggaran" },
