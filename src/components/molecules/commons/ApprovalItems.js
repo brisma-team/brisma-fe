@@ -7,7 +7,7 @@ const ApprovalItems = ({ title, text, data }) => {
 
   if (["Maker", "P.I.C"].includes(title) && text) {
     allSigned = true;
-  } else if (title === "Signer" && text.length) {
+  } else if (title === "Signer" && text?.length) {
     allSigned = true;
   } else {
     const checkSigned = text?.every((item) => item.is_signed === true);

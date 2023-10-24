@@ -118,7 +118,7 @@ const index = () => {
     if (commentPAT?.data?.length) {
       const mappingTotalComment = commentPAT?.data?.map((v) => {
         const bab = v?.ref_bab_pat_kode;
-        const total = v?.data?.filter((item) => !item?.is_closed).length;
+        const total = v?.data?.filter((item) => !item?.is_closed)?.length;
         return { bab, total };
       });
 
