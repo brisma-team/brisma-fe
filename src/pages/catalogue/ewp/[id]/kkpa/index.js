@@ -6,6 +6,9 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useKKPAList } from "@/data/catalog";
 
+import { IconClose, IconPlus } from "@/components/icons";
+import Textfield from "@atlaskit/textfield";
+
 const index = () => {
   const id = useRouter().query.id;
 
@@ -13,6 +16,13 @@ const index = () => {
   const [selectedId, setSelectedId] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [showFilter, setShowFilter] = useState(false);
+  const [filter, setFilter] = useState({
+    subactivity: "",
+    submajor: "",
+    riskissue: "",
+    limit: 5,
+  });
 
   useEffect(() => {
     if (id !== undefined) setSelectedId(id);
@@ -32,14 +42,31 @@ const index = () => {
     idToUse.split("x1c-")[2],
     idToUse.split("x1c-")[0],
     idToUse.split("x1c-")[1],
-    currentPage
+    currentPage,
+    filter.limit,
+    filter.subactivity,
+    filter.submajor,
+    filter.riskissue
   );
+
+  function debounce(func, delay) {
+    let timeoutId;
+    return function (...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func.apply(this, args), delay);
+    };
+  }
+  const debouncedHandleChange = debounce((e) => {
+    setFilter({
+      ...filter,
+      [e.target.name]: e.target.value,
+    });
+  }, 500); // Adjust the delay (in milliseconds) as needed
 
   useEffect(() => {
     if (kkpaList != undefined) {
       const mappingKKPA = kkpaList.data.kkpa_list.map((data, key) => {
         setTotalPages(kkpaList.data.total_page);
-        console.log(data);
         return {
           No: key + 1,
           Aktivitas: data.Activity,
@@ -77,6 +104,80 @@ const index = () => {
             <div className="text-3xl font-bold">Riwayat Dokumen KKPA</div>
           </div>
         </div>
+        {/* Start Filter */}
+        <div className="my-3 w-40">
+          <Button
+            appearance="primary"
+            iconBefore={IconPlus}
+            shouldFitContainer
+            onClick={() => setShowFilter(!showFilter)}
+          >
+            Tampilkan Filter
+          </Button>
+        </div>
+        {showFilter && (
+          <div className="flex justify-between w-96">
+            <Card>
+              <div className="flex p-2">
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="Sub Aktivitas"
+                    className="ml-1"
+                    name="subactivity"
+                    onChange={debouncedHandleChange}
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="Risk Issue"
+                    className="ml-1"
+                    name="riskissue"
+                    onChange={debouncedHandleChange}
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+              </div>
+              <div className="flex p-2">
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="Sub Major Name"
+                    className="mr-1"
+                    name="submajor"
+                    onChange={debouncedHandleChange}
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="Risk Issue"
+                    className="ml-1"
+                    name="riskissue"
+                    onChange={debouncedHandleChange}
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+        {/* End Filter */}
         <div className="mt-5 mr-40">
           <Card>
             <div className="w-full h-full px-6">

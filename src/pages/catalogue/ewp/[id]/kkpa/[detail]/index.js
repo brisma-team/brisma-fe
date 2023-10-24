@@ -131,11 +131,9 @@ const index = () => {
             </thead>
             <tbody>
                 <tr>
-                <td>{item.kode}</td>
-                <td>{item.nama}</td>
-                <td>{
-                  item.mtd_stc_control_kritikalitas_kode
-                }</td>
+                <td>**</td>
+                <td>**</td>
+                <td>**</td>
             </tr>
             </tbody>
         </table>
@@ -214,119 +212,30 @@ const index = () => {
         </style>
             <body>
                 <div>
-                    <p>{tipeSample}</p>
-        <table>
-            <thead>
-                <th style="background-color: #3C64B1; color: white;">No</th>
-                <th style="background-color: #3C64B1; color: white;">Nama File</th>
-                <th style="background-color: #3C64B1; color: white;">{item}</th>
-                <th style="background-color: #3C64B1; color: white;">Keterangan</th>
-                <th style="background-color: #3C64B1; color: white;">Keterangan Kelemahan Kontrol</th>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{idx + 1}</td>
-                    <td>{item.nama_file}</td>
-                    {keys
-                      .map(
-                        (val) => 
-                        <td>{item.content[val]}</td>
-                    
-                      )
-                      .join("")}
-                    <td>{item.keterangan}</td>
-                    <td>{item.kelemahan_control}</td>
-                </tr>
-            </tbody>
-        </table>
-                    <br/>
-                    <br/>
-                </div>
-                <div>
-                    <p>File</p>
-        <table>
-            <thead>
-                <th style="background-color: #3C64B1; color: white;">No</th>
-                <th style="background-color: #3C64B1; color: white;">Nama File</th>
-                <th style="background-color: #3C64B1; color: white;">Keterangan</th>
-                <th style="background-color: #3C64B1; color: white;">Keterangan Kelemahan Kontrol</th>
-            </thead>
-            <tbody>
-                <tr>
-                <td>{idx + 1}</td>
-                <td>{item.nama_file}</td>
-                <td>{item.keterangan}</td>
-                <td>{item.kelemahan_control}</td>
-            </tr>
-            </tbody>
-        </table>
-                    <br/>
-                    <br/>
-                </div>
-                <div>
-                    <p>{tipeSample}</p>
-        <table>
-            <thead>
-                <th style="background-color: #3C64B1; color: white;">No</th>
-                <th style="background-color: #3C64B1; color: white;">Nama File</th>
-                <th style="background-color: #3C64B1; color: white;">{item}</th>
-                <th style="background-color: #3C64B1; color: white;">Keterangan</th>
-                <th style="background-color: #3C64B1; color: white;">Keterangan Kelemahan Kontrol</th>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{idx + 1}</td>
-                    <td>{item.nama_file}</td>
-                    {keys
-                      .map(
-                        (val) => 
-                        <td>{item.content[val]}</td>
-                    
-                      )
-                      .join("")}
-                    <td>{item.keterangan}</td>
-                    <td>{item.kelemahan_control}</td>
-                </tr>
-            </tbody>
-        </table>
-                    <br/>
-                    <br/>
-                </div>
-                <div>
-                    <p>{tipeSample}</p>
-        <table>
-            <thead>
-                <th style="background-color: #3C64B1; color: white;">No</th>
-                <th style="background-color: #3C64B1; color: white;">Nama File</th>
-                <th style="background-color: #3C64B1; color: white;">{item}</th>
-                <th style="background-color: #3C64B1; color: white;">Keterangan</th>
-                <th style="background-color: #3C64B1; color: white;">Keterangan Kelemahan Kontrol</th>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{idx + 1}</td>
-                    <td>{item.nama_file}</td>
-                    {keys
-                      .map(
-                        (val) => 
-                        <td>{item.content[val]}</td>
-                    
-                      )
-                      .join("")}
-                    <td>{item.keterangan}</td>
-                    <td>{item.kelemahan_control}</td>
-                </tr>
-            </tbody>
-        </table>
-                    <br/>
-                    <br/>
+                <p>Sample</p>
+                <table>
+                    <thead>
+                        <th style="background-color: #3C64B1; color: white;">No</th>
+                        <th style="background-color: #3C64B1; color: white;">Nama File</th>
+                        <th style="background-color: #3C64B1; color: white;">Keterangan</th>
+                        <th style="background-color: #3C64B1; color: white;">Keterangan Kelemahan Kontrol</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <td>**</td>
+                        <td>**</td>
+                        <td>**</td>
+                        <td>**</td>
+                    </tr>
+                    </tbody>
+                </table>
                 </div>
             </body>
         <div>
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">VII. KESIMPULAN</h3>
         <div>
-           <p> {data.kesimpulan} </p>
+           <p> TIDAK EFEKTIF </p>
         <div>
         </main>`
           }
