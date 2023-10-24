@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card } from "@/components/atoms";
+import { Breadcrumbs, Card, TableField, Pagination } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
-import { TableField } from "@/components/atoms";
 import Link from "next/link";
-import useKKPAList from "@/data/catalog/useKKPAList";
+import { useKKPAList } from "@/data/catalog";
 
 const index = () => {
   const id = useRouter().query.id;
 
   const [kkpa, setKKPA] = useState([]);
   const [selectedId, setSelectedId] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  useEffect(() => {
+    if (id !== undefined) setSelectedId(id);
+  }, [id]);
+
+  const idToUse = selectedId ? selectedId : "";
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
@@ -21,24 +28,20 @@ const index = () => {
     { name: "Riwayat KKPA", path: "/catalogue/ewp/" + selectedId + "/kkpa" },
   ];
 
-  const idToUse = selectedId ? selectedId : "";
   const { kkpaList } = useKKPAList(
     idToUse.split("x1c-")[2],
     idToUse.split("x1c-")[0],
-    idToUse.split("x1c-")[1]
+    idToUse.split("x1c-")[1],
+    currentPage
   );
-
-  useEffect(() => {
-    if (id !== undefined) setSelectedId(id);
-  }, [id]);
 
   useEffect(() => {
     if (kkpaList != undefined) {
       const mappingKKPA = kkpaList.data.kkpa_list.map((data, key) => {
+        setTotalPages(kkpaList.data.total_page);
         console.log(data);
         return {
           No: key + 1,
-          "Judul KKPT": "Judul KKPT",
           Aktivitas: data.Activity,
           "Sub Aktivitas": data.SubActivity,
           "Sub Major": data.SubMajorCode + " - " + data.SubMajor,
@@ -76,22 +79,6 @@ const index = () => {
         </div>
         <div className="mt-5 mr-40">
           <Card>
-            <div className="w-full h-full px-6 p-5">
-              <div className="grid grid-cols-5">
-                <div className="col-span-1 font-bold text-lg">Projek ID</div>
-                <div className="col-span-4">: 001</div>
-                <div className="col-span-1 font-bold text-lg">Nama Projek</div>
-                <div className="col-span-4">: -</div>
-                <div className="col-span-1 font-bold text-lg">Tahun</div>
-                <div className="col-span-4">: 2023</div>
-                <div className="col-span-1 font-bold text-lg">Jenis Audit</div>
-                <div className="col-span-4">: Reguler</div>
-              </div>
-            </div>
-          </Card>
-        </div>
-        <div className="mt-5 mr-40">
-          <Card>
             <div className="w-full h-full px-6">
               <div className="text-xl font-bold p-5">Pustaka Dokumen</div>
               <Link className="pl-5 underline" href={"#"}>
@@ -112,9 +99,12 @@ const index = () => {
                   items={kkpa}
                 />
               </div>
-              {/* <div className="flex justify-center mt-5">
-                <Pagination pages={1} setCurrentPage={setCurrentPage} />
-              </div> */}
+              <div className="flex justify-center mt-5">
+                <Pagination
+                  pages={totalPages}
+                  setCurrentPage={setCurrentPage}
+                />
+              </div>
             </div>
           </Card>
         </div>

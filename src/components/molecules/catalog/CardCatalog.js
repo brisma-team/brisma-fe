@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import CardFilterLanding from "../catalog/CardFilterLanding";
-import ModalSelectSourceData from "../catalog/ModalSelectSourceData";
+import { useState } from "react";
+import CardFilterLanding from "./CardFilterLanding";
+import ModalSelectSourceData from "./ModalSelectSourceData";
 import { useRouter } from "next/router";
 
 const CardCatalog = ({ data }) => {

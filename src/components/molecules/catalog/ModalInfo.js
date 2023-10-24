@@ -1,8 +1,4 @@
-import React from "react";
-import {
-  // Card,
-  Modal,
-} from "@/components/atoms";
+import { Modal } from "@/components/atoms";
 
 const CardBody = ({ title, text, width }) => {
   let textColor;

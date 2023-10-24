@@ -1,17 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card } from "@/components/atoms";
+import { Breadcrumbs, Card, Pagination, TableField } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
-import { TableField } from "@/components/atoms";
-import Link from "next/link";
-import useKKPTList from "@/data/catalog/useKKPTList";
+// import Link from "next/link";
+import { useKKPTList } from "@/data/catalog";
+
+import { IconClose, IconPlus } from "@/components/icons";
+import Textfield from "@atlaskit/textfield";
+import { ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
   const id = useRouter().query.id;
 
   const [kkpt, setKKPT] = useState([]);
+  const [showFilter, setShowFilter] = useState(false);
   const [selectedId, setSelectedId] = useState("");
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filter, setFilter] = useState({
+    kkpttitle: "",
+    subactivity: "",
+    submajor: "",
+    riskissue: "",
+    limit: 5,
+  });
+
+  useEffect(() => {
+    if (id !== undefined) setSelectedId(id);
+  }, [id]);
+
+  const idToUse = selectedId ? selectedId : "";
+
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
@@ -20,22 +40,37 @@ const index = () => {
     { name: "Riwayat KKPT", path: "/catalogue/ewp/" + selectedId + "/kkpt" },
   ];
 
-  const idToUse = selectedId ? selectedId : "";
   const { kkptList } = useKKPTList(
     idToUse.split("x1c-")[2],
     idToUse.split("x1c-")[0],
-    idToUse.split("x1c-")[1]
+    idToUse.split("x1c-")[1],
+    currentPage,
+    filter.limit,
+    filter.kkpttitle,
+    filter.subactivity,
+    filter.submajor,
+    filter.riskissue
   );
-
-  useEffect(() => {
-    if (id !== undefined) setSelectedId(id);
-  }, [id]);
+  function debounce(func, delay) {
+    let timeoutId;
+    return function (...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func.apply(this, args), delay);
+    };
+  }
+  const debouncedHandleChange = debounce((e) => {
+    setFilter({
+      ...filter,
+      [e.target.name]: e.target.value,
+    });
+  }, 500); // Adjust the delay (in milliseconds) as needed
 
   useEffect(() => {
     if (kkptList != undefined) {
+      setTotalPages(kkptList.data.total_page);
       const mappingKKPT = kkptList.data.kkpt_list.map((data, key) => {
         return {
-          No: key + 1,
+          No: (currentPage - 1) * 5 + key + 1,
           "Judul KKPT": data.KKPTTitle,
           Aktivitas: data.Activity,
           "Sub Aktivitas": data.SubActivity,
@@ -72,29 +107,88 @@ const index = () => {
             <div className="text-3xl font-bold">Riwayat Dokumen KKPT</div>
           </div>
         </div>
-        <div className="mt-5 mr-40">
-          <Card>
-            <div className="w-full h-full px-6 p-5">
-              <div className="grid grid-cols-5">
-                <div className="col-span-1 font-bold text-lg">Projek ID</div>
-                <div className="col-span-4">: 001</div>
-                <div className="col-span-1 font-bold text-lg">Nama Projek</div>
-                <div className="col-span-4">: -</div>
-                <div className="col-span-1 font-bold text-lg">Tahun</div>
-                <div className="col-span-4">: 2023</div>
-                <div className="col-span-1 font-bold text-lg">Jenis Audit</div>
-                <div className="col-span-4">: Reguler</div>
-              </div>
-            </div>
-          </Card>
+        {/* Start Filter */}
+        <div className="my-3 w-40">
+          <Button
+            appearance="primary"
+            iconBefore={IconPlus}
+            shouldFitContainer
+            onClick={() => setShowFilter(!showFilter)}
+          >
+            Tampilkan Filter
+          </Button>
         </div>
+        {showFilter && (
+          <div className="flex justify-between w-96">
+            <Card>
+              <div className="flex p-2">
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="Judul KKPt"
+                    className="mr-1"
+                    name="kkpttitle"
+                    onChange={debouncedHandleChange}
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="Sub Aktivitas"
+                    className="ml-1"
+                    name="subactivity"
+                    onChange={debouncedHandleChange}
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+              </div>
+              <div className="flex p-2">
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="Sub Major"
+                    className="mr-1"
+                    name="submajor"
+                    onChange={debouncedHandleChange}
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+                <div className="w-1/2">
+                  <Textfield
+                    placeholder="Risk Issue"
+                    className="ml-1"
+                    name="riskissue"
+                    onChange={debouncedHandleChange}
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+        {/* End Filter */}
+        <ProjectInfo />
         <div className="mt-5 mr-40">
           <Card>
             <div className="w-full h-full px-6">
               <div className="text-xl font-bold p-5">Pustaka Dokumen</div>
-              <Link className="pl-5 underline" href={"#"}>
+              {/* <Link className="pl-5 underline" href={"#"}>
                 Lihat Seluruh Dokumen
-              </Link>
+              </Link> */}
               <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
                 <TableField
                   headers={[
@@ -120,9 +214,12 @@ const index = () => {
                   items={kkpt}
                 />
               </div>
-              {/* <div className="flex justify-center mt-5">
-                <Pagination pages={1} setCurrentPage={setCurrentPage} />
-              </div> */}
+              <div className="flex justify-center mt-5">
+                <Pagination
+                  pages={totalPages}
+                  setCurrentPage={setCurrentPage}
+                />
+              </div>
             </div>
           </Card>
         </div>

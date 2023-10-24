@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Select, TextInput } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
-import useOmniSearch from "@/data/catalog/useOmniSearch";
+import { useOmniSearch } from "@/data/catalog";
 
 const CardFilterLanding = () => {
   const [selected, setSelected] = useState(0);

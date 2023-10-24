@@ -2,15 +2,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/layouts";
 import { Breadcrumbs, Card, TableField, Pagination } from "@/components/atoms";
-import {
-  IconArrowRight,
-  // IconClose, IconPlus
-} from "@/components/icons";
+import { IconArrowRight, IconClose, IconPlus } from "@/components/icons";
 import Button from "@atlaskit/button";
-// import Textfield from "@atlaskit/textfield";
+import Textfield from "@atlaskit/textfield";
 import useCatalogPAT from "@/data/catalog/useCatalogPAT";
-import EditorPanelIcon from "@atlaskit/icon/glyph/editor/panel";
-import ModalInfo from "@/components/molecules/catalog/ModalInfo";
 
 const index = () => {
   const breadcrumbs = [
@@ -18,49 +13,33 @@ const index = () => {
     { name: "Catalogue", path: "/catalogue" },
     { name: "P.A.T", path: "/catalogue/pat" },
   ];
-
-  const { data } = useCatalogPAT();
-
-  const [showModal, setShowModal] = useState(false);
-  // const [showFilter, setShowFilter] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
   const [catPat, setCatPat] = useState([]);
-  const [info, setInfo] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const handleModalInfo = async (dump) => {
-    setShowModal(true);
-    setInfo(dump);
-  };
+  const [totalPage, setTotalPage] = useState(1);
+  const [patData, setPatData] = useState([]);
+
+  const { data } = useCatalogPAT(2023, 2, currentPage);
+
   useEffect(() => {
-    if (data != undefined) {
-      const mappingCatPat = data?.data.map((v, key) => {
+    if (data !== undefined) {
+      setPatData(data.data);
+      setTotalPage(data.totalPages);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (patData !== undefined) {
+      const mappingCatPat = patData.map((v, key) => {
         return {
           No: key + 1,
-          "Nama Project": v?.project_name,
-          "Kantor Audit":
-            v?.audit_office.uka_kode + " - " + v?.audit_office.uka_name,
-          "Tahun Audit": v?.audit_year,
-          "Tim Audit": v?.audit_team.map((d, key) => {
-            return (
-              <div key={key} className="flex justify-between">
-                <p className="mr-2">{d.name}</p>
-                <div className="rounded-full overflow-hidden w-5 h-[21px] mx-auto active:bg-slate-100">
-                  <Button
-                    appearance="default"
-                    shouldFitContainer
-                    onClick={() => handleModalInfo(d)}
-                    iconBefore={
-                      <EditorPanelIcon primaryColor="#0051CB" size="large" />
-                    }
-                    className="bottom-1.5"
-                  />
-                </div>
-              </div>
-            );
-          }),
-          "Addendum Ke": "Fase ke - " + v?.addendum_phase,
+          "Nama Project": v?.name,
+          "Kantor Audit": v?.uka + " - ",
+          "Tahun Audit": v?.tahun,
+          "Addendum Ke": "Fase ke - " + 0,
           Aksi: (
             <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
-              <Link href={"/catalogue/pat/" + v?._id}>
+              <Link href={"/catalogue/pat/" + v?.id}>
                 <Button
                   shouldFitContainer
                   iconBefore={
@@ -75,7 +54,7 @@ const index = () => {
       });
       setCatPat(mappingCatPat);
     }
-  }, [data]);
+  }, [patData]);
 
   return (
     <MainLayout>
@@ -87,7 +66,7 @@ const index = () => {
           <div className="text-3xl font-bold">Catalogue P.A.T</div>
         </div>
         {/* Start Filter */}
-        {/* <div className="my-3 w-40">
+        <div className="my-3 w-40">
           <Button
             appearance="primary"
             iconBefore={IconPlus}
@@ -150,7 +129,7 @@ const index = () => {
               </div>
             </Card>
           </div>
-        )} */}
+        )}
         {/* End Filter */}
 
         <div className="mt-5 mr-40">
@@ -164,7 +143,6 @@ const index = () => {
                     "Nama Project",
                     "Kantor Audit",
                     "Tahun Audit",
-                    "Tim Audit",
                     "Addendum Ke",
                     "Aksi",
                   ]}
@@ -173,19 +151,12 @@ const index = () => {
                 />
               </div>
               <div className="flex justify-center mt-5">
-                <Pagination pages={1} setCurrentPage={setCurrentPage} />
+                <Pagination pages={totalPage} setCurrentPage={setCurrentPage} />
               </div>
             </div>
           </Card>
         </div>
       </div>
-      {showModal && (
-        <ModalInfo
-          showModal={showModal}
-          setShowModal={setShowModal}
-          data={info}
-        />
-      )}
     </MainLayout>
   );
 };

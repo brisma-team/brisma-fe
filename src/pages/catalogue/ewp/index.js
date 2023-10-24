@@ -8,13 +8,13 @@ import { useSelector } from "react-redux";
 import useCatalogEWP from "@/data/catalog/useCatalogEWP";
 import ModalSelectSourceData from "@/components/molecules/catalog/ModalSelectSourceData";
 import shortenWord from "@/helpers/shortenWord";
+import { loadingSwal } from "@/helpers";
 
 const index = () => {
-  // const router = useRouter();
   const [catEwp, setCatEwp] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchFilter, setSearchFilter] = useState("");
+  const [totalPages, setTotalPages] = useState(1);
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
@@ -33,21 +33,24 @@ const index = () => {
 
   const { ewpData } = useCatalogEWP(
     searchParamObject.year,
-    searchParamObject.source
+    searchParamObject.source,
+    currentPage
   );
 
   useEffect(() => {
     if (ewpData != undefined) {
+      loadingSwal("close");
+      setTotalPages(ewpData.data.total_page);
       const mappingCatEwp = ewpData.data.ewp_list
-        .filter(
-          (list) =>
-            list.ProjectID.toString()
-              .toLowerCase()
-              .includes(searchFilter.toLowerCase()) ||
-            list.ProjectName.toLowerCase().includes(searchFilter.toLowerCase())
-        )
+        // .filter(
+        //   (list) =>
+        //     list.ProjectID.toString()
+        //       .toLowerCase()
+        //       .includes(searchFilter.toLowerCase()) ||
+        //     list.ProjectName.toLowerCase().includes(searchFilter.toLowerCase())
+        // )
         .map((EwpList, key) => ({
-          No: key + 1,
+          No: (currentPage - 1) * 5 + key + 1,
           "Project ID": EwpList?.ProjectID,
           "Nama Project": shortenWord(EwpList?.ProjectName, 0, 35),
           "Tahun Audit": EwpList?.Year,
@@ -77,11 +80,7 @@ const index = () => {
         }));
       setCatEwp(mappingCatEwp);
     }
-  }, [ewpData, searchFilter]);
-
-  useEffect(() => {
-    console.log(currentPage);
-  }, []);
+  }, [ewpData]);
 
   return (
     <MainLayout>
@@ -99,24 +98,19 @@ const index = () => {
             <div className="text-3xl font-bold">Catalogue E.W.P</div>
           </div>
         </div>
-        <Button
-          appearance="primary"
-          iconBefore={IconPlus}
-          onClick={() => setShowFilter(!showFilter)}
-        >
-          Filter Data
-        </Button>
-
+        <div className="flex gap-3">
+          <Button
+            appearance="warning"
+            iconBefore={IconPlus}
+            onClick={() => setShowFilter(!showFilter)}
+          >
+            Sumber Data
+          </Button>
+        </div>
         <div className="mt-5 mr-40">
           <Card>
             <div className="w-full h-full px-6">
               <div className="text-xl font-bold p-5">Pustaka Dokumen</div>
-              {/* <input
-                type="text"
-                name=""
-                value={searchFilter}
-                onChange={(e) => setSearchFilter(e.target.value)}
-              /> */}
               <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
                 <TableField
                   headers={[
@@ -132,7 +126,11 @@ const index = () => {
                 />
               </div>
               <div className="flex justify-center mt-5">
-                <Pagination pages={1} setCurrentPage={setCurrentPage} />
+                <Pagination
+                  pages={totalPages}
+                  setCurrentPage={setCurrentPage}
+                  withLoading={true}
+                />
               </div>
             </div>
           </Card>

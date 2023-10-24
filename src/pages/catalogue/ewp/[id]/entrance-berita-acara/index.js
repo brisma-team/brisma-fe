@@ -1,8 +1,9 @@
-import { Breadcrumbs, Card, PageTitle } from "@/components/atoms";
+import { useState, useEffect } from "react";
+import { Breadcrumbs, PageTitle } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
-import { entBaHtml } from "@/templates/catalog/ewp/entrance-ba";
-import { useState, useEffect } from "react";
+import { entBaHtml } from "@/templates/catalog/ewp";
+import { DocumentViewer } from "@/components/molecules/catalog";
 
 const index = () => {
   const { id } = useRouter().query;
@@ -42,33 +43,10 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Entrance BA Dokumen"} />
         </div>
-
-        {/* Start Content */}
-        <div className="w-[70rem] gap-6">
-          <div>
-            <Card>
-              <div className="overflow-y-scroll my-2">
-                <div>
-                  <div className="h-full w-full">
-                    {params.id !== undefined && (
-                      <div
-                        className="mt-4 p-10"
-                        dangerouslySetInnerHTML={{
-                          __html: entBaHtml(
-                            params.year,
-                            params.source,
-                            params.id
-                          ),
-                        }}
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
-        {/* End Content */}
+        <DocumentViewer
+          documentTitle="Entrance BA"
+          documentHtml={entBaHtml(params.year, params.source, params.id)}
+        />
       </div>
     </MainLayout>
   );

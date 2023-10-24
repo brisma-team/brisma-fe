@@ -1,8 +1,9 @@
-import useMapaById from "@/data/catalog/useMapaById";
+import { useMapaById } from "@/data/catalog";
 import { useState, useEffect } from "react";
 import dateLocaleString from "@/helpers/dateLocaleString";
+import { convertToRupiah } from "@/helpers";
 
-export const mapaHtml = (year, source, id) => {
+const mapaHtml = (year, source, id) => {
   const [data, setData] = useState();
   const [anggaran, setAnggaran] = useState([]);
   const { mapaDetail } = useMapaById(year, source, id);
@@ -609,13 +610,23 @@ export const mapaHtml = (year, source, id) => {
                         <p style="font-size:16px">${x.TipeAnggaran}</p>
                       </td>
                       <td style="text-align:center">
-                        <p style="font-size:16px">${x.TanggalAnggaran}</p>
+                        <p style="font-size:16px">${
+                          x.TanggalAnggaran
+                            ? dateLocaleString(x.TanggalAnggaran.split(".")[0])
+                            : "-"
+                        }</p>
                       </td>
                       <td>
-                        <p style="font-size:16px">${x.DeskripsiAnggaran}</p>
+                        <p style="font-size:16px">${
+                          x.DeskripsiAnggaran !== null
+                            ? x.DeskripsiAnggaran
+                            : "-"
+                        }</p>
                       </td>
                       <td>
-                        <p style="font-size:16px">Rp. ${x.TotalAnggaran}</p>
+                        <p style="font-size:16px">Rp. ${convertToRupiah(
+                          x.TotalAnggaran
+                        )}</p>
                       </td>
                     </tr>`;
                 })
@@ -623,8 +634,14 @@ export const mapaHtml = (year, source, id) => {
                   
           <tr>
               <td colspan="4" rowspan="1"><p style="font-size:16px"><strong>Total</strong></p></td>
-              <td><p style="font-size:16px">Rp. {numberWithCommas(
-                total
+              <td><p style="font-size:16px">Rp. ${convertToRupiah(
+                anggaran.reduce((accumulator, currentValue) => {
+                  const num = Number(currentValue.TotalAnggaran); // Convert the string to a number
+                  if (!isNaN(num)) {
+                    return accumulator + num;
+                  }
+                  return accumulator;
+                }, 0)
               )}</p></td>
           </tr>
               </tbody>
@@ -686,7 +703,7 @@ export const mapaHtml = (year, source, id) => {
               "
             >
               <p>Menyetujui,</p>
-              <p>{approver.kai.pn_auditor} - {approver.kai.nama_auditor}</p>
+              <p>${data?.PNKepalaUKA} - ${data?.NamaKepalaUKA}</p>
               <h4>Kepala Audit Intern</h4>
             </div>
           </div>
@@ -695,3 +712,5 @@ export const mapaHtml = (year, source, id) => {
     </body>
   </html>`;
 };
+
+export default mapaHtml;
