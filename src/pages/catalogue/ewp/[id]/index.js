@@ -25,7 +25,6 @@ const index = () => {
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: "/catalogue/ewp" },
-    { name: "Detail", path: "/catalogue/ewp/" + selectedId },
     { name: "Daftar Dokumen", path: "/catalogue/ewp/" + selectedId },
   ];
   const type_list = [
@@ -39,7 +38,8 @@ const index = () => {
       jenis: "Addendum MAPA",
       jumlah: "-----",
       url: `${selectedId}/addendum-mapa`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
+      // isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
+      isDisabled: true,
     },
     {
       jenis: "Entrance Attendance",
@@ -93,13 +93,7 @@ const index = () => {
       jenis: "LHA",
       jumlah: "-----",
       url: `${selectedId}/lha`,
-      isDisabled: false,
-    },
-    {
-      jenis: "Berita Acara",
-      jumlah: "-----",
-      url: `${selectedId}/berita_acara`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
+      isDisabled: true,
     },
   ];
 
@@ -109,7 +103,6 @@ const index = () => {
         return {
           No: key + 1,
           "Jenis Dokumen": data.jenis,
-          "Jumlah Dokumen": data.jumlah,
           Aksi: (
             <Button
               href={data.url}
@@ -190,8 +183,8 @@ const index = () => {
               <div className="text-xl font-bold p-5">Pustaka Dokumen</div>
               <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
                 <TableField
-                  headers={["No", "Jenis Dokumen", "Jumlah Dokumen", "Aksi"]}
-                  columnWidths={["10%", "40%", "30%", "20%"]}
+                  headers={["No", "Jenis Dokumen", "Aksi"]}
+                  columnWidths={["10%", "40%", "50%"]}
                   items={typeList}
                 />
               </div>

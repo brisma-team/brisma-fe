@@ -124,7 +124,7 @@ const index = () => {
               <div className="flex p-2">
                 <div className="w-1/2">
                   <Textfield
-                    placeholder="Judul KKPt"
+                    placeholder="Judul KKPT"
                     className="mr-1"
                     name="kkpttitle"
                     onChange={debouncedHandleChange}
@@ -152,7 +152,7 @@ const index = () => {
               <div className="flex p-2">
                 <div className="w-1/2">
                   <Textfield
-                    placeholder="Sub Major"
+                    placeholder="Sub Major Name"
                     className="mr-1"
                     name="submajor"
                     onChange={debouncedHandleChange}

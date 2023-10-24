@@ -6,7 +6,7 @@ import Search from "@atlaskit/icon/glyph/editor/search";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { setSearchParamsCATEWP } from "@/slices/catalog/ewp/catalogEWPSlice";
-import { loadingSwal, successSwal } from "@/helpers";
+import { errorSwal, loadingSwal, successSwal } from "@/helpers";
 
 const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
   const router = useRouter();
@@ -112,12 +112,16 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
       faseAdendum,
       sourceType,
     };
-    // Kirim data ke Redux
-    dispatch(setSearchParamsCATEWP(searchParamsCatEWP));
-    loadingSwal();
-    setShowModal(false);
-    router.push(url);
-    successSwal("Pencarian berhasil.");
+    if (year == "") {
+      errorSwal("Pilih tahun terlebih dahulu").then(() => setShowModal(true));
+    } else {
+      // Kirim data ke Redux
+      dispatch(setSearchParamsCATEWP(searchParamsCatEWP));
+      loadingSwal();
+      setShowModal(false);
+      router.push(url);
+      successSwal("Pencarian berhasil.");
+    }
   };
   return (
     <Modal

@@ -1,5 +1,5 @@
 import { Breadcrumbs, Card, PageTitle } from "@/components/atoms";
-import { useSHAById } from "@/data/catalog";
+// import { useSHAById } from "@/data/catalog";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
 
@@ -9,7 +9,7 @@ const index = () => {
   const id = useRouter().query.id;
 
   const [selectedId, setSelectedId] = useState("");
-  const [data, setData] = useState({});
+  // const [data, setData] = useState({});
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
@@ -25,17 +25,17 @@ const index = () => {
     if (id !== undefined) setSelectedId(id);
   }, [id]);
 
-  const { shaDetail } = useSHAById(
-    selectedId.split("x1c-")[2],
-    selectedId.split("x1c-")[0],
-    selectedId.split("x1c-")[1]
-  );
+  // const { shaDetail } = useSHAById(
+  //   selectedId.split("x1c-")[2],
+  //   selectedId.split("x1c-")[0],
+  //   selectedId.split("x1c-")[1]
+  // );
 
-  useEffect(() => {
-    if (shaDetail !== undefined) {
-      setData(shaDetail.data.sha);
-    }
-  }, [shaDetail]);
+  // useEffect(() => {
+  //   if (shaDetail !== undefined) {
+  //     setData(shaDetail.data.sha);
+  //   }
+  // }, [shaDetail]);
   return (
     <MainLayout>
       <div className="px-5">

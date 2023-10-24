@@ -1,8 +1,29 @@
 import withTokenFetcher from "@/fetchers/withTokenFetcher";
 import useSWR from "swr";
 
-export default function useKKPAList(year, type, id, page, limit = 5) {
-  let parameters = `year=${year}&source=${type}&id=${id}&page=${page}&limit=${limit}`;
+export default function useKKPAList(
+  year,
+  type,
+  id,
+  page,
+  limit = 5,
+  subactivity,
+  submajor,
+  riskissue
+) {
+  let filters = ``;
+  if (subactivity) {
+    filters += `&subactivity=${subactivity}`;
+  }
+  if (submajor) {
+    filters += `&submajor=${submajor}`;
+  }
+  if (riskissue) {
+    filters += `&riskissue=${riskissue}`;
+  }
+  let parameters =
+    `year=${year}&source=${type}&id=${id}&page=${page}&limit=${limit}` +
+    filters;
   const path = `${process.env.NEXT_PUBLIC_API_URL_CATALOG}/catalog/ewp/kkpa?${parameters}`;
   const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);
 
