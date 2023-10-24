@@ -151,7 +151,7 @@ const index = () => {
   }, [workflowDetailEWP]);
 
   useEffect(() => {
-    setContent(beritaAcaraEntranceEWP?.data?.berita_acara_info?.content);
+    setContent(beritaAcaraEntranceEWP?.data?.berita_acara_info?.content || "");
   }, [beritaAcaraEntranceEWP]);
   // [ END ]
 
