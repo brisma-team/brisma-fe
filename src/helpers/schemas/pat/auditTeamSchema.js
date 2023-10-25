@@ -14,23 +14,26 @@ const auditTeamSchema = yup.object().shape({
       })
     )
     .test("uniquePn", "PN tidak boleh sama", function (value) {
-      const allPns = [
-        ...value.map((item) => item.pn),
-        ...(this.parent.ref_tim_audit_ata || []).map((item) => item.pn),
-        ...(this.parent.ref_tim_audit_kta || []).map((item) => item.pn),
-      ];
+      const dataPn = value.map((item) => item.pn);
+      const duplicatePnInMA = dataPn.filter(
+        (pn, index) => dataPn.indexOf(pn) !== index
+      );
+      return duplicatePnInMA.length === 0;
+    })
+    .test("uniquePnInMA", "PN tidak boleh sama", function (value) {
+      const pnsInMA = value.map((item) => item.pn);
+      const pnsInKTA = this.parent.ref_tim_audit_kta
+        ? this.parent.ref_tim_audit_kta.map((item) => item.pn)
+        : [];
+      const pnsInATA = this.parent.ref_tim_audit_ata
+        ? this.parent.ref_tim_audit_ata.map((item) => item.pn)
+        : [];
 
-      const uniquePns = [];
-      let hasDuplicate = false;
-      for (const pn of allPns) {
-        if (uniquePns.includes(pn)) {
-          hasDuplicate = true;
-          break;
-        }
-        uniquePns.push(pn);
-      }
+      const duplicates = pnsInMA.filter(
+        (pn) => pnsInKTA.includes(pn) || pnsInATA.includes(pn)
+      );
 
-      return !hasDuplicate;
+      return duplicates.length === 0;
     }),
   ref_tim_audit_kta: yup
     .array()
@@ -40,53 +43,55 @@ const auditTeamSchema = yup.object().shape({
       })
     )
     .test("uniquePn", "PN tidak boleh sama", function (value) {
-      const allPns = [
-        ...(this.parent.ref_tim_audit_ma || []).map((item) => item.pn),
-        ...(this.parent.ref_tim_audit_ata || []).map((item) => item.pn),
-        ...value.map((item) => item.pn),
-      ];
-      const uniquePns = [];
-      let hasDuplicate = false;
-      for (const pn of allPns) {
-        if (uniquePns.includes(pn)) {
-          hasDuplicate = true;
-          break;
-        }
-        uniquePns.push(pn);
-      }
+      const dataPn = value.map((item) => item.pn);
+      const duplicatePnInMA = dataPn.filter(
+        (pn, index) => dataPn.indexOf(pn) !== index
+      );
+      return duplicatePnInMA.length === 0;
+    })
+    .test("uniquePnInKTA", "PN tidak boleh sama", function (value) {
+      const pnsInKTA = value.map((item) => item.pn);
+      const pnsInMA = this.parent.ref_tim_audit_ma
+        ? this.parent.ref_tim_audit_ma.map((item) => item.pn)
+        : [];
+      const pnsInATA = this.parent.ref_tim_audit_ata
+        ? this.parent.ref_tim_audit_ata.map((item) => item.pn)
+        : [];
 
-      return !hasDuplicate;
+      const duplicates = pnsInKTA.filter(
+        (pn) => pnsInMA.includes(pn) || pnsInATA.includes(pn)
+      );
+
+      return duplicates.length === 0;
     }),
   ref_tim_audit_ata: yup
     .array()
     .of(
       yup.object().shape({
         pn: yup.string().required("Field wajib diisi"),
-        uker_binaans: yup.array().of(
-          yup.object().shape({
-            orgeh_kode: yup.string().required("Field wajib diisi"),
-            branch_kode: yup.string().required("Field wajib diisi"),
-          })
-        ),
       })
     )
     .test("uniquePn", "PN tidak boleh sama", function (value) {
-      const allPns = [
-        ...(this.parent.ref_tim_audit_ma || []).map((item) => item.pn),
-        ...value.map((item) => item.pn),
-        ...(this.parent.ref_tim_audit_kta || []).map((item) => item.pn),
-      ];
-      const uniquePns = [];
-      let hasDuplicate = false;
-      for (const pn of allPns) {
-        if (uniquePns.includes(pn)) {
-          hasDuplicate = true;
-          break;
-        }
-        uniquePns.push(pn);
-      }
+      const dataPn = value.map((item) => item.pn);
+      const duplicatePnInMA = dataPn.filter(
+        (pn, index) => dataPn.indexOf(pn) !== index
+      );
+      return duplicatePnInMA.length === 0;
+    })
+    .test("uniquePnInATA", "PN tidak boleh sama", function (value) {
+      const pnsInATA = value.map((item) => item.pn);
+      const pnsInMA = this.parent.ref_tim_audit_ma
+        ? this.parent.ref_tim_audit_ma.map((item) => item.pn)
+        : [];
+      const pnsInKTA = this.parent.ref_tim_audit_kta
+        ? this.parent.ref_tim_audit_kta.map((item) => item.pn)
+        : [];
 
-      return !hasDuplicate;
+      const duplicates = pnsInATA.filter(
+        (pn) => pnsInMA.includes(pn) || pnsInKTA.includes(pn)
+      );
+
+      return duplicates.length === 0;
     }),
 });
 

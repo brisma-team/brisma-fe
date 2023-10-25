@@ -150,17 +150,6 @@ const CardFormInputTeam = ({
                                         }
                                         isDisabled={isDisabled}
                                       />
-                                      {validationErrors[
-                                        `ref_tim_audit_ata[${i}].uker_binaans[${idx}].orgeh_kode`
-                                      ] && (
-                                        <ErrorValidation
-                                          message={
-                                            validationErrors[
-                                              `ref_tim_audit_ata[${i}].uker_binaans[${idx}].orgeh_kode`
-                                            ]
-                                          }
-                                        />
-                                      )}
                                     </div>
                                     <div className="w-1/2">
                                       <BranchSelect
@@ -189,17 +178,6 @@ const CardFormInputTeam = ({
                                         }
                                         isDisabled={isDisabled}
                                       />
-                                      {validationErrors[
-                                        `ref_tim_audit_ata[${i}].uker_binaans[${idx}].branch_kode`
-                                      ] && (
-                                        <ErrorValidation
-                                          message={
-                                            validationErrors[
-                                              `ref_tim_audit_ata[${i}].uker_binaans[${idx}].branch_kode`
-                                            ]
-                                          }
-                                        />
-                                      )}
                                     </div>
                                   </div>
                                   <div className="flex items-center justify-center gap-2">
