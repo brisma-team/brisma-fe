@@ -17,7 +17,6 @@ import { CardOverview } from "@/components/molecules/pat/overview";
 import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
 import _ from "lodash";
 import useApprovalPat from "@/data/pat/useApprovalPat";
-import { decimalToPercentage } from "@/helpers";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -26,19 +25,41 @@ const breadcrumbs = [
 ];
 
 const convertProgressAndPercent = (approvers, status_approver, status_pat) => {
+  // let progress, percent;
+  // const findIndex = approvers?.findIndex((v) => v.pn === status_approver?.pn);
+  // if (status_pat === "Final") {
+  //   progress = 1;
+  //   percent = "100%";
+  // } else if (status_approver && find) {
+  //   const sum = (findIndex + 1) / approvers.length;
+  //   progress = sum;
+  //   percent = decimalToPercentage(sum);
+  // } else if (!status_approver) {
+  //   progress = 0;
+  //   percent = "0%";
+  // }
+  // return { progress, percent };
+
   let progress, percent;
-  const findIndex = approvers?.findIndex((v) => v.pn === status_approver?.pn);
-  if (status_pat === "Final") {
-    progress = 1;
-    percent = "100%";
-  } else if (status_approver && find) {
-    const sum = (findIndex + 1) / approvers.length;
-    progress = sum;
-    percent = decimalToPercentage(sum);
-  } else if (!status_approver) {
-    progress = 0;
-    percent = "0%";
+  switch (status_pat) {
+    case "Final":
+      progress = 1;
+      percent = "100%";
+      break;
+    case "On Approver":
+      progress = 0.6;
+      percent = "66%";
+      break;
+    case "On Progress":
+      progress = 0.3;
+      percent = "33%";
+      break;
+    default:
+      progress = 0;
+      percent = "0%";
+      break;
   }
+
   return { progress, percent };
 };
 
