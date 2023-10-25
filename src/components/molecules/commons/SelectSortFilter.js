@@ -2,16 +2,28 @@ import Select from "@atlaskit/select";
 
 const SelectSortFilter = ({ change }) => {
   return (
-    <div className="flex items-center">
-      <div className="text-sm">URUTKAN</div>
+    <div className="flex items-center gap-3">
       <Select
-        className="ml-2"
+        className="w-32"
+        options={[
+          { label: "10", value: 10 },
+          { label: "25", value: 25 },
+          { label: "50", value: 50 },
+          { label: "100", value: 100 },
+        ]}
+        isSearchable={false}
+        onChange={(e) => change("limit", e.value)}
+        placeholder={"Limit"}
+      />
+      <Select
+        className="w-32"
         options={[
           { label: "Awal", value: "ASC" },
           { label: "Akhir", value: "DESC" },
         ]}
         isSearchable={false}
-        onChange={change}
+        onChange={(e) => change("sort_by", e.value)}
+        placeholder={"Urutkan"}
       />
     </div>
   );

@@ -29,7 +29,7 @@ const CardAuditSchedule = ({
 }) => {
   return (
     <DivButton
-      className="my-2 hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
+      className="hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
       handleClick={() => console.log("test")}
     >
       <Card>

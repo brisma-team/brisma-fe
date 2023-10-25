@@ -68,6 +68,7 @@ const index = () => {
     start: "",
     end: "",
     sort_by: "ASC",
+    limit: 3,
   });
   const [filter, setFilter] = useState({
     project_name: "",
@@ -80,6 +81,7 @@ const index = () => {
     start: "",
     end: "",
     sort_by: "ASC",
+    limit: 3,
   });
 
   const { auditSchedule, auditScheduleMutate, auditScheduleError } =
@@ -87,7 +89,6 @@ const index = () => {
       ...params,
       id,
       pages: currentPage,
-      limit: 3,
     });
 
   const [data, setData] = useState([]);
@@ -180,6 +181,10 @@ const index = () => {
     auditScheduleMutate();
   };
 
+  const handleChangeFilter = (props, value) => {
+    setFilter({ ...filter, [props]: value });
+  };
+
   return (
     <PatLandingLayout content={content} data={statusPat?.data}>
       <Breadcrumbs data={breadcrumbs} />
@@ -227,7 +232,7 @@ const index = () => {
           setShowModal={setShowModalDetail}
         />
       </div>
-      <div className="flex justify-between items-end relative">
+      <div className="flex justify-between items-end relative mb-4">
         <div className="flex justify-center absolute z-10 bg-white top-0">
           <CardFilterAuditSchedule
             showFilter={showFilter}
@@ -255,9 +260,7 @@ const index = () => {
               })}
             </div>
           )}
-          <SelectSortFilter
-            change={(e) => setParams({ ...params, sort_by: e.value })}
-          />
+          <SelectSortFilter change={handleChangeFilter} />
         </div>
       </div>
       {/* End of Filter */}

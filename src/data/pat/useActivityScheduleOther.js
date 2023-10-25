@@ -23,7 +23,7 @@ const useActivityScheduleOther = (type, params) => {
   let query = "";
   switch (type) {
     case "all":
-      query = `/all?pat_id=${id}&page=${pages}&sortBy=nama ${sort_by}&nama_kegiatan=${nama}&start_date=${start}&end_date=${end}&ref_metode=${metode}&ref_tipe=${tipe}&ref_jenis=${jenis}&ref_tema=${tema}&pic=${pic}`;
+      query = `/all?pat_id=${id}&page=${pages}&limit=${limit}&sortBy=nama ${sort_by}&nama_kegiatan=${nama}&start_date=${start}&end_date=${end}&ref_metode=${metode}&ref_tipe=${tipe}&ref_jenis=${jenis}&ref_tema=${tema}&pic=${pic}`;
       break;
     case "detail":
       query = `?pat_id=${id}&kegiatan_lain_id=${kegiatan_lain_id}`;

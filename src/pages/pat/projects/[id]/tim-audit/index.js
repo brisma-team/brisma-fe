@@ -56,7 +56,6 @@ const index = () => {
   const [showModal, setShowModal] = useState(false);
   const [typeModal, setTypeModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
-  const [sortBy, setSortBy] = useState("ASC");
   const [selectedTeamId, setSelectedTeamId] = useState(0);
   const [filter, setFilter] = useState({
     tim_name: "",
@@ -64,6 +63,7 @@ const index = () => {
     nama_kta: "",
     nama_ata: "",
     sortBy: "ASC",
+    limit: "4",
   });
   const [params, setParams] = useState({
     tim_name: "",
@@ -71,14 +71,13 @@ const index = () => {
     nama_kta: "",
     nama_ata: "",
     sortBy: "ASC",
+    limit: "4",
   });
 
   const { auditTeam, auditTeamMutate, auditTeamError } = useAuditTeam("all", {
     ...params,
     id,
     pages: currentPage,
-    limit: 6,
-    sortBy,
   });
 
   useEffect(() => {
@@ -119,8 +118,8 @@ const index = () => {
     };
   }, [filter]);
 
-  const handleChangeSortBy = (e) => {
-    setSortBy(e.value);
+  const handleChangeFilter = (props, value) => {
+    setFilter({ ...filter, [props]: value });
   };
 
   const handleCreateButton = () => {
@@ -195,7 +194,7 @@ const index = () => {
           />
         </div>
         <div className="flex justify-end items-end rounded-full">
-          <SelectSortFilter change={handleChangeSortBy} />
+          <SelectSortFilter change={handleChangeFilter} />
         </div>
       </div>
       {/* End Filter */}

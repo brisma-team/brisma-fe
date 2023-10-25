@@ -88,11 +88,11 @@ const index = () => {
       { title: "Initiator", value: statusPat?.data?.create_by?.nama },
       {
         title: "Created",
-        value: convertDate(statusPat?.data?.createdAt, "-", "d"),
+        value: convertDate(statusPat?.data?.createdAt, "-", "d", true),
       },
       {
         title: "Last Modified",
-        value: convertDate(statusPat?.data?.updatedAt, "-", "d"),
+        value: convertDate(statusPat?.data?.updatedAt, "-", "d", true),
       },
     ]);
   }, [statusPat]);

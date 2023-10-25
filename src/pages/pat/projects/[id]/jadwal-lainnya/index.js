@@ -73,6 +73,7 @@ const index = () => {
     start: "",
     end: "",
     sort_by: "ASC",
+    limit: 3,
   });
   const [filter, setFilter] = useState({
     nama: "",
@@ -84,6 +85,7 @@ const index = () => {
     start: "",
     end: "",
     sort_by: "ASC",
+    limit: 3,
   });
 
   const {
@@ -94,7 +96,6 @@ const index = () => {
     ...params,
     id,
     pages: currentPage,
-    limit: 3,
   });
 
   useEffect(() => {
@@ -185,6 +186,10 @@ const index = () => {
     activityScheduleOtherMutate();
   };
 
+  const handleChangeFilter = (props, value) => {
+    setFilter({ ...filter, [props]: value });
+  };
+
   return (
     <PatLandingLayout data={statusPat} content={content}>
       <Breadcrumbs data={breadcrumbs} />
@@ -229,7 +234,7 @@ const index = () => {
           setShowModal={setShowModalDetail}
         />
       </div>
-      <div className="flex justify-between items-end relative">
+      <div className="flex justify-between items-end relative mb-4">
         <div className="flex justify-center absolute z-10 bg-white top-0">
           <CardFilterOtherSchedule
             showFilter={showFilter}
@@ -257,9 +262,7 @@ const index = () => {
               })}
             </div>
           )}
-          <SelectSortFilter
-            change={(e) => setParams({ ...params, sort_by: e.value })}
-          />
+          <SelectSortFilter change={handleChangeFilter} />
         </div>
       </div>
       {/* End of Filter */}

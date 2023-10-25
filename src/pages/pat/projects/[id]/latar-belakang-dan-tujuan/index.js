@@ -16,6 +16,7 @@ import {
 import useLatarBelakangTujuanPat from "@/data/pat/useLatarBelakangTujuanPat";
 import { useRouter } from "next/router";
 import {
+  convertDate,
   copyToClipboard,
   loadingSwal,
   usePostData,
@@ -112,14 +113,23 @@ const index = () => {
       },
       {
         title: "Created",
-        value: latarBelakangTujuanPat?.data?.lb_created_at,
+        value: convertDate(
+          latarBelakangTujuanPat?.data?.lb_created_at,
+          "-",
+          "d",
+          true
+        ),
       },
       {
         title: "Last Modified",
-        value: latarBelakangTujuanPat?.data?.lb_updated_at,
+        value: convertDate(
+          latarBelakangTujuanPat?.data?.lb_updated_at,
+          "-",
+          "d",
+          true
+        ),
       },
     ]);
-    console.log("latarBelakangTujuanPat => ", latarBelakangTujuanPat?.data);
 
     setData({
       ...data,

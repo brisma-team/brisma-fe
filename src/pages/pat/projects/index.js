@@ -73,14 +73,16 @@ const index = () => {
     project_name: "",
     status_approver: "",
     status_pat: "",
-    sortBy: "",
+    sortBy: "ASC",
+    limit: 8,
     year: "",
   });
   const [filter, setFilter] = useState({
     project_name: "",
     status_approver: "",
     status_pat: "",
-    sortBy: "",
+    sortBy: "ASC",
+    limit: 8,
     year: "",
   });
 
@@ -88,7 +90,6 @@ const index = () => {
     useProjectOverview({
       ...params,
       pages: currentPage,
-      limit: 8,
     });
   const { approvalPat } = useApprovalPat();
 
@@ -134,8 +135,8 @@ const index = () => {
     }
   }, [projectOverview, params]);
 
-  const handleChangeSortBy = (e) => {
-    setFilter({ ...filter, sortBy: e.value });
+  const handleChangeFilter = (props, value) => {
+    setFilter({ ...filter, [props]: value });
   };
 
   return (
@@ -177,7 +178,7 @@ const index = () => {
           setFilter={setFilter}
         />
         <div className="w-full flex justify-end items-end p-2">
-          <SelectSortFilter change={handleChangeSortBy} />
+          <SelectSortFilter change={handleChangeFilter} />
         </div>
       </div>
       {/* End Filter */}
