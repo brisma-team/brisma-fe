@@ -54,7 +54,7 @@ const index = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [typeModal, setTypeModal] = useState(false);
+  const [typeModal, setTypeModal] = useState(null);
   const [showFilter, setShowFilter] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState(0);
   const [filter, setFilter] = useState({
@@ -104,7 +104,7 @@ const index = () => {
 
     setData(mappedData);
     setTotalPages(auditTeam?.detailPage?.totalPage);
-  }, [auditTeam]);
+  }, [auditTeam, auditTeamMutate]);
 
   useEffect(() => {
     const handleSearch = () => {
@@ -124,6 +124,7 @@ const index = () => {
 
   const handleCreateButton = () => {
     dispatch(resetAuditTeamData());
+    setTypeModal("create");
     setShowModal(true);
   };
 

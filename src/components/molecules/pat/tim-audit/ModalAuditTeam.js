@@ -74,7 +74,7 @@ const ModalAuditTeam = ({
       };
       dispatch(setAuditTeamData(mapppedData));
     }
-  }, [auditTeam]);
+  }, [auditTeam, typeModal, showModal]);
 
   // START ADD HANDLING
   const handleAdd = (property) => {
@@ -132,22 +132,20 @@ const ModalAuditTeam = ({
 
   const handleDeleteUkerATA = (idxATA, idxUker) => {
     const currentATA = auditTeamData.ref_tim_audit_ata[idxATA];
-    if (currentATA?.uker_binaans?.length > 1) {
-      const newRefTimAuditAta = [...auditTeamData.ref_tim_audit_ata];
-      const newUkerBinaans = [...currentATA.uker_binaans];
-      newUkerBinaans.splice(idxUker, 1);
-      newRefTimAuditAta[idxATA] = {
-        ...currentATA,
-        uker_binaans: newUkerBinaans,
-      };
+    const newRefTimAuditAta = [...auditTeamData.ref_tim_audit_ata];
+    const newUkerBinaans = [...currentATA.uker_binaans];
+    newUkerBinaans.splice(idxUker, 1);
+    newRefTimAuditAta[idxATA] = {
+      ...currentATA,
+      uker_binaans: newUkerBinaans,
+    };
 
-      dispatch(
-        setAuditTeamData({
-          ...auditTeamData,
-          ref_tim_audit_ata: newRefTimAuditAta,
-        })
-      );
-    }
+    dispatch(
+      setAuditTeamData({
+        ...auditTeamData,
+        ref_tim_audit_ata: newRefTimAuditAta,
+      })
+    );
   };
   // END DELETE HANDLING
 
@@ -239,21 +237,25 @@ const ModalAuditTeam = ({
       .then(async () => {
         setValidationErrors({});
         try {
+          let result;
           if (typeModal === "update") {
-            await useUpdateData(
+            result = await useUpdateData(
               `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/tim_audit`,
               data
             );
             auditTeamMutate();
           } else {
-            await usePostData(
+            result = await usePostData(
               `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/tim_audit/create`,
               data
             );
           }
           mutate();
-          setShowModal(false);
-          dispatch(resetAuditTeamData());
+
+          if (!result?.isConfirmed) {
+            setShowModal(false);
+            dispatch(resetAuditTeamData());
+          }
         } catch (err) {
           await errorSwalTimeout(err);
         }
@@ -356,7 +358,6 @@ const ModalAuditTeam = ({
         </div>
         <div className="my-3">
           <CardFormInputTeam
-            key={2}
             type={"Anggota Tim Audit"}
             data={auditTeamData?.ref_tim_audit_ata}
             handlerDeleteParent={handleDelete}
