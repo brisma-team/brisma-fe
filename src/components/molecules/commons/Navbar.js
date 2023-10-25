@@ -5,17 +5,52 @@ import { NotificationIndicator } from "@atlaskit/notification-indicator";
 import {
   AtlassianNavigation,
   Notifications,
+  Profile,
   SignIn,
 } from "@atlaskit/atlassian-navigation";
 import { useRouter } from "next/router";
 import { deleteCookie } from "cookies-next";
 import { confirmationSwal, loadingSwal, successSwal } from "@/helpers";
+import Avatar from "@atlaskit/avatar";
+import useUser from "@/data/useUser";
+import DropdownMenu, { DropdownItemGroup } from "@atlaskit/dropdown-menu";
+import { RoleLabel } from "@/components/atoms";
 
 const NotificationsBadge = () => (
   <NotificationIndicator
     onCountUpdated={console.log}
     notificationLogProvider={Promise.resolve()}
   />
+);
+
+const DefaultProfile = ({ user }) => (
+  <DropdownMenu
+    trigger={({ triggerRef, ...props }) => (
+      <Profile
+        icon={
+          <Avatar
+            size="small"
+            src={
+              "https://api-private.atlassian.com/users/d533a32ca5379ef2482c4f6a780e3b20/avatar"
+            }
+          />
+        }
+        ref={triggerRef}
+        {...props}
+      />
+    )}
+  >
+    <DropdownItemGroup>
+      <div className="px-3">
+        <div className="flex flex-col items-center justify-center">
+          <div className="font-bold  text-base">{user?.fullName}</div>
+          <div className="text-base mb-1.5">{user?.pn}</div>
+          <RoleLabel text={user?.jabatan} />
+          <div className="mb-2" />
+        </div>
+      </div>
+    </DropdownItemGroup>
+  </DropdownMenu>
 );
 
 const CustomHome = () => (
@@ -34,6 +69,9 @@ const CustomHome = () => (
 const NavbarField = () => {
   const router = useRouter();
   const { pathname } = router;
+
+  const { user } = useUser();
+
   const handleLogout = async () => {
     const confirm = await confirmationSwal("Apakah Anda yakin untuk keluar?");
 
@@ -111,6 +149,7 @@ const NavbarField = () => {
         renderNotifications={() => (
           <Notifications badge={NotificationsBadge} tooltip="Notifications" />
         )}
+        renderProfile={() => <DefaultProfile user={user?.data} />}
         renderSignIn={() => <SignIn onClick={handleLogout} />}
         primaryItems={ar}
       />
