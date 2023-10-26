@@ -23,6 +23,7 @@ import findDataFromArray from "./findDataFromArray";
 import convertToNominal from "./convertToNominal";
 import parseInteger from "./parseInteger";
 import inputSwal from "./inputSwal";
+import convertIntegerToDecimal from "./convertIntegerToDecimal";
 
 export {
   loadingSwal,
@@ -50,4 +51,5 @@ export {
   convertToNominal,
   parseInteger,
   inputSwal,
+  convertIntegerToDecimal,
 };
