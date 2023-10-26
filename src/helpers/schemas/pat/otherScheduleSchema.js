@@ -20,7 +20,14 @@ const activityInfoSchema = yup.object().shape({
         pn: yup.string().required("Field wajib diisi"),
       })
     )
-    .min(1, "Wajib diisi, minimal 1 data"),
+    .min(1, "Wajib diisi, minimal 1 data")
+    .test("uniquePn", "PN tidak boleh sama", function (value) {
+      const dataPn = value.map((item) => item.pn);
+      const duplicatePnInMA = dataPn.filter(
+        (pn, index) => dataPn.indexOf(pn) !== index
+      );
+      return duplicatePnInMA.length === 0;
+    }),
 });
 
 const activityObjectSchema = yup.object().shape({
