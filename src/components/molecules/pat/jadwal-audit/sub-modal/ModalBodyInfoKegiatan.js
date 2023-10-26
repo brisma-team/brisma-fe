@@ -153,7 +153,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
   }, [auditTeam]);
 
   return (
-    <div className="w-[60rem]">
+    <div className="w-[63rem]">
       <div className="w-1/2 pr-1">
         <TextInput
           icon={
@@ -178,7 +178,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
         )}
       </div>
       <div className="flex gap-3 justify-between my-3">
-        <div className="w-1/2">
+        <div className="w-1/2 h-fit">
           <CardBodyContent>
             <FormWithLabel
               label={"Metode Audit"}
@@ -312,7 +312,7 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
             />
           </CardBodyContent>
         </div>
-        <div className="w-1/2">
+        <div className="w-1/2 h-fit">
           <CardAuditTeam
             header_title={auditTeam?.data?.name}
             maker={auditTeam?.data?.pic_maker_tim_audit?.nama}

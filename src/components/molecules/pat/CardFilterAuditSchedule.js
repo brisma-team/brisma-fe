@@ -49,9 +49,9 @@ const CardFilterAuditSchedule = ({ showFilter, params, setParams }) => {
   return (
     showFilter && (
       <Card>
-        <div className="flex p-2">
-          <div className="flex flex-wrap gap-3 px-2 w-[25.75rem]">
-            <div className="w-48">
+        <div className="flex gap-3 px-4 py-2 w-fit">
+          <div className="flex flex-col gap-3">
+            <div className="w-72 flex items-center h-full">
               <TextInput
                 placeholder="Nama Proyek"
                 onChange={(e) =>
@@ -66,6 +66,18 @@ const CardFilterAuditSchedule = ({ showFilter, params, setParams }) => {
                 }
               />
             </div>
+            <div className="w-72">
+              <DatepickerStartEnd
+                placeholderStart={"Start"}
+                placeholderEnd={"End"}
+                handlerChangeStart={(e) => handleChangeParams("start", e)}
+                handlerChangeEnd={(e) => handleChangeParams("end", e)}
+                valueStart={params.start}
+                valueEnd={params.end}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col gap-3">
             <div className="w-48">
               <MetodeSelect
                 placeholder={"Metode Audit"}
@@ -80,16 +92,6 @@ const CardFilterAuditSchedule = ({ showFilter, params, setParams }) => {
                   handleChangeSelected("metode", e)
                 )}
                 selectedValue={selectedValue.metode}
-              />
-            </div>
-            <div className="w-48">
-              <DatepickerStartEnd
-                placeholderStart={"Start"}
-                placeholderEnd={"End"}
-                handlerChangeStart={(e) => handleChangeParams("start", e)}
-                handlerChangeEnd={(e) => handleChangeParams("end", e)}
-                valueStart={params.start}
-                valueEnd={params.end}
               />
             </div>
             <div className="w-48">
@@ -109,7 +111,7 @@ const CardFilterAuditSchedule = ({ showFilter, params, setParams }) => {
               />
             </div>
           </div>
-          <div className="flex flex-wrap gap-3 px-2 w-[25.75rem]">
+          <div className="flex flex-col gap-3">
             <div className="w-48">
               <CategorySelect
                 placeholder={"Jenis Audit"}
@@ -124,22 +126,6 @@ const CardFilterAuditSchedule = ({ showFilter, params, setParams }) => {
                   handleChangeSelected("jenis", e)
                 )}
                 selectedValue={selectedValue.jenis}
-              />
-            </div>
-            <div className="w-48">
-              <PekerjaSelect
-                placeholder={"Maker"}
-                customIcon={
-                  <ButtonIcon
-                    icon={<IconClose />}
-                    handleClick={() => handleResetSelected("maker")}
-                  />
-                }
-                handleChange={(e) => (
-                  handleChangeParams("maker", e.value.pn),
-                  handleChangeSelected("maker", e)
-                )}
-                selectedValue={selectedValue.maker}
               />
             </div>
             <div className="w-48">
@@ -158,6 +144,25 @@ const CardFilterAuditSchedule = ({ showFilter, params, setParams }) => {
                 selectedValue={selectedValue.tema}
               />
             </div>
+          </div>
+          <div className="flex flex-col gap-3">
+            <div className="w-48">
+              <PekerjaSelect
+                placeholder={"Maker"}
+                customIcon={
+                  <ButtonIcon
+                    icon={<IconClose />}
+                    handleClick={() => handleResetSelected("maker")}
+                  />
+                }
+                handleChange={(e) => (
+                  handleChangeParams("maker", e.value.pn),
+                  handleChangeSelected("maker", e)
+                )}
+                selectedValue={selectedValue.maker}
+              />
+            </div>
+
             <div className="w-48">
               <AuditTeamSelect
                 placeholder={"Tim Audit"}

@@ -145,7 +145,7 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
   };
 
   return (
-    <div className="w-[50rem]">
+    <div className="w-[63rem]">
       <div className="w-1/2 pr-1">
         <TextInput
           icon={
@@ -168,7 +168,7 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
         )}
       </div>
       <div className="flex gap-3 justify-between my-3">
-        <div className="w-1/2">
+        <div className="w-1/2 h-fit">
           <CardBodyContent>
             <FormWithLabel
               label={"Metode Kegiatan"}
@@ -289,7 +289,7 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
             />
           </CardBodyContent>
         </div>
-        <div className="w-1/2">
+        <div className="w-1/2 h-fit">
           <CardFormInputTeam
             type={"P.I.C"}
             data={activityScheduleData.penanggung_jawab}

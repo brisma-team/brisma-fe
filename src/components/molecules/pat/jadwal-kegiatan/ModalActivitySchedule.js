@@ -291,11 +291,7 @@ const ModalActivitySchedule = ({
       showModal={showModal}
       header={
         <ModalHeader
-          headerText={
-            currentModalStage === 3
-              ? "Buat Jadwal Consulting"
-              : "Buat Jadwal Kegiatan"
-          }
+          headerText={"Buat Jadwal Kegiatan"}
           progressItems={items}
           handleCloseModal={handleCloseModal}
           showModal={showModal}
