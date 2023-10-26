@@ -1,4 +1,4 @@
-import { ReactSelect, TextInput } from "@/components/atoms";
+import { ReactSelect, TextInputDecimal } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
 import { FormWithLabel, CardBodyContent } from "@/components/molecules/commons";
 import { useKategoriAnggaran } from "@/data/pat";
@@ -67,27 +67,15 @@ const SubModalBiayaSelamaKegiatan = ({ typeModal }) => {
     setIsDisabled(false);
   };
 
-  const handleChangeSubActivityCategory = (e, idx) => {
+  const handleChangeSubActivityCategory = (value, idx) => {
     setOptionSubActivityCategory((prevData) => {
       const updatedOptionSubActivityCategory =
         prevData.ref_sub_kategori_anggarans.map((item, index) => {
           if (index === idx) {
-            if (isNaN(parseInt(e.target.value))) {
-              return {
-                ...item,
-                amount: 0,
-              };
-            } else if (parseInt(e.target.value) > 2000000000) {
-              return {
-                ...item,
-                amount: 2000000000,
-              };
-            } else {
-              return {
-                ...item,
-                amount: parseInt(e.target.value),
-              };
-            }
+            return {
+              ...item,
+              amount: value,
+            };
           } else {
             return item;
           }
@@ -150,11 +138,11 @@ const SubModalBiayaSelamaKegiatan = ({ typeModal }) => {
                             .ref_sub_kategori_anggaran_name
                         }
                         form={
-                          <TextInput
+                          <TextInputDecimal
                             icon={<IconClose />}
                             handleClick={() => handleClickResetValue(i)}
-                            onChange={(e) =>
-                              handleChangeSubActivityCategory(e, i)
+                            onChange={(value) =>
+                              handleChangeSubActivityCategory(value, i)
                             }
                             value={v.amount}
                           />

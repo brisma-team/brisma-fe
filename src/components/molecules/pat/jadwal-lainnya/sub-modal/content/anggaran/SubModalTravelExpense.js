@@ -1,4 +1,4 @@
-import { ReactSelect, TextInput } from "@/components/atoms";
+import { ReactSelect, TextInput, TextInputDecimal } from "@/components/atoms";
 import { FormWithLabel, CardBodyContent } from "@/components/molecules/commons";
 import { useEffect, useState } from "react";
 import { setActivityScheduleOtherData } from "@/slices/pat/activityScheduleOtherSlice";
@@ -138,11 +138,9 @@ const SubModalTravelExpense = ({ typeModal }) => {
           <FormWithLabel
             label={"Tiket PP"}
             form={
-              <TextInput
+              <TextInputDecimal
                 value={budget.biaya_tiket_pp}
-                onChange={(e) =>
-                  handleChange("biaya_tiket_pp", parseInt(e.target.value))
-                }
+                onChange={(value) => handleChange("biaya_tiket_pp", value)}
               />
             }
             widthLabel={"w-2/5"}
@@ -151,13 +149,10 @@ const SubModalTravelExpense = ({ typeModal }) => {
           <FormWithLabel
             label={"Transport Lokal"}
             form={
-              <TextInput
+              <TextInputDecimal
                 value={budget.biaya_transport_lokal}
-                onChange={(e) =>
-                  handleChange(
-                    "biaya_transport_lokal",
-                    parseInt(e.target.value)
-                  )
+                onChange={(value) =>
+                  handleChange("biaya_transport_lokal", value)
                 }
               />
             }
@@ -167,13 +162,10 @@ const SubModalTravelExpense = ({ typeModal }) => {
           <FormWithLabel
             label={"Uang Harian"}
             form={
-              <TextInput
+              <TextInputDecimal
                 value={budget.biaya_perjalanan_hari}
-                onChange={(e) =>
-                  handleChange(
-                    "biaya_perjalanan_hari",
-                    parseInt(e.target.value)
-                  )
+                onChange={(value) =>
+                  handleChange("biaya_perjalanan_hari", value)
                 }
               />
             }
@@ -183,11 +175,9 @@ const SubModalTravelExpense = ({ typeModal }) => {
           <FormWithLabel
             label={"Biaya Akomodasi"}
             form={
-              <TextInput
+              <TextInputDecimal
                 value={budget.biaya_akomodasi}
-                onChange={(e) =>
-                  handleChange("biaya_akomodasi", parseInt(e.target.value))
-                }
+                onChange={(value) => handleChange("biaya_akomodasi", value)}
               />
             }
             widthLabel={"w-2/5"}

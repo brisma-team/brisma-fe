@@ -1,8 +1,8 @@
-import { TextInput } from "@/components/atoms";
+import { TextInputDecimal } from "@/components/atoms";
 import { DatePicker } from "@atlaskit/datetime-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
-import { convertDate, parseDate, parseInteger } from "@/helpers";
+import { convertDate, parseDate } from "@/helpers";
 import { useEchannel } from "@/data/reference";
 import { useEffect } from "react";
 
@@ -16,23 +16,21 @@ const RowDatatable = ({ idx, handleChange, value, isDisabled }) => {
       </div>
       <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[25%] flex items-center text-justify p-1">
         <div className="w-full">
-          <TextInput
+          <TextInputDecimal
             value={value?.jumlah_existing?.toString()}
             isDisabled={isDisabled}
-            onChange={(e) =>
-              handleChange("jumlah_existing", parseInteger(e.target.value), idx)
-            }
+            onChange={(value) => handleChange("jumlah_existing", value, idx)}
           />
         </div>
       </div>
       <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[25%] flex items-center p-1">
         <div className="w-full">
-          <TextInput
+          <TextInputDecimal
             value={value?.jumlah_target?.toString()}
             isDisabled={isDisabled}
-            onChange={(e) =>
-              handleChange("jumlah_target", parseInteger(e.target.value), idx)
-            }
+            onChange={(value) => {
+              handleChange("jumlah_target", value, idx);
+            }}
           />
         </div>
       </div>
@@ -83,7 +81,6 @@ const SubModalEChannel = ({ isDisabled }) => {
   }, [echannel]);
 
   const handleChange = (property, value, idx) => {
-    console.log("value => ", value);
     const echannelData = [...auditScheduleData.echannel];
     const updatedUker = { ...echannelData[idx] };
     updatedUker[property] = value;
