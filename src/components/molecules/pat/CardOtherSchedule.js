@@ -68,8 +68,8 @@ const CardOtherSchedule = ({
           <div className="flex mb-2 justify-between items-end -ml-5 -mt-5">
             <div
               className={`text-base font-semibold rounded-tl-lg text-brisma ${
-                type?.toLowerCase() === "lain-lain"
-                  ? "bg-[#C094C4]"
+                type?.toLowerCase() === "individual"
+                  ? "bg-blue-300"
                   : "bg-[#AED3C3]"
               } px-5 h-9 flex items-center justify-center`}
             >
@@ -79,7 +79,7 @@ const CardOtherSchedule = ({
               <ButtonIcon
                 color={"blue"}
                 icon={<IconInfo size="medium" />}
-                handleClick={handleClickInfo}
+                handleClick={() => handleClickInfo(kegiatan_lain_id)}
               />
               <ButtonIcon
                 color={"yellow"}

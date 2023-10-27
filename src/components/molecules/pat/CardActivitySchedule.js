@@ -55,7 +55,7 @@ const CardActivitySchedule = ({
               <ButtonIcon
                 color={"blue"}
                 icon={<IconInfo size="medium" />}
-                handleClick={handleClickInfo}
+                handleClick={() => handleClickInfo(jadwal_sbp_id)}
               />
               <ButtonIcon
                 color={"yellow"}
