@@ -18,7 +18,14 @@ const workflowSchema = yup.object().shape({
       }
       return true;
     })
-    .min(1, "Wajib diisi, minimal 1 data"),
+    .min(1, "Wajib diisi, minimal 1 data")
+    .test("uniquePn", "PN tidak boleh sama", function (value) {
+      const dataPn = value.map((item) => item.pn);
+      const duplicatePnInSigner = dataPn.filter(
+        (pn, index) => dataPn.indexOf(pn) !== index
+      );
+      return duplicatePnInSigner.length === 0;
+    }),
   ref_tim_audit_signer: yup
     .array()
     .of(
@@ -26,17 +33,22 @@ const workflowSchema = yup.object().shape({
         pn: yup.string().required("Field wajib diisi"),
       })
     )
-    .test("unique-pn", "Nomor PN tidak boleh sama", function (value) {
-      const pnSet = {};
-      for (const { pn } of value) {
-        if (pnSet[pn]) {
-          return false;
-        }
-        pnSet[pn] = true;
-      }
-      return true;
+    .min(1, "Wajib diisi, minimal 1 data")
+    .test("uniquePn", "PN tidak boleh sama", function (value) {
+      const dataPn = value.map((item) => item.pn);
+      const duplicatePnInSigner = dataPn.filter(
+        (pn, index) => dataPn.indexOf(pn) !== index
+      );
+      return duplicatePnInSigner.length === 0;
     })
-    .min(1, "Wajib diisi, minimal 1 data"),
+    .test(
+      "maxCount",
+      "Jumlah Signer tidak boleh lebih dari jumlah Approver",
+      function (value) {
+        const dataApprover = this.parent.ref_tim_audit_approver;
+        return value?.length <= dataApprover?.length;
+      }
+    ),
 });
 
 export { workflowSchema };
