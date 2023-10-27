@@ -11,6 +11,7 @@ const Modal = ({
   children,
   positionCenter,
   maxHeight,
+  overflowScrollY,
 }) => {
   const ref = useRef(null);
   useEffect(() => {
@@ -59,8 +60,9 @@ const Modal = ({
               )}
               <div
                 className={`relative w-full p-4 mx-auto bg-white rounded-md shadow-lg ${
-                  maxHeight || `max-h-[39.5rem]`
-                } overflow-y-scroll`}
+                  overflowScrollY &&
+                  (maxHeight || `max-h-[39.5rem]`)`overflow-y-scroll relative`
+                }`}
               >
                 {children}
               </div>
