@@ -35,6 +35,7 @@ import Badge from "./Badge";
 import YearPicker from "./YearPicker";
 import QRGenerator from "./QRGenerator";
 import TextInputDecimal from "./TextInputDecimal";
+import AttachmentModal from "./AttachmentModal";
 
 export {
   AvatarDefaultExample,
@@ -74,4 +75,5 @@ export {
   YearPicker,
   QRGenerator,
   TextInputDecimal,
+  AttachmentModal,
 };
