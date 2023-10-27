@@ -4,10 +4,9 @@ import {
   ErrorValidation,
   Select,
   ButtonIcon,
-  UploadButton,
+  AttachmentModal,
 } from "@/components/atoms";
 import {
-  IconAttachment,
   IconCrossCircle,
   IconInfo,
   IconPlus,
@@ -313,15 +312,9 @@ const SubModalWorkUnit = ({ isDisabled }) => {
                     </div>
                   </div>
                   <div className="border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
-                    <UploadButton
-                      text={
-                        <ButtonIcon
-                          color={"purple"}
-                          icon={<IconAttachment />}
-                          handleClick={() => setSelectedIdxAttachments(i)}
-                        />
-                      }
-                      className={"border-none"}
+                    <AttachmentModal
+                      file={v?.attachments[0]}
+                      handleClick={() => setSelectedIdxAttachments(i)}
                       handleUpload={(e) =>
                         handleUpload(e, selectedIdxAttachments)
                       }
@@ -331,7 +324,7 @@ const SubModalWorkUnit = ({ isDisabled }) => {
               );
             })}
           </div>
-          <div className="flex gap-3 items-center">
+          <div className="flex gap-2 items-center">
             <div className="w-40 text-sm font-semibold p-2 my-1">
               <ButtonField
                 iconAfter={
@@ -345,10 +338,11 @@ const SubModalWorkUnit = ({ isDisabled }) => {
               />
             </div>
             {showBranch && (
-              <div className="w-40 mb-2">
+              <div className="w-40">
                 <BranchSelect
                   placeholder="Select an option"
                   handleChange={handleAddUker}
+                  className={"w-72"}
                 />
               </div>
             )}
