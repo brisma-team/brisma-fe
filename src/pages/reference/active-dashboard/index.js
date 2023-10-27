@@ -186,7 +186,7 @@ const index = () => {
         "Ditujukan Kepada":
           v.allow_list == null ? (
             v.is_public == true ? (
-              <p>Public</p>
+              <p>Publik</p>
             ) : (
               <p>Belum ditujukan</p>
             )
