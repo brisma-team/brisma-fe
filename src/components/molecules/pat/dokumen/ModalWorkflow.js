@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import {
   confirmationSwal,
   convertDate,
+  errorSwal,
   setErrorValidation,
   usePostData,
   useUpdateData,
@@ -146,6 +147,13 @@ const ModalWorkflow = ({ showModal, setShowModal }) => {
         if (!confirm.value) {
           return;
         }
+      }
+
+      if (type === "reject" && !workflowData.note) {
+        await errorSwal(
+          "Silakan berikan alasan mengapa Anda memilih untuk menolak."
+        );
+        return;
       }
 
       if (type === "update") {

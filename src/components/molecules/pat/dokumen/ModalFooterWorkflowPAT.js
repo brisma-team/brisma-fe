@@ -28,7 +28,7 @@ const ModalFooterWorkflowPAT = ({
   } else if (status === "On Approver" && findApproval) {
     // Jika status PAT nya On Approver dan status approver nya sesuai dengan yang login, maka hanya tampil button text input alasan, button reject dan approve
     return (
-      <div className="flex gap-3">
+      <div className="flex gap-3 items-center">
         <div className="w-full">
           <TextInput
             placeholder={"Masukkan alasan"}

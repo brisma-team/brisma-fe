@@ -195,7 +195,7 @@ const index = () => {
 
     setWorkflowDetail({
       statusPat: workflow?.data?.status_pat,
-      statusApprover: workflow?.data?.status_approver,
+      on_approver: workflow?.data?.status_approver,
       maker: workflow?.data?.pn_maker_akhir?.nama,
       checker: mappingChecker,
       signer: mappingSigner,
