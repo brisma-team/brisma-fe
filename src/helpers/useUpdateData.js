@@ -2,7 +2,7 @@ import withTokenConfig from "./withTokenConfig";
 import successSwal from "./successSwal";
 import errorSwal from "./errorSwal";
 
-const useUpdateData = async (url, body) => {
+const useUpdateData = async (url, body, withoutSwal) => {
   try {
     const { headers } = withTokenConfig();
     const options = {
@@ -23,6 +23,9 @@ const useUpdateData = async (url, body) => {
     }
 
     const responseData = await response.json();
+    if (withoutSwal) {
+      return;
+    }
     return successSwal(responseData.message);
   } catch (e) {
     throw new Error(e);
