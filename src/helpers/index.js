@@ -24,6 +24,7 @@ import convertToNominal from "./convertToNominal";
 import parseInteger from "./parseInteger";
 import inputSwal from "./inputSwal";
 import convertIntegerToDecimal from "./convertIntegerToDecimal";
+import calculateTimeDifference from "./calculateTimeDifference";
 
 export {
   loadingSwal,
@@ -52,4 +53,5 @@ export {
   parseInteger,
   inputSwal,
   convertIntegerToDecimal,
+  calculateTimeDifference,
 };

@@ -1,27 +1,101 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { NotificationIndicator } from "@atlaskit/notification-indicator";
 import {
   AtlassianNavigation,
-  Notifications,
   Profile,
   SignIn,
 } from "@atlaskit/atlassian-navigation";
 import { useRouter } from "next/router";
 import { deleteCookie } from "cookies-next";
-import { confirmationSwal, loadingSwal, successSwal } from "@/helpers";
+import {
+  calculateTimeDifference,
+  confirmationSwal,
+  loadingSwal,
+  successSwal,
+  useUpdateData,
+} from "@/helpers";
 import Avatar from "@atlaskit/avatar";
 import useUser from "@/data/useUser";
 import DropdownMenu, { DropdownItemGroup } from "@atlaskit/dropdown-menu";
-import { RoleLabel } from "@/components/atoms";
+import { ButtonIcon, DivButton, RoleLabel } from "@/components/atoms";
+import { useNotification } from "@/data/common";
+import { IconNotification } from "@/components/icons";
 
-const NotificationsBadge = () => (
-  <NotificationIndicator
-    onCountUpdated={console.log}
-    notificationLogProvider={Promise.resolve()}
-  />
-);
+const Notification = ({ data, handleMarkReadAll, handleClick }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <DropdownMenu
+      trigger={({ triggerRef, ...props }) => (
+        <div
+          className={`h-8 w-8 rounded-full hover:bg-blue-200 ${
+            isOpen && `bg-blue-200`
+          } flex items-center justify-center`}
+          {...props}
+          ref={triggerRef}
+        >
+          <ButtonIcon
+            className={"pt-1"}
+            icon={<IconNotification label="more" size="medium" />}
+          />
+        </div>
+      )}
+      onOpenChange={(e) => setIsOpen(e.isOpen)}
+    >
+      <DropdownItemGroup>
+        <div className="w-[27rem]">
+          {data?.length ? (
+            <>
+              <DropdownItemGroup>
+                <div className="px-3 h-full w-full flex justify-end">
+                  <DivButton
+                    className={`w-fit hover:underline hover:text-atlasian-blue-light text-atlasian-blue-light`}
+                    handleClick={handleMarkReadAll}
+                  >
+                    Mark all as Read
+                  </DivButton>
+                </div>
+              </DropdownItemGroup>
+              <DropdownItemGroup hasSeparator>
+                <div className="flex flex-col">
+                  {data?.map((v, i) => {
+                    return (
+                      <DivButton
+                        key={i}
+                        className={`h-10 px-3 w-full flex justify-between items-center ${
+                          !v.is_read && `bg-blue-200`
+                        }`}
+                        handleClick={() =>
+                          handleClick(v.id, v.is_read, v.url_path)
+                        }
+                      >
+                        <div className="h-6 font-medium">{v.perihal}</div>
+                        <div className="h-6 font-medium">
+                          {calculateTimeDifference(v.created_at)}
+                        </div>
+                      </DivButton>
+                    );
+                  })}
+                </div>
+              </DropdownItemGroup>
+            </>
+          ) : (
+            ""
+          )}
+          <DropdownItemGroup hasSeparator={Boolean(data?.length)}>
+            <Link
+              href={"/notification"}
+              className="w-full flex justify-center text-center"
+            >
+              See All Notifications
+            </Link>
+          </DropdownItemGroup>
+        </div>
+      </DropdownItemGroup>
+    </DropdownMenu>
+  );
+};
 
 const DefaultProfile = ({ user }) => (
   <DropdownMenu
@@ -71,6 +145,10 @@ const NavbarField = () => {
   const { pathname } = router;
 
   const { user } = useUser();
+  const { notification, notificationMutate } = useNotification("all", {
+    page: 1,
+    limit: 10,
+  });
 
   const handleLogout = async () => {
     const confirm = await confirmationSwal("Apakah Anda yakin untuk keluar?");
@@ -86,6 +164,28 @@ const NavbarField = () => {
     successSwal("Logout Berhasil");
     return router.push("/login");
   };
+
+  const handleMarkReadAll = async () => {
+    await useUpdateData(
+      `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/notifikasi/all`,
+      {},
+      true
+    );
+    notificationMutate();
+  };
+
+  const handleClickNotification = async (id, is_read, url_path) => {
+    if (!is_read) {
+      await useUpdateData(
+        `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/notifikasi?id=${id}`,
+        {},
+        true
+      );
+    }
+    router.push(url_path);
+    notificationMutate();
+  };
+
   const firstSegment = pathname.split("/")[1];
   const ar =
     pathname != "/pat" &&
@@ -147,7 +247,11 @@ const NavbarField = () => {
         label="site"
         renderProductHome={CustomHome}
         renderNotifications={() => (
-          <Notifications badge={NotificationsBadge} tooltip="Notifications" />
+          <Notification
+            data={notification?.data}
+            handleMarkReadAll={handleMarkReadAll}
+            handleClick={handleClickNotification}
+          />
         )}
         renderProfile={() => <DefaultProfile user={user?.data} />}
         renderSignIn={() => <SignIn onClick={handleLogout} />}
