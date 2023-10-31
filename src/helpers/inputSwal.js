@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 
-export default async function inputSwal(message) {
+export default async function inputSwal(message, confirmButtonText) {
   return await Swal.fire({
     input: "textarea",
     title: "Perhatian!",
@@ -9,6 +9,6 @@ export default async function inputSwal(message) {
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, delete it!",
+    confirmButtonText,
   });
 }
