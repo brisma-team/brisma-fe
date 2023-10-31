@@ -27,6 +27,7 @@ import IconChevronRight from "@atlaskit/icon/glyph/chevron-right";
 import IconArrowBottomCircle from "@atlaskit/icon/glyph/arrow-down-circle";
 import IconMore from "@atlaskit/icon/glyph/more";
 import IconArrowDown from "@atlaskit/icon/glyph/arrow-down";
+import IconNotification from "@atlaskit/icon/glyph/notification";
 
 export {
   IconPlus,
@@ -58,4 +59,5 @@ export {
   IconArrowBottomCircle,
   IconMore,
   IconArrowDown,
+  IconNotification,
 };
