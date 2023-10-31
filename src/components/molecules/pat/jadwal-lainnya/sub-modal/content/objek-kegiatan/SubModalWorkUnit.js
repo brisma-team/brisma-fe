@@ -17,13 +17,13 @@ import {
   CardTypeCount,
   DescriptionModal,
   OrgehSelect,
+  ModalAssessmentInfo,
 } from "@/components/molecules/commons";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setActivityScheduleOtherData } from "@/slices/pat/activityScheduleOtherSlice";
 import { useUkerType } from "@/data/reference";
 import { loadingSwal, usePostFileData } from "@/helpers";
-import ModalAssessmentInfo from "@/components/molecules/pat/ModalAssessmentInfo";
 
 const SubModalWorkUnit = ({ isDisabled }) => {
   const [showModalDesc, setShowModalDesc] = useState(false);

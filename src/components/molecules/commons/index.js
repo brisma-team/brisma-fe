@@ -51,6 +51,7 @@ import TeknikSamplingSelect from "./TeknikSamplingSelect";
 import ApprovalItems from "./ApprovalItems";
 import NavigationDocument from "./NavigationDocument";
 import CardWithHeaderLine from "./CardWithHeaderLine";
+import ModalAssessmentInfo from "./ModalAssessmentInfo";
 
 export {
   BackButton,
@@ -105,5 +106,6 @@ export {
   TeknikSamplingSelect,
   ApprovalItems,
   NavigationDocument,
-  CardWithHeaderLine
+  CardWithHeaderLine,
+  ModalAssessmentInfo,
 };

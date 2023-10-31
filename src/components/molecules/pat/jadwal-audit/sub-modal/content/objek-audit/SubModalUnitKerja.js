@@ -17,12 +17,12 @@ import {
   OrgehSelect,
   DescriptionModal,
   BranchSelect,
+  ModalAssessmentInfo,
 } from "@/components/molecules/commons";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
 import { useState, useEffect } from "react";
 import { useUkerType } from "@/data/reference";
-import ModalAssessmentInfo from "@/components/molecules/pat/ModalAssessmentInfo";
 import { loadingSwal, usePostFileData } from "@/helpers";
 
 const SubModalUnitKerja = ({ isDisabled }) => {
