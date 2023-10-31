@@ -11,7 +11,6 @@ function calculateTimeDifference(createdAt) {
   const years = Math.floor(days / 365);
 
   if (seconds < 60) {
-    console.log("seconds => ", seconds);
     return seconds <= 1 ? "just now" : `${seconds} seconds ago`;
   } else if (minutes < 60) {
     return minutes <= 1 ? "a minute ago" : `${minutes} minutes ago`;
