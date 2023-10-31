@@ -2,6 +2,7 @@ import Textfield from "@atlaskit/textfield";
 import ButtonIcon from "./ButtonIcon";
 import { useState } from "react";
 import { convertIntegerToDecimal } from "@/helpers";
+import { useEffect } from "react";
 
 const TextInputDecimal = ({
   onChange,
@@ -14,7 +15,11 @@ const TextInputDecimal = ({
   handleClick,
   onKeyDown,
 }) => {
-  const [numberValue, setNumberValue] = useState(value);
+  const [numberValue, setNumberValue] = useState("");
+
+  useEffect(() => {
+    setNumberValue(convertIntegerToDecimal(value).decimal);
+  }, [value]);
 
   const handleChange = (e) => {
     const format = convertIntegerToDecimal(e.target.value);
