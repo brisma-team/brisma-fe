@@ -4,53 +4,66 @@ import { MainLayout } from "@/layouts";
 import { Breadcrumbs, Card } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { TableField } from "@/components/atoms";
+import { ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
-  const { id } = useRouter().query;
+  const router = useRouter();
 
   const [typeList, setTypeList] = useState([]);
-  const [selectedId, setSelectedId] = useState(id || "");
+  const [params, setParams] = useState({
+    year: "2023",
+    type: "2",
+    id: "1",
+  });
 
   useEffect(() => {
-    if (id !== undefined) setSelectedId(id);
-  }, [id]);
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      ...params,
+      year: id?.split("x1c-")[2],
+      type: id?.split("x1c-")[0],
+      id: id?.split("x1c-")[1],
+      uri: id,
+    });
+  }, [router.isReady]);
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: "/catalogue/ewp" },
-    { name: "Detail", path: "/catalogue/ewp/" + selectedId },
-    { name: "Daftar Dokumen", path: "/catalogue/ewp/" + selectedId },
-  ];
-
-  const type_list = [
-    {
-      jenis: "SHA",
-      jumlah: "-----",
-      url: `${selectedId}/lha/sha`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-    },
-    {
-      jenis: "LHA Eksum",
-      jumlah: "-----",
-      url: `${selectedId}/lha/eksum`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-    },
-    {
-      jenis: "Risk Profile",
-      jumlah: "-----",
-      url: `${selectedId}/lha/risk-profile`,
-      isDisabled: false,
-    },
-    {
-      jenis: "RTA",
-      jumlah: "-----",
-      url: `${selectedId}/lha/rta`,
-      isDisabled: false,
-    },
+    { name: "Detail", path: "/catalogue/ewp/" + params.id },
+    { name: "Daftar Dokumen", path: "/catalogue/ewp/" + params.id },
   ];
 
   useEffect(() => {
+    const type_list = [
+      {
+        jenis: "SHA",
+        jumlah: "-----",
+        url: `lha/sha`,
+        isDisabled: params.type == "2" ? false : true,
+      },
+      {
+        jenis: "LHA Eksum",
+        jumlah: "-----",
+        url: `lha/eksum`,
+        isDisabled: params.type == "2" ? false : true,
+      },
+      {
+        jenis: "Risk Profile",
+        jumlah: "-----",
+        url: `lha/risk-profile`,
+        isDisabled: true,
+      },
+      {
+        jenis: "RTA",
+        jumlah: "-----",
+        url: `lha/rta`,
+        isDisabled: true,
+      },
+    ];
+
     if (type_list) {
       const mappingTypeList = type_list.map((data, key) => {
         return {
@@ -70,7 +83,7 @@ const index = () => {
       });
       setTypeList(mappingTypeList);
     }
-  }, []);
+  }, [params.id, params.year, params.type]);
 
   return (
     <MainLayout>
@@ -83,22 +96,12 @@ const index = () => {
             <div className="text-3xl font-bold">Kumpulan Dokumen LHA</div>
           </div>
         </div>
-        <div className="mt-5 mr-40">
-          <Card>
-            <div className="w-full h-full px-6 p-5">
-              <div className="grid grid-cols-5">
-                <div className="col-span-1 font-bold text-lg">Projek ID</div>
-                <div className="col-span-4">: 001</div>
-                <div className="col-span-1 font-bold text-lg">Nama Projek</div>
-                <div className="col-span-4">: -</div>
-                <div className="col-span-1 font-bold text-lg">Tahun</div>
-                <div className="col-span-4">: 2023</div>
-                <div className="col-span-1 font-bold text-lg">Jenis Audit</div>
-                <div className="col-span-4">: Reguler</div>
-              </div>
-            </div>
-          </Card>
-        </div>
+        <ProjectInfo
+          type="ewp"
+          year={params.year}
+          source={params.type}
+          id={params.id}
+        />
         <div className="mt-5 mr-40">
           <Card>
             <div className="w-full h-full px-6">

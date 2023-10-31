@@ -1,19 +1,23 @@
 import { useState, useEffect } from "react";
 import useOverviewPAT from "@/data/catalog/pat/useOverviewPAT";
 
-export const patHtml = (year, source, id) => {
+export const patHtml = (id) => {
   const [data, setData] = useState();
-
+  const [jadwalKegiatan, setJadwalKegiatan] = useState([]);
+  const [jadwalSBP, setJadwalSBP] = useState([]);
   const { overviewDetail } = useOverviewPAT(id);
 
   useEffect(() => {
     if (overviewDetail !== undefined) {
-      setData(overviewDetail.data.pat[0]);
+      setData(overviewDetail.data.pat);
+      setJadwalKegiatan(overviewDetail.data.jadwal_kegiatan);
+      setJadwalSBP(overviewDetail.data.jadwal_sbp);
     }
   }, [overviewDetail]);
 
-  console.log(year, source, id);
-  console.log(data);
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   return `<main>
   <header>
@@ -23,20 +27,6 @@ export const patHtml = (year, source, id) => {
     <div class="header">
       <h2>PT Bank Rakyat Indonesia (PERSERO), Tbk</h2>
       <h3 >AUDIT INTERN KANTOR PUSAT</h3>
-      <div style="margin-top: 10px;">
-        <div style="display: grid; grid-template-columns: 75px 1fr">
-          <h4 style="justify-self: left">Alamat</h4>
-          <h4 style="justify-self: left">: {uka_info.alamat}</h4>
-        </div>
-        <div style="display: grid; grid-template-columns: 75px 1fr">
-          <h4 style="justify-self: left">Fax</h4>
-          <h4 style="justify-self: left">: {uka_info.fax}</h4>
-        </div>
-        <div style="display: grid; grid-template-columns: 75px 1fr">
-          <h4 style="justify-self: left">No. Tlp</h4>
-          <h4 style="justify-self: left">: {uka_info.no_telp}</h4>
-        </div>
-      </div>
     </div>
   </header>
   <div style="
@@ -54,7 +44,7 @@ export const patHtml = (year, source, id) => {
     <div style="margin-top: 0.5rem;">
       <div style="width: 250px; display: grid; grid-template-columns: 125px 1fr;">
         <p style="justify-self: left;">Tahun</p>
-        <P style="justify-self: left;">{periode_audit}</P>
+        <P style="justify-self: left;">2023</P>
       </div>
     </div>
   </div>
@@ -319,55 +309,48 @@ export const patHtml = (year, source, id) => {
               </th>
           </tr>
       </thead>
-      <tbody>
-          mapping
-          <tr>
-        <td>
-            {idx + 1}
-        </td>
-        <td>
-            {
-              d.jadwal_audit.tipe_audit === "Regular Audit"
-                ? d.jadwal_audit.nama_orgeh[0].uker
-                : {d.jadwal_audit.nama_orgeh.map((e) => e.uker)}
-            }
-        </td>
-        <td>
-            {d.jadwal_audit.tim_audit_name}
-        </td>
-        <td>
-            {d.jadwal_audit.tipe_audit}
-        </td>
-        {[...Array(12)]
-          .map(
-            (_, idxm) =>
-              <td {
-                idxm + 1 >= start_month && idxm + 1 <= end_month
-                  ? 'style="background-color:hsl(210, 75%, 60%);"'
-                  : ""
-              }></td>
-          )
-          .join("")}
-        <td>
+      ${jadwalKegiatan.map((d, index) => {
+        return `<tbody>
+            <tr>
+                <td>
+                    ${index + 1}
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    ${d.NamaTimAudit}
+                </td>
+                <td>
+                    ${d.TipeAudit.audit_type}
+                </td>
+                ${[...Array(12)]
+                  .map((x) => {
+                    return `<td></td>`;
+                  })
+                  .join("")}
+            <td>
             {Object.keys(d.targetAudit.count_target_jenis_auditee.existing)
-              .map((k) => {
+                .map((k) => {
                 const existing =
-                  d.targetAudit.count_target_jenis_auditee.existing[k] || 0;
+                    d.targetAudit.count_target_jenis_auditee.existing[k] || 0;
                 const target =
-                  d.targetAudit.count_target_jenis_auditee.target[k] || 0;
+                    d.targetAudit.count_target_jenis_auditee.target[k] || 0;
                 const percent = Math.round(
-                  (Number(target) / Number(existing)) * 100
+                    (Number(target) / Number(existing)) * 100
                 );
                 return 
                 <p>
                     {k}: [{existing}][{target}] {percent}%&nbsp;
                 </p>
-              ;
-              })
-              .join("")}
-        </td>
-    </tr>
-      </tbody>
+                ;
+                })
+                .join("")}
+            </td>
+            </tr>
+            </tbody>`;
+      })}
+      
   </table>
 </figure>
     </section>

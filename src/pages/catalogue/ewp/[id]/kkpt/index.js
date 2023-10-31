@@ -12,10 +12,11 @@ import { ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
   const id = useRouter().query.id;
+  const router = useRouter();
 
   const [kkpt, setKKPT] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
-  const [selectedId, setSelectedId] = useState("");
+  const [selectedId, setSelectedId] = useState();
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState({
@@ -27,10 +28,10 @@ const index = () => {
   });
 
   useEffect(() => {
-    if (id !== undefined) setSelectedId(id);
-  }, [id]);
-
-  const idToUse = selectedId ? selectedId : "";
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setSelectedId(id);
+  }, [router.isReady]);
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
@@ -41,9 +42,9 @@ const index = () => {
   ];
 
   const { kkptList } = useKKPTList(
-    idToUse.split("x1c-")[2],
-    idToUse.split("x1c-")[0],
-    idToUse.split("x1c-")[1],
+    selectedId !== undefined ? selectedId.split("x1c-")[2] : null,
+    selectedId !== undefined ? selectedId.split("x1c-")[0] : null,
+    selectedId !== undefined ? selectedId.split("x1c-")[1] : null,
     currentPage,
     filter.limit,
     filter.kkpttitle,
@@ -181,7 +182,10 @@ const index = () => {
           </div>
         )}
         {/* End Filter */}
-        <ProjectInfo />
+        <ProjectInfo
+          type="ewp"
+          id={selectedId !== undefined ? selectedId.split("x1c-")[1] : null}
+        />
         <div className="mt-5 mr-40">
           <Card>
             <div className="w-full h-full px-6">

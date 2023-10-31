@@ -7,9 +7,9 @@ export default function useCatalogPAT(year, type, page) {
   const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);
 
   return {
-    data: data,
-    error: error,
-    mutate: mutate,
-    isLoading: isLoading,
+    patListData: data,
+    patListError: error,
+    patListMutate: mutate,
+    patListIsLoading: isLoading,
   };
 }

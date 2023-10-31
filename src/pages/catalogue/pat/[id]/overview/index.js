@@ -3,36 +3,28 @@ import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
 import { patHtml } from "@/templates/catalog/pat/pat";
 import { useState, useEffect } from "react";
-import DocumentViewer from "@/components/molecules/catalog/DocumentViewer";
+import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
-  const { id } = useRouter().query;
+  const [selectedId, setSelectedId] = useState();
 
-  const [params, setParams] = useState({
-    year: 2023,
-    source: 2,
-    id: 1,
-  });
+  const router = useRouter();
 
   useEffect(() => {
-    if (id !== undefined) {
-      setParams({
-        year: id.split("x1c-")[2],
-        source: id.split("x1c-")[0],
-        id: id.split("x1c-")[1],
-      });
-    }
-  }, [id]);
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setSelectedId(id);
+  }, [router.isReady]);
 
   const baseUrl = "/catalogue/pat";
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "P.A.T", path: baseUrl },
-    { name: "Daftar Dokumen", path: baseUrl + "/" + id },
+    { name: "Daftar Dokumen", path: baseUrl + "/" + selectedId },
     {
       name: "Dokumen PAT",
-      path: baseUrl + "/" + id + "/overview",
+      path: baseUrl + "/" + selectedId + "/overview",
     },
   ];
 
@@ -43,6 +35,7 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"PAT Dokumen"} />
         </div>
+        <ProjectInfo type="pat" id={selectedId} />
         <DocumentViewer
           documentTitle="Dokumen PAT"
           documentStyle={`.leader {
@@ -181,7 +174,7 @@ const index = () => {
             display: grid;
             grid-template-columns: 25px 400px 1fr;
           }`}
-          documentHtml={patHtml(params.year, params.source, params.id)}
+          documentHtml={patHtml(selectedId)}
         />
       </div>
     </MainLayout>

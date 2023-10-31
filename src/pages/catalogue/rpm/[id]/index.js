@@ -1,89 +1,65 @@
-import React, { useState } from "react";
-import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card, Modal, Pagination } from "@/components/atoms";
-import Button from "@atlaskit/button";
-// import Select from "@atlaskit/select";
-// import Textfield from "@atlaskit/textfield";
-// import { IconClose, IconPlus } from "@/components/icons";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import DocumentIcon from "@atlaskit/icon/glyph/document";
+import Link from "next/link";
+import { Breadcrumbs, Card, TableField } from "@/components/atoms";
+import { ProjectInfo } from "@/components/molecules/catalog";
+import { MainLayout } from "@/layouts";
+import Button from "@atlaskit/button";
 
-const approvalData = [
-  {
-    id: 1,
-    part: "Action Plan",
-    document_name: "Action Plan",
-    date: "10 Juli 2023",
-    attachment: "preventive - Test",
-  },
-  {
-    id: 2,
-    part: "Surat Evaluasi",
-    document_name: "Surat Evaluasi",
-    date: "20 Juli 2023",
-    attachment: "Surat Evaluasi",
-  },
-];
+const index = () => {
+  const router = useRouter();
 
-const histories = [
-  {
-    id: 1,
-    data: [
-      {
-        account: "11151700023 - Iqbal",
-        date: "9 Juli 2023",
-        time: "18.01",
-      },
-      {
-        account: "1151800032 - Samuel",
-        date: "9 Juli 2023",
-        time: "15.01",
-      },
-    ],
-  },
-  {
-    id: 2,
-    data: [
-      {
-        account: "1151900010 - Dandi",
-        date: "8 Juli 2023",
-        time: "16.01",
-      },
-    ],
-  },
-];
-
-const index = ({ data = approvalData }) => {
-  const id = useRouter().query.id;
-  const [showModal, setShowModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  // const [showFilter, setShowFilter] = useState(false);
-  const [selectedItem, setSelectedItem] = useState({
-    id: 0,
-    document_name: "No Document",
-    date: "10 Juli 1999",
-    attachment: "empty.pdf",
-  });
+  const [selectedId, setSelectedId] = useState();
+  const [typeList, setTypeList] = useState([]);
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "R.P.M", path: "/catalogue/rpm" },
-    { name: id, path: "/catalogue/rpm/" + id },
-    { name: "Daftar Dokumen", path: "/catalogue/rpm/" + id },
+    { name: selectedId, path: "/catalogue/rpm/" + selectedId },
+    { name: "Daftar Dokumen", path: "/catalogue/rpm/" + selectedId },
   ];
-  const handleHistoryDownload = (item) => {
-    setSelectedItem(item);
-    setShowModal(true);
-  };
 
-  // const handlePreviewDocs = (id) => {
+  const type_list = [
+    {
+      nomor_evaluasi: 1,
+    },
+    {
+      nomor_evaluasi: 2,
+    },
+  ];
 
-  // }
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setSelectedId(id);
+  }, [router.isReady]);
 
-  // const handleDownload = (id) => {
+  useEffect(() => {
+    if (type_list) {
+      const mappingTypeList = type_list.map((data, key) => {
+        return {
+          No: key + 1,
+          Evaluasi: "Tahap ke-" + data.nomor_evaluasi,
+          Aksi: (
+            <Link
+              href={"/catalogue/rpm/" + selectedId + "/" + data.nomor_evaluasi}
+            >
+              <Button
+                href={data.url}
+                isDisabled={data.isDisabled}
+                appearance="primary"
+              >
+                Lihat Pustaka
+              </Button>
+            </Link>
+          ),
+        };
+      });
+      setTypeList(mappingTypeList);
+    }
+  }, [selectedId]);
 
-  // }
   return (
     <MainLayout>
       <div className="px-5">
@@ -95,184 +71,19 @@ const index = ({ data = approvalData }) => {
             <div className="text-3xl font-bold">Catalogue R.P.M</div>
           </div>
         </div>
-        {/* Start Filter */}
-        {/* <div className="my-3 w-40">
-          <Button
-            appearance="primary"
-            iconBefore={IconPlus}
-            shouldFitContainer
-            onClick={() => setShowFilter(!showFilter)}
-          >
-            Tampilkan Filter
-          </Button>
-        </div>
-        {showFilter && (
-          <div className="flex justify-between w-96">
-            <Card>
-              <div className="flex p-2">
-                <div className="w-1/2 mr-1">
-                  <Textfield
-                    placeholder="ID Proyek"
-                    elemAfterInput={
-                      <button className="justify-center">
-                        <IconClose size="large" />
-                      </button>
-                    }
-                  />
-                </div>
-                <div className="w-1/2 ml-1">
-                  <Select options={[]} placeholder="Status Dokumen" />
-                </div>
-              </div>
-              <div className="flex p-2">
-                <div className="w-1/2 mr-1">
-                  <Textfield
-                    placeholder="Nama Proyek"
-                    elemAfterInput={
-                      <button className="justify-center">
-                        <IconClose size="large" />
-                      </button>
-                    }
-                  />
-                </div>
-                <div className="w-1/2 ml-1">
-                  <Select options={[]} placeholder="Status Persetujuan" />
-                </div>
-              </div>
-            </Card>
-          </div>
-        )} */}
-        {/* End Filter */}
-        {/* Start Modal */}
-        {selectedItem && (
-          <Modal
-            showModal={showModal}
-            positionCenter={true}
-            onClickOutside={() => setShowModal(false)}
-          >
-            <div className="w-[40rem] p-5">
-              <div className="text-xl font-bold text-atlasian-blue-dark mb-5">
-                Download History
-              </div>
-              <div className="flex pl-3 text-sm font-semibold text-atlasian-blue-dark items-center underline">
-                <DocumentIcon />
-                <span className="ml-2">{selectedItem.attachment}</span>
-              </div>
-              <div className="leading-3">
-                <>
-                  <div className="mt-2 px-6 py-3 border-b-[1px] hover:bg-gray-100 border-gray-300 font-bold">
-                    <div className="grid grid-cols-4">
-                      <div className="col-span-2">Nama Akun</div>
-                      <div>Tanggal</div>
-                      <div className="text-center">Jam</div>
-                    </div>
-                  </div>
-
-                  {histories
-                    .filter((items) => items.id == selectedItem.id)
-                    .map((history) => {
-                      return history.data.map((content, key) => {
-                        return (
-                          <div
-                            className="px-6 py-5 border-b-[1px] border-gray-300 hover:bg-gray-100"
-                            key={key}
-                          >
-                            <div className="grid grid-cols-4">
-                              <div className="col-span-2 my-auto">
-                                {content.account ? content.account : ""}
-                              </div>
-                              <div className="my-auto">
-                                {content.date ? content.date : ""}
-                              </div>
-                              <div className="text-center my-auto">
-                                {content.time ? content.time : ""}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      });
-                    })}
-                </>
-              </div>
-            </div>
-          </Modal>
-        )}
-        {/* End Modal */}
+        <ProjectInfo type="rpm" id={selectedId} />
         <div className="mt-5 mr-40">
           <Card>
-            <div className="w-full p-5">
-              <div className="flex flex-row justify-between mb-6">
-                <div className="text-xl font-bold text-atlasian-blue-dark">
-                  Daftar Dokumen
-                </div>
+            <div className="w-full h-full px-6">
+              <div className="text-xl font-bold p-5">Pustaka Dokumen</div>
+              <div className="max-h-[40rem] overflow-y-scroll px-2 mb-5">
+                <TableField
+                  headers={["No", "Evaluasi", "Aksi"]}
+                  columnWidths={["10%", "35%", "30%"]}
+                  items={typeList}
+                />
               </div>
-              <div className="leading-3">
-                <div>
-                  <div className="mt-2 px-6 py-3 border-b-[1px] hover:bg-gray-100 border-gray-300 font-bold">
-                    <div className="grid grid-cols-11">
-                      <div>No</div>
-                      <div className="col-span-2">Part</div>
-                      <div className="col-span-2">Nama Dokumen</div>
-                      <div>Tanggal</div>
-                      <div className="text-center col-span-2">Lampiran</div>
-                      <div className="text-center col-span-3">Aksi</div>
-                    </div>
-                  </div>
-
-                  {data?.map((item, key) => {
-                    return (
-                      <div
-                        className="px-6 py-5 border-b-[1px] border-gray-300 hover:bg-gray-100"
-                        key={key}
-                      >
-                        <div className="grid grid-cols-11">
-                          <div className="my-auto">{key + 1}</div>
-                          <div className="col-span-2 my-auto">{item.part}</div>
-                          <div className="col-span-2 my-auto">
-                            {item.document_name}
-                          </div>
-                          <div className="my-auto">{item.date}</div>
-                          <div className="text-center my-auto col-span-2">
-                            {item.attachment}
-                          </div>
-                          <div className="grid grid-cols-3 text-center col-span-3">
-                            <div className="align-middle px-2">
-                              <Button
-                                shouldFitContainer
-                                appearance="primary"
-                                onClick={() => handleHistoryDownload(item)}
-                              >
-                                History
-                              </Button>
-                            </div>
-                            <div className="align-middle px-2">
-                              <Button
-                                shouldFitContainer
-                                isDisabled
-                                appearance="primary"
-                              >
-                                Preview
-                              </Button>
-                            </div>
-                            <div className="align-middle px-2 ">
-                              <Button
-                                shouldFitContainer
-                                isDisabled
-                                appearance="primary"
-                              >
-                                Download
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="flex justify-center mt-4">
-                <Pagination pages={1} setCurrentPage={setCurrentPage} />
-              </div>
+              <div className="flex justify-center mt-5"></div>
             </div>
           </Card>
         </div>

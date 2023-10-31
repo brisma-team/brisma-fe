@@ -3,7 +3,7 @@ import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { addendumPatHtml } from "@/templates/catalog/pat/addendum-pat";
-import DocumentViewer from "@/components/molecules/catalog/DocumentViewer";
+import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
   const { id } = useRouter().query;
@@ -42,6 +42,7 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Dokumen Addendum PAT"} />
         </div>
+        <ProjectInfo type="pat" id={params.id} />
         <DocumentViewer
           documentTitle="Addendum PAT"
           documentStyle={`* {

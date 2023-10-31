@@ -1,40 +1,34 @@
+import { useState, useEffect } from "react";
 import { Breadcrumbs, PageTitle } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
-import { negoNotHtml } from "@/templates/catalog/rpm/negosiasi-notulen";
-import DocumentViewer from "@/components/molecules/catalog/DocumentViewer";
+import negoNotHtml from "@/templates/catalog/rpm/negosiasi-notulen";
+import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
-  const { id } = useRouter().query;
-
-  const [params, setParams] = useState({
-    year: 2023,
-    source: 2,
-    id: 1,
-  });
+  const router = useRouter();
+  const [selectedId, setSelectedId] = useState();
+  const [selectedEvaluasi, setEvaluasi] = useState();
 
   useEffect(() => {
-    if (id !== undefined) {
-      setParams({
-        year: id.split("x1c-")[2],
-        source: id.split("x1c-")[0],
-        id: id.split("x1c-")[1],
-      });
-    }
-  }, [id]);
+    if (!router.isReady) return;
+    const { id, iteration } = router.query;
+    setSelectedId(id);
+    setEvaluasi(iteration);
+  }, [router.isReady]);
 
   const baseUrl = "/catalogue/rpm";
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "R.P.M", path: baseUrl },
-    { name: "Daftar Dokumen", path: baseUrl + "/" + id },
+    { name: "Daftar Dokumen", path: baseUrl + "/" + selectedId },
     {
-      name: "Negosiasi Notulen",
-      path: baseUrl + "/" + id + "/negosiasi-notulen",
+      name: "Dokumen Negosiasi Notulen",
+      path: baseUrl + "/" + selectedId + "/negosiasi-notulen",
     },
   ];
+
   return (
     <MainLayout>
       <div className="px-5">
@@ -42,9 +36,10 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Dokumen Negosiasi Notulen"} />
         </div>
+        <ProjectInfo type="rpm" id={selectedId} />
         <DocumentViewer
           documentTitle="Negosiasi Notulen"
-          documentHtml={negoNotHtml(params.year, params.source, params.id)}
+          documentHtml={negoNotHtml(selectedId, selectedEvaluasi)}
         />
       </div>
     </MainLayout>

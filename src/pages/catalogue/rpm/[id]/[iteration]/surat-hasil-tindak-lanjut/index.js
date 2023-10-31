@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Breadcrumbs, PageTitle } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
-import negoBaHtml from "@/templates/catalog/rpm/negosiasi-berita-acara";
+import shtlHtml from "@/templates/catalog/rpm/shtl";
 import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
@@ -24,8 +24,8 @@ const index = () => {
     { name: "R.P.M", path: baseUrl },
     { name: "Daftar Dokumen", path: baseUrl + "/" + selectedId },
     {
-      name: "Dokumen Negosiasi Berita Acara",
-      path: baseUrl + "/" + selectedId + "/negosiasi-berita-acara",
+      name: "Dokumen Surat Hasil Tindak Lanjut",
+      path: baseUrl + "/" + selectedId + "/surat-hasil-tindak-lanjut",
     },
   ];
 
@@ -34,12 +34,12 @@ const index = () => {
       <div className="px-5">
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">
-          <PageTitle text={"Dokumen Negosiasi Berita Acara"} />
+          <PageTitle text={"Dokumen Surat Hasil Tindak Lanjut"} />
         </div>
         <ProjectInfo type="rpm" id={selectedId} />
         <DocumentViewer
-          documentTitle="Negosiasi Berita Acara"
-          documentHtml={negoBaHtml(selectedId, selectedEvaluasi)}
+          documentTitle="Surat Hasil Tindak Lanjut"
+          documentHtml={shtlHtml(selectedId, selectedEvaluasi)}
         />
       </div>
     </MainLayout>

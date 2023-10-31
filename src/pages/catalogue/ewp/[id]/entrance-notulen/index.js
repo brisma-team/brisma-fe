@@ -3,7 +3,7 @@ import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { entNotHtml } from "@/templates/catalog/ewp";
-import { DocumentViewer } from "@/components/molecules/catalog";
+import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
   const { id } = useRouter().query;
@@ -42,6 +42,7 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Entrance Notulen Dokumen"} />
         </div>
+        <ProjectInfo type="ewp" id={params.id} />
         <DocumentViewer
           documentTitle="Entrance Notulen"
           documentHtml={entNotHtml(params.year, params.source, params.id)}

@@ -12,13 +12,17 @@ const InlineDialog = styled(TooltipPrimitive)`
   padding: ${token("space.100", "8px")} ${token("space.150", "12px")};
 `;
 
-const TooltipField = ({ textButton, content }) => (
+const TooltipField = ({ textButton, content, isLink = true }) => (
   <Tooltip component={InlineDialog} content={content}>
-    {(tooltipProps) => (
-      <Link href={"#"} {...tooltipProps}>
-        {textButton}
-      </Link>
-    )}
+    {(tooltipProps) =>
+      isLink ? (
+        <Link href={"#"} {...tooltipProps}>
+          {textButton}
+        </Link>
+      ) : (
+        <p {...tooltipProps}>{textButton}</p>
+      )
+    }
   </Tooltip>
 );
 

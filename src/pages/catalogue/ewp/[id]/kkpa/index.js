@@ -8,9 +8,10 @@ import { useKKPAList } from "@/data/catalog";
 
 import { IconClose, IconPlus } from "@/components/icons";
 import Textfield from "@atlaskit/textfield";
+import { ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
-  const id = useRouter().query.id;
+  const router = useRouter();
 
   const [kkpa, setKKPA] = useState([]);
   const [selectedId, setSelectedId] = useState("");
@@ -25,10 +26,10 @@ const index = () => {
   });
 
   useEffect(() => {
-    if (id !== undefined) setSelectedId(id);
-  }, [id]);
-
-  const idToUse = selectedId ? selectedId : "";
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setSelectedId(id);
+  }, [router.isReady]);
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
@@ -39,9 +40,9 @@ const index = () => {
   ];
 
   const { kkpaList } = useKKPAList(
-    idToUse.split("x1c-")[2],
-    idToUse.split("x1c-")[0],
-    idToUse.split("x1c-")[1],
+    selectedId !== undefined ? selectedId.split("x1c-")[2] : null,
+    selectedId !== undefined ? selectedId.split("x1c-")[0] : null,
+    selectedId !== undefined ? selectedId.split("x1c-")[1] : null,
     currentPage,
     filter.limit,
     filter.subactivity,
@@ -178,6 +179,10 @@ const index = () => {
           </div>
         )}
         {/* End Filter */}
+        <ProjectInfo
+          type="ewp"
+          id={selectedId !== undefined ? selectedId.split("x1c-")[1] : null}
+        />
         <div className="mt-5 mr-40">
           <Card>
             <div className="w-full h-full px-6">

@@ -5,10 +5,10 @@ import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import Button from "@atlaskit/button";
+import { ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
-  const kkptid = useRouter().query.detail;
-  const projectid = useRouter().query.id;
+  const router = useRouter();
 
   const [projectId, setProjectId] = useState("");
   const [kkptId, setKkptId] = useState("");
@@ -30,17 +30,15 @@ const index = () => {
   ];
 
   useEffect(() => {
-    if (kkptid !== undefined) setKkptId(kkptid);
-  }, [kkptid]);
-
-  useEffect(() => {
-    if (projectid !== undefined) setProjectId(projectid);
-    loadingSwal();
-  }, [projectid]);
+    if (!router.isReady) return;
+    const { detail, id } = router.query;
+    setKkptId(detail);
+    setProjectId(id);
+  }, [router.isReady]);
 
   const { kkptDetail } = useKKPTById(
-    projectId.split("x1c-")[2],
-    projectId.split("x1c-")[0],
+    projectId !== undefined ? projectId.split("x1c-")[2] : null,
+    projectId !== undefined ? projectId.split("x1c-")[0] : null,
     kkptId
   );
 
@@ -64,7 +62,7 @@ const index = () => {
 
   let watermark = [];
 
-  for (let index = 0; index < 94; index++) {
+  for (let index = 0; index < 140; index++) {
     watermark.push(`1151700023 - Aji M. Iqbal Fadhilah`);
   }
 
@@ -75,11 +73,17 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"KKPT Dokumen"} />
         </div>
+        <ProjectInfo
+          type="ewp"
+          id={projectId !== undefined ? projectId.split("x1c-")[1] : null}
+        />
         <div className="flex mb-5 gap-2">
           <Button appearance="warning" onClick={handlePrint}>
             Generate to PDF
           </Button>
-          <Button appearance="primary">Generate to Docx</Button>
+          <Button appearance="primary" isDisabled={true}>
+            Generate to Docx
+          </Button>
         </div>
         {/* Start Content */}
         <div className="w-[70rem] gap-6">

@@ -1,11 +1,11 @@
 import useRPMModuleById from "@/data/catalog/rpm";
 import { useState, useEffect } from "react";
 
-const negoNotHtml = (id, noEvaluasi) => {
+const negoAttHtml = (id, noEvaluasi) => {
   const [data, setData] = useState();
   const { moduleDetail } = useRPMModuleById(
     id,
-    "negosiasi-notulen",
+    "negosiasi-attendance",
     noEvaluasi
   );
 
@@ -22,4 +22,4 @@ const negoNotHtml = (id, noEvaluasi) => {
 `;
 };
 
-export default negoNotHtml;
+export default negoAttHtml;

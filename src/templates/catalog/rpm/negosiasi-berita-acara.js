@@ -1,19 +1,25 @@
-// import { useEntNotById } from "@/data/catalog";
+import useRPMModuleById from "@/data/catalog/rpm";
 import { useState, useEffect } from "react";
 
-export const negoBaHtml = (year, source, id) => {
+const negoBaHtml = (id, noEvaluasi) => {
   const [data, setData] = useState();
-  // const { entNotDetail } = useEntNotById(year, source, id);
+  const { moduleDetail } = useRPMModuleById(
+    id,
+    "negosiasi-berita-acara",
+    noEvaluasi
+  );
 
-  // useEffect(() => {
-  //   if (entNotDetail !== undefined) {
-  //     setData(entNotDetail.data.entrance_notulen);
-  //   }
-  // }, [entNotDetail]);
+  useEffect(() => {
+    if (moduleDetail !== undefined) {
+      setData(moduleDetail.data);
+    }
+  }, [moduleDetail]);
 
   return `
-    <main>  
-      ${data?.Content}
+    <main>
+      ${data?.content}
     </main>
 `;
 };
+
+export default negoBaHtml;

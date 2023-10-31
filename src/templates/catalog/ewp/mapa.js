@@ -157,27 +157,30 @@ const mapaHtml = (year, source, id) => {
                               <th rowspan="2" style="background-color: #3C64B1; color: white;"> <p style="text-align:center;">Auditor</p></th>
                             </tr>
                           </thead>
-                  ${
-                    apBody && [...apBody].length > 0
-                      ? apBody.map((data) => {
-                          return `
-                          <tbody>
-                            <tr>
-                              <td>${data?.ManualControlKode}</td>
-                              <td>${
-                                data?.RiskIssueName +
-                                " - " +
-                                data?.RiskIssueName
-                              }</td>
-                              <td>${data?.JumlahSample}</td>
-                              <td>${
-                                data?.PNAuditor + " - " + data?.NamaAuditor
-                              }</td>
-                            </tr>
-                          </tbody>`;
-                        })
-                      : ""
-                  }
+                          ${
+                            apBody && apBody.length > 0
+                              ? apBody
+                                  .filter(
+                                    (data) =>
+                                      data?.ManualControlKode ||
+                                      data?.RiskIssueName ||
+                                      data?.JumlahSample ||
+                                      data?.PNAuditor ||
+                                      data?.NamaAuditor
+                                  )
+                                  .map((data) => {
+                                    return `
+                                    <tbody>
+                                      <tr>
+                                        <td>${data?.ManualControlKode}</td>
+                                        <td>${data?.RiskIssueName} - ${data?.RiskIssueName}</td>
+                                        <td>${data?.JumlahSample}</td>
+                                        <td>${data?.PNAuditor} - ${data?.NamaAuditor}</td>
+                                      </tr>
+                                    </tbody>`;
+                                  })
+                              : ""
+                          }
                   </table>
             </figure>
           </section>

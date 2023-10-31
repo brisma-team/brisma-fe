@@ -1,8 +1,8 @@
+import { useState, useEffect } from "react";
 import { Breadcrumbs, PageTitle } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
-import { mapaHtml } from "@/templates/catalog/ewp";
-import { useState, useEffect } from "react";
+import { exitAttHtml } from "@/templates/catalog/ewp";
 import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
@@ -31,8 +31,8 @@ const index = () => {
     { name: "E.W.P", path: baseUrl },
     { name: "Daftar Dokumen", path: baseUrl + "/" + id },
     {
-      name: "Dokumen Addendum MAPA",
-      path: baseUrl + "/" + id + "/addendum-mapa",
+      name: "Dokumen Exit Attendance",
+      path: baseUrl + "/" + id + "/exit-attendance",
     },
   ];
 
@@ -41,12 +41,12 @@ const index = () => {
       <div className="px-5">
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">
-          <PageTitle text={"Addendum MAPA Dokumen"} />
+          <PageTitle text={"Exit Attendance Dokumen"} />
         </div>
         <ProjectInfo type="ewp" id={params.id} />
         <DocumentViewer
-          documentTitle="MAPA"
-          documentHtml={mapaHtml(params.year, params.source, params.id)}
+          documentTitle="Exit Attendance"
+          documentHtml={exitAttHtml(params.year, params.source, params.id)}
         />
       </div>
     </MainLayout>

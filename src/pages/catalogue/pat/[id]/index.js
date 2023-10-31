@@ -1,38 +1,54 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card } from "@/components/atoms";
+import { Breadcrumbs, Card, TableField } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
-import { TableField } from "@/components/atoms";
+import { ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
-  const { id } = useRouter().query;
+  const router = useRouter();
 
   const [typeList, setTypeList] = useState([]);
-  const [selectedId, setSelectedId] = useState(id || "");
+  const [params, setParams] = useState({
+    year: "2023",
+    type: "2",
+    id: "1",
+    uri: "",
+  });
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      ...params,
+      id: id,
+      uri: id,
+    });
+  }, [router.isReady]);
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "P.A.T", path: "/catalogue/pat" },
-    { name: "Daftar Dokumen", path: "/catalogue/pat/" + selectedId },
-  ];
-  const type_list = [
-    {
-      jenis: "Overview",
-      jumlah: "-----",
-      url: `${selectedId}/overview`,
-      isDisabled: false,
-    },
-    {
-      jenis: "Addendum PAT",
-      jumlah: "-----",
-      url: `${selectedId}/addendum-pat`,
-      isDisabled: true,
-    },
+    { name: "Daftar Dokumen", path: "/catalogue/pat/" + params.uri },
   ];
 
   useEffect(() => {
+    const type_list = [
+      {
+        jenis: "Overview",
+        jumlah: "-----",
+        url: `${params.uri}/overview`,
+        isDisabled: false,
+      },
+      {
+        jenis: "Addendum PAT",
+        jumlah: "-----",
+        url: `${params.uri}/addendum-pat`,
+        isDisabled: true,
+      },
+    ];
+
     if (type_list) {
       const mappingTypeList = type_list.map((data, key) => {
         return {
@@ -52,11 +68,7 @@ const index = () => {
       });
       setTypeList(mappingTypeList);
     }
-  }, []);
-
-  useState(() => {
-    if (id !== undefined) setSelectedId(id);
-  }, [id]);
+  }, [params.uri, params.id]);
 
   return (
     <MainLayout>
@@ -66,11 +78,15 @@ const index = () => {
         {/* End Breadcrumbs */}
         <div className="flex justify-between items-center mb-6">
           <div className="flex-1">
-            <div className="text-3xl font-bold">
-              Riwayat Dokumen Perencanaan Audit
-            </div>
+            <div className="text-3xl font-bold">Riwayat Dokumen PAT</div>
           </div>
         </div>
+        <ProjectInfo
+          type="pat"
+          year={params.year}
+          source={params.type}
+          id={params.id}
+        />
         <div className="mt-5 mr-40">
           <Card>
             <div className="w-full h-full px-6">
@@ -82,9 +98,6 @@ const index = () => {
                   items={typeList}
                 />
               </div>
-              {/* <div className="flex justify-center mt-5">
-                <Pagination pages={1} setCurrentPage={setCurrentPage} />
-              </div> */}
             </div>
           </Card>
         </div>

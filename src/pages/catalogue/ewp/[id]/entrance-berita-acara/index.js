@@ -3,7 +3,7 @@ import { Breadcrumbs, PageTitle } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
 import { entBaHtml } from "@/templates/catalog/ewp";
-import { DocumentViewer } from "@/components/molecules/catalog";
+import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
   const { id } = useRouter().query;
@@ -43,6 +43,7 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Entrance BA Dokumen"} />
         </div>
+        <ProjectInfo type="ewp" id={params.id} />
         <DocumentViewer
           documentTitle="Entrance BA"
           documentHtml={entBaHtml(params.year, params.source, params.id)}
