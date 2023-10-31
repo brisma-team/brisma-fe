@@ -78,27 +78,28 @@ const ModalAddDashboard = ({
                 handleChange={handleIsPublicChange}
               />
             </div>
-          </div>
-          <div className="flex flex-row justify-center">
-            <div className="grid grid-cols-6 col-span-6 pt-1">
-              <div className="p-1 col-span-3">
-                <Select
-                  // optionValue={ukaMapping}
-                  placeholder="Pilih Uka"
-                  // onChange={(e) => setUkas(e.value)}
-                  isSearchable={true}
-                />
+            <div className="p-3 text-base col-span-2 mb-2"></div>
+            <div className="p-1 col-span-4 mb-2">
+              <div className="mb-2 flex justify-between gap-3 overflow-x-hidden">
+                  <div className="w-1/2">
+                    <Select
+                      // optionValue={ukaMapping}
+                      placeholder="Pilih Uka"
+                      // onChange={(e) => setUkas(e.value)}
+                      isSearchable={true}
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <Select
+                      // optionValue={roleMapping}
+                      placeholder="Pilih Role"
+                      // onChange={(e) => setRoles(e.map((obj) => obj.value))}
+                      isSearchable={true}
+                      isMulti={true}
+                    />
+                  </div>
               </div>
-              <div className="p-1 pl-1 col-span-3">
-                <Select
-                  // optionValue={roleMapping}
-                  placeholder="Pilih Role"
-                  // onChange={(e) => setRoles(e.map((obj) => obj.value))}
-                  isSearchable={true}
-                  isMulti={true}
-                />
-              </div>
-              <div className="text-center p-1 pl-1 col-span-6 pt-3">
+              <div className="w-full">
                 <ButtonField
                   iconAfter={
                     <div className="text-atlasian-purple">
