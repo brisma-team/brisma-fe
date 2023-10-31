@@ -78,7 +78,7 @@ const TableSelectControl = ({
             <div className="max-h-[23rem] overflow-y-scroll">
               <Rows
                 items={data}
-                render={({ no, code, deskripsi, flag }) => (
+                render={({ no, id, code, deskripsi, flag }) => (
                   <Row>
                     <Cell width="10%" className={`border-x ${customCell}`}>
                       <div className={`${positionCenter} justify-center`}>
@@ -88,7 +88,7 @@ const TableSelectControl = ({
                               <IconArrowRight size="small" />
                             </div>
                           }
-                          handleClick={() => handleDeleteControl(code)}
+                          handleClick={() => handleDeleteControl(id)}
                           isDisabled={flag}
                         />
                       </div>

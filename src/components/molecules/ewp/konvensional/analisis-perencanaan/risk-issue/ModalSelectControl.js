@@ -134,10 +134,10 @@ const ModalSelectControl = ({
     loadingSwal("close");
   };
 
-  const handleDeleteControl = async (code) => {
+  const handleDeleteControl = async (id) => {
     loadingSwal();
     await useDeleteData(
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${selectedRiskIssue}/risk_control/${code}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${selectedRiskIssue}/risk_control/${id}`,
       {}
     );
     riskControlMutate();
