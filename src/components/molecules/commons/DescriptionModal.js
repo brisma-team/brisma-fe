@@ -4,8 +4,8 @@ import {
   Modal,
   TextAreaField,
 } from "@/components/atoms";
-import { useEffect } from "react";
-import { useState } from "react";
+import { confirmationSwal } from "@/helpers";
+import { useEffect, useState } from "react";
 
 const ModalFooter = ({ handleConfirm }) => {
   return (
@@ -34,7 +34,14 @@ const DescriptionModal = ({
     setShowModal(false);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
     setShowModal(false);
   };
 
@@ -45,7 +52,7 @@ const DescriptionModal = ({
       footer={<ModalFooter handleConfirm={handleConfirmWithClose} />}
     >
       <div className="w-[37.5rem] relative">
-        <CloseModal handleCloseModal={handleCloseModal} />
+        <CloseModal handleCloseModal={handleCloseModal} showModal={showModal} />
         <div className="mb-2">Deskripsi Kegiatan</div>
         <TextAreaField
           handleChange={(e) => setEditValue(e.target.value)}
