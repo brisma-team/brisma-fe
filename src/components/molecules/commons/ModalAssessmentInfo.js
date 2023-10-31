@@ -1,14 +1,22 @@
 import { CloseModal, Modal, TableField } from "@/components/atoms";
+import { confirmationSwal } from "@/helpers";
 
 const ModalAssessmentInfo = ({ showModal, setShowModal }) => {
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
     setShowModal(false);
   };
 
   return (
     <Modal showModal={showModal} positionCenter>
       <div className="w-[35rem] relative">
-        <CloseModal handleCloseModal={handleCloseModal} />
+        <CloseModal handleCloseModal={handleCloseModal} showModal={showModal} />
         <div className="mb-2 text-xl text-center font-bold">
           Assessment Information
         </div>
