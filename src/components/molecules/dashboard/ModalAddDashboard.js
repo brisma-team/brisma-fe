@@ -93,9 +93,7 @@ const ModalAddDashboard = ({
         }
       });
     }
-  }, [dataPayload, ukaRolePayload, isPublic, data]);
-
-  console.log(ukaRolePayload)
+  }, [dataPayload, ukaRolePayload, isPublic]);
 
   return (
     <Modal

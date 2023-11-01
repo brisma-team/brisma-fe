@@ -36,7 +36,7 @@ const ModalEditDashboard = ({
         }
       }))
     }
-  }, [ukaRolePayload, isPublic])
+  }, [editData.allow_list, isPublic])
 
   const handleCloseModal = async () => {
     setShowEditModal(false);
@@ -94,7 +94,7 @@ const ModalEditDashboard = ({
         return {
           ...rest,
           ...dataPayload,
-          id: editData.id,
+          id: curr.id,
           isPublic: true,
         }
       });
@@ -104,12 +104,12 @@ const ModalEditDashboard = ({
         return {
           ...rest,
           ...dataPayload,
-          id: editData.id,
-          allowlist: ukaRolePayload,
+          id: curr.id,
+          allowlist: ukaRolePayload.map((item) => { return { uka_code: item.uka_code, role_code: item.role_code } })
         }
       });
     }
-  }, [dataPayload, ukaRolePayload, isPublic, editData]);
+  }, [dataPayload, ukaRolePayload, isPublic]);
 
   return (
     <Modal
