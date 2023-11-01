@@ -26,7 +26,14 @@ const ModalEditDashboard = ({
   const [ukaRolePayload, setUkaRolePayload] = useState([{ uka_code: "", role_code: ""}]); 
 
   useEffect(() => {
-    if (ukaRolePayload.length === 1 && ukaRolePayload[0].uka_code === "" && ukaRolePayload[0].role_code === "" && isPublic === false) {
+    if (
+      editData.allow_list !== null &&
+      editData.allow_list !== undefined &&
+      ukaRolePayload.length === 1 && 
+      ukaRolePayload[0].uka_code === "" && 
+      ukaRolePayload[0].role_code === "" && 
+      isPublic === false
+      ) {
       setUkaRolePayload(editData.allow_list.map((item) => {
         return {
           uka_code: item.mapped_uka_code,
@@ -105,6 +112,7 @@ const ModalEditDashboard = ({
           ...rest,
           ...dataPayload,
           id: curr.id,
+          isPublic: false,
           allowlist: ukaRolePayload.map((item) => { return { uka_code: item.uka_code, role_code: item.role_code } })
         }
       });
