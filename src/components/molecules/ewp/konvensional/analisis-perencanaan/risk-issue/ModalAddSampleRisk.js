@@ -6,13 +6,13 @@ import {
   Modal,
   TextAreaField,
   TextInput,
+  TextInputDecimal,
 } from "@/components/atoms";
 import { useState, useEffect } from "react";
 import {
   confirmationSwal,
   errorSwal,
   loadingSwal,
-  parseInteger,
   useDeleteData,
 } from "@/helpers";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,6 +34,7 @@ import {
 } from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
 import { SubModalPickDataCSV } from "./modal/sample-risk/sample-csv";
 import {
+  usePlanningAnalysisEWP,
   useSamplePoolMapaEWP,
   useSampleUploadMapaEWP,
 } from "@/data/ewp/konvensional/mapa/analisis-perencanaan";
@@ -81,6 +82,35 @@ const ModalAddSampleRisk = ({
       mapa_uker_mcr_id: selectedRiskIssue,
     }
   );
+
+  const { planningAnalysisEWP, planningAnalysisEWPError } =
+    usePlanningAnalysisEWP("risk_issue_detail", {
+      risk_id: selectedRiskIssue,
+    });
+
+  useEffect(() => {
+    const response = planningAnalysisEWP?.data;
+    if (!planningAnalysisEWPError) {
+      dispatch(
+        setPayloadSample({
+          sample_sumber_info: response?.sample_sumber_info || "",
+          sample_jumlah_populasi: response?.sample_jumlah_populasi || "",
+          sample_jumlah_sample: response?.sample_jumlah_sample || "",
+          sample_periode_start: response?.sample_periode_start || "",
+          sample_periode_end: response?.sample_periode_end || "",
+          sample_uraian: response?.sample_uraian || "",
+          sample_ref_teknik_sampling_kode:
+            response?.sample_ref_teknik_sampling_kode || "",
+          sample_ref_teknik_sampling_name:
+            response?.sample_ref_teknik_sampling_name || "",
+        })
+      );
+    }
+  }, [planningAnalysisEWP?.data]);
+
+  useEffect(() => {
+    console.log("payloadSample => ", payloadSample);
+  }, [payloadSample]);
 
   useEffect(() => {
     let type;
@@ -308,7 +338,7 @@ const ModalAddSampleRisk = ({
           : true
       }
     >
-      <div className="w-[67rem]">
+      <div className="w-[75rem]">
         {isPickDataModal ? (
           <SubModalPickDataCSV
             selectedRiskIssue={selectedRiskIssue}
@@ -327,7 +357,7 @@ const ModalAddSampleRisk = ({
           />
         ) : (
           <div className="px-3 py-1 flex gap-3">
-            <div className="w-2/5">
+            <div className="w-[45%]">
               <div>
                 <Card>
                   <div className="px-6 w-full">
@@ -350,13 +380,10 @@ const ModalAddSampleRisk = ({
                     />
                     <FormWithLabel
                       form={
-                        <TextInput
+                        <TextInputDecimal
                           placeholder="Jumlah Populasi"
-                          onChange={(e) =>
-                            handleChange(
-                              "sample_jumlah_populasi",
-                              parseInteger(e.target.value).toString()
-                            )
+                          onChange={(value) =>
+                            handleChange("sample_jumlah_populasi", value)
                           }
                           value={payloadSample.sample_jumlah_populasi}
                         />
@@ -435,7 +462,7 @@ const ModalAddSampleRisk = ({
                 </Card>
               </div>
             </div>
-            <div className="w-3/5">
+            <div className="w-[55%]">
               <Card>
                 <div className="grid grid-cols-4 gap-10">
                   <DivButton

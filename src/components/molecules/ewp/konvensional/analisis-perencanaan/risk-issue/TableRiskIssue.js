@@ -176,7 +176,6 @@ const TableRiskIssue = ({
                 sub_major_kode,
                 program_audit,
                 kriteria,
-                sample,
                 total_mapa_sample,
                 role,
                 children = [],
@@ -278,11 +277,12 @@ const TableRiskIssue = ({
                     )}
                   </Cell>
                   <Cell width="8%" className={`border-r ${customCell}`}>
-                    {levelMap[`${kode}-${role}`] === 1 && sample && (
-                      <div className={positionCenter}>
-                        <Image src={ImageCheck} alt="" />
-                      </div>
-                    )}
+                    {levelMap[`${kode}-${role}`] === 1 &&
+                      total_mapa_sample > 0 && (
+                        <div className={positionCenter}>
+                          <Image src={ImageCheck} alt="" />
+                        </div>
+                      )}
                   </Cell>
                 </Row>
               )}
