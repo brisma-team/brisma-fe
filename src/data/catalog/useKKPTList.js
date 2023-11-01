@@ -29,7 +29,10 @@ export default function useKKPTList(
     `year=${year}&source=${type}&id=${id}&page=${page}&limit=${limit}` +
     filters;
   const path = `${process.env.NEXT_PUBLIC_API_URL_CATALOG}/catalog/ewp/kkpt?${parameters}`;
-  const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);
+  const { data, error, mutate, isLoading } = useSWR(
+    id !== null ? path : null,
+    withTokenFetcher
+  );
 
   return {
     kkptList: data,

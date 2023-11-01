@@ -13,7 +13,7 @@ const DocumentViewer = ({
 
   let watermark = [];
 
-  for (let index = 0; index < 94; index++) {
+  for (let index = 0; index < 140; index++) {
     watermark.push(`00136165 - I Putu Andeandika`);
   }
   const documentMap = (style, body) => {
@@ -52,11 +52,13 @@ const DocumentViewer = ({
   };
   return (
     <>
-      <div className="flex mb-5 gap-2">
+      <div className="flex mb-5 mt-5 gap-2">
         <Button appearance="warning" onClick={handlePrint}>
           Generate to PDF
         </Button>
-        <Button appearance="primary">Generate to Docx</Button>
+        {/* <Button appearance="primary" isDisabled={true}>
+          Generate to Docx
+        </Button> */}
       </div>
       <div className="w-[70rem] gap-6">
         <div>
@@ -64,16 +66,14 @@ const DocumentViewer = ({
             <div
               className={`overflow-y-scroll my-2 ${isLoading ? "blur-sm" : ""}`}
             >
-              <div>
-                <div className="h-full w-full ">
-                  <iframe
-                    title="frame document"
-                    id="content-doc"
-                    className="content-doc w-[70rem]"
-                    srcDoc={documentMap(documentStyle, documentHtml)}
-                    style={{ minHeight: "29.7cm", padding: "20px" }}
-                  />
-                </div>
+              <div className="h-full w-full ">
+                <iframe
+                  title="frame document"
+                  id="content-doc"
+                  className="content-doc w-[70rem]"
+                  srcDoc={documentMap(documentStyle, documentHtml)}
+                  style={{ minHeight: "29.7cm", padding: "20px" }}
+                />
               </div>
             </div>
           </Card>

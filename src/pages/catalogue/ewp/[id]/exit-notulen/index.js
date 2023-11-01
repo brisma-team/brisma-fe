@@ -3,7 +3,7 @@ import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { exitNotHtml } from "@/templates/catalog/ewp";
-import { DocumentViewer } from "@/components/molecules/catalog";
+import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
   const { id } = useRouter().query;
@@ -43,6 +43,7 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Exit Notulen Dokumen"} />
         </div>
+        <ProjectInfo type="ewp" id={params.id} />
         <DocumentViewer
           documentTitle="Exit BA"
           documentHtml={exitNotHtml(params.year, params.source, params.id)}

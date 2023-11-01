@@ -1,40 +1,34 @@
+import { useState, useEffect } from "react";
 import { Breadcrumbs, PageTitle } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
-import { negoBaHtml } from "@/templates/catalog/rpm/negosiasi-berita-acara";
-import DocumentViewer from "@/components/molecules/catalog/DocumentViewer";
+import negoBaHtml from "@/templates/catalog/rpm/negosiasi-berita-acara";
+import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
-  const { id } = useRouter().query;
-
-  const [params, setParams] = useState({
-    year: 2023,
-    source: 2,
-    id: 1,
-  });
+  const router = useRouter();
+  const [selectedId, setSelectedId] = useState();
+  const [selectedEvaluasi, setEvaluasi] = useState();
 
   useEffect(() => {
-    if (id !== undefined) {
-      setParams({
-        year: id.split("x1c-")[2],
-        source: id.split("x1c-")[0],
-        id: id.split("x1c-")[1],
-      });
-    }
-  }, [id]);
+    if (!router.isReady) return;
+    const { id, iteration } = router.query;
+    setSelectedId(id);
+    setEvaluasi(iteration);
+  }, [router.isReady]);
 
   const baseUrl = "/catalogue/rpm";
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "R.P.M", path: baseUrl },
-    { name: "Daftar Dokumen", path: baseUrl + "/" + id },
+    { name: "Daftar Dokumen", path: baseUrl + "/" + selectedId },
     {
-      name: "Negosiasi Berita Acara",
-      path: baseUrl + "/" + id + "/negosiasi-berita-acara",
+      name: "Dokumen Negosiasi Berita Acara",
+      path: baseUrl + "/" + selectedId + "/negosiasi-berita-acara",
     },
   ];
+
   return (
     <MainLayout>
       <div className="px-5">
@@ -42,9 +36,10 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Dokumen Negosiasi Berita Acara"} />
         </div>
+        <ProjectInfo type="rpm" id={selectedId} />
         <DocumentViewer
           documentTitle="Negosiasi Berita Acara"
-          documentHtml={negoBaHtml(params.year, params.source, params.id)}
+          documentHtml={negoBaHtml(selectedId, selectedEvaluasi)}
         />
       </div>
     </MainLayout>

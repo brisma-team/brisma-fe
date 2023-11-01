@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card, Pagination, TableField } from "@/components/atoms";
+import {
+  Breadcrumbs,
+  Card,
+  Pagination,
+  TableField,
+  TooltipField,
+} from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { IconArrowRight, IconPlus } from "@/components/icons";
 import { useSelector } from "react-redux";
@@ -41,43 +47,41 @@ const index = () => {
     if (ewpData != undefined) {
       loadingSwal("close");
       setTotalPages(ewpData.data.total_page);
-      const mappingCatEwp = ewpData.data.ewp_list
-        // .filter(
-        //   (list) =>
-        //     list.ProjectID.toString()
-        //       .toLowerCase()
-        //       .includes(searchFilter.toLowerCase()) ||
-        //     list.ProjectName.toLowerCase().includes(searchFilter.toLowerCase())
-        // )
-        .map((EwpList, key) => ({
-          No: (currentPage - 1) * 5 + key + 1,
-          "Project ID": EwpList?.ProjectID,
-          "Nama Project": shortenWord(EwpList?.ProjectName, 0, 35),
-          "Tahun Audit": EwpList?.Year,
-          "Tipe Audit": EwpList?.ProjectType,
-          Aksi: (
-            <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
-              <Link
-                href={
-                  "/catalogue/ewp/" +
-                  searchParamObject.source +
-                  "x1c-" +
-                  EwpList.ProjectID +
-                  "x1c-" +
-                  searchParamObject.year
+      const mappingCatEwp = ewpData.data.ewp_list.map((EwpList, key) => ({
+        No: (currentPage - 1) * 5 + key + 1,
+        "Project ID": EwpList?.ProjectID,
+        "Nama Project": (
+          <TooltipField
+            textButton={shortenWord(EwpList?.ProjectName, 0, 35)}
+            content={EwpList?.ProjectName}
+            isLink={false}
+          />
+        ),
+        "Tahun Audit": EwpList?.Year,
+        "Tipe Audit": EwpList?.ProjectType,
+        Aksi: (
+          <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
+            <Link
+              href={
+                "/catalogue/ewp/" +
+                searchParamObject.source +
+                "x1c-" +
+                EwpList.ProjectID +
+                "x1c-" +
+                searchParamObject.year
+              }
+            >
+              <Button
+                shouldFitContainer
+                iconBefore={
+                  <IconArrowRight primaryColor="#0051CB" size="medium" />
                 }
-              >
-                <Button
-                  shouldFitContainer
-                  iconBefore={
-                    <IconArrowRight primaryColor="#0051CB" size="medium" />
-                  }
-                  className="bottom-1.5"
-                />
-              </Link>
-            </div>
-          ),
-        }));
+                className="bottom-1.5"
+              />
+            </Link>
+          </div>
+        ),
+      }));
       setCatEwp(mappingCatEwp);
     }
   }, [ewpData]);

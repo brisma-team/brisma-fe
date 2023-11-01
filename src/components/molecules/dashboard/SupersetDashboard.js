@@ -13,10 +13,11 @@ const SupersetDashboard = ({ id, token }) => {
           fetchGuestToken: () => token,
           dashboardUiConfig: {
             hideTitle: true,
-            hideChartControls: true,
+            hideChartControls: false,
             hideTab: false,
             filters: {
-              visible: true
+              visible: true,
+              expanded: false,
             }
           },
         };

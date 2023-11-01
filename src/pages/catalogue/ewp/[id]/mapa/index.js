@@ -3,34 +3,37 @@ import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
 import { mapaHtml } from "@/templates/catalog/ewp";
 import { useState, useEffect } from "react";
-import { DocumentViewer } from "@/components/molecules/catalog";
+import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
-  const { id } = useRouter().query;
+  const router = useRouter();
 
   const [params, setParams] = useState({
     year: 2023,
     source: 2,
     id: 1,
+    uri: "",
   });
 
   useEffect(() => {
-    if (id !== undefined) {
-      setParams({
-        year: id.split("x1c-")[2],
-        source: id.split("x1c-")[0],
-        id: id.split("x1c-")[1],
-      });
-    }
-  }, [id]);
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      ...params,
+      year: id?.split("x1c-")[2],
+      source: id?.split("x1c-")[0],
+      id: id?.split("x1c-")[1],
+      uri: id,
+    });
+  }, [router.isReady]);
 
   const baseUrl = "/catalogue/ewp";
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: baseUrl },
-    { name: "Daftar Dokumen", path: baseUrl + "/" + id },
-    { name: "Dokumen MAPA", path: baseUrl + "/" + id + "/mapa" },
+    { name: "Daftar Dokumen", path: baseUrl + "/" + params.uri },
+    { name: "Dokumen MAPA", path: baseUrl + "/" + params.uri + "/mapa" },
   ];
 
   return (
@@ -40,6 +43,12 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"MAPA Dokumen"} />
         </div>
+        <ProjectInfo
+          type="ewp"
+          id={params.id}
+          year={params.year}
+          source={params.source}
+        />
         <DocumentViewer
           documentTitle="MAPA"
           documentHtml={mapaHtml(params.year, params.source, params.id)}

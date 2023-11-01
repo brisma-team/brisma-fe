@@ -3,7 +3,8 @@ import useKKPAById from "@/data/catalog/useKKPAById";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import DocumentViewer from "@/components/molecules/catalog/DocumentViewer";
+import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
+import dateLocaleString from "@/helpers/dateLocaleString";
 
 const index = () => {
   const kkpaid = useRouter().query.detail;
@@ -41,7 +42,6 @@ const index = () => {
 
   useEffect(() => {
     if (kkpaDetail !== undefined) {
-      console.log(kkpaDetail);
       setData(kkpaDetail.data.kkpa);
     }
   }, [kkpaDetail]);
@@ -53,6 +53,10 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"KKPA Dokumen"} />
         </div>
+        <ProjectInfo
+          type="ewp"
+          id={projectId !== undefined ? projectId.split("x1c-")[1] : null}
+        />
         <DocumentViewer
           documentTitle="KKPA"
           documentStyle={`table,
@@ -111,9 +115,8 @@ const index = () => {
         <div><p>${data?.SubActivity ? data?.SubActivity : "**"}</p></div>
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">I. RISK ISSUE</h3>
-        <div><p style="text-align: justify;">${
-          data?.RiskIssueName ? data?.RiskIssueName : "**"
-        }</p></div>
+        <div><p style="text-align: justify;">${data?.RiskIssueCode}</p></div>
+        ${data?.RiskIssueName}
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">II. CONTROL</h3>
         <div>
@@ -159,9 +162,15 @@ const index = () => {
             <td style="width: 33.3333%;">Periode Populasi</td>
             <td style="width: 3.9593%;">:</td>
             <td style="width: 62.7073%;">
-              ${data?.PeriodeStart ? data?.PeriodeStart : "**"}` +
+              ${
+                data?.PeriodeStart
+                  ? dateLocaleString(data?.PeriodeStart, true)
+                  : "**"
+              }` +
             " - " +
-            `${data?.PeriodeEnd ? data?.PeriodeEnd : "**"}</td>
+            `${
+              data?.PeriodeEnd ? dateLocaleString(data?.PeriodeEnd, true) : "**"
+            }</td>
             </tr>
             <tr>
             <td style="width: 33.3333%;">Jumlah Populasi</td>
@@ -222,10 +231,10 @@ const index = () => {
                     </thead>
                     <tbody>
                         <tr>
-                        <td>**</td>
-                        <td>**</td>
-                        <td>**</td>
-                        <td>**</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     </tbody>
                 </table>

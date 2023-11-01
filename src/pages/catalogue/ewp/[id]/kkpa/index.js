@@ -8,12 +8,12 @@ import { useKKPAList } from "@/data/catalog";
 
 import { IconClose, IconPlus } from "@/components/icons";
 import Textfield from "@atlaskit/textfield";
+import { ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
-  const id = useRouter().query.id;
+  const router = useRouter();
 
   const [kkpa, setKKPA] = useState([]);
-  const [selectedId, setSelectedId] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [showFilter, setShowFilter] = useState(false);
@@ -23,25 +23,36 @@ const index = () => {
     riskissue: "",
     limit: 5,
   });
+  const [params, setParams] = useState({
+    year: "2023",
+    type: "2",
+    id: "1",
+  });
 
   useEffect(() => {
-    if (id !== undefined) setSelectedId(id);
-  }, [id]);
-
-  const idToUse = selectedId ? selectedId : "";
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      ...params,
+      year: id?.split("x1c-")[2],
+      type: id?.split("x1c-")[0],
+      id: id?.split("x1c-")[1],
+      uri: id,
+    });
+  }, [router.isReady]);
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: "/catalogue/ewp" },
-    { name: "Daftar Dokumen", path: "/catalogue/ewp/" + selectedId },
-    { name: "Riwayat KKPA", path: "/catalogue/ewp/" + selectedId + "/kkpa" },
+    { name: "Daftar Dokumen", path: "/catalogue/ewp/" + params.uri },
+    { name: "Riwayat KKPA", path: "/catalogue/ewp/" + params.uri + "/kkpa" },
   ];
 
   const { kkpaList } = useKKPAList(
-    idToUse.split("x1c-")[2],
-    idToUse.split("x1c-")[0],
-    idToUse.split("x1c-")[1],
+    params.year,
+    params.type,
+    params.id,
     currentPage,
     filter.limit,
     filter.subactivity,
@@ -78,7 +89,7 @@ const index = () => {
             <div className="text-center col-span-3">
               <div className="">
                 <Button
-                  href={"/catalogue/ewp/" + selectedId + "/kkpa/" + data.KKPAID}
+                  href={"/catalogue/ewp/" + params.uri + "/kkpa/" + data.KKPAID}
                   shouldFitContainer
                   appearance="primary"
                 >
@@ -178,6 +189,12 @@ const index = () => {
           </div>
         )}
         {/* End Filter */}
+        <ProjectInfo
+          type="ewp"
+          id={params.id}
+          year={params.year}
+          source={params.type}
+        />
         <div className="mt-5 mr-40">
           <Card>
             <div className="w-full h-full px-6">

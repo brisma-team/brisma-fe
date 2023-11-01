@@ -9,13 +9,14 @@ import { useKKPTList } from "@/data/catalog";
 import { IconClose, IconPlus } from "@/components/icons";
 import Textfield from "@atlaskit/textfield";
 import { ProjectInfo } from "@/components/molecules/catalog";
+import Link from "next/link";
 
 const index = () => {
   const id = useRouter().query.id;
+  const router = useRouter();
 
   const [kkpt, setKKPT] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
-  const [selectedId, setSelectedId] = useState("");
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState({
@@ -26,24 +27,36 @@ const index = () => {
     limit: 5,
   });
 
-  useEffect(() => {
-    if (id !== undefined) setSelectedId(id);
-  }, [id]);
+  const [params, setParams] = useState({
+    year: "2023",
+    type: "2",
+    id: "1",
+  });
 
-  const idToUse = selectedId ? selectedId : "";
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      ...params,
+      year: id?.split("x1c-")[2],
+      type: id?.split("x1c-")[0],
+      id: id?.split("x1c-")[1],
+      uri: id,
+    });
+  }, [router.isReady]);
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: "/catalogue/ewp" },
-    { name: "Daftar Dokumen", path: "/catalogue/ewp/" + selectedId },
-    { name: "Riwayat KKPT", path: "/catalogue/ewp/" + selectedId + "/kkpt" },
+    { name: "Daftar Dokumen", path: "/catalogue/ewp/" + params.uri },
+    { name: "Riwayat KKPT", path: "/catalogue/ewp/" + params.uri + "/kkpt" },
   ];
 
   const { kkptList } = useKKPTList(
-    idToUse.split("x1c-")[2],
-    idToUse.split("x1c-")[0],
-    idToUse.split("x1c-")[1],
+    params.year,
+    params.type,
+    params.id,
     currentPage,
     filter.limit,
     filter.kkpttitle,
@@ -181,14 +194,19 @@ const index = () => {
           </div>
         )}
         {/* End Filter */}
-        <ProjectInfo />
+        <ProjectInfo
+          type="ewp"
+          id={params.id}
+          year={params.year}
+          source={params.type}
+        />
         <div className="mt-5 mr-40">
           <Card>
             <div className="w-full h-full px-6">
               <div className="text-xl font-bold p-5">Pustaka Dokumen</div>
-              {/* <Link className="pl-5 underline" href={"#"}>
+              <Link className="pl-5 underline" href={"#"}>
                 Lihat Seluruh Dokumen
-              </Link> */}
+              </Link>
               <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
                 <TableField
                   headers={[

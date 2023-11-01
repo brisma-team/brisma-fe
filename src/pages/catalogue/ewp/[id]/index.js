@@ -5,99 +5,116 @@ import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
 import { useEWPAllAttachment } from "@/data/catalog";
 import shortenWord from "@/helpers/shortenWord";
+import { ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
-  const { id } = useRouter().query;
+  const router = useRouter();
 
   const [typeList, setTypeList] = useState([]);
   const [ewpAttachment, setEwpAttachment] = useState([]);
-  const [selectedId, setSelectedId] = useState(id || "");
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [params, setParams] = useState({
+    year: "2023",
+    type: "2",
+    id: "1",
+    uri: "",
+  });
 
   useEffect(() => {
-    if (id !== undefined) setSelectedId(id);
-  }, [id]);
-
-  const idToUse = selectedId ? selectedId : "";
-
-  const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
-    { name: "Catalogue", path: "/catalogue" },
-    { name: "E.W.P", path: "/catalogue/ewp" },
-    { name: "Daftar Dokumen", path: "/catalogue/ewp/" + selectedId },
-  ];
-  const type_list = [
-    {
-      jenis: "MAPA",
-      jumlah: "-----",
-      url: `${selectedId}/mapa`,
-      isDisabled: false,
-    },
-    {
-      jenis: "Addendum MAPA",
-      jumlah: "-----",
-      url: `${selectedId}/addendum-mapa`,
-      // isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-      isDisabled: true,
-    },
-    {
-      jenis: "Entrance Attendance",
-      jumlah: "-----",
-      url: `${selectedId}/entrance-attendance`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-    },
-    {
-      jenis: "Entrance Notulen",
-      jumlah: "-----",
-      url: `${selectedId}/entrance-notulen`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-    },
-    {
-      jenis: "Entrance Berita Acara",
-      jumlah: "-----",
-      url: `${selectedId}/entrance-berita-acara`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-    },
-    {
-      jenis: "KKPA",
-      jumlah: "-----",
-      url: `${selectedId}/kkpa`,
-      isDisabled: false,
-    },
-    {
-      jenis: "KKPT",
-      jumlah: "-----",
-      url: `${selectedId}/kkpt`,
-      isDisabled: false,
-    },
-    {
-      jenis: "Exit Attendance",
-      jumlah: "-----",
-      url: `${selectedId}/exit-attendance`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-    },
-    {
-      jenis: "Exit Notulen",
-      jumlah: "-----",
-      url: `${selectedId}/exit-notulen`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-    },
-    {
-      jenis: "Exit Berita Acara",
-      jumlah: "-----",
-      url: `${selectedId}/exit-berita-acara`,
-      isDisabled: selectedId.split("x1c-")[0] === "2" ? false : true,
-    },
-    {
-      jenis: "LHA",
-      jumlah: "-----",
-      url: `${selectedId}/lha`,
-      isDisabled: true,
-    },
-  ];
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      ...params,
+      year: id?.split("x1c-")[2],
+      type: id?.split("x1c-")[0],
+      id: id?.split("x1c-")[1],
+      uri: id,
+    });
+  }, [router.isReady]);
 
   useEffect(() => {
+    const type_list = [
+      {
+        jenis: "MAPA",
+        jumlah: "-----",
+        url: `${params.uri}/mapa`,
+        isDisabled: false,
+      },
+      {
+        jenis: "Addendum MAPA",
+        jumlah: "-----",
+        url: `${params.uri}/addendum-mapa`,
+        isDisabled: true,
+      },
+      {
+        jenis: "Entrance Attendance",
+        jumlah: "-----",
+        url: `${params.uri}/entrance-attendance`,
+        isDisabled: params.type === "2" ? false : true,
+      },
+      {
+        jenis: "Entrance Notulen",
+        jumlah: "-----",
+        url: `${params.uri}/entrance-notulen`,
+        isDisabled: params.type === "2" ? false : true,
+      },
+      {
+        jenis: "Entrance Berita Acara",
+        jumlah: "-----",
+        url: `${params.uri}/entrance-berita-acara`,
+        isDisabled: params.type === "2" ? false : true,
+      },
+      {
+        jenis: "KKPA",
+        jumlah: "-----",
+        url: `${params.uri}/kkpa`,
+        isDisabled: false,
+      },
+      {
+        jenis: "KKPT",
+        jumlah: "-----",
+        url: `${params.uri}/kkpt`,
+        isDisabled: false,
+      },
+      {
+        jenis: "Exit Attendance",
+        jumlah: "-----",
+        url: `${params.uri}/exit-attendance`,
+        isDisabled: params.type === "2" ? false : true,
+      },
+      {
+        jenis: "Exit Notulen",
+        jumlah: "-----",
+        url: `${params.uri}/exit-notulen`,
+        isDisabled: params.type === "2" ? false : true,
+      },
+      {
+        jenis: "Exit Berita Acara",
+        jumlah: "-----",
+        url: `${params.uri}/exit-berita-acara`,
+        isDisabled: params.type === "2" ? false : true,
+      },
+      {
+        jenis: "LHA",
+        jumlah: "-----",
+        url: `${params.uri}/lha`,
+        isDisabled: false,
+      },
+      {
+        jenis: "Laporan Temuan Major",
+        jumlah: "-----",
+        url: `${params.uri}/laporan-temuan-major`,
+        isDisabled: params.type === "2" ? false : true,
+      },
+      {
+        jenis: "Berita Acara Temuan Minor",
+        jumlah: "-----",
+        url: `${params.uri}/berita-acara-temuan-minor`,
+        isDisabled: params.type === "2" ? false : true,
+      },
+    ];
+
     if (type_list) {
       const mappingTypeList = type_list.map((data, key) => {
         return {
@@ -116,28 +133,35 @@ const index = () => {
       });
       setTypeList(mappingTypeList);
     }
-  }, []);
+  }, [params.uri, params.type]);
 
   const { allAttachmentData } = useEWPAllAttachment(
-    idToUse.split("x1c-")[2],
-    idToUse.split("x1c-")[0],
-    idToUse.split("x1c-")[1],
+    params.year,
+    params.type,
+    params.id,
     currentPage
   );
+
+  const breadcrumbs = [
+    { name: "Menu", path: "/dashboard" },
+    { name: "Catalogue", path: "/catalogue" },
+    { name: "E.W.P", path: "/catalogue/ewp" },
+    { name: "Daftar Dokumen", path: "/catalogue/ewp/" + params.id },
+  ];
 
   useEffect(() => {
     if (allAttachmentData != undefined) {
       setTotalPages(allAttachmentData.data.total_page);
       const mappingAttachment = allAttachmentData.data.all_attachment.map(
         (v, key) => {
-          const datePart = v?.CreatedAt.split(".")[0];
           return {
             No: (currentPage - 1) * 5 + key + 1,
-            "Nama Dokumen":
-              idToUse.split("x1c-")[0] == 1
-                ? shortenWord(v?.AttachmentName, 0, 45)
-                : shortenWord(v?.AttachmentName.berkas, 0, 45),
-            "Tanggal Dibuat": datePart,
+            "Nama Dokumen": shortenWord(
+              params.type == "1" ? v?.AttachmentName : v?.AttachmentName.berkas,
+              0,
+              45
+            ),
+            "Tanggal Dibuat": v?.CreatedAt.split(".")[0],
             Aksi: (
               <div className="grid grid-cols-3 text-center col-span-3">
                 <div className="align-middle px-2">
@@ -172,11 +196,15 @@ const index = () => {
         {/* End Breadcrumbs */}
         <div className="flex justify-between items-center mb-6">
           <div className="flex-1">
-            <div className="text-3xl font-bold">
-              Riwayat Dokumen Audit Project
-            </div>
+            <div className="text-3xl font-bold">Riwayat Dokumen EWP</div>
           </div>
         </div>
+        <ProjectInfo
+          type="ewp"
+          source={params.type}
+          id={params.id}
+          year={params.year}
+        />
         <div className="mt-5 mr-40">
           <Card>
             <div className="w-full h-full px-6">

@@ -3,7 +3,7 @@ import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
 import { mapaHtml } from "@/templates/catalog/ewp";
 import { useState, useEffect } from "react";
-import { DocumentViewer } from "@/components/molecules/catalog";
+import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
   const { id } = useRouter().query;
@@ -43,6 +43,7 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Addendum MAPA Dokumen"} />
         </div>
+        <ProjectInfo type="ewp" id={params.id} />
         <DocumentViewer
           documentTitle="MAPA"
           documentHtml={mapaHtml(params.year, params.source, params.id)}
