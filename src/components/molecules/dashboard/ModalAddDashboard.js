@@ -1,13 +1,6 @@
 import React, { use, useEffect, useState } from "react";
-import { Modal, CloseModal, ButtonField, TextInput, Select, ButtonIcon, CheckboxField } from "@/components/atoms";
+import { Modal, CloseModal, ButtonField, TextInput, CheckboxField } from "@/components/atoms";
 import { IconPlus } from "@/components/icons";
-import Button from "@atlaskit/button";
-import AddCircleIcon from "@atlaskit/icon/glyph/add-circle";
-import Close from "@atlaskit/icon/glyph/editor/close";
-import SendIcon from "@atlaskit/icon/glyph/send";
-import useUkaList from "@/data/dashboard/useUkaList";
-import useRoleList from "@/data/dashboard/useRoleList";
-import { confirmationSwal } from "@/helpers";
 import UkaSelectDashboard from "@/components/molecules/dashboard/UkaSelectDashboard";
 import RoleSelectDashboard from "@/components/molecules/dashboard/RoleSelectDashboard";
 
@@ -33,13 +26,6 @@ const ModalAddDashboard = ({
   const [ukaRolePayload, setUkaRolePayload] = useState([{ uka_code: "", role_code: ""}]); 
 
   const handleCloseModal = async () => {
-    const confirm = await confirmationSwal(
-      "Apakah Anda ingin menutup modal ini?"
-    );
-    if (!confirm.value) {
-      return;
-    }
-
     setShowModal(false);
   };
   
@@ -50,7 +36,6 @@ const ModalAddDashboard = ({
     } else {
       setIsPublic(false)
     }
-    console.log(data)
   }
 
   const handleChangeEmbedId = (e) => {
@@ -59,7 +44,6 @@ const ModalAddDashboard = ({
     
   const handleChangeName = (e) => { 
     setDataPayload({ ...dataPayload, name: e.target.value });
-    console.log(data)
   };
 
   const handleChangeUka = (e, index) => {
@@ -78,7 +62,6 @@ const ModalAddDashboard = ({
       role_code: e.map((obj) => obj.value)
     }
     setUkaRolePayload(newUkaRolePayload)
-    console.log(data)
   }
 
   const handleAddUkaRoleGroup = () => {
@@ -110,14 +93,14 @@ const ModalAddDashboard = ({
         }
       });
     }
-    
-    console.log(data);
   }, [dataPayload, ukaRolePayload, isPublic, data]);
+
+  console.log(ukaRolePayload)
 
   return (
     <Modal
       showModal={showModal}
-      onClickOutside={CloseModal}
+      onClickOutside={handleCloseModal}
       positionCenter={true}
       footer={<ModalFooter handleConfirm={handleSubmit} />}
     >
