@@ -28,6 +28,7 @@ const ModalFooter = ({
   mutate,
   setShowModal,
   sampleMutate,
+  sampleInfoMutate,
   typeSamplePool,
 }) => {
   const dispatch = useDispatch();
@@ -130,6 +131,7 @@ const ModalFooter = ({
         payloadUploadSample
       );
       sampleMutate();
+      sampleInfoMutate();
       setIsPickDataModal(false);
       setIsSelectedSamplePool(false);
     } else {

@@ -129,8 +129,10 @@ const ContentExistingSampleCSV = ({
   const handleSelectedSample = async (id, directory, fileName) => {
     setSelectedSamplePoolId(id);
     await importDataFromUrl(directory, fileName);
-    setIsSelectedSamplePool(true);
-    setCurrentSubModalStage(1);
+    if (currentModalStage === 1) {
+      setIsSelectedSamplePool(true);
+      setCurrentSubModalStage(1);
+    }
   };
 
   const customHeader = `h-full flex items-center text-brisma`;

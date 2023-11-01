@@ -83,10 +83,13 @@ const ModalAddSampleRisk = ({
     }
   );
 
-  const { planningAnalysisEWP, planningAnalysisEWPError } =
-    usePlanningAnalysisEWP("risk_issue_detail", {
-      risk_id: selectedRiskIssue,
-    });
+  const {
+    planningAnalysisEWP,
+    planningAnalysisEWPError,
+    planningAnalysisEWPMutate,
+  } = usePlanningAnalysisEWP("risk_issue_detail", {
+    risk_id: selectedRiskIssue,
+  });
 
   useEffect(() => {
     const response = planningAnalysisEWP?.data;
@@ -107,10 +110,6 @@ const ModalAddSampleRisk = ({
       );
     }
   }, [planningAnalysisEWP?.data]);
-
-  useEffect(() => {
-    console.log("payloadSample => ", payloadSample);
-  }, [payloadSample]);
 
   useEffect(() => {
     let type;
@@ -328,6 +327,7 @@ const ModalAddSampleRisk = ({
           mutate={mutate}
           setShowModal={setShowModal}
           sampleMutate={sampleUploadMapaEWPMutate}
+          sampleInfoMutate={planningAnalysisEWPMutate}
           typeSamplePool={typeSamplePool}
         />
       }
