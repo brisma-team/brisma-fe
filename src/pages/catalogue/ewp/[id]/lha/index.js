@@ -14,6 +14,7 @@ const index = () => {
     year: "2023",
     type: "2",
     id: "1",
+    uri: "",
   });
 
   useEffect(() => {
@@ -32,8 +33,8 @@ const index = () => {
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: "/catalogue/ewp" },
-    { name: "Detail", path: "/catalogue/ewp/" + params.id },
-    { name: "Daftar Dokumen", path: "/catalogue/ewp/" + params.id },
+    { name: "Detail", path: "/catalogue/ewp/" + params.uri },
+    { name: "Daftar Dokumen", path: "/catalogue/ewp/" + params.uri },
   ];
 
   useEffect(() => {

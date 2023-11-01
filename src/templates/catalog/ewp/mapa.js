@@ -23,7 +23,7 @@ const mapaHtml = (year, source, id) => {
   }, [mapaDetail]);
 
   useEffect(() => {
-    if (anggaran.length > 0) {
+    if (anggaran?.length > 0) {
       anggaran.map((d) => {
         console.log(d.TipeAnggaran);
       });
@@ -158,7 +158,7 @@ const mapaHtml = (year, source, id) => {
                             </tr>
                           </thead>
                           ${
-                            apBody && apBody.length > 0
+                            apBody && apBody?.length > 0
                               ? apBody
                                   .filter(
                                     (data) =>
@@ -209,7 +209,7 @@ const mapaHtml = (year, source, id) => {
                       <th rowspan="2" style="background-color: #3C64B1; color: white;"> <p style="text-align:center;">Auditor</p></th>
                   </tr>
               </thead>
-              ${mcr.map((data, index) => {
+              ${mcr?.map((data, index) => {
                 return `
                     <tbody>
                       <tr>
@@ -233,7 +233,7 @@ const mapaHtml = (year, source, id) => {
         <article>
           <h4>VI. PROGRAM AUDIT</h4>
           <section>
-            ${mcr.map((data) => {
+            ${mcr?.map((data) => {
               return `
           <strong><p>Manual Control: ${
             data.SubActivityName + " - " + data.SubMajorName
@@ -448,8 +448,8 @@ const mapaHtml = (year, source, id) => {
               <tbody>
               
               ${
-                anggaran.length > 0 &&
-                anggaran.map((x, index) => {
+                anggaran?.length > 0 &&
+                anggaran?.map((x, index) => {
                   return `<tr >
                       <td style="text-align:center">
                         <p style="font-size:16px">${index + 1}</p>
@@ -483,7 +483,7 @@ const mapaHtml = (year, source, id) => {
           <tr>
               <td colspan="4" rowspan="1"><p style="font-size:16px"><strong>Total</strong></p></td>
               <td><p style="font-size:16px">Rp. ${convertToRupiah(
-                anggaran.reduce((accumulator, currentValue) => {
+                anggaran?.reduce((accumulator, currentValue) => {
                   const num = Number(currentValue.TotalAnggaran); // Convert the string to a number
                   if (!isNaN(num)) {
                     return accumulator + num;

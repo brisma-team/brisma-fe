@@ -12,6 +12,7 @@ const index = () => {
     year: 2023,
     source: 2,
     id: 1,
+    uri: "",
   });
 
   useEffect(() => {
@@ -22,6 +23,7 @@ const index = () => {
       year: id?.split("x1c-")[2],
       source: id?.split("x1c-")[0],
       id: id?.split("x1c-")[1],
+      uri: id,
     });
   }, [router.isReady]);
 
@@ -30,8 +32,8 @@ const index = () => {
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: baseUrl },
-    { name: "Daftar Dokumen", path: baseUrl + "/" + params.id },
-    { name: "Dokumen MAPA", path: baseUrl + "/" + params.id + "/mapa" },
+    { name: "Daftar Dokumen", path: baseUrl + "/" + params.uri },
+    { name: "Dokumen MAPA", path: baseUrl + "/" + params.uri + "/mapa" },
   ];
 
   return (

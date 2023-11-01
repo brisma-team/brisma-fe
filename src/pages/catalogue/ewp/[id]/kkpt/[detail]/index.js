@@ -81,9 +81,9 @@ const index = () => {
           <Button appearance="warning" onClick={handlePrint}>
             Generate to PDF
           </Button>
-          <Button appearance="primary" isDisabled={true}>
+          {/* <Button appearance="primary" isDisabled={true}>
             Generate to Docx
-          </Button>
+          </Button> */}
         </div>
         {/* Start Content */}
         <div className="w-[70rem] gap-6">
