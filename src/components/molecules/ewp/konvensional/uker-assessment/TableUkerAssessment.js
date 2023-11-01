@@ -1,8 +1,7 @@
 import {
   ButtonIcon,
   ErrorValidation,
-  InlineEditText,
-  TextInput,
+  TextInputDecimal,
 } from "@/components/atoms";
 import { IconCrossCircle, IconInfo, IconQuestions } from "@/components/icons";
 import {
@@ -10,7 +9,6 @@ import {
   OrgehSelect,
   UkerTypeSelect,
 } from "@/components/molecules/commons";
-import { convertToNominal } from "@/helpers";
 import { setUkerAssessmentData } from "@/slices/ewp/konvensional/mapa/ukerAssessmentMapaEWPSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -18,6 +16,7 @@ const TableUkerAssessment = ({
   handleChange,
   setShowDescModal,
   setOpenDescIdx,
+  setShowAssessmentInfoModal,
 }) => {
   const dispatch = useDispatch();
   const validationErrors = useSelector(
@@ -76,12 +75,8 @@ const TableUkerAssessment = ({
                 />
               </div>
               <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex flex-col items-center justify-center text-justify px-3 py-1">
-                <div className="-mb-3 -mx-2 -mt-5 w-full">
-                  <InlineEditText
-                    isDisabled={true}
-                    value={v.ref_auditee_branch_name}
-                    placeholder={v.ref_auditee_branch_name}
-                  />
+                <div className="-mb-3 -mx-2 -mt-3 w-full">
+                  {v.ref_auditee_branch_name}
                 </div>
               </div>
               <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex flex-col items-center justify-center text-justify px-2 py-1">
@@ -123,24 +118,11 @@ const TableUkerAssessment = ({
               </div>
               <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[11%] flex flex-col items-center justify-center px-2 py-1.5">
                 <div className="w-full">
-                  <TextInput
-                    onChange={(e) =>
-                      handleChange(
-                        "gross_profit",
-                        i,
-                        convertToNominal(e.target.value)
-                      )
-                    }
+                  <TextInputDecimal
+                    onChange={(value) => handleChange("gross_profit", i, value)}
                     placeholder={"Gross Profit"}
                     value={v.gross_profit}
                   />
-                  {validationErrors[`[${i}].gross_profit`] && (
-                    <div className="w-full px-1 py-0.5">
-                      <ErrorValidation
-                        message={validationErrors[`[${i}].gross_profit`]}
-                      />
-                    </div>
-                  )}
                 </div>
               </div>
               <div className="border-b-2 border-[#DFE1E6] w-[8%] flex items-center">
@@ -152,7 +134,11 @@ const TableUkerAssessment = ({
                       setShowDescModal(true), setOpenDescIdx(i)
                     )}
                   />
-                  <ButtonIcon color={"yellow"} icon={<IconInfo />} />
+                  <ButtonIcon
+                    handleClick={() => setShowAssessmentInfoModal(true)}
+                    color={"yellow"}
+                    icon={<IconInfo />}
+                  />
                 </div>
               </div>
             </div>
