@@ -23,6 +23,7 @@ const index = () => {
     useState(false);
   const [selectedRiskIssue, setSelectedRiskIssue] = useState(null);
   const [headerTextRiskIssue, setHeaderTextRiskIssue] = useState("");
+  const [typeModal, setTypeModal] = useState("");
 
   const riskIssueInfo = useSelector(
     (state) => state.planningAnalysisMapaEWP.riskIssueInfo
@@ -42,6 +43,10 @@ const index = () => {
     {
       name: `${auditorEWP?.data?.project_info?.project_id} / Analisis Perencanaan`,
       path: `/ewp/projects/konvensional/${id}/analisis-perencanaan`,
+    },
+    {
+      name: `Set Risk Issue`,
+      path: `/ewp/projects/konvensional/${id}/analisis-perencanaan/${sub_aktivitas_kode}/${uker_id}`,
     },
   ];
 
@@ -110,6 +115,9 @@ const index = () => {
         <ModalAddRiskIssue
           showModal={showModalCreateRiskIssue}
           setShowModal={setShowModalCreateRiskIssue}
+          typeModal={typeModal}
+          setTypeModal={setTypeModal}
+          selectedRiskIssue={selectedRiskIssue}
           mutate={planningAnalysisEWPMutate}
         />
       </div>
@@ -119,6 +127,8 @@ const index = () => {
         setHeaderTextRiskIssue={setHeaderTextRiskIssue}
         selectedRiskIssue={selectedRiskIssue}
         setSelectedRiskIssue={setSelectedRiskIssue}
+        setTypeModal={setTypeModal}
+        setShowModalCreateRiskIssue={setShowModalCreateRiskIssue}
         mutate={planningAnalysisEWPMutate}
       />
     </LandingLayoutEWP>

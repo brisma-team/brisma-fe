@@ -1,5 +1,9 @@
 import { ButtonIcon, Card, DivButton, LozengeField } from "@/components/atoms";
-import { IconChevronDown, IconChevronRight } from "@/components/icons";
+import {
+  IconChevronDown,
+  IconChevronRight,
+  IconEdit,
+} from "@/components/icons";
 import { confirmationSwal, loadingSwal, useDeleteData } from "@/helpers";
 import { ImageCheck, ImageClose } from "@/helpers/imagesUrl";
 import TableTree, {
@@ -22,6 +26,8 @@ const TableRiskIssue = ({
   setHeaderTextRiskIssue,
   selectedRiskIssue,
   setSelectedRiskIssue,
+  setTypeModal,
+  setShowModalCreateRiskIssue,
   mutate,
 }) => {
   const { id } = useRouter().query;
@@ -104,9 +110,15 @@ const TableRiskIssue = ({
     setSelectedRiskIssue(id);
   };
 
+  const handleUpdateRisk = (id) => {
+    setSelectedRiskIssue(id);
+    setTypeModal("update");
+    setShowModalCreateRiskIssue(true);
+  };
+
   const customHeader = `w-full h-full flex items-center text-brisma`;
   const customCell = `cell-width-full-height-full cell-custom-dataTables`;
-  const positionCenter = `w-full h-full flex justify-center items-center`;
+  const positionCenter = `w-full h-full flex justify-center gap-1 items-center`;
 
   return (
     <Card>
@@ -115,13 +127,13 @@ const TableRiskIssue = ({
           <Headers>
             <Header className="!hidden" />
             <Header
-              width="5%"
+              width="7%"
               className="border-x border-t rounded-ss-xl cell-custom-dataTables"
             >
               <div className={`${customHeader} justify-center`}>Aksi</div>
             </Header>
             <Header
-              width="46%"
+              width="44%"
               className="border-t border-r cell-custom-dataTables"
             >
               <div className={`${customHeader} pl-2`}>
@@ -188,7 +200,7 @@ const TableRiskIssue = ({
                   isExpanded={Boolean(expansionMap[`${kode}-${role}`])}
                 >
                   <Cell className="!hidden" />
-                  <Cell width="5%" className={`border-x ${customCell}`}>
+                  <Cell width="7%" className={`border-x ${customCell}`}>
                     {levelMap[`${kode}-${role}`] === 1 && (
                       <div className={positionCenter}>
                         <ButtonIcon
@@ -199,10 +211,19 @@ const TableRiskIssue = ({
                           }
                           handleClick={() => handleDeleteRisk(id)}
                         />
+                        <ButtonIcon
+                          icon={
+                            <div className="rounded-full border border-atlasian-yellow w-5 h-5 flex items-center justify-center p-1">
+                              <IconEdit size="small" />
+                            </div>
+                          }
+                          handleClick={() => handleUpdateRisk(id)}
+                          color={"yellow"}
+                        />
                       </div>
                     )}
                   </Cell>
-                  <Cell width="46%" className={`border-r ${customCell}`}>
+                  <Cell width="44%" className={`border-r ${customCell}`}>
                     <div
                       className={`w-full h-full flex items-center ${
                         levelMap[`${kode}-${role}`] === 1 ? `pl-6` : ``

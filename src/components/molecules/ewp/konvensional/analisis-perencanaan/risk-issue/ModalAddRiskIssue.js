@@ -18,8 +18,17 @@ import {
   SubModalRiskIssue,
 } from "./modal/risk-issue";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { usePlanningAnalysisEWP } from "@/data/ewp/konvensional/mapa/analisis-perencanaan";
 
-const ModalAddRiskIssue = ({ showModal, setShowModal, mutate }) => {
+const ModalAddRiskIssue = ({
+  showModal,
+  setShowModal,
+  typeModal,
+  setTypeModal,
+  selectedRiskIssue,
+  mutate,
+}) => {
   const dispatch = useDispatch();
   const { id } = useRouter().query;
 
@@ -31,6 +40,10 @@ const ModalAddRiskIssue = ({ showModal, setShowModal, mutate }) => {
     (state) => state.planningAnalysisMapaEWP.riskIssueInfo
   );
 
+  const { planningAnalysisEWP } = usePlanningAnalysisEWP("risk_issue_detail", {
+    risk_id: selectedRiskIssue,
+  });
+
   const schemaMappings = {
     schema: addRiskIssueMapaEWPSchema,
     resetErrors: resetValidationErrorsPayloadRiskIssue,
@@ -41,7 +54,10 @@ const ModalAddRiskIssue = ({ showModal, setShowModal, mutate }) => {
     {
       id: "step-1",
       label: (
-        <DivButton handleClick={() => setCurrentModalStage(1)}>
+        <DivButton
+          handleClick={() => setCurrentModalStage(1)}
+          isDisabled={typeModal === "update"}
+        >
           Risk Issue
         </DivButton>
       ),
@@ -72,6 +88,17 @@ const ModalAddRiskIssue = ({ showModal, setShowModal, mutate }) => {
       href: "#",
     },
   ];
+
+  useEffect(() => {
+    if (typeModal === "update") {
+      setCurrentModalStage(2);
+      dispatch(
+        setPayloadRiskIssue({
+          ..._.pick(planningAnalysisEWP?.data, ["program_audit", "kriteria"]),
+        })
+      );
+    }
+  }, [planningAnalysisEWP, typeModal]);
 
   const handleChange = (property, value) => {
     let updatedData;
@@ -112,14 +139,22 @@ const ModalAddRiskIssue = ({ showModal, setShowModal, mutate }) => {
     };
     const validate = setErrorValidation(payload, dispatch, schemaMappings);
 
-    if (validate) {
+    if (typeModal === "update") {
       await usePostData(
-        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/risk?sub_kode=${payload?.ref_sub_aktivitas_kode}&uker_id=${payload?.mapa_uker_id}`,
-        payload
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/${selectedRiskIssue}/risk_program_kriteria`,
+        payloadRiskIssue
       );
-      mutate();
-      setShowModal(false);
+    } else {
+      if (validate) {
+        await usePostData(
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/risk?sub_kode=${payload?.ref_sub_aktivitas_kode}&uker_id=${payload?.mapa_uker_id}`,
+          payload
+        );
+      }
     }
+    mutate();
+    setShowModal(false);
+    setTypeModal("");
   };
 
   const handleNextStage = async () => {
@@ -149,6 +184,7 @@ const ModalAddRiskIssue = ({ showModal, setShowModal, mutate }) => {
 
     setCurrentModalStage(1);
     setShowModal(false);
+    setTypeModal("");
     dispatch(resetPayloadRiskIssue());
   };
 
