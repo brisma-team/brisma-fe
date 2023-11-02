@@ -11,7 +11,7 @@ const ModalFooter = ({
       {currentModalStage > 1 && (
         <div className="rounded w-28 bg-atlasian-yellow">
           <ButtonField
-            text={"Template"}
+            text={"Get Default"}
             disabled={isDisabled}
             type={"submit"}
             name={"nextButton"}
