@@ -3,6 +3,7 @@ import ModalAddSubActivity from "./ModalAddSubActivity";
 import ModalDescAnlysisSubActivity from "./ModalDescAnalysisSubActivity";
 import TableSummaryAnalysis from "./TableSummaryAnalysis";
 import CardFilterSummary from "./CardFilterSummary";
+import ModalComment from "./ModalComment";
 
 export {
   ModalAddActivity,
@@ -10,4 +11,5 @@ export {
   ModalDescAnlysisSubActivity,
   TableSummaryAnalysis,
   CardFilterSummary,
+  ModalComment,
 };

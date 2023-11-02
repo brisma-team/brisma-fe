@@ -4,6 +4,7 @@ import useSamplePoolMapaEWP from "./useSamplePoolMapaEWP";
 import useRiskControlMapaEWP from "./useRiskControlMapaEWP";
 import useHistorySamplePoolMapaEWP from "./useHistorySamplePool";
 import useSummaryAnalysisEWP from "./useSummaryAnalysisEWP";
+import useHistoryCommentMapaEWP from "./useHistoryCommentMapaEWP";
 
 export {
   usePlanningAnalysisEWP,
@@ -12,4 +13,5 @@ export {
   useRiskControlMapaEWP,
   useHistorySamplePoolMapaEWP,
   useSummaryAnalysisEWP,
+  useHistoryCommentMapaEWP,
 };

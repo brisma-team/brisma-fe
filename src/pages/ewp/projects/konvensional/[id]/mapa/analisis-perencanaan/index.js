@@ -13,10 +13,7 @@ import { LandingLayoutEWP } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  DescriptionModal,
-  PrevNextNavigation,
-} from "@/components/molecules/commons";
+import { PrevNextNavigation } from "@/components/molecules/commons";
 import { useMapaEWP } from "@/data/ewp/konvensional/mapa";
 import TableTree, {
   Cell,
@@ -46,6 +43,7 @@ import { usePlanningAnalysisEWP } from "@/data/ewp/konvensional/mapa/analisis-pe
 import {
   ModalAddActivity,
   ModalAddSubActivity,
+  ModalComment,
   ModalDescAnlysisSubActivity,
   TableSummaryAnalysis,
 } from "@/components/molecules/ewp/konvensional/analisis-perencanaan";
@@ -89,6 +87,7 @@ const index = () => {
     (state) => state.planningAnalysisMapaEWP.planningAnalysisData
   );
 
+  const [isKTA, setIsKTA] = useState(false);
   const [currentContentStage, setCurrentContentStage] = useState(1);
   const [expansionMap, setExpansionMap] = useState({});
   const [levelMap, setLevelMap] = useState({});
@@ -104,13 +103,13 @@ const index = () => {
     useState(false);
   const [showModalDescAnlysisSubActivity, setShowModalDescAnlysisSubActivity] =
     useState(false);
+  const [showModalComment, setShowModalComment] = useState(false);
 
   const [selectedUker, setSelectedUker] = useState({ id: "", name: "" });
   const [selectedActivityId, setSelectedActivityId] = useState(null);
   const [selectedSubActivityId, setSelectedSubActivityId] = useState(null);
   const [selectedDesc, setSelectedDesc] = useState("");
 
-  const [showModalDesc, setShowModalDesc] = useState(false);
   const [type, setType] = useState("");
 
   const { user } = useUser();
@@ -124,6 +123,8 @@ const index = () => {
       aktivitas_kode: childParams.aktivitas_kode,
     });
 
+  const timAuditEWP = useMapaEWP("tim_audit", { id });
+
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
@@ -132,6 +133,18 @@ const index = () => {
       path: `/ewp/projects/konvensional/${id}/mapa/analisis-perencanaan`,
     },
   ];
+
+  useEffect(() => {
+    if (!timAuditEWP.mapaEWPError) {
+      if (
+        timAuditEWP.mapaEWP?.data?.tim_audit?.kta.some(
+          (auditor) => auditor?.pn === user?.data?.pn
+        )
+      ) {
+        setIsKTA(true);
+      }
+    }
+  }, [timAuditEWP.mapaEWP]);
 
   useEffect(() => {
     if (type === "modalSubActivity") {
@@ -355,7 +368,8 @@ const index = () => {
       payload.is_approved = true;
     } else {
       const result = await inputSwal(
-        "Apakah anda yakin ingin merubah status Sub-Aktivitas ini?"
+        "Apakah anda yakin ingin merubah status Sub-Aktivitas ini?",
+        "Yes"
       );
 
       if (!result.isConfirmed) {
@@ -371,6 +385,7 @@ const index = () => {
       payload
     );
     loadingSwal("close");
+    planningAnalysisEWPMutate();
   };
 
   const positionCenter = `w-full h-full flex justify-center items-center`;
@@ -463,9 +478,9 @@ const index = () => {
                   </Header>
                   <Header
                     width="8%"
-                    className="border-t border-r rounded-se-xl"
+                    className="border-t border-r flex justify-center rounded-se-xl"
                   >
-                    Comment
+                    Log
                   </Header>
                 </Headers>
                 <Rows
@@ -497,7 +512,7 @@ const index = () => {
                         className={`border-x cell-width-full-height-full`}
                       >
                         <div className={positionCenter}>
-                          {role !== "parent" && (
+                          {role !== "parent" && isKTA && (
                             <CheckboxField
                               isChecked={is_reviewed}
                               handleChange={(e) =>
@@ -511,7 +526,7 @@ const index = () => {
                         width="6%"
                         className={`border-r cell-width-full-height-full`}
                       >
-                        {levelMap[`${id}-${role}`] > 0 && (
+                        {levelMap[`${id}-${role}`] > 0 && isKTA && (
                           <div className={positionCenter}>
                             <ButtonIcon
                               icon={
@@ -562,7 +577,7 @@ const index = () => {
                             className={`flex items-center w-full justify-between ml-2`}
                           >
                             <div>{`${kode} - ${name}`}</div>
-                            {levelMap[`${id}-${role}`] < 2 && (
+                            {levelMap[`${id}-${role}`] < 2 && isKTA && (
                               <>
                                 <ButtonIcon
                                   icon={<Image src={ImageGroup} alt="" />}
@@ -595,18 +610,22 @@ const index = () => {
                         width="5%"
                         className="border-r cell-width-full-height-full cell-custom-dataTables"
                       >
-                        {levelMap[`${id}-${role}`] === 2 && (
-                          <div className={positionCenter}>
-                            <ButtonIcon
-                              icon={<IconQuestions />}
-                              color={"blue"}
-                              handleClick={() => (
-                                handleClickDescAnalysisSubActivity(id),
-                                setSelectedDesc(deskripsi)
-                              )}
-                            />
-                          </div>
-                        )}
+                        {levelMap[`${id}-${role}`] === 2 &&
+                          ((status_approval_name?.toLowerCase() === "on kta" &&
+                            isKTA) ||
+                            (status_approval_name?.toLowerCase() === "on ata" &&
+                              pic_pn === user.data.pn)) && (
+                            <div className={positionCenter}>
+                              <ButtonIcon
+                                icon={<IconQuestions />}
+                                color={`${deskripsi ? `blue` : `gray`}`}
+                                handleClick={() => (
+                                  handleClickDescAnalysisSubActivity(id),
+                                  setSelectedDesc(deskripsi)
+                                )}
+                              />
+                            </div>
+                          )}
                       </Cell>
                       <Cell
                         width="8%"
@@ -618,7 +637,10 @@ const index = () => {
                         width="9%"
                         className="border-r cell-width-full-height-full cell-custom-dataTables"
                       >
-                        {levelMap[`${id}-${role}`] === 2 && (
+                        {(levelMap[`${id}-${role}`] === 2 &&
+                          status_approval_name?.toLowerCase() === "on kta" &&
+                          isKTA) ||
+                        pic_pn === user.data.pn ? (
                           <div className={positionCenter}>
                             <LozengeField appreance="inprogress" isBold={true}>
                               <Link
@@ -629,8 +651,11 @@ const index = () => {
                               </Link>
                             </LozengeField>
                           </div>
+                        ) : (
+                          ""
                         )}
                       </Cell>
+
                       <Cell
                         width="8%"
                         className="border-r cell-width-full-height-full cell-custom-dataTables"
@@ -651,7 +676,9 @@ const index = () => {
                                   On ATA
                                 </div>
                               </LozengeField>
-                            ) : null)}
+                            ) : (
+                              ""
+                            ))}
                         </div>
                       </Cell>
                       <Cell
@@ -659,49 +686,49 @@ const index = () => {
                         className="border-r cell-width-full-height-full cell-custom-dataTables"
                       >
                         <div className={positionCenter}>
-                          {levelMap[`${id}-${role}`] === 2 &&
-                            (pic_pn === user.data.pn
-                              ? levelMap[`${id}-${role}`] === 2 &&
-                                (status_approval_name?.toLowerCase() ===
-                                "on kta" ? (
-                                  <LozengeField
-                                    appreance="removed"
-                                    isBold={true}
+                          {levelMap[`${id}-${role}`] === 2 ? (
+                            status_approval_name?.toLowerCase() === "on kta" &&
+                            isKTA ? (
+                              <LozengeField appreance="removed" isBold={true}>
+                                <DivButton
+                                  className={"flex gap-1 py-0.5"}
+                                  handleClick={() =>
+                                    handleUpdateApprovalStatusSubActivity(
+                                      id,
+                                      "reject"
+                                    )
+                                  }
+                                >
+                                  <Image src={ImageCircleArrowRed} alt="" />
+                                  <div className="text-white">Reject</div>
+                                </DivButton>
+                              </LozengeField>
+                            ) : (
+                              status_approval_name?.toLowerCase() ===
+                                "on ata" &&
+                              pic_pn === user.data.pn && (
+                                <LozengeField appreance="moved" isBold={true}>
+                                  <DivButton
+                                    className={"flex gap-1 py-0.5"}
+                                    handleClick={() =>
+                                      handleUpdateApprovalStatusSubActivity(
+                                        id,
+                                        "send"
+                                      )
+                                    }
                                   >
-                                    <DivButton
-                                      className={"flex gap-1 py-0.5"}
-                                      handleClick={() =>
-                                        handleUpdateApprovalStatusSubActivity(
-                                          id,
-                                          "reject"
-                                        )
-                                      }
-                                    >
-                                      <Image src={ImageCircleArrowRed} alt="" />
-                                      <div className="text-white">Reject</div>
-                                    </DivButton>
-                                  </LozengeField>
-                                ) : status_approval_name?.toLowerCase() ===
-                                  "on ata" ? (
-                                  <LozengeField appreance="moved" isBold={true}>
-                                    <DivButton
-                                      className={"flex gap-1 py-0.5"}
-                                      handleClick={() =>
-                                        handleUpdateApprovalStatusSubActivity(
-                                          id,
-                                          "send"
-                                        )
-                                      }
-                                    >
-                                      <Image
-                                        src={ImageCircleArrowYellow}
-                                        alt=""
-                                      />
-                                      <div className="text-white">Send</div>
-                                    </DivButton>
-                                  </LozengeField>
-                                ) : null)
-                              : "")}
+                                    <Image
+                                      src={ImageCircleArrowYellow}
+                                      alt=""
+                                    />
+                                    <div className="text-white">Send</div>
+                                  </DivButton>
+                                </LozengeField>
+                              )
+                            )
+                          ) : (
+                            ""
+                          )}
                         </div>
                       </Cell>
                       <Cell
@@ -713,12 +740,10 @@ const index = () => {
                             <ButtonIcon
                               icon={<IconQuestions />}
                               color={"blue"}
-                              handleClick={() => setShowModalDesc(true)}
-                            />
-                            <DescriptionModal
-                              showModal={showModalDesc}
-                              setShowModal={setShowModalDesc}
-                              value={deskripsi}
+                              handleClick={() => (
+                                setShowModalComment(true),
+                                setSelectedSubActivityId(id)
+                              )}
                             />
                           </div>
                         )}
@@ -736,7 +761,7 @@ const index = () => {
               <ModalAddSubActivity
                 showModal={showModalAddSubActivity}
                 setShowModal={setShowModalAddSubActivitiy}
-                activityId={selectedActivityId}
+                activityId={selectedSubActivityId}
                 handleSubmit={handleModalAddSubActivity}
               />
               <ModalDescAnlysisSubActivity
@@ -748,6 +773,11 @@ const index = () => {
                   setShowModalDescAnlysisSubActivity(false),
                   planningAnalysisEWPMutate()
                 )}
+              />
+              <ModalComment
+                showModal={showModalComment}
+                setShowModal={setShowModalComment}
+                selectedSubActivityId={selectedSubActivityId}
               />
             </div>
           </Card>{" "}
