@@ -193,6 +193,7 @@ const NavbarField = () => {
     pathname != "/rpm" &&
     pathname != "/dashboard" &&
     firstSegment != "catalogue" &&
+    firstSegment != "reporting" &&
     firstSegment != "reference"
       ? [
           <a href="/dashboard" key={1}>

@@ -37,7 +37,7 @@ const index = () => {
   const [combinedData, setCombinedData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [dashboard, setDashboard] = useState([]);
-  const [data, setData] = useState({ embedId: "", name: "" });
+  const [data, setData] = useState({ embedId: "", name: "", type: "visual" });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [index, setIndex] = useState(1);
@@ -51,6 +51,7 @@ const index = () => {
   const [editData, setEditData] = useState(); // Menambah state untuk data yang akan diedit
 
   const { dashboardList, dashboardListMutate } = useDashboardList(
+    "visual",
     currentPage,
     5
   );
