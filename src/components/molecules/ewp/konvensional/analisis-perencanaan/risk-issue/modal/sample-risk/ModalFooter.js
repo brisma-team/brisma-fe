@@ -2,6 +2,7 @@ import { ButtonField, UploadButton } from "@/components/atoms";
 import {
   errorSwal,
   loadingSwal,
+  setErrorValidation,
   usePostData,
   usePostFileData,
 } from "@/helpers";
@@ -10,10 +11,13 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   resetDataTables,
   resetPayloadUploadSample,
+  resetValidationErrorsPayloadSample,
   setDataTables,
   setPayloadUploadSample,
+  setValidationErrorsPayloadSample,
 } from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
 import { useRouter } from "next/router";
+import { riskIssueSampleMapaEWPSchema } from "@/helpers/schemas/ewp/konvensional/mapa/planningAnalysisMapaEWPSchema";
 
 const ModalFooter = ({
   isPickDataModal,
@@ -42,6 +46,12 @@ const ModalFooter = ({
   const dataTables = useSelector(
     (state) => state.planningAnalysisMapaEWP.dataTables
   );
+
+  const schemaMappings = {
+    schema: riskIssueSampleMapaEWPSchema,
+    resetErrors: resetValidationErrorsPayloadSample,
+    setErrors: setValidationErrorsPayloadSample,
+  };
 
   const handleConvertFromCSV = async (url, file) => {
     Papa.parse(file, {
@@ -125,6 +135,12 @@ const ModalFooter = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const validate = setErrorValidation(
+      payloadSample,
+      dispatch,
+      schemaMappings
+    );
+
     if (isPickDataModal) {
       await usePostData(
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/${selectedRiskIssue}/${typeSamplePool}/upload`,
@@ -135,12 +151,14 @@ const ModalFooter = ({
       setIsPickDataModal(false);
       setIsSelectedSamplePool(false);
     } else {
-      await usePostData(
-        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/${selectedRiskIssue}/sample_info`,
-        payloadSample
-      );
-      mutate();
-      setShowModal(false);
+      if (validate) {
+        await usePostData(
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/${selectedRiskIssue}/sample_info`,
+          payloadSample
+        );
+        mutate();
+        setShowModal(false);
+      }
     }
 
     setCurrentModalStage(1);

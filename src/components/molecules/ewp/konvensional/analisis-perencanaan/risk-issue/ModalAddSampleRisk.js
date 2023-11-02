@@ -69,6 +69,9 @@ const ModalAddSampleRisk = ({
   const payloadUploadSample = useSelector(
     (state) => state.planningAnalysisMapaEWP.payloadUploadSample
   );
+  const validationErrors = useSelector(
+    (state) => state.planningAnalysisMapaEWP.validationErrorsPayloadSample
+  );
 
   const { sampleUploadMapaEWP, sampleUploadMapaEWPMutate } =
     useSampleUploadMapaEWP({
@@ -377,6 +380,7 @@ const ModalAddSampleRisk = ({
                       label="Sumber Informasi"
                       widthLabel={"w-2/5"}
                       widthForm={"w-3/5"}
+                      errors={validationErrors["sample_sumber_info"]}
                     />
                     <FormWithLabel
                       form={
@@ -391,6 +395,7 @@ const ModalAddSampleRisk = ({
                       label="Jumlah Populasi"
                       widthLabel={"w-2/5"}
                       widthForm={"w-3/5"}
+                      errors={validationErrors["sample_jumlah_populasi"]}
                     />
                     <FormWithLabel
                       form={
@@ -413,6 +418,7 @@ const ModalAddSampleRisk = ({
                       widthLabel={"w-2/5"}
                       widthForm={"w-3/5"}
                       labelPositionTop={true}
+                      errors={validationErrors["sample_periode_start"]}
                     />
                     <FormWithLabel
                       form={
@@ -424,6 +430,7 @@ const ModalAddSampleRisk = ({
                       label="Jumlah Sample"
                       widthLabel={"w-2/5"}
                       widthForm={"w-3/5"}
+                      errors={validationErrors["sample_jumlah_sample"]}
                     />
                     <FormWithLabel
                       form={
@@ -441,6 +448,7 @@ const ModalAddSampleRisk = ({
                       label="Tehnik Sampling"
                       widthLabel={"w-2/5"}
                       widthForm={"w-3/5"}
+                      errors={validationErrors["sample_jumlah_sample"]}
                     />
                     <FormWithLabel
                       form={
@@ -457,6 +465,7 @@ const ModalAddSampleRisk = ({
                       widthLabel={"w-2/5"}
                       widthForm={"w-3/5"}
                       labelPositionTop={true}
+                      errors={validationErrors["sample_uraian"]}
                     />
                   </div>
                 </Card>
