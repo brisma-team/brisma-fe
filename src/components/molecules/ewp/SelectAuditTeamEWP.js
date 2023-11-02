@@ -16,7 +16,7 @@ const SelectAuditTeamEWP = ({
   const [options, setOptions] = useState([]);
 
   const arrUser = [];
-  const groups = ["ma", "kta", "ata"];
+  const groups = ["ata"];
   useEffect(() => {
     groups.forEach((group) => {
       if (mapaEWP?.data?.tim_audit) {
