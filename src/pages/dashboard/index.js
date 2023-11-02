@@ -33,20 +33,22 @@ const updateIntervalList = [
 
 export default function index() {
   const [interval, setInterval] = useState(updateIntervalList[3].value * 1000); // default 5 menit
-  const { data } = useGetToken(interval);
   const [dashboardList, setDashboardList] = useState([]);
   const [selected, setSelected] = useState("");
   const [ctoken, setCtoken] = useState("");
   const [tagName, setTagName] = useState("");
+  const [noActiveDashboard, setNoActiveDashboard] = useState(false);
+  const { data } = useGetToken("visual", interval);
 
   useEffect(() => {
-    if (data && data) {
+    if (data !== undefined && Array.isArray(data.list) && data.list.length > 0) {
       const mapping = data.list.map((v) => {
         return {
           label: v.name,
           value: v.embed_id,
         };
       });
+
       setDashboardList(mapping);
       if (selected === "") {
         setTagName(mapping[0].label);
@@ -54,6 +56,9 @@ export default function index() {
       }
 
       setCtoken(data.token);
+      setNoActiveDashboard(false)
+    } else {
+      setNoActiveDashboard(true);
     }
   }, [data, selected]);
 
@@ -74,41 +79,49 @@ export default function index() {
     setInterval(selectedOption.value * 1000);
   }
 
-  return (
-    <Main breadcrumb={breadcrumb}>
-      <div className="px-5">
-        <div className="flex items-center mb-6">
-          <div className="text-3xl font-bold pl-5">{tagName}</div>
+  if (noActiveDashboard) {
+    return (
+      <Main breadcrumb={breadcrumb}>
+        <div className="text-xl text-center justify-center">Tidak ada <i>dashboard</i> yang aktif!</div>
+      </Main>
+    )
+  } else {
+    return (
+      <Main breadcrumb={breadcrumb}>
+        <div className="px-5">
+          <div className="flex items-center mb-6">
+            <div className="text-3xl font-bold pl-5">{tagName}</div>
+          </div>
+          <div className="flex w-[40rem] pl-5 mb-5">
+            <div className="w-[14rem]">
+              <Select
+                optionValue={dashboardList}
+                placeholder="Pilih Jenis Dashboard"
+                onChange={(e) => handleSelectChange(e)}
+                isSearchable={true}
+              />
+            </div>
+            <div className="w-[12rem] ml-2">
+              <Select
+                optionValue={updateIntervalList}
+                placeholder="Pilih Interval Refresh"
+                onChange={(e) => handleSelectIntervalChange(e)}
+                isSearchable={false}
+              />
+            </div>
+            <div className="w-[9rem] ml-2 pt-1 bg-atlasian-blue-dark rounded-md hover:bg-atlasian-blue-baby">
+              <ButtonField
+                handler={openKioskModeTab}
+                text={"Kiosk Mode"}
+                iconAfter={<VidShareScreenIcon primaryColor="#fff" />}
+              />
+            </div>
+          </div>
+          {selected && data.token && (
+            <SupersetDashboard token={ctoken} id={selected} />
+          )}
         </div>
-        <div className="flex w-[40rem] pl-5 mb-5">
-          <div className="w-[14rem]">
-            <Select
-              optionValue={dashboardList}
-              placeholder="Pilih Jenis Dashboard"
-              onChange={(e) => handleSelectChange(e)}
-              isSearchable={true}
-            />
-          </div>
-          <div className="w-[12rem] ml-2">
-            <Select
-              optionValue={updateIntervalList}
-              placeholder="Pilih Interval Refresh"
-              onChange={(e) => handleSelectIntervalChange(e)}
-              isSearchable={false}
-            />
-          </div>
-          <div className="w-[9rem] ml-2 pt-1 bg-atlasian-blue-dark rounded-md hover:bg-atlasian-blue-baby">
-            <ButtonField
-              handler={openKioskModeTab}
-              text={"Kiosk Mode"}
-              iconAfter={<VidShareScreenIcon primaryColor="#fff" />}
-            />
-          </div>
-        </div>
-        {selected && data.token && (
-          <SupersetDashboard token={ctoken} id={selected} />
-        )}
-      </div>
-    </Main>
-  );
+      </Main>
+    )
+  }
 }
