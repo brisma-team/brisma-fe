@@ -1,30 +1,13 @@
-import { DivButton } from "@/components/atoms";
-import Image from "next/image";
-import { ImageClose } from "@/helpers/imagesUrl";
-import { useEffect } from "react";
+import { CloseModal } from "@/components/atoms";
 
-const ModalHeader = ({
-  headerText,
-  title,
-  handleCloseModal,
-  handleKeyDown,
-}) => {
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-
+const ModalHeader = ({ showModal, headerText, title, handleCloseModal }) => {
   return (
-    <div style={{ width: "31rem" }}>
-      <div className="w-full flex justify-end -mt-1">
-        <DivButton handleClick={handleCloseModal} handleKeyDown={handleKeyDown}>
-          <Image src={ImageClose} alt="chat" />
-        </DivButton>
-      </div>
+    <div className="w-[31rem] relative">
+      <CloseModal handleCloseModal={handleCloseModal} showModal={showModal} />
       <div className="text-3xl font-semibold">{headerText}</div>
-      <div className="w-full -mt-4">{title}</div>
+      <div className="w-full mt-1.5 text-base font-semibold text-atlasian-blue-light">
+        {title}
+      </div>
     </div>
   );
 };

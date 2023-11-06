@@ -6,7 +6,10 @@ import {
   Card,
   PageTitle,
 } from "@/components/atoms";
-import { PrevNextNavigation } from "@/components/molecules/commons";
+import {
+  DataNotFound,
+  PrevNextNavigation,
+} from "@/components/molecules/commons";
 import { useRouter } from "next/router";
 import { LandingLayoutEWP } from "@/layouts/ewp";
 import { useAuditorEWP } from "@/data/ewp/konvensional";
@@ -22,7 +25,11 @@ import { IconEdit } from "@/components/icons";
 import { useDispatch } from "react-redux";
 import { setDataTables } from "@/slices/ewp/konvensional/mapa/assignmentMapaEWPSlice";
 import { useSelector } from "react-redux";
-import { ModalSetAuditor } from "@/components/molecules/ewp/konvensional/penugasan";
+import {
+  CardFilterAssignment,
+  ModalSetAuditor,
+} from "@/components/molecules/ewp/konvensional/penugasan";
+import _ from "lodash";
 
 const customHeader = `w-full h-full flex items-center text-brisma font-bold px-3`;
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
@@ -53,11 +60,30 @@ const index = () => {
   const baseUrl = `/ewp/projects/konvensional/${id}/mapa`;
 
   const dataTables = useSelector((state) => state.assignmentMapaEWP.dataTables);
-  const tableColumns = useSelector(
-    (state) => state.assignmentMapaEWP.tableColumns
-  );
   const [showModal, setShowModal] = useState(false);
   const [selectedUkerMcrId, setSelectedUkerMcrId] = useState(null);
+  const [headerTitle, setHeaderTitle] = useState("");
+  const [showFilter, setShowFilter] = useState(false);
+  const [filter, setFilter] = useState({
+    sub_aktivitas_kode: "",
+    sub_aktivitas_name: "",
+    sub_major_kode: "",
+    sub_major_name: "",
+    risk_issue_kode: "",
+    risk_issue_name: "",
+    mcr_id: "",
+    risk_assigned: "",
+  });
+  const [params, setParams] = useState({
+    sub_aktivitas_kode: "",
+    sub_aktivitas_name: "",
+    sub_major_kode: "",
+    sub_major_name: "",
+    risk_issue_kode: "",
+    risk_issue_name: "",
+    mcr_id: "",
+    risk_assigned: "",
+  });
 
   const { auditorEWP } = useAuditorEWP({ id });
 
@@ -76,6 +102,7 @@ const index = () => {
 
   const { mapaEWP, mapaEWPMutate, mapaEWPError } = useMapaEWP("penugasan", {
     id,
+    ...params,
   });
 
   useEffect(() => {
@@ -92,14 +119,17 @@ const index = () => {
       });
 
       const mapping = filterData?.map((v) => {
+        const headerTitle = `${v.mapa_uker.ref_auditee_branch_kode} ${v.mapa_uker.ref_auditee_branch_name} / ${v.ref_aktivitas_name} / ${v.ref_sub_aktivitas_name} / ${v.ref_sub_major_kode} / ${v.ref_risk_issue_kode}`;
+
         const auditor = v?.mapa_sample?.map((sample) => sample?.name_auditor);
-        const riskIssueCode = v.ref_risk_issue_kode;
-        const riskIssueName = v.ref_risk_issue_name;
 
         const uker = `${v.mapa_uker.ref_auditee_branch_kode} - ${v.mapa_uker.ref_auditee_branch_name}`;
         const aktifitas = v.ref_aktivitas_name;
         const sub_aktifitas = v.ref_sub_aktivitas_name;
-        const sub_major = v.ref_sub_major_name;
+        const sub_major_kode = v.ref_sub_major_kode;
+        const sub_major_name = v.ref_sub_major_name;
+        const risk_issue_kode = v.ref_risk_issue_kode;
+        const risk_issue_name = v.ref_risk_issue_name;
         const sample_jumlah_sample = v.sample_jumlah_sample;
         const mapa_uker_mcr_id = v.id;
 
@@ -107,22 +137,19 @@ const index = () => {
           ? (
               (filterData?.length / parseInt(sample_jumlah_sample)) *
               100
-            ).toFixed(2) + " %"
+            ).toFixed(0) + "%"
           : "";
 
         return {
+          header_title: headerTitle,
           auditor,
           uker,
           aktifitas,
           sub_aktifitas,
-          sub_major,
-          risk_issue: (
-            <>
-              <p className="font-bold">{riskIssueCode}</p>
-              {" - "}
-              {riskIssueName}
-            </>
-          ),
+          sub_major_kode,
+          sub_major_name,
+          risk_issue_kode,
+          risk_issue_name,
           sample: sample_jumlah_sample,
           presentase,
           mapa_uker_mcr_id,
@@ -132,72 +159,136 @@ const index = () => {
     }
   }, [mapaEWP]);
 
-  const handleClick = (id) => {
-    // console.log("id => ", id);
+  useEffect(() => {
+    const handleSearch = () => {
+      setParams(filter);
+    };
+    const debouncedSearch = _.debounce(handleSearch, 800);
+    debouncedSearch();
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [filter]);
+
+  const handleClick = (id, headerTitle) => {
+    setHeaderTitle(headerTitle);
     setShowModal(true);
     setSelectedUkerMcrId(id);
   };
 
+  const handleChange = (props, value) => {
+    setFilter((prev) => {
+      return { ...prev, [props]: value };
+    });
+  };
+
   return (
     <LandingLayoutEWP>
-      <div className="pr-16">
-        {/* Start Breadcrumbs */}
-        <Breadcrumbs data={breadcrumbs} />
-        {/* End Breadcrumbs */}
-        {/* Start Content */}
-        <div className="flex justify-between items-center mb-6">
-          <PageTitle text="Penugasan" />
-          <PrevNextNavigation
-            baseUrl={baseUrl}
-            routes={routes}
-            prevUrl={"/analisis-perencanaan"}
-            nextUrl={"/jadwal-audit"}
-          />
-        </div>
-        <div className="w-32 bg-atlasian-blue-light rounded">
-          <ButtonField text="Tampilkan Filter" />
-        </div>
-        <div className="mb-4" />
-        <Card>
-          <div className="w-full px-6 py-4 overflow-y-scroll max-h-[40rem]">
-            <TableTree>
-              <Headers>
-                <Header className="!hidden" />
-                <Header
-                  width="5%"
-                  className={`border-t border-x rounded-ss-xl header-width-full-height-full`}
-                >
-                  <div className={`${customHeader} justify-center`}>Aksi</div>
-                </Header>
-                {tableColumns.map((column, index) => {
-                  return (
-                    <Header
-                      width={
-                        [6, 7].includes(index)
-                          ? "8%"
-                          : index === 0
-                          ? "14%"
-                          : "13%"
-                      }
-                      className={`header-width-full-height-full border-t border-r ${
-                        index + 1 >= tableColumns.length && `rounded-se-xl`
-                      }`}
-                      key={index}
-                    >
-                      <div
-                        className={`${customHeader} ${
-                          [6, 7].includes(index) && `justify-center`
-                        }`}
-                      >
-                        {column?.toUpperCase()}
-                      </div>
-                    </Header>
-                  );
-                })}
-              </Headers>
+      {/* Start Breadcrumbs */}
+      <Breadcrumbs data={breadcrumbs} />
+      {/* End Breadcrumbs */}
+      {/* Start Content */}
+      <div className="flex justify-between items-center mb-6">
+        <PageTitle text="Penugasan" />
+        <PrevNextNavigation
+          baseUrl={baseUrl}
+          routes={routes}
+          prevUrl={"/analisis-perencanaan"}
+          nextUrl={"/jadwal-audit"}
+          marginLeft={"-60px"}
+        />
+      </div>
+      <div className="w-32 bg-atlasian-blue-light rounded">
+        <ButtonField
+          text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
+          handler={() => setShowFilter(!showFilter)}
+        />
+      </div>
+      <CardFilterAssignment
+        showFilter={showFilter}
+        data={filter}
+        handleChangeFilter={handleChange}
+      />
+      <div className="mb-4" />
+      <Card>
+        <div className="w-full px-6 py-4 overflow-y-scroll max-h-[40rem]">
+          <TableTree>
+            <Headers>
+              <Header className="!hidden" />
+              <Header
+                width="5%"
+                className={`border-t border-x rounded-ss-xl header-width-full-height-full`}
+              >
+                <div className={`${customHeader} justify-center`}>Aksi</div>
+              </Header>
+              <Header
+                width="14%"
+                className={`border-t border-r header-width-full-height-full`}
+              >
+                <div className={`${customHeader}`}>AUDITOR</div>
+              </Header>
+              <Header
+                width="13%"
+                className={`border-t border-r header-width-full-height-full`}
+              >
+                <div className={`${customHeader}`}>UKER</div>
+              </Header>
+              <Header
+                width="13%"
+                className={`border-t border-r header-width-full-height-full`}
+              >
+                <div className={`${customHeader}`}>AKTIFITAS</div>
+              </Header>
+              <Header
+                width="13%"
+                className={`border-t border-r header-width-full-height-full`}
+              >
+                <div className={`${customHeader}`}>SUB-AKTIFITAS</div>
+              </Header>
+              <Header
+                width="13%"
+                className={`border-t border-r header-width-full-height-full`}
+              >
+                <div className={`${customHeader}`}>SUB-MAJOR</div>
+              </Header>
+              <Header
+                width="13%"
+                className={`border-t border-r header-width-full-height-full`}
+              >
+                <div className={`${customHeader}`}>RISK ISSUE</div>
+              </Header>
+              <Header
+                width="8%"
+                className={`border-t border-r header-width-full-height-full`}
+              >
+                <div className={`${customHeader} justify-center`}>SAMPLE</div>
+              </Header>
+              <Header
+                width="8%"
+                className={`border-t border-r header-width-full-height-full rounded-se-xl`}
+              >
+                <div className={`${customHeader} justify-center`}>
+                  PRESENTASE
+                </div>
+              </Header>
+            </Headers>
+            {dataTables?.length ? (
               <Rows
                 items={dataTables}
-                render={(data) => (
+                render={({
+                  header_title,
+                  auditor,
+                  uker,
+                  aktifitas,
+                  sub_aktifitas,
+                  sub_major_kode,
+                  sub_major_name,
+                  risk_issue_kode,
+                  risk_issue_name,
+                  sample,
+                  presentase,
+                  mapa_uker_mcr_id,
+                }) => (
                   <Row>
                     <Cell className="!hidden" />
                     <Cell width="5%" className={`border-x ${customCell}`}>
@@ -205,39 +296,69 @@ const index = () => {
                         <ButtonIcon
                           icon={<IconEdit />}
                           color={"yellow"}
-                          handleClick={() => handleClick(data.mapa_uker_mcr_id)}
+                          handleClick={() =>
+                            handleClick(mapa_uker_mcr_id, header_title)
+                          }
                         />
                       </div>
                     </Cell>
-                    {tableColumns.map((column, index) => {
-                      return (
-                        <Cell key={index} className={`border-r ${customCell}`}>
-                          {[4, 5].includes(index) ? (
-                            data[column]
-                          ) : (
-                            <div
-                              className={`${positionCenter} ${
-                                [6, 7].includes(index) && `justify-center`
-                              }`}
-                            >
-                              {data[column]}
-                            </div>
-                          )}
-                        </Cell>
-                      );
-                    })}
+                    <Cell width="14%" className={`border-r ${customCell}`}>
+                      <div className={positionCenter}>{auditor}</div>
+                    </Cell>
+                    <Cell width="13%" className={`border-r ${customCell}`}>
+                      <div className={positionCenter}>{uker}</div>
+                    </Cell>
+                    <Cell width="13%" className={`border-r ${customCell}`}>
+                      <div className={positionCenter}>{aktifitas}</div>
+                    </Cell>
+                    <Cell width="13%" className={`border-r ${customCell}`}>
+                      <div className={positionCenter}>{sub_aktifitas}</div>
+                    </Cell>
+                    <Cell width="13%" className={`border-r ${customCell}`}>
+                      <div className={positionCenter}>
+                        <p>
+                          <span className="font-bold">{sub_major_kode}</span> -{" "}
+                          <span>{sub_major_name}</span>
+                        </p>
+                      </div>
+                    </Cell>
+                    <Cell width="13%" className={`border-r ${customCell}`}>
+                      <div className={positionCenter}>
+                        <p>
+                          <span className="font-bold">{risk_issue_kode}</span> -{" "}
+                          <span>{risk_issue_name}</span>
+                        </p>
+                      </div>
+                    </Cell>
+                    <Cell width="8%" className={`border-r ${customCell}`}>
+                      <div className={`${positionCenter} justify-center`}>
+                        {sample}
+                      </div>
+                    </Cell>
+                    <Cell width="8%" className={`border-r ${customCell}`}>
+                      <div className={`${positionCenter} justify-center`}>
+                        {presentase}
+                      </div>
+                    </Cell>
                   </Row>
                 )}
               />
-            </TableTree>
-          </div>
-        </Card>
-        {/* End Content */}
-        <ModalSetAuditor
-          showModal={showModal}
-          selectedUkerMcrId={selectedUkerMcrId}
-        />
-      </div>
+            ) : (
+              <div className="w-full border-x border-b rounded-es-xl rounded-ee-xl pb-4">
+                <DataNotFound />
+              </div>
+            )}
+          </TableTree>
+        </div>
+      </Card>
+      {/* End Content */}
+      <ModalSetAuditor
+        showModal={showModal}
+        setShowModal={setShowModal}
+        headerTitle={headerTitle}
+        tableMutate={mapaEWPMutate}
+        selectedUkerMcrId={selectedUkerMcrId}
+      />
     </LandingLayoutEWP>
   );
 };

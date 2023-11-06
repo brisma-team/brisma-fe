@@ -14,6 +14,7 @@ import {
   BranchSelect,
   CardTypeCount,
   DescriptionModal,
+  ModalAssessmentInfo,
   PrevNextNavigation,
 } from "@/components/molecules/commons";
 import { IconPlus } from "@/components/icons";
@@ -46,6 +47,7 @@ const index = () => {
   const { id } = useRouter().query;
   const baseUrl = `/ewp/projects/konvensional/${id}/mapa`;
   const [showDescModal, setShowDescModal] = useState(false);
+  const [showAssessmentInfoModal, setShowAssessmentInfoModal] = useState(false);
   const [openDescIdx, setOpenDescIdx] = useState(null);
   const [showBranch, setShowBranch] = useState(false);
   const [countType, setCountType] = useState([]);
@@ -213,6 +215,7 @@ const index = () => {
               handleChange={handleChange}
               setOpenDescIdx={setOpenDescIdx}
               setShowDescModal={setShowDescModal}
+              setShowAssessmentInfoModal={setShowAssessmentInfoModal}
             />
             <DescriptionModal
               showModal={showDescModal}
@@ -225,6 +228,10 @@ const index = () => {
               handleConfirm={(value) =>
                 handleChange("description", openDescIdx, value)
               }
+            />
+            <ModalAssessmentInfo
+              showModal={showAssessmentInfoModal}
+              setShowModal={setShowAssessmentInfoModal}
             />
             <div className="flex gap-3 items-center mt-3">
               <div className="w-40 text-sm font-semibold">
