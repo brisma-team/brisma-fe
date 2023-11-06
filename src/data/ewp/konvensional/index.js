@@ -3,6 +3,7 @@ import useAuditorEWP from "./useAuditorEWP";
 import useWorkflowEWP from "./useWorkflowEWP";
 import useWorkflowDetailEWP from "./useWorkflowDetailEWP";
 import useAuditorDetailEWP from "./useAuditorDetailEWP";
+import useDocumentEWP from "./useDocumentEWP";
 
 export {
   useOverviewEWP,
@@ -10,4 +11,5 @@ export {
   useWorkflowEWP,
   useWorkflowDetailEWP,
   useAuditorDetailEWP,
+  useDocumentEWP,
 };

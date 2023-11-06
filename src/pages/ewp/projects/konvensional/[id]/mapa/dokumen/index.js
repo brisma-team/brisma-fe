@@ -9,10 +9,14 @@ import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common
 import Image from "next/image";
 import { ImageChat } from "@/helpers/imagesUrl";
 import { useRef, useState, useEffect } from "react";
-import { useCommentPAT, useDocument } from "@/data/pat";
+import { useCommentPAT } from "@/data/pat";
 import { useRouter } from "next/router";
 import { LandingLayoutEWP } from "@/layouts/ewp";
-import { useAuditorEWP, useWorkflowDetailEWP } from "@/data/ewp/konvensional";
+import {
+  useAuditorEWP,
+  useDocumentEWP,
+  useWorkflowDetailEWP,
+} from "@/data/ewp/konvensional";
 import { useSelector, useDispatch } from "react-redux";
 import {
   resetValidationErrorsWorkflow,
@@ -35,9 +39,28 @@ const sample = {
   comment: 0,
 };
 
+const routes = [
+  {
+    name: "Latar Belakang",
+    slug: "latar-belakang",
+  },
+  {
+    name: "Tujuan",
+    slug: "tujuan",
+  },
+  { name: "Sumber Informasi", slug: "sumber-informasi" },
+  { name: "Tim Audit", slug: "tim-audit" },
+  { name: "UKER Assessment", slug: "uker-assessment" },
+  { name: "Analisis", slug: "analisis-perencanaan" },
+  { name: "Penugasan", slug: "penugasan" },
+  { name: "Jadwal Audit", slug: "jadwal-audit" },
+  { name: "Anggaran", slug: "anggaran" },
+  { name: "Dokumen", slug: "dokumen" },
+];
+
 const index = () => {
-  const { id, kkpa_id } = useRouter().query;
-  const baseUrl = `/ewp/projects/konvensional/${id}/kkpa`;
+  const { id } = useRouter().query;
+  const baseUrl = `/ewp/projects/konvensional/${id}/mapa`;
   const dispatch = useDispatch();
 
   const { auditorEWP } = useAuditorEWP({ id });
@@ -49,8 +72,8 @@ const index = () => {
       path: `${baseUrl}`,
     },
     {
-      name: "Detail KKPA",
-      path: `${baseUrl}/audited/${kkpa_id}/detail`,
+      name: "Dokumen",
+      path: `${baseUrl}/dokumen`,
     },
   ];
 
@@ -81,11 +104,6 @@ const index = () => {
       name: "Anggaran",
       url: "anggaran",
     },
-    {
-      idx: 11,
-      name: "Dokumen",
-      url: "dokumen",
-    },
   ];
 
   const ref = useRef(null);
@@ -107,8 +125,8 @@ const index = () => {
     (state) => state.documentMapaEWP.validationErrorsWorkflow
   );
 
-  const [type, setType] = useState("ltb");
-  const { documentPAT, documentPATMutate } = useDocument(type, { id });
+  const [bab, setBab] = useState(1);
+  const { documentEWP } = useDocumentEWP("ewp", bab, { id });
   const { commentPAT } = useCommentPAT("total", { id });
   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
     "mapa",
@@ -216,26 +234,26 @@ const index = () => {
           comment: sample.comment,
         },
       ]);
-      setTotalComment((prev) => [...prev, { bab: currentPosition, total: 2 }]);
+      // setTotalComment((prev) => [...prev, { bab: currentPosition, total: 2 }]);
+      setBab(nav[hitEndpointCount].idx);
     }
 
     // Yang benar ini
-    // setType(nav[hitEndpointCount].url);
   }, [hitEndpointCount]);
 
   useEffect(() => {
-    if (documentPAT) {
+    if (documentEWP) {
       setDoc((prev) => [
         ...prev,
         {
           idx: hitEndpointCount,
           key: nav[hitEndpointCount].name,
-          content: documentPAT?.data,
-          comment: documentPAT?.comments,
+          content: documentEWP?.data,
+          comment: documentEWP?.comments,
         },
       ]);
     }
-  }, [documentPAT, documentPATMutate]);
+  }, [documentEWP]);
 
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
@@ -416,8 +434,13 @@ const index = () => {
     <LandingLayoutEWP>
       <Breadcrumbs data={breadcrumbs} />
       <div className="flex justify-between items-center mb-6">
-        <PageTitle text={"Detail K.K.P.A"} />
-        <PrevNextNavigation baseUrl={baseUrl} prevUrl={"/"} />
+        <PageTitle text={"Dokumen"} />
+        <PrevNextNavigation
+          baseUrl={baseUrl}
+          routes={routes}
+          prevUrl={"/"}
+          marginLeft={"-60px"}
+        />
       </div>
       {/* Start Content */}
       <div className="flex w-full gap-6">
@@ -522,7 +545,7 @@ const index = () => {
                       Approval K.K.P.A
                     </p>
                     <ApprovalItems
-                      title={"P.I.C"}
+                      title={"Maker"}
                       text={workflowData?.maker?.nama}
                     />
                     <ApprovalItems
