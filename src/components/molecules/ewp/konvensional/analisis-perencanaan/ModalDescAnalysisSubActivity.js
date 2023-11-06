@@ -53,15 +53,17 @@ const ModalDescAnlysisSubActivity = ({
   return (
     <Modal
       showModal={showModal}
-      //   positionCenter={true}
       footer={<ModalFooter handleSubmit={handleSubmit} />}
+      positionCenter={true}
     >
-      <div className="h-[37.5rem] relative">
+      <div className="h-[31.5rem] relative">
         <CloseModal handleCloseModal={handleClose} showModal={showModal} />
         <div className="px-3 pb-2 h-full">
-          <p className="font-bold text-xl text-brisma">Risk Issue</p>
-          <div className="my-2" />
-          <div className="ckeditor-modal-set-risk-issue">
+          <p className="font-bold text-xl text-brisma">
+            Deskripsi Analisa Sub Aktivitas
+          </p>
+          <div className="my-4" />
+          <div className="ckeditor-modal">
             <Editor
               contentData={value}
               disabled={false}

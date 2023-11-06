@@ -53,6 +53,10 @@ const initialState = {
   },
 
   // default data
+  defaultPayloadSubActivity: {
+    aktivitas_id: "",
+    sub_aktivitas: [],
+  },
   defaultPayloadRiskIssue: {
     mapa_uker_id: "",
     ref_sub_aktivitas_kode: "",
@@ -94,8 +98,10 @@ const initialState = {
   },
 
   //validation
+  validationErrorsPayloadSubActivity: {},
   validationErrorsPayloadRiskIssue: {},
   validationErrorsPayloadUploadSample: {},
+  validationErrorsPayloadSample: {},
 };
 
 export const planningAnalysisMapaEWPSlice = createSlice({
@@ -137,11 +143,20 @@ export const planningAnalysisMapaEWPSlice = createSlice({
     },
 
     // validation
+    setValidationErrorsSubActivity: (state, action) => {
+      state.validationErrorsPayloadSubActivity = action.payload;
+    },
     setValidationErrorsRiskIssue: (state, action) => {
       state.validationErrorsPayloadRiskIssue = action.payload;
     },
+    setValidationErrorsPayloadSample: (state, action) => {
+      state.validationErrorsPayloadSample = action.payload;
+    },
 
     // reset
+    resetPayloadSubActivity: (state) => {
+      state.payloadSubActivity = { ...state.defaultPayloadSubActivity };
+    },
     resetPayloadRiskIssue: (state) => {
       state.payloadRiskIssue = { ...state.defaultPayloadRiskIssue };
     },
@@ -156,8 +171,15 @@ export const planningAnalysisMapaEWPSlice = createSlice({
         ...state.defaultPayloadDescAnalysisSubActivity,
       };
     },
+
+    resetValidationErrorsPayloadSubActivity: (state) => {
+      state.validationErrorsPayloadSubActivity = {};
+    },
     resetValidationErrorsPayloadRiskIssue: (state) => {
       state.validationErrorsPayloadRiskIssue = {};
+    },
+    resetValidationErrorsPayloadSample: (state) => {
+      state.validationErrorsPayloadSample = {};
     },
     resetDataTables: (state) => {
       state.dataTables = { ...state.defaultDataTables };
@@ -176,12 +198,17 @@ export const {
   setPayloadUploadSample,
   setPayloadSample,
   setPayloadDescAnalysisSubActivity,
+  setValidationErrorsSubActivity,
   setValidationErrorsRiskIssue,
+  setValidationErrorsPayloadSample,
+  resetPayloadSubActivity,
   resetPayloadRiskIssue,
   resetPayloadUploadSample,
   resetPayloadSample,
   resetPayloadDescAnalysisSubActivity,
+  resetValidationErrorsPayloadSubActivity,
   resetValidationErrorsPayloadRiskIssue,
+  resetValidationErrorsPayloadSample,
   resetDataTables,
 } = planningAnalysisMapaEWPSlice.actions;
 

@@ -1,11 +1,22 @@
-import { ButtonField, CloseModal, Modal } from "@/components/atoms";
+import {
+  ButtonField,
+  CloseModal,
+  ErrorValidation,
+  Modal,
+} from "@/components/atoms";
 import { SubActivitySelect } from "@/components/molecules/commons";
-import { setPayloadSubActivity } from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
+import {
+  resetValidationErrorsPayloadSubActivity,
+  setPayloadSubActivity,
+  setValidationErrorsSubActivity,
+} from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import SelectAuditTeamEWP from "../../SelectAuditTeamEWP";
 import { IconPlus } from "@/components/icons";
-import { confirmationSwal, usePostData } from "@/helpers";
+import { confirmationSwal, setErrorValidation, usePostData } from "@/helpers";
+import { subActivityMapaEWPSchema } from "@/helpers/schemas/ewp/konvensional/mapa/planningAnalysisMapaEWPSchema";
+import useUser from "@/data/useUser";
 
 const ModalFooter = ({ handleConfirm }) => {
   return (
@@ -25,9 +36,20 @@ const ModalAddSubActivity = ({
 }) => {
   const { id } = useRouter().query;
   const dispatch = useDispatch();
+
+  const { user } = useUser();
   const payloadSubActivity = useSelector(
     (state) => state.planningAnalysisMapaEWP.payloadSubActivity
   );
+  const validationErrors = useSelector(
+    (state) => state.planningAnalysisMapaEWP.validationErrorsPayloadSubActivity
+  );
+
+  const schemaMappings = {
+    schema: subActivityMapaEWPSchema,
+    resetErrors: resetValidationErrorsPayloadSubActivity,
+    setErrors: setValidationErrorsSubActivity,
+  };
 
   const handleCloseModal = async () => {
     const confirm = await confirmationSwal(
@@ -41,11 +63,28 @@ const ModalAddSubActivity = ({
   };
 
   const handleConfirmWithClose = async () => {
-    await usePostData(
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/sub_aktivitas`,
-      payloadSubActivity
+    const validate = setErrorValidation(
+      payloadSubActivity,
+      dispatch,
+      schemaMappings
     );
-    handleSubmit();
+
+    const payload = JSON.parse(JSON.stringify(payloadSubActivity));
+
+    payload.sub_aktivitas.map((item) => {
+      if (!item.pn_pic_analisa) {
+        item.pn_pic_analisa = user?.data?.pn;
+        item.name_pic_analisa = user?.data?.fullName;
+      }
+    });
+
+    if (validate) {
+      await usePostData(
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/analisis_perencanaan/${id}/sub_aktivitas`,
+        payload
+      );
+      handleSubmit();
+    }
   };
 
   const handleChangeSelect = (property, idx, e) => {
@@ -120,6 +159,19 @@ const ModalAddSubActivity = ({
                     placeholder={"Masukan Sub Aktivitas"}
                     width={"w-[14.5rem]"}
                   />
+                  {validationErrors[
+                    `sub_aktivitas[${i}].mtd_sub_aktivitas_kode`
+                  ] && (
+                    <div className="pl-2">
+                      <ErrorValidation
+                        message={
+                          validationErrors[
+                            `sub_aktivitas[${i}].mtd_sub_aktivitas_kode`
+                          ]
+                        }
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="w-1/2">
                   <SelectAuditTeamEWP
@@ -137,6 +189,11 @@ const ModalAddSubActivity = ({
               </div>
             );
           })}
+          {validationErrors["sub_aktivitas"] && (
+            <div className="pl-2">
+              <ErrorValidation message={validationErrors["sub_aktivitas"]} />
+            </div>
+          )}
         </div>
         <div className="bg-none w-48 mt-4">
           <ButtonField
