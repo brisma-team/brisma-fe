@@ -2,8 +2,7 @@ import Main from "@/layouts/MainLayout";
 import SupersetDashboard from "@/components/molecules/dashboard/SupersetDashboard";
 import { useState, useEffect } from "react";
 import useGetToken from "@/data/dashboard/useGetToken";
-import { Select, ButtonField } from "@/components/atoms";
-import VidShareScreenIcon from "@atlaskit/icon/glyph/vid-share-screen";
+import { Select } from "@/components/atoms";
 
 const breadcrumb = [
   {
@@ -38,7 +37,7 @@ export default function index() {
   const [ctoken, setCtoken] = useState("");
   const [tagName, setTagName] = useState("");
   const [noActiveDashboard, setNoActiveDashboard] = useState(false);
-  const { data } = useGetToken("visual", interval);
+  const { data } = useGetToken("report", interval);
 
   useEffect(() => {
     if (data !== undefined && Array.isArray(data.list) && data.list.length > 0) {
@@ -62,14 +61,6 @@ export default function index() {
     }
   }, [data, selected]);
 
-  const openKioskModeTab = () => {
-    // URL untuk mode kiosk
-    const kioskURL = `/dashboard/kiosk/${selected}`; // Ganti dengan URL yang sesuai
-
-    // Membuka tab baru dengan URL mode kiosk
-    window.open(kioskURL, "_blank");
-  };
-
   const handleSelectChange = (selectedOption) => {
     setSelected(selectedOption.value);
     setTagName(selectedOption.label);
@@ -82,7 +73,7 @@ export default function index() {
   if (noActiveDashboard) {
     return (
       <Main breadcrumb={breadcrumb}>
-        <div className="text-xl text-center justify-center">Tidak ada <i>dashboard</i> yang aktif!</div>
+        <div className="text-xl text-center justify-center">Tidak ada <i>report</i> yang aktif!</div>
       </Main>
     )
   } else {
@@ -96,7 +87,7 @@ export default function index() {
             <div className="w-[14rem]">
               <Select
                 optionValue={dashboardList}
-                placeholder="Pilih Jenis Dashboard"
+                placeholder="Pilih Jenis Reporting"
                 onChange={(e) => handleSelectChange(e)}
                 isSearchable={true}
               />
@@ -107,13 +98,6 @@ export default function index() {
                 placeholder="Pilih Interval Refresh"
                 onChange={(e) => handleSelectIntervalChange(e)}
                 isSearchable={false}
-              />
-            </div>
-            <div className="w-[9rem] ml-2 pt-1 bg-atlasian-blue-dark rounded-md hover:bg-atlasian-blue-baby">
-              <ButtonField
-                handler={openKioskModeTab}
-                text={"Kiosk Mode"}
-                iconAfter={<VidShareScreenIcon primaryColor="#fff" />}
               />
             </div>
           </div>

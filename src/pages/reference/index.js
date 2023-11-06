@@ -86,9 +86,14 @@ const index = () => {
             isBlank: true,
           },
           {
-            title: "Aktivasi Dashboard",
-            description: "Pengaturan untuk Aktivasi Dashboard.",
-            url: "/reference/active-dashboard",
+            title: "Aktivasi Dashboard Visual",
+            description: "Pengaturan untuk Aktivasi Dashboard Visual.",
+            url: "/reference/active-dashboard-visual",
+          },
+          {
+            title: "Aktivasi Dashboard Reporting",
+            description: "Pengaturan untuk Aktivasi Dashboard Reporting.",
+            url: "/reference/active-dashboard-report",
           },
         ],
       },
