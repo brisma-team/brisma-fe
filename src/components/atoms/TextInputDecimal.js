@@ -18,7 +18,9 @@ const TextInputDecimal = ({
   const [numberValue, setNumberValue] = useState("");
 
   useEffect(() => {
-    setNumberValue(convertIntegerToDecimal(value).decimal);
+    if (typeof value == "undefined") {
+      setNumberValue(undefined);
+    }
   }, [value]);
 
   const handleChange = (e) => {
@@ -26,7 +28,7 @@ const TextInputDecimal = ({
 
     setNumberValue(format.decimal);
 
-    onChange(format.integer);
+    if (typeof format.decimal !== "undefined") onChange(format?.integer);
   };
 
   return (
