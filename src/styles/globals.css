@@ -38,6 +38,10 @@
   cursor: pointer;
 }
 
+.dynamic-table-custom-margin div {
+  margin-bottom: 10px;
+}
+
 /* ************************************************************* */
 /* START custom component common */
 
