@@ -28,6 +28,7 @@ import IconArrowBottomCircle from "@atlaskit/icon/glyph/arrow-down-circle";
 import IconMore from "@atlaskit/icon/glyph/more";
 import IconArrowDown from "@atlaskit/icon/glyph/arrow-down";
 import IconNotification from "@atlaskit/icon/glyph/notification";
+import IconCross from "@atlaskit/icon/glyph/cross";
 
 export {
   IconPlus,
@@ -60,4 +61,5 @@ export {
   IconMore,
   IconArrowDown,
   IconNotification,
+  IconCross,
 };
