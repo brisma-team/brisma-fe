@@ -20,6 +20,8 @@ const TextInputDecimal = ({
   useEffect(() => {
     if (typeof value == "undefined") {
       setNumberValue(undefined);
+    } else {
+      setNumberValue(convertIntegerToDecimal(value).decimal);
     }
   }, [value]);
 
