@@ -52,6 +52,8 @@ import ApprovalItems from "./ApprovalItems";
 import NavigationDocument from "./NavigationDocument";
 import CardWithHeaderLine from "./CardWithHeaderLine";
 import ModalAssessmentInfo from "./ModalAssessmentInfo";
+import ButtonEdit from "./ButtonEdit";
+import ButtonDelete from "./ButtonDelete";
 
 export {
   BackButton,
@@ -108,4 +110,6 @@ export {
   NavigationDocument,
   CardWithHeaderLine,
   ModalAssessmentInfo,
+  ButtonEdit,
+  ButtonDelete,
 };
