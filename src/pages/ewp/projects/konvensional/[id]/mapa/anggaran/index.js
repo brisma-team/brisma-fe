@@ -58,48 +58,46 @@ const index = () => {
 
   return (
     <LandingLayoutEWP>
-      <div className="pr-16">
-        {/* Start Breadcrumbs */}
-        <Breadcrumbs data={breadcrumbs} />
-        {/* End Breadcrumbs */}
-        {/* Start Content */}
-        <div className="flex justify-between items-center mb-6">
-          <PageTitle text="Anggaran" />
-          <PrevNextNavigation
-            baseUrl={baseUrl}
-            routes={routes}
-            prevUrl={"/jadwal-audit"}
-            nextUrl={"/dokumen"}
-            marginLeft={"-60px"}
-          />
-        </div>
-        <div className="mb-4" />
-        <div className="w-full">
-          <Card>
-            <div className="px-6 pt-2 pb-4 w-full">
-              <p className="ml-2 font-bold text-base">Usulan Anggaran</p>
-              <div className="my-2 " />
-              <DataTables
-                data={mapaEWP?.data}
-                mutate={mapaEWPMutate}
-                setShowModal={setShowModal}
-                setTypeModal={setTypeModal}
-                setSelectedId={setSelectedId}
-              />
-            </div>
-          </Card>
-        </div>
-        <ModalAddBudget
-          showModal={showModal}
-          setShowModal={setShowModal}
-          mutate={mapaEWPMutate}
-          typeModal={typeModal}
-          setTypeModal={setTypeModal}
-          selectedId={selectedId}
-          setSelectedId={setSelectedId}
+      {/* Start Breadcrumbs */}
+      <Breadcrumbs data={breadcrumbs} />
+      {/* End Breadcrumbs */}
+      {/* Start Content */}
+      <div className="flex justify-between items-center mb-6">
+        <PageTitle text="Anggaran" />
+        <PrevNextNavigation
+          baseUrl={baseUrl}
+          routes={routes}
+          prevUrl={"/jadwal-audit"}
+          nextUrl={"/dokumen"}
+          marginLeft={"-60px"}
         />
-        {/* End Content */}
       </div>
+      <div className="mb-4" />
+      <div className="w-full">
+        <Card>
+          <div className="px-6 pt-2 pb-4 w-full">
+            <p className="ml-2 font-bold text-base">Usulan Anggaran</p>
+            <div className="my-2 " />
+            <DataTables
+              data={mapaEWP?.data}
+              mutate={mapaEWPMutate}
+              setShowModal={setShowModal}
+              setTypeModal={setTypeModal}
+              setSelectedId={setSelectedId}
+            />
+          </div>
+        </Card>
+      </div>
+      <ModalAddBudget
+        showModal={showModal}
+        setShowModal={setShowModal}
+        mutate={mapaEWPMutate}
+        typeModal={typeModal}
+        setTypeModal={setTypeModal}
+        selectedId={selectedId}
+        setSelectedId={setSelectedId}
+      />
+      {/* End Content */}
     </LandingLayoutEWP>
   );
 };
