@@ -146,97 +146,96 @@ const index = () => {
 
   return (
     <LandingLayoutEWP>
-      <div className="pr-16">
-        {/* Start Breadcrumbs */}
-        <Breadcrumbs data={breadcrumbs} />
-        {/* End Breadcrumbs */}
-        {/* Start Content */}
-        <div className="flex justify-between items-center mb-6">
-          <PageTitle text="Jadwal Audit" />
-          <PrevNextNavigation
-            baseUrl={baseUrl}
-            routes={routes}
-            prevUrl={"/penugasan"}
-            nextUrl={"/anggaran"}
-          />
-        </div>
-        <div className="mb-4" />
-        <div className="w-[47rem]">
-          <Card>
-            <div className="px-6 pt-2 pb-4 w-full">
-              <p className="ml-2 font-bold text-base">Usulan Pelaksanaan</p>
-              <div className="my-2 " />
-              <div className="dataTables-jadwal-audit-mapa-ewp">
-                <TableTree>
-                  <Headers>
-                    <Header className="!hidden" />
-                    <Header
-                      width="50%"
-                      className="border-t border-x cell-jadwal-audit-mapa-ewp"
-                    >
-                      Keterangan
-                    </Header>
-                    <Header
-                      width="25%"
-                      className="border-t border-r cell-jadwal-audit-mapa-ewp"
-                    >
-                      Tanggal Dimulai
-                    </Header>
-                    <Header
-                      width="25%"
-                      className="border-t border-r cell-jadwal-audit-mapa-ewp"
-                    >
-                      Tanggal Berakhir
-                    </Header>
-                  </Headers>
-                  <Rows
-                    items={dataTables}
-                    render={({ keterangan, property_start, property_end }) => (
-                      <Row>
-                        <Cell className="!hidden" />
-                        <Cell
-                          width="50%"
-                          className="border-x cell-jadwal-audit-mapa-ewp"
-                        >
-                          {keterangan}
-                        </Cell>
-                        <Cell
-                          width="25%"
-                          className="border-r cell-jadwal-audit-mapa-ewp"
-                        >
-                          <DatepickerField
-                            placeholder="Tanggal"
-                            handleChange={(e) =>
-                              handleChange(property_start, e)
-                            }
-                            value={payload[property_start] || ""}
-                          />
-                        </Cell>
-                        <Cell
-                          width="25%"
-                          className="border-r cell-jadwal-audit-mapa-ewp"
-                        >
-                          <DatepickerField
-                            placeholder="Tanggal"
-                            handleChange={(e) => handleChange(property_end, e)}
-                            value={payload[property_end] || ""}
-                          />
-                        </Cell>
-                      </Row>
-                    )}
-                  />
-                </TableTree>
-              </div>
-            </div>
-          </Card>
-          <div className="flex justify-end mt-2">
-            <div className="rounded bg-atlasian-green w-28">
-              <ButtonField text={"Simpan"} handler={handleSubmit} />
+      {/* Start Breadcrumbs */}
+      <Breadcrumbs data={breadcrumbs} />
+      {/* End Breadcrumbs */}
+      {/* Start Content */}
+      <div className="flex justify-between items-center mb-6">
+        <PageTitle text="Jadwal Audit" />
+        <PrevNextNavigation
+          baseUrl={baseUrl}
+          routes={routes}
+          prevUrl={"/penugasan"}
+          nextUrl={"/anggaran"}
+          marginLeft={"-60px"}
+        />
+      </div>
+      <div className="mb-4" />
+      <div className="w-[47rem]">
+        <Card>
+          <div className="px-6 pt-2 pb-4 w-full">
+            <p className="ml-2 font-bold text-base">Usulan Pelaksanaan</p>
+            <div className="my-2 " />
+            <div className="dataTables-jadwal-audit-mapa-ewp">
+              <TableTree>
+                <Headers>
+                  <Header className="!hidden" />
+                  <Header
+                    width="50%"
+                    className="border-t border-x cell-jadwal-audit-mapa-ewp"
+                  >
+                    Keterangan
+                  </Header>
+                  <Header
+                    width="25%"
+                    className="border-t border-r cell-jadwal-audit-mapa-ewp"
+                  >
+                    Tanggal Dimulai
+                  </Header>
+                  <Header
+                    width="25%"
+                    className="border-t border-r cell-jadwal-audit-mapa-ewp"
+                  >
+                    Tanggal Berakhir
+                  </Header>
+                </Headers>
+                <Rows
+                  items={dataTables}
+                  render={({ keterangan, property_start, property_end }) => (
+                    <Row>
+                      <Cell className="!hidden" />
+                      <Cell
+                        width="50%"
+                        className="border-x cell-jadwal-audit-mapa-ewp"
+                      >
+                        {keterangan}
+                      </Cell>
+                      <Cell
+                        width="25%"
+                        className="border-r cell-jadwal-audit-mapa-ewp"
+                      >
+                        <DatepickerField
+                          placeholder="Tanggal"
+                          handleChange={(e) => handleChange(property_start, e)}
+                          value={payload[property_start] || ""}
+                          pastDate={true}
+                        />
+                      </Cell>
+                      <Cell
+                        width="25%"
+                        className="border-r cell-jadwal-audit-mapa-ewp"
+                      >
+                        <DatepickerField
+                          placeholder="Tanggal"
+                          handleChange={(e) => handleChange(property_end, e)}
+                          value={payload[property_end] || ""}
+                          pastDate={true}
+                        />
+                      </Cell>
+                    </Row>
+                  )}
+                />
+              </TableTree>
             </div>
           </div>
+        </Card>
+        <div className="flex justify-end mt-3">
+          <div className="rounded bg-atlasian-green w-28">
+            <ButtonField text={"Simpan"} handler={handleSubmit} />
+          </div>
         </div>
-        {/* End Content */}
       </div>
+      {/* End Content */}
     </LandingLayoutEWP>
   );
 };

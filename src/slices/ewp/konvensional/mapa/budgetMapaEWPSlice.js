@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   payload: {
-    stc_mapa_tipe_anggaran_kode: "",
     tipe_anggaran_name: "",
     tanggal: "",
     tanggal_end: "",
@@ -10,7 +9,6 @@ const initialState = {
     deskripsi: "",
   },
   defaultPayload: {
-    stc_mapa_tipe_anggaran_kode: "",
     tipe_anggaran_name: "",
     tanggal: "",
     tanggal_end: "",

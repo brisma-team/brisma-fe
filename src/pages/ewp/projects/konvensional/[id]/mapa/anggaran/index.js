@@ -70,10 +70,11 @@ const index = () => {
             routes={routes}
             prevUrl={"/jadwal-audit"}
             nextUrl={"/dokumen"}
+            marginLeft={"-60px"}
           />
         </div>
         <div className="mb-4" />
-        <div className="w-[80rem]">
+        <div className="w-full">
           <Card>
             <div className="px-6 pt-2 pb-4 w-full">
               <p className="ml-2 font-bold text-base">Usulan Anggaran</p>

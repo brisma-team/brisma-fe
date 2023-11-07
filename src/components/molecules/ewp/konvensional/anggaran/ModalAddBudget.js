@@ -4,6 +4,7 @@ import {
   Modal,
   TextAreaField,
   TextInput,
+  TextInputDecimal,
 } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
 import {
@@ -11,15 +12,17 @@ import {
   ModalFooter,
   CardBodyContent,
   FormWithLabel,
-  BudgetCategorySelect,
 } from "@/components/molecules/commons";
+import { useDetailBudgetMapaEWP } from "@/data/ewp/konvensional/mapa/anggaran";
 import { confirmationSwal, usePostData, useUpdateData } from "@/helpers";
 import {
   resetPayload,
   setPayload,
 } from "@/slices/ewp/konvensional/mapa/budgetMapaEWPSlice";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
 
 const ModalAddBudget = ({
   showModal,
@@ -33,6 +36,26 @@ const ModalAddBudget = ({
   const { id } = useRouter().query;
   const dispatch = useDispatch();
   const payload = useSelector((state) => state.budgetMapaEWP.payload);
+
+  const { detailBudgetMapaEWP } = useDetailBudgetMapaEWP({
+    id: selectedId,
+  });
+
+  useEffect(() => {
+    if (detailBudgetMapaEWP?.data && typeModal === "update") {
+      dispatch(
+        setPayload(
+          _.pick(detailBudgetMapaEWP?.data, [
+            "tipe_anggaran_name",
+            "tanggal",
+            "tanggal_end",
+            "amount",
+            "deskripsi",
+          ])
+        )
+      );
+    }
+  }, [detailBudgetMapaEWP, typeModal, showModal]);
 
   const handleCloseModal = async () => {
     const confirm = await confirmationSwal(
@@ -57,15 +80,6 @@ const ModalAddBudget = ({
     dispatch(setPayload(updatedData));
   };
 
-  const handleChangeSelectBudgetCategory = (value) => {
-    const updatedData = {
-      ...payload,
-      stc_mapa_tipe_anggaran_kode: value.kode,
-      tipe_anggaran_name: value.nama,
-    };
-    dispatch(setPayload(updatedData));
-  };
-
   const handleSubmit = async () => {
     if (typeModal === "update") {
       await useUpdateData(
@@ -86,6 +100,9 @@ const ModalAddBudget = ({
     dispatch(resetPayload());
   };
 
+  useEffect(() => {
+    console.log("payload => ", payload);
+  }, [payload]);
   return (
     <Modal
       showModal={showModal}
@@ -101,16 +118,20 @@ const ModalAddBudget = ({
         <FormWithLabel
           label={"Nama Pengeluaran"}
           form={
-            <BudgetCategorySelect
-              handleChange={(e) => handleChangeSelectBudgetCategory(e.value)}
-              selectedValue={{
-                label: payload.tipe_anggaran_name,
-                value: {
-                  kode: payload.stc_mapa_tipe_anggaran_kode,
-                  nama: payload.tipe_anggaran_name,
-                },
-              }}
+            <TextInput
+              value={payload.tipe_anggaran_name}
+              onChange={(e) =>
+                handleChange("tipe_anggaran_name", e.target.value)
+              }
+              placeholder="Nominal Pengeluaran"
+              icon={
+                <ButtonIcon
+                  handleClick={() => handleChange("tipe_anggaran_name", "")}
+                  icon={<IconClose size="medium" />}
+                />
+              }
             />
+            // <div>test</div>
           }
           widthLabel={"w-2/5"}
           widthForm={"w-3/5"}
@@ -118,15 +139,16 @@ const ModalAddBudget = ({
         <FormWithLabel
           label={"Nominal Biaya"}
           form={
-            <TextInput
+            <TextInputDecimal
+              value={payload.amount}
+              onChange={(value) => handleChange("amount", value)}
+              placeholder="Nominal Biaya"
               icon={
                 <ButtonIcon
-                  handleClick={() => handleChange("name_kegiatan_audit", "")}
+                  handleClick={() => handleChange("amount", "")}
                   icon={<IconClose size="medium" />}
                 />
               }
-              onChange={(e) => handleChange("amount", e.target.value)}
-              value={payload.amount}
             />
           }
           widthLabel={"w-2/5"}

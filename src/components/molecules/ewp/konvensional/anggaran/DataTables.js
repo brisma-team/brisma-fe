@@ -12,8 +12,9 @@ import {
   loadingSwal,
   useDeleteData,
 } from "@/helpers";
-import { IconCrossCircle, IconEdit, IconPlus } from "@/components/icons";
+import { IconPlus } from "@/components/icons";
 import { ButtonField, ButtonIcon } from "@/components/atoms";
+import { ButtonDelete, ButtonEdit } from "@/components/molecules/commons";
 
 const DataTables = ({
   data,
@@ -97,13 +98,12 @@ const DataTables = ({
               >
                 <div className="flex justify-center items-center gap-1">
                   <ButtonIcon
-                    icon={<IconEdit />}
-                    color={"yellow"}
+                    icon={<ButtonEdit />}
                     handleClick={() => handleClickUpdate(id)}
+                    color={"yellow"}
                   />
                   <ButtonIcon
-                    icon={<IconCrossCircle />}
-                    color={"red"}
+                    icon={<ButtonDelete />}
                     handleClick={() => handleClickDelete(id)}
                   />
                 </div>
