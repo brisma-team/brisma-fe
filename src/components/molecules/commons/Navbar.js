@@ -27,7 +27,7 @@ const Notification = ({ data, handleMarkReadAll, handleClick }) => {
 
   return (
     <DropdownMenu
-      trigger={({ triggerRef, isSelected, ...props }) => (
+      trigger={({ triggerRef, isSelected, testId, ...props }) => (
         <div
           className={`h-8 w-8 rounded-full hover:bg-blue-200 ${
             isOpen && `bg-blue-200`
