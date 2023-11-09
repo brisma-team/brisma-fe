@@ -5,6 +5,7 @@ const DocumentViewer = ({
   documentStyle = ``,
   documentHtml,
   isLoading = false,
+  withNoHeader = false,
 }) => {
   const handlePrint = () => {
     window.frames["content-doc"].focus();
@@ -52,15 +53,17 @@ const DocumentViewer = ({
   };
   return (
     <>
-      <div className="flex mb-5 mt-5 gap-2">
-        <Button appearance="warning" onClick={handlePrint}>
-          Generate to PDF
-        </Button>
-        {/* <Button appearance="primary" isDisabled={true}>
+      {!withNoHeader && (
+        <div className="flex mb-5 mt-5 gap-2">
+          <Button appearance="warning" onClick={handlePrint}>
+            Generate to PDF
+          </Button>
+          {/* <Button appearance="primary" isDisabled={true}>
           Generate to Docx
         </Button> */}
-      </div>
-      <div className="w-[70rem] gap-6">
+        </div>
+      )}
+      <div className="w-[59rem] gap-6">
         <div>
           <Card>
             <div
@@ -70,7 +73,7 @@ const DocumentViewer = ({
                 <iframe
                   title="frame document"
                   id="content-doc"
-                  className="content-doc w-[70rem]"
+                  className="content-doc w-[59rem]"
                   srcDoc={documentMap(documentStyle, documentHtml)}
                   style={{ minHeight: "29.7cm", padding: "20px" }}
                 />

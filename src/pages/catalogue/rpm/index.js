@@ -29,7 +29,6 @@ const index = () => {
           "Nama Project": v?.NamaProject,
           "Jenis Audit": "SPESIAL",
           "Periode Audit": "Triwulan " + "I" + " - " + 2023,
-          "Tujuan Audit": "DIVISI TEKNOLOGI INFORMASI",
           Aksi: (
             <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
               <Link href={"/catalogue/rpm/" + v?.ProjectID}>
@@ -85,10 +84,9 @@ const index = () => {
                     "Nama Project",
                     "Jenis Audit",
                     "Periode Audit",
-                    "Tujuan Audit",
                     "Aksi",
                   ]}
-                  columnWidths={["5%", "15%", "30%", "15%", "17%", "13%", "5%"]}
+                  columnWidths={["5%", "15%", "30%", "15%", "17%", "5%"]}
                   items={catRpm}
                 />
               </div>

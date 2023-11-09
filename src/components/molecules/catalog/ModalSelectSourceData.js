@@ -247,16 +247,40 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                       isSearchable={false}
                     />
                   </div> */}
-                  <div className="p-3 font-semibold text-sm">Fase Addendum</div>
-                  <div className="p-1 pl-10 col-span-3">
-                    <TextInput
-                      isNumber={true}
-                      onChange={(e) => {
-                        setFaseAdendum(e.target.value);
-                      }}
-                      placeholder="Masukkan Fase Addendum"
-                    />
-                  </div>
+                  {sourceType == 2 && (
+                    <>
+                      <div className="p-3 font-semibold text-sm">
+                        Tipe Audit
+                      </div>
+                      <div className="p-1 pl-10 col-span-3">
+                        <TextInput
+                          onChange={(e) => {
+                            setFaseAdendum(e.target.value);
+                          }}
+                          placeholder="Masukkan Tipe Audit"
+                        />
+                      </div>
+                    </>
+                  )}
+                  {sourceType == 1 && (
+                    <>
+                      <div className="p-3 font-semibold text-sm">
+                        Kantor Audit
+                      </div>
+                      <div className="p-1 pl-10 col-span-3">
+                        <TextInput placeholder="Masukkan Kantor Audit" />
+                      </div>
+                      <div className="p-3 font-semibold text-sm">
+                        Fase Addendum
+                      </div>
+                      <div className="p-1 pl-10 col-span-3">
+                        <TextInput
+                          isNumber={true}
+                          placeholder="Masukkan Riwayat Addendum"
+                        />
+                      </div>
+                    </>
+                  )}
                   <div className="p-3"></div>
                   <div className="flex gap-2 p-1 pl-10 col-span-3 py-3">
                     <Button

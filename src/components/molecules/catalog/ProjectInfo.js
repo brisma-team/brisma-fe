@@ -49,7 +49,9 @@ const ProjectInfo = ({ type = "pat", id, source = 2, year = 2023 }) => {
                 : <Spinner />
               </div>
             ) : (
-              <div className="col-span-4 text-base">: {information?.Year}</div>
+              <div className="col-span-4 text-base">
+                : {information?.Year ? information.Year : year}
+              </div>
             )}
             {type === "ewp" && (
               <>

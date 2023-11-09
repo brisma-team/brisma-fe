@@ -5,19 +5,18 @@ export const patHtml = (id) => {
   const [data, setData] = useState();
   const [jadwalKegiatan, setJadwalKegiatan] = useState([]);
   const [jadwalSBP, setJadwalSBP] = useState([]);
+  const [jadwalLainnya, setJadwalLainnya] = useState([]);
+  const [timAudit, setTimAudit] = useState([]);
   const { overviewDetail } = useOverviewPAT(id);
-
   useEffect(() => {
     if (overviewDetail !== undefined) {
       setData(overviewDetail.data.pat);
       setJadwalKegiatan(overviewDetail.data.jadwal_kegiatan);
       setJadwalSBP(overviewDetail.data.jadwal_sbp);
+      setJadwalLainnya(overviewDetail.data.jadwal_lainnya);
+      setTimAudit(overviewDetail.data.tim_audit);
     }
   }, [overviewDetail]);
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   return `<main>
   <header>
@@ -309,8 +308,9 @@ export const patHtml = (id) => {
               </th>
           </tr>
       </thead>
-      ${jadwalKegiatan.map((d, index) => {
-        return `<tbody>
+      ${jadwalKegiatan
+        .map((d, index) => {
+          return `<tbody>
             <tr>
                 <td>
                     ${index + 1}
@@ -329,30 +329,32 @@ export const patHtml = (id) => {
                     return `<td></td>`;
                   })
                   .join("")}
-            <td>
-            {Object.keys(d.targetAudit.count_target_jenis_auditee.existing)
-                .map((k) => {
-                const existing =
-                    d.targetAudit.count_target_jenis_auditee.existing[k] || 0;
-                const target =
-                    d.targetAudit.count_target_jenis_auditee.target[k] || 0;
-                const percent = Math.round(
-                    (Number(target) / Number(existing)) * 100
-                );
-                return 
-                <p>
-                    {k}: [{existing}][{target}] {percent}%&nbsp;
-                </p>
-                ;
-                })
-                .join("")}
-            </td>
+                <td>
+                    {Object.keys(d.targetAudit.count_target_jenis_auditee.existing)
+                        .map((k) => {
+                        const existing =
+                            d.targetAudit.count_target_jenis_auditee.existing[k] || 0;
+                        const target =
+                            d.targetAudit.count_target_jenis_auditee.target[k] || 0;
+                        const percent = Math.round(
+                            (Number(target) / Number(existing)) * 100
+                        );
+                        return 
+                        <p>
+                            {k}: [{existing}][{target}] {percent}%&nbsp;
+                        </p>
+                        ;
+                        })
+                        .join("")
+                    }
+                </td>
             </tr>
             </tbody>`;
-      })}
+        })
+        .join("")}
       
-  </table>
-</figure>
+    </table>
+    </figure>
     </section>
   </article>
   <article>
@@ -457,29 +459,38 @@ export const patHtml = (id) => {
               </th>
           </tr>
       </thead>
-      <tbody>
-          <tr>
-          <td>{idx + 1}</td>
-          <td>{d.sbp_name}</td>
-          <td>{d.orgeh_name}</td>
-          <td>
-      {d.pembicara.map((p) => <p>{p.pn} - {p.nama}</p>).join("")}
-          </td>
-          <td>
-              {d.penanggung_jawab.map((p) => <p>{p.pn} - {p.nama}</p>).join("")}
-          </td>
-    {[...Array(12)]
-      .map(
-        (_, idx) =>
-          <td {
-            idx + 1 >= start_month &&
-            idx + 1 <= end_month &&
-            'style="background-color:hsl(210, 75%, 60%);"'
-          }></td>,
-      )
-      .join("")}
-      </tr>
-      </tbody>
+      ${jadwalSBP
+        .map((d, index) => {
+          return `<tbody>
+                        <tr>
+                        <td>${index + 1}</td>
+                        <td>${d.NamaSBP}</td>
+                        <td>${d.Orgeh ? d.Orgeh : "-"}</td>
+                        <td>
+                    ${d.Pembicara.map(
+                      (p, i) => `<p key={i}>${p[0] + " - " + p[1]}</p>`
+                    ).join("")}
+                        </td>
+                        <td>
+                            ${d.PenanggungJawab.map(
+                              (p, i) => `<p key="${i}">${p[0]} - ${p[1]}</p>`
+                            ).join("")}
+                        </td>
+                ${[...Array(12)]
+                  .map(
+                    (_, idx) =>
+                      `<td ${
+                        idx + 1 >= new Date(d.JadwalMulai).getMonth() + 1 &&
+                        idx + 1 <= new Date(d.JadwalAkhir).getMonth() + 1 &&
+                        'style="background-color:hsl(210, 75%, 60%);"'
+                      }></td>`
+                  )
+                  .join("")}
+                    </tr>
+                    </tbody>`;
+        })
+        .join("")}
+      
   </table>
 </figure>
     </section>
@@ -581,26 +592,31 @@ export const patHtml = (id) => {
               </th>
           </tr>
       </thead>
-      <tbody>
-          <tr>
-          <td>{idx + 1}</td>
-          <td>{d.nama_kegiatan}</td>
-          <td>{d.orgeh_name}</td>
-          <td>
-      {d.anggota.map((p) => <p>{p.pn} - {p.nama}</p>).join("")}
-          </td>
-    {[...Array(12)]
-      .map(
-        (_, idx) =>
-          <td {
-            idx + 1 >= start_month && idx + 1 <= end_month
-              ? 'style="background-color:hsl(210, 75%, 60%);"'
-              : ""
-          }></td>,
-      )
-      .join("")}
-      </tr>
-      </tbody>
+      
+      ${jadwalLainnya
+        .map((d, index) => {
+          return `<tbody key=${index}>
+                    <tr>
+                    <td>${index + 1}</td>
+                    <td>${d.NamaKegiatan}</td>
+                    <td>${d.Orgeh}</td>
+                    <td>
+                    <p>${d.PN + " - " + d.Nama + " - " + d.Jabatan}</p>
+                    </td>
+                    ${[...Array(12)]
+                      .map(
+                        (_, idx) =>
+                          `<td ${
+                            idx + 1 >= new Date(d.JadwalMulai).getMonth() + 1 &&
+                            idx + 1 <= new Date(d.JadwalAkhir).getMonth() + 1 &&
+                            'style="background-color:hsl(210, 75%, 60%);"'
+                          }></td>`
+                      )
+                      .join("")}
+                </tr>
+                </tbody>`;
+        })
+        .join("")}
   </table>
 </figure>
     </section>
@@ -642,47 +658,42 @@ export const patHtml = (id) => {
               </th>
           </tr>
       </thead>
-      <tbody>
-          <tr>
-      <td>
-        {idx + 1}
-      </td>
-      <td>
-        {d.name}
-      </td>
-      <td>
-        <p>
-          MA: {d.pn_ma} - {d.nama_ma}
-        </p>
-        <p>
-          KTA: {d.pn_kta} - {d.nama_kta}
-        </p>
-        <p>
-          ATA:&nbsp;
-        </p>
-        {d.atas
-          .map(
-            (a) =>
-              <p>
-            {a.pn} - {a.name}
-          </p>,
-          )
-          .join("")}
-      </td>
-      <td>
-        {d.atas
-          .map(
-            (a) =>
-              <p>
-            {a.pn} - {a.name}: {a.uker
-                .map((u, idx) => {u.orgeh_name})
-                .join(", ")}
-          </p>,
-          )
-          .join("")}
-      </td>
-    </tr>
-      </tbody>
+
+      ${timAudit
+        .map((d, index) => {
+          return `
+        <tbody key=${index}>
+            <tr>
+        <td>
+            ${index + 1}
+        </td>
+        <td>
+            ${d.NamaTim}
+        </td>
+        <td>
+            <p>
+                <b>MA</b>: ${d.MA.pn} - ${d.MA.nama}
+            </p>
+            <p>
+                <b>KTA</b>: ${d.KTA.pn} - ${d.KTA.nama}
+            </p>
+            <p>
+                <b>ATA</b>:&nbsp;
+            </p>
+            ${d.ATA.map((a) => `<p>${a[0]} - ${a[1]}</p>`).join("")}
+        </td>
+        <td style="text-align:left;">
+            ${d.ATA.map(
+              (a) =>
+                `<p style="margin-bottom:5px;">
+                ${a[0]} - ${a[1]}: ${a[2] ? a[2] : "-"}
+                </p>`
+            ).join("")}
+        </td>
+        </tr>
+        </tbody>`;
+        })
+        .join("")}
   </table>
 </figure>
     </section>

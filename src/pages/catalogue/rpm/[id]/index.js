@@ -9,15 +9,28 @@ import Button from "@atlaskit/button";
 const index = () => {
   const router = useRouter();
 
-  const [selectedId, setSelectedId] = useState();
   const [typeList, setTypeList] = useState([]);
+  const [params, setParams] = useState({
+    year: "2023",
+    type: "2",
+    id: "1",
+  });
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      ...params,
+      id,
+    });
+  }, [router.isReady]);
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "R.P.M", path: "/catalogue/rpm" },
-    { name: selectedId, path: "/catalogue/rpm/" + selectedId },
-    { name: "Daftar Dokumen", path: "/catalogue/rpm/" + selectedId },
+    { name: params.id, path: "/catalogue/rpm/" + params.id },
+    { name: "Daftar Dokumen", path: "/catalogue/rpm/" + params.id },
   ];
 
   const type_list = [
@@ -30,12 +43,6 @@ const index = () => {
   ];
 
   useEffect(() => {
-    if (!router.isReady) return;
-    const { id } = router.query;
-    setSelectedId(id);
-  }, [router.isReady]);
-
-  useEffect(() => {
     if (type_list) {
       const mappingTypeList = type_list.map((data, key) => {
         return {
@@ -43,7 +50,7 @@ const index = () => {
           Evaluasi: "Tahap ke-" + data.nomor_evaluasi,
           Aksi: (
             <Link
-              href={"/catalogue/rpm/" + selectedId + "/" + data.nomor_evaluasi}
+              href={"/catalogue/rpm/" + params.id + "/" + data.nomor_evaluasi}
             >
               <Button
                 href={data.url}
@@ -58,7 +65,7 @@ const index = () => {
       });
       setTypeList(mappingTypeList);
     }
-  }, [selectedId]);
+  }, [params.id]);
 
   return (
     <MainLayout>
@@ -71,7 +78,12 @@ const index = () => {
             <div className="text-3xl font-bold">Catalogue R.P.M</div>
           </div>
         </div>
-        <ProjectInfo type="rpm" id={selectedId} />
+        <ProjectInfo
+          type="rpm"
+          id={params.id}
+          year={params.year}
+          source={params.type}
+        />
         <div className="mt-5 mr-40">
           <Card>
             <div className="w-full h-full px-6">

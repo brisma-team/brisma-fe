@@ -3,7 +3,7 @@ import { MainLayout } from "@/layouts";
 import { Breadcrumbs, Card, TableField, Pagination } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
-import Link from "next/link";
+// import Link from "next/link";
 import { useKKPAList } from "@/data/catalog";
 
 import { IconClose, IconPlus } from "@/components/icons";
@@ -84,7 +84,10 @@ const index = () => {
           "Sub Aktivitas": data.SubActivity,
           "Sub Major": data.SubMajorCode + " - " + data.SubMajor,
           "Risk Issue": data.RiskIssueCode,
-          Auditor: data.PICAuditorPN + " - " + data.PICAuditorName,
+          Auditor:
+            params.type == "2"
+              ? data.Auditor.pn + " - " + data.Auditor.name
+              : data.PICAuditorPN + " - " + data.PICAuditorName,
           Aksi: (
             <div className="text-center col-span-3">
               <div className="">
@@ -199,9 +202,6 @@ const index = () => {
           <Card>
             <div className="w-full h-full px-6">
               <div className="text-xl font-bold p-5">Pustaka Dokumen</div>
-              <Link className="pl-5 underline" href={"#"}>
-                Lihat Seluruh Dokumen
-              </Link>
               <div className="max-h-[29rem] overflow-y-scroll mb-5">
                 <TableField
                   headers={[

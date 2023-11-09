@@ -51,6 +51,21 @@ const index = () => {
         />
         <DocumentViewer
           documentTitle="MAPA"
+          documentStyle={`header {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 1em;
+          }
+          .header {
+            position: relative;
+          }
+          header img {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            left: 0;
+          }`}
           documentHtml={mapaHtml(params.year, params.source, params.id)}
         />
       </div>

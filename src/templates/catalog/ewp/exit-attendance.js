@@ -1,10 +1,20 @@
 import { useModuleById } from "@/data/catalog";
 import { useState, useEffect } from "react";
 import dateLocaleString from "@/helpers/dateLocaleString";
+import { loadingSwal } from "@/helpers";
 
 const exitAttHtml = (year, source, id) => {
   const [data, setData] = useState();
-  const { moduleDetail } = useModuleById(year, source, id, "exit_attendance");
+  const { moduleDetail, moduleDetailIsLoading } = useModuleById(
+    year,
+    source,
+    id,
+    "exit_attendance"
+  );
+
+  useEffect(() => {
+    moduleDetailIsLoading ? loadingSwal() : loadingSwal("close");
+  }, [moduleDetailIsLoading]);
 
   useEffect(() => {
     if (moduleDetail !== undefined) {
@@ -14,47 +24,54 @@ const exitAttHtml = (year, source, id) => {
 
   return `
     <main>
-    <p><strong>Exit Attendance</strong></p>
-    <table>
-        <thead>
-          <tr>
-            <th rowspan="2" style="background-color: #3C64B1; color: white;"> <p style="text-align:center;">No</p></th>
-            <th rowspan="2" style="background-color: #3C64B1; color: white;"> <p style="text-align:center;">Nama Anggota</p></th>
-            <th rowspan="2" style="background-color: #3C64B1; color: white;"> <p style="text-align:center;">Tanggal Absen</p></th>
-            <th rowspan="2" style="background-color: #3C64B1; color: white;"> <p style="text-align:center;">Jabatan</p></th>
-            <th rowspan="2" style="background-color: #3C64B1; color: white;"> <p style="text-align:center;">UKER</p></th>
-          </tr>
-        </thead>
+    <h2><strong>Exit Attendance</strong></h2>
+    <table style="width: 100%; border: 1px solid #000; border-collapse: collapse;">
+        <tr>
+            <th style="width: 5%;border: 1px solid #000; padding: 8px; text-align: center; background-color: #f2f2f2;">No</th>
+            <th style="width: 25%;border: 1px solid #000; padding: 8px; text-align: center; background-color: #f2f2f2;">Peserta</th>
+            <th style="width: 22%;border: 1px solid #000; padding: 8px; text-align: center; background-color: #f2f2f2;">Tanggal Kehadiran</th>
+            <th style="width: 23%;border: 1px solid #000; padding: 8px; text-align: center; background-color: #f2f2f2;">Jabatan</th>
+            <th style="width: 25%;border: 1px solid #000; padding: 8px; text-align: center; background-color: #f2f2f2;">Unit Kerja</th>
+        </tr>
         ${
-          data &&
-          data
-            .filter(
-              (item) =>
-                item.PN ||
-                item.Nama ||
-                item.TanggalAbsen ||
-                item.Jabatan ||
-                item.UnitKerja
-            )
-            .map((item, index) => {
-              return `
-                      <tbody>
+          moduleDetailIsLoading
+            ? `<tr>
+            <td colspan="5" style="text-align:center;border: 1px solid #000; padding: 8px;">Loading data...</td></tr>`
+            : data &&
+              data
+                .filter(
+                  (item) =>
+                    item.PN ||
+                    item.Nama ||
+                    item.TanggalAbsen ||
+                    item.Jabatan ||
+                    item.UnitKerja
+                )
+                .map((item, index) => {
+                  return `
                         <tr>
-                            <td>${index + 1}</td>
-                            <td>${item.PN} - ${item.Nama}</td>
-                            <td>${dateLocaleString(
-                              item.TanggalAbsen,
-                              true
-                            )}</td>
-                            <td>${item.Jabatan}</td>
-                            <td>${item.UnitKerja}</td>
+                        <td style="text-align:center;border: 1px solid #000; padding: 8px;">${
+                          index + 1
+                        }</td>
+                        <td style="border: 1px solid #000; padding: 8px;">${
+                          item.PN
+                        } - ${item.Nama}</td>
+                        <td style="border: 1px solid #000; padding: 8px;">${dateLocaleString(
+                          item.TanggalAbsen,
+                          true
+                        )}</td>
+                            <td style="border: 1px solid #000; padding: 8px;">${
+                              item.Jabatan
+                            }</td>
+                            <td style="border: 1px solid #000; padding: 8px;">${
+                              item.UnitKerja
+                            }</td>
                         </tr>
-                      </tbody>
                     `;
-            })
-            .join(", ")
+                })
+                .join("")
         }
-</table>
+    </table>
     </main>
 `;
 };

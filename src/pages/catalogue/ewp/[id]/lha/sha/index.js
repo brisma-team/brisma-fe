@@ -33,6 +33,10 @@ const index = () => {
     { name: "E.W.P", path: baseUrl },
     { name: "Daftar Dokumen", path: baseUrl + "/" + params.uri },
     {
+      name: "Daftar Dokumen LHA",
+      path: baseUrl + "/" + params.uri + "/lha",
+    },
+    {
       name: "Dokumen LHA-SHA",
       path: baseUrl + "/" + params.uri + "/lha/sha",
     },

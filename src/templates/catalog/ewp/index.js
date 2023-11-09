@@ -9,6 +9,7 @@ import mapaHtml from "./mapa";
 import shaHtml from "./sha";
 import ltmajorHtml from "./ltmajor";
 import ltminorHtml from "./ltminor";
+import addendumMapaHtml from "./addendum-mapa";
 
 export {
   eksumHtml,
@@ -22,4 +23,5 @@ export {
   shaHtml,
   ltmajorHtml,
   ltminorHtml,
+  addendumMapaHtml,
 };

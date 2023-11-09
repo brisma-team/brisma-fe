@@ -10,6 +10,8 @@ import useKKPTById from "./useKKPTById";
 import useKKPTList from "./useKKPTList";
 import useMapaById from "./useMapaById";
 import useOmniSearch from "./useOmniSearch";
+import useRTAById from "./useRTAById";
+import useRTEById from "./rpm/useRTEById";
 
 export {
   useModuleById,
@@ -24,4 +26,6 @@ export {
   useKKPTList,
   useMapaById,
   useOmniSearch,
+  useRTAById,
+  useRTEById,
 };
