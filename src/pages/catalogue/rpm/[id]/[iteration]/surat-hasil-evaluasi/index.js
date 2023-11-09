@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { Breadcrumbs, PageTitle } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
@@ -18,16 +18,20 @@ const index = () => {
   }, [router.isReady]);
 
   const baseUrl = "/catalogue/rpm";
-  const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
-    { name: "Catalogue", path: "/catalogue" },
-    { name: "R.P.M", path: baseUrl },
-    { name: "Daftar Dokumen", path: baseUrl + "/" + selectedId },
-    {
-      name: "Dokumen Surat Hasil Tindak Lanjut",
-      path: baseUrl + "/" + selectedId + "/surat-hasil-evaluasi",
-    },
-  ];
+  const breadcrumbs = useMemo(() => {
+    if (!selectedId) return [];
+
+    return [
+      { name: "Menu", path: "/dashboard" },
+      { name: "Catalogue", path: "/catalogue" },
+      { name: "R.P.M", path: baseUrl },
+      { name: "Daftar Dokumen", path: `${baseUrl}/${selectedId}` },
+      {
+        name: "Dokumen Surat Hasil Tindak Lanjut",
+        path: `${baseUrl}/${selectedId}/surat-hasil-evaluasi`,
+      },
+    ];
+  }, [selectedId, baseUrl]);
 
   return (
     <MainLayout>
@@ -37,10 +41,12 @@ const index = () => {
           <PageTitle text={"Dokumen Surat Hasil Evaluasi"} />
         </div>
         <ProjectInfo type="rpm" id={selectedId} />
-        <DocumentViewer
-          documentTitle="Surat Hasil Evaluasi"
-          documentHtml={sheHtml(selectedId, selectedEvaluasi)}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <DocumentViewer
+            documentTitle="Surat Hasil Evaluasi"
+            documentHtml={sheHtml(selectedId, selectedEvaluasi)}
+          />
+        </Suspense>
       </div>
     </MainLayout>
   );

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Breadcrumbs, PageTitle } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
@@ -37,10 +37,12 @@ const index = () => {
           <PageTitle text={"Dokumen Negosiasi Berita Acara"} />
         </div>
         <ProjectInfo type="rpm" id={selectedId} />
-        <DocumentViewer
-          documentTitle="Negosiasi Berita Acara"
-          documentHtml={negoBaHtml(selectedId, selectedEvaluasi)}
-        />
+        <Suspense fallback={<p>Loading....</p>}>
+          <DocumentViewer
+            documentTitle="Negosiasi Berita Acara"
+            documentHtml={negoBaHtml(selectedId, selectedEvaluasi)}
+          />
+        </Suspense>
       </div>
     </MainLayout>
   );

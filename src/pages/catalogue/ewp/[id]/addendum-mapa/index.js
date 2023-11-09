@@ -1,8 +1,8 @@
 import { Breadcrumbs, PageTitle } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
-import { mapaHtml } from "@/templates/catalog/ewp";
 import { useState, useEffect } from "react";
+import { addendumMapaHtml } from "@/templates/catalog/ewp";
 import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 
 const index = () => {
@@ -35,7 +35,6 @@ const index = () => {
       path: baseUrl + "/" + id + "/addendum-mapa",
     },
   ];
-
   return (
     <MainLayout>
       <div className="px-5">
@@ -45,8 +44,8 @@ const index = () => {
         </div>
         <ProjectInfo type="ewp" id={params.id} />
         <DocumentViewer
-          documentTitle="MAPA"
-          documentHtml={mapaHtml(params.year, params.source, params.id)}
+          documentTitle="Addendum MAPA"
+          documentHtml={addendumMapaHtml(params.year, params.source, params.id)}
         />
       </div>
     </MainLayout>

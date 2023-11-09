@@ -36,37 +36,44 @@ const index = () => {
       jenis: "Negosiasi Attendance",
       jumlah: "-----",
       url: `negosiasi-attendance`,
-      isDisabled: false,
+      isDisabled: selectedEvaluasi == 1 ? true : false,
+      title: selectedEvaluasi == 1 ? "Dokumen tidak ada" : "Lihat Pustaka",
     },
     {
       jenis: "Negosiasi Berita Acara",
       jumlah: "-----",
       url: `negosiasi-berita-acara`,
-      isDisabled: false,
+      isDisabled: selectedEvaluasi == 1 ? true : false,
+      title: selectedEvaluasi == 1 ? "Dokumen tidak ada" : "Lihat Pustaka",
     },
     {
       jenis: "Negosiasi Notulen",
       jumlah: "-----",
       url: `negosiasi-notulen`,
-      isDisabled: false,
+      isDisabled: selectedEvaluasi == 1 ? true : false,
+      title: selectedEvaluasi == 1 ? "Dokumen tidak ada" : "Lihat Pustaka",
     },
     {
       jenis: "Rincian Tindak Lanjut Evaluasi",
       jumlah: "-----",
       url: `rincian-tindak-lanjut-evaluasi`,
-      isDisabled: true,
+      // isDisabled: selectedEvaluasi == 1 ? true : false,
+      isDisabled: false,
+      title: "Lihat Pustaka",
     },
     {
       jenis: "Surat Hasil Evaluasi",
       jumlah: "-----",
       url: `surat-hasil-evaluasi`,
       isDisabled: false,
+      title: "Lihat Pustaka",
     },
     {
       jenis: "Surat Hasil Tindak Lanjut",
       jumlah: "-----",
       url: `surat-hasil-tindak-lanjut`,
       isDisabled: false,
+      title: "Lihat Pustaka",
     },
   ];
 
@@ -82,7 +89,7 @@ const index = () => {
               isDisabled={data.isDisabled}
               appearance="primary"
             >
-              Lihat Pustaka
+              {data.title}
             </Button>
           ),
         };

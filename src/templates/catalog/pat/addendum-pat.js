@@ -10,7 +10,6 @@ export const addendumPatHtml = (year, source, id) => {
   //       setData(entNotDetail.data.entrance_notulen);
   //     }
   //   }, [entNotDetail]);
-  console.log(year, source, id);
 
   return `
   <main>

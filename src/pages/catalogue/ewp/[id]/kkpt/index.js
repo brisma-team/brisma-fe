@@ -1,6 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card, Pagination, TableField } from "@/components/atoms";
+import {
+  Breadcrumbs,
+  ButtonIcon,
+  Card,
+  Pagination,
+  TableField,
+} from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
 // import Link from "next/link";
@@ -9,7 +15,8 @@ import { useKKPTList } from "@/data/catalog";
 import { IconClose, IconPlus } from "@/components/icons";
 import Textfield from "@atlaskit/textfield";
 import { ProjectInfo } from "@/components/molecules/catalog";
-import Link from "next/link";
+// import Link from "next/link";
+import { BranchSelect } from "@/components/molecules/commons";
 
 const index = () => {
   const id = useRouter().query.id;
@@ -24,8 +31,10 @@ const index = () => {
     subactivity: "",
     submajor: "",
     riskissue: "",
+    auditor: undefined,
     limit: 5,
   });
+  const [ukerSelect, setUkerSelect] = useState("");
 
   const [params, setParams] = useState({
     year: "2023",
@@ -45,6 +54,10 @@ const index = () => {
     });
   }, [router.isReady]);
 
+  const handleBranchChange = useCallback((val) => {
+    setUkerSelect(String(val.branch_kode));
+  }, []);
+
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
@@ -60,9 +73,11 @@ const index = () => {
     currentPage,
     filter.limit,
     filter.kkpttitle,
+    ukerSelect,
     filter.subactivity,
     filter.submajor,
-    filter.riskissue
+    filter.riskissue,
+    filter.auditor
   );
   function debounce(func, delay) {
     let timeoutId;
@@ -85,11 +100,15 @@ const index = () => {
         return {
           No: (currentPage - 1) * 5 + key + 1,
           "Judul KKPT": data.KKPTTitle,
+          "Unit Kerja": data.BranchName,
           Aktivitas: data.Activity,
           "Sub Aktivitas": data.SubActivity,
           "Sub Major": data.SubMajorCode + " - " + data.SubMajor,
           "Risk Issue": data.RiskIssueCode,
-          Auditor: data.PICAuditorPN + " - " + data.PICAuditorName,
+          Auditor:
+            params.type == "2"
+              ? data.Auditor.pn + " - " + data.Auditor.name
+              : data.PICAuditorPN + " - " + data.PICAuditorName,
           Aksi: (
             <div className="text-center col-span-3">
               <div className="">
@@ -108,7 +127,6 @@ const index = () => {
       setKKPT(mappingKKPT);
     }
   }, [kkptList]);
-
   return (
     <MainLayout>
       <div className="px-5">
@@ -132,13 +150,13 @@ const index = () => {
           </Button>
         </div>
         {showFilter && (
-          <div className="flex justify-between w-96">
+          <div className="flex justify-between w-[38rem]">
             <Card>
               <div className="flex p-2">
-                <div className="w-1/2">
+                <div className="w-48">
                   <Textfield
                     placeholder="Judul KKPT"
-                    className="mr-1"
+                    className="mx-1"
                     name="kkpttitle"
                     onChange={debouncedHandleChange}
                     elemAfterInput={
@@ -148,11 +166,24 @@ const index = () => {
                     }
                   />
                 </div>
-                <div className="w-1/2">
+                <div className="w-48">
+                  <BranchSelect
+                    placeholder={"Unit Kerja"}
+                    className={"mx-1"}
+                    customIcon={
+                      <ButtonIcon
+                        icon={<IconClose />}
+                        handleClick={() => handleBranchChange("")}
+                      />
+                    }
+                    handleChange={(e) => handleBranchChange(e.value)}
+                  />
+                </div>
+                <div className="w-48">
                   <Textfield
-                    placeholder="Sub Aktivitas"
-                    className="ml-1"
-                    name="subactivity"
+                    placeholder="Aktivitas"
+                    className="mx-1"
+                    name="activity"
                     onChange={debouncedHandleChange}
                     elemAfterInput={
                       <button className="justify-center">
@@ -163,10 +194,23 @@ const index = () => {
                 </div>
               </div>
               <div className="flex p-2">
-                <div className="w-1/2">
+                <div className="w-48">
                   <Textfield
-                    placeholder="Sub Major Name"
-                    className="mr-1"
+                    placeholder="Sub Aktivitas"
+                    className="mx-1"
+                    name="subactivity"
+                    onChange={debouncedHandleChange}
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+                <div className="w-48">
+                  <Textfield
+                    placeholder="Sub Major"
+                    className="mx-1"
                     name="submajor"
                     onChange={debouncedHandleChange}
                     elemAfterInput={
@@ -176,10 +220,10 @@ const index = () => {
                     }
                   />
                 </div>
-                <div className="w-1/2">
+                <div className="w-48">
                   <Textfield
                     placeholder="Risk Issue"
-                    className="ml-1"
+                    className="mx-1"
                     name="riskissue"
                     onChange={debouncedHandleChange}
                     elemAfterInput={
@@ -204,14 +248,15 @@ const index = () => {
           <Card>
             <div className="w-full h-full px-6">
               <div className="text-xl font-bold p-5">Pustaka Dokumen</div>
-              <Link className="pl-5 underline" href={"#"}>
+              {/* <Link className="pl-5 underline" href={"#"}>
                 Lihat Seluruh Dokumen
-              </Link>
-              <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
+              </Link> */}
+              <div className="max-h-[35rem] overflow-y-scroll px-2 mb-5">
                 <TableField
                   headers={[
                     "No",
                     "Judul KKPT",
+                    "Unit Kerja",
                     "Aktivitas",
                     "Sub Aktivitas",
                     "Sub Major",
@@ -220,14 +265,15 @@ const index = () => {
                     "Aksi",
                   ]}
                   columnWidths={[
-                    "3%",
-                    "20%",
-                    "8%",
-                    "12%",
-                    "20%",
-                    "10%",
-                    "15%",
-                    "12%",
+                    "4rem",
+                    "18rem",
+                    "10rem",
+                    "10rem",
+                    "10rem",
+                    "15rem",
+                    "10rem",
+                    "10rem",
+                    "4rem",
                   ]}
                   items={kkpt}
                 />

@@ -8,13 +8,18 @@ export default function useKKPTList(
   page,
   limit = 5,
   kkpttitle,
+  uker,
   subactivity,
   submajor,
-  riskissue
+  riskissue,
+  auditor
 ) {
   let filters = ``;
   if (kkpttitle) {
     filters += `&kkpttitle=${kkpttitle}`;
+  }
+  if (uker) {
+    filters += `&uker=${uker}`;
   }
   if (subactivity) {
     filters += `&subactivity=${subactivity}`;
@@ -25,6 +30,9 @@ export default function useKKPTList(
   if (riskissue) {
     filters += `&riskissue=${riskissue}`;
   }
+  if (auditor) {
+    filters += `&auditor=${auditor}`;
+  }
   let parameters =
     `year=${year}&source=${type}&id=${id}&page=${page}&limit=${limit}` +
     filters;
@@ -33,7 +41,6 @@ export default function useKKPTList(
     id !== null ? path : null,
     withTokenFetcher
   );
-
   return {
     kkptList: data,
     kkptListError: error,

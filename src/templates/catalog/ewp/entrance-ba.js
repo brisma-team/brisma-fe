@@ -1,9 +1,15 @@
 import { useModuleById } from "@/data/catalog";
+import { loadingSwal } from "@/helpers";
 import { useState, useEffect } from "react";
 
 const entBaHtml = (year, source, id) => {
   const [data, setData] = useState();
-  const { moduleDetail } = useModuleById(year, source, id, "entrance_ba");
+  const { moduleDetail, moduleDetailIsLoading } = useModuleById(
+    year,
+    source,
+    id,
+    "entrance_ba"
+  );
 
   useEffect(() => {
     if (moduleDetail !== undefined) {
@@ -11,9 +17,17 @@ const entBaHtml = (year, source, id) => {
     }
   }, [moduleDetail]);
 
-  return `
+  useEffect(() => {
+    moduleDetailIsLoading && data == undefined
+      ? loadingSwal()
+      : loadingSwal("close");
+  }, [moduleDetailIsLoading]);
+
+  return moduleDetailIsLoading && data == undefined
+    ? `<p>Loading data...</p>`
+    : `
     <main>
-      ${data?.Content}
+      ${data?.Content ? data.Content : "Loading data..."}
     </main>
 `;
 };

@@ -33,7 +33,6 @@ const index = () => {
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: "/catalogue/ewp" },
-    { name: "Detail", path: "/catalogue/ewp/" + params.uri },
     { name: "Daftar Dokumen", path: "/catalogue/ewp/" + params.uri },
   ];
 
@@ -56,12 +55,13 @@ const index = () => {
         jumlah: "-----",
         url: `lha/risk-profile`,
         isDisabled: true,
+        title: "Belum Tersedia",
       },
       {
         jenis: "RTA",
         jumlah: "-----",
         url: `lha/rta`,
-        isDisabled: true,
+        isDisabled: false,
       },
     ];
 
@@ -77,7 +77,7 @@ const index = () => {
               isDisabled={data.isDisabled}
               appearance="primary"
             >
-              Lihat Pustaka
+              {data.title != undefined ? data.title : "Lihat Pustaka"}
             </Button>
           ),
         };
