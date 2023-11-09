@@ -2,14 +2,13 @@ import { Breadcrumbs, Card, DivButton, PageTitle } from "@/components/atoms";
 import {
   PrevNextNavigation,
   ApprovalItems,
+  ModalComment,
 } from "@/components/molecules/commons";
 import { NavigationDocument } from "@/components/molecules/commons";
-import { CardCommentMAPA } from "@/components/molecules/ewp/konvensional/mapa/dokumen";
 import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common";
 import Image from "next/image";
 import { ImageChat } from "@/helpers/imagesUrl";
 import { useRef, useState, useEffect } from "react";
-import { useCommentPAT } from "@/data/pat";
 import { useRouter } from "next/router";
 import { LandingLayoutEWP } from "@/layouts/ewp";
 import {
@@ -33,11 +32,8 @@ import {
   useUpdateData,
 } from "@/helpers";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
-
-const sample = {
-  data: '<figure class="image"><img src="http://139.59.104.214:9000/pat/1696921137696-LOGO_BRISMA_UNTUK_202_(1).png" alt="LOGO BRISMA UNTUK 202 (1).png"></figure><h2 style="margin-left:28.8px;">What is Lorem Ipsum?</h2><p style="text-align:justify;margin-left:28.8px;"><strong>Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p><h2 style="margin-left:14.4px;">Why do we use it?</h2><p style="text-align:justify;margin-left:14.4px;">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p><h2 style="margin-left:28.8px;">Where does it come from?</h2><p style="text-align:justify;margin-left:28.8px;">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p><p style="text-align:justify;margin-left:28.8px;">The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</p><h2 style="margin-left:14.4px;">Where can I get some?</h2><p style="text-align:justify;margin-left:14.4px;">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn\'t anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>',
-  comment: 0,
-};
+import { useMapaEWP } from "@/data/ewp/konvensional/mapa";
+import { useCommentMapaEWP } from "@/data/ewp/konvensional/mapa/dokumen";
 
 const routes = [
   {
@@ -77,34 +73,8 @@ const index = () => {
     },
   ];
 
-  const nav = [
-    { idx: 1, name: "Latar Belakang", url: "lb" },
-    { idx: 2, name: "Tujuan", url: "tujuan" },
-    { idx: 3, name: "Sumber Informasi", url: "si" },
-    { idx: 4, name: "Pemetaan Prioritas", url: "pemetaan" },
-    { idx: 5, name: "Tim Audit", url: "tim_audit" },
-    { idx: 6, name: "UKER Assessment", url: "uker_assessment" },
-    {
-      idx: 7,
-      name: "Analisis Perencanaan",
-      url: "analisis",
-    },
-    {
-      idx: 8,
-      name: "Penugasan",
-      url: "penugasan",
-    },
-    {
-      idx: 9,
-      name: "Jadwal Audit",
-      url: "jadwal_audit",
-    },
-    {
-      idx: 10,
-      name: "Anggaran",
-      url: "anggaran",
-    },
-  ];
+  const [listContent, setListContent] = useState([]);
+  const [listComment, setListComment] = useState([]);
 
   const ref = useRef(null);
   const [showModalApproval, setShowModalApproval] = useState(false);
@@ -112,12 +82,12 @@ const index = () => {
   const [activeIndex, setActiveIndex] = useState(1);
   const [activeIndexComment, setActiveIndexComment] = useState(1);
   const activeDivRef = useRef(null);
-  const [hitEndpointCount, setHitEndpointCount] = useState(0);
+  const [hitEndpointCount, setHitEndpointCount] = useState(1);
   const [doc, setDoc] = useState([]);
   const [currentPosition, setCurrentPosition] = useState(1);
-  const [totalComment, setTotalComment] = useState([]);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
-
+  const [bab, setBab] = useState(1);
+  const [selectedParentCommentId, setSelectedParentCommentId] = useState(0);
   const workflowData = useSelector(
     (state) => state.documentMapaEWP.workflowData
   );
@@ -125,13 +95,71 @@ const index = () => {
     (state) => state.documentMapaEWP.validationErrorsWorkflow
   );
 
-  const [bab, setBab] = useState(1);
-  const { documentEWP } = useDocumentEWP("ewp", bab, { id });
-  const { commentPAT } = useCommentPAT("total", { id });
+  const { mapaEWP } = useMapaEWP("dokumen", { id });
+  const { documentEWP } = useDocumentEWP("mapa", bab, { id });
   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
     "mapa",
     { id }
   );
+  const { commentMapaEWP, commentMapaEWPMutate } = useCommentMapaEWP({
+    id,
+    bab: activeIndexComment,
+  });
+
+  useEffect(() => {
+    if (commentMapaEWP?.data?.length) {
+      const mapping = commentMapaEWP?.data?.map((parent) => {
+        const {
+          id,
+          create_by,
+          createdAt,
+          is_closed,
+          deskripsi,
+          child_comment,
+        } = parent;
+        return {
+          id,
+          created_by: create_by,
+          created_at: createdAt,
+          is_closed,
+          deskripsi,
+          child_comment: child_comment?.length
+            ? child_comment?.map((child) => {
+                const { id, create_by, createdAt, is_closed, deskripsi } =
+                  child;
+                return {
+                  id,
+                  created_by: create_by,
+                  created_at: createdAt,
+                  is_closed,
+                  deskripsi,
+                };
+              })
+            : [],
+        };
+      });
+      setListComment(mapping);
+    }
+  }, [commentMapaEWP]);
+
+  useEffect(() => {
+    console.log("listComment => ", listComment);
+  }, [listComment]);
+
+  useEffect(() => {
+    const response = mapaEWP?.data?.daftar_isi;
+    if (response) {
+      const mapping = response?.map((bab) => {
+        return {
+          idx: bab.key,
+          total_comment: bab?.jumlah_comment?.filter((v) => !v.is_closed)
+            .length,
+          title: bab.title,
+        };
+      });
+      setListContent(mapping);
+    }
+  }, [mapaEWP]);
 
   // [ START ] Function ini berfungsi agar setiap kali class page-container-a4 melewati class parent,
   // maka akan setter setCurrentPosition akan merubah data dan setter setHitEndpointCount
@@ -162,26 +190,11 @@ const index = () => {
       const isAtBottom =
         parentContainer.scrollTop + parentContainer.clientHeight ===
         parentContainer.scrollHeight;
-      if (isAtBottom && hitEndpointCount < nav.length) {
-        setHitEndpointCount((prev) => Math.min(prev + 1, nav.length));
+      if (isAtBottom && hitEndpointCount <= 10) {
+        setHitEndpointCount((prev) => Math.min(prev + 1, 10));
       }
     }
   };
-  // [ END ]
-
-  // [ START ] Hook ini berfungsi untuk menghitung total comment berdasarkan masing-masing
-  // BAB pada dokumen
-  useEffect(() => {
-    if (commentPAT?.data?.length) {
-      const mappingTotalComment = commentPAT?.data?.map((v) => {
-        const bab = v?.ref_bab_pat_kode;
-        const total = v?.data?.filter((item) => !item?.is_closed).length;
-        return { bab, total };
-      });
-
-      setTotalComment(mappingTotalComment);
-    }
-  }, [commentPAT]);
   // [ END ]
 
   // [ START ] Hook ini berfungsi untuk merubah fokus dokumen berdasarkan current active index
@@ -223,37 +236,22 @@ const index = () => {
   // [ END ]
 
   useEffect(() => {
-    // Data dummy
-    if (hitEndpointCount < nav.length) {
-      setDoc((prev) => [
-        ...prev,
-        {
-          idx: hitEndpointCount,
-          key: nav[hitEndpointCount].name,
-          content: sample.data,
-          comment: sample.comment,
-        },
-      ]);
-      // setTotalComment((prev) => [...prev, { bab: currentPosition, total: 2 }]);
-      setBab(nav[hitEndpointCount].idx);
-    }
-
-    // Yang benar ini
+    setBab(hitEndpointCount);
   }, [hitEndpointCount]);
 
   useEffect(() => {
-    if (documentEWP) {
+    if (documentEWP?.data && listContent?.length) {
+      const findBab = listContent?.find((value) => value?.idx === bab);
       setDoc((prev) => [
         ...prev,
         {
-          idx: hitEndpointCount,
-          key: nav[hitEndpointCount].name,
-          content: documentEWP?.data,
-          comment: documentEWP?.comments,
+          idx: findBab?.idx,
+          title: findBab?.title,
+          content: documentEWP?.data?.data,
         },
       ]);
     }
-  }, [documentEWP]);
+  }, [documentEWP, listContent]);
 
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
@@ -307,17 +305,9 @@ const index = () => {
   }, [workflowDetailEWP]);
   // [ END ]
 
-  const handleClickComment = (idx) => {
+  const handleClickComment = (babIdx) => {
     setOpenCardComment(true);
-    setActiveIndexComment(idx);
-  };
-
-  const findTotalComment = (idx) => {
-    const correspondingTotal = totalComment?.find(
-      (item) => item.bab === idx + 1
-    );
-    const count = correspondingTotal ? correspondingTotal.total : 0;
-    return count;
+    setActiveIndexComment(babIdx);
   };
 
   // [ START ] function untuk Modal Workflow
@@ -430,6 +420,43 @@ const index = () => {
   };
   // [ END ]
 
+  // [ START ] COMMENT
+  const handleSubmitCommentParent = async (e, value) => {
+    e.stopPropagation();
+    const body = {
+      ref_bab_mapa_id: activeIndexComment.toString(),
+      deskripsi: value,
+    };
+
+    await usePostData(
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${id}?ref_bab_mapa_id=${activeIndexComment}`,
+      body
+    );
+
+    commentMapaEWPMutate();
+  };
+
+  const handleSubmitCommentChild = async (e, value) => {
+    e.stopPropagation();
+    const body = {
+      ref_bab_mapa_id: activeIndexComment.toString(),
+      deskripsi: value,
+      parent_comment_id: selectedParentCommentId,
+    };
+
+    await usePostData(
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${id}?ref_bab_mapa_id=${activeIndexComment}`,
+      body
+    );
+
+    commentMapaEWPMutate();
+  };
+
+  const handleSelectedParentComment = (id) => {
+    setSelectedParentCommentId(id);
+  };
+  // [ END ]
+
   return (
     <LandingLayoutEWP>
       <Breadcrumbs data={breadcrumbs} />
@@ -438,7 +465,7 @@ const index = () => {
         <PrevNextNavigation
           baseUrl={baseUrl}
           routes={routes}
-          prevUrl={"/"}
+          prevUrl={"/anggaran"}
           marginLeft={"-60px"}
         />
       </div>
@@ -450,15 +477,15 @@ const index = () => {
               <div className="px-3 py-1 w-full">
                 <div className="text-xl">Daftar Isi</div>
                 <div className="pl-2 mt-0.5">
-                  {nav.map((v, i) => {
+                  {listContent.map((v, i) => {
                     return (
                       <NavigationDocument
                         key={i}
                         no={i + 1}
-                        title={v.name}
-                        handleClick={() => setActiveIndex(i)}
+                        title={v.title}
+                        handleClick={() => setActiveIndex(v.idx)}
                         activeIndex={currentPosition}
-                        count={findTotalComment(i)}
+                        count={v.total_comment}
                       />
                     );
                   })}
@@ -470,31 +497,32 @@ const index = () => {
         <div>
           <Card>
             <div className="overflow-y-scroll my-2 parent max-h-[40rem]">
-              <CardCommentMAPA
+              <ModalComment
                 callbackRef={ref}
                 show={openCardComment}
-                handleClickOutside={() => {
-                  setOpenCardComment(false);
-                }}
-                activeIndexBab={activeIndexComment + 1}
+                handleClickOutside={() => setOpenCardComment(false)}
+                handleSubmitParent={handleSubmitCommentParent}
+                handleSubmitChild={handleSubmitCommentChild}
+                handleSelectedParentComment={handleSelectedParentComment}
+                data={listComment}
               />
               {doc.map((v, i) => {
                 return (
                   <div
                     key={i}
                     className={`page-container-a4 shrink-0 ${
-                      i === activeIndex ? "active" : ""
+                      i + 1 === activeIndex ? "active" : ""
                     }`}
-                    tabIndex={i === activeIndex ? 0 : -1}
-                    ref={i === activeIndex ? activeDivRef : null}
+                    tabIndex={i + 1 === activeIndex ? 0 : -1}
+                    ref={i + 1 === activeIndex ? activeDivRef : null}
                   >
                     {v.content && (
                       <div className="px-4 h-full w-full relative page-content-a4">
                         <div className="flex justify-between">
-                          <div className="font-bold text-xl">{v.key}</div>
+                          <div className="font-bold text-xl">{v.title}</div>
                           <div className="flex items-center" ref={ref}>
                             <DivButton
-                              handleClick={() => handleClickComment(i)}
+                              handleClick={() => handleClickComment(v.idx)}
                             >
                               <Image src={ImageChat} alt="chat" />
                             </DivButton>
@@ -504,26 +532,6 @@ const index = () => {
                           className="mt-4"
                           dangerouslySetInnerHTML={{ __html: v.content }}
                         />
-                        {/* {v.idx === 2 ? (
-                          <div
-                            className="mt-4"
-                            dangerouslySetInnerHTML={{
-                              __html: getAuditTargetTable(v.content),
-                            }}
-                          />
-                        ) : v.idx === 6 ? (
-                          <div
-                            className="mt-4"
-                            dangerouslySetInnerHTML={{
-                              __html: getAuditTeamTable(v.content),
-                            }}
-                          />
-                        ) : (
-                          <div
-                            className="mt-4"
-                            dangerouslySetInnerHTML={{ __html: v.content }}
-                          />
-                        )} */}
                       </div>
                     )}
                   </div>

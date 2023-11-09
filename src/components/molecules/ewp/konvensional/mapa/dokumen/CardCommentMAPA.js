@@ -9,7 +9,6 @@ import Image from "next/image";
 import { ImageAvatar } from "@/helpers/imagesUrl";
 import { convertDate, usePostData, useUpdateData } from "@/helpers";
 import { useState } from "react";
-import { useCommentPAT } from "@/data/pat";
 import { useRouter } from "next/router";
 
 const CommentDetail = ({ mutate, babCode, data }) => {
@@ -174,10 +173,10 @@ const CardCommentMAPA = ({
   const [newComment, setNewComment] = useState(false);
   const [commentTextParent, setCommentTextParent] = useState("");
 
-  const { commentPAT, commentPATMutate } = useCommentPAT("list", {
-    id,
-    bab: activeIndexBab,
-  });
+  // const { commentPAT, commentPATMutate } = useCommentPAT("list", {
+  //   id,
+  //   bab: activeIndexBab,
+  // });
 
   useEffect(() => {
     const clickOutside = (event) => {
@@ -208,7 +207,7 @@ const CardCommentMAPA = ({
       body
     );
 
-    commentPATMutate();
+    // commentPATMutate();
     setNewComment(false);
     setCommentTextParent("");
   };
@@ -254,7 +253,7 @@ const CardCommentMAPA = ({
                   </div>
                 </div>
               )}
-              {commentPAT?.data?.length ? (
+              {/* {commentPAT?.data?.length ? (
                 <Comment
                   mutate={commentPATMutate}
                   babCode={activeIndexBab}
@@ -262,7 +261,7 @@ const CardCommentMAPA = ({
                 />
               ) : (
                 ""
-              )}
+              )} */}
             </div>
           </Card>
         </div>

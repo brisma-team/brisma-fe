@@ -54,6 +54,8 @@ import CardWithHeaderLine from "./CardWithHeaderLine";
 import ModalAssessmentInfo from "./ModalAssessmentInfo";
 import ButtonEdit from "./ButtonEdit";
 import ButtonDelete from "./ButtonDelete";
+import CardCommentDetail from "./CardCommentDetail";
+import ModalComment from "./ModalComment";
 
 export {
   BackButton,
@@ -112,4 +114,6 @@ export {
   ModalAssessmentInfo,
   ButtonEdit,
   ButtonDelete,
+  CardCommentDetail,
+  ModalComment,
 };
