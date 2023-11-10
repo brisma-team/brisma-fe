@@ -45,7 +45,7 @@ const index = () => {
         jenis: "Addendum MAPA",
         jumlah: "-----",
         url: `${params.uri}/addendum-mapa`,
-        isDisabled: true,
+        isDisabled: params.type === "2" ? false : true,
       },
       {
         jenis: "Entrance Attendance",

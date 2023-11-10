@@ -10,7 +10,6 @@ export const addendumPatHtml = (year, id) => {
       setData(addendumPATData.data.data_addendum);
     }
   }, [addendumPATData]);
-  console.log(addendumPATData);
   return `
   <main>
     <header>
