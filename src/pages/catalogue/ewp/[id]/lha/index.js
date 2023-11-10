@@ -34,6 +34,10 @@ const index = () => {
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: "/catalogue/ewp" },
     { name: "Daftar Dokumen", path: "/catalogue/ewp/" + params.uri },
+    {
+      name: "Daftar Dokumen LHA",
+      path: "/catalogue/ewp/" + params.uri + "/lha",
+    },
   ];
 
   useEffect(() => {

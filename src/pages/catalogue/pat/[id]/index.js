@@ -45,7 +45,7 @@ const index = () => {
         jenis: "Addendum PAT",
         jumlah: "-----",
         url: `${params.uri}/addendum-pat`,
-        isDisabled: true,
+        isDisabled: false,
       },
     ];
 
