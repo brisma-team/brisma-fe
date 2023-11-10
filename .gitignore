@@ -34,3 +34,6 @@ yarn-error.log*
 # 
 package-lock.json
 yarn.lock
+
+# ckeditor-5
+/ckeditor5

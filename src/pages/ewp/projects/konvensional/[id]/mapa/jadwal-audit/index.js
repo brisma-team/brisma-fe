@@ -25,7 +25,7 @@ import {
 } from "@/slices/ewp/konvensional/mapa/auditScheduleMapaEWPSlice";
 import { useSelector } from "react-redux";
 import _ from "lodash";
-import { usePostData } from "@/helpers";
+import { convertDate, dateNow, usePostData } from "@/helpers";
 
 const routes = [
   {
@@ -208,7 +208,6 @@ const index = () => {
                           placeholder="Tanggal"
                           handleChange={(e) => handleChange(property_start, e)}
                           value={payload[property_start] || ""}
-                          pastDate={true}
                         />
                       </Cell>
                       <Cell
@@ -219,7 +218,7 @@ const index = () => {
                           placeholder="Tanggal"
                           handleChange={(e) => handleChange(property_end, e)}
                           value={payload[property_end] || ""}
-                          pastDate={true}
+                          pastDate={convertDate(payload[property_start], "-")}
                         />
                       </Cell>
                     </Row>
