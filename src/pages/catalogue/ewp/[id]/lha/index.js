@@ -58,8 +58,7 @@ const index = () => {
         jenis: "Risk Profile",
         jumlah: "-----",
         url: `lha/risk-profile`,
-        isDisabled: true,
-        title: "Belum Tersedia",
+        isDisabled: false,
       },
       {
         jenis: "RTA",
