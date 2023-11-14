@@ -4,6 +4,24 @@
 :root {
   --ck-border-radius: 10px;
 }
+
+.ck-content > h1,
+.ck-content > h2,
+.ck-content > h3,
+.ck-content > h4,
+.ck-content > h5,
+.ck-content > h6 {
+  font-size: revert;
+  font-weight: revert;
+}
+
+.ck-content > ol,
+.ck-content > ul {
+  list-style: revert;
+  margin: revert;
+  padding: revert;
+}
+
 .ck.ck-editor {
   /* min-height: 100% !important; */
   max-width: 210mm;

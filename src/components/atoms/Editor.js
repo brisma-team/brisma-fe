@@ -1,14 +1,13 @@
 import React from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Editor from "ckeditor5-custom-build/build/ckeditor";
 
 const EditorField = ({ contentData, ready, onChange }) => {
   const editorConfiguration = {
     toolbar: {
       items: [
-        "undo",
-        "redo",
+        "heading",
+        "|",
         "sourceEditing",
         "|",
         "bold",
@@ -20,39 +19,30 @@ const EditorField = ({ contentData, ready, onChange }) => {
         "specialCharacters",
         "|",
         "link",
+        "bulletedList",
+        "numberedList",
+        "todoList",
+        "|",
+        "alignment",
         "|",
         "outdent",
         "indent",
         "|",
         "blockQuote",
         "insertTable",
-        "mediaEmbed",
-        "-",
+        "undo",
+        "redo",
         "fontColor",
-        "/",
         "fontFamily",
         "fontBackgroundColor",
-        "highlight",
         "fontSize",
         "|",
         "horizontalLine",
         "pageBreak",
         "removeFormat",
-        "-",
-        "heading",
+        "findAndReplace",
         "|",
-        "alignment",
-        "|",
-        "bulletedList",
-        "numberedList",
-        "todoList",
-        "|",
-        "code",
         "imageInsert",
-        "mathType",
-        "tableColumn",
-        "tableRow",
-        "mergeTableCells",
       ],
       shouldNotGroupWhenFull: true,
     },
@@ -70,6 +60,19 @@ const EditorField = ({ contentData, ready, onChange }) => {
       ],
     },
     licenseKey: "",
+    htmlSupport: {
+      allow: [
+        {
+          name: /.*/,
+          attributes: true,
+          classes: true,
+          styles: true,
+        },
+      ],
+    },
+    mediaEmbed: {
+      toolbar: ["mediaEmbed"],
+    },
   };
   return (
     <div>
