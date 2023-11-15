@@ -121,7 +121,9 @@ const index = () => {
       const mapping = filterData?.map((v) => {
         const headerTitle = `${v.mapa_uker.ref_auditee_branch_kode} ${v.mapa_uker.ref_auditee_branch_name} / ${v.ref_aktivitas_name} / ${v.ref_sub_aktivitas_name} / ${v.ref_sub_major_kode} / ${v.ref_risk_issue_kode}`;
 
-        const auditor = v?.mapa_sample?.map((sample) => sample?.name_auditor);
+        const auditor = v?.mapa_sample
+          ?.map((sample) => sample?.name_auditor)
+          .filter((auditor, index, self) => self.indexOf(auditor) === index);
 
         const uker = `${v.mapa_uker.ref_auditee_branch_kode} - ${v.mapa_uker.ref_auditee_branch_name}`;
         const aktifitas = v.ref_aktivitas_name;
@@ -303,7 +305,17 @@ const index = () => {
                       </div>
                     </Cell>
                     <Cell width="14%" className={`border-r ${customCell}`}>
-                      <div className={positionCenter}>{auditor}</div>
+                      <div className={`${positionCenter}`}>
+                        {auditor?.length
+                          ? auditor?.map((v, i) => {
+                              return (
+                                <div key={i} className="w-full">
+                                  • {v}
+                                </div>
+                              );
+                            })
+                          : ""}
+                      </div>
                     </Cell>
                     <Cell width="13%" className={`border-r ${customCell}`}>
                       <div className={positionCenter}>{uker}</div>

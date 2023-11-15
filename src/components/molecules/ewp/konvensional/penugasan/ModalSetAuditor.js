@@ -10,12 +10,10 @@ import {
   setErrorValidation,
   usePostData,
 } from "@/helpers";
-import { ContentSampleCSV } from "./content";
+import { ContentSampleCSV, ContentSampleFile } from "./content";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  setModalDataTables,
   setPayloadAssignment,
-  setPayloadSample,
   setValidationErrors,
   resetValidationErrors,
   resetPayloadAssignment,
@@ -49,9 +47,6 @@ const ModalSetAuditor = ({
   });
   const [currentModalStage, setCurrentModalStage] = useState(1);
 
-  const dataTables = useSelector(
-    (state) => state.assignmentMapaEWP.modalDataTables
-  );
   const payloadSample = useSelector(
     (state) => state.assignmentMapaEWP.payloadSample
   );
@@ -88,38 +83,8 @@ const ModalSetAuditor = ({
     }
 
     setShowModal(false);
-  };
-
-  const extendRows = (rows, sampleIndex, onClick) => {
-    return rows.map((row, index) => ({
-      ...row,
-      onClick: (e) => onClick(e, sampleIndex, row?.cells[0]?.content, index),
-    }));
-  };
-
-  // Untuk pilih sample data yang ada di DynamicTable yang mana samplenya akan di upload
-  const handleRowClick = (e, sampleIndex, key, index) => {
-    const newDataTables = JSON.parse(JSON.stringify(dataTables));
-    const objData = [...newDataTables[sampleIndex].tableData];
-    const updateDataTables = [...newDataTables[sampleIndex].tableSelectedRows];
-
-    const updatePayloadSample = [...payloadSample];
-    const existingIndex = updateDataTables.findIndex((item) => {
-      return item === index;
-    });
-
-    if (existingIndex > -1) {
-      updatePayloadSample.splice(existingIndex, 1);
-      updateDataTables.splice(existingIndex, 1);
-    } else {
-      updatePayloadSample.push({ id: objData[index].ID });
-      updateDataTables.push(index);
-    }
-
-    newDataTables[sampleIndex].tableSelectedRows = updateDataTables;
-
-    dispatch(setModalDataTables(newDataTables));
-    dispatch(setPayloadSample(updatePayloadSample));
+    dispatch(resetPayloadAssignment());
+    dispatch(resetPayloadSample());
   };
 
   const handleChangeSelect = (e) => {
@@ -241,24 +206,14 @@ const ModalSetAuditor = ({
             </div>
           </div>
           <div className="flex flex-col gap-4 w-full p-4">
-            <ContentSampleCSV
-              data={sample}
-              extendRows={extendRows}
-              handleRowClick={handleRowClick}
-            />
+            {currentModalStage === 1 ? (
+              <ContentSampleCSV data={sample} />
+            ) : currentModalStage === 2 ? (
+              <ContentSampleFile data={sample} />
+            ) : (
+              ""
+            )}
           </div>
-          {/* {currentModalStage === 1 &&
-            sampleAssignmentMapaEWP?.data?.csv?.length &&
-            sampleAssignmentMapaEWP?.data?.csv?.map(v) => {
-              return
-            }} */}
-          {/* <DynamicTable
-                  head={dataTables.tableColumns}
-                  highlightedRowIndex={dataTables.tableSelectedRows}
-                  rows={extendRows(dataTables.tableRows, handleRowClick)}
-                  rowsPerPage={50}
-                  defaultPage={1}
-                /> */}
         </div>
       </div>
     </Modal>

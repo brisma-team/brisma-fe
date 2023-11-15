@@ -1,3 +1,4 @@
 import ContentSampleCSV from "./ContentSampleCSV";
+import ContentSampleFile from "./ContentSampleFile";
 
-export { ContentSampleCSV };
+export { ContentSampleCSV, ContentSampleFile };

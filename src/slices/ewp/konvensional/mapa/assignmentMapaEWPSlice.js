@@ -40,7 +40,7 @@ export const assignmentMapaEWPSlice = createSlice({
       state.payloadSample = [];
     },
     resetPayloadAssignment: (state) => {
-      state.payloadSample = { ...state.defaultPayloadAssignment };
+      state.payloadAssignment = { ...state.defaultPayloadAssignment };
     },
     resetValidationErrors: (state) => {
       state.validationErrors = {};
