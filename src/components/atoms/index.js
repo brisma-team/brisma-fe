@@ -36,6 +36,7 @@ import YearPicker from "./YearPicker";
 import QRGenerator from "./QRGenerator";
 import TextInputDecimal from "./TextInputDecimal";
 import AttachmentModal from "./AttachmentModal";
+import CustomPagination from "./CustomPagination";
 
 export {
   AvatarDefaultExample,
@@ -76,4 +77,5 @@ export {
   QRGenerator,
   TextInputDecimal,
   AttachmentModal,
+  CustomPagination,
 };

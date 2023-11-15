@@ -1,3 +1,5 @@
+import { withTokenConfig } from "@/helpers";
+
 const ButtonIcon = ({
   color,
   icon,
@@ -7,6 +9,8 @@ const ButtonIcon = ({
   isDisabled,
   handleMouseEnter,
   handleMouseLeave,
+  downloadUrl,
+  downloadFilename,
 }) => {
   let iconColor;
   switch (color) {
@@ -29,6 +33,26 @@ const ButtonIcon = ({
       iconColor = "text-black";
   }
 
+  const onClick = (e) => {
+    if (downloadUrl) {
+      const { headers } = withTokenConfig();
+      fetch(downloadUrl, { headers })
+        .then((response) => response.blob())
+        .then((blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = downloadFilename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => console.error("Error downloading file:", error));
+    }
+    handleClick(e);
+  };
+
   if (isDisabled) {
     return (
       <div
@@ -49,7 +73,7 @@ const ButtonIcon = ({
       className={`${className} ${iconColor} ${
         isDisabled && "cursor-not-allowed"
       }`}
-      onClick={handleClick}
+      onClick={onClick}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === "Space") {
           return;
