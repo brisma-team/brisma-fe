@@ -6,6 +6,7 @@ const DatepickerField = ({
   handleChange,
   value,
   isDisabled,
+  pastDate,
 }) => {
   return (
     <DatePicker
@@ -14,6 +15,7 @@ const DatepickerField = ({
       value={value}
       dateFormat={format}
       isDisabled={isDisabled}
+      minDate={pastDate}
     />
   );
 };
