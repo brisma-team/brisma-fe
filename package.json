@@ -88,6 +88,7 @@
     "react-select": "^5.7.0",
     "react-spinners": "^0.13.8",
     "react-virtualized": "^9.22.3",
+    "rsuite-table": "^3.16.1",
     "styled-components": "^5.3.6",
     "sweetalert2": "^11.7.2",
     "sweetalert2-react-content": "^5.0.7",
