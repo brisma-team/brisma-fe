@@ -305,7 +305,7 @@ const index = () => {
                       </div>
                     </Cell>
                     <Cell width="14%" className={`border-r ${customCell}`}>
-                      <div className={`${positionCenter}`}>
+                      <div className={`${positionCenter} flex-col`}>
                         {auditor?.length
                           ? auditor?.map((v, i) => {
                               return (
