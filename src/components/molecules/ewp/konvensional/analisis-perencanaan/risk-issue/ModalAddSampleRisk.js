@@ -31,6 +31,7 @@ import {
   setDataTables,
   setPayloadUploadSample,
   resetPayloadUploadSample,
+  resetDataTables,
 } from "@/slices/ewp/konvensional/mapa/planningAnalysisMapaEWPSlice";
 import { SubModalPickDataCSV } from "./modal/sample-risk/sample-csv";
 import {
@@ -186,6 +187,7 @@ const ModalAddSampleRisk = ({
     setShowModal(false);
     setIsPickDataModal(false);
     setIsSelectedSamplePool(false);
+    dispatch(resetDataTables());
     dispatch(resetPayloadUploadSample());
   };
 

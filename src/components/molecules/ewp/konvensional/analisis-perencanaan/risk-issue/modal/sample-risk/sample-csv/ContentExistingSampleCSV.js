@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 const ContentExistingSampleCSV = ({
   data,
   currentModalStage,
+  currentSubModalStage,
   setCurrentSubModalStage,
   setIsSelectedSamplePool,
   setSelectedSamplePoolId,
@@ -129,10 +130,10 @@ const ContentExistingSampleCSV = ({
   const handleSelectedSample = async (id, directory, fileName) => {
     setSelectedSamplePoolId(id);
     await importDataFromUrl(directory, fileName);
-    if (currentModalStage === 1) {
+    if (currentSubModalStage === 2 && currentModalStage === 1) {
       setIsSelectedSamplePool(true);
-      setCurrentSubModalStage(1);
     }
+    setCurrentSubModalStage(1);
   };
 
   const customHeader = `h-full flex items-center text-brisma`;

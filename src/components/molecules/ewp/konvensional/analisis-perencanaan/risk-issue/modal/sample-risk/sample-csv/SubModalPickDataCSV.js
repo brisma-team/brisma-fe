@@ -88,6 +88,7 @@ const SubModalPickDataCSV = ({
           <ContentExistingSampleCSV
             data={samplePoolData}
             currentModalStage={currentModalStage}
+            currentSubModalStage={currentSubModalStage}
             setCurrentSubModalStage={setCurrentSubModalStage}
             setIsSelectedSamplePool={setIsSelectedSamplePool}
             setSelectedSamplePoolId={setSelectedSamplePoolId}
