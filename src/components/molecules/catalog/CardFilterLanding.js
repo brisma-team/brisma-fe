@@ -3,7 +3,7 @@ import { Select, TextInput, Modal } from "@/components/atoms";
 import { useOmniSearch } from "@/data/catalog";
 
 const CardFilterLanding = () => {
-  const [selected, setSelected] = useState(0);
+  // const [selected, setSelected] = useState(0);
   const [omniList, setOmniList] = useState([]);
   const [params, setParams] = useState({
     type: "ewp",
@@ -23,7 +23,7 @@ const CardFilterLanding = () => {
 
   useEffect(() => {
     if (omni !== undefined || "") {
-      setIsModalOpen(true);
+      // setIsModalOpen(true);
       setOmniList(omni.data.ewp_list);
     }
   }, [omni]);
@@ -45,7 +45,7 @@ const CardFilterLanding = () => {
               { label: "R.P.M", value: 3 },
             ]}
             placeholder="Pilih Jenis"
-            onChange={(e) => setSelected(e.value)}
+            // onChange={(e) => setSelected(e.value)}
             isSearchable={false}
           />
         </div>

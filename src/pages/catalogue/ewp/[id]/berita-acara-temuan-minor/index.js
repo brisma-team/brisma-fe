@@ -6,6 +6,7 @@ import { ltminorHtml } from "@/templates/catalog/ewp";
 import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 import rtaHtml from "@/templates/catalog/ewp/rta";
 import { useRTAById } from "@/data/catalog";
+import { loadingSwal } from "@/helpers";
 
 const index = () => {
   const router = useRouter();
@@ -29,7 +30,7 @@ const index = () => {
     });
   }, [router.isReady]);
 
-  const { rtaDetail } = useRTAById(
+  const { rtaDetail, rtaDetailIsLoading } = useRTAById(
     params.year,
     params.type,
     params.id,
@@ -41,6 +42,10 @@ const index = () => {
       setList(rtaDetail.data.kkpt);
     }
   }, [rtaDetail]);
+
+  useEffect(() => {
+    rtaDetailIsLoading ? loadingSwal() : loadingSwal("close");
+  }, [rtaDetailIsLoading]);
 
   const baseUrl = "/catalogue/ewp";
   const breadcrumbs = [

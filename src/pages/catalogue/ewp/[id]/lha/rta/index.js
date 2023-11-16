@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 import rtaHtml from "@/templates/catalog/ewp/rta";
 import { useRTAById } from "@/data/catalog";
+import { loadingSwal } from "@/helpers";
 
 const index = () => {
   const router = useRouter();
@@ -29,13 +30,21 @@ const index = () => {
     });
   }, [router.isReady]);
 
-  const { rtaDetail } = useRTAById(params.year, params.type, params.id);
+  const { rtaDetail, rtaDetailIsLoading } = useRTAById(
+    params.year,
+    params.type,
+    params.id
+  );
 
   useEffect(() => {
     if (rtaDetail !== undefined) {
       setList(rtaDetail.data.kkpt);
     }
   }, [rtaDetail]);
+
+  useEffect(() => {
+    rtaDetailIsLoading ? loadingSwal() : loadingSwal("close");
+  }, [rtaDetailIsLoading]);
 
   const baseUrl = "/catalogue/ewp";
   const breadcrumbs = [
@@ -73,13 +82,17 @@ const index = () => {
                 <Card>
                   <div className="w-full h-full px-3 p-5">
                     <u className="font-bold text-base">Kumpulan KKPT</u>
-                    {list?.map((data, i) => {
-                      return (
-                        <p className="text-base" key={i}>
-                          {data.KKPTID + " - " + data.KKPTTitle}
-                        </p>
-                      );
-                    })}
+                    {rtaDetailIsLoading ? (
+                      <p>Loading data...</p>
+                    ) : (
+                      list?.map((data, i) => {
+                        return (
+                          <p className="text-base" key={i}>
+                            {data.KKPTID + " - " + data.KKPTTitle}
+                          </p>
+                        );
+                      })
+                    )}
                   </div>
                 </Card>
               </div>
