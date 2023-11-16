@@ -6,7 +6,7 @@ import DropdownMenu, {
 import Button from "@atlaskit/button/standard-button";
 import { IconMore } from "@/components/icons";
 
-const DropdownCard = ({ action }) => {
+const DropdownCard = ({ actions }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const closeDropdown = () => {
@@ -26,9 +26,12 @@ const DropdownCard = ({ action }) => {
       onOpenChange={(e) => (setIsOpen(e.isOpen), e.event.stopPropagation())}
     >
       <DropdownItemGroup>
-        {action?.map((v, i) => {
+        {actions?.map((v, i) => {
           return (
-            <DropdownItem onClick={() => (closeDropdown(), v.action)} key={i}>
+            <DropdownItem
+              onClick={() => (closeDropdown(), v?.action())}
+              key={i}
+            >
               {v.label}
             </DropdownItem>
           );
