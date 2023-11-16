@@ -56,6 +56,7 @@ import ButtonEdit from "./ButtonEdit";
 import ButtonDelete from "./ButtonDelete";
 import CardCommentDetail from "./CardCommentDetail";
 import ModalComment from "./ModalComment";
+import CardTotalListSidebar from "./CardTotalListSidebar";
 
 export {
   BackButton,
@@ -116,4 +117,5 @@ export {
   ButtonDelete,
   CardCommentDetail,
   ModalComment,
+  CardTotalListSidebar,
 };
