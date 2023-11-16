@@ -97,6 +97,22 @@ const index = () => {
           },
         ],
       },
+      {
+        subtitle: "Admin Survei",
+        subcontent: [
+          {
+            title: "Template Survei",
+            description: "Pengaturan template Survei.",
+            url: "/reference/survey/overview",
+            isBlank: true,
+          },
+          {
+            title: "Approval",
+            description: "Melihat riwayat approval.",
+            url: "/reference/survey/approval",
+          },
+        ],
+      },
     ],
   };
   return (
