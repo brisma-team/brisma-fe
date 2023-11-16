@@ -20,7 +20,7 @@ const CustomPagination = ({
     const newStartIndex = (currentPage - 1) * perPage;
     const newEndIndex = newStartIndex + perPage;
 
-    handleSetPagination(newStartIndex, newEndIndex);
+    handleSetPagination(newStartIndex, newEndIndex, currentPage);
   }, [currentPage, perPage]);
 
   const handleChange = (e) => {
