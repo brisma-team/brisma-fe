@@ -105,7 +105,7 @@ const CardOverview = ({ data, withoutButton, withoutHover }) => {
             </div>
             {!withoutButton && (
               <div className="flex items-center justify-end w-20 gap-1 pt-2">
-                <DropdownCard action={listDropdown} />
+                <DropdownCard actions={listDropdown} />
                 <ButtonIcon color={"red"} icon={<IconTrash size="medium" />} />
               </div>
             )}
