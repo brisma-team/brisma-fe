@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 import { useRTAById, useRTEById } from "@/data/catalog";
 import rteHtml from "@/templates/catalog/rpm/rincian-tindak-lanjut-evaluasi";
+import { loadingSwal } from "@/helpers";
 
 const index = () => {
   const router = useRouter();
@@ -39,7 +40,7 @@ const index = () => {
     "all",
     5
   );
-  const { rteDetail } = useRTEById(kkptId);
+  const { rteDetail } = useRTEById(kkptId, currentPage);
 
   useEffect(() => {
     if (rteDetail !== undefined) {
@@ -47,6 +48,7 @@ const index = () => {
       setLists(rteDetail.data.rteActionPlan);
     }
   }, [rteDetail]);
+
   useEffect(() => {
     if (rtaDetail !== undefined) {
       setList(rtaDetail.data.kkpt);
@@ -57,26 +59,30 @@ const index = () => {
     setKkptId(selected);
   }, []);
 
+  useEffect(() => {
+    rtaDetailIsLoading ? loadingSwal() : loadingSwal("close");
+  }, [rtaDetailIsLoading]);
+
   const baseUrl = "/catalogue/rpm";
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "R.P.M", path: baseUrl },
-    { name: "Daftar Dokumen", path: baseUrl + "/" + params.id },
+    { name: "Daftar Evaluasi", path: baseUrl + "/" + params.id },
     {
-      name: "Dokumen Rincian Tindak Lanjut dan Evaluasi",
+      name: "Daftar Dokumen",
+      path: baseUrl + "/" + params.id + "/" + params.iteration,
+    },
+    {
+      name: "Rincian Tindak Lanjut dan Evaluasi",
       path:
         baseUrl +
         "/" +
         params.id +
         "/" +
         params.iteration +
-        "/rincian-tindak-lanjut-evaluaasi",
+        "/rincian-tindak-lanjut-evaluasi",
     },
   ];
-
-  console.log(currentPage);
-
   return (
     <MainLayout>
       <div className="px-5">
@@ -125,12 +131,14 @@ const index = () => {
               <div className="mb-4">
                 <DocumentViewer
                   documentTitle="Kertas Kerja Pengawasan Temuan"
-                  documentHtml={rteHtml(kkptinfo, lists)}
+                  documentHtml={
+                    rtaDetailIsLoading
+                      ? `<p>Loading data...</p>`
+                      : rteHtml(kkptinfo, lists)
+                  }
                   withNoHeader={true}
                 />
               </div>
-              {/* );
-              })} */}
             </div>
           </div>
         </div>

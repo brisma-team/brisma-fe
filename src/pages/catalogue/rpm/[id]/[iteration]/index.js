@@ -17,11 +17,13 @@ const index = () => {
   const [selectedEvaluasi, setSelectedEvaluasi] = useState(1);
 
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "R.P.M", path: "/catalogue/rpm" },
-    { name: selectedId, path: "/catalogue/rpm/" + selectedId },
-    { name: "Daftar Dokumen", path: "/catalogue/rpm/" + selectedId },
+    { name: "Daftar Evaluasi", path: "/catalogue/rpm/" + selectedId },
+    {
+      name: "Daftar Dokumen",
+      path: "/catalogue/rpm/" + selectedId + "/" + selectedEvaluasi,
+    },
   ];
 
   useEffect(() => {
@@ -113,7 +115,10 @@ const index = () => {
         <div className="mt-5 mr-40">
           <Card>
             <div className="w-full h-full px-6">
-              <div className="text-xl font-bold p-5">Pustaka Dokumen</div>
+              <div className="text-xl font-bold px-5">Pustaka Dokumen</div>
+              <p className="text-sm font-bold px-5">
+                Evaluasi ke-{selectedEvaluasi}
+              </p>
               <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
                 <TableField
                   headers={["No", "Jenis Dokumen", "Aksi"]}

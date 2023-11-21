@@ -91,7 +91,9 @@ const index = () => {
               <div>
                 <Card>
                   <div className="w-full h-full px-3 p-5">
-                    <u className="font-bold text-base">Kumpulan KKPT</u>
+                    <u className="font-bold text-base">
+                      Kumpulan KKPT ~ ({list.length} Temuan Major)
+                    </u>
                     {rtaDetailIsLoading ? (
                       <p>Loading data...</p>
                     ) : list.length == 0 ? (
@@ -102,7 +104,7 @@ const index = () => {
                       list?.map((data, i) => {
                         return (
                           <p className="text-base" key={i}>
-                            {data.KKPTID + " - " + data.KKPTTitle}
+                            {i + 1 + ". " + data.KKPTTitle}
                           </p>
                         );
                       })
@@ -135,7 +137,12 @@ const index = () => {
                 return (
                   <div className="mb-4" key={i}>
                     <h5 className="mb-5 font-bold">
-                      {data.KKPTID + " - " + data.KKPTTitle}
+                      {i +
+                        1 +
+                        ". (kkptid: " +
+                        data.KKPTID +
+                        ") ~ " +
+                        data.KKPTTitle}
                     </h5>
                     <DocumentViewer
                       documentTitle="Kertas Kerja Pengawasan Temuan"
