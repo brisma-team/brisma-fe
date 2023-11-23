@@ -9,17 +9,14 @@ import {
 } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
-// import Link from "next/link";
+import Link from "next/link";
 import { useKKPTList } from "@/data/catalog";
-
 import { IconClose, IconPlus } from "@/components/icons";
 import Textfield from "@atlaskit/textfield";
 import { ProjectInfo } from "@/components/molecules/catalog";
-// import Link from "next/link";
 import { BranchSelect } from "@/components/molecules/commons";
 
 const index = () => {
-  const id = useRouter().query.id;
   const router = useRouter();
 
   const [kkpt, setKKPT] = useState([]);
@@ -28,6 +25,8 @@ const index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState({
     kkpttitle: "",
+    uker: "",
+    activity: "",
     subactivity: "",
     submajor: "",
     riskissue: "",
@@ -74,6 +73,7 @@ const index = () => {
     filter.limit,
     filter.kkpttitle,
     ukerSelect,
+    filter.activity,
     filter.subactivity,
     filter.submajor,
     filter.riskissue,
@@ -104,7 +104,7 @@ const index = () => {
           Aktivitas: data.Activity,
           "Sub Aktivitas": data.SubActivity,
           "Sub Major": data.SubMajorCode + " - " + data.SubMajor,
-          "Risk Issue": data.RiskIssueCode,
+          "Risk Issue": data.RiskIssueCode + " - " + data.RiskIssueName,
           Auditor:
             params.type == "2"
               ? data.Auditor.pn + " - " + data.Auditor.name
@@ -113,7 +113,7 @@ const index = () => {
             <div className="text-center col-span-3">
               <div className="">
                 <Button
-                  href={"/catalogue/ewp/" + id + "/kkpt/" + data.KKPTID}
+                  href={"/catalogue/ewp/" + params.uri + "/kkpt/" + data.KKPTID}
                   shouldFitContainer
                   appearance="primary"
                 >
@@ -150,7 +150,7 @@ const index = () => {
           </Button>
         </div>
         {showFilter && (
-          <div className="flex justify-between w-[38rem]">
+          <div className="flex justify-between w-[49rem]">
             <Card>
               <div className="flex p-2">
                 <div className="w-48">
@@ -192,8 +192,6 @@ const index = () => {
                     }
                   />
                 </div>
-              </div>
-              <div className="flex p-2">
                 <div className="w-48">
                   <Textfield
                     placeholder="Sub Aktivitas"
@@ -207,6 +205,8 @@ const index = () => {
                     }
                   />
                 </div>
+              </div>
+              <div className="flex p-2">
                 <div className="w-48">
                   <Textfield
                     placeholder="Sub Major"
@@ -233,6 +233,20 @@ const index = () => {
                     }
                   />
                 </div>
+                <div className="w-48">
+                  <Textfield
+                    placeholder="Auditor"
+                    className="mx-1"
+                    name="auditor"
+                    onChange={debouncedHandleChange}
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+                <div className="w-48"></div>
               </div>
             </Card>
           </div>
@@ -248,9 +262,24 @@ const index = () => {
           <Card>
             <div className="w-full h-full px-6">
               <div className="text-xl font-bold p-5">Pustaka Dokumen</div>
-              {/* <Link className="pl-5 underline" href={"#"}>
+              <Link
+                className="pl-5 underline"
+                target="_blank"
+                href={{
+                  pathname: "/catalogue/ewp/" + params.uri + "/kkpt/view-all",
+                  query: {
+                    kkpttitle: filter.kkpttitle,
+                    uker: ukerSelect,
+                    activity: filter.activity,
+                    subactivity: filter.subactivity,
+                    submajor: filter.submajor,
+                    riskissue: filter.riskissue,
+                    auditor: filter.auditor,
+                  },
+                }}
+              >
                 Lihat Seluruh Dokumen
-              </Link> */}
+              </Link>
               <div className="max-h-[35rem] overflow-y-scroll px-2 mb-5">
                 <TableField
                   headers={[
@@ -265,13 +294,13 @@ const index = () => {
                     "Aksi",
                   ]}
                   columnWidths={[
-                    "4rem",
-                    "18rem",
+                    "2rem",
+                    "16rem",
                     "10rem",
                     "10rem",
                     "10rem",
                     "15rem",
-                    "10rem",
+                    "20rem",
                     "10rem",
                     "4rem",
                   ]}

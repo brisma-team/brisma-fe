@@ -65,19 +65,27 @@ const mapaHtml = (year, source, id) => {
   <article>
     <h4>I. LATAR BELAKANG</h4>
     <section>
-      ${data?.LatarBelakang ? data.LatarBelakang : "**"}
+      ${
+        data?.LatarBelakang
+          ? data.LatarBelakang
+          : "<b><i>Data tidak ditemukan </i></b>"
+      }
     </section>
   </article>
   <article>
     <h4>II. TUJUAN</h4>
     <section>
-      ${data?.Tujuan ? data.Tujuan : "**"}
+      ${data?.Tujuan ? data.Tujuan : "<b><i>Data tidak ditemukan </i></b>"}
     </section>
   </article>
   <article>
     <h4>III. SUMBER INFORMASI</h4>
     <section>
-      ${data?.SumberInformasi ? data.SumberInformasi : "**"}
+      ${
+        data?.SumberInformasi
+          ? data.SumberInformasi
+          : "<b><i>Data tidak ditemukan </i></b>"
+      }
     </section>
   </article>
   <article>
@@ -93,8 +101,9 @@ const mapaHtml = (year, source, id) => {
           padding: 15px;
         }
       </style>
-  
-      <figure class="table" style="margin-top: 30px;">
+      ${
+        apHeader
+          ? `<figure class="table" style="margin-top: 30px;">
         <p><strong>Unit Kerja: </strong></p>
         <p>${apHeader?.UkerAuditee}</p>
         <p><strong>Aktivitas: </strong></p>
@@ -146,7 +155,9 @@ const mapaHtml = (year, source, id) => {
                         : ""
                     }
             </table>
-      </figure>
+      </figure>`
+          : "<b><i>Data tidak ditemukan </i></b>"
+      }
     </section>
   </article>
   <article>
@@ -162,6 +173,9 @@ border: 1px solid;
 padding: 15px;
 }
 </style>
+${
+  mcr == undefined
+    ? `
 <figure class="table">
     <table style="width: 100%;">
         <thead>
@@ -196,7 +210,9 @@ padding: 15px;
           .join("")}
         
     </table>
-</figure>
+</figure>`
+    : "<b><i>Data tidak ditemukan </i></b>"
+}
       </div>
     </section>
   </article>
@@ -484,8 +500,8 @@ padding: 15px;
       >
         <p>Mengetahui,</p>
         
-        <p>${data?.ManajerAudit[0] ? data.ManajerAudit[0] : "**"}  - ${
-        data?.ManajerAudit[1] ? data.ManajerAudit[1] : "**"
+        <p>${data?.ManajerAudit[0] ? data.ManajerAudit[0] : "*"}  - ${
+        data?.ManajerAudit[1] ? data.ManajerAudit[1] : "*"
       } </p>
         <h4>Manager Audit</h4>
       </div>
@@ -498,7 +514,9 @@ padding: 15px;
         "
       >
         <p>Menyetujui,</p>
-        <p>${data?.PNKepalaUKA} - ${data?.NamaKepalaUKA}</p>
+        <p>${data?.PNKepalaUKA ? data.PNKepalaUKA : "*"} - ${
+        data?.NamaKepalaUKA ? data.NamaKepalaUKA : "*"
+      }</p>
         <h4>Kepala Audit Intern</h4>
       </div>
     </div>

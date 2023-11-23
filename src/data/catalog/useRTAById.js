@@ -6,9 +6,16 @@ export default function useRTAById(
   type,
   id,
   kategori = "all",
-  limit = null
+  limit = null,
+  kkpttitle = "",
+  uker = "",
+  activity = "",
+  subactivity = "",
+  submajor = "",
+  riskissue = "",
+  auditor = ""
 ) {
-  let parameters = `year=${year}&source=${type}&id=${id}&kategori=${kategori}`;
+  let parameters = `year=${year}&source=${type}&id=${id}&kategori=${kategori}&kkpttitle=${kkpttitle}&uker=${uker}&activity=${activity}&subactivity=${subactivity}&submajor=${submajor}&riskissue=${riskissue}&auditor=${auditor}`;
   if (limit != null) parameters += `&limit=${limit}`;
   const path = `${process.env.NEXT_PUBLIC_API_URL_CATALOG}/catalog/ewp/rta/detail?${parameters}`;
   const { data, error, mutate, isLoading } = useSWR(

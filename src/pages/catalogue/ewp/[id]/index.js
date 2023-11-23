@@ -99,7 +99,7 @@ const index = () => {
         jenis: "LHA",
         jumlah: "-----",
         url: `${params.uri}/lha`,
-        isDisabled: false,
+        isDisabled: params.type === "2" ? false : true,
       },
       {
         jenis: "Laporan Temuan Major",

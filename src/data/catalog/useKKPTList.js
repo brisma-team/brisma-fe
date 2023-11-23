@@ -9,6 +9,7 @@ export default function useKKPTList(
   limit = 5,
   kkpttitle,
   uker,
+  activity,
   subactivity,
   submajor,
   riskissue,
@@ -20,6 +21,9 @@ export default function useKKPTList(
   }
   if (uker) {
     filters += `&uker=${uker}`;
+  }
+  if (activity) {
+    filters += `&activity=${activity}`;
   }
   if (subactivity) {
     filters += `&subactivity=${subactivity}`;

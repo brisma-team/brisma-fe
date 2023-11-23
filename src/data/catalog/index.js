@@ -12,6 +12,7 @@ import useMapaById from "./useMapaById";
 import useOmniSearch from "./useOmniSearch";
 import useRTAById from "./useRTAById";
 import useRTEById from "./rpm/useRTEById";
+import useViewAllKKPA from "./useViewAllKKPA";
 
 export {
   useModuleById,
@@ -28,4 +29,5 @@ export {
   useOmniSearch,
   useRTAById,
   useRTEById,
+  useViewAllKKPA,
 };

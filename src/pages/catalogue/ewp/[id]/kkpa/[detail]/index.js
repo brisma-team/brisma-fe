@@ -95,10 +95,10 @@ const index = () => {
             <div style="text-align: center">
               <h2 style="color: black">KERTAS KERJA PELAKSANAAN AUDIT</h2>
               <h2 style="color: black">
-                ${data?.JenisAudit ? data?.JenisAudit.toUpperCase() : "**"} 
+                ${data?.JenisAudit ? data?.JenisAudit.toUpperCase() : ""} 
               </h2>
               <h2 style="color: black">
-              ${data?.AuditeeBranchName ? data?.AuditeeBranchName : "**"}
+              ${data?.AuditeeBranchName ? data?.AuditeeBranchName : ""}
               </h2>
               <h2 style="color: black">PERIODE AUDIT 
                 ${data?.Year ? data?.Year : "**"}
@@ -108,9 +108,9 @@ const index = () => {
               <h3 style="color: black">
                 Ref No: ${
                   data?.AuditeeBranchCode ? data?.AuditeeBranchCode : "**"
-                }-${
+                } - ${
                   data?.MCAuditProjectCode ? data?.MCAuditProjectCode : "**"
-                }-${data?.RiskIssueCode ? data?.RiskIssueCode : "**"}
+                } - ${data?.RiskIssueCode ? data?.RiskIssueCode : "**"}
               </h3>
             </div>
             <hr
@@ -125,19 +125,35 @@ const index = () => {
         </header>
         <main>
         <h3 style="font-weight: bold;margin-bottom:10px;margin-top:10px;">AKTIVITAS</h3>
-        <div><p>${data?.Activity ? data?.Activity : "**"}</p></div>
+        <div><p>${
+          data?.Activity
+            ? data?.Activity
+            : "<i><b>Data tidak ditemukan.</b></i>"
+        }</p></div>
         <h3 style="font-weight: bold;margin-bottom:10px;">SUB AKTIVITAS</h3>
-        <div><p>${data?.SubActivity ? data?.SubActivity : "**"}</p></div>
+        <div><p>${
+          data?.SubActivity
+            ? data?.SubActivity
+            : "<i><b>Data tidak ditemukan.</b></i>"
+        }</p></div>
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">I. RISK ISSUE</h3>
-        <div><p style="text-align: justify;">${data?.RiskIssueCode}</p></div>
-        ${data?.RiskIssueName}
+        ${
+          data?.RiskIssueCode && data?.RiskIssueName
+            ? `<div><p style="text-align: justify;">${data?.RiskIssueCode}</p></div>
+        ${data?.RiskIssueName}`
+            : "<i><b>Data tidak ditemukan.</b></i>"
+        }
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">II. CONTROL</h3>
         <div>
         <h4>Keterangan</h4>
         <p>
-        ${data?.PengujianControlDesc ? data?.PengujianControlDesc : "**"}
+        ${
+          data?.PengujianControlDesc
+            ? data?.PengujianControlDesc
+            : "<i><b>Data tidak ditemukan.</b></i>"
+        }
         </p>
         </br>
         <h4>List Kontrol</h4>
@@ -159,15 +175,21 @@ const index = () => {
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">III. PROGRAM AUDIT</h3>
         <div>
-        ${data?.ProgramAudit ? data?.ProgramAudit : "**"}
+        ${
+          data?.ProgramAudit
+            ? data?.ProgramAudit
+            : "<i><b>Data tidak ditemukan.</b></i>"
+        }
         </div>
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">IV. RUANG LINGKUP</h3>
-        <div>
+        
         ${
           params.type == "1"
             ? data?.RuangLingkup
-            : `<table style="height: 160px; width: 100%; border-collapse: collapse;" border="0">
+              ? data.RuangLingkup
+              : "<i><b>Data tidak ditemukan.</b></i>"
+            : `<div><table style="height: 160px; width: 100%; border-collapse: collapse;" border="0">
             <tbody>
             <tr>
             <td style="width: 33.3333%;">Sumber Informasi</td>
@@ -175,7 +197,7 @@ const index = () => {
             <td style="width: 62.7073%;">${
               data?.SumberInformasi
                 ? data?.SumberInformasi
-                : "Data tidak ditemukan."
+                : "<i><b>Data tidak ditemukan.</b></i>"
             }</td>
             </tr>
             <tr>
@@ -223,14 +245,19 @@ const index = () => {
             }</td>
             </tr>
             </tbody>
-            </table>`
+            </table></div>`
         }
-        </div>
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">V. KRITERIA</h3>
         <div>
-        ${data?.KriteriaAudit ? data?.KriteriaAudit : "Data tidak ditemukan."}
-        <div>
+        ${
+          data?.KriteriaAudit
+            ? data?.KriteriaAudit
+            : "<i><b>Data tidak ditemukan.</b></i>"
+        }
+        </div>
+        <br/>
+        <br/>
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">VI. HASIL PENGUJIAN SAMPLE</h3>
         <div>
@@ -244,6 +271,8 @@ const index = () => {
             ${
               params.type == "1"
                 ? data?.HasilPengujian
+                  ? data.HasilPengujian
+                  : "<i><b>Data tidak ditemukan.</b></i>"
                 : `
                 <div>
                 <p>Sample</p>
@@ -271,7 +300,13 @@ const index = () => {
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">VII. KESIMPULAN</h3>
         <div>
-        ${params.type == "1" ? data?.Kesimpulan : `<p> TIDAK EFEKTIF </p>`}
+        ${
+          params.type == "1"
+            ? data?.Kesimpulan
+              ? data.Kesimpulan
+              : "<i><b>Data tidak ditemukan.</b></i>"
+            : `<p> TIDAK EFEKTIF </p>`
+        }
         <div>
         </main>`
           }

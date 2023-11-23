@@ -7,11 +7,16 @@ export default function useKKPAList(
   id,
   page,
   limit = 5,
+  activity,
   subactivity,
   submajor,
-  riskissue
+  riskissue,
+  auditor
 ) {
   let filters = ``;
+  if (activity) {
+    filters += `&activity=${activity}`;
+  }
   if (subactivity) {
     filters += `&subactivity=${subactivity}`;
   }
@@ -20,6 +25,9 @@ export default function useKKPAList(
   }
   if (riskissue) {
     filters += `&riskissue=${riskissue}`;
+  }
+  if (auditor) {
+    filters += `&auditor=${auditor}`;
   }
   let parameters =
     `year=${year}&source=${type}&id=${id}&page=${page}&limit=${limit}` +
