@@ -14,6 +14,11 @@ import ImageBar from "../../public/images/icon-bar.png";
 import ImageCircleArrowYellow from "../../public/images/icon-circle-arrow-yellow.png";
 import ImageCircleArrowRed from "../../public/images/icon-circle-arrow-red.png";
 import ImageBrisma from "../../public/images/BRISMA-2.0.2.png";
+import ImagePreview from "../../public/images/icon-preview.png";
+import ImageAddCategory from "../../public/images/icon-add-category.png";
+import ImageTrash from "../../public/images/icon-trash.png";
+import ImageEdit from "../../public/images/icon-edit.png";
+import ImageMore from "../../public/images/icon-more.png";
 
 export {
   ImageBrismaVertical,
@@ -32,4 +37,9 @@ export {
   ImageCircleArrowYellow,
   ImageCircleArrowRed,
   ImageBrisma,
+  ImagePreview,
+  ImageAddCategory,
+  ImageTrash,
+  ImageEdit,
+  ImageMore,
 };
