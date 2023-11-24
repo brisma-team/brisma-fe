@@ -52,6 +52,7 @@
     "@emotion/styled": "^11.11.0",
     "@heroicons/react": "^2.0.16",
     "@hookform/resolvers": "^2.9.11",
+    "@monaco-editor/react": "^4.6.0",
     "@nivo/bar": "^0.80.0",
     "@nivo/core": "^0.80.0",
     "@nivo/heatmap": "^0.80.0",
