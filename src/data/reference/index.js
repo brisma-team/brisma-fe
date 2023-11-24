@@ -11,6 +11,8 @@ import useSubMajor from "./useSubMajor";
 import useRiskIssue from "./useRiskIssue";
 import useTeknikSampling from "./useTeknikSampling";
 import useRiskControl from "./useRiskControl";
+import useQuestionType from "./useQuestionType";
+import useSurveyType from "./useSurveyType";
 
 export {
   useMetode,
@@ -26,4 +28,6 @@ export {
   useRiskIssue,
   useTeknikSampling,
   useRiskControl,
+  useQuestionType,
+  useSurveyType,
 };

@@ -16,14 +16,6 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
     nama_status_template: "",
   });
 
-  const [optionValueStatus, setOptionValueStatus] = useState([
-    { label: "Enable", value: "true" },
-    { label: "Disable", value: "false" },
-  ]);
-  const [optionValueJenis, setOptionValueJenis] = useState([
-    { label: "Test", value: 1 },
-  ]);
-
   const handleChange = (property, value) => {
     setFilter({ ...filter, [property]: value });
   };
@@ -90,6 +82,7 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
                   placeholder="Nama Pembuat"
                   icon={
                     <ButtonIcon
+                      // handleClick={}
                       handleClick={() => handleChange("nama_pembuat", "")}
                       icon={<IconClose size="large" />}
                     />
@@ -102,7 +95,10 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
             <div className="flex flex-col gap-2">
               <div className="w-48">
                 <CustomSelect
-                  optionValue={optionValueStatus}
+                  optionValue={[
+                    { label: "Aktif", value: "true" },
+                    { label: "Non-Aktif", value: "false" },
+                  ]}
                   selectedValue={
                     selectOptionValue.kode_status_template
                       ? {
@@ -125,7 +121,7 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
               </div>
               <div className="w-48">
                 <CustomSelect
-                  optionValue={optionValueJenis}
+                  optionValue={[{ label: "CSS", value: "CSS" }]}
                   selectedValue={
                     selectOptionValue.kode_jenis_template
                       ? {

@@ -3,8 +3,8 @@ import DropdownMenu, {
   DropdownItem,
   DropdownItemGroup,
 } from "@atlaskit/dropdown-menu";
-import Button from "@atlaskit/button/standard-button";
-import { IconMore } from "@/components/icons";
+import Image from "next/image";
+import { ImageMore } from "@/helpers/imagesUrl";
 
 const DropdownCard = ({ actions }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,11 +16,15 @@ const DropdownCard = ({ actions }) => {
   return (
     <DropdownMenu
       trigger={({ triggerRef, ...props }) => (
-        <Button
-          {...props}
+        <div
           ref={triggerRef}
-          iconBefore={<IconMore label="more" />}
-        />
+          {...props}
+          role="button"
+          tabIndex={0}
+          className="h-full flex items-center"
+        >
+          <Image src={ImageMore} alt="" height={22} width={22} />
+        </div>
       )}
       isOpen={isOpen}
       onOpenChange={(e) => (setIsOpen(e.isOpen), e.event.stopPropagation())}

@@ -57,6 +57,11 @@ import ButtonDelete from "./ButtonDelete";
 import CardCommentDetail from "./CardCommentDetail";
 import ModalComment from "./ModalComment";
 import CardTotalListSidebar from "./CardTotalListSidebar";
+import NavigationTab from "./NavigationTab";
+import FormLabel from "./FormLabel";
+import CustomSelect from "./CustomSelect";
+import TypeSurveySelect from "./TypeSurveySelect";
+import CardContentHeaderFooter from "./CardContentHeaderFooter";
 
 export {
   BackButton,
@@ -118,4 +123,9 @@ export {
   CardCommentDetail,
   ModalComment,
   CardTotalListSidebar,
+  NavigationTab,
+  FormLabel,
+  CustomSelect,
+  TypeSurveySelect,
+  CardContentHeaderFooter,
 };

@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 
-const successSwalTimeout = async (message) => {
+export default async function successSwalTimeout(message) {
   return Swal.fire({
     position: "bottom-end",
     icon: "success",
@@ -8,6 +8,4 @@ const successSwalTimeout = async (message) => {
     showConfirmButton: false,
     timer: 1500,
   });
-};
-
-export default successSwalTimeout;
+}

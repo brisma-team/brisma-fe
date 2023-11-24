@@ -25,6 +25,9 @@ import parseInteger from "./parseInteger";
 import inputSwal from "./inputSwal";
 import convertIntegerToDecimal from "./convertIntegerToDecimal";
 import calculateTimeDifference from "./calculateTimeDifference";
+import fetchApi from "./fetchApi";
+import generateAlphabet from "./generateAlphabet";
+import capitalizeEveryWord from "./capitalizeEveryWord";
 
 export {
   loadingSwal,
@@ -54,4 +57,7 @@ export {
   inputSwal,
   convertIntegerToDecimal,
   calculateTimeDifference,
+  fetchApi,
+  generateAlphabet,
+  capitalizeEveryWord,
 };

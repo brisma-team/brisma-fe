@@ -8,7 +8,7 @@ import {
 import { ProfileDetail } from "../commons";
 const PatSidebarOverview = ({ children }) => {
   return (
-    <div className="fixed h-screen w-64 pt-14 shadow">
+    <div className="fixed h-screen w-64 pt-14 shadow z-10">
       <SideNavigation label="project" testId="side-navigation">
         <NavigationHeader>
           <ProfileDetail />

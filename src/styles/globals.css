@@ -114,3 +114,11 @@
 .custom-table-position-center {
   @apply w-full h-full flex items-center;
 }
+
+.navbar {
+  @apply font-semibold text-base flex justify-center pb-1;
+}
+
+.navbar-active {
+  @apply border-b-[5px] border-atlasian-blue-light text-atlasian-blue-light;
+}

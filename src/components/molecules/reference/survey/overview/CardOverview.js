@@ -13,25 +13,25 @@ const Content = ({ title, text }) => {
 };
 
 const CardOverview = ({
-  kode,
-  title,
-  type,
-  desc,
-  createdBy,
-  createdAt,
-  approvalAt,
-  bgColor,
+  data,
   handleEnableTemplate,
   handleDetailTemplate,
   handleShowScore,
   handleDeleteTemplate,
 }) => {
   const listDropdown = [
-    { label: "Aktifkan", action: () => handleEnableTemplate(kode) },
+    { label: "Aktifkan", action: () => handleEnableTemplate(data.kode) },
     { label: "Detail", action: () => handleDetailTemplate() },
     { label: "Lihat Nilai", action: handleShowScore },
     { label: "Hapus", action: handleDeleteTemplate },
   ];
+
+  const bgColor = {
+    CSS: "bg-purple-300",
+    AL: "bg-blue-300",
+    PR: "bg-green-300",
+    SBP: "bg-orange-300",
+  };
 
   return (
     <DivButton
@@ -43,9 +43,11 @@ const CardOverview = ({
           <div className="flex justify-between items-center px-2">
             <div className="mb-2 -ml-2 -mt-5">
               <div
-                className={`text-base font-semibold rounded-tl-lg text-brisma ${bgColor} px-5 h-9 flex items-center justify-center`}
+                className={`text-base font-semibold rounded-tl-lg text-brisma ${
+                  bgColor[data.jenis_kode]
+                } px-5 h-9 flex items-center justify-center`}
               >
-                <p>{type?.toUpperCase()}</p>
+                <p>{data.jenis_nama?.toUpperCase()}</p>
               </div>
             </div>
             <div className="flex justify-end gap-1 items-center -mt-3">
@@ -54,7 +56,13 @@ const CardOverview = ({
                 isDisabled
                 color={"red"}
                 icon={
-                  <div className="w-full h-full flex items-center">
+                  <div
+                    className={`w-full h-full flex items-center ${
+                      data.is_active
+                        ? "text-atlasian-yellow"
+                        : "text-atlasian-red"
+                    }`}
+                  >
                     <IconBullet size="large" />
                   </div>
                 }
@@ -64,25 +72,25 @@ const CardOverview = ({
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-3 px-4">
               <div className="text-xl font-bold text-atlasian-blue-dark">
-                {kode}
+                {data.kode}
               </div>
               <div className="text-base font-bold text-atlasian-blue-dark">
-                {title}
+                {data.title}
               </div>
               <div className="text-base text-justify text-atlasian-blue-dark">
-                {desc}
+                {data.desc}
               </div>
             </div>
             <hr />
             <div className="w-full flex flex-col gap-1 px-4">
-              <Content title={"Nama Pembuat"} text={createdBy} />
+              <Content title={"Nama Pembuat"} text={data.createdBy} />
               <Content
                 title={"Tanggal Pembuatan"}
-                text={convertDate(createdAt, "-", "d")}
+                text={convertDate(data.createdAt, "-", "d")}
               />
               <Content
                 title={"Tanggal Approval"}
-                text={convertDate(approvalAt, "-", "d")}
+                text={convertDate(data.approvalAt, "-", "d")}
               />
             </div>
           </div>

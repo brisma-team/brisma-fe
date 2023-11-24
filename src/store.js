@@ -30,34 +30,38 @@ import beritaAcaraEntranceEWPReducer from "./slices/ewp/konvensional/entrance/be
 // CATALOG
 import catalogEWPReducer from "./slices/catalog/ewp/catalogEWPSlice";
 
+// REFERENCE
+import createTemplateReferenceSlice from "./slices/reference/createTemplateReferenceSlice";
+
 import { configureStore } from "@reduxjs/toolkit";
 
 export const store = configureStore({
-	reducer: {
-		userSKAI: userSKAIReducer,
-		jadwalAudit: jadwalAuditReducer,
-		projectOverview: projectOverviewReducer,
-		statusPat: statusPatReducer,
-		auditTeam: auditTeamReducer,
-		auditSchedule: auditScheduleReducer,
-		activitySchedule: activityScheduleReducer,
-		activityScheduleOther: activityScheduleOtherReducer,
-		documentPAT: documentPATReducer,
-		latarBelakang: latarBelakangReducer,
-		sumberInformasi: sumberInformasiReducer,
-		auditorInfoEWP: auditorInfoEWPReducer,
-		projectOverviewEWP: projectOverviewEWPReducer,
-		auditTeamMapaEWP: auditTeamMapaEWPReducer,
-		ukerAssessmentMapaEWP: ukerAssessmentMapaEWPReducer,
-		planningAnalysisMapaEWP: planningAnalysisMapaEWPReducer,
-		catalogEWP: catalogEWPReducer,
-		assignmentMapaEWP: assignmentMapaEWPReducer,
-		auditScheduleMapaEWP: auditScheduleMapaEWPReducer,
-		budgetMapaEWP: budgetMapaEWPReducer,
-		notulenEntranceEWP: notulenEntranceEWPReducer,
-		beritaAcaraEntranceEWP: beritaAcaraEntranceEWPReducer,
-		documentMapaEWP: documentMapaEWPReducer,
-		suratEWP: suratEWPReducer,
-		documentSuratEWP: documentSuratEWPReducer,
-	},
+  reducer: {
+    userSKAI: userSKAIReducer,
+    jadwalAudit: jadwalAuditReducer,
+    projectOverview: projectOverviewReducer,
+    statusPat: statusPatReducer,
+    auditTeam: auditTeamReducer,
+    auditSchedule: auditScheduleReducer,
+    activitySchedule: activityScheduleReducer,
+    activityScheduleOther: activityScheduleOtherReducer,
+    documentPAT: documentPATReducer,
+    latarBelakang: latarBelakangReducer,
+    sumberInformasi: sumberInformasiReducer,
+    auditorInfoEWP: auditorInfoEWPReducer,
+    projectOverviewEWP: projectOverviewEWPReducer,
+    auditTeamMapaEWP: auditTeamMapaEWPReducer,
+    ukerAssessmentMapaEWP: ukerAssessmentMapaEWPReducer,
+    planningAnalysisMapaEWP: planningAnalysisMapaEWPReducer,
+    catalogEWP: catalogEWPReducer,
+    assignmentMapaEWP: assignmentMapaEWPReducer,
+    auditScheduleMapaEWP: auditScheduleMapaEWPReducer,
+    budgetMapaEWP: budgetMapaEWPReducer,
+    notulenEntranceEWP: notulenEntranceEWPReducer,
+    beritaAcaraEntranceEWP: beritaAcaraEntranceEWPReducer,
+    documentMapaEWP: documentMapaEWPReducer,
+    suratEWP: suratEWPReducer,
+    documentSuratEWP: documentSuratEWPReducer,
+    createTemplateReference: createTemplateReferenceSlice,
+  },
 });

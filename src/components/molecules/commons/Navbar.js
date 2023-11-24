@@ -243,7 +243,7 @@ const NavbarField = () => {
         ]
       : [];
   return (
-    <div style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 11 }}>
+    <div className="fixed top-0 left-0 right-0 z-10">
       <AtlassianNavigation
         label="site"
         renderProductHome={CustomHome}

@@ -40,10 +40,10 @@ const LayoutSurveyReference = ({ children }) => {
           </div>
         </div>
       </PatSidebarOverview>
-      <div className="flex">
+      <div className="flex max-h-screen overflow-y-hidden">
         <div className="flex-1 mt-16" style={{ marginLeft: "260px" }}>
           <div className="main">
-            <div className="pl-5 pr-16 py-4 w-full">{children}</div>
+            <div className="pl-5 relative flex justify-between">{children}</div>
           </div>
         </div>
       </div>
