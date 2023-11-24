@@ -1,4 +1,4 @@
-const { DivButton } = require("@/components/atoms");
+import { DivButton } from "@/components/atoms";
 
 const NavigationTab = ({ items, currentStage, setCurrentStage }) => {
   return items?.length ? (

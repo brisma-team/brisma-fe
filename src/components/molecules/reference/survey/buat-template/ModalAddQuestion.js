@@ -7,10 +7,10 @@ import { confirmationSwal } from "@/helpers";
 import { ProgressTracker } from "@atlaskit/progress-tracker";
 import { useState } from "react";
 import QuestionTypeSelect from "../../QuestionTypeSelect";
-import dynamic from "next/dynamic";
-const Editor = dynamic(() => import("@/components/atoms/Editor"), {
-  ssr: false,
-});
+// import dynamic from "next/dynamic";
+// const Editor = dynamic(() => import("@/components/atoms/Editor"), {
+//   ssr: false,
+// });
 
 const ModalHeader = ({
   currentContentStage,
