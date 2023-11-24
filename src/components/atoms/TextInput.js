@@ -12,6 +12,7 @@ const TextInput = ({
   handleClick,
   onKeyDown,
   isNumber,
+  maxLength,
 }) => {
   return (
     <Textfield
@@ -26,6 +27,7 @@ const TextInput = ({
       style={style}
       isDisabled={isDisabled}
       type={isNumber ? "number" : "text"}
+      maxLength={maxLength && maxLength}
     />
   );
 };

@@ -1,6 +1,7 @@
 import TextArea from "@atlaskit/textarea";
 
 const TextAreaField = ({
+  className,
   maxHeight,
   handleChange,
   value,
@@ -12,6 +13,7 @@ const TextAreaField = ({
   return (
     <TextArea
       maxHeight={maxHeight}
+      className={className}
       onChange={handleChange}
       value={value}
       isDisabled={isDisabled}

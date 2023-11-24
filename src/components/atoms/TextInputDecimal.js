@@ -14,6 +14,7 @@ const TextInputDecimal = ({
   isDisabled,
   handleClick,
   onKeyDown,
+  maxLength,
 }) => {
   const [numberValue, setNumberValue] = useState("");
 
@@ -46,6 +47,7 @@ const TextInputDecimal = ({
       style={style}
       isDisabled={isDisabled}
       type="text"
+      maxLength={maxLength && maxLength}
     />
   );
 };

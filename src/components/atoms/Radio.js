@@ -1,7 +1,14 @@
 import { Radio } from "@atlaskit/radio";
 
-const RadioField = ({ value, label, isChecked }) => {
-  return <Radio value={value} label={label} isChecked={isChecked} />;
+const RadioField = ({ value, label, isChecked, handleChange }) => {
+  return (
+    <Radio
+      value={value}
+      label={label}
+      isChecked={isChecked}
+      onChange={handleChange}
+    />
+  );
 };
 
 export default RadioField;

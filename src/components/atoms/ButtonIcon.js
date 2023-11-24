@@ -1,6 +1,7 @@
 import { withTokenConfig } from "@/helpers";
 
 const ButtonIcon = ({
+  ref,
   color,
   icon,
   handleClick,
@@ -68,12 +69,13 @@ const ButtonIcon = ({
   return (
     <div
       {...props}
+      ref={ref && ref}
       role="button"
       tabIndex={0}
       className={`${className} ${iconColor} ${
         isDisabled && "cursor-not-allowed"
       }`}
-      onClick={onClick}
+      onClick={downloadUrl ? onClick : handleClick}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === "Space") {
           return;
