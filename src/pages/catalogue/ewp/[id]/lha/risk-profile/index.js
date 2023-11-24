@@ -15,7 +15,6 @@ import { loadingSwal } from "@/helpers";
 const index = () => {
   const router = useRouter();
 
-  const [data, setData] = useState(undefined);
   const [profilResikoUKO, setProfilResikoUKO] = useState({});
   const [profilResikoUker, setProfilResikoUker] = useState({});
   const [topTenRisk, setTopTenRisk] = useState([]);
@@ -55,12 +54,12 @@ const index = () => {
       setRekapAktivitasTemuan(riskProfileData.data.rekapAktivitasTemuan);
     }
   }, [riskProfileData]);
+
   useEffect(() => {
     setLoadingGet(riskProfileIsLoading);
-    riskProfileIsLoading && data == undefined
-      ? loadingSwal()
-      : loadingSwal("close");
+    riskProfileIsLoading ? loadingSwal() : loadingSwal("close");
   }, [riskProfileIsLoading]);
+  console.log(riskProfileIsLoading);
 
   const baseUrl = "/catalogue/ewp";
   const breadcrumbs = [
@@ -127,12 +126,6 @@ const index = () => {
 
   const renderHeatMapRACM = () => {
     let newOnes = reverseHeatMapRACM();
-
-    // Periksa apakah data atau ukoScore mungkin undefined
-    if (!data || !profilResikoUKO) {
-      // Atau tindakan lain yang sesuai dengan kebutuhan Anda, misalnya tampilkan pesan kesalahan
-      return <p>Data not available</p>;
-    }
 
     const { ukoScore } = profilResikoUKO;
 
@@ -624,13 +617,13 @@ const index = () => {
                             {loadingGet ? "Loading..." : renderHeatMapRACM()}
                           </table>
                           <p>Keterangan : </p>
-                          {profilResikoUKO?.ukoScore === undefined ? (
+                          {profilResikoUKO.ukoScore === undefined ? (
                             "Loading..."
                           ) : (
                             <p>
-                              {profilResikoUKO?.ukoScore.branch_kode} :{" "}
-                              {profilResikoUKO?.ukoScore.branch_name} -{" "}
-                              {profilResikoUKO?.ukoScore.orgeh_name}
+                              {profilResikoUKO.ukoScore.branch_kode} :{" "}
+                              {profilResikoUKO.ukoScore.branch_name} -{" "}
+                              {profilResikoUKO.ukoScore.orgeh_name}
                             </p>
                           )}
                         </div>
@@ -664,15 +657,15 @@ const index = () => {
                           border: "solid 1px #000",
                         }}
                       >
-                        {/* <div
-                              style={{
-                                marginTop: "15rem",
-                                transformOrigin: "0 0",
-                                transform: "rotate(270deg)",
-                              }}
-                            >
-                              JUMLAH TEMUAN
-                            </div> */}
+                        <div
+                          style={{
+                            marginTop: "15rem",
+                            transformOrigin: "0 0",
+                            transform: "rotate(270deg)",
+                          }}
+                        >
+                          JUMLAH TEMUAN
+                        </div>
                         <div style={{ width: "60%", marginLeft: "3rem" }}>
                           <Bar
                             options={optionsTop10Risk}
@@ -730,15 +723,15 @@ const index = () => {
                         }}
                       >
                         {/* <div
-                              style={{
-                                position: "absolute",
-                                marginTop: "20rem",
-                                transformOrigin: "0 0",
-                                transform: "rotate(270deg)",
-                              }}
-                            >
-                              JUMLAH KONTROL TIDAK EFEKTIF
-                            </div> */}
+                          style={{
+                            position: "absolute",
+                            marginTop: "20rem",
+                            transformOrigin: "0 0",
+                            transform: "rotate(270deg)",
+                          }}
+                        >
+                          JUMLAH KONTROL TIDAK EFEKTIF
+                        </div> */}
                         <div style={{ width: "60%", marginLeft: "3rem" }}>
                           <Bar
                             options={optionsTop10Control}
@@ -798,12 +791,7 @@ const index = () => {
                           </tr>
                           <tr>
                             <td style={{ width: "10rem" }}>Audit Year</td>
-                            <td>
-                              :{" "}
-                              {rcmAfterAudit?.length > 0
-                                ? rcmAfterAudit[0].audit_year
-                                : ""}
-                            </td>
+                            <td>: {params.year}</td>
                           </tr>
                           <tr>
                             <td>UKO</td>
@@ -961,13 +949,17 @@ const index = () => {
                                         border: "solid 1px #000",
                                         padding: "0.5rem",
                                       }}
-                                    ></td>
+                                    >
+                                      {NumberDenganKoma(item.rp_potential)}
+                                    </td>
                                     <td
                                       style={{
                                         border: "solid 1px #000",
                                         padding: "0.5rem",
                                       }}
-                                    ></td>
+                                    >
+                                      {NumberDenganKoma(item.rp_actual)}
+                                    </td>
                                     <td
                                       style={{
                                         border: "solid 1px #000",

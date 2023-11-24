@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Breadcrumbs, PageTitle } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
@@ -18,20 +18,25 @@ const index = () => {
   }, [router.isReady]);
 
   const baseUrl = "/catalogue/rpm";
-  const breadcrumbs = useMemo(() => {
-    if (!selectedId) return [];
-
-    return [
-      { name: "Menu", path: "/dashboard" },
-      { name: "Catalogue", path: "/catalogue" },
-      { name: "R.P.M", path: baseUrl },
-      { name: "Daftar Dokumen", path: `${baseUrl}/${selectedId}` },
-      {
-        name: "Dokumen Surat Hasil Tindak Lanjut",
-        path: `${baseUrl}/${selectedId}/surat-hasil-evaluasi`,
-      },
-    ];
-  }, [selectedId, baseUrl]);
+  const breadcrumbs = [
+    { name: "Catalogue", path: "/catalogue" },
+    { name: "R.P.M", path: baseUrl },
+    { name: "Daftar Evaluasi", path: baseUrl + "/" + selectedId },
+    {
+      name: "Daftar Dokumen",
+      path: baseUrl + "/" + selectedId + "/" + selectedEvaluasi,
+    },
+    {
+      name: "Surat Hasil Evaluasi",
+      path:
+        baseUrl +
+        "/" +
+        selectedId +
+        "/" +
+        selectedEvaluasi +
+        "/surat-hasil-evaluasi",
+    },
+  ];
 
   return (
     <MainLayout>

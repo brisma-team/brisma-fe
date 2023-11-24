@@ -23,7 +23,7 @@ const index = () => {
     { name: "P.A.T", path: baseUrl },
     { name: "Daftar Dokumen", path: baseUrl + "/" + selectedId },
     {
-      name: "Dokumen PAT",
+      name: "Overview P.A.T",
       path: baseUrl + "/" + selectedId + "/overview",
     },
   ];
@@ -33,11 +33,11 @@ const index = () => {
       <div className="px-5">
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">
-          <PageTitle text={"PAT Dokumen"} />
+          <PageTitle text={"P.A.T Dokumen"} />
         </div>
         <ProjectInfo type="pat" id={selectedId} />
         <DocumentViewer
-          documentTitle="Dokumen PAT"
+          documentTitle="Dokumen P.A.T"
           documentStyle={`.leader {
             position: relative;
             overflow: hidden;

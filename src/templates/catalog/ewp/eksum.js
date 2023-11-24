@@ -1,9 +1,15 @@
 import { useModuleById } from "@/data/catalog";
+import { loadingSwal } from "@/helpers";
 import { useState, useEffect } from "react";
 
 const eksumHtml = (year, source, id) => {
   const [data, setData] = useState();
-  const { moduleDetail } = useModuleById(year, source, id, "eksum");
+  const { moduleDetail, moduleDetailIsLoading } = useModuleById(
+    year,
+    source,
+    id,
+    "eksum"
+  );
 
   useEffect(() => {
     if (moduleDetail !== undefined) {
@@ -11,7 +17,13 @@ const eksumHtml = (year, source, id) => {
     }
   }, [moduleDetail]);
 
-  return `
+  useEffect(() => {
+    moduleDetailIsLoading ? loadingSwal() : loadingSwal("close");
+  }, [moduleDetailIsLoading]);
+
+  return moduleDetailIsLoading
+    ? `<p>Loading data...</p>`
+    : `
     <main>
       ${data?.Content}
     </main>

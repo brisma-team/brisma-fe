@@ -19,13 +19,22 @@ const index = () => {
 
   const baseUrl = "/catalogue/rpm";
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "R.P.M", path: baseUrl },
-    { name: "Daftar Dokumen", path: baseUrl + "/" + selectedId },
+    { name: "Daftar Evaluasi", path: baseUrl + "/" + selectedId },
     {
-      name: "Dokumen Surat Hasil Tindak Lanjut",
-      path: baseUrl + "/" + selectedId + "/surat-hasil-tindak-lanjut",
+      name: "Daftar Dokumen",
+      path: baseUrl + "/" + selectedId + "/" + selectedEvaluasi,
+    },
+    {
+      name: "Surat Hasil Tindak Lanjut",
+      path:
+        baseUrl +
+        "/" +
+        selectedId +
+        "/" +
+        selectedEvaluasi +
+        "/surat-hasil-tindak-lanjut",
     },
   ];
 

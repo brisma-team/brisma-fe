@@ -1,12 +1,11 @@
-import { Breadcrumbs, PageTitle, Card } from "@/components/atoms";
-import { MainLayout } from "@/layouts";
-import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { Breadcrumbs, Card, PageTitle } from "@/components/atoms";
 import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
-import rtaHtml from "@/templates/catalog/ewp/rta";
 import { useRTAById } from "@/data/catalog";
 import { loadingSwal } from "@/helpers";
-
+import { MainLayout } from "@/layouts";
+import rtaHtml from "@/templates/catalog/ewp/rta";
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 const index = () => {
   const router = useRouter();
 
@@ -16,24 +15,56 @@ const index = () => {
     type: "2",
     id: "1",
     uri: "",
+    kkpttitle: "",
+    uker: "",
+    activity: "",
+    subactivity: "",
+    submajor: "",
+    riskissue: "",
+    auditor: "",
   });
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { id } = router.query;
+    const {
+      id,
+      kkpttitle,
+      uker,
+      activity,
+      subactivity,
+      submajor,
+      riskissue,
+      auditor,
+    } = router.query;
     setParams({
       ...params,
       year: id?.split("x1c-")[2],
       type: id?.split("x1c-")[0],
       id: id?.split("x1c-")[1],
       uri: id,
+      kkpttitle: kkpttitle,
+      uker: uker,
+      activity: activity,
+      subactivity: subactivity,
+      submajor: submajor,
+      riskissue: riskissue,
+      auditor: auditor,
     });
   }, [router.isReady]);
 
   const { rtaDetail, rtaDetailIsLoading } = useRTAById(
     params.year,
     params.type,
-    params.id
+    params.id,
+    "all",
+    null,
+    params.kkpttitle,
+    params.uker,
+    params.activity,
+    params.subactivity,
+    params.submajor,
+    params.riskissue,
+    params.auditor
   );
 
   useEffect(() => {
@@ -46,19 +77,15 @@ const index = () => {
     rtaDetailIsLoading ? loadingSwal() : loadingSwal("close");
   }, [rtaDetailIsLoading]);
 
-  const baseUrl = "/catalogue/ewp";
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
-    { name: "E.W.P", path: baseUrl },
-    { name: "Daftar Dokumen", path: baseUrl + "/" + params.uri },
+    { name: "E.W.P", path: "/catalogue/ewp" },
+    { name: "Daftar Dokumen", path: "/catalogue/ewp/" + params.uri },
+    { name: "Riwayat KKPT", path: "/catalogue/ewp/" + params.uri + "/kkpt" },
     {
-      name: "Daftar Dokumen LHA",
-      path: baseUrl + "/" + params.uri + "/lha",
-    },
-    {
-      name: "Dokumen LHA-Rincian Temuan Audit",
-      path: baseUrl + "/" + params.uri + "/lha/rta",
+      name: "Lihat Seluruh Dokumen KKPT",
+      path: "/catalogue/ewp/" + params.uri + "/kkpt/view-all",
     },
   ];
 
@@ -67,7 +94,7 @@ const index = () => {
       <div className="px-5">
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">
-          <PageTitle text={"Rincian Temuan Audit"} />
+          <PageTitle text={"Lihat Semua Dokumen KKPT"} />
         </div>
         <ProjectInfo
           type="ewp"

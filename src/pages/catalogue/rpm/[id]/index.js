@@ -26,11 +26,9 @@ const index = () => {
   }, [router.isReady]);
 
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "R.P.M", path: "/catalogue/rpm" },
-    { name: params.id, path: "/catalogue/rpm/" + params.id },
-    { name: "Daftar Dokumen", path: "/catalogue/rpm/" + params.id },
+    { name: "Daftar Evaluasi", path: "/catalogue/rpm/" + params.id },
   ];
 
   const type_list = [
@@ -47,7 +45,7 @@ const index = () => {
       const mappingTypeList = type_list.map((data, key) => {
         return {
           No: key + 1,
-          Evaluasi: "Tahap ke-" + data.nomor_evaluasi,
+          Evaluasi: "Tahap ke-" + (key + 1),
           Aksi: (
             <Link
               href={"/catalogue/rpm/" + params.id + "/" + data.nomor_evaluasi}

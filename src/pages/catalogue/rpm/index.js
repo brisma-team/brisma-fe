@@ -11,7 +11,6 @@ import { ModalSelectSourceData } from "@/components/molecules/catalog";
 const index = () => {
   const { data } = useCatalogRPM();
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "R.P.M", path: "/catalogue/rpm" },
   ];

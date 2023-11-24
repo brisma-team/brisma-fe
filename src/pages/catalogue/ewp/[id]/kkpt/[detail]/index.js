@@ -25,7 +25,7 @@ const index = () => {
       type: id?.split("x1c-")[0],
       id: id?.split("x1c-")[1],
       uri: id,
-      kkptid: detail,
+      kkptid: detail.toUpperCase(),
     });
   }, [router.isReady]);
 

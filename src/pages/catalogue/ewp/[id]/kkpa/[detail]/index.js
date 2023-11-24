@@ -5,39 +5,47 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 import dateLocaleString from "@/helpers/dateLocaleString";
+import { loadingSwal } from "@/helpers";
 
 const index = () => {
-  const kkpaid = useRouter().query.detail;
-  const projectid = useRouter().query.id;
+  const router = useRouter();
 
-  const [projectId, setProjectId] = useState("");
-  const [kkpaId, setKkpaId] = useState("");
   const [data, setData] = useState({});
+  const [params, setParams] = useState({
+    year: "2023",
+    type: "2",
+    id: "1",
+  });
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id, detail } = router.query;
+    setParams({
+      ...params,
+      year: id?.split("x1c-")[2],
+      type: id?.split("x1c-")[0],
+      id: id?.split("x1c-")[1],
+      kkpaId: detail.toUpperCase(),
+      uri: id,
+    });
+  }, [router.isReady]);
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: "/catalogue/ewp" },
-    { name: "Daftar Dokumen", path: "/catalogue/ewp/" + projectId },
-    { name: "Riwayat KKPA", path: "/catalogue/ewp/" + projectId + "/kkpa" },
+    { name: "Daftar Dokumen", path: "/catalogue/ewp/" + params.uri },
+    { name: "Riwayat KKPA", path: "/catalogue/ewp/" + params.uri + "/kkpa" },
     {
       name: "Dokumen KKPA",
-      path: "/catalogue/ewp/" + projectId + "/kkpa/" + kkpaId,
+      path: "/catalogue/ewp/" + params.uri + "/kkpa/" + params.kkpaId,
     },
   ];
 
-  useEffect(() => {
-    if (kkpaid !== undefined) setKkpaId(kkpaid);
-  }, [kkpaid]);
-
-  useEffect(() => {
-    if (projectid !== undefined) setProjectId(projectid);
-  }, [projectid]);
-
-  const { kkpaDetail } = useKKPAById(
-    projectId.split("x1c-")[2],
-    projectId.split("x1c-")[0],
-    kkpaId
+  const { kkpaDetail, kkpaDetailIsLoading } = useKKPAById(
+    params.year,
+    params.type,
+    params.kkpaId
   );
 
   useEffect(() => {
@@ -46,6 +54,9 @@ const index = () => {
     }
   }, [kkpaDetail]);
 
+  useEffect(() => {
+    kkpaDetailIsLoading ? loadingSwal() : loadingSwal("close");
+  }, [kkpaDetailIsLoading]);
   return (
     <MainLayout>
       <div className="px-5">
@@ -55,7 +66,9 @@ const index = () => {
         </div>
         <ProjectInfo
           type="ewp"
-          id={projectId !== undefined ? projectId.split("x1c-")[1] : null}
+          id={params.id}
+          year={params.year}
+          source={params.type}
         />
         <DocumentViewer
           documentTitle="KKPA"
@@ -75,15 +88,17 @@ const index = () => {
               }
             `}
           documentHtml={
-            `<header>
+            kkpaDetailIsLoading
+              ? `<p>Loading data...</p>`
+              : `<header>
           <div  class="header">
             <div style="text-align: center">
               <h2 style="color: black">KERTAS KERJA PELAKSANAAN AUDIT</h2>
               <h2 style="color: black">
-                ${data?.JenisAudit ? data?.JenisAudit : "**"} AUDIT
+                ${data?.JenisAudit ? data?.JenisAudit.toUpperCase() : ""} 
               </h2>
               <h2 style="color: black">
-              ${data?.AuditeeBranchName ? data?.AuditeeBranchName : "**"}
+              ${data?.AuditeeBranchName ? data?.AuditeeBranchName : ""}
               </h2>
               <h2 style="color: black">PERIODE AUDIT 
                 ${data?.Year ? data?.Year : "**"}
@@ -93,9 +108,9 @@ const index = () => {
               <h3 style="color: black">
                 Ref No: ${
                   data?.AuditeeBranchCode ? data?.AuditeeBranchCode : "**"
-                }-${
-              data?.MCAuditProjectCode ? data?.MCAuditProjectCode : "**"
-            }-${data?.RiskIssueCode ? data?.RiskIssueCode : "**"}
+                } - ${
+                  data?.MCAuditProjectCode ? data?.MCAuditProjectCode : "**"
+                } - ${data?.RiskIssueCode ? data?.RiskIssueCode : "**"}
               </h3>
             </div>
             <hr
@@ -110,19 +125,35 @@ const index = () => {
         </header>
         <main>
         <h3 style="font-weight: bold;margin-bottom:10px;margin-top:10px;">AKTIVITAS</h3>
-        <div><p>${data?.Activity ? data?.Activity : "**"}</p></div>
+        <div><p>${
+          data?.Activity
+            ? data?.Activity
+            : "<i><b>Data tidak ditemukan.</b></i>"
+        }</p></div>
         <h3 style="font-weight: bold;margin-bottom:10px;">SUB AKTIVITAS</h3>
-        <div><p>${data?.SubActivity ? data?.SubActivity : "**"}</p></div>
+        <div><p>${
+          data?.SubActivity
+            ? data?.SubActivity
+            : "<i><b>Data tidak ditemukan.</b></i>"
+        }</p></div>
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">I. RISK ISSUE</h3>
-        <div><p style="text-align: justify;">${data?.RiskIssueCode}</p></div>
-        ${data?.RiskIssueName}
+        ${
+          data?.RiskIssueCode && data?.RiskIssueName
+            ? `<div><p style="text-align: justify;">${data?.RiskIssueCode}</p></div>
+        ${data?.RiskIssueName}`
+            : "<i><b>Data tidak ditemukan.</b></i>"
+        }
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">II. CONTROL</h3>
         <div>
         <h4>Keterangan</h4>
         <p>
-        ${data?.PengujianControlDesc ? data?.PengujianControlDesc : "**"}
+        ${
+          data?.PengujianControlDesc
+            ? data?.PengujianControlDesc
+            : "<i><b>Data tidak ditemukan.</b></i>"
+        }
         </p>
         </br>
         <h4>List Kontrol</h4>
@@ -134,9 +165,9 @@ const index = () => {
             </thead>
             <tbody>
                 <tr>
-                <td>**</td>
-                <td>**</td>
-                <td>**</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
             </tr>
             </tbody>
         </table>
@@ -144,18 +175,29 @@ const index = () => {
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">III. PROGRAM AUDIT</h3>
         <div>
-        ${data?.ProgramAudit ? data?.ProgramAudit : "**"}
+        ${
+          data?.ProgramAudit
+            ? data?.ProgramAudit
+            : "<i><b>Data tidak ditemukan.</b></i>"
+        }
         </div>
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">IV. RUANG LINGKUP</h3>
-        <div>
-        <table style="height: 160px; width: 100%; border-collapse: collapse;" border="0">
+        
+        ${
+          params.type == "1"
+            ? data?.RuangLingkup
+              ? data.RuangLingkup
+              : "<i><b>Data tidak ditemukan.</b></i>"
+            : `<div><table style="height: 160px; width: 100%; border-collapse: collapse;" border="0">
             <tbody>
             <tr>
             <td style="width: 33.3333%;">Sumber Informasi</td>
             <td style="width: 3.9593%;">:</td>
             <td style="width: 62.7073%;">${
-              data?.SumberInformasi ? data?.SumberInformasi : "**"
+              data?.SumberInformasi
+                ? data?.SumberInformasi
+                : "<i><b>Data tidak ditemukan.</b></i>"
             }</td>
             </tr>
             <tr>
@@ -167,10 +209,12 @@ const index = () => {
                   ? dateLocaleString(data?.PeriodeStart, true)
                   : "**"
               }` +
-            " - " +
-            `${
-              data?.PeriodeEnd ? dateLocaleString(data?.PeriodeEnd, true) : "**"
-            }</td>
+              " - " +
+              `${
+                data?.PeriodeEnd
+                  ? dateLocaleString(data?.PeriodeEnd, true)
+                  : "**"
+              }</td>
             </tr>
             <tr>
             <td style="width: 33.3333%;">Jumlah Populasi</td>
@@ -190,10 +234,8 @@ const index = () => {
             <td style="width: 33.3333%;">Teknik Sampling</td>
             <td style="width: 3.9593%;">:</td>
             <td style="width: 62.7073%;">${
-              data?.TeknikSamplingCode ? data?.TeknikSamplingCode : "**"
-            }` +
-            " - " +
-            `${data?.TeknikSamplingDesc ? data?.TeknikSamplingDesc : "**"}</td>
+              data?.TeknikSamplingDesc ? data?.TeknikSamplingDesc : "**"
+            }</td>
             </tr>
             <tr>
             <td style="width: 33.3333%;">Keterangan</td>
@@ -203,13 +245,19 @@ const index = () => {
             }</td>
             </tr>
             </tbody>
-            </table>
-        </div>
+            </table></div>`
+        }
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">V. KRITERIA</h3>
         <div>
-        ${data?.KriteriaAudit ? data?.KriteriaAudit : "**"}
-        <div>
+        ${
+          data?.KriteriaAudit
+            ? data?.KriteriaAudit
+            : "<i><b>Data tidak ditemukan.</b></i>"
+        }
+        </div>
+        <br/>
+        <br/>
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">VI. HASIL PENGUJIAN SAMPLE</h3>
         <div>
@@ -220,6 +268,12 @@ const index = () => {
         }
         </style>
             <body>
+            ${
+              params.type == "1"
+                ? data?.HasilPengujian
+                  ? data.HasilPengujian
+                  : "<i><b>Data tidak ditemukan.</b></i>"
+                : `
                 <div>
                 <p>Sample</p>
                 <table>
@@ -239,12 +293,20 @@ const index = () => {
                     </tbody>
                 </table>
                 </div>
+                `
+            }
             </body>
         <div>
         <br/>
         <h3 style="font-weight: bold;margin-bottom:10px;">VII. KESIMPULAN</h3>
         <div>
-           <p> TIDAK EFEKTIF </p>
+        ${
+          params.type == "1"
+            ? data?.Kesimpulan
+              ? data.Kesimpulan
+              : "<i><b>Data tidak ditemukan.</b></i>"
+            : `<p> TIDAK EFEKTIF </p>`
+        }
         <div>
         </main>`
           }

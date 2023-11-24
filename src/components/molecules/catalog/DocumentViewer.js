@@ -1,4 +1,5 @@
 import { Card } from "@/components/atoms";
+import useUser from "@/data/useUser";
 import Button from "@atlaskit/button";
 const DocumentViewer = ({
   documentTitle = `Document`,
@@ -7,6 +8,7 @@ const DocumentViewer = ({
   isLoading = false,
   withNoHeader = false,
 }) => {
+  const { user } = useUser();
   const handlePrint = () => {
     window.frames["content-doc"].focus();
     window.frames["content-doc"].contentWindow.print();
@@ -15,7 +17,7 @@ const DocumentViewer = ({
   let watermark = [];
 
   for (let index = 0; index < 140; index++) {
-    watermark.push(`00136165 - I Putu Andeandika`);
+    watermark.push(`${user?.data.pn} - ${user?.data.fullName}`);
   }
   const documentMap = (style, body) => {
     return `
@@ -66,15 +68,16 @@ const DocumentViewer = ({
       <div className="w-[59rem] gap-6">
         <div>
           <Card>
-            <div
-              className={`overflow-y-scroll my-2 ${isLoading ? "blur-sm" : ""}`}
-            >
+            <div className={`overflow-y-scroll my-2`}>
               <div className="h-full w-full ">
                 <iframe
                   title="frame document"
                   id="content-doc"
                   className="content-doc w-[59rem]"
-                  srcDoc={documentMap(documentStyle, documentHtml)}
+                  srcDoc={documentMap(
+                    documentStyle,
+                    isLoading ? `<p>Loading data...</p>` : documentHtml
+                  )}
                   style={{ minHeight: "29.7cm", padding: "20px" }}
                 />
               </div>

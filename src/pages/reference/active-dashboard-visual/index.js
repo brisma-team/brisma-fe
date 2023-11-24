@@ -259,7 +259,7 @@ const index = () => {
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">
           <div className="flex-1">
-            <div className="text-3xl font-bold">Manajemen Dashboard</div>
+            <div className="text-3xl font-bold">Manajemen Dashboard Visual</div>
           </div>
         </div>
 

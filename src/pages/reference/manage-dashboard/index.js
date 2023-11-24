@@ -13,7 +13,7 @@ const index = () => {
     <div>
       <iframe
         title="superset"
-        src={`${process.env.NEXT_PUBLIC_API_URL_SUPERSET_SSL}/login?token=${token}`}
+        src={`${process.env.NEXT_PUBLIC_API_URL_SUPERSET}/login?token=${token}`}
         height="1444px"
         width="100%"
       />

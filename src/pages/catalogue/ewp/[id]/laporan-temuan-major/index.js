@@ -6,6 +6,7 @@ import { ltmajorHtml } from "@/templates/catalog/ewp";
 import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 import { useRTAById } from "@/data/catalog";
 import rtaHtml from "@/templates/catalog/ewp/rta";
+import { loadingSwal } from "@/helpers";
 
 const index = () => {
   const router = useRouter();
@@ -29,7 +30,7 @@ const index = () => {
     });
   }, [router.isReady]);
 
-  const { rtaDetail } = useRTAById(
+  const { rtaDetail, rtaDetailIsLoading } = useRTAById(
     params.year,
     params.type,
     params.id,
@@ -41,6 +42,10 @@ const index = () => {
       setList(rtaDetail.data.kkpt);
     }
   }, [rtaDetail]);
+
+  useEffect(() => {
+    rtaDetailIsLoading ? loadingSwal() : loadingSwal("close");
+  }, [rtaDetailIsLoading]);
 
   const baseUrl = "/catalogue/ewp";
   const breadcrumbs = [
@@ -86,21 +91,24 @@ const index = () => {
               <div>
                 <Card>
                   <div className="w-full h-full px-3 p-5">
-                    <u className="font-bold text-base">Kumpulan KKPT</u>
-                    {list.length == 0 ? (
+                    <u className="font-bold text-base">
+                      Kumpulan KKPT ~ ({list.length} Temuan Major)
+                    </u>
+                    {rtaDetailIsLoading ? (
+                      <p>Loading data...</p>
+                    ) : list.length == 0 ? (
                       <p className="text-base">
                         Tidak Ada Dokumen Temuan Major
                       </p>
                     ) : (
-                      ""
+                      list?.map((data, i) => {
+                        return (
+                          <p className="text-base" key={i}>
+                            {i + 1 + ". " + data.KKPTTitle}
+                          </p>
+                        );
+                      })
                     )}
-                    {list?.map((data, i) => {
-                      return (
-                        <p className="text-base" key={i}>
-                          {data.KKPTID + " - " + data.KKPTTitle}
-                        </p>
-                      );
-                    })}
                   </div>
                 </Card>
               </div>
@@ -110,6 +118,7 @@ const index = () => {
               <DocumentViewer
                 documentTitle="Laporan Temuan Major"
                 documentHtml={ltmajorHtml(params.year, params.type, params.id)}
+                isLoading={rtaDetailIsLoading}
                 withNoHeader={true}
               />
             </div>
@@ -128,7 +137,12 @@ const index = () => {
                 return (
                   <div className="mb-4" key={i}>
                     <h5 className="mb-5 font-bold">
-                      {data.KKPTID + " - " + data.KKPTTitle}
+                      {i +
+                        1 +
+                        ". (kkptid: " +
+                        data.KKPTID +
+                        ") ~ " +
+                        data.KKPTTitle}
                     </h5>
                     <DocumentViewer
                       documentTitle="Kertas Kerja Pengawasan Temuan"

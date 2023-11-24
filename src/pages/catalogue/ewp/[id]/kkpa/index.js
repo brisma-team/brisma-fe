@@ -3,7 +3,7 @@ import { MainLayout } from "@/layouts";
 import { Breadcrumbs, Card, TableField, Pagination } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
-// import Link from "next/link";
+import Link from "next/link";
 import { useKKPAList } from "@/data/catalog";
 
 import { IconClose, IconPlus } from "@/components/icons";
@@ -18,9 +18,11 @@ const index = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [showFilter, setShowFilter] = useState(false);
   const [filter, setFilter] = useState({
+    activity: "",
     subactivity: "",
     submajor: "",
     riskissue: "",
+    auditor: "",
     limit: 5,
   });
   const [params, setParams] = useState({
@@ -55,9 +57,11 @@ const index = () => {
     params.id,
     currentPage,
     filter.limit,
+    filter.activity,
     filter.subactivity,
     filter.submajor,
-    filter.riskissue
+    filter.riskissue,
+    filter.auditor
   );
 
   function debounce(func, delay) {
@@ -76,14 +80,14 @@ const index = () => {
 
   useEffect(() => {
     if (kkpaList != undefined) {
+      setTotalPages(kkpaList.data.total_page);
       const mappingKKPA = kkpaList.data.kkpa_list.map((data, key) => {
-        setTotalPages(kkpaList.data.total_page);
         return {
           No: key + 1,
           Aktivitas: data.Activity,
           "Sub Aktivitas": data.SubActivity,
           "Sub Major": data.SubMajorCode + " - " + data.SubMajor,
-          "Risk Issue": data.RiskIssueCode,
+          "Risk Issue": data.RiskIssueCode + " - " + data.RiskIssueName,
           Auditor:
             params.type == "2"
               ? data.Auditor.pn + " - " + data.Auditor.name
@@ -130,13 +134,26 @@ const index = () => {
           </Button>
         </div>
         {showFilter && (
-          <div className="flex justify-between w-96">
+          <div className="flex justify-between w-[38rem]">
             <Card>
               <div className="flex p-2">
-                <div className="w-1/2">
+                <div className="w-48">
+                  <Textfield
+                    placeholder="Aktivitas"
+                    className="mx-1"
+                    name="activity"
+                    onChange={debouncedHandleChange}
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+                <div className="w-48">
                   <Textfield
                     placeholder="Sub Aktivitas"
-                    className="ml-1"
+                    className="mx-1"
                     name="subactivity"
                     onChange={debouncedHandleChange}
                     elemAfterInput={
@@ -146,11 +163,11 @@ const index = () => {
                     }
                   />
                 </div>
-                <div className="w-1/2">
+                <div className="w-48">
                   <Textfield
-                    placeholder="Risk Issue"
-                    className="ml-1"
-                    name="riskissue"
+                    placeholder="Sub Major"
+                    className="mx-1"
+                    name="submajor"
                     onChange={debouncedHandleChange}
                     elemAfterInput={
                       <button className="justify-center">
@@ -161,23 +178,10 @@ const index = () => {
                 </div>
               </div>
               <div className="flex p-2">
-                <div className="w-1/2">
-                  <Textfield
-                    placeholder="Sub Major Name"
-                    className="mr-1"
-                    name="submajor"
-                    onChange={debouncedHandleChange}
-                    elemAfterInput={
-                      <button className="justify-center">
-                        <IconClose size="large" />
-                      </button>
-                    }
-                  />
-                </div>
-                <div className="w-1/2">
+                <div className="w-48">
                   <Textfield
                     placeholder="Risk Issue"
-                    className="ml-1"
+                    className="mx-1"
                     name="riskissue"
                     onChange={debouncedHandleChange}
                     elemAfterInput={
@@ -187,6 +191,20 @@ const index = () => {
                     }
                   />
                 </div>
+                <div className="w-48">
+                  <Textfield
+                    placeholder="Auditor"
+                    className="mx-1"
+                    name="auditor"
+                    onChange={debouncedHandleChange}
+                    elemAfterInput={
+                      <button className="justify-center">
+                        <IconClose size="large" />
+                      </button>
+                    }
+                  />
+                </div>
+                <div className="w-48"></div>
               </div>
             </Card>
           </div>
@@ -202,6 +220,22 @@ const index = () => {
           <Card>
             <div className="w-full h-full px-6">
               <div className="text-xl font-bold p-5">Pustaka Dokumen</div>
+              <Link
+                className="pl-5 underline"
+                target="_blank"
+                href={{
+                  pathname: "/catalogue/ewp/" + params.uri + "/kkpa/view-all",
+                  query: {
+                    activity: filter.activity,
+                    subactivity: filter.subactivity,
+                    submajor: filter.submajor,
+                    riskissue: filter.riskissue,
+                    auditor: filter.auditor,
+                  },
+                }}
+              >
+                Lihat Seluruh Dokumen
+              </Link>
               <div className="max-h-[29rem] overflow-y-scroll mb-5">
                 <TableField
                   headers={[
@@ -213,7 +247,15 @@ const index = () => {
                     "Auditor",
                     "Aksi",
                   ]}
-                  columnWidths={["5%", "8%", "20%", "25%", "10%", "17%", "15%"]}
+                  columnWidths={[
+                    "5%",
+                    "10%",
+                    "15%",
+                    "20%",
+                    "18%",
+                    "17%",
+                    "15%",
+                  ]}
                   items={kkpa}
                 />
               </div>

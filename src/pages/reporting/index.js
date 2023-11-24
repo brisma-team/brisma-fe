@@ -33,7 +33,8 @@ const updateIntervalList = [
 export default function index() {
   const [interval, setInterval] = useState(updateIntervalList[3].value * 1000); // default 5 menit
   const [dashboardList, setDashboardList] = useState([]);
-  const [selected, setSelected] = useState("");
+  const [selectedEntry, setSelectedEntry] = useState("");
+  const [selectedID, setSelectedID] = useState("");
   const [ctoken, setCtoken] = useState("");
   const [tagName, setTagName] = useState("");
   const [noActiveDashboard, setNoActiveDashboard] = useState(false);
@@ -41,17 +42,19 @@ export default function index() {
 
   useEffect(() => {
     if (data !== undefined && Array.isArray(data.list) && data.list.length > 0) {
-      const mapping = data.list.map((v) => {
+      const mapping = data.list.map((v, i) => {
         return {
           label: v.name,
-          value: v.embed_id,
+          value: i,
+          id: v.embed_id,
         };
       });
 
       setDashboardList(mapping);
-      if (selected === "") {
+      if (selectedEntry === "") {
         setTagName(mapping[0].label);
-        setSelected(mapping[0].value);
+        setSelectedEntry(mapping[0].value);
+        setSelectedID(mapping[0].id);
       }
 
       setCtoken(data.token);
@@ -59,10 +62,11 @@ export default function index() {
     } else {
       setNoActiveDashboard(true);
     }
-  }, [data, selected]);
+  }, [data, selectedEntry]);
 
   const handleSelectChange = (selectedOption) => {
-    setSelected(selectedOption.value);
+    setSelectedEntry(selectedOption.value);
+    setSelectedID(selectedOption.id);
     setTagName(selectedOption.label);
   };
 
@@ -101,8 +105,8 @@ export default function index() {
               />
             </div>
           </div>
-          {selected && data.token && (
-            <SupersetDashboard token={ctoken} id={selected} />
+          {selectedID && data.token && (
+            <SupersetDashboard token={ctoken} id={selectedID} />
           )}
         </div>
       </Main>
