@@ -2,6 +2,7 @@ import { ButtonIcon, Card, DivButton } from "@/components/atoms";
 import { IconBullet } from "@/components/icons";
 import { DropdownCard } from "@/components/molecules/commons";
 import { convertDate } from "@/helpers";
+import { useRouter } from "next/router";
 
 const Content = ({ title, text }) => {
   return (
@@ -19,6 +20,7 @@ const CardOverview = ({
   handleShowScore,
   handleDeleteTemplate,
 }) => {
+  const router = useRouter();
   const listDropdown = [
     { label: "Aktifkan", action: () => handleEnableTemplate(data.kode) },
     { label: "Detail", action: () => handleDetailTemplate() },
@@ -36,7 +38,7 @@ const CardOverview = ({
   return (
     <DivButton
       className="hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
-      handleClick={() => console.log("test")}
+      handleClick={() => router.push(`overview/buat-template/${data.id}`)}
     >
       <Card>
         <div className="w-full py-3">

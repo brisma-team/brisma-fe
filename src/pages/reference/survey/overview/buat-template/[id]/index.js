@@ -11,22 +11,38 @@ import {
 } from "@/components/molecules/reference/survey/buat-template";
 import { useSelector } from "react-redux";
 import {
+  resetWorkflowData,
   resetPayloadKuesioner,
   resetPayloadPertanyaan,
+  resetValidationErrorsWorkflow,
   setDataCategory,
+  setWorkflowData,
   setPayloadInformasi,
   setPayloadKuesioner,
   setPayloadPertanyaan,
+  setValidationErrorsWorkflow,
+  setHistoryWorkflow,
 } from "@/slices/reference/createTemplateReferenceSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import { errorSwal, fetchApi, loadingSwal, successSwal } from "@/helpers";
+import {
+  confirmationSwal,
+  convertDate,
+  errorSwal,
+  fetchApi,
+  loadingSwal,
+  setErrorValidation,
+  successSwal,
+} from "@/helpers";
 import {
   useInformation,
   useKuesioner,
+  useWorkflow,
 } from "@/data/reference/admin-survey/informasi";
 import _ from "lodash";
 import { useCategory } from "@/data/reference/admin-survey/kuesioner";
+import { workflowSchema } from "@/helpers/schemas/reference/adminSurveiSchema";
+import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -40,6 +56,7 @@ const index = () => {
   const [isUpdateGuidline, setIsUpdateGuidline] = useState(false);
   const [currentContentStage, setCurrentContentStage] = useState(1);
 
+  const [showModalApproval, setShowModalApproval] = useState(false);
   const [showModalAddQuestion, setShowModalAddQuestion] = useState(false);
   const [showModalGuidelines, setShowModalGuidelines] = useState(false);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
@@ -57,6 +74,15 @@ const index = () => {
   const payloadPertanyaan = useSelector(
     (state) => state.createTemplateReference.payloadPertanyaan
   );
+  const workflowData = useSelector(
+    (state) => state.createTemplateReference.workflowData
+  );
+  const historyWorkflow = useSelector(
+    (state) => state.createTemplateReference.historyWorkflow
+  );
+  const validationErrorsWorkflow = useSelector(
+    (state) => state.createTemplateReference.validationErrorsWorkflow
+  );
 
   const [navigationTabItems, setNavigationTabItems] = useState([
     { idx: 1, title: "Informasi", isDisabled: false },
@@ -66,6 +92,10 @@ const index = () => {
   const { category, categoryMutate } = useCategory({ id });
   const { information, informationError } = useInformation({ id });
   const { kuesioner, kuesionerMutate, kuesionerError } = useKuesioner({ id });
+  const { workflow, workflowMutate } = useWorkflow({
+    sub_modul: "template_survey",
+    sub_modul_id: id,
+  });
 
   useEffect(() => {
     setIsNewTemplate(id === "new");
@@ -123,7 +153,6 @@ const index = () => {
     } else {
       dispatch(resetPayloadKuesioner());
     }
-    console.log("ke trigger");
   }, [kuesioner]);
 
   useEffect(() => {
@@ -158,6 +187,52 @@ const index = () => {
       },
     ]);
   }, [currentContentStage]);
+
+  useEffect(() => {
+    const workflowInfo = workflow?.data?.info;
+    const maker = workflow?.data?.initiator;
+    const approvers = workflow?.data?.approver;
+
+    console.log("workflow => ", workflow?.data);
+    console.log("maker => ", maker);
+    console.log("approvers => ", approvers);
+    const newWorkflowData = {
+      ...workflowData,
+      status_approver: workflowInfo?.status_persetujuan,
+      on_approver: workflowInfo?.status_approver,
+    };
+
+    newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.fullName}`;
+    newWorkflowData.maker = maker;
+
+    if (approvers?.length) {
+      const mappingApprovers = _.map(approvers, ({ pn, nama, is_signed }) => ({
+        pn,
+        nama,
+        is_signed,
+      }));
+      newWorkflowData.ref_tim_audit_approver = mappingApprovers;
+    }
+
+    if (workflow?.data?.log?.length) {
+      const mapping = workflow?.data?.log?.map((v) => {
+        return {
+          "P.I.C": v?.from?.pn + " - " + v?.from?.nama,
+          Alasan: v?.note,
+          Status:
+            v?.is_signed === true
+              ? "Approved"
+              : v?.is_signed === false
+              ? "Rejected"
+              : "",
+          Tanggal: convertDate(v?.createdAt, "-", "d"),
+        };
+      });
+      dispatch(setHistoryWorkflow(mapping));
+    }
+
+    dispatch(setWorkflowData(newWorkflowData));
+  }, [workflow]);
 
   const handleUnderChange = () => {
     if (!isUnderChange) setIsUnderChange(true);
@@ -490,9 +565,128 @@ const index = () => {
   };
   // [ END ] Handler for answer
 
-  // useEffect(() => {
-  //   console.log("payload kuesioner => ", payloadKuesioner);
-  // }, [payloadKuesioner]);
+  // [ START ] Handler for modal approval
+  const handleClickOpenModalApproval = () => {
+    setShowModalApproval(true);
+  };
+
+  const handleAdd = (property) => {
+    const newData = [...workflowData[property]];
+    newData.push({
+      pn: "",
+      nama: "",
+      is_signed: false,
+    });
+    dispatch(setWorkflowData({ ...workflowData, [property]: newData }));
+  };
+
+  const handleDelete = (property, idx) => {
+    const newData = [...workflowData[property]];
+    newData.splice(idx, 1);
+    dispatch(setWorkflowData({ ...workflowData, [property]: newData }));
+  };
+
+  const handleChangeText = (property, value) => {
+    dispatch(
+      setWorkflowData({
+        ...workflowData,
+        [property]: value,
+      })
+    );
+  };
+
+  const handleChangeSelect = (property, index, e) => {
+    const newData = [...workflowData[property]];
+    const updated = { ...newData[index] };
+    updated["pn"] = e?.value?.pn;
+    updated["nama"] = e?.value?.name;
+    newData[index] = updated;
+    dispatch(
+      setWorkflowData({
+        ...workflowData,
+        [property]: newData,
+      })
+    );
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const schemaMapping = {
+      schema: workflowSchema,
+      resetErrors: resetValidationErrorsWorkflow,
+      setErrors: setValidationErrorsWorkflow,
+    };
+    const validate = setErrorValidation(workflowData, dispatch, schemaMapping);
+
+    if (validate) {
+      const actionType = e.target.offsetParent.name;
+      const data = {
+        sub_modul: "template_survey",
+        sub_modul_id: id,
+      };
+
+      const signedCount = workflowData?.ref_tim_audit_approver?.filter(
+        (item) => item.is_signed
+      ).length;
+
+      switch (actionType) {
+        case "change":
+          data.approvers = workflowData.ref_tim_audit_approver;
+          break;
+        case "create":
+          data.approvers = workflowData.ref_tim_audit_approver;
+          break;
+        case "reject":
+          if (!data.note) {
+            await errorSwal("Silahkan berikan alasan!");
+            return;
+          }
+          data.note = workflowData.note;
+          break;
+        case "approve":
+          if (signedCount >= workflowData?.ref_tim_audit_approver?.length) {
+            data.data = "<p>pirli test</p>";
+          }
+          data.note = workflowData.note;
+          break;
+      }
+
+      if (actionType === "reset") {
+        const confirm = await confirmationSwal(
+          "Terkait dengan workflow ini, apakah Anda yakin ingin melakukan pengaturan ulang?"
+        );
+        if (!confirm.value) {
+          return;
+        }
+      }
+
+      if (actionType === "change") {
+        const response = await fetchApi(
+          "PATCH",
+          `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/workflow/change`,
+          data
+        );
+        console.log("response => ", response);
+        if (!response.isDismissed) return;
+      } else {
+        await fetchApi(
+          "POST",
+          `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/workflow/${actionType}`,
+          data
+        );
+      }
+
+      workflowMutate();
+      dispatch(resetWorkflowData());
+      setShowModalApproval(false);
+    }
+    workflowMutate();
+  };
+  // [ END ] Handler for modal approval
+
+  useEffect(() => {
+    console.log("payload kuesioner => ", payloadKuesioner);
+  }, [payloadKuesioner]);
 
   // useEffect(() => {
   //   console.log("payload pertanyaan => ", payloadPertanyaan);
@@ -518,6 +712,7 @@ const index = () => {
               handleChangeForm={handleChangeFormInformasi}
               handleClickAddKuesioner={handleClickKuesioner}
               handleSubmit={handleSaveInformation}
+              handleClickOpenModalApproval={handleClickOpenModalApproval}
             />
           ) : (
             <TabKuesioner
@@ -547,6 +742,21 @@ const index = () => {
       ) : (
         ""
       )}
+      <ModalWorkflowEWP
+        workflowData={workflowData}
+        historyWorkflow={historyWorkflow}
+        validationErrors={validationErrorsWorkflow}
+        setShowModal={setShowModalApproval}
+        showModal={showModalApproval}
+        headerTitle={"Approval Template Survey"}
+        handleChange={handleChangeText}
+        handleChangeSelect={handleChangeSelect}
+        handleDelete={handleDelete}
+        handleAdd={handleAdd}
+        handleSubmit={handleSubmit}
+        widthHeader={`w-[42rem]`}
+        withoutSigner={true}
+      />
       <ModalAddQuestion
         data={payloadPertanyaan}
         showModal={showModalAddQuestion}
