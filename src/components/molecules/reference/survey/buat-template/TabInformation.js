@@ -17,6 +17,7 @@ const TabInformation = ({
   handleChangeForm,
   handleSubmit,
   handleClickAddKuesioner,
+  handleClickOpenModalApproval,
 }) => {
   const payloadInformasi = useSelector(
     (state) => state.createTemplateReference.payloadInformasi
@@ -155,6 +156,7 @@ const TabInformation = ({
                 <ButtonField
                   text={"Approval"}
                   disabled={isFormDisabled || isNewTemplate}
+                  handler={handleClickOpenModalApproval}
                 />
               </div>
             </div>

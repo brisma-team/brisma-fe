@@ -6,6 +6,7 @@ import CardQuestion from "./CardQuestion";
 const CardCategoryQuestion = ({
   indexCategory,
   data,
+  isPreviewPage,
   isDisabled,
   handleChangeQuestion,
   handleDeleteQuestion,
@@ -28,19 +29,21 @@ const CardCategoryQuestion = ({
         <div className="py-2 px-4 text-base font-semibold w-full flex items-center">
           {data?.name || "Judul Kategori"}
         </div>
-        <div>
-          <DivButton
-            className={`w-44 h-full text-base rounded-tr-lg flex justify-center items-center font-semibold ${
-              isDisabled
-                ? `text-gray-400 bg-atlasian-gray-light`
-                : `text-white bg-atlasian-blue-light`
-            }`}
-            isDisabled={isDisabled}
-            handleClick={() => handleClickOpenModalAddQuestion(indexCategory)}
-          >
-            Tambah Pertanyaan
-          </DivButton>
-        </div>
+        {!isPreviewPage && (
+          <div>
+            <DivButton
+              className={`w-44 h-full text-base rounded-tr-lg flex justify-center items-center font-semibold ${
+                isDisabled
+                  ? `text-gray-400 bg-atlasian-gray-light`
+                  : `text-white bg-atlasian-blue-light`
+              }`}
+              isDisabled={isDisabled}
+              handleClick={() => handleClickOpenModalAddQuestion(indexCategory)}
+            >
+              Tambah Pertanyaan
+            </DivButton>
+          </div>
+        )}
       </div>
       <div className="px-4 py-4 flex flex-col gap-4 w-full">
         {data?.pertanyaan?.length
@@ -51,6 +54,7 @@ const CardCategoryQuestion = ({
                   indexCategory={indexCategory}
                   indexQuestion={idx}
                   data={kuesioner}
+                  isPreviewPage={isPreviewPage}
                   handleChangeQuestion={handleChangeQuestion}
                   handleDeleteQuestion={handleDeleteQuestion}
                   handleChangeAnswer={handleChangeAnswer}

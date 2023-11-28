@@ -8,6 +8,7 @@ import { decimalToPercentage } from "@/helpers";
 const CardCategory = ({
   index,
   data,
+  isPreviewPage,
   handleMutateData,
   handleUpdateCategory,
   handleOnEditCategory,
@@ -26,25 +27,27 @@ const CardCategory = ({
       >
         <div className="w-full h-full border-b-2 border-neutral-200 p-2 flex justify-between items-center">
           <p className="text-base font-bold">Kategori {data.idx}</p>
-          <div className="mr-2 flex gap-2">
-            {data.onEdit ? (
+          {!isPreviewPage && (
+            <div className="mr-2 flex gap-2">
+              {data.onEdit ? (
+                <ButtonIcon
+                  icon={<Image src={ImageCheck} alt="" />}
+                  handleClick={() => handleUpdateCategory(index, data)}
+                />
+              ) : (
+                <ButtonIcon
+                  icon={<Image src={ImageEdit} alt="" />}
+                  handleClick={() => handleOnEditCategory(index, true)}
+                />
+              )}
               <ButtonIcon
-                icon={<Image src={ImageCheck} alt="" />}
-                handleClick={() => handleUpdateCategory(index, data)}
+                icon={<Image src={ImageTrash} alt="" />}
+                handleClick={async () => {
+                  await handleDeleteCategory(data.id), handleMutateData();
+                }}
               />
-            ) : (
-              <ButtonIcon
-                icon={<Image src={ImageEdit} alt="" />}
-                handleClick={() => handleOnEditCategory(index, true)}
-              />
-            )}
-            <ButtonIcon
-              icon={<Image src={ImageTrash} alt="" />}
-              handleClick={async () => {
-                await handleDeleteCategory(data.id), handleMutateData();
-              }}
-            />
-          </div>
+            </div>
+          )}
         </div>
         <div className="w-full h-full border-b-2 border-neutral-200 p-2">
           {data.onEdit ? (

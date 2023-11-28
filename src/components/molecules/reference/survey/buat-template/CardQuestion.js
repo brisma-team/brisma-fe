@@ -1,5 +1,6 @@
 import {
   ButtonIcon,
+  CheckboxField,
   DivButton,
   RadioField,
   TextAreaField,
@@ -18,6 +19,7 @@ const CardQuestion = ({
   indexCategory,
   indexQuestion,
   data,
+  isPreviewPage,
   handleChangeQuestion,
   handleDeleteQuestion,
   handleChangeAnswer,
@@ -40,34 +42,38 @@ const CardQuestion = ({
             Pertanyaan : {indexQuestion + 1}/4
           </p>
         </div>
-        <div className="h-full flex items-center gap-3 px-4">
-          <DropdownCard
-            actions={[
-              {
-                label: "Ubah Guideline",
-                action: () =>
-                  handleClickOpenModalGuidelines(
-                    indexCategory,
-                    indexQuestion,
-                    true
-                  ),
-              },
-            ]}
-          />
-          {(data.tipe_pertanyaan_kode === "2" ||
-            data.tipe_pertanyaan_kode === "3") && (
-            <ButtonIcon
-              icon={<Image src={ImageGroup} width={20} height={20} alt="" />}
-              handleClick={() => handleAddAnswer(indexCategory, indexQuestion)}
+        {!isPreviewPage && (
+          <div className="h-full flex items-center gap-3 px-4">
+            <DropdownCard
+              actions={[
+                {
+                  label: "Ubah Guideline",
+                  action: () =>
+                    handleClickOpenModalGuidelines(
+                      indexCategory,
+                      indexQuestion,
+                      true
+                    ),
+                },
+              ]}
             />
-          )}
-          <ButtonIcon
-            icon={<Image src={ImageTrash} width={20} height={20} alt="" />}
-            handleClick={() =>
-              handleDeleteQuestion(indexCategory, indexQuestion)
-            }
-          />
-        </div>
+            {(data.tipe_pertanyaan_kode === "2" ||
+              data.tipe_pertanyaan_kode === "3") && (
+              <ButtonIcon
+                icon={<Image src={ImageGroup} width={20} height={20} alt="" />}
+                handleClick={() =>
+                  handleAddAnswer(indexCategory, indexQuestion)
+                }
+              />
+            )}
+            <ButtonIcon
+              icon={<Image src={ImageTrash} width={20} height={20} alt="" />}
+              handleClick={() =>
+                handleDeleteQuestion(indexCategory, indexQuestion)
+              }
+            />
+          </div>
+        )}
       </div>
       <div className="flex w-full">
         <div className="w-28 border-r-2 border-neutral-200 gap-4 flex flex-col items-center py-2">
@@ -76,61 +82,64 @@ const CardQuestion = ({
               {indexQuestion + 1}
             </p>
           </div>
-          <div className="w-10">
-            <TextInputDecimal
-              onChange={(value) =>
-                handleChangeQuestion(
-                  indexCategory,
-                  indexQuestion,
-                  "bobot",
-                  value
-                )
-              }
-              style={{
-                fontWeight: "bold",
-                textAlign: "center",
-                borderRadius: 4,
-              }}
-              maxLength={2}
-              value={data.bobot}
-            />
-          </div>
+          {isPreviewPage ? (
+            <div className="w-14 h-14 border-neutral-200 border-2 rounded-lg flex items-center justify-center">
+              <p className="text-xl font-bold">{data.bobot}</p>
+            </div>
+          ) : (
+            <div className="w-10">
+              <TextInputDecimal
+                onChange={(value) =>
+                  handleChangeQuestion(
+                    indexCategory,
+                    indexQuestion,
+                    "bobot",
+                    value
+                  )
+                }
+                style={{
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  borderRadius: 4,
+                }}
+                maxLength={2}
+                value={data.bobot}
+              />
+            </div>
+          )}
         </div>
         <div className="flex flex-col gap-4 px-4 py-3 justify-center border-r-2 w-full">
           <p className="text-xl font-bold">
             {capitalizeEveryWord(data.tipe_pertanyaan_name)}
           </p>
-          {/* <div className="border border-neutral-200 p-2 rounded-lg">
-            <p className="text-xs text-justify">
-              Apakah pekerja di Unit Kerja Anda menunjukan perilaku sesuai nilai
-              etika dalam perusahaan dan budaya korporasi (corporate value) yang
-              tercermin dalam BRI One Culture (Core Values, BRILiaN Belief,
-              BRILiaN Ways) serta Kode Etik perusahaan terkini? (seperti menjaga
-              integritas, profersional, kolaborasi yang produktif, empati,
-              jujur, tulus dan patuh terhadap peraturan yang perusahaan, dll).
-            </p>
-          </div> */}
-          <div>
-            <TextAreaField
-              value={data.uraian}
-              handleChange={(e) =>
-                handleChangeQuestion(
-                  indexCategory,
-                  indexQuestion,
-                  "uraian",
-                  e.target.value
-                )
-              }
-            />
-          </div>
-          {data.tipe_pertanyaan_kode !== "4" ? (
-            <div className="border border-neutral-200 p-3 rounded-lg flex justify-between items-center w-full">
+          {isPreviewPage ? (
+            <div className="border-2 border-neutral-200 p-2 rounded-lg flex items-center">
+              <p className="text-xs text-justify">{data.uraian}</p>
+            </div>
+          ) : (
+            <div>
+              <TextAreaField
+                value={data.uraian}
+                handleChange={(e) =>
+                  handleChangeQuestion(
+                    indexCategory,
+                    indexQuestion,
+                    "uraian",
+                    e.target.value
+                  )
+                }
+              />
+            </div>
+          )}
+          {!isPreviewPage && data.tipe_pertanyaan_kode !== "4" ? (
+            <div className="border-2 border-neutral-200 p-3 rounded-lg flex justify-between items-center w-full">
               <p className="font-semibold text-xs">
                 Apakah responden wajib memberikan deskripsi dari jawaban?
               </p>
               <div className="flex gap-2">
                 <RadioField
                   label={"Ya"}
+                  isDisabled={isPreviewPage}
                   isChecked={data.is_need_deskripsi}
                   value={true}
                   handleChange={(e) =>
@@ -144,6 +153,7 @@ const CardQuestion = ({
                 />
                 <RadioField
                   label={"Tidak"}
+                  isDisabled={isPreviewPage}
                   isChecked={!data.is_need_deskripsi}
                   value={false}
                   handleChange={(e) =>
@@ -160,6 +170,7 @@ const CardQuestion = ({
           ) : (
             ""
           )}
+
           <div className="flex flex-col gap-4">
             {data.jawaban?.length
               ? data.jawaban.map((answer, indexAnswer) => {
@@ -167,7 +178,10 @@ const CardQuestion = ({
                     <div
                       key={indexAnswer}
                       className={`flex ${
-                        data.tipe_pertanyaan_kode === "1" && `gap-1.5`
+                        (data.tipe_pertanyaan_kode === "1" ||
+                          (isPreviewPage &&
+                            data.tipe_pertanyaan_kode === "4")) &&
+                        `gap-1.5`
                       }`}
                     >
                       {
@@ -175,7 +189,7 @@ const CardQuestion = ({
                         data.tipe_pertanyaan_kode === "2" ||
                         data.tipe_pertanyaan_kode === "3" ? (
                           <div className="w-10 h-10">
-                            <div className="rounded bg-atlasian-blue-light h-full flex flex-col justify-center items-center font-bold text-white">
+                            <div className="rounded-ss rounded-es bg-atlasian-blue-light h-full flex flex-col justify-center items-center font-bold text-white">
                               {generateAlphabet(indexAnswer).toUpperCase()}
                             </div>
                           </div>
@@ -183,52 +197,150 @@ const CardQuestion = ({
                           ""
                         )
                       }
-                      <div className="w-10">
-                        <TextInputDecimal
-                          style={{
-                            fontWeight: "bold",
-                            textAlign: "center",
-                            borderRadius: 4,
-                          }}
-                          maxLength={2}
-                          value={answer.bobot}
-                          onChange={(value) =>
-                            handleChangeAnswer(
-                              indexCategory,
-                              indexQuestion,
-                              indexAnswer,
-                              "bobot",
-                              value
-                            )
-                          }
-                        />
-                      </div>
-                      {data.tipe_pertanyaan_kode === "1" ? (
-                        <TextAreaField className={"h-2"} isDisabled={true} />
-                      ) : data.tipe_pertanyaan_kode === "2" ||
-                        data.tipe_pertanyaan_kode === "3" ? (
-                        <TextInput
-                          value={answer.text}
-                          onChange={(e) =>
-                            handleChangeAnswer(
-                              indexCategory,
-                              indexQuestion,
-                              indexAnswer,
-                              "text",
-                              e.target.value
-                            )
-                          }
-                          icon={
-                            <ButtonIcon
-                              handleClick={() =>
-                                handleDeleteAnswer(
+                      {isPreviewPage ? (
+                        data.tipe_pertanyaan_kode === "2" ? (
+                          <div className="border-y-2 border-l-2 w-10 border-neutral-200 flex justify-center items-center">
+                            <RadioField
+                              isChecked={
+                                !!data?.jawaban_user?.find(
+                                  (value) => value.text === answer.text
+                                )
+                              }
+                              value={answer.text}
+                              handleChange={(e) =>
+                                handleChangeAnswer(
+                                  data.tipe_pertanyaan_kode,
+                                  e.target.value,
                                   indexCategory,
                                   indexQuestion,
                                   indexAnswer
                                 )
                               }
-                              icon={<IconClose size="medium" />}
                             />
+                          </div>
+                        ) : data.tipe_pertanyaan_kode === "3" ? (
+                          <div className="border-y-2 border-l-2 w-10 border-neutral-200  flex justify-center items-center">
+                            <CheckboxField
+                              isChecked={
+                                !!data?.jawaban_user?.find(
+                                  (value) => value.text === answer.text
+                                )
+                              }
+                              handleChange={(e) =>
+                                handleChangeAnswer(
+                                  data.tipe_pertanyaan_kode,
+                                  e.target.checked,
+                                  indexCategory,
+                                  indexQuestion,
+                                  indexAnswer
+                                )
+                              }
+                            />
+                          </div>
+                        ) : data.tipe_pertanyaan_kode === "4" ? (
+                          <div className="w-10">
+                            <TextInputDecimal
+                              style={{
+                                fontWeight: "bold",
+                                textAlign: "center",
+                                borderRadius: 4,
+                              }}
+                              maxLength={2}
+                              value={data?.jawaban_user?.[0]?.text ?? null}
+                              onChange={(value) =>
+                                handleChangeAnswer(
+                                  data.tipe_pertanyaan_kode,
+                                  value,
+                                  indexCategory,
+                                  indexQuestion,
+                                  indexAnswer
+                                )
+                              }
+                            />
+                          </div>
+                        ) : (
+                          ""
+                        )
+                      ) : (
+                        <div className="w-10">
+                          <TextInputDecimal
+                            style={{
+                              fontWeight: "bold",
+                              textAlign: "center",
+                              borderRadius: 4,
+                            }}
+                            maxLength={2}
+                            value={answer.bobot}
+                            onChange={(value) =>
+                              handleChangeAnswer(
+                                indexCategory,
+                                indexQuestion,
+                                indexAnswer,
+                                "bobot",
+                                value
+                              )
+                            }
+                          />
+                        </div>
+                      )}
+                      {data.tipe_pertanyaan_kode === "1" ? (
+                        <TextAreaField
+                          className={"h-2"}
+                          isDisabled={!isPreviewPage}
+                          handleChange={(e) =>
+                            handleChangeAnswer(
+                              data.tipe_pertanyaan_kode,
+                              e.target.value,
+                              indexCategory,
+                              indexQuestion,
+                              indexAnswer
+                            )
+                          }
+                        />
+                      ) : data.tipe_pertanyaan_kode === "2" ||
+                        data.tipe_pertanyaan_kode === "3" ? (
+                        isPreviewPage ? (
+                          <div className="w-full h-10 flex items-center px-2 border-2 border-neutral-200">
+                            <p>{answer.text}</p>
+                          </div>
+                        ) : (
+                          <TextInput
+                            value={answer.text}
+                            onChange={(e) =>
+                              handleChangeAnswer(
+                                indexCategory,
+                                indexQuestion,
+                                indexAnswer,
+                                "text",
+                                e.target.value
+                              )
+                            }
+                            icon={
+                              <ButtonIcon
+                                handleClick={() =>
+                                  handleDeleteAnswer(
+                                    indexCategory,
+                                    indexQuestion,
+                                    indexAnswer
+                                  )
+                                }
+                                icon={<IconClose size="medium" />}
+                              />
+                            }
+                          />
+                        )
+                      ) : data.tipe_pertanyaan_kode === "4" && isPreviewPage ? (
+                        <TextAreaField
+                          placeholder={"Deskripsi Jawaban"}
+                          isDisabled={!isPreviewPage}
+                          handleChange={(e) =>
+                            handleChangeAnswer(
+                              "deskripsi jawaban",
+                              e.target.value,
+                              indexCategory,
+                              indexQuestion,
+                              indexAnswer
+                            )
                           }
                         />
                       ) : (
@@ -272,14 +384,22 @@ const CardQuestion = ({
                 })
               : ""}
           </div>
-          {data.is_need_deskripsi ? (
-            <TextAreaField
-              placeholder={"Deskripsi Jawaban"}
-              isDisabled={true}
-            />
-          ) : (
-            ""
-          )}
+          {isPreviewPage && data.tipe_pertanyaan_kode === "4"
+            ? ""
+            : data.is_need_deskripsi && (
+                <TextAreaField
+                  placeholder={"Deskripsi Jawaban"}
+                  isDisabled={!isPreviewPage}
+                  handleChange={(e) =>
+                    handleChangeAnswer(
+                      "deskripsi jawaban",
+                      e.target.value,
+                      indexCategory,
+                      indexQuestion
+                    )
+                  }
+                />
+              )}
         </div>
         <DivButton
           className={"flex w-48 flex-col p-3"}

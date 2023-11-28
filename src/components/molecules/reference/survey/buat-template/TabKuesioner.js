@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import CardCategoryQuestion from "./CardCategoryQuestion";
 
 const TabKuesioner = ({
+  isPreviewPage,
   handleChangeQuestion,
   handleDeleteQuestion,
   handleChangeAnswer,
@@ -23,6 +24,7 @@ const TabKuesioner = ({
               key={i}
               indexCategory={i}
               data={category_quesioner}
+              isPreviewPage={isPreviewPage}
               isDisabled={!dataKuesioner.length}
               handleChangeQuestion={handleChangeQuestion}
               handleDeleteQuestion={handleDeleteQuestion}

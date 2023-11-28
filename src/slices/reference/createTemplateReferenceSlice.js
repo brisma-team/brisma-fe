@@ -2,6 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   dataCategory: [],
+  workflowData: {
+    sub_modul: "",
+    sub_modul_id: "",
+    pic: "",
+    ref_tim_audit_approver: [],
+    note: "",
+  },
+  historyWorkflow: [],
   payloadInformasi: {
     judul: "",
     deskripsi: "",
@@ -19,7 +27,15 @@ const initialState = {
     uraian: "",
     is_need_deskripsi: false,
     bobot: 0,
-    jawaban: [],
+    jawaban: [{ bobot: 0, text: "" }],
+  },
+  workflowDefaultData: {
+    sub_modul: "",
+    sub_modul_id: "",
+    pic: "",
+    ref_tim_audit_approver: [],
+    ref_tim_audit_signer: [],
+    note: "",
   },
   defaultPayloadInformasi: {
     judul: "",
@@ -37,8 +53,9 @@ const initialState = {
     uraian: "",
     is_need_deskripsi: false,
     bobot: 0,
-    jawaban: [],
+    jawaban: [{ bobot: 0, text: "" }],
   },
+  validationErrorsWorkflow: {},
 };
 
 export const createTemplateReferenceSlice = createSlice({
@@ -47,6 +64,12 @@ export const createTemplateReferenceSlice = createSlice({
   reducers: {
     setDataCategory: (state, action) => {
       state.dataCategory = action.payload;
+    },
+    setWorkflowData: (state, action) => {
+      state.workflowData = action.payload;
+    },
+    setHistoryWorkflow: (state, action) => {
+      state.historyWorkflow = action.payload;
     },
     setPayloadInformasi: (state, action) => {
       state.payloadInformasi = action.payload;
@@ -57,8 +80,17 @@ export const createTemplateReferenceSlice = createSlice({
     setPayloadPertanyaan: (state, action) => {
       state.payloadPertanyaan = action.payload;
     },
+    setValidationErrorsWorkflow: (state, action) => {
+      state.validationErrorsWorkflow = action.payload;
+    },
     resetDataCategory: (state) => {
       state.dataCategory = [];
+    },
+    resetWorkflowData: (state) => {
+      state.workflowData = { ...state.workflowDefaultData };
+    },
+    resetHistoryWorkflow: (state) => {
+      state.historyWorkflow = [];
     },
     resetPayloadInformasi: (state) => {
       state.payloadInformasi = { ...state.defaultPayloadInformasi };
@@ -69,18 +101,27 @@ export const createTemplateReferenceSlice = createSlice({
     resetPayloadKuesioner: (state) => {
       state.payloadKuesioner = [];
     },
+    resetValidationErrorsWorkflow: (state) => {
+      state.validationErrorsWorkflow = {};
+    },
   },
 });
 
 export const {
   setDataCategory,
+  setWorkflowData,
+  setHistoryWorkflow,
   setPayloadInformasi,
   setPayloadKuesioner,
   setPayloadPertanyaan,
+  setValidationErrorsWorkflow,
   resetDataCategory,
+  resetWorkflowData,
   resetPayloadInformasi,
   resetPayloadPertanyaan,
   resetPayloadKuesioner,
+  resetValidationErrorsWorkflow,
+  resetHistoryWorkflow,
 } = createTemplateReferenceSlice.actions;
 
 export default createTemplateReferenceSlice.reducer;
