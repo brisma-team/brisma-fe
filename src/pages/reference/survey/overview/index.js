@@ -13,6 +13,7 @@ import LayoutSurveyReference from "@/layouts/reference/LayoutSurveyReference";
 import { useEffect, useState } from "react";
 import _ from "lodash";
 import { useOverview } from "@/data/reference/admin-survey/overview";
+import { useRouter } from "next/router";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -21,6 +22,7 @@ const breadcrumbs = [
 ];
 
 const index = () => {
+  const router = useRouter();
   const [data, setData] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [showModalCreateTemplate, setShowModalCreateTemplate] = useState(false);
@@ -57,12 +59,13 @@ const index = () => {
     page: 1,
   });
 
-  const { overview } = useOverview({ params });
+  const { overview } = useOverview("all", params);
 
   useEffect(() => {
     if (overview?.data?.length) {
       const mapping = overview?.data?.map((v) => {
         return {
+          id: v.id,
           kode: v.project_template_id,
           title: v.judul,
           jenis_kode: v.jenis_survey_kode,
@@ -139,7 +142,7 @@ const index = () => {
             </div>
             <div className="w-36 rounded bg-atlasian-purple">
               <ButtonField
-                handler={() => setShowModalCreateTemplate(true)}
+                handler={() => router.push("overview/buat-template/new")}
                 text={"Buat Template"}
               />
             </div>
