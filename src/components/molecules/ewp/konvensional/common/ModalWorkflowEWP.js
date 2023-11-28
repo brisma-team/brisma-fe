@@ -16,6 +16,8 @@ const ModalWorkflowEWP = ({
   handleChangeSelect,
   handleDelete,
   validationErrors,
+  widthHeader,
+  withoutSigner,
 }) => {
   const { user } = useUser();
   let isApproval, isInitiator;
@@ -53,6 +55,8 @@ const ModalWorkflowEWP = ({
           handleAdd={handleAdd}
           handleChange={handleChangeSelect}
           handleDelete={handleDelete}
+          width={widthHeader}
+          withoutSigner={withoutSigner}
         />
       }
       footer={

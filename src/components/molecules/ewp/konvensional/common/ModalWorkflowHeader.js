@@ -15,6 +15,8 @@ const ModalWorkflowHeader = ({
   handleAdd,
   handleChange,
   handleDelete,
+  withoutSigner,
+  width,
 }) => {
   const [optionSigners, setOptionSigners] = useState([]);
 
@@ -33,13 +35,13 @@ const ModalWorkflowHeader = ({
   }, [data]);
 
   return (
-    <div className="w-[61rem] relative">
+    <div className={`${width ? width : `w-[61rem]`} relative`}>
       <CloseModal handleCloseModal={handleCloseModal} showModal={showModal} />
       <div className="mx-3">
         <p className="font-bold text-xl text-brisma">{headerTitle}</p>
       </div>
-      <div className="flex w-full gap-4 p-3">
-        <div className="w-1/3">
+      <div className="flex w-full justify-center gap-4 p-3">
+        <div className={withoutSigner ? `w-1/2` : `w-1/3`}>
           <CardFormInput
             title={"P.I.C"}
             className={"text-atlasian-blue-light"}
@@ -52,7 +54,7 @@ const ModalWorkflowHeader = ({
             />
           </CardFormInput>
         </div>
-        <div className="w-1/3">
+        <div className={withoutSigner ? `w-1/2` : `w-1/3`}>
           <CardFormInputTeam
             data={data?.ref_tim_audit_approver}
             type={"Approver"}
@@ -84,32 +86,38 @@ const ModalWorkflowHeader = ({
             }
           />
         </div>
-        <div className="w-1/3">
-          <CardFormInputTeam
-            data={data?.ref_tim_audit_signer}
-            type={"Signer"}
-            handlerAddParent={handleAdd}
-            handlerChangeParent={handleChange}
-            handlerDeleteParent={handleDelete}
-            property={"ref_tim_audit_signer"}
-            optionValue={optionSigners}
-            validationErrors={validationErrors}
-            withoutButtonAdd={
-              data?.status_approver === "On Progress" && isInitiator
-                ? false
-                : true
-            }
-            isDisabled={
-              (data?.status_approver === "On Progress" && isInitiator) ||
-              (data?.status_approver === "On Approver" && isApprover)
-                ? false
-                : true
-            }
-            isButtonChange={
-              data?.status_approver === "On Approver" && isInitiator && "Ganti"
-            }
-          />
-        </div>
+        {!withoutSigner ? (
+          <div className="w-1/3">
+            <CardFormInputTeam
+              data={data?.ref_tim_audit_signer}
+              type={"Signer"}
+              handlerAddParent={handleAdd}
+              handlerChangeParent={handleChange}
+              handlerDeleteParent={handleDelete}
+              property={"ref_tim_audit_signer"}
+              optionValue={optionSigners}
+              validationErrors={validationErrors}
+              withoutButtonAdd={
+                data?.status_approver === "On Progress" && isInitiator
+                  ? false
+                  : true
+              }
+              isDisabled={
+                (data?.status_approver === "On Progress" && isInitiator) ||
+                (data?.status_approver === "On Approver" && isApprover)
+                  ? false
+                  : true
+              }
+              isButtonChange={
+                data?.status_approver === "On Approver" &&
+                isInitiator &&
+                "Ganti"
+              }
+            />
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
