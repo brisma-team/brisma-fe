@@ -3,30 +3,32 @@ import {
   NavbarField,
 } from "@/components/molecules/commons";
 import { PatSidebarOverview } from "@/components/molecules/pat";
+import { useEffect, useState } from "react";
+import { useOverview } from "@/data/reference/admin-survey/overview";
 
 const LayoutSurveyReference = ({ children }) => {
-  const data = [
-    {
-      color: "text-atlasian-purple",
-      total: "18",
-      name: "Total Template",
-    },
-    {
-      color: "text-atlasian-green",
-      total: "18",
-      name: "Total Enabled",
-    },
-    {
-      color: "text-atlasian-yellow",
-      total: "18",
-      name: "Total Disabled",
-    },
-    {
-      color: "text-atlasian-red",
-      total: "18",
-      name: "Total Berakhir",
-    },
-  ];
+  const [data, setData] = useState(null);
+  const { overview } = useOverview("count", {});
+
+  useEffect(() => {
+    setData([
+      {
+        color: "text-atlasian-purple",
+        total: overview?.data?.total_templates.toString(),
+        name: "Total Template",
+      },
+      {
+        color: "text-atlasian-green",
+        total: overview?.data?.active_templates.toString(),
+        name: "Total Enabled",
+      },
+      {
+        color: "text-atlasian-yellow",
+        total: overview?.data?.inactive_templates.toString(),
+        name: "Total Disabled",
+      },
+    ]);
+  }, [overview]);
   return (
     <div>
       <NavbarField />
