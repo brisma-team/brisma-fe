@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import _ from "lodash";
 import { useOverview } from "@/data/reference/admin-survey/overview";
 import { useRouter } from "next/router";
+import { confirmationSwal, fetchApi, loadingSwal } from "@/helpers";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -25,14 +26,7 @@ const index = () => {
   const router = useRouter();
   const [data, setData] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
-  const [showModalCreateTemplate, setShowModalCreateTemplate] = useState(false);
-
-  const [showModalConfirmEnable, setShowModalConfirmEnable] = useState(false);
-  const [showModalDetail, setShowModalDetail] = useState(false);
-  const [showModalScore, setShowModalScore] = useState(false);
-  const [showModalConfirmDelete, setShowModalConfirmDelete] = useState(false);
-
-  const [selectedTemplateId, setSelectedTemplateId] = useState(0);
+  const [totalData, setTotalData] = useState(0);
 
   const [filter, setFilter] = useState({
     kode: "",
@@ -59,9 +53,10 @@ const index = () => {
     page: 1,
   });
 
-  const { overview } = useOverview("all", params);
+  const { overview, overviewMutate } = useOverview("all", params);
 
   useEffect(() => {
+    setTotalData(overview?.pagination?.totalItems);
     if (overview?.data?.length) {
       const mapping = overview?.data?.map((v) => {
         return {
@@ -73,7 +68,11 @@ const index = () => {
           desc: v.deskripsi,
           createdBy: v.create_by.pn,
           createdAt: v.createdAt,
-          approvalAt: "2022-10-10",
+          approvalAt:
+            v.template_survey_log_persetujuan[
+              v.template_survey_log_persetujuan.length - 1
+            ]?.createdAt,
+          status_persetujuan: v.status_persetujuan,
           is_active: v.is_active,
         };
       });
@@ -108,25 +107,74 @@ const index = () => {
     });
   };
 
-  const handleEnableTemplate = (kode) => {
-    setShowModalConfirmEnable(true);
+  const handleEnableTemplate = async (id) => {
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin ingin mengaktifkan template survey ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/aktivasi/${id}?is_active=true`,
+      {}
+    );
+    overviewMutate();
+    loadingSwal("close");
   };
 
-  const handleDetailTemplate = (kode) => {
-    setShowModalConfirmEnable(true);
+  const handleDisableTemplate = async (id) => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin ingin menonaktifkan template survey ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/aktivasi/${id}?is_active=false`,
+      {}
+    );
+    overviewMutate();
+    loadingSwal("close");
   };
 
-  const handleShowScore = (kode) => {
-    setShowModalConfirmEnable(true);
+  const handleClickSimulation = (id) => {
+    router.push(`overview/buat-template/${id}/rumus`);
   };
 
-  const handleDeleteTemplate = (kode) => {
-    setShowModalConfirmEnable(true);
+  const handleClickApproval = (id) => {
+    router.push(`overview/buat-template/${id}?isOpenModalApproval=true`);
+  };
+
+  const handleClickDownload = (id) => {
+    console.log("download");
+  };
+
+  const handleDeleteTemplate = async (id) => {
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin ingin menghapus template survey ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "DELETE",
+      `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/delete/${id}`
+    );
+    overviewMutate();
+    loadingSwal("close");
   };
 
   return (
-    <LayoutSurveyReference>
-      <div className="w-full h-full pr-16 pb-4">
+    <LayoutSurveyReference overflowY={true}>
+      <div className="w-full h-full pr-16 pb-20">
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Template Kuesioner Overview"} />
@@ -170,8 +218,10 @@ const index = () => {
                     key={idx}
                     data={item}
                     handleEnableTemplate={handleEnableTemplate}
-                    handleDetailTemplate={handleDetailTemplate}
-                    handleShowScore={handleShowScore}
+                    handleDisableTemplate={handleDisableTemplate}
+                    handleClickApproval={handleClickApproval}
+                    handleClickDownload={handleClickDownload}
+                    handleClickSimulation={handleClickSimulation}
                     handleDeleteTemplate={handleDeleteTemplate}
                   />
                 );
@@ -185,7 +235,7 @@ const index = () => {
             handleChangeFilter("page", pageNow)
           }
           defaultCurrentPage={1}
-          totalData={data?.length}
+          totalData={totalData}
         />
         {/* End Content */}
       </div>
