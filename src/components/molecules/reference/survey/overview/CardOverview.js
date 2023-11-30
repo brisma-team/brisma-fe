@@ -16,16 +16,34 @@ const Content = ({ title, text }) => {
 const CardOverview = ({
   data,
   handleEnableTemplate,
-  handleDetailTemplate,
-  handleShowScore,
+  handleDisableTemplate,
+  handleClickSimulation,
+  handleClickApproval,
+  handleClickDownload,
   handleDeleteTemplate,
 }) => {
   const router = useRouter();
   const listDropdown = [
-    { label: "Aktifkan", action: () => handleEnableTemplate(data.kode) },
-    { label: "Detail", action: () => handleDetailTemplate() },
-    { label: "Lihat Nilai", action: handleShowScore },
-    { label: "Hapus", action: handleDeleteTemplate },
+    {
+      label: "Aktifkan",
+      action: () => handleEnableTemplate(data.id),
+      isDisabled: !(data.status_persetujuan === "Final" && !data.is_active),
+    },
+    {
+      label: "Non-Aktifkan",
+      action: () => handleDisableTemplate(data.id),
+      isDisabled: !data.is_active,
+    },
+    {
+      label: "Simulasi",
+      action: () => handleClickSimulation(data.id),
+    },
+    {
+      label: "Approval",
+      action: async () => await handleClickApproval(data.id),
+    },
+    { label: "Download", action: async () => handleClickDownload(data.id) },
+    { label: "Hapus", action: async () => await handleDeleteTemplate(data.id) },
   ];
 
   const bgColor = {
