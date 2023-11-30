@@ -40,7 +40,10 @@ const index = () => {
   const { ewpData } = useCatalogEWP(
     searchParamObject.year,
     searchParamObject.source,
-    currentPage
+    currentPage,
+    5,
+    searchParamObject.projectName || "",
+    searchParamObject.auditType || ""
   );
 
   useEffect(() => {
@@ -52,9 +55,14 @@ const index = () => {
         "Project ID": EwpList?.ProjectID,
         "Nama Project": (
           <TooltipField
-            textButton={shortenWord(EwpList?.ProjectName, 0, 35)}
+            textButton={
+              <p className="hover:text-blue-800 hover:underline">
+                {shortenWord(EwpList?.ProjectName, 0, 30)}
+              </p>
+            }
             content={EwpList?.ProjectName}
             isLink={false}
+            isText={false}
           />
         ),
         "Tahun Audit": EwpList?.Year,

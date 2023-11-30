@@ -44,7 +44,9 @@ const kkptHtml = (year, source, id) => {
     <div class="header">
       <div style="text-align:center">
         <h2 style="color:#000">KERTAS KERJA PENGEMBANGAN TEMUAN</h2>
-        <h2 style="color:#000">${data?.JenisAudit}</h2>
+        <h2 style="color:#000">${
+          data?.JenisAudit ? data.JenisAudit.toUpperCase() : ""
+        }</h2>
         <h2 style="color:#000">${data?.AuditeeBranchName}</h2>
         <h2 style="color:#000">PERIODE AUDIT ${data?.Year}</h2>
       </div>
@@ -60,7 +62,9 @@ const kkptHtml = (year, source, id) => {
             <u>JUDUL TEMUAN</u>
           </strong>
         </h3>
-        <h3>${data?.KKPTTitle}</h3>
+        <h3>${
+          data?.KKPTTitle ? data.KKPTTitle : "Judul KKPT tidak ditemukan"
+        }</h3>
       </div>
     </div>
   </header>
@@ -76,7 +80,9 @@ const kkptHtml = (year, source, id) => {
             <b>Judul KKPT</b>
           </div>
           <div style="padding-left:10px">:</div>
-          <div style="padding-left:10px">${data?.KKPTTitle}</div>
+          <div style="padding-left:10px">${
+            data?.KKPTTitle ? data.KKPTTitle : "Judul KKPT tidak ditemukan"
+          }</div>
         </div>
         <div style="display:flex;margin-bottom:10px">
           <div style="width:100px">
@@ -180,8 +186,9 @@ const kkptHtml = (year, source, id) => {
               </tr>
           </thead>
           <tbody>
-          ${penyebabList.map((x) => {
-            return `<tr style="height: 18px;text-align: center">
+          ${penyebabList
+            .map((x) => {
+              return `<tr style="height: 18px;text-align: center">
                 <td style="height: 18px;">
                   ${x.PenyebabKode}
                 </td>
@@ -204,7 +211,8 @@ const kkptHtml = (year, source, id) => {
                   
                 </td>
               </tr>`;
-          })}
+            })
+            .join(" ")}
               
           </tbody>
       </table></article>
@@ -223,15 +231,20 @@ const kkptHtml = (year, source, id) => {
       <p><strong>B. Dampak Non Finansial</strong></p>
       <p>Skor Dampak Non-Finansial : ${
         data?.NonFinancialImpact
-          ? convertSkorDampak(data.NonFinancialImpact)
+          ? convertSkorDampak(data.NonFinancialImpact) +
+            " (" +
+            data?.Impact +
+            ")"
           : "<i><b>Tidak ada skor.</b></i>"
       }</p>
       <p>&nbsp;</p>
       <p><strong>C. Kesimpulan Dampak</strong></p>
       <p>Skor Dampak&nbsp; &nbsp;: ${
-        data?.Impact ? convertSkorDampak(data?.Impact) : "-"
+        data?.Impact
+          ? convertSkorDampak(data?.Impact) + " (" + data?.Impact + ")"
+          : "-"
       }</p>
-      <p>Keterangan.&nbsp; &nbsp; &nbsp;: ${
+      <p>Keterangan&nbsp; &nbsp; &nbsp; &nbsp;: ${
         data?.ImpactDescription ? data?.ImpactDescription : "**"
       }</p></article>
       <article><p lang="SV" dir="ltr"><strong><u>V. REKOMENDASI</u></strong></p>

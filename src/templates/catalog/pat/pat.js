@@ -603,7 +603,7 @@ export const patHtml = (id) => {
                         <td>${d.Orgeh ? d.Orgeh : "-"}</td>
                         <td>
                     ${d.Pembicara.map(
-                      (p, i) => `<p key={i}>${p[0] + " - " + p[1]}</p>`
+                      (p, i) => `<p key=${i}>${p[0] + " - " + p[1]}</p>`
                     ).join("")}
                         </td>
                         <td>

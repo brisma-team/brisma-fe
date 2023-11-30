@@ -19,16 +19,7 @@ const mapaHtml = (year, source, id) => {
       setApBody(mapaDetail.data.ap_body);
       setMcr(mapaDetail.data.mcr);
     }
-    console.log(mapaDetail);
   }, [mapaDetail]);
-
-  useEffect(() => {
-    if (anggaran?.length > 0) {
-      anggaran.map((d) => {
-        console.log(d.TipeAnggaran);
-      });
-    }
-  }, [anggaran]);
 
   useEffect(() => {
     mapaDetailIsLoading && data == undefined
@@ -45,7 +36,7 @@ const mapaHtml = (year, source, id) => {
     />
     <div class="header">
       <h2>PT Bank Rakyat Indonesia (PERSERO), Tbk</h2>
-      <h3 >AUDIT INTERN WILAYAH</h3>
+      <h3>AUDIT INTERN WILAYAH</h3>
     </div>
   </header>
   <div
@@ -59,7 +50,7 @@ const mapaHtml = (year, source, id) => {
       margin: 1.5rem 0 1rem 0;
     "
   >
-    <h3>REGULER AUDIT</h3>
+    <h3>${data?.TipeAudit ? data.TipeAudit.toUpperCase() : "-"}</h3>
     <h3>MEMORANDUM ANALISIS PERENCANAAN AUDIT</h3>
   </div>
   <article>
@@ -68,14 +59,14 @@ const mapaHtml = (year, source, id) => {
       ${
         data?.LatarBelakang
           ? data.LatarBelakang
-          : "<b><i>Data tidak ditemukan </i></b>"
+          : "<b><i>Latar Belakang tidak ditemukan </i></b>"
       }
     </section>
   </article>
   <article>
     <h4>II. TUJUAN</h4>
     <section>
-      ${data?.Tujuan ? data.Tujuan : "<b><i>Data tidak ditemukan </i></b>"}
+      ${data?.Tujuan ? data.Tujuan : "<b><i>Tujuan tidak ditemukan </i></b>"}
     </section>
   </article>
   <article>
@@ -84,7 +75,7 @@ const mapaHtml = (year, source, id) => {
       ${
         data?.SumberInformasi
           ? data.SumberInformasi
-          : "<b><i>Data tidak ditemukan </i></b>"
+          : "<b><i>Sumber Informasi tidak ditemukan </i></b>"
       }
     </section>
   </article>
@@ -101,17 +92,18 @@ const mapaHtml = (year, source, id) => {
           padding: 15px;
         }
       </style>
-      ${
-        apHeader
-          ? `<figure class="table" style="margin-top: 30px;">
+      <figure class="table" style="margin-top: 30px;">
         <p><strong>Unit Kerja: </strong></p>
-        <p>${apHeader?.UkerAuditee}</p>
+        <p>${apHeader?.UkerAuditee ? apHeader.UkerAuditee : "-"}</p>
         <p><strong>Aktivitas: </strong></p>
-        <p>${apHeader?.AktivitasName}</p>
+        <p>${apHeader?.AktivitasName ? apHeader.AktivitasName : "-"}</p>
         <p><strong>Analisa Aktivitas: </strong></p>
-        <p>${apHeader?.AnalisaAktivitas}</p>
+        <p>${apHeader?.AnalisaAktivitas ? apHeader.AnalisaAktivitas : "-"}</p>
               <p><strong>Ruang Lingkup Audit & Penugasan Audit:</strong></p>
-                <table>
+              ${
+                !apBody
+                  ? `<b><i>Ruang Lingkup Audit & Penugasan Audit tidak ditemukan</i></b>`
+                  : `<table>
                     <thead>
                       <tr>
                         <th rowspan="2" style="background-color: #3C64B1; color: white;"> <p style="text-align:center;">Manual Control</p></th>
@@ -121,7 +113,7 @@ const mapaHtml = (year, source, id) => {
                       </tr>
                     </thead>
                     ${
-                      apBody && apBody?.length > 0
+                      apBody?.length > 0
                         ? apBody
                             .filter(
                               (data) =>
@@ -134,10 +126,17 @@ const mapaHtml = (year, source, id) => {
                               return `
                               <tbody>
                                 <tr>
-                                  <td>${data?.ManualControlKode}</td>
-                                  <td>${data?.RiskIssueName} - ${
-                                data?.RiskIssueName
-                              }</td>
+                                  <td>${
+                                    data?.ManualControlKode
+                                      ? data.ManualControlKode
+                                      : "<i>Manual Control Code tidak ditemukan</i>"
+                                  }</td>
+                                  ${
+                                    data?.RiskIssueCode && data?.RiskIssueName
+                                      ? `<td>${data?.RiskIssueCode} - ${data?.RiskIssueName}</td>`
+                                      : `<td><i>Risk Issue tidak ditemukan</i></td>`
+                                  }
+                                  
                                   <td>${
                                     data?.JumlahSample ? data.JumlahSample : 0
                                   }</td>
@@ -146,7 +145,7 @@ const mapaHtml = (year, source, id) => {
                                       ? data.Auditor.pn +
                                         " - " +
                                         data.Auditor.name
-                                      : "Auditor tidak ditemukan"
+                                      : "<i>Auditor tidak ditemukan</i>"
                                   }</td>
                                 </tr>
                               </tbody>`;
@@ -154,27 +153,17 @@ const mapaHtml = (year, source, id) => {
                             .join("")
                         : ""
                     }
-            </table>
-      </figure>`
-          : "<b><i>Data tidak ditemukan </i></b>"
-      }
+            </table>`
+              }
+      </figure>
     </section>
   </article>
   <article>
     <h4>V. RINGKASAN DAFTAR PENUGASAN AUDIT</h4>
     <section>
       <div style="padding-left: 1rem; padding-right: 1rem">
-        <style>
-table {
-border: 1px solid;
-}
-th, td {
-border: 1px solid;
-padding: 15px;
-}
-</style>
 ${
-  mcr == undefined
+  mcr != undefined
     ? `
 <figure class="table">
     <table style="width: 100%;">
@@ -193,15 +182,28 @@ ${
               <tbody>
                 <tr>
                     <td>${index + 1}</td>
-                    <td>${data?.BranchName}</td>
                     <td>${
-                      data?.SubActivityName + " - " + data?.SubMajorName
+                      data?.BranchName
+                        ? data.BranchName
+                        : "<i>Unit Kerja tidak ditemukan</i>"
                     }</td>
-                    <td>${data?.RiskIssueCode}</td>
+                    ${
+                      data?.SubActivityName && data?.SubMajorName
+                        ? `<td>${
+                            data?.SubActivityName + " - " + data?.SubMajorName
+                          }</td>`
+                        : "<i>Manual Control tidak ditemukan</i>"
+                    }
+                    
+                    <td width="15%">${
+                      data?.RiskIssueCode
+                        ? data.RiskIssueCode
+                        : "<i>Risk Issue tidak ditemukan</i>"
+                    }</td>
                     <td>${
                       data?.Auditor?.pn && data?.Auditor?.name
                         ? data.Auditor.pn + " - " + data.Auditor.name
-                        : "Auditor tidak ditemukan"
+                        : "<i>Auditor tidak ditemukan</i>"
                     }</td>
                 </tr>
             </tbody>
@@ -211,7 +213,7 @@ ${
         
     </table>
 </figure>`
-    : "<b><i>Data tidak ditemukan </i></b>"
+    : "<b><i>Ringkasan Daftar Penugasan Audit tidak ditemukan </i></b>"
 }
       </div>
     </section>
@@ -223,7 +225,9 @@ ${
         ?.map((data) => {
           return `
     <strong><p>Manual Control: ${
-      data.SubActivityName + " - " + data.SubMajorName
+      data?.SubActivityName && data?.SubMajorName
+        ? data.SubActivityName + " - " + data.SubMajorName
+        : "<i>Data tidak ditemukan</i>"
     }</p></strong>
     <table>
         <thead>
@@ -235,9 +239,17 @@ ${
         <tbody>
                 <tr>
                     <td>
-                      <strong>${data.RiskIssueCode}</strong>
+                      <strong>${
+                        data?.RiskIssueCode
+                          ? data.RiskIssueCode
+                          : "<i>Risk Issue tidak ditemukan</i>"
+                      }</strong>
                     </td>
-                    <td>${data.ProgramAudit}</td>
+                    <td>${
+                      data?.ProgramAudit
+                        ? data.ProgramAudit
+                        : "<i>Program Audit tidak ditemukan</i>"
+                    }</td>
                   </tr>
         </tbody>
     </table>
@@ -251,15 +263,6 @@ ${
     <h4>VII. JADWAL AUDIT</h4>
     <section>
       <div style="padding-left: 1rem; padding-right: 1rem">
-        <style>
-table {
-border: 1px solid;
-}
-th, td {
-border: 1px solid;
-padding: 15px;
-}
-</style>
 <figure>
 <table style="width: 100%;">
     <thead>
@@ -372,23 +375,32 @@ padding: 15px;
         <td><span style="font-size:20px"><strong>Manager Audit</strong></span></td>
         <td><span style="font-size:20px">:</span></td>
         <td><span style="font-size:20px">
-        ${data?.ManajerAudit[0] ? data.ManajerAudit[0] : "**"} 
-        - ${data?.ManajerAudit[1] ? data.ManajerAudit[1] : "**"} 
+        ${
+          data?.ManajerAudit[0] && data?.ManajerAudit[1]
+            ? data.ManajerAudit[0] + " - " + data.ManajerAudit[1]
+            : "<i>ManajerAudit tidak ditemukan</i>"
+        }
 </span></td>
     </tr>
     <tr>
         <td><span style="font-size:20px"><strong>Ketua Tim Audit</strong></span></td>
         <td><span style="font-size:20px">:</span></td>
         <td><span style="font-size:20px">
-        ${data?.KetuaTimAudit[0] ? data.KetuaTimAudit[0] : "**"}  - ${
-        data?.KetuaTimAudit[1] ? data.KetuaTimAudit[1] : "**"
-      } 
+        ${
+          data?.KetuaTimAudit[0] && data?.KetuaTimAudit[1]
+            ? data.KetuaTimAudit[0] + " - " + data.KetuaTimAudit[1]
+            : "<i>Ketua Tim Audit tidak ditemukan</i>"
+        } 
 </span></td>
     </tr>
     <tr>
         <td><span style="font-size:20px"><strong>Anggota Tim Audit</strong></span></td>
         <td><span style="font-size:20px">:</span></td>
-        <td><span style="font-size:20px">-</span></td>
+        <td><span style="font-size:20px">${
+          data?.AnggotaTimAudit[0] && data?.AnggotaTimAudit[1]
+            ? data.AnggotaTimAudit[0] + " - " + data.AnggotaTimAudit[1]
+            : "<i>Ketua Tim Audit tidak ditemukan</i>"
+        } </span></td>
         </tr>
 </tbody>
 </table>

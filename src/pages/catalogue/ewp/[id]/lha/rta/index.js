@@ -33,7 +33,9 @@ const index = () => {
   const { rtaDetail, rtaDetailIsLoading } = useRTAById(
     params.year,
     params.type,
-    params.id
+    params.id,
+    "all",
+    5
   );
 
   useEffect(() => {

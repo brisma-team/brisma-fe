@@ -6,6 +6,7 @@ import {
   Card,
   Pagination,
   TableField,
+  TooltipField,
 } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
@@ -14,7 +15,8 @@ import { useKKPTList } from "@/data/catalog";
 import { IconClose, IconPlus } from "@/components/icons";
 import Textfield from "@atlaskit/textfield";
 import { ProjectInfo } from "@/components/molecules/catalog";
-import { BranchSelect } from "@/components/molecules/commons";
+import { BranchSelect, PekerjaSelect } from "@/components/molecules/commons";
+import shortenWord from "@/helpers/shortenWord";
 
 const index = () => {
   const router = useRouter();
@@ -34,6 +36,7 @@ const index = () => {
     limit: 5,
   });
   const [ukerSelect, setUkerSelect] = useState("");
+  const [auditorSelect, setAuditorSelect] = useState("");
 
   const [params, setParams] = useState({
     year: "2023",
@@ -57,6 +60,10 @@ const index = () => {
     setUkerSelect(String(val.branch_kode));
   }, []);
 
+  const handleAuditorChange = useCallback((val) => {
+    setAuditorSelect(String(val.pn));
+  }, []);
+
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
@@ -77,7 +84,7 @@ const index = () => {
     filter.subactivity,
     filter.submajor,
     filter.riskissue,
-    filter.auditor
+    auditorSelect
   );
   function debounce(func, delay) {
     let timeoutId;
@@ -92,22 +99,47 @@ const index = () => {
       [e.target.name]: e.target.value,
     });
   }, 500); // Adjust the delay (in milliseconds) as needed
-
   useEffect(() => {
     if (kkptList != undefined) {
       setTotalPages(kkptList.data.total_page);
       const mappingKKPT = kkptList.data.kkpt_list.map((data, key) => {
         return {
           No: (currentPage - 1) * 5 + key + 1,
-          "Judul KKPT": data.KKPTTitle,
+          "Judul KKPT": (
+            <TooltipField
+              textButton={
+                <p className="hover:text-blue-800 hover:underline">
+                  {shortenWord(data.KKPTTitle, 0, 30)}
+                </p>
+              }
+              content={data.KKPTTitle}
+              isLink={false}
+              isText={false}
+            />
+          ),
           "Unit Kerja": data.BranchName,
           Aktivitas: data.Activity,
           "Sub Aktivitas": data.SubActivity,
           "Sub Major": data.SubMajorCode + " - " + data.SubMajor,
-          "Risk Issue": data.RiskIssueCode + " - " + data.RiskIssueName,
+          "Risk Issue": (
+            <TooltipField
+              textButton={
+                <p className="hover:text-blue-800 hover:underline">
+                  {data.RiskIssueCode +
+                    " - " +
+                    shortenWord(data.RiskIssueName, 0, 30)}
+                </p>
+              }
+              content={data.RiskIssueCode + " - " + data.RiskIssueName}
+              isLink={false}
+              isText={false}
+            />
+          ),
           Auditor:
             params.type == "2"
-              ? data.Auditor.pn + " - " + data.Auditor.name
+              ? data.Auditor.pn +
+                " - " +
+                (data?.Auditor?.name ? data.Auditor.name : data.Auditor.nama)
               : data.PICAuditorPN + " - " + data.PICAuditorName,
           Aksi: (
             <div className="text-center col-span-3">
@@ -159,23 +191,14 @@ const index = () => {
                     className="mx-1"
                     name="kkpttitle"
                     onChange={debouncedHandleChange}
-                    elemAfterInput={
-                      <button className="justify-center">
-                        <IconClose size="large" />
-                      </button>
-                    }
+                    elemAfterInput={<ButtonIcon icon={<IconClose />} />}
                   />
                 </div>
                 <div className="w-48">
                   <BranchSelect
                     placeholder={"Unit Kerja"}
                     className={"mx-1"}
-                    customIcon={
-                      <ButtonIcon
-                        icon={<IconClose />}
-                        handleClick={() => handleBranchChange("")}
-                      />
-                    }
+                    customIcon={<ButtonIcon icon={<IconClose />} />}
                     handleChange={(e) => handleBranchChange(e.value)}
                   />
                 </div>
@@ -185,11 +208,7 @@ const index = () => {
                     className="mx-1"
                     name="activity"
                     onChange={debouncedHandleChange}
-                    elemAfterInput={
-                      <button className="justify-center">
-                        <IconClose size="large" />
-                      </button>
-                    }
+                    elemAfterInput={<ButtonIcon icon={<IconClose />} />}
                   />
                 </div>
                 <div className="w-48">
@@ -198,11 +217,7 @@ const index = () => {
                     className="mx-1"
                     name="subactivity"
                     onChange={debouncedHandleChange}
-                    elemAfterInput={
-                      <button className="justify-center">
-                        <IconClose size="large" />
-                      </button>
-                    }
+                    elemAfterInput={<ButtonIcon icon={<IconClose />} />}
                   />
                 </div>
               </div>
@@ -213,11 +228,7 @@ const index = () => {
                     className="mx-1"
                     name="submajor"
                     onChange={debouncedHandleChange}
-                    elemAfterInput={
-                      <button className="justify-center">
-                        <IconClose size="large" />
-                      </button>
-                    }
+                    elemAfterInput={<ButtonIcon icon={<IconClose />} />}
                   />
                 </div>
                 <div className="w-48">
@@ -226,24 +237,15 @@ const index = () => {
                     className="mx-1"
                     name="riskissue"
                     onChange={debouncedHandleChange}
-                    elemAfterInput={
-                      <button className="justify-center">
-                        <IconClose size="large" />
-                      </button>
-                    }
+                    elemAfterInput={<ButtonIcon icon={<IconClose />} />}
                   />
                 </div>
                 <div className="w-48">
-                  <Textfield
-                    placeholder="Auditor"
-                    className="mx-1"
-                    name="auditor"
-                    onChange={debouncedHandleChange}
-                    elemAfterInput={
-                      <button className="justify-center">
-                        <IconClose size="large" />
-                      </button>
-                    }
+                  <PekerjaSelect
+                    placeholder={"Auditor"}
+                    className={"mx-1"}
+                    customIcon={<ButtonIcon icon={<IconClose />} />}
+                    handleChange={(e) => handleAuditorChange(e.value)}
                   />
                 </div>
                 <div className="w-48"></div>
@@ -274,7 +276,7 @@ const index = () => {
                     subactivity: filter.subactivity,
                     submajor: filter.submajor,
                     riskissue: filter.riskissue,
-                    auditor: filter.auditor,
+                    auditor: auditorSelect,
                   },
                 }}
               >
@@ -294,15 +296,15 @@ const index = () => {
                     "Aksi",
                   ]}
                   columnWidths={[
-                    "2rem",
-                    "16rem",
-                    "10rem",
-                    "10rem",
-                    "10rem",
-                    "15rem",
-                    "20rem",
-                    "10rem",
-                    "4rem",
+                    "5%",
+                    "14%",
+                    "12%",
+                    "12%",
+                    "14%",
+                    "14%",
+                    "12%",
+                    "12%",
+                    "5%",
                   ]}
                   items={kkpt}
                 />
