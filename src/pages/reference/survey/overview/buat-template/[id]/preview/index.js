@@ -31,7 +31,7 @@ const index = () => {
     { name: "Form Survei", path: "/reference/survey/overview" },
     {
       name: "Kuesioner / Preview",
-      path: `/reference/survey/buat-template/${id}/preview`,
+      path: `/reference/survey/overview/buat-template/${id}/preview`,
     },
   ];
 
