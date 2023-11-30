@@ -1,9 +1,11 @@
 import useAddendumMAPAById from "@/data/catalog/ewp/useAddendumMAPAById";
+import { loadingSwal } from "@/helpers";
 import { useState, useEffect } from "react";
 
 const addendumMapaHtml = (year, id) => {
   const [data, setData] = useState();
-  const { addendumMAPAData } = useAddendumMAPAById(id);
+  const { addendumMAPAData, addendumMAPADataIsLoading } =
+    useAddendumMAPAById(id);
 
   useEffect(() => {
     if (addendumMAPAData !== undefined) {
@@ -11,12 +13,18 @@ const addendumMapaHtml = (year, id) => {
     }
   }, [addendumMAPAData]);
 
+  useEffect(() => {
+    addendumMAPADataIsLoading ? loadingSwal() : loadingSwal("close");
+  }, [addendumMAPADataIsLoading]);
+
+  console.log(addendumMAPAData);
+
   const remapPart = (part, part_name, detail_part) => {
     switch (part) {
       case "analisis_perencanaan_mcr":
-        return `<div>Risk Issue</div>
+        return `<div><b>Risk Issue</b></div>
             <br />
-            <div>Uker: ${
+            <div><b>Uker:</b> ${
               detail_part?.ref_auditee_branch_kode
                 ? detail_part?.ref_auditee_branch_kode
                 : "-"
@@ -25,42 +33,46 @@ const addendumMapaHtml = (year, id) => {
             ? detail_part?.ref_auditee_orgeh_kode
             : "-"
         } - ${detail_part?.ref_auditee_branch_name}</div>
-            <div>Aktivitas: ${
+            <div><b>Aktivitas:</b> ${
               detail_part?.ref_aktivitas_name
                 ? detail_part?.ref_aktivitas_name
                 : "-"
             }</div>
-            <div>Subaktivitas: ${
-              detail_part?.ref_sub_aktivitas_name
-                ? detail_part?.ref_sub_aktivitas_name
+            <div><b>Sub Aktivitas:</b> ${
+              detail_part?.mcr[0]?.ref_sub_aktivitas_name
+                ? detail_part.mcr[0].ref_sub_aktivitas_name
                 : "-"
             }</div>`;
-      case "saved_sample_addendum":
-        return `<div>Analisa Sample</div>
+      case "saved_sample_adendum":
+        return `<div><b><u>Analisa Sample</u></b></div>
             <br />
-            <div>Uker: ${
-              detail_part[0].branch_kode ? detail_part[0].branch_kode : "-"
-            } / ${detail_part[0].orgeh_kode} - ${
-          detail_part[0].branch_name
-        }</div>
-            <div>Aktivitas: ${
-              detail_part[0].aktivitas_name
-                ? detail_part[0].aktivitas_name
+            <div><b>Uker:</b> ${
+              detail_part[0]?.branch_kode &&
+              detail_part[0]?.orgeh_kode &&
+              detail_part[0]?.branch_name
+                ? detail_part[0].branch_kode +
+                  " / " +
+                  detail_part[0].orgeh_kode +
+                  " - " +
+                  detail_part[0]?.branch_name
                 : "-"
             }</div>
-            <div>Subaktivitas: ${
-              detail_part[0].sub_aktivitas_name
-                ? detail_part[0].sub_aktivitas_name
+            <div><b>Aktivitas:</b> ${
+              detail_part?.aktivitas_name ? detail_part.aktivitas_name : "-"
+            }</div>
+            <div><b>Sub Aktivitas:</b> ${
+              detail_part?.mcr?.ref_sub_aktivitas_name
+                ? detail_part.mcr.ref_sub_aktivitas_name
                 : "-"
             }</div>
-            <div>Submajor: ${
-              detail_part[0].sub_major_kode
-                ? detail_part[0].sub_major_kode
+            <div><b>Sub Major:</b> ${
+              detail_part?.mcr?.ref_sub_major_kode
+                ? detail_part.mcr.ref_sub_major_kode
                 : "-"
             }</div>
-            <div>Risk Issue: ${
-              detail_part[0].risk_issue_kode
-                ? detail_part[0].risk_issue_kode
+            <div><b>Risk Issue:</b> ${
+              detail_part?.mcr?.ref_risk_issue_kode
+                ? detail_part.mcr.ref_risk_issue_kode
                 : "-"
             }</div>`;
       case "penugasan_kkpa":
@@ -83,47 +95,55 @@ const addendumMapaHtml = (year, id) => {
 
   const remapDokumenAddendum = (part, content) => {
     switch (part) {
-      case "saved_sample_addendum":
+      case "saved_sample_adendum":
         return remapSample(content);
       case "analisis_perencanaan_mcr":
-        return remapRiskIssue(content) || "Tetap";
+        return remapRiskIssue(content) || "<b>Tetap</b>";
     }
   };
 
   const remapSample = (data) => {
-    return data.map(
-      (item) => `
-          <div>Terdapat:</div>
-          <div>Csv: ${item.samples.csv.length} sampel</div>
-          <div>File: ${item.samples.file.length} sampel</div>
-          <div>Monber: ${item.samples.monber.length} sampel</div>
-          <div>Frd: ${item.samples.frd.length} sampel</div>`
-    );
+    return `
+      <div><b><u>Terdapat:</u></b></div>
+      <br />
+      <div><b>Csv: </b>${
+        data?.samples ? data?.samples?.length : "0"
+      } sampel</div>
+      <div><b>File: </b>0 sampel</div>
+      <div><b>Monber: </b>0 sampel</div>
+      <div><b>Frd: </b>0 sampel</div>`;
   };
 
   const remapRiskIssue = (data) => {
-    return data?.mcr?.map(
-      (item_risk) =>
-        `<ul style={{ listStyleType: 'circle', marginLeft: '15px' }}>
+    return data?.mcr
+      ?.map(
+        (item_risk) =>
+          `<ul style={{ listStyleType: 'circle', marginLeft: '15px'}}>
           <li>
             <div className="mb-5">
-              <div className="mb-2">Risk Issue: ${
+              <div className="mb-2"><b>Risk Issue:</b> ${
                 item_risk.ref_risk_issue_kode || ""
               }</div>
-              <div>Terdapat Sample:</div>
-              <div>Csv: ${item_risk?.samples?.csv?.length || ""} sample</div>
-              <div>File: ${item_risk?.samples?.file?.length || ""} sample</div>
-              <div>Monber: ${
-                item_risk?.samples?.monber?.length || ""
+              <br/>
+              <div><u><b>Terdapat</b></u></div>
+              <div><b>Csv:</b> ${
+                item_risk?.mapa_sample ? item_risk.mapa_sample.length : "0"
               } sample</div>
-              <div>Frd: ${item_risk?.samples?.frd?.length || ""} sample</div>
+              <div><b>File:</b> 0 sample</div>
+              <div><b>Monber:</b> 0 sample</div>
+              <div><b>Frd:</b> 0 sample</div>
             </div>
+            <br/>
           </li>
+          
         </ul>`
-    );
+      )
+      .join(" ");
   };
 
-  return `
+  return addendumMAPADataIsLoading
+    ? `<p>Loading data...</p>`
+    : `
   <main>
     <header>
       <div class="header">
@@ -183,20 +203,24 @@ const addendumMapaHtml = (year, id) => {
             return `<tbody>
             
         <tr key=${index}>
-            <td>
+            <td width="25%" style="padding: 10px;">
                 <p style="text-align:center;">
                     ${remapPart(c.Part, c.PartName, c.Sebelum)}
                 </p>
             </td>
-            <td style="padding: 10px;">
+            <td width="15%" style="padding: 10px">
                ${remapDokumenAddendum(c.Part, c.Sebelum)}
             </td>
-            <td style="padding: 10px;">
+            <td width="15%" style="padding: 10px;">
               ${remapDokumenAddendum(c.Part, c.Sesudah)}
             </td>
             <td>
                 <p style="text-align:center; padding: 10px;">
-                    ${c.Alasan}
+                    ${
+                      c.Alasan
+                        ? c.Alasan
+                        : "<i><b>Alasan tidak ditemukan</b></i>"
+                    }
                 </p>
             </td>
         </tr>

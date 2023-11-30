@@ -28,6 +28,7 @@ import calculateTimeDifference from "./calculateTimeDifference";
 import fetchApi from "./fetchApi";
 import generateAlphabet from "./generateAlphabet";
 import capitalizeEveryWord from "./capitalizeEveryWord";
+import infoSwal from "./infoSwal";
 
 export {
   loadingSwal,
@@ -60,4 +61,5 @@ export {
   fetchApi,
   generateAlphabet,
   capitalizeEveryWord,
+  infoSwal,
 };

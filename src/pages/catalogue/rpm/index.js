@@ -4,12 +4,11 @@ import { MainLayout } from "@/layouts";
 import { Breadcrumbs, Card, Pagination, TableField } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { IconArrowRight, IconPlus } from "@/components/icons";
-
 import useCatalogRPM from "@/data/catalog/useCatalogRPM";
 import { ModalSelectSourceData } from "@/components/molecules/catalog";
+import { useSelector } from "react-redux";
 
 const index = () => {
-  const { data } = useCatalogRPM();
   const breadcrumbs = [
     { name: "Catalogue", path: "/catalogue" },
     { name: "R.P.M", path: "/catalogue/rpm" },
@@ -17,11 +16,30 @@ const index = () => {
   const [catRpm, setCatRpm] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+
+  const searchParamObject = useSelector(
+    (state) => state.catalogRPM.searchParamObjectCAT
+  );
 
   useEffect(() => {
-    console.log(currentPage);
+    if (!searchParamObject.year || !searchParamObject.source) {
+      setShowFilter(true);
+    }
+  }, [searchParamObject]);
+
+  const { data } = useCatalogRPM(
+    searchParamObject.year,
+    searchParamObject.source,
+    currentPage,
+    5,
+    searchParamObject.projectName || ""
+  );
+
+  useEffect(() => {
     if (data !== undefined) {
-      const mappingCatRpm = data.data.map((v, key) => {
+      setTotalPage(data?.totalPages);
+      const mappingCatRpm = data?.data?.map((v, key) => {
         return {
           No: key + 1,
           "Project ID": v?.ProjectID,
@@ -46,6 +64,7 @@ const index = () => {
       setCatRpm(mappingCatRpm);
     }
   }, [data]);
+
   return (
     <MainLayout>
       <ModalSelectSourceData
@@ -90,7 +109,7 @@ const index = () => {
                 />
               </div>
               <div className="flex justify-center mt-5">
-                <Pagination pages={1} setCurrentPage={setCurrentPage} />
+                <Pagination pages={totalPage} setCurrentPage={setCurrentPage} />
               </div>
             </div>
           </Card>

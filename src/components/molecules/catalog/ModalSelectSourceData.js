@@ -1,12 +1,25 @@
-import { useEffect, useState } from "react";
-import { Modal, Card, TextInput } from "@/components/atoms";
+import { useCallback, useEffect, useState } from "react";
+import {
+  Modal,
+  Card,
+  TextInput,
+  TooltipField,
+  Select,
+  // ButtonIcon,
+} from "@/components/atoms";
 import { IconArrowLeft, IconArrowRight } from "@/components/icons";
 import Button from "@atlaskit/button";
 import Search from "@atlaskit/icon/glyph/editor/search";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { setSearchParamsCATEWP } from "@/slices/catalog/ewp/catalogEWPSlice";
-import { errorSwal, loadingSwal, successSwal } from "@/helpers";
+import { setSearchParamsCATPAT } from "@/slices/catalog/pat/catalogPATSlice";
+import { setSearchParamsCATRPM } from "@/slices/catalog/rpm/catalogRPMSlice";
+import { infoSwal, loadingSwal, successSwal } from "@/helpers";
+import {
+  // AuditOfficeSelect,
+  CategorySelect,
+} from "../commons";
 
 const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
   const router = useRouter();
@@ -18,7 +31,13 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
   const [arr, setArr] = useState(0);
   const [url, setUrl] = useState("");
   const [projectName, setProjectName] = useState("");
-  const [faseAdendum, setFaseAdendum] = useState(0);
+  const [auditType, setAuditType] = useState("");
+  const [auditOffice, setAuditOffice] = useState("");
+  const [faseAddendum, setFaseAddendum] = useState("");
+
+  const handleAuditTypeChange = useCallback((val) => {
+    setAuditType(String(val.label));
+  }, []);
   const ar = [
     [
       {
@@ -69,7 +88,7 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
     [
       {
         tahun: "2022",
-        is_disabled: false,
+        is_disabled: true,
       },
       {
         tahun: "2023",
@@ -109,15 +128,67 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
       year,
       source,
       projectName,
-      faseAdendum,
+      auditType,
       sourceType,
     };
     if (year == "") {
-      errorSwal("Pilih tahun terlebih dahulu").then(() => setShowModal(true));
+      infoSwal("Pilih tahun terlebih dahulu").then(() => setShowModal(true));
     } else {
       // Kirim data ke Redux
       dispatch(setSearchParamsCATEWP(searchParamsCatEWP));
       loadingSwal();
+      handleReset();
+      setShowModal(false);
+      router.push(url);
+      successSwal("Pencarian berhasil.");
+    }
+  };
+
+  const handleReset = useCallback(() => {
+    setProjectName("");
+    setAuditOffice("");
+    setFaseAddendum("");
+    setAuditType("");
+  }, []);
+
+  const handleSubmitCatalogPAT = (url) => {
+    // Dapatkan nilai dari state di sini
+    const searchParamsCatPAT = {
+      year,
+      source,
+      projectName,
+      auditOffice,
+      faseAddendum,
+      sourceType,
+    };
+    if (year == "") {
+      infoSwal("Pilih tahun terlebih dahulu").then(() => setShowModal(true));
+    } else {
+      // Kirim data ke Redux
+      dispatch(setSearchParamsCATPAT(searchParamsCatPAT));
+      loadingSwal();
+      handleReset();
+      setShowModal(false);
+      router.push(url);
+      successSwal("Pencarian berhasil.");
+    }
+  };
+
+  const handleSubmitCatalogRPM = (url) => {
+    // Dapatkan nilai dari state di sini
+    const searchParamsCatRPM = {
+      year,
+      source,
+      projectName,
+      sourceType,
+    };
+    if (year == "") {
+      infoSwal("Pilih tahun terlebih dahulu").then(() => setShowModal(true));
+    } else {
+      // Kirim data ke Redux
+      dispatch(setSearchParamsCATRPM(searchParamsCatRPM));
+      loadingSwal();
+      handleReset();
       setShowModal(false);
       router.push(url);
       successSwal("Pencarian berhasil.");
@@ -188,8 +259,35 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                 <h4 className="p-3 font-semibold text-lg">Pilih Tahun</h4>
                 <div className="grid grid-cols-3 gap-2 p-4">
                   {ar[source - 1].map((item, i) => {
-                    return (
+                    return item.is_disabled ? (
+                      <TooltipField
+                        key={i}
+                        textButton={
+                          <button
+                            className={`p-3 text-sm border border-slate-300 rounded-md shadow-sm ${
+                              item.is_disabled
+                                ? "opacity-50"
+                                : "hover:text-white hover:bg-gray-800"
+                            } ${
+                              arr == i && i != 0 ? "bg-gray-800 text-white" : ""
+                            }`}
+                            onClick={() => handleClickYear(item.tahun, i)}
+                            disabled={item.is_disabled}
+                          >
+                            Data {item.tahun}
+                          </button>
+                        }
+                        content={
+                          <i>
+                            <b>Data belum tersedia</b>
+                          </i>
+                        }
+                        isLink={false}
+                        isText={false}
+                      />
+                    ) : (
                       <button
+                        key={i}
                         className={`p-3 text-sm border border-slate-300 rounded-md shadow-sm ${
                           item.is_disabled
                             ? "opacity-50"
@@ -197,7 +295,6 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                         } ${
                           arr == i && i != 0 ? "bg-gray-800 text-white" : ""
                         }`}
-                        key={i}
                         onClick={() => handleClickYear(item.tahun, i)}
                         disabled={item.is_disabled}
                       >
@@ -253,12 +350,32 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                         Tipe Audit
                       </div>
                       <div className="p-1 pl-10 col-span-3">
-                        <TextInput
+                        {/* <TextInput
                           onChange={(e) => {
-                            setFaseAdendum(e.target.value);
+                            setAuditType(e.target.value);
                           }}
                           placeholder="Masukkan Tipe Audit"
-                        />
+                        /> */}
+                        {source == 1 && (
+                          <Select
+                            placeholder={"Masukkan Tipe Audit"}
+                            optionValue={[
+                              { label: "Regular Audit", value: "REG" },
+                              { label: "Fraud Audit", value: "FRAUD" },
+                              { label: "Mandatory", value: "SA-BI" },
+                              { label: "Management Request", value: "SA-MG" },
+                              { label: "Special Audit 1M", value: "SA-1M" },
+                            ]}
+                            onChange={(e) => handleAuditTypeChange(e)}
+                          />
+                        )}
+                        {source == 2 && (
+                          <CategorySelect
+                            placeholder={"Masukkan Tipe Audit"}
+                            // customIcon={<ButtonIcon icon={<IconClose />} />}
+                            handleChange={(e) => handleAuditTypeChange(e)}
+                          />
+                        )}
                       </div>
                     </>
                   )}
@@ -268,7 +385,17 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                         Kantor Audit
                       </div>
                       <div className="p-1 pl-10 col-span-3">
-                        <TextInput placeholder="Masukkan Kantor Audit" />
+                        {/* <AuditOfficeSelect
+                          placeholder={"Masukkan Kantor Audit"}
+                          // customIcon={<ButtonIcon icon={<IconClose />} />}
+                          handleChange={(e) => console.log(e)}
+                        /> */}
+                        <TextInput
+                          onChange={(e) => {
+                            setAuditOffice(e.target.value);
+                          }}
+                          placeholder="Masukkan Kantor Audit"
+                        />
                       </div>
                       <div className="p-3 font-semibold text-sm">
                         Fase Addendum
@@ -276,6 +403,9 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                       <div className="p-1 pl-10 col-span-3">
                         <TextInput
                           isNumber={true}
+                          onChange={(e) => {
+                            setFaseAddendum(e.target.value);
+                          }}
                           placeholder="Masukkan Riwayat Addendum"
                         />
                       </div>
@@ -285,14 +415,24 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                   <div className="flex gap-2 p-1 pl-10 col-span-3 py-3">
                     <Button
                       appearance="default"
-                      onClick={() => setMenu(0)}
+                      onClick={() => {
+                        setMenu(0);
+                        setYear("");
+                        setArr(0);
+                      }}
                       iconBefore={<IconArrowLeft size="medium" />}
                     >
                       Kembali
                     </Button>
                     <Button
                       appearance="primary"
-                      onClick={() => handleSubmitCatalogEWP(url)}
+                      onClick={() =>
+                        sourceType == 1
+                          ? handleSubmitCatalogPAT(url)
+                          : sourceType == 2
+                          ? handleSubmitCatalogEWP(url)
+                          : handleSubmitCatalogRPM(url)
+                      }
                       iconBefore={<Search size="medium" />}
                     >
                       Tampilkan

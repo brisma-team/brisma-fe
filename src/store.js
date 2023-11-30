@@ -29,6 +29,8 @@ import beritaAcaraEntranceEWPReducer from "./slices/ewp/konvensional/entrance/be
 
 // CATALOG
 import catalogEWPReducer from "./slices/catalog/ewp/catalogEWPSlice";
+import catalogPATReducer from "./slices/catalog/pat/catalogPATSlice";
+import catalogRPMReducer from "./slices/catalog/rpm/catalogRPMSlice";
 
 // REFERENCE
 import createTemplateReferenceSlice from "./slices/reference/createTemplateReferenceSlice";
@@ -54,6 +56,8 @@ export const store = configureStore({
     ukerAssessmentMapaEWP: ukerAssessmentMapaEWPReducer,
     planningAnalysisMapaEWP: planningAnalysisMapaEWPReducer,
     catalogEWP: catalogEWPReducer,
+    catalogPAT: catalogPATReducer,
+    catalogRPM: catalogRPMReducer,
     assignmentMapaEWP: assignmentMapaEWPReducer,
     auditScheduleMapaEWP: auditScheduleMapaEWPReducer,
     budgetMapaEWP: budgetMapaEWPReducer,

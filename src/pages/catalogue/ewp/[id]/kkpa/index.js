@@ -1,6 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card, TableField, Pagination } from "@/components/atoms";
+import {
+  Breadcrumbs,
+  Card,
+  TableField,
+  Pagination,
+  TooltipField,
+  ButtonIcon,
+} from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -9,6 +16,8 @@ import { useKKPAList } from "@/data/catalog";
 import { IconClose, IconPlus } from "@/components/icons";
 import Textfield from "@atlaskit/textfield";
 import { ProjectInfo } from "@/components/molecules/catalog";
+import shortenWord from "@/helpers/shortenWord";
+import { PekerjaSelect } from "@/components/molecules/commons";
 
 const index = () => {
   const router = useRouter();
@@ -17,6 +26,7 @@ const index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [showFilter, setShowFilter] = useState(false);
+  const [auditorSelect, setAuditorSelect] = useState("");
   const [filter, setFilter] = useState({
     activity: "",
     subactivity: "",
@@ -61,7 +71,7 @@ const index = () => {
     filter.subactivity,
     filter.submajor,
     filter.riskissue,
-    filter.auditor
+    auditorSelect
   );
 
   function debounce(func, delay) {
@@ -78,16 +88,32 @@ const index = () => {
     });
   }, 500); // Adjust the delay (in milliseconds) as needed
 
+  const handleAuditorChange = useCallback((val) => {
+    setAuditorSelect(String(val.pn));
+  }, []);
   useEffect(() => {
     if (kkpaList != undefined) {
       setTotalPages(kkpaList.data.total_page);
       const mappingKKPA = kkpaList.data.kkpa_list.map((data, key) => {
         return {
-          No: key + 1,
+          No: (currentPage - 1) * 5 + key + 1,
           Aktivitas: data.Activity,
           "Sub Aktivitas": data.SubActivity,
           "Sub Major": data.SubMajorCode + " - " + data.SubMajor,
-          "Risk Issue": data.RiskIssueCode + " - " + data.RiskIssueName,
+          "Risk Issue": (
+            <TooltipField
+              textButton={
+                <p className="hover:text-blue-800 hover:underline">
+                  {data.RiskIssueCode +
+                    " - " +
+                    shortenWord(data.RiskIssueName, 0, 30)}
+                </p>
+              }
+              content={data.RiskIssueCode + " - " + data.RiskIssueName}
+              isLink={false}
+              isText={false}
+            />
+          ),
           Auditor:
             params.type == "2"
               ? data.Auditor.pn + " - " + data.Auditor.name
@@ -192,7 +218,7 @@ const index = () => {
                   />
                 </div>
                 <div className="w-48">
-                  <Textfield
+                  {/* <Textfield
                     placeholder="Auditor"
                     className="mx-1"
                     name="auditor"
@@ -202,6 +228,12 @@ const index = () => {
                         <IconClose size="large" />
                       </button>
                     }
+                  /> */}
+                  <PekerjaSelect
+                    placeholder={"Auditor"}
+                    className={"mx-1"}
+                    customIcon={<ButtonIcon icon={<IconClose />} />}
+                    handleChange={(e) => handleAuditorChange(e.value)}
                   />
                 </div>
                 <div className="w-48"></div>

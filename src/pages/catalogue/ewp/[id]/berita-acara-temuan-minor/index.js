@@ -94,7 +94,7 @@ const index = () => {
                 <Card>
                   <div className="w-full h-full px-3 p-5">
                     <u className="font-bold text-base">
-                      Kumpulan KKPT ~ ({list.length} Temuan Minor)
+                      Kumpulan KKPT - ({list.length} Temuan Minor)
                     </u>
                     {list.length == 0 ? (
                       <p className="text-base">
@@ -141,7 +141,7 @@ const index = () => {
                         1 +
                         ". (kkptid: " +
                         data.KKPTID +
-                        ") ~ " +
+                        ") - " +
                         data.KKPTTitle}
                     </h5>
                     <DocumentViewer

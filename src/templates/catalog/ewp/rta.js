@@ -1,12 +1,30 @@
 import { convertToRupiah } from "@/helpers";
 const rtaHtml = (data, penyebabList = [], rekomendasiList = []) => {
+  const convertSkorDampak = (skorDampak) => {
+    if (skorDampak == "ST" || skorDampak == 5) {
+      return "Sangat Tinggi";
+    } else if (skorDampak == "T" || skorDampak == 4) {
+      return "Tinggi";
+    } else if (skorDampak == "SD" || skorDampak == 3) {
+      return "Sedang";
+    } else if (skorDampak == "R" || skorDampak == 2) {
+      return "Rendah";
+    } else if (skorDampak == "SR" || skorDampak == 1) {
+      return "Sangat Rendah";
+    } else {
+      return "Tidak ada skor dampak.";
+    }
+  };
+
   return `
   <main>
   <header>
     <div class="header">
       <div style="text-align:center">
         <h2 style="color:#000">KERTAS KERJA PENGEMBANGAN TEMUAN</h2>
-        <h2 style="color:#000">${data?.JenisAudit}</h2>
+        <h2 style="color:#000">${
+          data?.JenisAudit ? data.JenisAudit.toUpperCase() : ""
+        }</h2>
         <h2 style="color:#000">${data?.AuditeeBranchName}</h2>
         <h2 style="color:#000">PERIODE AUDIT ${data?.Year}</h2>
       </div>
@@ -22,7 +40,9 @@ const rtaHtml = (data, penyebabList = [], rekomendasiList = []) => {
             <u>JUDUL TEMUAN</u>
           </strong>
         </h3>
-        <h3>${data?.KKPTTitle}</h3>
+        <h3>${
+          data?.KKPTTitle ? data.KKPTTitle : "Judul KKPT tidak ditemukan"
+        }</h3>
       </div>
     </div>
   </header>
@@ -38,7 +58,9 @@ const rtaHtml = (data, penyebabList = [], rekomendasiList = []) => {
             <b>Judul KKPT</b>
           </div>
           <div style="padding-left:10px">:</div>
-          <div style="padding-left:10px">${data?.KKPTTitle}</div>
+          <div style="padding-left:10px">${
+            data?.KKPTTitle ? data.KKPTTitle : "Judul KKPT tidak ditemukan"
+          }</div>
         </div>
         <div style="display:flex;margin-bottom:10px">
           <div style="width:100px">
@@ -73,7 +95,7 @@ const rtaHtml = (data, penyebabList = [], rekomendasiList = []) => {
           </div>
           <div style="padding-left:10px">:</div>
           <div style="padding-left:10px"> ${
-            data?.ProductCode ? data?.ProductCode : ""
+            data?.ProductCode.length > 0 ? data.ProductName : "-"
           } </div>
         </div>
       </article>
@@ -109,29 +131,31 @@ const rtaHtml = (data, penyebabList = [], rekomendasiList = []) => {
           <div style="width: 100px;"><b>Auditee</b></div>
           <div style="padding-left: 10px;">:</div>
           <div style="padding-left: 10px;"> 
-          ${data?.AuditeeBranchName ? data.AuditeeBranchName : "**"}
+          ${data?.AuditeeBranchName ? data.AuditeeBranchName : "-"}
           </div>
       </div>
   </p></article>
       <article><div style="margin-bottom: 40px;">
       <p style="margin-bottom: 20px;"><strong>Kondisi</strong></p>
       <div style="border-style: solid; padding: 4px;">${
-        data?.Condition ? data?.Condition : "**"
+        data?.Condition ? data?.Condition : "<i>Kondisi tidak ditemukan</i>"
       }</div>
   </div>
   <div style="margin-bottom: 40px;">
       <p style="margin-bottom: 20px;"><strong>Kelemahan Pengendalian Intern</strong></p>
       <div style="border-style: solid;  padding: 4px;">${
-        data?.KPI ? data?.KPI : "**"
+        data?.KPI
+          ? data?.KPI
+          : "<i>Kelemahan Pengendalian Intern tidak ditemukan</i>"
       }</div>
   </div></article>
       <article><div style="margin-bottom: 40px;">
   <p lang="SV" dir="ltr"><strong><u>II. KRITERIA</u></strong></p>
       <div style="border-style: solid;  padding: 4px;">${
-        data?.Criteria ? data?.Criteria : "**"
+        data?.Criteria ? data?.Criteria : "<i>Kriteria tidak ditemukan</i>"
       }</div>
   </div></article>
-      <article><p lang="SV" dir="ltr"><strong><u>III. PENYEBAB</u></strong></p>
+      <article><br><br><br><br><p lang="SV" dir="ltr"><strong><u>III. PENYEBAB</u></strong></p>
       <table style="border-collapse: collapse; width: 100%; height: 90px;" border="1">
           <thead>
               <tr style="height: 18px;">
@@ -142,8 +166,11 @@ const rtaHtml = (data, penyebabList = [], rekomendasiList = []) => {
               </tr>
           </thead>
           <tbody>
-          ${penyebabList.map((x) => {
-            return `<tr style="height: 18px;">
+          ${
+            penyebabList?.length > 0
+              ? penyebabList
+                  .map((x) => {
+                    return `<tr style="height: 18px;text-align: center">
                 <td style="height: 18px;">
                   ${x.PenyebabKode}
                 </td>
@@ -153,59 +180,52 @@ const rtaHtml = (data, penyebabList = [], rekomendasiList = []) => {
                 <td style="height: 18px;">
                   ${x.PenyebabDesc}
                 </td>
-                <td style="height: 18px;">
-                ${x.PN.map(
+                <td style="height: 18px;width:100px">
+                ${x?.PN?.map(
                   (person) => `<li>
-                    ${person.pn.pernr}
+                    ${person.pn.pernr ? person.pn.pernr : "-"}
                   </li>`
-                )}
+                ).join(" ")}
                   
                 </td>
               </tr>`;
-          })}
+                  })
+                  .join(" ")
+              : "<tr><td colspan='4' style='text-align:center'><i>Tidak ada data</i></td></tr>"
+          }
               
           </tbody>
       </table></article>
       <article><p lang="SV" dir="ltr"><strong><u>IV. DAMPAK</u></strong></p>
       <p><strong>A. Dampak Finansial</strong></p>
       <p>Skor Dampak Finansial : ${
-        data?.FinancialImpact ? data.FinancialImpact : ""
+        data?.FinancialImpact == ""
+          ? convertSkorDampak(data.FinancialImpact)
+          : "-"
       }</p>
-      <p>Total Kerugian: ${data?.FinancialLoss ? data.FinancialLoss : "-"}</p>
-      <p>Gross: ${
-        data?.Gross ? "Rp. " + convertToRupiah(data?.Gross) + ",-" : ""
+      <p>Total Kerugian: ${
+        data?.FinancialLoss ? "Rp. " + convertToRupiah(data.FinancialLoss) : "-"
       }</p>
-      <p>Table List Kerugian:</p>
-      <table style="border-collapse: collapse; width: 100%; height: 90px;" border="1">
-      <thead>
-      <tr style="height: 18px;">
-      <th style=" height: 18px; text-align: center;background-color: #3C64B1; color: white;">Jumlah Kerugian</th>
-      <th style=" height: 18px; text-align: center;background-color: #3C64B1; color: white;">jenis Kerugian</th>
-      <th style=" height: 18px; text-align: center;background-color: #3C64B1; color: white;">Keteranagn</th>
-      </tr>
-      </thead>
-     <tbody>
-     <tr style="height: 18px;">
-            <td style=" height: 18px;">
-            </td>
-            <td style=" height: 18px;">
-            </td>
-            <td style=" height: 18px;">
-            </td>
-       </tr>
-        
-     </tbody>
-     </table>
+      <p>Gross: ${data?.Gross ? "Rp. " + convertToRupiah(data.Gross) : "-"}</p>
       <p>&nbsp;</p>
       <p><strong>B. Dampak Non Finansial</strong></p>
       <p>Skor Dampak Non-Finansial : ${
-        data?.NonFinancialImpact ? data.NonFinancialImpact : ""
+        data?.NonFinancialImpact
+          ? convertSkorDampak(data.NonFinancialImpact) +
+            " (" +
+            data?.NonFinancialImpact +
+            ")"
+          : "<i><b>Tidak ada skor</b></i>"
       }</p>
       <p>&nbsp;</p>
       <p><strong>C. Kesimpulan Dampak</strong></p>
-      <p>Skor Dampak&nbsp; &nbsp;: ${data?.Impact ? data?.Impact : "**"}</p>
-      <p>Keterangan.&nbsp; &nbsp; &nbsp;: ${
-        data?.ImpactDescription ? data?.ImpactDescription : "**"
+      <p>Skor Dampak&nbsp; &nbsp;: ${
+        data?.Impact
+          ? convertSkorDampak(data?.Impact) + " (" + data?.Impact + ")"
+          : "-"
+      }</p>
+      <p>Keterangan&nbsp; &nbsp; &nbsp; &nbsp;: ${
+        data?.ImpactDescription ? data?.ImpactDescription : "-"
       }</p></article>
       <article><p lang="SV" dir="ltr"><strong><u>V. REKOMENDASI</u></strong></p>
     <table style="border-collapse: collapse; width: 100%; height: 90px;" border="1">
@@ -218,14 +238,20 @@ const rtaHtml = (data, penyebabList = [], rekomendasiList = []) => {
      </tr>
     </thead>
      <tbody>
-     ${rekomendasiList.map((item) => {
-       return `<tr style="height: 18px;">
-      <td style=" height: 18px;">${item.TipeRekomendasiName}</td>
-      <td style=" height: 18px;">${item.BranchTujuan}</td>
-      <td style=" height: 18px;">${item.OrgehTujuan}</td>
+     ${
+       rekomendasiList?.length > 0
+         ? rekomendasiList
+             .map((item) => {
+               return `<tr style="height: 18px;">
+      <td style=" height: 18px;text-align: center">${item.TipeRekomendasiName}</td>
+      <td style=" height: 18px;text-align: center">${item.BranchTujuan}</td>
+      <td style=" height: 18px;text-align: center">${item.OrgehTujuan}</td>
       <td style=" height: 18px;">${item.ItemDesc}</td>
     </tr>`;
-     })}
+             })
+             .join(" ")
+         : `<tr style="height: 18px;"><td colspan="4" style=" height: 18px;text-align: center"><i>Tidak ada data</i></td></tr>`
+     }
        
      </tbody>
      </table>

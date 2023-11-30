@@ -62,6 +62,7 @@ import FormLabel from "./FormLabel";
 import CustomSelect from "./CustomSelect";
 import TypeSurveySelect from "./TypeSurveySelect";
 import CardContentHeaderFooter from "./CardContentHeaderFooter";
+import AuditOfficeSelect from "./AuditOfficeSelect";
 
 export {
   BackButton,
@@ -128,4 +129,5 @@ export {
   CustomSelect,
   TypeSurveySelect,
   CardContentHeaderFooter,
+  AuditOfficeSelect,
 };

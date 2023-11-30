@@ -6,6 +6,7 @@ import { IconArrowRight, IconPlus } from "@/components/icons";
 import Button from "@atlaskit/button";
 import useCatalogPAT from "@/data/catalog/useCatalogPAT";
 import { ModalSelectSourceData } from "@/components/molecules/catalog";
+import { useSelector } from "react-redux";
 
 const index = () => {
   const breadcrumbs = [
@@ -17,20 +18,31 @@ const index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilter, setShowFilter] = useState(false);
   const [totalPage, setTotalPage] = useState(1);
-  const [patData, setPatData] = useState([]);
 
-  const { patListData } = useCatalogPAT(2023, 2, currentPage);
+  const searchParamObject = useSelector(
+    (state) => state.catalogPAT.searchParamObjectCAT
+  );
+
+  useEffect(() => {
+    if (!searchParamObject.year || !searchParamObject.source) {
+      setShowFilter(true);
+    }
+  }, [searchParamObject]);
+
+  const { patListData } = useCatalogPAT(
+    searchParamObject.year,
+    searchParamObject.source,
+    currentPage,
+    5,
+    searchParamObject.projectName || "",
+    searchParamObject.auditOffice || "",
+    searchParamObject.faseAddendum || 0
+  );
 
   useEffect(() => {
     if (patListData !== undefined) {
-      setPatData(patListData.data);
       setTotalPage(patListData.totalPages);
-    }
-  }, [patListData]);
-
-  useEffect(() => {
-    if (patData !== undefined) {
-      const mappingCatPat = patData.map((v, key) => {
+      const mappingCatPat = patListData?.data?.map((v, key) => {
         return {
           No: (currentPage - 1) * 5 + key + 1,
           "Nama Project": v?.name,
@@ -54,7 +66,7 @@ const index = () => {
       });
       setCatPat(mappingCatPat);
     }
-  }, [patData]);
+  }, [patListData]);
 
   return (
     <MainLayout>
