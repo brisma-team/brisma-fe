@@ -34,9 +34,14 @@ const DropdownCard = ({ actions }) => {
           return (
             <DropdownItem
               onClick={() => (closeDropdown(), v?.action())}
+              isDisabled={v?.isDisabled}
               key={i}
             >
-              {v.label}
+              <p
+                className={`${v?.isDisabled && `text-gray-300`} font-semibold`}
+              >
+                {v.label}
+              </p>
             </DropdownItem>
           );
         })}

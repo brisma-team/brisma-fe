@@ -1,10 +1,18 @@
 import { N800 } from "@atlaskit/theme/colors";
 import { token } from "@atlaskit/tokens";
 
-const CardContentHeaderFooter = ({ header, footer, children }) => {
+const CardContentHeaderFooter = ({
+  header,
+  footer,
+  children,
+  width,
+  className,
+}) => {
   return (
     <div
-      className="w-full h-full rounded flex flex-col items-center"
+      className={`${
+        width || `w-full`
+      } h-full rounded flex flex-col items-center ${className}`}
       style={{
         color: token("color.text", N800),
         borderRadius: "10px",
