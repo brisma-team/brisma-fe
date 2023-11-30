@@ -18,6 +18,7 @@ const TabInformation = ({
   handleSubmit,
   handleClickAddKuesioner,
   handleClickOpenModalApproval,
+  handleClickFormula,
 }) => {
   const payloadInformasi = useSelector(
     (state) => state.createTemplateReference.payloadInformasi
@@ -52,6 +53,7 @@ const TabInformation = ({
                       nama: payloadInformasi.jenis_survey_name,
                     },
                   }}
+                  isDisabled={!isNewTemplate}
                 />
               }
             />
@@ -61,7 +63,9 @@ const TabInformation = ({
                 <TextInput
                   isDisabled={true}
                   value={
-                    isNewTemplate ? "" : payloadInformasi.project_template_id
+                    isNewTemplate
+                      ? ""
+                      : payloadInformasi?.project_template_id || ""
                   }
                 />
               }
@@ -83,7 +87,7 @@ const TabInformation = ({
                     }
                   />
                 }
-                value={payloadInformasi.judul}
+                value={payloadInformasi?.judul || ""}
                 onChange={(e) => handleChangeForm("judul", e.target.value)}
               />
             }
@@ -94,7 +98,7 @@ const TabInformation = ({
               <TextAreaField
                 placeholder={"Deskripsi template"}
                 resize="auto"
-                value={payloadInformasi.deskripsi}
+                value={payloadInformasi?.deskripsi || ""}
                 handleChange={(e) =>
                   handleChangeForm("deskripsi", e.target.value)
                 }
@@ -131,6 +135,7 @@ const TabInformation = ({
                 <ButtonField
                   text={"Rumus Nilai"}
                   disabled={isFormDisabled || isNewTemplate}
+                  handler={handleClickFormula}
                 />
               </div>
               <div
