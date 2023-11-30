@@ -46,7 +46,7 @@ import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id } = useRouter().query;
+  const { id, isOpenModalApproval } = useRouter().query;
   const router = useRouter();
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -54,7 +54,12 @@ const index = () => {
   const [isFormDisabled, setIsFormDisabled] = useState(true);
   const [isUnderChange, setIsUnderChange] = useState(false);
   const [isUpdateGuidline, setIsUpdateGuidline] = useState(false);
+
   const [currentContentStage, setCurrentContentStage] = useState(1);
+  const [
+    currentContentModalAddQuestionStage,
+    setCurrentContentModalAddQuestionStage,
+  ] = useState(1);
 
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [showModalAddQuestion, setShowModalAddQuestion] = useState(false);
@@ -100,6 +105,10 @@ const index = () => {
   useEffect(() => {
     setIsNewTemplate(id === "new");
   }, [id]);
+
+  useEffect(() => {
+    if (isOpenModalApproval) setShowModalApproval(true);
+  }, [isOpenModalApproval]);
 
   useEffect(() => {
     if (!informationError) {
@@ -183,7 +192,7 @@ const index = () => {
       { name: "Form Survei", path: "/reference/survey/overview" },
       {
         name: templateName,
-        path: "/reference/survey/buat-template",
+        path: "/reference/survey/overview/buat-template",
       },
     ]);
   }, [currentContentStage]);
@@ -193,9 +202,6 @@ const index = () => {
     const maker = workflow?.data?.initiator;
     const approvers = workflow?.data?.approver;
 
-    console.log("workflow => ", workflow?.data);
-    console.log("maker => ", maker);
-    console.log("approvers => ", approvers);
     const newWorkflowData = {
       ...workflowData,
       status_approver: workflowInfo?.status_persetujuan,
@@ -295,17 +301,40 @@ const index = () => {
     setCurrentContentStage(2);
   };
 
+  const handleClickFormula = () => {
+    router.push(`${id}/rumus`);
+  };
+
   const handleMutateCategory = () => {
     categoryMutate();
   };
 
   const handleSaveInformation = async () => {
+    const message = isNewTemplate
+      ? "Apakah anda yakin ingin membuat template survey?"
+      : "Apakah anda yakin ingin melakukan perubahan informasi pada template survey ini?";
+
+    const confirm = await confirmationSwal(message);
+    if (!confirm.value) {
+      return;
+    }
+
     loadingSwal();
+
+    const apiPayload = isNewTemplate
+      ? payloadInformasi
+      : { ...payloadInformasi, id };
+
     await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey`,
-      payloadInformasi
-    ).then((res) => router.push(`${res?.data?.id}`));
+      apiPayload
+    ).then((res) => {
+      if (isNewTemplate) {
+        router.push(`${res?.data?.id}`);
+      }
+    });
+
     loadingSwal("close");
   };
   // [ END ] Handler for content stage informasi
@@ -375,10 +404,24 @@ const index = () => {
     indexQuestion,
     isModalUpdate
   ) => {
-    setShowModalGuidelines(true);
     setSelectedCategoryIndex(indexCategory);
     setSelectedQuestionIndex(indexQuestion);
-    if (isModalUpdate) setIsUpdateGuidline(true);
+    if (isModalUpdate) {
+      setIsUpdateGuidline(true);
+      setShowModalAddQuestion(true);
+      setCurrentContentModalAddQuestionStage(2);
+
+      dispatch(
+        setPayloadPertanyaan({
+          ...payloadPertanyaan,
+          guideline:
+            payloadKuesioner[indexCategory]?.pertanyaan[indexQuestion]
+              ?.guideline,
+        })
+      );
+    } else {
+      setShowModalGuidelines(true);
+    }
   };
 
   const handleCloseModalGuidelines = () => {
@@ -400,6 +443,10 @@ const index = () => {
   // [ END ] Handler for modal guidelines
 
   // [ START ] Handler for modal add question
+  const handleSetCurrentModalAddQuestionStage = (index) => {
+    setCurrentContentModalAddQuestionStage(index);
+  };
+
   const handleClickOpenModalAddQuestion = (indexCategory) => {
     setShowModalAddQuestion(true);
     setSelectedCategoryIndex(indexCategory);
@@ -407,6 +454,7 @@ const index = () => {
 
   const handleCloseModalAddQuestion = () => {
     setShowModalAddQuestion(false);
+    setIsUpdateGuidline(false);
     dispatch(resetPayloadPertanyaan());
   };
 
@@ -431,13 +479,19 @@ const index = () => {
   };
 
   const handleSubmitButtonAddQuestion = async () => {
-    if (!payloadPertanyaan.tipe_pertanyaan_kode) {
-      await errorSwal("Jenis pertanyaan wajib diisi!");
+    const newCategory = JSON.parse(JSON.stringify(payloadKuesioner));
+    const newQuestion = [...newCategory[selectedCategoryIndex].pertanyaan];
+    if (isUpdateGuidline) {
+      newQuestion[selectedQuestionIndex].guideline =
+        payloadPertanyaan.guideline;
+    } else {
+      if (!isUpdateGuidline && !payloadPertanyaan.tipe_pertanyaan_kode) {
+        await errorSwal("Jenis pertanyaan wajib diisi!");
+        return;
+      }
+      newQuestion.push(payloadPertanyaan);
     }
 
-    const newCategory = [...payloadKuesioner];
-    const newQuestion = [...newCategory[selectedCategoryIndex].pertanyaan];
-    newQuestion.push(payloadPertanyaan);
     newCategory[selectedCategoryIndex] = {
       ...newCategory[selectedCategoryIndex],
       pertanyaan: newQuestion,
@@ -445,9 +499,11 @@ const index = () => {
     dispatch(setPayloadKuesioner(newCategory));
     dispatch(resetPayloadPertanyaan());
     setShowModalAddQuestion(false);
+    setIsUpdateGuidline(false);
     handleUnderChange();
     await successSwal("Berhasil menambahkan pertanyaan");
   };
+
   // [ END ] Handler for modal add question
 
   // [ START ] Handler for question
@@ -684,14 +740,6 @@ const index = () => {
   };
   // [ END ] Handler for modal approval
 
-  useEffect(() => {
-    console.log("payload kuesioner => ", payloadKuesioner);
-  }, [payloadKuesioner]);
-
-  // useEffect(() => {
-  //   console.log("payload pertanyaan => ", payloadPertanyaan);
-  // }, [payloadPertanyaan]);
-
   return (
     <LayoutSurveyReference>
       <div className="w-[71rem] max-h-screen overflow-y-scroll pb-16">
@@ -713,6 +761,7 @@ const index = () => {
               handleClickAddKuesioner={handleClickKuesioner}
               handleSubmit={handleSaveInformation}
               handleClickOpenModalApproval={handleClickOpenModalApproval}
+              handleClickFormula={handleClickFormula}
             />
           ) : (
             <TabKuesioner
@@ -760,6 +809,9 @@ const index = () => {
       <ModalAddQuestion
         data={payloadPertanyaan}
         showModal={showModalAddQuestion}
+        currentContentStage={currentContentModalAddQuestionStage}
+        isUpdateModal={isUpdateGuidline}
+        handleChangeCurrentContentStage={handleSetCurrentModalAddQuestionStage}
         handleCloseModal={handleCloseModalAddQuestion}
         handleSubmit={handleSubmitButtonAddQuestion}
         handleChangePayloadQuestion={handleChangePayloadQuestion}
