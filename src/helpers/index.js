@@ -29,6 +29,7 @@ import fetchApi from "./fetchApi";
 import generateAlphabet from "./generateAlphabet";
 import capitalizeEveryWord from "./capitalizeEveryWord";
 import infoSwal from "./infoSwal";
+import previewPrintDocument from "./previewPrintDocument";
 
 export {
   loadingSwal,
@@ -62,4 +63,5 @@ export {
   generateAlphabet,
   capitalizeEveryWord,
   infoSwal,
+  previewPrintDocument,
 };
