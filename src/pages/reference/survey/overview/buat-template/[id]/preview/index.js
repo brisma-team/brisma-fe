@@ -21,6 +21,7 @@ import { useRouter } from "next/router";
 import { useKuesioner } from "@/data/reference/admin-survey/informasi";
 import { useCategory } from "@/data/reference/admin-survey/kuesioner";
 import { IconArrowLeft } from "@/components/icons";
+import { previewPrintDocument } from "@/helpers";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -76,6 +77,10 @@ const index = () => {
       dispatch(resetPayloadKuesioner());
     }
   }, [kuesioner]);
+
+  const handleClickDownloadDocument = () => {
+    previewPrintDocument("content-doc");
+  };
 
   // [ START ] Handler for modal guidelines
   const handleClickOpenModalGuidelines = (indexCategory, indexQuestion) => {
@@ -157,7 +162,7 @@ const index = () => {
             <div className="rounded w-28 bg-atlasian-blue-light">
               <ButtonField
                 text="Download"
-                handler={() => console.log("download")}
+                handler={handleClickDownloadDocument}
               />
             </div>
           </div>

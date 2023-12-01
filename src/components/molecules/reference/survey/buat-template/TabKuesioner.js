@@ -16,7 +16,7 @@ const TabKuesioner = ({
   );
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4" id="content-doc">
       {dataKuesioner?.length ? (
         dataKuesioner.map((category_quesioner, i) => {
           return (
