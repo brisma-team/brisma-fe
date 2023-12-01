@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select, { components } from "@atlaskit/select";
+import { useSurveyType } from "@/data/reference";
 
 const TypeSurveySelect = ({
   handleChange,
@@ -10,12 +11,20 @@ const TypeSurveySelect = ({
   customIcon,
   isDisabled,
 }) => {
-  const [options, setOptions] = useState([
-    { label: "CSS", value: { kode: "CSS", nama: "CSS" } },
-    { label: "Lingkungan", value: { kode: "AL", nama: "Lingkungan" } },
-    { label: "Peer Review", value: { kode: "PR", nama: "Peer Review" } },
-    { label: "SBP", value: { kode: "SBP", nama: "SBP" } },
-  ]);
+  const [options, setOptions] = useState([]);
+
+  const { surveyType } = useSurveyType();
+
+  useEffect(() => {
+    const mapping = surveyType?.data?.map((survey) => {
+      return {
+        label: survey.nama,
+        value: { survey },
+      };
+    });
+
+    setOptions(mapping);
+  }, [surveyType]);
 
   const DropdownIndicator = (props) => {
     return (
