@@ -19,6 +19,8 @@ import ImageAddCategory from "../../public/images/icon-add-category.png";
 import ImageTrash from "../../public/images/icon-trash.png";
 import ImageEdit from "../../public/images/icon-edit.png";
 import ImageMore from "../../public/images/icon-more.png";
+import ImageStar from "../../public/images/icon-star.png";
+import ImageDownload from "../../public/images/icon-download.png";
 
 export {
   ImageBrismaVertical,
@@ -42,4 +44,6 @@ export {
   ImageTrash,
   ImageEdit,
   ImageMore,
+  ImageStar,
+  ImageDownload,
 };
