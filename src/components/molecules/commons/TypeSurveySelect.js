@@ -17,9 +17,10 @@ const TypeSurveySelect = ({
 
   useEffect(() => {
     const mapping = surveyType?.data?.map((survey) => {
+      const { kode, nama } = survey;
       return {
         label: survey.nama,
-        value: { survey },
+        value: { kode, nama },
       };
     });
 
