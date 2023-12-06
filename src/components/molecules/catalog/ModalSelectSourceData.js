@@ -84,6 +84,10 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
         tahun: "2022",
         is_disabled: false,
       },
+      {
+        tahun: "2023",
+        is_disabled: false,
+      },
     ],
     [
       {

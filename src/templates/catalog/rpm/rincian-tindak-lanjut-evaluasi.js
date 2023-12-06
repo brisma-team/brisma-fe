@@ -105,7 +105,7 @@ const rteHtml = (data, actionPlan) => {
                     ${ap[1]
                       .map((tl, x) => {
                         let tl2 = JSON.parse(tl);
-                        return `<li key=${x}>${tl2.deskripsi} - <a href="${tl2.attachment} target="_blank">Lampiran</a></li>`;
+                        return `<li key=${x}>${tl2.deskripsi}`;
                       })
                       .join("")}
                         

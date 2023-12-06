@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { useEWPAllAttachment } from "@/data/catalog";
 import shortenWord from "@/helpers/shortenWord";
 import { ProjectInfo } from "@/components/molecules/catalog";
+import { getCookie } from "cookies-next";
 
 const index = () => {
   const router = useRouter();
@@ -157,25 +158,33 @@ const index = () => {
           return {
             No: (currentPage - 1) * 5 + key + 1,
             "Nama Dokumen": shortenWord(
-              params.type == "1" ? v?.AttachmentName : v?.AttachmentName.berkas,
+              params.type == "1" ? v?.Description : v?.AttachmentName.berkas,
               0,
               45
             ),
+            Tipe:
+              v?.ContentType == "application/pdf" || params.type == "2"
+                ? "PDF"
+                : "File",
             "Tanggal Dibuat": v?.CreatedAt.split(".")[0],
             Aksi: (
               <div className="grid grid-cols-3 text-center col-span-3">
-                <div className="align-middle px-2">
-                  <Button shouldFitContainer isDisabled appearance="primary">
-                    History
-                  </Button>
-                </div>
-                <div className="align-middle px-2">
-                  <Button shouldFitContainer isDisabled appearance="primary">
-                    Preview
-                  </Button>
-                </div>
                 <div className="align-middle px-2 ">
-                  <Button shouldFitContainer isDisabled appearance="primary">
+                  <Button
+                    shouldFitContainer
+                    onClick={() =>
+                      params.type == "1"
+                        ? downloadFile(
+                            v?.ID,
+                            params.type == "1"
+                              ? v?.Description
+                              : v?.AttachmentName.berkas,
+                            v?.ContentType
+                          )
+                        : window.open(v?.FileURL[0], "_ blank")
+                    }
+                    appearance="primary"
+                  >
                     Download
                   </Button>
                 </div>
@@ -187,6 +196,51 @@ const index = () => {
       setEwpAttachment(mappingAttachment);
     }
   }, [allAttachmentData]);
+
+  const downloadFile = async (id, name, contentTypes) => {
+    try {
+      // const response = await useDownload(params.year, id); // Replace with your actual API endpoint
+      const token = getCookie("token");
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL_CATALOG}/catalog/attachment/ewp/${params.year}/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": contentTypes,
+          },
+        }
+      );
+      const blob = await response.blob();
+
+      // Create a Blob URL and initiate the download
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `ewp_attachment_${name}${getFileExtension(contentTypes)}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Release the Blob URL after the download
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+    }
+  };
+
+  const getFileExtension = (contentType) => {
+    // Add logic to determine file extension based on content type
+    switch (contentType) {
+      case "application/pdf":
+        return ".pdf";
+      case "application/octet-stream":
+        return ".rar";
+      // Add more cases for other content types if needed
+      default:
+        return "";
+    }
+  };
 
   return (
     <MainLayout>
@@ -225,8 +279,14 @@ const index = () => {
               <div className="text-xl font-bold p-5">Seluruh Attachment</div>
               <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
                 <TableField
-                  headers={["No", "Nama Dokumen", "Tanggal Dibuat", "Aksi"]}
-                  columnWidths={["5%", "35%", "30%", "30%"]}
+                  headers={[
+                    "No",
+                    "Nama Dokumen",
+                    "Tipe",
+                    "Tanggal Dibuat",
+                    "Aksi",
+                  ]}
+                  columnWidths={["5%", "25%", "10%", "20%", "40%"]}
                   items={ewpAttachment}
                 />
               </div>

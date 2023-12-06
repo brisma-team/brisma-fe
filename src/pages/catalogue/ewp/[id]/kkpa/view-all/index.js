@@ -1,15 +1,16 @@
-import { Breadcrumbs, PageTitle } from "@/components/atoms";
+import { Breadcrumbs, ButtonField, PageTitle } from "@/components/atoms";
 import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 import { useViewAllKKPA } from "@/data/catalog";
 import { loadingSwal } from "@/helpers";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import dateLocaleString from "@/helpers/dateLocaleString";
 const index = () => {
   const router = useRouter();
 
   const [list, setList] = useState([]);
+  const [limit, setLimit] = useState(5);
   const [params, setParams] = useState({
     year: "2023",
     type: "2",
@@ -44,6 +45,7 @@ const index = () => {
     params.year,
     params.type,
     params.id,
+    limit,
     params.activity,
     params.subactivity,
     params.submajor,
@@ -60,6 +62,10 @@ const index = () => {
   useEffect(() => {
     kkpaAllDetailIsLoading ? loadingSwal() : loadingSwal("close");
   }, [kkpaAllDetailIsLoading]);
+
+  const handleClickLoadMore = useCallback(() => {
+    setLimit((prev) => prev + 5);
+  }, []);
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
@@ -356,6 +362,22 @@ const index = () => {
                   </div>
                 );
               })}
+              {!kkpaAllDetailIsLoading ? (
+                limit < kkpaAllDetail?.data?.total_data ? (
+                  <div className="w-[59rem] bg-blue-800 rounded-md hover:bg-brisma">
+                    <ButtonField
+                      text={"Load More"}
+                      handler={handleClickLoadMore}
+                    />
+                  </div>
+                ) : (
+                  ""
+                )
+              ) : (
+                <h4 className="text-center my-8">
+                  Loading data, mohon tunggu...
+                </h4>
+              )}
             </div>
           </div>
         </div>
