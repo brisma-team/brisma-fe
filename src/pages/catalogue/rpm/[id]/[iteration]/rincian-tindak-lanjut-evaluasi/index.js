@@ -14,7 +14,6 @@ const index = () => {
   const [lists, setLists] = useState([]);
   const [kkptId, setKkptId] = useState(0);
   const [kkptinfo, setKkptinfo] = useState({});
-  const [currentPage, setCurrentPage] = useState(1);
   const [params, setParams] = useState({
     year: "2023",
     type: "2",
@@ -40,7 +39,7 @@ const index = () => {
     "all",
     5
   );
-  const { rteDetail } = useRTEById(kkptId, currentPage);
+  const { rteDetail } = useRTEById(kkptId, 1);
 
   useEffect(() => {
     if (rteDetail !== undefined) {
@@ -54,7 +53,6 @@ const index = () => {
       setList(rtaDetail.data.kkpt);
     }
   }, [rtaDetail]);
-  setCurrentPage(1);
 
   const handleKkptId = useCallback((selected) => {
     setKkptId(selected);
@@ -119,9 +117,6 @@ const index = () => {
                         );
                       })
                     )}
-                    {/* <div className="flex justify-center mt-5">
-                      <Pagination pages={5} setCurrentPage={setCurrentPage} />
-                    </div> */}
                   </div>
                 </Card>
               </div>
