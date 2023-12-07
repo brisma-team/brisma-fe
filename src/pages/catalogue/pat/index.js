@@ -41,8 +41,8 @@ const index = () => {
 
   useEffect(() => {
     if (patListData !== undefined) {
-      setTotalPage(patListData.totalPages);
-      const mappingCatPat = patListData?.data?.map((v, key) => {
+      setTotalPage(patListData?.data?.total_page);
+      const mappingCatPat = patListData?.data?.pat?.map((v, key) => {
         return {
           No: (currentPage - 1) * 5 + key + 1,
           "Nama Project": v?.name,

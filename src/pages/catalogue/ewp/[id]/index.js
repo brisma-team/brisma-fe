@@ -152,9 +152,10 @@ const index = () => {
 
   useEffect(() => {
     if (allAttachmentData != undefined) {
-      setTotalPages(allAttachmentData.data.total_page);
-      const mappingAttachment = allAttachmentData.data.all_attachment.map(
+      setTotalPages(allAttachmentData?.data?.total_page);
+      const mappingAttachment = allAttachmentData?.data?.all_attachment?.map(
         (v, key) => {
+          console.log(params.type, v?.FileURL[0]);
           return {
             No: (currentPage - 1) * 5 + key + 1,
             "Nama Dokumen": shortenWord(
@@ -172,20 +173,30 @@ const index = () => {
                 <div className="align-middle px-2 ">
                   <Button
                     shouldFitContainer
+                    isDisabled={
+                      params.type == "2" && v?.FileURL[0] == undefined
+                        ? true
+                        : false
+                    }
                     onClick={() =>
                       params.type == "1"
                         ? downloadFile(
                             v?.ID,
                             params.type == "1"
-                              ? v?.Description
+                              ? v?.AttachmentName
                               : v?.AttachmentName.berkas,
                             v?.ContentType
                           )
-                        : window.open(v?.FileURL[0], "_ blank")
+                        : window.open(
+                            v?.FileURL?.length > 0 ? v?.FileURL[0] : "",
+                            "_ blank"
+                          )
                     }
                     appearance="primary"
                   >
-                    Download
+                    {params.type == "2" && v?.FileURL[0] == undefined
+                      ? "Tidak tersedia"
+                      : "Download"}
                   </Button>
                 </div>
               </div>
@@ -277,7 +288,7 @@ const index = () => {
           <Card>
             <div className="w-full h-full px-6">
               <div className="text-xl font-bold p-5">Seluruh Attachment</div>
-              <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
+              <div className="max-h-[39rem] overflow-y-scroll px-2 mb-5">
                 <TableField
                   headers={[
                     "No",
@@ -286,7 +297,7 @@ const index = () => {
                     "Tanggal Dibuat",
                     "Aksi",
                   ]}
-                  columnWidths={["5%", "25%", "10%", "20%", "40%"]}
+                  columnWidths={["5%", "15%", "10%", "20%", "50%"]}
                   items={ewpAttachment}
                 />
               </div>

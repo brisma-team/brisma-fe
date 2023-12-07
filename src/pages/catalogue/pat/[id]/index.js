@@ -54,7 +54,6 @@ const index = () => {
         return {
           No: key + 1,
           "Jenis Dokumen": data.jenis,
-          "Jumlah Dokumen": data.jumlah,
           Aksi: (
             <Button
               href={data.url}
@@ -93,8 +92,8 @@ const index = () => {
               <div className="text-xl font-bold p-5">Pustaka Dokumen</div>
               <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
                 <TableField
-                  headers={["No", "Jenis Dokumen", "Jumlah Dokumen", "Aksi"]}
-                  columnWidths={["10%", "40%", "30%", "20%"]}
+                  headers={["No", "Jenis Dokumen", "Aksi"]}
+                  columnWidths={["10%", "40%", "20%"]}
                   items={typeList}
                 />
               </div>

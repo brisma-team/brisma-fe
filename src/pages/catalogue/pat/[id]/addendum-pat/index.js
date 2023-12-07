@@ -57,7 +57,7 @@ const index = () => {
           "Nama Maker": data.AddendumMaker.nama,
           "Jabatan Maker": data.AddendumMaker.jabatan,
           "Addendum Ke": data.AddendumNumber,
-          "Tanggal Addendum": data.AddendumTime,
+          "Tanggal Addendum": data.AddendumTime.split(".")[0],
           Aksi: (
             <Button
               href={"addendum-pat/" + data.AddendumPATID}
