@@ -11,26 +11,33 @@ export const patHtml = (id) => {
   const [targetAudit, setTargetAudit] = useState(undefined);
   const [anggaran, setAnggaran] = useState(undefined);
   const [anggaranDinas, setAnggaranDinas] = useState(undefined);
+  const [anggaranLainnya, setAnggaranLainnya] = useState(undefined);
   const { overviewDetail, overviewDetailIsLoading } = useOverviewPAT(id);
 
   useEffect(() => {
     if (overviewDetail !== undefined) {
-      setData(overviewDetail.data.pat);
-      setJadwalKegiatan(overviewDetail.data.jadwal_kegiatan);
-      setJadwalSBP(overviewDetail.data.jadwal_sbp);
-      setJadwalLainnya(overviewDetail.data.jadwal_lainnya);
-      setTimAudit(overviewDetail.data.tim_audit);
-      setTargetAudit(overviewDetail.data.target_audit);
-      setAnggaran(overviewDetail.data.anggaran.totalAnggaran);
-      setAnggaranDinas(overviewDetail.data.anggaran.allAnggaranDinas);
+      const datas = overviewDetail.data;
+      setData(datas.pat);
+      setJadwalKegiatan(datas.jadwal_kegiatan);
+      setJadwalSBP(datas.jadwal_sbp);
+      setJadwalLainnya(datas.jadwal_lainnya);
+      setTimAudit(datas.tim_audit);
+      setTargetAudit(datas.target_audit);
+      setAnggaran(datas.anggaran.totalAnggaran);
+      setAnggaranDinas(datas.anggaran.allAnggaranDinas);
+      setAnggaranLainnya(datas.anggaran.allAnggaranKegiatan);
     }
   }, [overviewDetail]);
+  console.log(anggaranLainnya);
 
   useEffect(() => {
     overviewDetailIsLoading && data == undefined
       ? loadingSwal()
       : loadingSwal("close");
   }, [overviewDetailIsLoading]);
+
+  const numberWithCommas = (x) =>
+    x ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : 0;
 
   const prepareDataAnggaran = (tahun, x) => {
     const total_dinas = x.allAnggaranDinas;
@@ -924,176 +931,196 @@ export const patHtml = (id) => {
     <section>
       <h4 style="text-align: center; margin-top: 1rem;">Biaya Perjalanan Dinas Jabatan</h4>
       <figure class="table">
-    <table style="table-layout: fixed; width: 100%;">
-        <thead>
-            <tr>
-                <th rowspan="2" style="background-color: #3C64B1; color: white; word-wrap: break-word;">
-                    <p style="text-align:center;">
-                        No
-                    </p>
-                </th>
-                <th rowspan="2" style="background-color: #3C64B1; color: white; word-wrap: break-word;">
-                    <p style="text-align:center;">
-                        Kegiatan
-                    </p>
-                </th>
-                <th colspan="2" style="background-color: #3C64B1; color: white; word-wrap: break-word;">
-                    <p style="text-align:center;">
-                        Peserta
-                    </p>
-                </th>
-                <th rowspan="2" style="background-color: #3C64B1; color: white; word-wrap: break-word;">
-                    <p style="text-align:center;">
-                        Tempat/Kegiatan Auditee
-                    </p>
-                </th>
-                <th rowspan="2" style="background-color: #3C64B1; color: white; word-wrap: break-word;">
-                    <p style="text-align:center;">
-                        Bulan Kegiatan
-                    </p>
-                </th>
-                <th rowspan="2" style="background-color: #3C64B1; color: white; word-wrap: break-word;">
-                    <p style="text-align:center;">
-                        Lama Kegiatan
-                    </p>
-                </th>
-                <th colspan="5" style="background-color: #3C64B1; color: white; word-wrap: break-word;">
-                    <p style="text-align:center;">
-                        Biaya Perjalanan Dinas Jabatan
-                    </p>
-                </th>
-            </tr>
-            <tr>
-                <th style="background-color: #3C64B1; color: white; word-wrap: break-word;">
-                    <p style="text-align:center;">
-                        Jabatan / Golongan / Pangkat
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white; word-wrap: break-word;">
-                    <p style="text-align:center;">
-                        Jumlah Orang
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white; word-wrap: break-word;">
-                    <p style="text-align:center;">
-                        Tiket PP
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white; word-wrap: break-word;">
-                    <p style="text-align:center;">
-                        Transport Lokal
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white; word-wrap: break-word;">
-                    <p style="text-align:center;">
-                        Uang Harian
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white; word-wrap: break-word;">
-                    <p style="text-align:center;">
-                        Biaya Akomodasi
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white; word-wrap: break-word;">
-                    <p style="text-align:center;">
-                        Total Biaya
-                    </p>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-        ${
-          anggaranDinas !== undefined &&
-          anggaranDinas
-            .map((d, idx) => {
-              const length = Object.keys(d.Jabatan).length;
-              Object.keys(d.Jabatan)
-                .map((k, i) => {
-                  const currJabatan = d.Jabatan[k];
-                  return `
+        <table style="table-layout: fixed; width: 100%;">
+            <thead>
                 <tr>
-                    ${
-                      i === 0
-                        ? `
-                        <td rowspan="${d.Jabatan.length}">
-                          <p style="text-align:center; word-wrap: break-word;">
-                              ${idx + 1}
-                          </p>
-                        </td>
-                        <td rowspan="${d.Jabatan.length}">
-                          <p style="text-align:center; word-wrap: break-word;">
-                              ${d.nama_kegiatan}
-                          </p>
-                        </td>
-                      `
-                        : ""
-                    }
-                    <td>
-                      <p style="text-align:center; word-wrap: break-word;">
-                          ${k}
-                      </p>
-                    </td>
-                    <td>
-                      <p style="text-align:center; word-wrap: break-word;">
-                          ${currJabatan.jumlah}
-                      </p>
-                    </td>
-                    ${
-                      i === 0
-                        ? `
-                      <td rowspan="${d.Jabatan.length}">
-                        <p style="text-align:center; word-wrap: break-word;">
-                            ${d.tempat_kegiatan}
+                    <th rowspan="2" style="background-color: #3C64B1; color: white; word-wrap: break-word;">
+                        <p style="text-align:center;">
+                            No
                         </p>
-                      </td>
-                      <td rowspan="${length}">
-                        <p style="text-align:center; word-wrap: break-word;">
-                            ${d.bulan}
+                    </th>
+                    <th rowspan="2" style="background-color: #3C64B1; color: white; word-wrap: break-word;">
+                        <p style="text-align:center;">
+                            Kegiatan
                         </p>
-                      </td>
-                      `
-                        : ""
-                    }
-                    <td>
-                      <p style="text-align:center; word-wrap: break-word;">
-                          ${currJabatan.lama_kegiatan} hari
-                      </p>
-                    </td>
-                    <td>
-                      <p style="text-align:center; word-wrap: break-word;">
-                          ${convertToRupiah(currJabatan.biaya_tiket)}
-                      </p>
-                    </td>
-                    <td>
-                      <p style="text-align:center; word-wrap: break-word;">
-                          ${convertToRupiah(currJabatan.biaya_transport)}
-                      </p>
-                    </td>
-                    <td>
-                      <p style="text-align:center; word-wrap: break-word;">
-                          ${convertToRupiah(currJabatan.biaya_perjalanan)}
-                      </p>
-                    </td>
-                    <td>
-                      <p style="text-align:center; word-wrap: break-word;">
-                          ${convertToRupiah(currJabatan.biaya_akomodasi)}
-                      </p>
-                    </td>
-                    <td>
-                      <p style="text-align:center; word-wrap: break-word;">
-                          ${convertToRupiah(currJabatan.total_biaya)}
-                      </p>
-                    </td>
+                    </th>
+                    <th colspan="2" style="background-color: #3C64B1; color: white; word-wrap: break-word;">
+                        <p style="text-align:center;">
+                            Peserta
+                        </p>
+                    </th>
+                    <th rowspan="2" style="background-color: #3C64B1; color: white; word-wrap: break-word;">
+                        <p style="text-align:center;">
+                            Tempat/Kegiatan Auditee
+                        </p>
+                    </th>
+                    <th rowspan="2" style="background-color: #3C64B1; color: white; word-wrap: break-word;">
+                        <p style="text-align:center;">
+                            Bulan Kegiatan
+                        </p>
+                    </th>
+                    <th rowspan="2" style="background-color: #3C64B1; color: white; word-wrap: break-word;">
+                        <p style="text-align:center;">
+                            Lama Kegiatan
+                        </p>
+                    </th>
+                    <th colspan="5" style="background-color: #3C64B1; color: white; word-wrap: break-word;">
+                        <p style="text-align:center;">
+                            Biaya Perjalanan Dinas Jabatan
+                        </p>
+                    </th>
                 </tr>
-              `;
-                })
-                .join("");
-            })
-            .join("")
-        }
-      </tbody>
-  </table>
-</figure>
+                <tr>
+                    <th style="background-color: #3C64B1; color: white; word-wrap: break-word;">
+                        <p style="text-align:center;">
+                            Jabatan / Golongan / Pangkat
+                        </p>
+                    </th>
+                    <th style="background-color: #3C64B1; color: white; word-wrap: break-word;">
+                        <p style="text-align:center;">
+                            Jumlah Orang
+                        </p>
+                    </th>
+                    <th style="background-color: #3C64B1; color: white; word-wrap: break-word;">
+                        <p style="text-align:center;">
+                            Tiket PP
+                        </p>
+                    </th>
+                    <th style="background-color: #3C64B1; color: white; word-wrap: break-word;">
+                        <p style="text-align:center;">
+                            Transport Lokal
+                        </p>
+                    </th>
+                    <th style="background-color: #3C64B1; color: white; word-wrap: break-word;">
+                        <p style="text-align:center;">
+                            Uang Harian
+                        </p>
+                    </th>
+                    <th style="background-color: #3C64B1; color: white; word-wrap: break-word;">
+                        <p style="text-align:center;">
+                            Biaya Akomodasi
+                        </p>
+                    </th>
+                    <th style="background-color: #3C64B1; color: white; word-wrap: break-word;">
+                        <p style="text-align:center;">
+                            Total Biaya
+                        </p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                ${anggaranDinas
+                  ?.map((d, idx) => {
+                    const length = Object.keys(d.Jabatan).length;
+
+                    Object.keys(d.Jabatan)
+                      ?.map((k, i) => {
+                        const currJabatan = d.Jabatan[k];
+                        return `
+                      <tr>
+                          ${
+                            i === 0
+                              ? `
+                              <td rowspan="${length}">
+                                <p style="text-align:center; word-wrap: break-word;">
+                                    ${idx + 1}
+                                </p>
+                              </td>
+                              <td rowspan="${length}">
+                                <p style="text-align:center; word-wrap: break-word;">
+                                    ${d.nama_kegiatan}
+                                </p>
+                              </td>
+                            `
+                              : ""
+                          }
+                          <td>
+                            <p style="text-align:center; word-wrap: break-word;">
+                                ${k}
+                            </p>
+                          </td>
+                          <td>
+                            <p style="text-align:center; word-wrap: break-word;">
+                                ${currJabatan.jumlah}
+                            </p>
+                          </td>
+                          ${
+                            i === 0
+                              ? `
+                            <td rowspan="${length}">
+                              <p style="text-align:center; word-wrap: break-word;">
+                                  ${d.tempat_kegiatan}
+                              </p>
+                            </td>
+                            <td rowspan="${length}">
+                              <p style="text-align:center; word-wrap: break-word;">
+                                  ${d.bulan}
+                              </p>
+                            </td>
+                            `
+                              : ""
+                          }
+                          <td>
+                            <p style="text-align:center; word-wrap: break-word;">
+                                ${currJabatan.lama_kegiatan} hari
+                            </p>
+                          </td>
+                          <td>
+                            <p style="text-align:center; word-wrap: break-word;">
+                                ${numberWithCommas(currJabatan.biaya_tiket)}
+                            </p>
+                          </td>
+                          <td>
+                            <p style="text-align:center; word-wrap: break-word;">
+                                ${numberWithCommas(currJabatan.biaya_transport)}
+                            </p>
+                          </td>
+                          <td>
+                            <p style="text-align:center; word-wrap: break-word;">
+                                ${numberWithCommas(
+                                  currJabatan.biaya_perjalanan
+                                )}
+                            </p>
+                          </td>
+                          <td>
+                            <p style="text-align:center; word-wrap: break-word;">
+                                ${numberWithCommas(currJabatan.biaya_akomodasi)}
+                            </p>
+                          </td>
+                          <td>
+                            <p style="text-align:center; word-wrap: break-word;">
+                                ${numberWithCommas(currJabatan.total_biaya)}
+                            </p>
+                          </td>
+                      </tr>
+                    `;
+                      })
+                      .join("");
+                  })
+                  .join("")}
+              <tr>
+                <td colspan="11">
+                  Total Biaya Perjalanan Dinas
+                </td>
+                <td>
+                  <p style="text-align:center;">
+                    ${numberWithCommas(
+                      anggaranDinas?.reduce((prev, curr) => {
+                        const totalSatuKegiatan = Object.keys(
+                          curr.Jabatan
+                        ).reduce(
+                          (p, c) => (p += Number(curr.Jabatan[c].total_biaya)),
+                          0
+                        );
+                        return (prev += totalSatuKegiatan);
+                      }, 0)
+                    )}
+                  </p>
+                </td>
+              </tr>
+            </tbody>
+        </table>
+      </figure>
     </section>
   </article>
   <article>
@@ -1101,136 +1128,226 @@ export const patHtml = (id) => {
     <section>
       <h4 style="text-align: center;">Biaya Lainnya</h4>
       <figure class="table">
-  <table style="width: 100%;">
-      <thead>
-          <tr>
-              <th rowspan="2" style="background-color: #3C64B1; color: white;">
-                  <p style="text-align:center;">
-                      No
-                  </p>
-              </th>
-              <th colspan="3" style="background-color: #3C64B1; color: white;">
-                  <p style="text-align:center;">
-                      Biaya Pemeliharaan &amp; Perbaikan AT
-                  </p>
-              </th>
-              <th colspan="4" style="background-color: #3C64B1; color: white;">
-                  <p style="text-align:center;">
-                      Biaya Barang &amp; Jasa Pihak Ke III
-                  </p>
-              </th>
-              <th colspan="2" style="background-color: #3C64B1; color: white;">
-                  <p style="text-align:center;">
-                      Biaya Umum Lainnya
-                  </p>
-              </th>
-          </tr>
-          <tr>
-              <th style="background-color: #3C64B1; color: white;">
-                  <p style="text-align:center;">
-                      Kendaraan
-                  </p>
-              </th>
-              <th style="background-color: #3C64B1; color: white;">
-                  <p style="text-align:center;">
-                      Mesin
-                  </p>
-              </th>
-              <th style="background-color: #3C64B1; color: white;">
-                  <p style="text-align:center;">
-                      Inventaris
-                  </p>
-              </th>
-              <th style="background-color: #3C64B1; color: white;">
-                  <p style="text-align:center;">
-                      Porto
-                  </p>
-              </th>
-              <th style="background-color: #3C64B1; color: white;">
-                  <p style="text-align:center;">
-                      Percetakan
-                  </p>
-              </th>
-              <th style="background-color: #3C64B1; color: white;">
-                  <p style="text-align:center;">
-                      ATK
-                  </p>
-              </th>
-              <th style="background-color: #3C64B1; color: white;">
-                  <p style="text-align:center;">
-                      Supplies Komputer
-                  </p>
-              </th>
-              <th style="background-color: #3C64B1; color: white;">
-                  <p style="text-align:center;">
-                      Representasi
-                  </p>
-              </th>
-              <th style="background-color: #3C64B1; color: white;">
-                  <p style="text-align:center;">
-                      Rapat
-                  </p>
-              </th>
-          </tr>
-      </thead>
-      <tbody>
-          <tr>
-        <td><p style="text-align:center;">{idx + 1}</p></td>
-        {d.kategori
-          .map((k) =>
-            k.sub_kategori
-              .map(
-                (s) =>
-                  <td>
-                    <p style="text-align:center;">
-                      {numberWithCommas(s.amount[0].amount)}
-                    </p>
-                  </td>,
+        <table style="width: 100%;">
+            <thead>
+                <tr>
+                    <th rowspan="2" style="background-color: #3C64B1; color: white;">
+                        <p style="text-align:center;">
+                            No
+                        </p>
+                    </th>
+                    <th colspan="3" style="background-color: #3C64B1; color: white;">
+                        <p style="text-align:center;">
+                            Biaya Pemeliharaan &amp; Perbaikan AT
+                        </p>
+                    </th>
+                    <th colspan="4" style="background-color: #3C64B1; color: white;">
+                        <p style="text-align:center;">
+                            Biaya Barang &amp; Jasa Pihak Ke III
+                        </p>
+                    </th>
+                    <th colspan="2" style="background-color: #3C64B1; color: white;">
+                        <p style="text-align:center;">
+                            Biaya Umum Lainnya
+                        </p>
+                    </th>
+                </tr>
+                <tr>
+                    <th style="background-color: #3C64B1; color: white;">
+                        <p style="text-align:center;">
+                            Kendaraan
+                        </p>
+                    </th>
+                    <th style="background-color: #3C64B1; color: white;">
+                        <p style="text-align:center;">
+                            Mesin
+                        </p>
+                    </th>
+                    <th style="background-color: #3C64B1; color: white;">
+                        <p style="text-align:center;">
+                            Inventaris
+                        </p>
+                    </th>
+                    <th style="background-color: #3C64B1; color: white;">
+                        <p style="text-align:center;">
+                            Porto
+                        </p>
+                    </th>
+                    <th style="background-color: #3C64B1; color: white;">
+                        <p style="text-align:center;">
+                            Percetakan
+                        </p>
+                    </th>
+                    <th style="background-color: #3C64B1; color: white;">
+                        <p style="text-align:center;">
+                            ATK
+                        </p>
+                    </th>
+                    <th style="background-color: #3C64B1; color: white;">
+                        <p style="text-align:center;">
+                            Supplies Komputer
+                        </p>
+                    </th>
+                    <th style="background-color: #3C64B1; color: white;">
+                        <p style="text-align:center;">
+                            Representasi
+                        </p>
+                    </th>
+                    <th style="background-color: #3C64B1; color: white;">
+                        <p style="text-align:center;">
+                            Rapat
+                        </p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                ${anggaranLainnya
+                  ?.map((d, idx) => {
+                    return `
+                    <tr>
+                        <td><p style="text-align:center;">${idx + 1}</p></td>
+                        ${d.kategori
+                          .map((k) =>
+                            k.sub_kategori
+                              .map(
+                                (s) =>
+                                  `<td>
+                                    <p style="text-align:center;">
+                                      ${numberWithCommas(s.amount[0].amount)}
+                                    </p>
+                                  </td>`
+                              )
+                              .join("")
+                          )
+                          .join("")}
+                    </tr>`;
+                  })
+                  .join("")}
+                  <tr style="">
+          <td><p style="text-align:center; font-size: bold;">Total</p></td>
+          <td>
+            <p style="text-align:center;">
+            ${numberWithCommas(
+              anggaranLainnya?.reduce(
+                (prev, d) =>
+                  (prev += Number(
+                    d.kategori[0].sub_kategori[0].amount[0].amount
+                  )),
+                0
               )
-              .join(""),
-          )
-          .join("")}
-    </tr>
-      </tbody>
-  </table>
-</figure>
+            )}
+            </p>
+          </td>
+          <td>
+            <p style="text-align:center;">
+            ${numberWithCommas(
+              anggaranLainnya?.reduce(
+                (prev, d) =>
+                  (prev += Number(
+                    d.kategori[0].sub_kategori[1].amount[0].amount
+                  )),
+                0
+              )
+            )}
+            </p>
+          </td>
+          <td>
+            <p style="text-align:center;">
+            ${numberWithCommas(
+              anggaranLainnya?.reduce(
+                (prev, d) =>
+                  (prev += Number(
+                    d.kategori[0].sub_kategori[2].amount[0].amount
+                  )),
+                0
+              )
+            )}
+            </p>
+          </td>
+          <td>
+            <p style="text-align:center;">
+            ${numberWithCommas(
+              anggaranLainnya?.reduce(
+                (prev, d) =>
+                  (prev += Number(
+                    d.kategori[1].sub_kategori[0].amount[0].amount
+                  )),
+                0
+              )
+            )}
+            </p>
+          </td>
+          <td>
+            <p style="text-align:center;">
+            ${numberWithCommas(
+              anggaranLainnya?.reduce(
+                (prev, d) =>
+                  (prev += Number(
+                    d.kategori[1].sub_kategori[1].amount[0].amount
+                  )),
+                0
+              )
+            )}
+            </p>
+          </td>
+          <td>
+            <p style="text-align:center;">
+            ${numberWithCommas(
+              anggaranLainnya?.reduce(
+                (prev, d) =>
+                  (prev += Number(
+                    d.kategori[1].sub_kategori[2].amount[0].amount
+                  )),
+                0
+              )
+            )}
+            </p>
+          </td>
+          <td>
+            <p style="text-align:center;">
+            ${numberWithCommas(
+              anggaranLainnya?.reduce(
+                (prev, d) =>
+                  (prev += Number(
+                    d.kategori[1].sub_kategori[3].amount[0].amount
+                  )),
+                0
+              )
+            )}
+            </p>
+          </td>
+          <td>
+            <p style="text-align:center;">
+            ${numberWithCommas(
+              anggaranLainnya?.reduce(
+                (prev, d) =>
+                  (prev += Number(
+                    d.kategori[2].sub_kategori[0].amount[0].amount
+                  )),
+                0
+              )
+            )}
+            </p>
+          </td>
+          <td>
+            <p style="text-align:center;">
+            ${numberWithCommas(
+              anggaranLainnya?.reduce(
+                (prev, d) =>
+                  (prev += Number(
+                    d.kategori[2].sub_kategori[1].amount[0].amount
+                  )),
+                0
+              )
+            )}
+            </p>
+          </td>
+      </tr>
+            </tbody>
+        </table>
+      </figure>
     </section>
   </article>
-  <footer>
-    <div style="display: flex; justify-content: end; margin: 5rem 75px;">
-      <p>{tanggal}</p>
-    </div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; margin: 0 75px;">
-      {
-        !signers
-          ? ""
-          : signers
-              .map(
-                (s) =>
-                  
-                    <div style="{
-                      signers.length < 2 ? "grid-column: 2;" : ""
-                    } display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                      <div style="margin-bottom: 1rem;">
-                        {qr.imageSync({s.from.pn} - {s.from.nama}, {
-                          type: "svg",
-                          size: 3,
-                        })}
-                      </div>
-                      <p>
-                        {s.from.pn}
-                      </p>
-                      <p>
-                        {s.from.nama}
-                      </p>
-                      <h4>{s.from.jabatan}</h4>
-                    </div>
-                  
-              )
-              .join("")
-      }
-    </div>
-  </footer>
 </main>
 `;
 };

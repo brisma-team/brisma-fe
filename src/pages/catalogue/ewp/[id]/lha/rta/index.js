@@ -35,7 +35,7 @@ const index = () => {
     params.type,
     params.id,
     "all",
-    5
+    7
   );
 
   useEffect(() => {

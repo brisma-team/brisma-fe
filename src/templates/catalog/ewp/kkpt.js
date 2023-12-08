@@ -22,15 +22,15 @@ const kkptHtml = (year, source, id) => {
 
   const convertSkorDampak = (skorDampak) => {
     if (skorDampak == "ST" || skorDampak == 5) {
-      return "Sangat Tinggi";
+      return "Sangat Tinggi (ST)";
     } else if (skorDampak == "T" || skorDampak == 4) {
-      return "Tinggi";
+      return "Tinggi (T)";
     } else if (skorDampak == "SD" || skorDampak == 3) {
-      return "Sedang";
+      return "Sedang (SD)";
     } else if (skorDampak == "R" || skorDampak == 2) {
-      return "Rendah";
+      return "Rendah (R)";
     } else if (skorDampak == "SR" || skorDampak == 1) {
-      return "Sangat Rendah";
+      return "Sangat Rendah (SR)";
     } else {
       return "Tidak ada skor dampak.";
     }
@@ -90,7 +90,9 @@ const kkptHtml = (year, source, id) => {
           </div>
           <div style="padding-left:10px">:</div>
           <div style="padding-left:10px">${
-            data?.TemuanBerulang === true ? "Ya" : "Tidak"
+            data?.TemuanBerulang == true || data?.TemuanBerulang == 1
+              ? "Ya"
+              : "Tidak"
           }</div>
         </div>
         <div style="display:flex;margin-bottom:10px">
@@ -98,7 +100,9 @@ const kkptHtml = (year, source, id) => {
             <b>Tipe Resiko</b>
           </div>
           <div style="padding-left:10px">:</div>
-          <div style="padding-left:10px">${data?.RiskTypeName}</div>
+          <div style="padding-left:10px">${
+            data?.RiskTypeName ? data.RiskTypeName : "-"
+          }</div>
         </div>
         <div style="display:flex;margin-bottom:10px">
           <div style="width:100px">
@@ -126,14 +130,14 @@ const kkptHtml = (year, source, id) => {
           <div style="width: 100px;"><b>Risk Issue</b></div>
           <div style="padding-left: 10px;">:</div>
           <div style="padding-left: 10px;">
-          ${data?.RiskIssueName}
+          ${data?.RiskIssueName ? data.RiskIssueName : "-"}
           </div>
       </div>
       <div style="display: flex;margin-bottom:10px;">
           <div style="width: 100px;"><b>Sub Major Proses</b></div>
           <div style="padding-left: 10px;">:</div>
           <div style="padding-left: 10px;"> 
-          ${data?.SubMajor}
+          ${data?.SubMajor ? data.SubMajor : "-"}
           </div>
       </div>
       <div style="display: flex;margin-bottom:10px;">
@@ -153,26 +157,26 @@ const kkptHtml = (year, source, id) => {
           <div style="width: 100px;"><b>Auditee</b></div>
           <div style="padding-left: 10px;">:</div>
           <div style="padding-left: 10px;"> 
-          ${data?.AuditeeBranchName ? data.AuditeeBranchName : "**"}
+          ${data?.AuditeeBranchName ? data.AuditeeBranchName : "-"}
           </div>
       </div>
   </p></article>
       <article><div style="margin-bottom: 40px;">
       <p style="margin-bottom: 20px;"><strong>Kondisi</strong></p>
       <div style="border-style: solid; padding: 4px;">${
-        data?.Condition ? data?.Condition : "**"
+        data?.Condition ? data?.Condition : "-"
       }</div>
   </div>
   <div style="margin-bottom: 40px;">
       <p style="margin-bottom: 20px;"><strong>Kelemahan Pengendalian Intern</strong></p>
       <div style="border-style: solid;  padding: 4px;">${
-        data?.KPI ? data?.KPI : "**"
+        data?.KPI ? data?.KPI : "-"
       }</div>
   </div></article>
       <article><div style="margin-bottom: 40px;">
   <p lang="SV" dir="ltr"><strong><u>II. KRITERIA</u></strong></p>
       <div style="border-style: solid;  padding: 4px;">${
-        data?.Criteria ? data?.Criteria : "**"
+        data?.Criteria ? data?.Criteria : "-"
       }</div>
   </div></article>
       <article><br><br><br><br><p lang="SV" dir="ltr"><strong><u>III. PENYEBAB</u></strong></p>
@@ -186,9 +190,11 @@ const kkptHtml = (year, source, id) => {
               </tr>
           </thead>
           <tbody>
-          ${penyebabList
-            .map((x) => {
-              return `<tr style="height: 18px;text-align: center">
+          ${
+            source == 2
+              ? penyebabList
+                  .map((x) => {
+                    return `<tr style="height: 18px;text-align: center">
                 <td style="height: 18px;">
                   ${x.PenyebabKode}
                 </td>
@@ -211,8 +217,47 @@ const kkptHtml = (year, source, id) => {
                   
                 </td>
               </tr>`;
-            })
-            .join(" ")}
+                  })
+                  .join(" ")
+              : penyebabList
+                  .map((x) => {
+                    return `<tr style="height: 18px;text-align: center">
+              <td style="height: 18px;">
+                ${x.PenyebabKode1}
+              </td>
+              <td style="height: 18px;">
+                ${x.PenyebabName1}
+              </td>
+              <td style="height: 18px;">
+                ${x.PenyebabDesc}
+              </td>
+              <td style="height: 18px;width:100px">-</td>
+            </tr><tr style="height: 18px;text-align: center">
+            <td style="height: 18px;">
+              ${x.PenyebabKode2}
+            </td>
+            <td style="height: 18px;">
+              ${x.PenyebabName2}
+            </td>
+            <td style="height: 18px;">
+              ${x.PenyebabDesc}
+            </td>
+            <td style="height: 18px;width:100px">-</td>
+          </tr><tr style="height: 18px;text-align: center">
+          <td style="height: 18px;">
+            ${x.PenyebabKode3}
+          </td>
+          <td style="height: 18px;">
+            ${x.PenyebabName3}
+          </td>
+          <td style="height: 18px;">
+            ${x.PenyebabDesc}
+          </td>
+          <td style="height: 18px;width:100px">-</td>
+        </tr>`;
+                  })
+                  .join(" ")
+          }
               
           </tbody>
       </table></article>
@@ -221,31 +266,30 @@ const kkptHtml = (year, source, id) => {
       <p>Skor Dampak Finansial : ${
         data?.FinancialImpact == ""
           ? convertSkorDampak(data.FinancialImpact)
-          : "-"
+          : "<i><b>Tidak ada skor.</b></i>"
       }</p>
-      <p>Total Kerugian: ${data?.FinancialLoss ? data.FinancialLoss : "-"}</p>
-      <p>Gross: ${
-        data?.Gross ? "Rp. " + convertToRupiah(data?.Gross) + ",-" : "-"
+      <p>Total Kerugian: ${
+        "Rp. " + convertToRupiah(data?.FinancialLoss) + ",-" || "-"
       }</p>
+      <p>Gross: ${"Rp. " + convertToRupiah(data?.Gross) + ",-" || "-"}</p>
       <p>&nbsp;</p>
       <p><strong>B. Dampak Non Finansial</strong></p>
       <p>Skor Dampak Non-Finansial : ${
         data?.NonFinancialImpact
-          ? convertSkorDampak(data.NonFinancialImpact) +
-            " (" +
-            data?.Impact +
-            ")"
+          ? convertSkorDampak(data.NonFinancialImpact)
           : "<i><b>Tidak ada skor.</b></i>"
       }</p>
       <p>&nbsp;</p>
       <p><strong>C. Kesimpulan Dampak</strong></p>
       <p>Skor Dampak&nbsp; &nbsp;: ${
         data?.Impact
-          ? convertSkorDampak(data?.Impact) + " (" + data?.Impact + ")"
-          : "-"
+          ? convertSkorDampak(data?.Impact)
+          : "<i><b>Tidak ada skor.</b></i>"
       }</p>
       <p>Keterangan&nbsp; &nbsp; &nbsp; &nbsp;: ${
-        data?.ImpactDescription ? data?.ImpactDescription : "**"
+        data?.ImpactDescription
+          ? data?.ImpactDescription
+          : "<i><b>Tidak ada Deskripsi.</b></i>"
       }</p></article>
       <article><p lang="SV" dir="ltr"><strong><u>V. REKOMENDASI</u></strong></p>
     <table style="border-collapse: collapse; width: 100%; height: 90px;" border="1">
@@ -258,16 +302,26 @@ const kkptHtml = (year, source, id) => {
      </tr>
     </thead>
      <tbody>
-     ${rekomendasiList
-       .map((item) => {
-         return `<tr style="height: 18px;">
-      <td style=" height: 18px;text-align: center">${item.TipeRekomendasiName}</td>
-      <td style=" height: 18px;text-align: center">${item.BranchTujuan}</td>
-      <td style=" height: 18px;text-align: center">${item.OrgehTujuan}</td>
-      <td style=" height: 18px;">${item.ItemDesc}</td>
+     ${
+       rekomendasiList?.length > 0
+         ? rekomendasiList
+             .map((item) => {
+               return `<tr style="height: 18px;">
+      <td style=" height: 18px;text-align: center">${
+        item.TipeRekomendasiName || "-"
+      }</td>
+      <td style=" height: 18px;text-align: center">${
+        item.BranchTujuan || "-"
+      }</td>
+      <td style=" height: 18px;text-align: center">${
+        item.OrgehTujuan || "-"
+      }</td>
+      <td style=" height: 18px;">${item.ItemDesc || "-"}</td>
     </tr>`;
-       })
-       .join(" ")}
+             })
+             .join(" ")
+         : `<tr><td colspan="4" style="height: 18px;text-align: center">Data tidak ditemukan</td></tr>`
+     }
        
      </tbody>
      </table>

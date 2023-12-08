@@ -13,6 +13,7 @@ import useOmniSearch from "./useOmniSearch";
 import useRTAById from "./useRTAById";
 import useRTEById from "./rpm/useRTEById";
 import useViewAllKKPA from "./useViewAllKKPA";
+import useDownload from "./useDownload";
 
 export {
   useModuleById,
@@ -30,4 +31,5 @@ export {
   useRTAById,
   useRTEById,
   useViewAllKKPA,
+  useDownload,
 };

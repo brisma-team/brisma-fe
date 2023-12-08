@@ -42,7 +42,7 @@ const index = () => {
             position: relative;
             overflow: hidden;
             z-index: 0;
-          }t
+          }
           .leader > span {
             background-color: white;
           }

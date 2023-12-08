@@ -1,4 +1,4 @@
-import { Breadcrumbs, PageTitle, Card, Pagination } from "@/components/atoms";
+import { Breadcrumbs, PageTitle, Card } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
 import { useState, useEffect, useCallback } from "react";
@@ -12,9 +12,8 @@ const index = () => {
 
   const [list, setList] = useState([]);
   const [lists, setLists] = useState([]);
-  const [kkptId, setKkptId] = useState(278);
+  const [kkptId, setKkptId] = useState(0);
   const [kkptinfo, setKkptinfo] = useState({});
-  const [currentPage, setCurrentPage] = useState(1);
   const [params, setParams] = useState({
     year: "2023",
     type: "2",
@@ -40,7 +39,7 @@ const index = () => {
     "all",
     5
   );
-  const { rteDetail } = useRTEById(kkptId, currentPage);
+  const { rteDetail } = useRTEById(kkptId, 1);
 
   useEffect(() => {
     if (rteDetail !== undefined) {
@@ -118,9 +117,6 @@ const index = () => {
                         );
                       })
                     )}
-                    <div className="flex justify-center mt-5">
-                      <Pagination pages={5} setCurrentPage={setCurrentPage} />
-                    </div>
                   </div>
                 </Card>
               </div>
@@ -129,15 +125,19 @@ const index = () => {
               {/* {list?.map((data, i) => {
                 return ( */}
               <div className="mb-4">
-                <DocumentViewer
-                  documentTitle="Kertas Kerja Pengawasan Temuan"
-                  documentHtml={
-                    rtaDetailIsLoading
-                      ? `<p>Loading data...</p>`
-                      : rteHtml(kkptinfo, lists)
-                  }
-                  withNoHeader={true}
-                />
+                {kkptId == 0 ? (
+                  <h5>Silahkan Pilih KKPT terlebih dahulu</h5>
+                ) : (
+                  <DocumentViewer
+                    documentTitle="Kertas Kerja Pengawasan Temuan"
+                    documentHtml={
+                      rtaDetailIsLoading
+                        ? `<p>Loading data...</p>`
+                        : rteHtml(kkptinfo, lists)
+                    }
+                    withNoHeader={true}
+                  />
+                )}
               </div>
             </div>
           </div>

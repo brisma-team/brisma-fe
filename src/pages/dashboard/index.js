@@ -67,7 +67,7 @@ export default function index() {
 
   const openKioskModeTab = () => {
     // URL untuk mode kiosk
-    const kioskURL = `/dashboard/kiosk/${selectedValue}`; // Ganti dengan URL yang sesuai
+    const kioskURL = `/dashboard/kiosk/${selectedID}`; // Ganti dengan URL yang sesuai
 
     // Membuka tab baru dengan URL mode kiosk
     window.open(kioskURL, "_blank");

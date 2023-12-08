@@ -26,7 +26,7 @@ const updateIntervalList = [
 
 export default function index() {
   const [interval, setInterval] = useState(updateIntervalList[3].value * 1000); // default 5 menit
-  const { data } = useGetToken(interval);
+  const { data } = useGetToken("visual", interval);
   const { id } = useRouter().query;
   const [ctoken, setCtoken] = useState("");
   const [tagName, setTagName] = useState(""); // Menambahkan state untuk tagName
