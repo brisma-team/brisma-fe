@@ -27,7 +27,7 @@ const TabInformation = ({
 }) => {
   const { id } = useRouter().query;
   const payloadInformasi = useSelector(
-    (state) => state.penilaianSurvey.payloadInformasi
+    (state) => state.createSurvey.payloadInformasi
   );
 
   return (

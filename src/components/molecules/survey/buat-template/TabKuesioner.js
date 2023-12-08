@@ -13,7 +13,7 @@ const TabKuesioner = ({
   handleClickOpenModalGuidelines,
 }) => {
   const dataKuesioner = useSelector(
-    (state) => state.penilaianSurvey.payloadKuesioner
+    (state) => state.createSurvey.payloadKuesioner
   );
 
   return (

@@ -15,7 +15,8 @@ import {
   setHistoryWorkflow,
   setPayloadInformasi,
   setWorkflowData,
-} from "@/slices/survey/penilaianSurveySlice";
+  setPayloadKuesioner,
+} from "@/slices/survey/createSurveySlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import {
@@ -32,7 +33,6 @@ import { workflowSchema } from "@/helpers/schemas/reference/adminSurveiSchema";
 import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common";
 import { LandingLayoutSurvey } from "@/layouts/survey";
 import { useInformation, useKuesioner } from "@/data/survey/informasi";
-import { setPayloadKuesioner } from "@/slices/survey/penilaianSurveySlice";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -54,19 +54,17 @@ const index = () => {
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
 
   const payloadInformasi = useSelector(
-    (state) => state.penilaianSurvey.payloadInformasi
+    (state) => state.createSurvey.payloadInformasi
   );
   const payloadKuesioner = useSelector(
-    (state) => state.penilaianSurvey.payloadKuesioner
+    (state) => state.createSurvey.payloadKuesioner
   );
-  const workflowData = useSelector(
-    (state) => state.penilaianSurvey.workflowData
-  );
+  const workflowData = useSelector((state) => state.createSurvey.workflowData);
   const historyWorkflow = useSelector(
-    (state) => state.penilaianSurvey.historyWorkflow
+    (state) => state.createSurvey.historyWorkflow
   );
   const validationErrorsWorkflow = useSelector(
-    (state) => state.penilaianSurvey.validationErrorsWorkflow
+    (state) => state.createSurvey.validationErrorsWorkflow
   );
 
   const [navigationTabItems, setNavigationTabItems] = useState([
@@ -502,7 +500,7 @@ const index = () => {
         validationErrors={validationErrorsWorkflow}
         setShowModal={setShowModalApproval}
         showModal={showModalApproval}
-        headerTitle={"Approval Template Survey"}
+        headerTitle={"Approval Survey"}
         handleChange={handleChangeText}
         handleChangeSelect={handleChangeSelect}
         handleDelete={handleDelete}

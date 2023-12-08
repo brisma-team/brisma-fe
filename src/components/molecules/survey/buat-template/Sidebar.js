@@ -26,7 +26,7 @@ const Sidebar = ({
   const { id } = useRouter().query;
   const [dataCategory, setDataCategory] = useState([]);
   const payloadKuesioner = useSelector(
-    (state) => state.penilaianSurvey.payloadKuesioner
+    (state) => state.createSurvey.payloadKuesioner
   );
 
   useEffect(() => {

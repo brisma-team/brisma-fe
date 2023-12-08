@@ -340,7 +340,7 @@ const index = () => {
       <div className="w-[71rem]">
         <div className="pl-0.5 pt-4 pr-4 pb-6">
           <Breadcrumbs data={breadcrumbs} />
-          <PageTitle text={"Preview Kuesioner Responden"} />
+          <PageTitle text={"Responden"} />
           <div className="mb-4" />
           <NavigationTab
             items={navigationTabItems}
