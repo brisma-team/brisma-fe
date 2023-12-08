@@ -37,6 +37,7 @@ import createTemplateReferenceSlice from "./slices/reference/createTemplateRefer
 
 // SURVEY
 import penilaianSurveyReducer from "./slices/survey/penilaianSurveySlice";
+import respondenSurveyReducer from "./slices/survey/respondenSurveySlice";
 
 import { configureStore } from "@reduxjs/toolkit";
 
@@ -71,5 +72,6 @@ export const store = configureStore({
     documentSuratEWP: documentSuratEWPReducer,
     createTemplateReference: createTemplateReferenceSlice,
     penilaianSurvey: penilaianSurveyReducer,
+    respondenSurvey: respondenSurveyReducer,
   },
 });
