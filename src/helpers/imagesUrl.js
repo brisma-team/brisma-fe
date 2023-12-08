@@ -21,7 +21,7 @@ import ImageEdit from "../../public/images/icon-edit.png";
 import ImageMore from "../../public/images/icon-more.png";
 import ImageStar from "../../public/images/icon-star.png";
 import ImageDownload from "../../public/images/icon-download.png";
-
+import ImageCircleCheckGreen from "../../public/images/icon-circle-check-green.png";
 export {
   ImageBrismaVertical,
   ImageBrismaHorizontal,
@@ -46,4 +46,5 @@ export {
   ImageMore,
   ImageStar,
   ImageDownload,
+  ImageCircleCheckGreen,
 };
