@@ -1,8 +1,8 @@
 import React from "react";
 import { LoginForm } from "../auth";
 import { LeftSidebar } from "@atlaskit/page-layout";
-import { Card } from "@/components/atoms";
-import Image from "next/image";
+// import { Card } from "@/components/atoms";
+// import Image from "next/image";
 
 const SidebarLanding = () => {
   return (
@@ -16,7 +16,7 @@ const SidebarLanding = () => {
       >
         <LoginForm />
       </LeftSidebar>
-      <div className="flex">
+      {/* <div className="flex">
         <div className="flex-1 overflow-x-hidden ml-5 pt-14 h-screen overflow-y-scroll">
           <div className="p-4"></div>
           <div className="main">
@@ -158,7 +158,7 @@ const SidebarLanding = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

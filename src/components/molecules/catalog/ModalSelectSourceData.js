@@ -204,32 +204,38 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
       onClickOutside={() => setShowModal(false)}
     >
       {menu == 0 && (
-        <div className="w-[48rem] h-modal p-5">
+        <div
+          className={
+            sourceType == 2 ? "w-[48rem] h-modal p-5" : "w-[26rem] h-modal p-5"
+          }
+        >
           <h3 className="p-3 font-semibold text-xl">
             {`Pustaka Dokumen ${tag}`}
           </h3>
-          <div className="grid grid-cols-2 gap-2">
-            <div className="p-3">
-              <Card>
-                <div className="p-5 text-center">
-                  <p className="font-semibold text-lg">Brisma 1.0</p>
-                  <h5 className="text-atlasian-gray-dark mb-5 font-medium text-base">
-                    Pustaka Dokumen <br /> Tahun 2012 - 2022
-                  </h5>
-                  <Button
-                    appearance="primary"
-                    onClick={() => {
-                      setSource(1);
-                      setMenu(1);
-                    }}
-                    isDisabled={sourceType !== 2 ? true : false}
-                    iconAfter={<IconArrowRight size="medium" />}
-                  >
-                    <p className="text-base p-1">Akses Data</p>
-                  </Button>
-                </div>
-              </Card>
-            </div>
+          <div className={sourceType == 2 ? "grid grid-cols-2 gap-2" : ""}>
+            {sourceType == 2 && (
+              <div className="p-3">
+                <Card>
+                  <div className="p-5 text-center">
+                    <p className="font-semibold text-lg">Brisma 1.0</p>
+                    <h5 className="text-atlasian-gray-dark mb-5 font-medium text-base">
+                      Pustaka Dokumen <br /> Tahun 2012 - 2022
+                    </h5>
+                    <Button
+                      appearance="primary"
+                      onClick={() => {
+                        setSource(1);
+                        setMenu(1);
+                      }}
+                      isDisabled={sourceType !== 2 ? true : false}
+                      iconAfter={<IconArrowRight size="medium" />}
+                    >
+                      <p className="text-base p-1">Akses Data</p>
+                    </Button>
+                  </div>
+                </Card>
+              </div>
+            )}
             <div className="p-3">
               <Card>
                 <div className="p-5 text-center">
