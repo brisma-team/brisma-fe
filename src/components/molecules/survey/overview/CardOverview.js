@@ -103,7 +103,7 @@ const CardOverview = ({
                 icon={
                   <div
                     className={`w-full h-full flex items-center ${
-                      data.is_active
+                      data.status_kode == 4
                         ? "text-atlasian-yellow"
                         : "text-atlasian-red"
                     }`}
