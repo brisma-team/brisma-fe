@@ -15,7 +15,7 @@ const DropdownCard = ({ actions }) => {
 
   return (
     <DropdownMenu
-      trigger={({ triggerRef, ...props }) => (
+      trigger={({ triggerRef, isSelected, testId, ...props }) => (
         <div
           ref={triggerRef}
           {...props}

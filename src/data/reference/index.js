@@ -13,6 +13,7 @@ import useTeknikSampling from "./useTeknikSampling";
 import useRiskControl from "./useRiskControl";
 import useQuestionType from "./useQuestionType";
 import useSurveyType from "./useSurveyType";
+import useTemplateSurvey from "./useTemplateSurvey";
 
 export {
   useMetode,
@@ -30,4 +31,5 @@ export {
   useRiskControl,
   useQuestionType,
   useSurveyType,
+  useTemplateSurvey,
 };

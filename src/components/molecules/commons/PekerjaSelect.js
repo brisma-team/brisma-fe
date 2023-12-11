@@ -12,12 +12,15 @@ const PekerjaSelect = ({
   customIcon,
   isDisabled,
   className,
+  positionAbsolute,
+  width,
 }) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState("");
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState(false);
   const { pekerja, pekerjaMutate } = usePekerja(keyword, "skai");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (search) {
@@ -56,6 +59,14 @@ const PekerjaSelect = ({
     }
   }
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const DropdownIndicator = (props) => {
     return (
       <components.DropdownIndicator {...props}>
@@ -63,19 +74,28 @@ const PekerjaSelect = ({
       </components.DropdownIndicator>
     );
   };
+
   return (
-    <Select
-      {...fieldsProps}
-      placeholder={placeholder}
-      options={options}
-      onChange={handleChange}
-      isSearchable={isSearchable}
-      value={selectedValue}
-      onInputChange={handleInputChange}
-      components={customIcon && { DropdownIndicator }}
-      isDisabled={isDisabled}
-      className={className}
-    />
+    <div
+      className={`${positionAbsolute && open ? `z-50 absolute` : ``} ${
+        width && width
+      }`}
+    >
+      <Select
+        {...fieldsProps}
+        placeholder={placeholder}
+        options={options}
+        onChange={handleChange}
+        isSearchable={isSearchable}
+        value={selectedValue}
+        onInputChange={handleInputChange}
+        components={customIcon && { DropdownIndicator }}
+        isDisabled={isDisabled}
+        className={className}
+        onMenuOpen={handleOpen}
+        onMenuClose={handleClose}
+      />
+    </div>
   );
 };
 

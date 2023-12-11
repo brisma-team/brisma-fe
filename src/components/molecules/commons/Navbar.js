@@ -191,6 +191,7 @@ const NavbarField = () => {
     pathname != "/pat" &&
     pathname != "/ewp" &&
     pathname != "/rpm" &&
+    pathname != "/survey" &&
     pathname != "/dashboard" &&
     firstSegment != "catalogue" &&
     firstSegment != "reporting" &&
@@ -238,6 +239,17 @@ const NavbarField = () => {
               }`}
             >
               R.P.M
+            </button>
+          </a>,
+          <a href="/survey" key={5}>
+            <button
+              className={`font-semibold text-xl text-atlasian-dark px-2 p-3 ${
+                firstSegment == "survey"
+                  ? "border-b-4 border-atlasian-blue-light"
+                  : "hover:border-b-4 hover:border-atlasian-blue-light"
+              }`}
+            >
+              Survey
             </button>
           </a>,
         ]

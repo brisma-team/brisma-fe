@@ -1,8 +1,8 @@
 import { DivButton } from "@/components/atoms";
 
-const NavigationTab = ({ items, currentStage, setCurrentStage }) => {
+const NavigationTab = ({ items, currentStage, setCurrentStage, width }) => {
   return items?.length ? (
-    <div className="flex border-b-2 w-44 justify-between mb-4">
+    <div className={`flex border-b-2 ${width || `w-44`} justify-between mb-4`}>
       {items?.map((v, i) => {
         return (
           <DivButton

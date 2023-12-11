@@ -75,6 +75,14 @@ const Sidebar = ({ handleSidebarItemClick }) => {
                 <p className="text-base">Catalogue</p>
               </ButtonItem>
               <ButtonItem
+                iconBefore={<IconMediaServicesSpreadsheet label="" />}
+                href="/survey"
+                isSelected={selectedItem === "/survey"}
+                onClick={(e) => handleItemClick(e, "/survey")}
+              >
+                <p className="text-base">Survey</p>
+              </ButtonItem>
+              <ButtonItem
                 iconBefore={<IconGraphBar label="" />}
                 href="/reporting"
                 isSelected={selectedItem === "/reporting"}
