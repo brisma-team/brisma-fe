@@ -1,7 +1,7 @@
-import { Breadcrumbs, Card, PageTitle } from "@/components/atoms";
+import { Breadcrumbs, ButtonField, Card, PageTitle } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ltminorHtml } from "@/templates/catalog/ewp";
 import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 import rtaHtml from "@/templates/catalog/ewp/rta";
@@ -12,6 +12,7 @@ const index = () => {
   const router = useRouter();
 
   const [list, setList] = useState([]);
+  const [limit, setLimit] = useState(5);
   const [params, setParams] = useState({
     year: "2023",
     type: "2",
@@ -30,11 +31,12 @@ const index = () => {
     });
   }, [router.isReady]);
 
-  const { rtaDetail, rtaDetailIsLoading } = useRTAById(
+  const { rtaDetail, rtaDetailIsLoading, rtaDetailIsValidating } = useRTAById(
     params.year,
     params.type,
     params.id,
-    "temuan-minor"
+    "temuan-minor",
+    limit
   );
 
   useEffect(() => {
@@ -47,9 +49,12 @@ const index = () => {
     rtaDetailIsLoading ? loadingSwal() : loadingSwal("close");
   }, [rtaDetailIsLoading]);
 
+  const handleClickLoadMore = useCallback(() => {
+    setLimit((prev) => prev + 5);
+  }, []);
+
   const baseUrl = "/catalogue/ewp";
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: baseUrl },
     { name: "Daftar Dokumen", path: baseUrl + "/" + params.uri },
@@ -105,9 +110,22 @@ const index = () => {
                     )}
                     {list?.map((data, i) => {
                       return (
-                        <p className="text-base" key={i}>
+                        <button
+                          className="text-sm hover:underline text-left justify-normal mb-1 p-2"
+                          onClick={() =>
+                            router.push(
+                              baseUrl +
+                                "/" +
+                                params.uri +
+                                "/berita-acara-temuan-minor" +
+                                "#kkpt" +
+                                (i + 1)
+                            )
+                          }
+                          key={i}
+                        >
                           {i + 1 + ". " + data.KKPTTitle}
-                        </p>
+                        </button>
                       );
                     })}
                   </div>
@@ -117,7 +135,7 @@ const index = () => {
             <div className="w-2/3">
               <h2 className="mb-5 font-bold">Berita Acara Temuan Minor</h2>
               <DocumentViewer
-                documentTitle="Berita Acara Temuan Major"
+                documentTitle="Berita Acara Temuan Minor"
                 documentHtml={ltminorHtml(params.year, params.type, params.id)}
                 withNoHeader={true}
               />
@@ -136,13 +154,8 @@ const index = () => {
               {list?.map((data, i) => {
                 return (
                   <div className="mb-4" key={i}>
-                    <h5 className="mb-5 font-bold">
-                      {i +
-                        1 +
-                        ". (kkptid: " +
-                        data.KKPTID +
-                        ") - " +
-                        data.KKPTTitle}
+                    <h5 className="mb-5 font-bold" id={"kkpt" + (i + 1)}>
+                      {i + 1 + ". " + data.KKPTTitle}
                     </h5>
                     <DocumentViewer
                       documentTitle="Kertas Kerja Pengawasan Temuan"
@@ -153,6 +166,22 @@ const index = () => {
                   </div>
                 );
               })}
+              {!rtaDetailIsValidating ? (
+                limit < rtaDetail?.data?.total_data ? (
+                  <div className="w-[59rem] bg-blue-800 rounded-md hover:bg-brisma">
+                    <ButtonField
+                      text={"Load More"}
+                      handler={handleClickLoadMore}
+                    />
+                  </div>
+                ) : (
+                  ""
+                )
+              ) : (
+                <h4 className="text-center my-8">
+                  Loading data, mohon tunggu...
+                </h4>
+              )}
             </div>
           </div>
         </div>

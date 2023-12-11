@@ -30,7 +30,6 @@ const index = () => {
   }, [router.isReady]);
 
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: "/catalogue/ewp" },
     { name: "Daftar Dokumen", path: "/catalogue/ewp/" + params.uri },

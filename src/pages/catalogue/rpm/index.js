@@ -38,8 +38,8 @@ const index = () => {
 
   useEffect(() => {
     if (data !== undefined) {
-      setTotalPage(data?.totalPages);
-      const mappingCatRpm = data?.data?.map((v, key) => {
+      setTotalPage(data?.data?.total_page);
+      const mappingCatRpm = data?.data?.rpm?.map((v, key) => {
         return {
           No: key + 1,
           "Project ID": v?.ProjectID,

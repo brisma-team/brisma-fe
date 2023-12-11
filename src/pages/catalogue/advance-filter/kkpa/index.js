@@ -14,7 +14,6 @@ import { xcodeLight } from "@uiw/codemirror-theme-xcode";
 
 const index = () => {
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     {
       name: "Pencarian Dokumen KKPA",
@@ -28,7 +27,7 @@ const index = () => {
   const [selectedYear, setSelectedYear] = useState(2022);
   const few = [
     {
-      "Nama Kolom": "kkptid",
+      "Nama Kolom": "kkpaid",
       "Tipe Data": "UUID",
     },
     {
@@ -167,7 +166,7 @@ const index = () => {
 
   const handleSubmit = async () => {
     loadingSwal();
-    const url = `${process.env.NEXT_PUBLIC_API_URL_CATALOG}/catalog/advfilter/kkpt`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL_CATALOG}/catalog/advfilter/kkpa`;
     await usePostKKPTQuery(url, {
       whereclause: whereClause != "" ? `WHERE ` + whereClause : "",
       year: selectedYear,
@@ -266,7 +265,7 @@ const index = () => {
                   headers={[
                     "Aksi",
                     "No",
-                    "KKPTID",
+                    "KKPAID",
                     "Nama Project",
                     "Tahun Audit",
                     "Tipe Audit",

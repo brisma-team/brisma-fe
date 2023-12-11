@@ -63,6 +63,7 @@ import CustomSelect from "./CustomSelect";
 import TypeSurveySelect from "./TypeSurveySelect";
 import CardContentHeaderFooter from "./CardContentHeaderFooter";
 import AuditOfficeSelect from "./AuditOfficeSelect";
+import OmniSelect from "./OmniSelect";
 
 export {
   BackButton,
@@ -130,4 +131,5 @@ export {
   TypeSurveySelect,
   CardContentHeaderFooter,
   AuditOfficeSelect,
+  OmniSelect,
 };

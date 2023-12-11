@@ -28,7 +28,6 @@ export const patHtml = (id) => {
       setAnggaranLainnya(datas.anggaran.allAnggaranKegiatan);
     }
   }, [overviewDetail]);
-  console.log(anggaranLainnya);
 
   useEffect(() => {
     overviewDetailIsLoading && data == undefined

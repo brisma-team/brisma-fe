@@ -17,8 +17,6 @@ const addendumMapaHtml = (year, id) => {
     addendumMAPADataIsLoading ? loadingSwal() : loadingSwal("close");
   }, [addendumMAPADataIsLoading]);
 
-  console.log(addendumMAPAData);
-
   const remapPart = (part, part_name, detail_part) => {
     switch (part) {
       case "analisis_perencanaan_mcr":

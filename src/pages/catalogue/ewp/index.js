@@ -23,7 +23,6 @@ const index = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: "/catalogue/ewp" },
   ];
