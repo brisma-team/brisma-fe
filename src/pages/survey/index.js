@@ -12,12 +12,12 @@ const index = () => {
           {
             title: "Inisiasi Survei",
             description: "Membuat Form Survei.",
-            url: "/survey/overview",
+            url: "/survey/initiator/overview",
           },
           {
             title: "Approval",
             description: "Melihat riwayat approval.",
-            url: "/survey/approval",
+            url: "/survey/initiator/approval",
           },
         ],
       },
@@ -27,12 +27,12 @@ const index = () => {
           {
             title: "Mengisi Survei",
             description: "Membuat kuesioner pada Survei.",
-            url: "/survey/responden/overview",
+            url: "/survey/initiator/responden/overview",
           },
           {
             title: "Approval",
             description: "Melihat riwayat approval.",
-            url: "/survey/responden/approval",
+            url: "/survey/initiator/responden/approval",
           },
         ],
       },
