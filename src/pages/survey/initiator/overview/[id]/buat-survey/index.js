@@ -135,10 +135,6 @@ const index = () => {
   }, [information]);
 
   useEffect(() => {
-    console.log("payloadInformasi => ", payloadInformasi);
-  }, [payloadInformasi]);
-
-  useEffect(() => {
     if (!kuesionerError && kuesioner?.data?.kategori?.length) {
       const mapping = kuesioner.data.kategori.map((category) => {
         return {
@@ -185,10 +181,10 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "Survei", path: "/survey" },
-      { name: "Overview", path: "/survey/overview" },
+      { name: "Overview", path: "/survey/initiator/overview" },
       {
         name: `Buat Survei / ${templateName}`,
-        path: `/survey/overview/${id}/buat-template`,
+        path: `/survey/initiator/overview/${id}/buat-template`,
       },
     ]);
   }, [currentContentStage]);
@@ -270,7 +266,7 @@ const index = () => {
   };
 
   const handleClickResponden = () => {
-    router.push(`/survey/overview/${id}/buat-survey/responden`);
+    router.push(`/survey/initiator/overview/${id}/buat-survey/responden`);
   };
 
   const handleSaveInformation = async () => {

@@ -34,14 +34,14 @@ const index = () => {
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Survei", path: "/survey" },
-    { name: "Overview", path: "/survey/overview" },
+    { name: "Overview", path: "/survey/initiator/overview" },
     {
       name: `Buat Survei / Template Kuesioner`,
-      path: `/survey/overview/${id}/buat-survey`,
+      path: `/survey/initiator/overview/${id}/buat-survey`,
     },
     {
       name: `Preview`,
-      path: `/survey/overview/${id}/buat-survey/preview`,
+      path: `/survey/initiator/overview/${id}/buat-survey/preview`,
     },
   ];
 
