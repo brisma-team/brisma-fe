@@ -36,7 +36,7 @@ const ModalSelectedTemplateSurvey = ({
   handleChangeForm,
 }) => {
   const payloadInformasi = useSelector(
-    (state) => state.penilaianSurvey.payloadInformasi
+    (state) => state.createSurvey.payloadInformasi
   );
 
   const [optionTemplateSurvey, setOptionTemplateSurvey] = useState([]);

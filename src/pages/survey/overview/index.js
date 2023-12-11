@@ -8,6 +8,7 @@ import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
 import {
   CardFilterOverview,
   CardOverview,
+  ModalDetailSurvey,
 } from "@/components/molecules/survey/overview";
 import { LandingLayoutSurvey } from "@/layouts/survey";
 import { useEffect, useState } from "react";
@@ -15,6 +16,7 @@ import _ from "lodash";
 import { useOverview } from "@/data/survey/overview";
 import { useRouter } from "next/router";
 import { confirmationSwal, fetchApi, loadingSwal } from "@/helpers";
+import { useInformation } from "@/data/survey/informasi";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -26,13 +28,14 @@ const index = () => {
   const router = useRouter();
   const [data, setData] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
+  const [showModalSurveyDetail, setShowModalSurveyDetail] = useState(false);
   const [totalData, setTotalData] = useState(0);
+  const [selectedSurveyId, setSelectedSurveyId] = useState(0);
 
   const [filter, setFilter] = useState({
     nama_pembuat: "",
     pn_responden: "",
     project_code: "",
-    status_active: "",
     status_approver: "",
     status_survey: "",
     jenis_survey: "",
@@ -46,7 +49,6 @@ const index = () => {
     nama_pembuat: "",
     pn_responden: "",
     project_code: "",
-    status_active: "",
     status_approver: "",
     status_survey: "",
     jenis_survey: "",
@@ -57,11 +59,8 @@ const index = () => {
     page: 1,
   });
 
-  useEffect(() => {
-    console.log("params => ", params);
-  }, [params]);
-
   const { overview, overviewMutate } = useOverview("all", params);
+  const { information } = useInformation({ id: selectedSurveyId });
 
   useEffect(() => {
     setTotalData(overview?.pagination?.totalItems);
@@ -71,13 +70,15 @@ const index = () => {
           id: v.id,
           jenis_kode: v.jenis_survey_kode,
           jenis_nama: v.jenis_survey_name,
+          nama_survey: v.nama_survey,
           kode: v.project_survey_id,
           desc: v.deskripsi,
           tanggal_pelaksanaan: `${v.pelaksanaan_start} s/d ${v.pelaksanaan_end}`,
-          createdBy: v.create_by.pn,
+          createdBy: v.create_by,
           createdAt: v.createdAt,
+          status_kode: v.status_kode,
+          status_name: v.status_name,
           status_persetujuan: v.status_persetujuan,
-          is_active: v.is_active,
         };
       });
 
@@ -111,57 +112,34 @@ const index = () => {
     });
   };
 
-  const handleEnableTemplate = async (id) => {
-    const confirm = await confirmationSwal(
-      "Apakah anda yakin ingin mengaktifkan template survey ini?"
-    );
-    if (!confirm.value) {
-      return;
-    }
-
-    loadingSwal();
-    await fetchApi(
-      "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/aktivasi/${id}?is_active=true`,
-      {}
-    );
-    overviewMutate();
-    loadingSwal("close");
-  };
-
-  const handleDisableTemplate = async (id) => {
-    const confirm = await confirmationSwal(
-      "Apakah Anda yakin ingin menonaktifkan template survey ini?"
-    );
-    if (!confirm.value) {
-      return;
-    }
-
-    loadingSwal();
-    await fetchApi(
-      "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/aktivasi/${id}?is_active=false`,
-      {}
-    );
-    overviewMutate();
-    loadingSwal("close");
-  };
-
-  const handleClickSimulation = (id) => {
-    router.push(`overview/buat-template/${id}/rumus`);
+  const handleClickStop = (id) => {
+    console.log("stop");
   };
 
   const handleClickApproval = (id) => {
-    router.push(`overview/buat-template/${id}?isOpenModalApproval=true`);
+    router.push(`overview/${id}/buat-survey?isOpenModalApproval=true`);
+  };
+
+  const handleClickDetail = (id) => {
+    setShowModalSurveyDetail(true);
+    setSelectedSurveyId(id);
   };
 
   const handleClickDownload = (id) => {
-    console.log("download");
+    router.push(`overview/${id}/buat-survey/preview`);
   };
 
-  const handleDeleteTemplate = async (id) => {
+  const handleClickShowScoreSurvey = (id) => {
+    router.push(`overview/${id}/buat-survey/penilaian`);
+  };
+
+  const handleExtendSurvey = (id) => {
+    console.log("extend");
+  };
+
+  const handleDeleteSurvey = async (id) => {
     const confirm = await confirmationSwal(
-      "Apakah anda yakin ingin menghapus template survey ini?"
+      "Apakah anda yakin ingin menghapus survey ini?"
     );
     if (!confirm.value) {
       return;
@@ -170,10 +148,14 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "DELETE",
-      `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/delete/${id}`
+      `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/delete/${id}`
     );
     overviewMutate();
     loadingSwal("close");
+  };
+
+  const handleCloseModalSurveyDetail = () => {
+    setShowModalSurveyDetail(false);
   };
 
   return (
@@ -194,7 +176,7 @@ const index = () => {
             </div>
             <div className="w-36 rounded bg-atlasian-purple">
               <ButtonField
-                handler={() => router.push("overview/buat-template/new")}
+                handler={() => router.push(`overview/new/buat-survey`)}
                 text={"Buat Template"}
               />
             </div>
@@ -221,12 +203,13 @@ const index = () => {
                   <CardOverview
                     key={idx}
                     data={item}
-                    handleEnableTemplate={handleEnableTemplate}
-                    handleDisableTemplate={handleDisableTemplate}
-                    handleClickApproval={handleClickApproval}
-                    handleClickDownload={handleClickDownload}
-                    handleClickSimulation={handleClickSimulation}
-                    handleDeleteTemplate={handleDeleteTemplate}
+                    handleStopSurvey={handleClickStop}
+                    handleDetailSurvey={handleClickDetail}
+                    handleDownloadSurvey={handleClickDownload}
+                    handleApprovalSurvey={handleClickApproval}
+                    handleExtendSurvey={handleExtendSurvey}
+                    handleShowScoreSurvey={handleClickShowScoreSurvey}
+                    handleDeleteSurvey={handleDeleteSurvey}
                   />
                 );
               })}
@@ -243,6 +226,11 @@ const index = () => {
         />
         {/* End Content */}
       </div>
+      <ModalDetailSurvey
+        showModal={showModalSurveyDetail}
+        handleCloseModal={handleCloseModalSurveyDetail}
+        data={information?.data}
+      />
     </LandingLayoutSurvey>
   );
 };

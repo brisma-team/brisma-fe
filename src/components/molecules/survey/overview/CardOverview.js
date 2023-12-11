@@ -1,8 +1,10 @@
 import { ButtonIcon, Card, DivButton } from "@/components/atoms";
 import { IconBullet } from "@/components/icons";
 import { DropdownCard } from "@/components/molecules/commons";
-import { convertDate } from "@/helpers";
+import useUser from "@/data/useUser";
+import { checkRoleIsAdmin, convertDate } from "@/helpers";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const Content = ({ title, text }) => {
   return (
@@ -15,30 +17,58 @@ const Content = ({ title, text }) => {
 
 const CardOverview = ({
   data,
-  handleEnableTemplate,
-  handleDisableTemplate,
-  handleClickSimulation,
-  handleClickApproval,
-  handleClickDownload,
-  handleDeleteTemplate,
+  handleStopSurvey,
+  handleDetailSurvey,
+  handleDownloadSurvey,
+  handleApprovalSurvey,
+  handleExtendSurvey,
+  handleShowScoreSurvey,
+  handleDeleteSurvey,
 }) => {
   const router = useRouter();
+  const [isInitiator, setIsInitiator] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const { user } = useUser();
+
+  useEffect(() => {
+    setIsAdmin(checkRoleIsAdmin(user.data.role_kode));
+    setIsInitiator(data?.createdBy?.pn === user?.data?.pn);
+  }, [user, data]);
+
   const listDropdown = [
     {
       label: "Hentikan",
-      action: () => handleEnableTemplate(data.id),
-      isDisabled: !(data.status_persetujuan === "Final" && !data.is_active),
+      action: async () => await handleStopSurvey(data.id),
+      isDisabled: !(data.status_kode == 4),
     },
     {
       label: "Detail",
-      action: () => handleDisableTemplate(data.id),
-      isDisabled: !data.is_active,
+      action: () => handleDetailSurvey(data.id),
     },
-    { label: "Download", action: async () => handleClickDownload(data.id) },
-    { label: "Approval", action: async () => handleClickDownload(data.id) },
-    { label: "Perpanjang", action: async () => handleClickDownload(data.id) },
-    { label: "Lihat Nilai", action: async () => handleClickDownload(data.id) },
-    { label: "Hapus", action: async () => await handleDeleteTemplate(data.id) },
+    {
+      label: "Download",
+      action: async () => await handleDownloadSurvey(data.id),
+    },
+    { label: "Approval", action: async () => handleApprovalSurvey(data.id) },
+    {
+      label: "Perpanjang",
+      action: async () => await handleExtendSurvey(data.id),
+      isDisabled: !((isAdmin || isInitiator) && data.status_kode == 5),
+    },
+    {
+      label: "Lihat Nilai",
+      action: async () => handleShowScoreSurvey(data.id),
+      isDisabled: !(
+        (isAdmin && [4, 5].includes(parseInt(data.status_kode))) ||
+        (isInitiator && data.status_kode == 5)
+      ),
+    },
+    {
+      label: "Hapus",
+      action: async () => await handleDeleteSurvey(data.id),
+      isDisabled: !(data.status_kode == 1),
+    },
   ];
 
   const bgColor = {
@@ -51,7 +81,7 @@ const CardOverview = ({
   return (
     <DivButton
       className="hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
-      handleClick={() => router.push(`overview/buat-template/${data.id}`)}
+      handleClick={() => router.push(`overview/${data.id}/buat-survey`)}
     >
       <Card>
         <div className="w-full py-3">
@@ -87,7 +117,10 @@ const CardOverview = ({
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-3 px-4">
               <div className="text-xl font-bold text-atlasian-blue-dark">
-                {data.kode}
+                {data.kode.toUpperCase()}
+              </div>
+              <div className="text-base font-semibold text-atlasian-blue-dark -mt-1.5">
+                {data.nama_survey}
               </div>
               <div className="text-base text-justify text-atlasian-blue-dark">
                 {data.desc}
@@ -98,13 +131,16 @@ const CardOverview = ({
             </div>
             <hr />
             <div className="w-full flex flex-col gap-1 px-4">
-              <Content title={"Nama Pembuat"} text={data.createdBy} />
+              <Content title={"Nama Pembuat"} text={data.createdBy.fullName} />
               <Content
                 title={"Tanggal Pembuatan"}
                 text={convertDate(data.createdAt, "-", "d")}
               />
-              <Content title={"Status Survei"} text={"-"} />
-              <Content title={"Status Approval"} text={"-"} />
+              <Content title={"Status Survei"} text={data.status_name || "-"} />
+              <Content
+                title={"Status Approval"}
+                text={data.status_persetujuan || "-"}
+              />
             </div>
           </div>
         </div>

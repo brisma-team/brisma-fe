@@ -2,6 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   objData: {},
+  workflowData: {
+    sub_modul: "",
+    sub_modul_id: "",
+    pic: "",
+    ref_tim_audit_approver: [],
+    note: "",
+  },
   historyWorkflow: [],
   payloadInformasi: {
     nama_survey: "",
@@ -15,6 +22,14 @@ const initialState = {
     ref_template_name: "",
     ref_template_desc: "",
   },
+  workflowDefaultData: {
+    sub_modul: "",
+    sub_modul_id: "",
+    pic: "",
+    ref_tim_audit_approver: [],
+    ref_tim_audit_signer: [],
+    note: "",
+  },
   defaultPayloadInformasi: {
     nama_survey: "",
     deskripsi: "",
@@ -26,14 +41,8 @@ const initialState = {
     ref_template_id: "",
     ref_template_desc: "",
   },
-  workflowData: {
-    sub_modul: "",
-    sub_modul_id: "",
-    pic: "",
-    ref_tim_audit_approver: [],
-    note: "",
-  },
   payloadKuesioner: [],
+  validationErrorsWorkflow: {},
 
   payloadPertanyaan: {
     id: "",
@@ -46,14 +55,7 @@ const initialState = {
     bobot: 0,
     jawaban: [{ bobot: 0, text: "" }],
   },
-  workflowDefaultData: {
-    sub_modul: "",
-    sub_modul_id: "",
-    pic: "",
-    ref_tim_audit_approver: [],
-    ref_tim_audit_signer: [],
-    note: "",
-  },
+
   defaultPayloadPertanyaan: {
     id: "",
     template_id: "",
@@ -65,7 +67,6 @@ const initialState = {
     bobot: 0,
     jawaban: [{ bobot: 0, text: "" }],
   },
-  validationErrorsWorkflow: {},
 };
 
 export const createSurveySlice = createSlice({
@@ -90,10 +91,6 @@ export const createSurveySlice = createSlice({
     setPayloadKuesioner: (state, action) => {
       state.payloadKuesioner = action.payload;
     },
-
-    setPayloadPertanyaan: (state, action) => {
-      state.payloadPertanyaan = action.payload;
-    },
     setValidationErrorsWorkflow: (state, action) => {
       state.validationErrorsWorkflow = action.payload;
     },
@@ -103,14 +100,18 @@ export const createSurveySlice = createSlice({
     resetHistoryWorkflow: (state) => {
       state.historyWorkflow = [];
     },
+    resetValidationErrorsWorkflow: (state) => {
+      state.validationErrorsWorkflow = {};
+    },
+
+    setPayloadPertanyaan: (state, action) => {
+      state.payloadPertanyaan = action.payload;
+    },
     resetPayloadPertanyaan: (state) => {
       state.payloadPertanyaan = { ...state.defaultPayloadPertanyaan };
     },
     resetPayloadKuesioner: (state) => {
       state.payloadKuesioner = [];
-    },
-    resetValidationErrorsWorkflow: (state) => {
-      state.validationErrorsWorkflow = {};
     },
   },
 });

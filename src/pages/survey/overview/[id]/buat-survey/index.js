@@ -16,6 +16,9 @@ import {
   setPayloadInformasi,
   setWorkflowData,
   setPayloadKuesioner,
+  resetValidationErrorsWorkflow,
+  setValidationErrorsWorkflow,
+  resetPayloadInformasi,
 } from "@/slices/survey/createSurveySlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
@@ -27,9 +30,9 @@ import {
   loadingSwal,
   setErrorValidation,
 } from "@/helpers";
-import { useWorkflow } from "@/data/reference/admin-survey/informasi";
+import { useWorkflowSurvey } from "@/data/survey/buat-survey";
 import _ from "lodash";
-import { workflowSchema } from "@/helpers/schemas/reference/adminSurveiSchema";
+import { workflowSchema } from "@/helpers/schemas/survey/createSurveySchema";
 import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common";
 import { LandingLayoutSurvey } from "@/layouts/survey";
 import { useInformation, useKuesioner } from "@/data/survey/informasi";
@@ -74,10 +77,12 @@ const index = () => {
 
   const { information, informationError } = useInformation({ id });
   const { kuesioner, kuesionerError } = useKuesioner({ id });
-  const { workflow, workflowMutate } = useWorkflow({
-    sub_modul: "template_survey",
-    sub_modul_id: id,
-  });
+  const { workflowSurvey, workflowSurveyMutate } = useWorkflowSurvey(
+    "project_survey",
+    {
+      id,
+    }
+  );
 
   useEffect(() => {
     setIsNewTemplate(id === "new");
@@ -86,6 +91,10 @@ const index = () => {
       { ...prevItems[1], isDisabled: false },
     ]);
   }, [id]);
+
+  useEffect(() => {
+    if (isOpenModalApproval) setShowModalApproval(true);
+  }, [isOpenModalApproval]);
 
   useEffect(() => {
     const {
@@ -107,10 +116,6 @@ const index = () => {
   }, [payloadInformasi]);
 
   useEffect(() => {
-    if (isOpenModalApproval) setShowModalApproval(true);
-  }, [isOpenModalApproval]);
-
-  useEffect(() => {
     if (!informationError) {
       dispatch(
         setPayloadInformasi(
@@ -125,6 +130,10 @@ const index = () => {
       );
     }
   }, [information]);
+
+  useEffect(() => {
+    console.log("payloadInformasi => ", payloadInformasi);
+  }, [payloadInformasi]);
 
   useEffect(() => {
     if (!kuesionerError && kuesioner?.data?.kategori?.length) {
@@ -182,9 +191,9 @@ const index = () => {
   }, [currentContentStage]);
 
   useEffect(() => {
-    const workflowInfo = workflow?.data?.info;
-    const maker = workflow?.data?.initiator;
-    const approvers = workflow?.data?.approver;
+    const workflowInfo = workflowSurvey?.data?.info;
+    const maker = workflowSurvey?.data?.initiator;
+    const approvers = workflowSurvey?.data?.approver;
 
     const newWorkflowData = {
       ...workflowData,
@@ -204,8 +213,8 @@ const index = () => {
       newWorkflowData.ref_tim_audit_approver = mappingApprovers;
     }
 
-    if (workflow?.data?.log?.length) {
-      const mapping = workflow?.data?.log?.map((v) => {
+    if (workflowSurvey?.data?.log?.length) {
+      const mapping = workflowSurvey?.data?.log?.map((v) => {
         return {
           "P.I.C": v?.from?.pn + " - " + v?.from?.nama,
           Alasan: v?.note,
@@ -222,7 +231,7 @@ const index = () => {
     }
 
     dispatch(setWorkflowData(newWorkflowData));
-  }, [workflow]);
+  }, [workflowSurvey]);
 
   // [ START ] Handler for content stage informasi
   const handleChangeFormInformasi = (property, value) => {
@@ -257,8 +266,8 @@ const index = () => {
     setCurrentContentStage(2);
   };
 
-  const handleClickFormula = () => {
-    router.push(`${id}/rumus`);
+  const handleClickResponden = () => {
+    router.push(`/survey/overview/${id}/buat-survey/responden`);
   };
 
   const handleSaveInformation = async () => {
@@ -287,6 +296,8 @@ const index = () => {
       }
     });
 
+    dispatch(resetPayloadInformasi());
+    setShowModalSelectedTemplateSurvey(false);
     loadingSwal("close");
   };
 
@@ -368,15 +379,15 @@ const index = () => {
     e.preventDefault();
     const schemaMapping = {
       schema: workflowSchema,
-      resetErrors: null,
-      setErrors: null,
+      resetErrors: resetValidationErrorsWorkflow,
+      setErrors: setValidationErrorsWorkflow,
     };
     const validate = setErrorValidation(workflowData, dispatch, schemaMapping);
 
     if (validate) {
       const actionType = e.target.offsetParent.name;
       const data = {
-        sub_modul: "template_survey",
+        sub_modul: "project_survey",
         sub_modul_id: id,
       };
 
@@ -418,23 +429,23 @@ const index = () => {
       if (actionType === "change") {
         const response = await fetchApi(
           "PATCH",
-          `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/workflow/change`,
+          `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/change`,
           data
         );
         if (!response.isDismissed) return;
       } else {
         await fetchApi(
           "POST",
-          `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/workflow/${actionType}`,
+          `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/${actionType}`,
           data
         );
       }
 
-      workflowMutate();
+      workflowSurveyMutate();
       dispatch(resetWorkflowData());
       setShowModalApproval(false);
     }
-    workflowMutate();
+    workflowSurveyMutate();
   };
   // [ END ] Handler for modal approval
 
@@ -478,7 +489,7 @@ const index = () => {
               }
               handleSaveInformation={handleSaveInformation}
               handleClickOpenModalApproval={handleClickOpenModalApproval}
-              handleClickFormula={handleClickFormula}
+              handleClickResponden={handleClickResponden}
             />
           ) : (
             <TabKuesioner

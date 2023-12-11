@@ -12,7 +12,6 @@ import {
   FormLabel,
   TypeSurveySelect,
 } from "@/components/molecules/commons";
-import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
 const TabInformation = ({
@@ -23,9 +22,8 @@ const TabInformation = ({
   handleSaveInformation,
   handleClickAddKuesioner,
   handleClickOpenModalApproval,
-  handleClickFormula,
+  handleClickResponden,
 }) => {
-  const { id } = useRouter().query;
   const payloadInformasi = useSelector(
     (state) => state.createSurvey.payloadInformasi
   );
@@ -109,7 +107,9 @@ const TabInformation = ({
                       }
                     />
                   }
-                  value={!isNewTemplate ? id : ""}
+                  value={
+                    !isNewTemplate ? payloadInformasi?.project_survey_id : ""
+                  }
                 />
               }
             />
@@ -181,7 +181,7 @@ const TabInformation = ({
             <p className="text-xl font-semibold">Tindakan</p>
             <div className="my-5 flex flex-col gap-3">
               <div
-                className={`rounded w-36 ${
+                className={`rounded w-40 ${
                   isFormDisabled || isNewTemplate
                     ? `bg-atlasian-gray-light`
                     : `bg-atlasian-purple`
@@ -194,7 +194,7 @@ const TabInformation = ({
                 />
               </div>
               <div
-                className={`rounded w-36 ${
+                className={`rounded w-40 ${
                   isFormDisabled || isNewTemplate
                     ? `bg-atlasian-gray-light`
                     : `bg-atlasian-purple`
@@ -203,11 +203,11 @@ const TabInformation = ({
                 <ButtonField
                   text={"Responden"}
                   disabled={isFormDisabled || isNewTemplate}
-                  handler={handleClickAddKuesioner}
+                  handler={handleClickResponden}
                 />
               </div>
               <div
-                className={`rounded w-36 ${
+                className={`rounded w-40 ${
                   isFormDisabled
                     ? `bg-atlasian-gray-light`
                     : `bg-atlasian-yellow`
@@ -224,7 +224,7 @@ const TabInformation = ({
                 />
               </div>
               <div
-                className={`rounded w-36 ${
+                className={`rounded w-40 ${
                   isFormDisabled || isNewTemplate
                     ? `bg-atlasian-gray-light`
                     : `bg-atlasian-green`
@@ -234,19 +234,6 @@ const TabInformation = ({
                   text={"Approval"}
                   disabled={isFormDisabled || isNewTemplate}
                   handler={handleClickOpenModalApproval}
-                />
-              </div>
-              <div
-                className={`rounded w-36 ${
-                  isFormDisabled || isNewTemplate
-                    ? `bg-atlasian-gray-light`
-                    : `bg-atlasian-blue-light`
-                }`}
-              >
-                <ButtonField
-                  text={"Aktifkan"}
-                  disabled={isFormDisabled || isNewTemplate}
-                  handler={handleClickFormula}
                 />
               </div>
             </div>

@@ -4,33 +4,30 @@ import {
 } from "@/components/molecules/commons";
 import { PatSidebarOverview } from "@/components/molecules/pat";
 import { useEffect, useState } from "react";
-import { useOverview } from "@/data/reference/admin-survey/overview";
+import { useOverview } from "@/data/survey/overview";
 
 const LandingLayoutSurvey = ({ overflowY, withoutRightSidebar, children }) => {
   const [data, setData] = useState(null);
   const { overview } = useOverview("count", {});
 
+  useEffect;
+
   useEffect(() => {
     setData([
       {
         color: "text-atlasian-purple",
-        total: overview?.data?.total_templates.toString(),
-        name: "Survei Dibuat",
+        total: overview?.data?.total?.toString(),
+        name: "Total Survei",
       },
       {
         color: "text-atlasian-green",
-        total: overview?.data?.active_templates.toString(),
-        name: "Survei Berjalan",
-      },
-      {
-        color: "text-atlasian-yellow",
-        total: overview?.data?.inactive_templates.toString(),
-        name: "Survei Selesai",
+        total: overview?.data?.aktif?.toString(),
+        name: "Aktif",
       },
       {
         color: "text-atlasian-red",
-        total: overview?.data?.inactive_templates.toString(),
-        name: "Survei Ditutup",
+        total: overview?.data?.non_aktif?.toString(),
+        name: "Non-Aktif",
       },
     ]);
   }, [overview]);

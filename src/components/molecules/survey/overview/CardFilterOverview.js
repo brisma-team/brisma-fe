@@ -6,15 +6,15 @@ import {
 } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
 import CustomSelect from "@/components/molecules/commons/CustomSelect";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TypeSurveySelect } from "../../commons";
 
 const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
   const [selectOptionValue, setSelectOptionValue] = useState({
     jenis_survey_kode: "",
     jenis_survey_nama: "",
-    kode_status_active: "",
-    nama_status_active: "",
+    status_kode: "",
+    status_name: "",
   });
 
   const handleChange = (property, value) => {
@@ -26,20 +26,21 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
       setSelectOptionValue((prev) => {
         return {
           ...prev,
-          jenis_survey_kode: e.value,
-          jenis_survey_nama: e.label,
+          jenis_survey_kode: e.value.kode,
+          jenis_survey_nama: e.value.nama,
         };
       });
-    } else if (property === "status_active") {
+      setFilter({ ...filter, [property]: e.value.kode });
+    } else if (property === "status_survey") {
       setSelectOptionValue((prev) => {
         return {
           ...prev,
-          kode_status_active: e.value,
-          nama_status_active: e.label,
+          status_kode: e.value,
+          status_name: e.label,
         };
       });
+      setFilter({ ...filter, [property]: e.value });
     }
-    setFilter({ ...filter, [property]: e.value });
   };
 
   const handleResetSelect = (property, value) => {
@@ -111,31 +112,12 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
                   customIcon={
                     <ButtonIcon
                       icon={<IconClose />}
-                      handleClick={() => handleResetSelect("jenis_survey", "")}
-                    />
-                  }
-                />
-              </div>
-              <div className="w-48">
-                <CustomSelect
-                  optionValue={[
-                    { label: "Active", value: "true" },
-                    { label: "Inactive", value: "false" },
-                  ]}
-                  selectedValue={
-                    selectOptionValue.kode_status_active
-                      ? {
-                          label: selectOptionValue.nama_status_active,
-                          value: selectOptionValue.kode_status_active,
-                        }
-                      : null
-                  }
-                  placeholder={"Status Aktif"}
-                  handleChange={(e) => handleChangeSelect("status_active", e)}
-                  customIcon={
-                    <ButtonIcon
-                      icon={<IconClose />}
-                      handleClick={() => handleResetSelect("status_active", "")}
+                      handleClick={() =>
+                        handleResetSelect("jenis_survey", {
+                          label: "",
+                          value: { kode: "", nama: "" },
+                        })
+                      }
                     />
                   }
                 />
@@ -145,12 +127,8 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
                   optionValue={[
                     { label: "On Progress", value: "On Progress" },
                     {
-                      label: "On Approver Active",
-                      value: "On Approver Active",
-                    },
-                    {
-                      label: "On Approver Inactive",
-                      value: "On Approver Inactive",
+                      label: "On Approver",
+                      value: "On Approver",
                     },
                     { label: "Final", value: "Final" },
                   ]}
@@ -163,38 +141,37 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
                       : null
                   }
                   placeholder={"Status Approver"}
-                  handleChange={(e) => handleChangeSelect("status_approver", e)}
+                  handleChange={(e) => handleChange("status_approver", e.value)}
                   customIcon={
                     <ButtonIcon
                       icon={<IconClose />}
-                      handleClick={() =>
-                        handleResetSelect("status_approver", "")
-                      }
+                      handleClick={() => handleChange("status_approver", "")}
                     />
                   }
                 />
               </div>
-            </div>
-            <div className="flex flex-col gap-3">
               <div className="w-48">
                 <CustomSelect
                   optionValue={[
-                    { label: "Draft", value: "Draft" },
+                    { label: "Draft", value: "1" },
+                    {
+                      label: "Pending Approval",
+                      value: "2",
+                    },
                     {
                       label: "Belum dimulai",
-                      value: "Belum dimulai",
+                      value: "3",
                     },
-                    {
-                      label: "Sedang berlangsung",
-                      value: "Sedang berlangsung",
-                    },
-                    { label: "Selesai", value: "Selesai" },
+                    { label: "Sedang Berlangsung", value: "4" },
+                    { label: "Selesai", value: "5" },
+                    { label: "Pending Perpanjangan", value: "6" },
+                    { label: "Pending Pemberhentian", value: "7" },
                   ]}
                   selectedValue={
-                    filter.status_survey
+                    selectOptionValue.status_kode
                       ? {
-                          label: filter.status_survey,
-                          value: filter.status_survey,
+                          label: selectOptionValue.status_name,
+                          value: selectOptionValue.status_kode,
                         }
                       : null
                   }
@@ -203,11 +180,18 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
                   customIcon={
                     <ButtonIcon
                       icon={<IconClose />}
-                      handleClick={() => handleResetSelect("status_survey", "")}
+                      handleClick={() =>
+                        handleResetSelect("status_survey", {
+                          label: "",
+                          value: "",
+                        })
+                      }
                     />
                   }
                 />
               </div>
+            </div>
+            <div className="flex flex-col gap-3">
               <div className="w-48">
                 <DatepickerField
                   placeholder={"Tanggal Dimulai"}
