@@ -11,10 +11,6 @@ import {
   TabKuesioner,
 } from "@/components/molecules/survey/initiator/buat-template";
 import { useSelector } from "react-redux";
-import {
-  resetPayloadKuesioner,
-  setPayloadInformasi,
-} from "@/slices/survey/penilaianSurveySlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { previewPrintDocument } from "@/helpers";
@@ -24,7 +20,11 @@ import {
   useInformation,
   useKuesioner,
 } from "@/data/survey/initiator/informasi";
-import { setPayloadKuesioner } from "@/slices/survey/penilaianSurveySlice";
+import {
+  resetPayloadKuesioner,
+  setPayloadInformasi,
+  setPayloadKuesioner,
+} from "@/slices/survey/initiator/penilaianSurveySlice";
 import { IconArrowLeft } from "@/components/icons";
 
 const index = () => {

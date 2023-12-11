@@ -15,7 +15,7 @@ import {
   setDataTables,
   setPayloadNewResponden,
   setPayloadNewUker,
-} from "@/slices/survey/respondenSurveySlice";
+} from "@/slices/survey/initiator/respondenSurveySlice";
 import { confirmationSwal, errorSwal, fetchApi, loadingSwal } from "@/helpers";
 import {
   TableResponden,
