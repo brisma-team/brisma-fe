@@ -1,7 +1,7 @@
-import { Breadcrumbs, PageTitle, Card } from "@/components/atoms";
+import { Breadcrumbs, PageTitle, Card, ButtonField } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ltmajorHtml } from "@/templates/catalog/ewp";
 import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 import { useRTAById } from "@/data/catalog";
@@ -12,6 +12,7 @@ const index = () => {
   const router = useRouter();
 
   const [list, setList] = useState([]);
+  const [limit, setLimit] = useState(5);
   const [params, setParams] = useState({
     year: "2023",
     type: "2",
@@ -30,11 +31,12 @@ const index = () => {
     });
   }, [router.isReady]);
 
-  const { rtaDetail, rtaDetailIsLoading } = useRTAById(
+  const { rtaDetail, rtaDetailIsLoading, rtaDetailIsValidating } = useRTAById(
     params.year,
     params.type,
     params.id,
-    "temuan-major"
+    "temuan-major",
+    limit
   );
 
   useEffect(() => {
@@ -47,9 +49,12 @@ const index = () => {
     rtaDetailIsLoading ? loadingSwal() : loadingSwal("close");
   }, [rtaDetailIsLoading]);
 
+  const handleClickLoadMore = useCallback(() => {
+    setLimit((prev) => prev + 5);
+  }, []);
+
   const baseUrl = "/catalogue/ewp";
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: baseUrl },
     { name: "Daftar Dokumen", path: baseUrl + "/" + params.uri },
@@ -103,9 +108,22 @@ const index = () => {
                     ) : (
                       list?.map((data, i) => {
                         return (
-                          <p className="text-base" key={i}>
+                          <button
+                            className="text-sm hover:underline text-left justify-normal mb-1 p-2"
+                            onClick={() =>
+                              router.push(
+                                baseUrl +
+                                  "/" +
+                                  params.uri +
+                                  "/laporan-temuan-major" +
+                                  "#kkpt" +
+                                  (i + 1)
+                              )
+                            }
+                            key={i}
+                          >
                             {i + 1 + ". " + data.KKPTTitle}
-                          </p>
+                          </button>
                         );
                       })
                     )}
@@ -136,13 +154,8 @@ const index = () => {
               {list?.map((data, i) => {
                 return (
                   <div className="mb-4" key={i}>
-                    <h5 className="mb-5 font-bold">
-                      {i +
-                        1 +
-                        ". (kkptid: " +
-                        data.KKPTID +
-                        ") - " +
-                        data.KKPTTitle}
+                    <h5 className="mb-5 font-bold" id={"kkpt" + (i + 1)}>
+                      {i + 1 + ". " + data.KKPTTitle}
                     </h5>
                     <DocumentViewer
                       documentTitle="Kertas Kerja Pengawasan Temuan"
@@ -153,6 +166,22 @@ const index = () => {
                   </div>
                 );
               })}
+              {!rtaDetailIsValidating ? (
+                limit < rtaDetail?.data?.total_data ? (
+                  <div className="w-[59rem] bg-blue-800 rounded-md hover:bg-brisma">
+                    <ButtonField
+                      text={"Load More"}
+                      handler={handleClickLoadMore}
+                    />
+                  </div>
+                ) : (
+                  ""
+                )
+              ) : (
+                <h4 className="text-center my-8">
+                  Loading data, mohon tunggu...
+                </h4>
+              )}
             </div>
           </div>
         </div>

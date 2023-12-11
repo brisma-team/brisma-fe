@@ -14,7 +14,6 @@ import { xcodeLight } from "@uiw/codemirror-theme-xcode";
 
 const index = () => {
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     {
       name: "Pencarian Dokumen KKPT",
@@ -132,7 +131,7 @@ const index = () => {
   // It works, but it's supposed to accomodate whole schema, not just columns.
   const colObject = {};
   few.forEach((v) => {
-    colObject[v["Nama Kolom"]] = []
+    colObject[v["Nama Kolom"]] = [];
   });
 
   // const exportToExcel = () => {
@@ -238,20 +237,20 @@ const index = () => {
                 </div>
               </div>
             </div>
-            <div 
-              className="p-6 w-full h-full rounded-lg border-[1.5px] border-[#83606025]" 
+            <div
+              className="p-6 w-full h-full rounded-lg border-[1.5px] border-[#83606025]"
               style={{ boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.20)" }}
             >
-              <CodeMirror  
+              <CodeMirror
                 value="audityear = ..."
-                height="300px" 
+                height="300px"
                 theme={xcodeLight}
-                extensions={[ 
-                  sql({ 
+                extensions={[
+                  sql({
                     upperCaseKeywords: true,
                     dialect: StandardSQL,
-                    schema: colObject
-                  })
+                    schema: colObject,
+                  }),
                 ]}
                 onChange={(e) => setWhereClause(e)}
                 basicSetup={{

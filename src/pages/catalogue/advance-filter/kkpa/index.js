@@ -14,7 +14,6 @@ import { xcodeLight } from "@uiw/codemirror-theme-xcode";
 
 const index = () => {
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     {
       name: "Pencarian Dokumen KKPA",

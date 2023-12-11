@@ -5,7 +5,6 @@ import {
   TextInput,
   TooltipField,
   Select,
-  // ButtonIcon,
 } from "@/components/atoms";
 import { IconArrowLeft, IconArrowRight } from "@/components/icons";
 import Button from "@atlaskit/button";
@@ -322,44 +321,12 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                       placeholder="Masukkan Nama Project"
                     />
                   </div>
-                  {/* Additional Filter (Periode Audit, Jenis Audit) */}
-                  {/* <div className="p-3 font-semibold text-sm">Periode Audit</div>
-                  <div className="p-1 pl-10 col-span-3">
-                    <Select
-                      optionValue={[
-                        { label: "Triwulan I", value: "I" },
-                        { label: "Triwulan II", value: "II" },
-                        { label: "Triwulan III" },
-                        { label: "Triwulan IV", value: "IV" },
-                      ]}
-                      placeholder="Pilih Periode"
-                      isSearchable={false}
-                    />
-                  </div>
-                  <div className="p-3 font-semibold text-sm">Jenis Audit</div>
-                  <div className="p-1 pl-10 col-span-3">
-                    <Select
-                      optionValue={[
-                        { label: "Reguler", value: "Reguler" },
-                        { label: "Special", value: "Special" },
-                        { label: "Tematik", value: "Tematik" },
-                      ]}
-                      placeholder="Pilih Jenis"
-                      isSearchable={false}
-                    />
-                  </div> */}
                   {sourceType == 2 && (
                     <>
                       <div className="p-3 font-semibold text-sm">
                         Tipe Audit
                       </div>
                       <div className="p-1 pl-10 col-span-3">
-                        {/* <TextInput
-                          onChange={(e) => {
-                            setAuditType(e.target.value);
-                          }}
-                          placeholder="Masukkan Tipe Audit"
-                        /> */}
                         {source == 1 && (
                           <Select
                             placeholder={"Masukkan Tipe Audit"}
@@ -376,7 +343,6 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                         {source == 2 && (
                           <CategorySelect
                             placeholder={"Masukkan Tipe Audit"}
-                            // customIcon={<ButtonIcon icon={<IconClose />} />}
                             handleChange={(e) => handleAuditTypeChange(e)}
                           />
                         )}
@@ -389,11 +355,6 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
                         Kantor Audit
                       </div>
                       <div className="p-1 pl-10 col-span-3">
-                        {/* <AuditOfficeSelect
-                          placeholder={"Masukkan Kantor Audit"}
-                          // customIcon={<ButtonIcon icon={<IconClose />} />}
-                          handleChange={(e) => console.log(e)}
-                        /> */}
                         <TextInput
                           onChange={(e) => {
                             setAuditOffice(e.target.value);

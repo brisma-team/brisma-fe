@@ -59,11 +59,9 @@ const index = () => {
     setLoadingGet(riskProfileIsLoading);
     riskProfileIsLoading ? loadingSwal() : loadingSwal("close");
   }, [riskProfileIsLoading]);
-  console.log(riskProfileIsLoading);
 
   const baseUrl = "/catalogue/ewp";
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: baseUrl },
     { name: "Daftar Dokumen", path: baseUrl + "/" + params.uri },

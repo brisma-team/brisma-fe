@@ -1,5 +1,5 @@
 import { convertToRupiah } from "@/helpers";
-const rtaHtml = (data, penyebabList = [], rekomendasiList = []) => {
+const rtaHtml = (data) => {
   const convertSkorDampak = (skorDampak) => {
     if (skorDampak == "ST" || skorDampak == 5) {
       return "Sangat Tinggi";
@@ -167,10 +167,9 @@ const rtaHtml = (data, penyebabList = [], rekomendasiList = []) => {
           </thead>
           <tbody>
           ${
-            penyebabList?.length > 0
-              ? penyebabList
-                  .map((x) => {
-                    return `<tr style="height: 18px;text-align: center">
+            data?.Penyebab?.length > 0
+              ? data.Penyebab.map((x) => {
+                  return `<tr style="height: 18px;text-align: center">
                 <td style="height: 18px;">
                   ${x.PenyebabKode}
                 </td>
@@ -189,8 +188,7 @@ const rtaHtml = (data, penyebabList = [], rekomendasiList = []) => {
                   
                 </td>
               </tr>`;
-                  })
-                  .join(" ")
+                }).join(" ")
               : "<tr><td colspan='4' style='text-align:center'><i>Tidak ada data</i></td></tr>"
           }
               
@@ -239,18 +237,22 @@ const rtaHtml = (data, penyebabList = [], rekomendasiList = []) => {
     </thead>
      <tbody>
      ${
-       rekomendasiList?.length > 0
-         ? rekomendasiList
-             .map((item) => {
-               return `<tr style="height: 18px;">
-      <td style=" height: 18px;text-align: center">${item.TipeRekomendasiName}</td>
-      <td style=" height: 18px;text-align: center">${item.BranchTujuan}</td>
-      <td style=" height: 18px;text-align: center">${item.OrgehTujuan}</td>
-      <td style=" height: 18px;">${item.ItemDesc}</td>
-    </tr>`;
-             })
-             .join(" ")
-         : `<tr style="height: 18px;"><td colspan="4" style=" height: 18px;text-align: center"><i>Tidak ada data</i></td></tr>`
+       data?.Rekomendasi?.length > 0
+         ? data.Rekomendasi.map((item) => {
+             return `<tr style="height: 18px;">
+     <td style=" height: 18px;text-align: center">${
+       item.TipeRekomendasiName || "-"
+     }</td>
+     <td style=" height: 18px;text-align: center">${
+       item.BranchTujuan || "-"
+     }</td>
+     <td style=" height: 18px;text-align: center">${
+       item.OrgehTujuan || "-"
+     }</td>
+     <td style=" height: 18px;">${item.ItemDesc || "-"}</td>
+   </tr>`;
+           }).join(" ")
+         : `<tr><td colspan="4" style="height: 18px;text-align: center">Data tidak ditemukan</td></tr>`
      }
        
      </tbody>

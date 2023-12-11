@@ -15,7 +15,6 @@ const index = () => {
   const [rekomendasiList, setRekomendasiList] = useState([]);
 
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: "/catalogue/ewp" },
   ];
@@ -33,7 +32,6 @@ const index = () => {
       setRekomendasiList(kkptDetail.data.rekomendasi);
     }
   }, [kkptDetail]);
-  console.log(data);
 
   return (
     <MainLayout>

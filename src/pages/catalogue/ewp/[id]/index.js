@@ -144,7 +144,6 @@ const index = () => {
   );
 
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: "/catalogue/ewp" },
     { name: "Daftar Dokumen", path: "/catalogue/ewp/" + params.id },
@@ -155,7 +154,6 @@ const index = () => {
       setTotalPages(allAttachmentData?.data?.total_page);
       const mappingAttachment = allAttachmentData?.data?.all_attachment?.map(
         (v, key) => {
-          console.log(params.type, v?.FileURL[0]);
           return {
             No: (currentPage - 1) * 5 + key + 1,
             "Nama Dokumen": shortenWord(

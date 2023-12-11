@@ -1,7 +1,7 @@
-import { Breadcrumbs, PageTitle, Card } from "@/components/atoms";
+import { Breadcrumbs, PageTitle, Card, ButtonField } from "@/components/atoms";
 import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
 import rtaHtml from "@/templates/catalog/ewp/rta";
 import { useRTAById } from "@/data/catalog";
@@ -11,6 +11,7 @@ const index = () => {
   const router = useRouter();
 
   const [list, setList] = useState([]);
+  const [limit, setLimit] = useState(7);
   const [params, setParams] = useState({
     year: "2023",
     type: "2",
@@ -30,12 +31,12 @@ const index = () => {
     });
   }, [router.isReady]);
 
-  const { rtaDetail, rtaDetailIsLoading } = useRTAById(
+  const { rtaDetail, rtaDetailIsLoading, rtaDetailIsValidating } = useRTAById(
     params.year,
     params.type,
     params.id,
     "all",
-    7
+    limit
   );
 
   useEffect(() => {
@@ -48,9 +49,12 @@ const index = () => {
     rtaDetailIsLoading ? loadingSwal() : loadingSwal("close");
   }, [rtaDetailIsLoading]);
 
+  const handleClickLoadMore = useCallback(() => {
+    setLimit((prev) => prev + 7);
+  }, []);
+
   const baseUrl = "/catalogue/ewp";
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "E.W.P", path: baseUrl },
     { name: "Daftar Dokumen", path: baseUrl + "/" + params.uri },
@@ -83,15 +87,36 @@ const index = () => {
               <div>
                 <Card>
                   <div className="w-full h-full px-3 p-5">
-                    <u className="font-bold text-base">Kumpulan KKPT</u>
+                    <u className="font-bold text-base">Kumpulan KKPT</u>(
+                    {!rtaDetailIsLoading
+                      ? limit > rtaDetail?.data?.total_data
+                        ? rtaDetail?.data?.total_data +
+                          "/" +
+                          rtaDetail?.data?.total_data
+                        : limit + " / " + rtaDetail?.data?.total_data + " Docs"
+                      : "-"}
+                    )
                     {rtaDetailIsLoading ? (
                       <p>Loading data...</p>
                     ) : (
                       list?.map((data, i) => {
                         return (
-                          <p className="text-base" key={i}>
-                            {data.KKPTID + " - " + data.KKPTTitle}
-                          </p>
+                          <button
+                            className="text-sm hover:underline text-left justify-normal mb-1 p-2"
+                            onClick={() =>
+                              router.push(
+                                baseUrl +
+                                  "/" +
+                                  params.uri +
+                                  "/lha/rta" +
+                                  "#kkpt" +
+                                  (i + 1)
+                              )
+                            }
+                            key={i}
+                          >
+                            {i + 1 + ". " + data.KKPTTitle}
+                          </button>
                         );
                       })
                     )}
@@ -103,14 +128,33 @@ const index = () => {
               {list?.map((data, i) => {
                 return (
                   <div className="mb-4" key={i}>
+                    <h5 className="mb-5 font-bold" id={"kkpt" + (i + 1)}>
+                      {i + 1 + ". " + data.KKPTTitle}
+                    </h5>
                     <DocumentViewer
                       documentTitle="Kertas Kerja Pengawasan Temuan"
-                      documentHtml={rtaHtml(data)}
+                      documentHtml={rtaHtml(data)} //
                       withNoHeader={true}
                     />
                   </div>
                 );
               })}
+              {!rtaDetailIsValidating ? (
+                limit < rtaDetail?.data?.total_data ? (
+                  <div className="w-[59rem] bg-blue-800 rounded-md hover:bg-brisma">
+                    <ButtonField
+                      text={"Load More"}
+                      handler={handleClickLoadMore}
+                    />
+                  </div>
+                ) : (
+                  ""
+                )
+              ) : (
+                <h4 className="text-center my-8">
+                  Loading data, mohon tunggu...
+                </h4>
+              )}
             </div>
           </div>
         </div>

@@ -18,7 +18,6 @@ const index = () => {
 
   const baseUrl = "/catalogue/pat";
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "P.A.T", path: baseUrl },
     { name: "Daftar Dokumen", path: baseUrl + "/" + selectedId },

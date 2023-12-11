@@ -10,7 +10,6 @@ import { useSelector } from "react-redux";
 
 const index = () => {
   const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
     { name: "Catalogue", path: "/catalogue" },
     { name: "P.A.T", path: "/catalogue/pat" },
   ];
