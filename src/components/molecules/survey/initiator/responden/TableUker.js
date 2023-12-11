@@ -2,9 +2,14 @@ import {
   ButtonDelete,
   CardContentHeaderFooter,
   DataNotFound,
-  PekerjaSelect,
-} from "../../commons";
-import { ButtonField, ButtonIcon, TextAreaField } from "@/components/atoms";
+  OrgehSelect,
+} from "@/components/molecules/commons";
+import {
+  ButtonField,
+  ButtonIcon,
+  RadioField,
+  TextAreaField,
+} from "@/components/atoms";
 import { IconPlus } from "@/components/icons";
 import { ImageCircleCheckGreen } from "@/helpers/imagesUrl";
 import TableTree, {
@@ -18,45 +23,37 @@ import Image from "next/image";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
-const TableResponden = ({
+const TableUker = ({
   data,
-  dataUker,
-  newResponden,
+  newUker,
   selectedUkerId,
   handleClickAddRow,
   handleClickSave,
   handleClickDelete,
-  handleChangeResponden,
-  handleChangeText,
-  withUker,
+  handleChangeUker,
+  handleChangeTextUker,
+  handleSelectedUker,
 }) => {
-  const findIndex = dataUker?.findIndex((uker) => uker.id === selectedUkerId);
+  const findIndex = data?.findIndex((uker) => uker.id === selectedUkerId);
   return (
     <CardContentHeaderFooter
       header={
-        <div className="px-4 py-2 flex items-center justify-between">
-          <p className="font-semibold text-base">Daftar PN Responden</p>
-          {withUker ? (
-            <div className="font-semibold text-base text-atlasian-blue-light">
-              {dataUker[findIndex]?.orgeh_name}
-            </div>
-          ) : (
-            ""
-          )}
+        <div className="px-4 py-2 flex items-center">
+          <p className="font-semibold text-base">Daftar UKER Responden</p>
         </div>
       }
       footer={
         <div className="p-3 flex items-center">
-          <div className="w-48 text-sm font-semibold">
+          <div className="w-40 text-sm font-semibold">
             <ButtonField
               iconAfter={
                 <div className="text-atlasian-purple">
                   <IconPlus size="medium" />
                 </div>
               }
-              text={"Tambah Responden"}
+              text={"Tambah UKER"}
               textColor={"purple"}
-              handler={handleClickAddRow}
+              handler={() => handleClickAddRow()}
             />
           </div>
         </div>
@@ -81,13 +78,13 @@ const TableResponden = ({
               width="21%"
               className="border-t border-r cell-custom-dataTables"
             >
-              <div className={`custom-table-header`}>PN Responden</div>
+              <div className={`custom-table-header`}>UKER</div>
             </Header>
             <Header
               width="27%"
               className="border-t border-r cell-custom-dataTables"
             >
-              <div className={`custom-table-header`}>Nama Responden</div>
+              <div className={`custom-table-header`}>Jumlah</div>
             </Header>
             <Header
               width="37%"
@@ -102,8 +99,8 @@ const TableResponden = ({
               render={({
                 index,
                 id,
-                pn_responden,
-                nama_responden,
+                orgeh_name,
+                jumlah,
                 keterangan,
                 is_edit,
                 is_new,
@@ -123,32 +120,18 @@ const TableResponden = ({
                           }
                           handleClick={handleClickSave}
                         />
-                      ) : is_edit ? (
-                        <div className="flex justify-between gap-2">
+                      ) : (
+                        <div className="flex justify-between gap-3">
+                          <RadioField
+                            isChecked={findIndex === index}
+                            handleChange={() => handleSelectedUker(id)}
+                          />
                           <ButtonIcon
                             icon={<ButtonDelete />}
                             handleClick={() => handleClickDelete(id)}
                             color={"red"}
                           />
-                          <ButtonIcon
-                            icon={
-                              <Image
-                                src={ImageCircleCheckGreen}
-                                alt=""
-                                width={22}
-                                height={22}
-                              />
-                            }
-                            handleClick={() => handleClickDelete(id)}
-                            color={"yellow"}
-                          />
                         </div>
-                      ) : (
-                        <ButtonIcon
-                          icon={<ButtonDelete />}
-                          handleClick={() => handleClickDelete(id)}
-                          color={"red"}
-                        />
                       )}
                     </div>
                   </Cell>
@@ -160,41 +143,39 @@ const TableResponden = ({
                   <Cell width="21%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center relative">
                       {is_edit ? (
-                        <PekerjaSelect
+                        <OrgehSelect
                           selectedValue={
-                            newResponden.name
+                            newUker?.orgeh_kode
                               ? {
-                                  label: newResponden?.name,
+                                  label: newUker?.orgeh_name,
                                   value: {
-                                    pn: newResponden.pn,
-                                    name: newResponden.name,
+                                    orgeh_kode: newUker?.orgeh_kode,
+                                    orgeh_name: newUker?.orgeh_name,
                                   },
                                 }
                               : null
                           }
-                          handleChange={(e) => handleChangeResponden(e.value)}
+                          handleChange={(e) => handleChangeUker(e.value)}
                           positionAbsolute={true}
                           width="w-[13rem]"
                         />
                       ) : (
-                        <p className="text-xs">{pn_responden}</p>
+                        <p className="text-xs">{orgeh_name}</p>
                       )}
                     </div>
                   </Cell>
                   <Cell width="27%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
-                      <p className="text-xs">
-                        {is_edit ? newResponden?.name : nama_responden}
-                      </p>
+                      <p className="text-xs">{is_edit ? "" : jumlah}</p>
                     </div>
                   </Cell>
                   <Cell width="37%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       {is_edit ? (
                         <TextAreaField
-                          value={newResponden?.keterangan}
+                          value={newUker?.keterangan}
                           handleChange={(e) =>
-                            handleChangeText("keterangan", e.target.value)
+                            handleChangeTextUker("keterangan", e.target.value)
                           }
                         />
                       ) : (
@@ -216,4 +197,4 @@ const TableResponden = ({
   );
 };
 
-export default TableResponden;
+export default TableUker;

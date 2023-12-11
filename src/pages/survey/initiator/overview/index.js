@@ -9,7 +9,7 @@ import {
   CardFilterOverview,
   CardOverview,
   ModalDetailSurvey,
-} from "@/components/molecules/survey/overview";
+} from "@/components/molecules/survey/initiator/overview";
 import { LandingLayoutSurvey } from "@/layouts/survey";
 import { useEffect, useState } from "react";
 import _ from "lodash";

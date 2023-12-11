@@ -5,7 +5,7 @@ import {
   CustomSelect,
   FormLabel,
   ModalHeader,
-} from "../../commons";
+} from "@/components/molecules/commons";
 import { useSelector } from "react-redux";
 import { useTemplateSurvey } from "@/data/reference";
 import { useEffect, useState } from "react";

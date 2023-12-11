@@ -20,7 +20,7 @@ import { confirmationSwal, errorSwal, fetchApi, loadingSwal } from "@/helpers";
 import {
   TableResponden,
   TableUker,
-} from "@/components/molecules/survey/responden";
+} from "@/components/molecules/survey/initiator/responden";
 
 const index = () => {
   const dispatch = useDispatch();

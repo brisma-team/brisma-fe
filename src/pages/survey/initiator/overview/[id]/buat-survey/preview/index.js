@@ -9,7 +9,7 @@ import {
   ModalGuidelines,
   Sidebar,
   TabKuesioner,
-} from "@/components/molecules/survey/buat-template";
+} from "@/components/molecules/survey/initiator/buat-template";
 import { useSelector } from "react-redux";
 import {
   resetPayloadKuesioner,
