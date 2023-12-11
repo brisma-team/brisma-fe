@@ -4,10 +4,10 @@ import { CardDashboard } from "@/components/molecules/commons";
 
 const index = () => {
   const data = {
-    title: "Inisiator Survei",
+    title: "Survei",
     content: [
       {
-        subtitle: "PAT",
+        subtitle: "Inisiator Survei",
         subcontent: [
           {
             title: "Inisiasi Survei",
@@ -18,6 +18,21 @@ const index = () => {
             title: "Approval",
             description: "Melihat riwayat approval.",
             url: "/survey/approval",
+          },
+        ],
+      },
+      {
+        subtitle: "Responden Survei",
+        subcontent: [
+          {
+            title: "Mengisi Survei",
+            description: "Membuat kuesioner pada Survei.",
+            url: "/survey/responden/overview",
+          },
+          {
+            title: "Approval",
+            description: "Melihat riwayat approval.",
+            url: "/survey/responden/approval",
           },
         ],
       },

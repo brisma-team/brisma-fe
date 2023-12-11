@@ -8,8 +8,8 @@ import {
   TabRespondenGrade,
   TabSurveyNote,
 } from "@/components/molecules/survey/penilaian";
-import { usePenilaian } from "@/data/survey/penilaian";
-import { useDispatch, useSelector } from "react-redux";
+import { usePenilaian } from "@/data/survey/initiator/penilaian";
+import { useDispatch } from "react-redux";
 import { setObjData } from "@/slices/survey/penilaianSurveySlice";
 
 const index = () => {
@@ -18,7 +18,7 @@ const index = () => {
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Survei", path: "/survey" },
-    { name: "Penilaian", path: `/survey/overview/${id}` },
+    { name: "Penilaian", path: `/survey/initiator/overview/${id}` },
   ];
   const navigationTabItems = [
     { idx: 1, title: "Score" },

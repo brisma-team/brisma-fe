@@ -8,7 +8,7 @@ import {
   useRespondenByPnSurvey,
   useRespondenByUkerPnSurvey,
   useRespondenByUkerSurvey,
-} from "@/data/survey/responden";
+} from "@/data/survey/initiator/responden";
 import {
   resetPayloadNewResponden,
   resetPayloadNewUker,

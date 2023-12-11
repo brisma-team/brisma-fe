@@ -30,12 +30,15 @@ import {
   loadingSwal,
   setErrorValidation,
 } from "@/helpers";
-import { useWorkflowSurvey } from "@/data/survey/buat-survey";
+import { useWorkflowSurvey } from "@/data/survey/initiator/buat-survey";
 import _ from "lodash";
 import { workflowSchema } from "@/helpers/schemas/survey/createSurveySchema";
 import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common";
 import { LandingLayoutSurvey } from "@/layouts/survey";
-import { useInformation, useKuesioner } from "@/data/survey/informasi";
+import {
+  useInformation,
+  useKuesioner,
+} from "@/data/survey/initiator/informasi";
 
 const index = () => {
   const dispatch = useDispatch();

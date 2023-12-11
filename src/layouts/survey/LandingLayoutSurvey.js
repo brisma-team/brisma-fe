@@ -4,7 +4,7 @@ import {
 } from "@/components/molecules/commons";
 import { PatSidebarOverview } from "@/components/molecules/pat";
 import { useEffect, useState } from "react";
-import { useOverview } from "@/data/survey/overview";
+import { useOverview } from "@/data/survey/initiator/overview";
 
 const LandingLayoutSurvey = ({ overflowY, withoutRightSidebar, children }) => {
   const [data, setData] = useState(null);

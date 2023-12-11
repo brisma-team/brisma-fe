@@ -13,15 +13,15 @@ import {
 import { LandingLayoutSurvey } from "@/layouts/survey";
 import { useEffect, useState } from "react";
 import _ from "lodash";
-import { useOverview } from "@/data/survey/overview";
+import { useOverview } from "@/data/survey/initiator/overview";
 import { useRouter } from "next/router";
 import { confirmationSwal, fetchApi, loadingSwal } from "@/helpers";
-import { useInformation } from "@/data/survey/informasi";
+import { useInformation } from "@/data/survey/initiator/informasi";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
   { name: "Reference", path: "/reference" },
-  { name: "Form Survei", path: "/reference/survey/overview" },
+  { name: "Form Survei", path: "/reference/initiator/survey/overview" },
 ];
 
 const index = () => {

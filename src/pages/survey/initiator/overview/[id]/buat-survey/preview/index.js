@@ -20,7 +20,10 @@ import { useRouter } from "next/router";
 import { previewPrintDocument } from "@/helpers";
 import _ from "lodash";
 import { LandingLayoutSurvey } from "@/layouts/survey";
-import { useInformation, useKuesioner } from "@/data/survey/informasi";
+import {
+  useInformation,
+  useKuesioner,
+} from "@/data/survey/initiator/informasi";
 import { setPayloadKuesioner } from "@/slices/survey/penilaianSurveySlice";
 import { IconArrowLeft } from "@/components/icons";
 
