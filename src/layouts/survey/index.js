@@ -1,3 +1,4 @@
 import LandingLayoutSurvey from "./LandingLayoutSurvey";
+import RespondenLayoutSurvey from "./RespondenLayoutSurvey";
 
-export { LandingLayoutSurvey };
+export { LandingLayoutSurvey, RespondenLayoutSurvey };

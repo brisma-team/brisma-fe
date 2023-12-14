@@ -27,12 +27,12 @@ const index = () => {
           {
             title: "Mengisi Survei",
             description: "Membuat kuesioner pada Survei.",
-            url: "/survey/initiator/responden/overview",
+            url: "/survey/responden/overview",
           },
           {
             title: "Approval",
             description: "Melihat riwayat approval.",
-            url: "/survey/initiator/responden/approval",
+            url: "/survey/responden/approval",
           },
         ],
       },
