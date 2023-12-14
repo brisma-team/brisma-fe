@@ -5,7 +5,7 @@ import {
 } from "@/components/molecules/commons";
 import { confirmationSwal } from "@/helpers";
 import { ProgressTracker } from "@atlaskit/progress-tracker";
-import { QuestionTypeSelect } from "../../reference";
+import { QuestionTypeSelect } from "@/components/molecules/reference";
 import dynamic from "next/dynamic";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,

@@ -7,10 +7,10 @@ import {
   TabScore,
   TabRespondenGrade,
   TabSurveyNote,
-} from "@/components/molecules/survey/penilaian";
+} from "@/components/molecules/survey/initiator/penilaian";
 import { usePenilaian } from "@/data/survey/initiator/penilaian";
 import { useDispatch } from "react-redux";
-import { setObjData } from "@/slices/survey/penilaianSurveySlice";
+import { setObjData } from "@/slices/survey/initiator/penilaianSurveySlice";
 
 const index = () => {
   const dispatch = useDispatch();

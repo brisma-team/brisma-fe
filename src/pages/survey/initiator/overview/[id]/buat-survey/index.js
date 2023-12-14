@@ -7,7 +7,7 @@ import {
   Sidebar,
   TabInformation,
   TabKuesioner,
-} from "@/components/molecules/survey/buat-template";
+} from "@/components/molecules/survey/initiator/buat-template";
 import { useSelector } from "react-redux";
 import {
   resetPayloadKuesioner,
@@ -19,7 +19,7 @@ import {
   resetValidationErrorsWorkflow,
   setValidationErrorsWorkflow,
   resetPayloadInformasi,
-} from "@/slices/survey/createSurveySlice";
+} from "@/slices/survey/initiator/createSurveySlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import {

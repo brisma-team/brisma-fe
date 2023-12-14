@@ -6,8 +6,8 @@ import {
 } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
 import CustomSelect from "@/components/molecules/commons/CustomSelect";
-import { useEffect, useState } from "react";
-import { TypeSurveySelect } from "../../commons";
+import { useState } from "react";
+import { TypeSurveySelect } from "@/components/molecules/commons";
 
 const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
   const [selectOptionValue, setSelectOptionValue] = useState({

@@ -36,9 +36,9 @@ import catalogRPMReducer from "./slices/catalog/rpm/catalogRPMSlice";
 import createTemplateReferenceSlice from "./slices/reference/createTemplateReferenceSlice";
 
 // SURVEY
-import penilaianSurveyReducer from "./slices/survey/penilaianSurveySlice";
-import createSurveyReducer from "./slices/survey/createSurveySlice";
-import respondenSurveyReducer from "./slices/survey/respondenSurveySlice";
+import penilaianSurveyReducer from "./slices/survey/initiator/penilaianSurveySlice";
+import createSurveyReducer from "./slices/survey/initiator/createSurveySlice";
+import respondenSurveyReducer from "./slices/survey/initiator/respondenSurveySlice";
 
 import { configureStore } from "@reduxjs/toolkit";
 
