@@ -4,7 +4,7 @@ import { MainLayout } from "@/layouts";
 import {
   Breadcrumbs,
   Card,
-  Pagination,
+  CustomPagination,
   TableField,
   TooltipField,
 } from "@/components/atoms";
@@ -20,7 +20,7 @@ const index = () => {
   const [catEwp, setCatEwp] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalData, setTotalData] = useState(1);
 
   const breadcrumbs = [
     { name: "Catalogue", path: "/catalogue" },
@@ -48,7 +48,7 @@ const index = () => {
   useEffect(() => {
     if (ewpData != undefined) {
       loadingSwal("close");
-      setTotalPages(ewpData.data.total_page);
+      setTotalData(ewpData.data.total_data);
       const mappingCatEwp = ewpData.data.ewp_list.map((EwpList, key) => ({
         No: (currentPage - 1) * 5 + key + 1,
         "Project ID": EwpList?.ProjectID,
@@ -137,10 +137,13 @@ const index = () => {
                 />
               </div>
               <div className="flex justify-center mt-5">
-                <Pagination
-                  pages={totalPages}
-                  setCurrentPage={setCurrentPage}
-                  withLoading={true}
+                <CustomPagination
+                  defaultCurrentPage={1}
+                  perPage={5}
+                  totalData={totalData}
+                  handleSetPagination={async (start, end, pageNow) =>
+                    setCurrentPage(pageNow)
+                  }
                 />
               </div>
             </div>

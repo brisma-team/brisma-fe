@@ -84,7 +84,7 @@ const index = () => {
   ];
   return (
     <MainLayout>
-      <div className="px-5">
+      <div className="px-5 overflow-x-scroll max-w-screen">
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Rincian Tindak Lanjut dan Evaluasi"} />
@@ -112,7 +112,7 @@ const index = () => {
                             onClick={() => handleKkptId(data.KKPTID)}
                             key={i}
                           >
-                            {data.KKPTID + " - " + data.KKPTTitle}
+                            {i + 1 + ". " + data.KKPTTitle}
                           </button>
                         );
                       })
@@ -121,10 +121,10 @@ const index = () => {
                 </Card>
               </div>
             </div>
-            <div className="w-2/3">
+            <div className="w-2/3 mr-5">
               {/* {list?.map((data, i) => {
                 return ( */}
-              <div className="mb-4">
+              <div className="mb-4 pr-5">
                 {kkptId == 0 ? (
                   <h5>Silahkan Pilih KKPT terlebih dahulu</h5>
                 ) : (

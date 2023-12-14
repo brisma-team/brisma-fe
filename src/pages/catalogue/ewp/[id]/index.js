@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card, TableField, Pagination } from "@/components/atoms";
+import {
+  Breadcrumbs,
+  Card,
+  TableField,
+  CustomPagination,
+} from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
 import { useEWPAllAttachment } from "@/data/catalog";
@@ -13,7 +18,7 @@ const index = () => {
 
   const [typeList, setTypeList] = useState([]);
   const [ewpAttachment, setEwpAttachment] = useState([]);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalData, setTotalData] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [params, setParams] = useState({
     year: "2023",
@@ -38,86 +43,73 @@ const index = () => {
     const type_list = [
       {
         jenis: "MAPA",
-        jumlah: "-----",
         url: `${params.uri}/mapa`,
         isDisabled: false,
       },
       {
         jenis: "Addendum MAPA",
-        jumlah: "-----",
         url: `${params.uri}/addendum-mapa`,
         isDisabled: params.type === "2" ? false : true,
       },
       {
         jenis: "Entrance Attendance",
-        jumlah: "-----",
         url: `${params.uri}/entrance-attendance`,
         isDisabled: params.type === "2" ? false : true,
       },
       {
         jenis: "Entrance Notulen",
-        jumlah: "-----",
         url: `${params.uri}/entrance-notulen`,
         isDisabled: params.type === "2" ? false : true,
       },
       {
         jenis: "Entrance Berita Acara",
-        jumlah: "-----",
         url: `${params.uri}/entrance-berita-acara`,
         isDisabled: params.type === "2" ? false : true,
       },
       {
         jenis: "KKPA",
-        jumlah: "-----",
         url: `${params.uri}/kkpa`,
         isDisabled: false,
       },
       {
         jenis: "KKPT",
-        jumlah: "-----",
         url: `${params.uri}/kkpt`,
         isDisabled: false,
       },
       {
         jenis: "Exit Attendance",
-        jumlah: "-----",
         url: `${params.uri}/exit-attendance`,
         isDisabled: params.type === "2" ? false : true,
       },
       {
         jenis: "Exit Notulen",
-        jumlah: "-----",
         url: `${params.uri}/exit-notulen`,
         isDisabled: params.type === "2" ? false : true,
       },
       {
         jenis: "Exit Berita Acara",
-        jumlah: "-----",
         url: `${params.uri}/exit-berita-acara`,
         isDisabled: params.type === "2" ? false : true,
       },
       {
         jenis: "LHA",
-        jumlah: "-----",
         url: `${params.uri}/lha`,
         isDisabled: params.type === "2" ? false : true,
       },
       {
         jenis: "Laporan Temuan Major",
-        jumlah: "-----",
         url: `${params.uri}/laporan-temuan-major`,
         isDisabled: params.type === "2" ? false : true,
       },
       {
         jenis: "Berita Acara Temuan Minor",
-        jumlah: "-----",
         url: `${params.uri}/berita-acara-temuan-minor`,
         isDisabled: params.type === "2" ? false : true,
       },
     ];
 
     if (type_list) {
-      const mappingTypeList = type_list.map((data, key) => {
+      const mappingTypeList = type_list?.map((data, key) => {
         return {
           No: key + 1,
           "Jenis Dokumen": data.jenis,
@@ -151,7 +143,7 @@ const index = () => {
 
   useEffect(() => {
     if (allAttachmentData != undefined) {
-      setTotalPages(allAttachmentData?.data?.total_page);
+      setTotalData(allAttachmentData?.data?.total_data);
       const mappingAttachment = allAttachmentData?.data?.all_attachment?.map(
         (v, key) => {
           return {
@@ -208,9 +200,7 @@ const index = () => {
 
   const downloadFile = async (id, name, contentTypes) => {
     try {
-      // const response = await useDownload(params.year, id); // Replace with your actual API endpoint
       const token = getCookie("token");
-
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL_CATALOG}/catalog/attachment/ewp/${params.year}/${id}`,
         {
@@ -300,9 +290,13 @@ const index = () => {
                 />
               </div>
               <div className="flex justify-center mt-5">
-                <Pagination
-                  pages={totalPages}
-                  setCurrentPage={setCurrentPage}
+                <CustomPagination
+                  defaultCurrentPage={1}
+                  perPage={5}
+                  totalData={totalData}
+                  handleSetPagination={async (start, end, pageNow) =>
+                    setCurrentPage(pageNow)
+                  }
                 />
               </div>
             </div>

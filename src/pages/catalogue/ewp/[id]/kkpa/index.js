@@ -4,9 +4,9 @@ import {
   Breadcrumbs,
   Card,
   TableField,
-  Pagination,
   TooltipField,
   ButtonIcon,
+  CustomPagination,
 } from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
@@ -24,7 +24,7 @@ const index = () => {
 
   const [kkpa, setKKPA] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalData, setTotalData] = useState(1);
   const [showFilter, setShowFilter] = useState(false);
   const [auditorSelect, setAuditorSelect] = useState("");
   const [filter, setFilter] = useState({
@@ -92,7 +92,7 @@ const index = () => {
   }, []);
   useEffect(() => {
     if (kkpaList != undefined) {
-      setTotalPages(kkpaList.data.total_page);
+      setTotalData(kkpaList.data.total_data);
       const mappingKKPA = kkpaList.data.kkpa_list.map((data, key) => {
         return {
           No: (currentPage - 1) * 5 + key + 1,
@@ -291,9 +291,13 @@ const index = () => {
                 />
               </div>
               <div className="flex justify-center mt-5">
-                <Pagination
-                  pages={totalPages}
-                  setCurrentPage={setCurrentPage}
+                <CustomPagination
+                  defaultCurrentPage={1}
+                  perPage={5}
+                  totalData={totalData}
+                  handleSetPagination={async (start, end, pageNow) =>
+                    setCurrentPage(pageNow)
+                  }
                 />
               </div>
             </div>

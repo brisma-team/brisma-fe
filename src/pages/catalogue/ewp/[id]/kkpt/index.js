@@ -4,7 +4,7 @@ import {
   Breadcrumbs,
   ButtonIcon,
   Card,
-  Pagination,
+  CustomPagination,
   TableField,
   TooltipField,
 } from "@/components/atoms";
@@ -23,7 +23,7 @@ const index = () => {
 
   const [kkpt, setKKPT] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalData, setTotalData] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState({
     kkpttitle: "",
@@ -100,7 +100,7 @@ const index = () => {
   }, 500); // Adjust the delay (in milliseconds) as needed
   useEffect(() => {
     if (kkptList != undefined) {
-      setTotalPages(kkptList.data.total_page);
+      setTotalData(kkptList.data.total_data);
       const mappingKKPT = kkptList.data.kkpt_list.map((data, key) => {
         return {
           No: (currentPage - 1) * 5 + key + 1,
@@ -309,9 +309,13 @@ const index = () => {
                 />
               </div>
               <div className="flex justify-center mt-5">
-                <Pagination
-                  pages={totalPages}
-                  setCurrentPage={setCurrentPage}
+                <CustomPagination
+                  defaultCurrentPage={1}
+                  perPage={5}
+                  totalData={totalData}
+                  handleSetPagination={async (start, end, pageNow) =>
+                    setCurrentPage(pageNow)
+                  }
                 />
               </div>
             </div>
