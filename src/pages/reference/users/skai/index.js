@@ -2,19 +2,23 @@ import { MainLayout } from "@/layouts";
 import useUserSKAI from "@/data/useUserSKAI";
 import {
   CustomDataTable,
-  UkaSelect,
-  RoleSelect,
-  DeleteButton,
-  UpdateButton,
-  CreateButton,
-  SearchButton,
+  // UkaSelect,
+  // RoleSelect,
+  // DeleteButton,
+  // UpdateButton,
+  // CreateButton,
+  // SearchButton,
 } from "@/components/molecules/commons";
 import { setSearchParam, setSearchParamObject } from "@/slices/userSKAISlice";
 
 import React from "react";
-import { Button, Card, TextInput, Label } from "flowbite-react";
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  Button,
+  // Card, TextInput, Label
+} from "flowbite-react";
+import { useSelector } from "react-redux";
+// import { useForm } from "react-hook-form";
+// import { useDispatch, useSelector } from "react-redux";
 
 const breadcrumb = [
   {
@@ -24,12 +28,12 @@ const breadcrumb = [
 ];
 
 export default function index() {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const searchParam = useSelector((state) => state.userSKAI.searchParam);
-  const searchParamObject = useSelector(
-    (state) => state.userSKAI.searchParamObject
-  );
+  // const searchParamObject = useSelector(
+  //   (state) => state.userSKAI.searchParamObject
+  // );
 
   const { userSKAI, userSKAIMutate, userSKAIIsLoading } =
     useUserSKAI(searchParam);
@@ -39,11 +43,12 @@ export default function index() {
       name: "Action",
       cell: (row) => (
         <div className="flex gap-x-2">
-          <UpdateButton href={`/users/update/${row.pn}`} />
+          No Action
+          {/* <UpdateButton href={`/users/update/${row.pn}`} />
           <DeleteButton
             url={`${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/user_skai/delete/${row.pn}`}
             mutate={userSKAIMutate}
-          />
+          /> */}
         </div>
       ),
       minWidth: "10rem",
@@ -79,48 +84,48 @@ export default function index() {
     },
   ];
 
-  const { register, handleSubmit, control } = useForm({
-    defaultValues: {
-      pn: "",
-      name: "",
-      role_kode: [],
-      uka_kode: "",
-    },
-  });
+  // const { register, handleSubmit, control } = useForm({
+  //   defaultValues: {
+  //     pn: "",
+  //     name: "",
+  //     role_kode: [],
+  //     uka_kode: "",
+  //   },
+  // });
 
-  function onSearchSubmit(data) {
-    const param = {
-      ...searchParamObject,
-    };
+  // function onSearchSubmit(data) {
+  //   const param = {
+  //     ...searchParamObject,
+  //   };
 
-    delete param.pn;
-    delete param.name;
-    delete param.uka_kode;
-    delete param.role_kode;
+  //   delete param.pn;
+  //   delete param.name;
+  //   delete param.uka_kode;
+  //   delete param.role_kode;
 
-    if (data.pn.length > 0) {
-      param.pn = data.pn;
-    }
+  //   if (data.pn.length > 0) {
+  //     param.pn = data.pn;
+  //   }
 
-    if (data.name.length > 0) {
-      param.name = data.name;
-    }
+  //   if (data.name.length > 0) {
+  //     param.name = data.name;
+  //   }
 
-    if (data.uka_kode !== "" && data.uka_kode !== null) {
-      param.uka_kode = data.uka_kode.value;
-    }
+  //   if (data.uka_kode !== "" && data.uka_kode !== null) {
+  //     param.uka_kode = data.uka_kode.value;
+  //   }
 
-    if (data.role_kode.length > 0) {
-      param.role_kode = data.role_kode[0].value;
-    }
+  //   if (data.role_kode.length > 0) {
+  //     param.role_kode = data.role_kode[0].value;
+  //   }
 
-    const urlParam = new URLSearchParams(param).toString();
+  //   const urlParam = new URLSearchParams(param).toString();
 
-    dispatch(setSearchParam(urlParam));
-    dispatch(setSearchParamObject(param));
+  //   dispatch(setSearchParam(urlParam));
+  //   dispatch(setSearchParamObject(param));
 
-    userSKAIMutate();
-  }
+  //   userSKAIMutate();
+  // }
 
   return (
     <MainLayout breadcrumb={breadcrumb}>
@@ -128,11 +133,11 @@ export default function index() {
         <div className="flex-1">
           <h1 className="text-2xl font-bold">Users</h1>
         </div>
-        <div className="w-1/8">
+        {/* <div className="w-1/8">
           <CreateButton href="/users/create" />
-        </div>
+        </div> */}
       </div>
-      <Card className="mb-4">
+      {/* <Card className="mb-4">
         <form onSubmit={handleSubmit(onSearchSubmit)} className="space-y-4">
           <div className="flex gap-x-4">
             <div className="w-1/6">
@@ -172,7 +177,7 @@ export default function index() {
             </div>
           </div>
         </form>
-      </Card>
+      </Card> */}
       <CustomDataTable
         columns={columns}
         data={userSKAI?.data.data}

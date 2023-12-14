@@ -7,24 +7,11 @@ import { useRouter } from "next/router";
 const CardFilterLanding = () => {
   const [params, setParams] = useState({
     type: "pat",
+    label: "P.A.T",
     year: 2023,
     words: "",
   });
   const router = useRouter();
-
-  // function debounce(func, delay) {
-  //   let timeoutId;
-  //   return function (...args) {
-  //     clearTimeout(timeoutId);
-  //     timeoutId = setTimeout(() => func.apply(this, args), delay);
-  //   };
-  // }
-  // const debouncedHandleChange = debounce((e) => {
-  //   setParams({
-  //     ...params,
-  //     words: e.target.value,
-  //   });
-  // }, 500); // Adjust the delay (in milliseconds) as needed
 
   return (
     <div className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-2 mb-3">
@@ -36,9 +23,11 @@ const CardFilterLanding = () => {
               { label: "E.W.P", value: "ewp" },
               { label: "R.P.M", value: "rpm" },
             ]}
-            placeholder="Modul"
-            onChange={(e) => setParams({ ...params, type: e.value })}
+            onChange={(e) =>
+              setParams({ ...params, label: e.label, type: e.value })
+            }
             isSearchable={false}
+            value={{ label: params.label, value: params.value }}
           />
         </div>
         <div className="w-3/4">

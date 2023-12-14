@@ -65,7 +65,7 @@ const index = () => {
   ];
   return (
     <MainLayout>
-      <div className="px-5">
+      <div className="px-5 overflow-x-scroll max-w-screen">
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"Berita Acara Temuan Minor"} />

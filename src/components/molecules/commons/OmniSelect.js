@@ -25,7 +25,6 @@ const OmniSelect = ({
 
   useEffect(() => {
     if (search && omni !== undefined) {
-      console.log(omni);
       const mappedOmni = omni?.data?.list.map((row) => {
         return {
           label:

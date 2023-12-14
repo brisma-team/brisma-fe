@@ -1,12 +1,19 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card, Pagination, TableField } from "@/components/atoms";
+import {
+  Breadcrumbs,
+  Card,
+  CustomPagination,
+  TableField,
+  TooltipField,
+} from "@/components/atoms";
 import Button from "@atlaskit/button";
 import { IconArrowRight, IconPlus } from "@/components/icons";
 import useCatalogRPM from "@/data/catalog/useCatalogRPM";
 import { ModalSelectSourceData } from "@/components/molecules/catalog";
 import { useSelector } from "react-redux";
+import shortenWord from "@/helpers/shortenWord";
 
 const index = () => {
   const breadcrumbs = [
@@ -16,7 +23,7 @@ const index = () => {
   const [catRpm, setCatRpm] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
+  const [totalData, setTotalData] = useState(1);
 
   const searchParamObject = useSelector(
     (state) => state.catalogRPM.searchParamObjectCAT
@@ -36,16 +43,51 @@ const index = () => {
     searchParamObject.projectName || ""
   );
 
+  function formatTimestampToQuarterYear(timestamp) {
+    const dateObject = new Date(timestamp);
+    const year = dateObject.getFullYear();
+    const month = dateObject.getMonth() + 1; // Month is zero-based, so we add 1
+
+    const quarterMap = {
+      1: "I",
+      2: "I",
+      3: "I",
+      4: "II",
+      5: "II",
+      6: "II",
+      7: "III",
+      8: "III",
+      9: "III",
+      10: "IV",
+      11: "IV",
+      12: "IV",
+    };
+    const quarter = quarterMap[month];
+
+    return "Triwulan " + quarter + " - " + year;
+  }
+
   useEffect(() => {
     if (data !== undefined) {
-      setTotalPage(data?.data?.total_page);
+      setTotalData(data?.data?.total_data);
       const mappingCatRpm = data?.data?.rpm?.map((v, key) => {
         return {
           No: key + 1,
           "Project ID": v?.ProjectID,
-          "Nama Project": v?.NamaProject,
-          "Jenis Audit": "SPESIAL",
-          "Periode Audit": "Triwulan " + "I" + " - " + 2023,
+          "Nama Project": (
+            <TooltipField
+              textButton={
+                <p className="hover:text-blue-800 hover:underline">
+                  {shortenWord(v?.NamaProject, 0, 30)}
+                </p>
+              }
+              content={v?.NamaProject}
+              isLink={false}
+              isText={false}
+            />
+          ),
+          "Jenis Audit": v?.ProjectType,
+          "Periode Audit": formatTimestampToQuarterYear(v?.CreatedAt),
           Aksi: (
             <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
               <Link href={"/catalogue/rpm/" + v?.ProjectID}>
@@ -109,7 +151,14 @@ const index = () => {
                 />
               </div>
               <div className="flex justify-center mt-5">
-                <Pagination pages={totalPage} setCurrentPage={setCurrentPage} />
+                <CustomPagination
+                  defaultCurrentPage={1}
+                  perPage={5}
+                  totalData={totalData}
+                  handleSetPagination={async (start, end, pageNow) =>
+                    setCurrentPage(pageNow)
+                  }
+                />
               </div>
             </div>
           </Card>

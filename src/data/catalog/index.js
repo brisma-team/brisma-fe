@@ -14,6 +14,7 @@ import useRTAById from "./useRTAById";
 import useRTEById from "./rpm/useRTEById";
 import useViewAllKKPA from "./useViewAllKKPA";
 import useDownload from "./useDownload";
+import useNumEvaluasById from "./rpm/useNumEvaluasiById";
 
 export {
   useModuleById,
@@ -32,4 +33,5 @@ export {
   useRTEById,
   useViewAllKKPA,
   useDownload,
+  useNumEvaluasById,
 };

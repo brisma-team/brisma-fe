@@ -5,11 +5,13 @@ import { Breadcrumbs, Card, TableField } from "@/components/atoms";
 import { ProjectInfo } from "@/components/molecules/catalog";
 import { MainLayout } from "@/layouts";
 import Button from "@atlaskit/button";
+import { useNumEvaluasById } from "@/data/catalog";
 
 const index = () => {
   const router = useRouter();
 
   const [typeList, setTypeList] = useState([]);
+  const [mappedTypeList, setMappedTypeList] = useState([]);
   const [params, setParams] = useState({
     year: "2023",
     type: "2",
@@ -31,18 +33,25 @@ const index = () => {
     { name: "Daftar Evaluasi", path: "/catalogue/rpm/" + params.id },
   ];
 
-  const type_list = [
-    {
-      nomor_evaluasi: 1,
-    },
-    {
-      nomor_evaluasi: 2,
-    },
-  ];
+  const { numEvaluasiDetail } = useNumEvaluasById(params.id);
 
   useEffect(() => {
-    if (type_list) {
-      const mappingTypeList = type_list.map((data, key) => {
+    if (numEvaluasiDetail !== undefined) {
+      let typelist = [];
+      const num = numEvaluasiDetail?.data?.NumEvaluasi;
+
+      for (let i = 0; i < num; i++) {
+        typelist[i] = {
+          nomor_evaluasi: i + 1,
+        };
+      }
+      setTypeList(typelist);
+    }
+  }, [numEvaluasiDetail]);
+
+  useEffect(() => {
+    if (typeList?.length > 0) {
+      const mappingTypeList = typeList?.map((data, key) => {
         return {
           No: key + 1,
           Evaluasi: "Tahap ke-" + (key + 1),
@@ -61,9 +70,9 @@ const index = () => {
           ),
         };
       });
-      setTypeList(mappingTypeList);
+      setMappedTypeList(mappingTypeList);
     }
-  }, [params.id]);
+  }, [typeList]);
 
   return (
     <MainLayout>
@@ -90,7 +99,7 @@ const index = () => {
                 <TableField
                   headers={["No", "Evaluasi", "Aksi"]}
                   columnWidths={["10%", "35%", "30%"]}
-                  items={typeList}
+                  items={mappedTypeList}
                 />
               </div>
               <div className="flex justify-center mt-5"></div>

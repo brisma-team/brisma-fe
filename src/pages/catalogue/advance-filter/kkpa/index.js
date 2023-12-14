@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, ButtonField, Card, TableField } from "@/components/atoms";
+import {
+  Breadcrumbs,
+  ButtonField,
+  Card,
+  CustomPagination,
+  TableField,
+} from "@/components/atoms";
 import { IconArrowRight } from "@/components/icons";
-import Button from "@atlaskit/button";
 import { loadingSwal, successSwal } from "@/helpers";
 import usePostKKPTQuery from "@/helpers/usePostKKPTQuery";
 import shortenWord from "@/helpers/shortenWord";
 import CodeMirror from "@uiw/react-codemirror";
 import { StandardSQL, sql } from "@codemirror/lang-sql";
 import { xcodeLight } from "@uiw/codemirror-theme-xcode";
-// import * as XLSX from "xlsx";
 
 const index = () => {
   const breadcrumbs = [
@@ -21,110 +25,154 @@ const index = () => {
     },
   ];
 
+  const [params, setParams] = useState({
+    page: 1,
+    limit: 5,
+    total_data: 0,
+    total_page: 0,
+  });
   const [catPat, setCatPat] = useState([]);
   const [whereClause, setWhereClause] = useState([]);
   const [dataList, setDataList] = useState([]);
-  const [selectedYear, setSelectedYear] = useState(2022);
+  // const fewl = [
+  //   {
+  //     "Nama Kolom": "kkpaid",
+  //     "Tipe Data": "UUID",
+  //   },
+  //   {
+  //     "Nama Kolom": "auditprojectid",
+  //     "Tipe Data": "UUID",
+  //   },
+  //   {
+  //     "Nama Kolom": "audityear",
+  //     "Tipe Data": "Int16",
+  //   },
+  //   {
+  //     "Nama Kolom": "auditprojectname",
+  //     "Tipe Data": "String",
+  //   },
+  //   {
+  //     "Nama Kolom": "audittypename",
+  //     "Tipe Data": "String",
+  //   },
+  //   {
+  //     "Nama Kolom": "riskissuecode",
+  //     "Tipe Data": "String",
+  //   },
+  //   {
+  //     "Nama Kolom": "riskissuename",
+  //     "Tipe Data": "String",
+  //   },
+  //   {
+  //     "Nama Kolom": "submajorprocesscode",
+  //     "Tipe Data": "String",
+  //   },
+  //   {
+  //     "Nama Kolom": "submajorprocessname",
+  //     "Tipe Data": "String",
+  //   },
+  //   {
+  //     "Nama Kolom": "majorprocessname",
+  //     "Tipe Data": "String",
+  //   },
+  //   {
+  //     "Nama Kolom": "megaprocessname",
+  //     "Tipe Data": "String",
+  //   },
+  //   {
+  //     "Nama Kolom": "functionalactivity2name",
+  //     "Tipe Data": "String",
+  //   },
+  //   {
+  //     "Nama Kolom": "functionalactivity1name",
+  //     "Tipe Data": "String",
+  //   },
+  //   {
+  //     "Nama Kolom": "organizationcode",
+  //     "Tipe Data": "String",
+  //   },
+  //   {
+  //     "Nama Kolom": "organizationname",
+  //     "Tipe Data": "String",
+  //   },
+  //   {
+  //     "Nama Kolom": "personalnumber",
+  //     "Tipe Data": "String",
+  //   },
+  //   {
+  //     "Nama Kolom": "personname",
+  //     "Tipe Data": "String",
+  //   }
+  // ];
+
   const few = [
     {
-      "Nama Kolom": "kkpaid",
+      "Nama Kolom": "KKPAID",
       "Tipe Data": "UUID",
     },
     {
-      "Nama Kolom": "auditprojectid",
+      "Nama Kolom": "ProjectID",
       "Tipe Data": "UUID",
     },
     {
-      "Nama Kolom": "audityear",
+      "Nama Kolom": "ProjectYear",
       "Tipe Data": "Int16",
     },
     {
-      "Nama Kolom": "auditprojectname",
+      "Nama Kolom": "ProjectName",
       "Tipe Data": "String",
     },
     {
-      "Nama Kolom": "audittypename",
+      "Nama Kolom": "AuditTypeName",
       "Tipe Data": "String",
     },
     {
-      "Nama Kolom": "riskissuecode",
+      "Nama Kolom": "RiskIssueCode",
       "Tipe Data": "String",
     },
     {
-      "Nama Kolom": "riskissuename",
+      "Nama Kolom": "RiskIssueName",
       "Tipe Data": "String",
     },
     {
-      "Nama Kolom": "submajorprocesscode",
+      "Nama Kolom": "SubMajorProcessCode",
       "Tipe Data": "String",
     },
     {
-      "Nama Kolom": "submajorprocessname",
+      "Nama Kolom": "SubMajorProcessName",
       "Tipe Data": "String",
     },
     {
-      "Nama Kolom": "majorprocessname",
+      "Nama Kolom": "MajorProcessName",
       "Tipe Data": "String",
     },
     {
-      "Nama Kolom": "megaprocessname",
+      "Nama Kolom": "MegaProcessName",
       "Tipe Data": "String",
     },
     {
-      "Nama Kolom": "functionalactivity2name",
+      "Nama Kolom": "SubActivity",
       "Tipe Data": "String",
     },
     {
-      "Nama Kolom": "functionalactivity1name",
+      "Nama Kolom": "Activity",
       "Tipe Data": "String",
     },
     {
-      "Nama Kolom": "organizationcode",
+      "Nama Kolom": "OrgehCode",
       "Tipe Data": "String",
     },
     {
-      "Nama Kolom": "organizationname",
+      "Nama Kolom": "OrgehName",
       "Tipe Data": "String",
     },
     {
-      "Nama Kolom": "personalnumber",
+      "Nama Kolom": "PersonalNumber",
       "Tipe Data": "String",
     },
     {
-      "Nama Kolom": "personname",
+      "Nama Kolom": "PersonalName",
       "Tipe Data": "String",
-    },
-    {
-      "Nama Kolom": "kkpttitle",
-      "Tipe Data": "String",
-    },
-    {
-      "Nama Kolom": "findinglevelname",
-      "Tipe Data": "String",
-    },
-    {
-      "Nama Kolom": "findingtypename",
-      "Tipe Data": "String",
-    },
-    {
-      "Nama Kolom": "refrisktypename",
-      "Tipe Data": "String",
-    },
-    {
-      "Nama Kolom": "productname",
-      "Tipe Data": "String",
-    },
-    {
-      "Nama Kolom": "samplenumber",
-      "Tipe Data": "Int32",
-    },
-    {
-      "Nama Kolom": "impactscore",
-      "Tipe Data": "Int32",
-    },
-    {
-      "Nama Kolom": "likelihoodscore",
-      "Tipe Data": "Int32",
     },
   ];
 
@@ -138,22 +186,19 @@ const index = () => {
     if (dataList != undefined) {
       const mappingCatPat = dataList.map((v, key) => {
         return {
-          No: key + 1,
-          KKPTID: v?.KKPTID,
+          No: (params.page - 1) * 5 + key + 1,
+          KKPAID: v?.KKPAID,
           "Nama Project": shortenWord(v?.ProjectName, 0, 20),
           "Tahun Audit": v?.ProjectYear,
-          "Tipe Audit": v?.AuditType,
+          "Tipe Audit": v?.AuditTypeName,
           Aktivitas: v?.Activity,
           "Sub Aktivitas": v?.SubActivity,
           Aksi: (
             <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
               <Link href={"/catalogue/advance-filter/kkpa/" + v?.KKPAID}>
-                <Button
-                  shouldFitContainer
-                  iconBefore={
-                    <IconArrowRight primaryColor="#0051CB" size="medium" />
-                  }
-                  className="bottom-1.5"
+                <ButtonField
+                  className={"bottom-1.5"}
+                  icon={<IconArrowRight primaryColor="#0051CB" size="medium" />}
                 />
               </Link>
             </div>
@@ -164,15 +209,25 @@ const index = () => {
     }
   }, [dataList]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (page = 1) => {
+    console.log(page);
     loadingSwal();
     const url = `${process.env.NEXT_PUBLIC_API_URL_CATALOG}/catalog/advfilter/kkpa`;
     await usePostKKPTQuery(url, {
       whereclause: whereClause != "" ? `WHERE ` + whereClause : "",
-      year: selectedYear,
+      year: 2023,
+      page: page,
+      limit: params.limit,
     }).then((res) => {
       successSwal(res.messages);
-      setDataList(res.data);
+      setDataList(res.data.kkpalist);
+      setParams({
+        ...params,
+        page: res.data.current_page,
+        total_page: res.data.total_page,
+        total_data: res.data.total_data,
+        limit: res.data.limit,
+      });
     });
   };
 
@@ -207,7 +262,10 @@ const index = () => {
               <div className="pt-4 font-bold">Kolom Pencarian</div>
               <div>
                 <div className="bg-green-500 shadow rounded-md">
-                  <ButtonField text={"Eksekusi"} handler={handleSubmit} />
+                  <ButtonField
+                    text={"Eksekusi"}
+                    handler={() => handleSubmit(params.page)}
+                  />
                 </div>
               </div>
             </div>
@@ -216,7 +274,7 @@ const index = () => {
               style={{ boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.20)" }}
             >
               <CodeMirror
-                value="audityear = ..."
+                value="ProjectYear = ..."
                 height="300px"
                 theme={xcodeLight}
                 extensions={[
@@ -234,27 +292,14 @@ const index = () => {
                 }}
               />
             </div>
-            {/* <textarea
-              rows={10}
-              placeholder="Masukkan batasan data yang diperlukan..."
-              className="p-6 w-full h-full rounded-lg border-[1.5px] border-[#83606025]"
-              onChange={(e) => setWhereClause(e.target.value)}
-              style={{ boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.20)" }}
-            >
-            </textarea> */}
           </div>
         </div>
         <div className="mt-5 mr-40 flex gap-1">
           <div className="w-[10rem]">
             <div className="bg-slate-800 shadow rounded-md p-1.5">
-              <p className="text-white px-10">{catPat.length} KKPAs</p>
+              <p className="text-white px-10">{params.total_data} KKPAs</p>
             </div>
           </div>
-          {/* <div className="w-[12rem]">
-            <div className="bg-green-500 shadow rounded-md">
-              <ButtonField text={"Export to Excel"} handler={exportToExcel} />
-            </div>
-          </div> */}
         </div>
         <div className="mt-5 mr-40">
           <Card>
@@ -263,7 +308,6 @@ const index = () => {
               <div className="max-h-[29rem] overflow-y-scroll px-2 mb-5">
                 <TableField
                   headers={[
-                    "Aksi",
                     "No",
                     "KKPAID",
                     "Nama Project",
@@ -271,9 +315,9 @@ const index = () => {
                     "Tipe Audit",
                     "Aktivitas",
                     "Sub Aktivitas",
+                    "Aksi",
                   ]}
                   columnWidths={[
-                    "10%",
                     "5%",
                     "20%",
                     "20%",
@@ -281,8 +325,25 @@ const index = () => {
                     "10%",
                     "10%",
                     "15%",
+                    "10%",
                   ]}
                   items={catPat}
+                />
+              </div>
+              <div className="flex justify-center mt-5">
+                <CustomPagination
+                  defaultCurrentPage={1}
+                  perPage={5}
+                  totalData={params.total_data}
+                  handleClick={handleSubmit}
+                  handleSetPagination={async (start, end, pageNow) =>
+                    setParams((prev) => {
+                      return {
+                        ...prev,
+                        page: pageNow,
+                      };
+                    })
+                  }
                 />
               </div>
             </div>

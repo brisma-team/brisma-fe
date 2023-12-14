@@ -6,6 +6,7 @@ const CustomPagination = ({
   perPage,
   totalData,
   handleSetPagination,
+  handleClick,
 }) => {
   const [currentPage, setCurrentPage] = useState(defaultCurrentPage || 1);
 
@@ -25,10 +26,19 @@ const CustomPagination = ({
 
   const handleChange = (e) => {
     if (e?.target?.offsetParent?.ariaLabel === "next") {
+      if (handleClick !== undefined) {
+        handleClick(currentPage + 1);
+      }
       setCurrentPage((prev) => prev + 1);
     } else if (e?.target?.offsetParent?.ariaLabel === "prev") {
+      if (handleClick !== undefined) {
+        handleClick(currentPage - 1);
+      }
       setCurrentPage((prev) => prev - 1);
     } else if (!isNaN(parseInt(e.target.textContent))) {
+      if (handleClick !== undefined) {
+        handleClick(parseInt(e.target.textContent));
+      }
       setCurrentPage(parseInt(e.target.textContent));
     }
   };

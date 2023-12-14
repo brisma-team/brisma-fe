@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/layouts";
-import { Breadcrumbs, Card, TableField, Pagination } from "@/components/atoms";
+import {
+  Breadcrumbs,
+  Card,
+  TableField,
+  CustomPagination,
+} from "@/components/atoms";
 import { IconArrowRight, IconPlus } from "@/components/icons";
 import Button from "@atlaskit/button";
 import useCatalogPAT from "@/data/catalog/useCatalogPAT";
@@ -16,7 +21,7 @@ const index = () => {
   const [catPat, setCatPat] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilter, setShowFilter] = useState(false);
-  const [totalPage, setTotalPage] = useState(1);
+  const [totalData, setTotalData] = useState(1);
 
   const searchParamObject = useSelector(
     (state) => state.catalogPAT.searchParamObjectCAT
@@ -40,7 +45,7 @@ const index = () => {
 
   useEffect(() => {
     if (patListData !== undefined) {
-      setTotalPage(patListData?.data?.total_page);
+      setTotalData(patListData?.data?.total_data);
       const mappingCatPat = patListData?.data?.pat?.map((v, key) => {
         return {
           No: (currentPage - 1) * 5 + key + 1,
@@ -109,7 +114,14 @@ const index = () => {
                 />
               </div>
               <div className="flex justify-center mt-5">
-                <Pagination pages={totalPage} setCurrentPage={setCurrentPage} />
+                <CustomPagination
+                  defaultCurrentPage={1}
+                  perPage={5}
+                  totalData={totalData}
+                  handleSetPagination={async (start, end, pageNow) =>
+                    setCurrentPage(pageNow)
+                  }
+                />
               </div>
             </div>
           </Card>
