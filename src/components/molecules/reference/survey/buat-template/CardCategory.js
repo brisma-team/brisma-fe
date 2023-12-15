@@ -49,7 +49,7 @@ const CardCategory = ({
             </div>
           )}
         </div>
-        <div className="w-full h-full border-b-2 border-neutral-200 p-2">
+        <div className="w-full min-h-[4rem] border-b-2 border-neutral-200 p-2">
           {data.onEdit ? (
             <TextAreaField
               value={data.name}

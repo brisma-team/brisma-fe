@@ -22,7 +22,7 @@ const index = () => {
     { name: "Form Survei", path: "/reference/survey/overview" },
     {
       name: "Rumus Nilai",
-      path: `/reference/survey/overview/buat-template/${id}/rumus`,
+      path: `/reference/survey/overview/${id}/rumus`,
     },
   ];
 
@@ -139,7 +139,7 @@ const index = () => {
           <div className="flex justify-between items-center mb-4">
             <div className="flex gap-3 items-center">
               <LinkIcon
-                href={`/reference/survey/overview/buat-template/${id}`}
+                href={`/reference/survey/overview/${id}`}
                 icon={
                   <div className="rounded-full border-2 border-atlasian-blue-light text-atlasian-blue-light w-6 h-6 flex items-center justify-center">
                     <IconArrowLeft size="medium" />

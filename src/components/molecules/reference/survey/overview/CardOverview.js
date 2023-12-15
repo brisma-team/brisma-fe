@@ -56,7 +56,7 @@ const CardOverview = ({
   return (
     <DivButton
       className="hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
-      handleClick={() => router.push(`overview/buat-template/${data.id}`)}
+      handleClick={() => router.push(`overview/${data.id}`)}
     >
       <Card>
         <div className="w-full py-3">

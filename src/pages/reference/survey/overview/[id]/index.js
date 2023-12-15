@@ -172,7 +172,7 @@ const index = () => {
       { ...prevItems[0], isDisabled: false },
       {
         ...prevItems[1],
-        isDisabled: !isInformasiComplete || isNewTemplate,
+        isDisabled: !(isInformasiComplete && !isNewTemplate),
       },
     ]);
 
@@ -192,7 +192,7 @@ const index = () => {
       { name: "Form Survei", path: "/reference/survey/overview" },
       {
         name: templateName,
-        path: "/reference/survey/overview/buat-template",
+        path: `/reference/survey/overview/${id}`,
       },
     ]);
   }, [currentContentStage]);

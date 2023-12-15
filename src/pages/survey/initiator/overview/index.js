@@ -117,7 +117,7 @@ const index = () => {
   };
 
   const handleClickApproval = (id) => {
-    router.push(`overview/${id}/buat-survey?isOpenModalApproval=true`);
+    router.push(`overview/${id}?is_approval=true`);
   };
 
   const handleClickDetail = (id) => {
@@ -126,11 +126,11 @@ const index = () => {
   };
 
   const handleClickDownload = (id) => {
-    router.push(`overview/${id}/buat-survey/preview`);
+    router.push(`overview/${id}/preview`);
   };
 
   const handleClickShowScoreSurvey = (id) => {
-    router.push(`overview/${id}/buat-survey/penilaian`);
+    router.push(`overview/${id}/penilaian`);
   };
 
   const handleExtendSurvey = (id) => {
@@ -176,7 +176,7 @@ const index = () => {
             </div>
             <div className="w-36 rounded bg-atlasian-purple">
               <ButtonField
-                handler={() => router.push(`overview/new/buat-survey`)}
+                handler={() => router.push(`overview/new`)}
                 text={"Buat Template"}
               />
             </div>

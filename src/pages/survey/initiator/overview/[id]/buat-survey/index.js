@@ -42,7 +42,7 @@ import {
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id, isOpenModalApproval } = useRouter().query;
+  const { id, is_approval } = useRouter().query;
   const router = useRouter();
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -96,8 +96,8 @@ const index = () => {
   }, [id]);
 
   useEffect(() => {
-    if (isOpenModalApproval) setShowModalApproval(true);
-  }, [isOpenModalApproval]);
+    if (is_approval) setShowModalApproval(true);
+  }, [is_approval]);
 
   useEffect(() => {
     const {
@@ -184,7 +184,7 @@ const index = () => {
       { name: "Overview", path: "/survey/initiator/overview" },
       {
         name: `Buat Survei / ${templateName}`,
-        path: `/survey/initiator/overview/${id}/buat-template`,
+        path: `/survey/initiator/overview/${id}`,
       },
     ]);
   }, [currentContentStage]);

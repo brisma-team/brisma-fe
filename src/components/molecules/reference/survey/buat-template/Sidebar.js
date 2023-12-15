@@ -71,7 +71,7 @@ const Sidebar = ({
             <div className="flex gap-3 items-center">
               <LinkIcon
                 icon={<Image src={ImagePreview} alt="" />}
-                href={`/reference/survey/overview/buat-template/${id}/preview`}
+                href={`/reference/survey/overview/${id}/preview`}
               />
               <ButtonIcon
                 icon={<Image src={ImageGroup} alt="" />}

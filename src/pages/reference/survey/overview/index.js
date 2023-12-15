@@ -144,11 +144,11 @@ const index = () => {
   };
 
   const handleClickSimulation = (id) => {
-    router.push(`overview/buat-template/${id}/rumus`);
+    router.push(`overview/${id}/rumus`);
   };
 
   const handleClickApproval = (id) => {
-    router.push(`overview/buat-template/${id}?isOpenModalApproval=true`);
+    router.push(`overview/${id}?is_approval=true`);
   };
 
   const handleClickDownload = (id) => {
@@ -190,7 +190,7 @@ const index = () => {
             </div>
             <div className="w-36 rounded bg-atlasian-purple">
               <ButtonField
-                handler={() => router.push("overview/buat-template/new")}
+                handler={() => router.push("overview/new")}
                 text={"Buat Template"}
               />
             </div>
