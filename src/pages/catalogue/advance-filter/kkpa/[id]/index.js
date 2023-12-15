@@ -25,7 +25,7 @@ const index = () => {
       year: id?.split("x1c-")[2],
       type: id?.split("x1c-")[0],
       id: id?.split("x1c-")[1],
-      kkpaId: id.toUpperCase(),
+      kkpaId: id.split("x1c-")[1].toUpperCase(),
       uri: id,
     });
   }, [router.isReady]);
@@ -40,8 +40,8 @@ const index = () => {
   ];
 
   const { kkpaDetail, kkpaDetailIsLoading } = useKKPAById(
-    2023,
-    1,
+    params.year,
+    params.type,
     params.kkpaId
   );
 
