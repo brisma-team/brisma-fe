@@ -35,7 +35,7 @@ const index = () => {
     { name: "Daftar Dokumen", path: "/catalogue/pat/" + params.uri },
     {
       name: "Daftar Dokumen Addendum PAT",
-      path: "/catalogue/pat/addendum-pat/" + params.uri,
+      path: "/catalogue/pat/" + params.uri + "/addendum-pat/",
     },
   ];
 
