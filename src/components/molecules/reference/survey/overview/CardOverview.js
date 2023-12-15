@@ -1,6 +1,7 @@
 import { ButtonIcon, Card, DivButton } from "@/components/atoms";
 import { IconBullet } from "@/components/icons";
 import { DropdownCard } from "@/components/molecules/commons";
+import useUser from "@/data/useUser";
 import { convertDate } from "@/helpers";
 import { useRouter } from "next/router";
 
@@ -23,16 +24,21 @@ const CardOverview = ({
   handleDeleteTemplate,
 }) => {
   const router = useRouter();
+  const { user } = useUser();
   const listDropdown = [
     {
       label: "Aktifkan",
       action: () => handleEnableTemplate(data.id),
-      isDisabled: !(data.status_persetujuan === "Final" && !data.is_active),
+      isDisabled: !(
+        data.status_persetujuan === "Final" &&
+        !data.is_active &&
+        user?.data?.pn == data.createdBy
+      ),
     },
     {
       label: "Non-Aktifkan",
       action: () => handleDisableTemplate(data.id),
-      isDisabled: !data.is_active,
+      isDisabled: !(data.is_active && user?.data?.pn == data.createdBy),
     },
     {
       label: "Simulasi",
