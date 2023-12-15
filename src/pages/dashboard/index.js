@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import useGetToken from "@/data/dashboard/useGetToken";
 import { Select, ButtonField } from "@/components/atoms";
 import VidShareScreenIcon from "@atlaskit/icon/glyph/vid-share-screen";
+import useGetGuestToken from "@/data/dashboard/useGetGuestToken";
 
 const breadcrumb = [
   {
@@ -15,20 +16,20 @@ const breadcrumb = [
 const updateIntervalList = [
   {
     label: "10 Detik",
-    value: 10
+    value: 10,
   },
   {
     label: "30 Detik",
-    value: 30
+    value: 30,
   },
   {
     label: "1 Menit",
-    value: 60
+    value: 60,
   },
   {
     label: "5 Menit",
-    value: 300
-  }
+    value: 300,
+  },
 ];
 
 export default function index() {
@@ -40,9 +41,14 @@ export default function index() {
   const [tagName, setTagName] = useState("");
   const [noActiveDashboard, setNoActiveDashboard] = useState(false);
   const { data } = useGetToken("visual", interval);
+  const { guestData } = useGetGuestToken(selectedID);
 
   useEffect(() => {
-    if (data !== undefined && Array.isArray(data.list) && data.list.length > 0) {
+    if (
+      data !== undefined &&
+      Array.isArray(data.list) &&
+      data.list.length > 0
+    ) {
       const mapping = data.list.map((v, i) => {
         return {
           id: v.embed_id,
@@ -55,15 +61,20 @@ export default function index() {
       if (selectedEntry === "") {
         setTagName(mapping[0].label);
         setSelectedEntry(mapping[0].value);
-        setSelectedID(mapping[0].id)
+        setSelectedID(mapping[0].id);
       }
 
-      setCtoken(data.token);
-      setNoActiveDashboard(false)
+      setNoActiveDashboard(false);
     } else {
       setNoActiveDashboard(true);
     }
   }, [data, selectedEntry]);
+
+  useEffect(() => {
+    if (guestData !== undefined) {
+      setCtoken(guestData.token);
+    }
+  }, [guestData]);
 
   const openKioskModeTab = () => {
     // URL untuk mode kiosk
@@ -81,14 +92,16 @@ export default function index() {
 
   const handleSelectIntervalChange = (selectedOption) => {
     setInterval(selectedOption.value * 1000);
-  }
+  };
 
   if (noActiveDashboard) {
     return (
       <Main breadcrumb={breadcrumb}>
-        <div className="text-xl text-center justify-center">Tidak ada <i>dashboard</i> yang aktif!</div>
+        <div className="text-xl text-center justify-center">
+          Tidak ada <i>dashboard</i> yang aktif!
+        </div>
       </Main>
-    )
+    );
   } else {
     return (
       <Main breadcrumb={breadcrumb}>
@@ -126,6 +139,6 @@ export default function index() {
           )}
         </div>
       </Main>
-    )
+    );
   }
 }
