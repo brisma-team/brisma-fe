@@ -5,7 +5,7 @@ import {
   Card,
   TableField,
   ButtonField,
-  Pagination,
+  CustomPagination,
   ButtonIcon,
 } from "@/components/atoms";
 import { IconPlus } from "@/components/icons";
@@ -39,7 +39,7 @@ const index = () => {
   const [dashboard, setDashboard] = useState([]);
   const [data, setData] = useState({ embedId: "", name: "", type: "report" });
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalData, setTotalData] = useState(1);
   const [index, setIndex] = useState(1);
 
   const [mappedDashboard, setMappedDashboard] = useState([]);
@@ -67,7 +67,7 @@ const index = () => {
   useEffect(() => {
     if (dashboardList) {
       setMappedDashboard(dashboardList.list);
-      setTotalPages(dashboardList.totalPages);
+      setTotalData(dashboardList.totalItems);
       setIndex(dashboardList.limit * dashboardList.page + 1);
     }
   }, [dashboardList]);
@@ -102,12 +102,12 @@ const index = () => {
                   const fRole = mappedRole.find((item) =>
                     dlist.includes(item.kode)
                   );
-                  return fRole.name;
+                  return fRole?.name;
                 });
 
                 return {
-                  mapped_uka: rUka.name,
-                  mapped_role: rRole,
+                  mapped_uka: rUka?.name || "",
+                  mapped_role: rRole || "",
                   mapped_uka_code: alist.uka_code,
                   mapped_role_code: alist.role_code,
                 };
@@ -293,9 +293,13 @@ const index = () => {
                 />
               </div>
               <div className="flex justify-center mt-5">
-                <Pagination
-                  pages={totalPages}
-                  setCurrentPage={setCurrentPage}
+                <CustomPagination
+                  defaultCurrentPage={1}
+                  perPage={5}
+                  totalData={totalData}
+                  handleSetPagination={async (start, end, pageNow) =>
+                    setCurrentPage(pageNow)
+                  }
                 />
               </div>
             </div>

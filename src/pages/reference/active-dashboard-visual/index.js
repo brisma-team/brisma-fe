@@ -102,12 +102,12 @@ const index = () => {
                   const fRole = mappedRole.find((item) =>
                     dlist.includes(item.kode)
                   );
-                  return fRole.name;
+                  return fRole?.name;
                 });
 
                 return {
-                  mapped_uka: rUka.name,
-                  mapped_role: rRole,
+                  mapped_uka: rUka?.name || "",
+                  mapped_role: rRole || "",
                   mapped_uka_code: alist.uka_code,
                   mapped_role_code: alist.role_code,
                 };

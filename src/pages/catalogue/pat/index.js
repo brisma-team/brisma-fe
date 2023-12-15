@@ -40,7 +40,7 @@ const index = () => {
     5,
     searchParamObject.projectName || "",
     searchParamObject.auditOffice || "",
-    searchParamObject.faseAddendum || 0
+    searchParamObject.faseAddendum || ""
   );
 
   useEffect(() => {

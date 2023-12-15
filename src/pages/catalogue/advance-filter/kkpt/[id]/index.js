@@ -3,7 +3,7 @@ import { MainLayout } from "@/layouts";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import kkptHtml from "@/templates/catalog/ewp/kkpt";
-import { DocumentViewer, ProjectInfo } from "@/components/molecules/catalog";
+import { DocumentViewer } from "@/components/molecules/catalog";
 
 const index = () => {
   const router = useRouter();
@@ -25,7 +25,7 @@ const index = () => {
       type: id?.split("x1c-")[0],
       id: id?.split("x1c-")[1],
       uri: id,
-      kkptid: id.toUpperCase(),
+      kkptid: id.split("x1c-")[1].toUpperCase(),
     });
   }, [router.isReady]);
 
@@ -45,15 +45,9 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <PageTitle text={"KKPT Dokumen"} />
         </div>
-        {/* <ProjectInfo
-          type="ewp"
-          id={params.id}
-          year={params.year}
-          source={params.type}
-        /> */}
         <DocumentViewer
           documentTitle="Kertas Kerja Pengawasan Temuan"
-          documentHtml={kkptHtml(2022, 1, params.kkptid)}
+          documentHtml={kkptHtml(params.year, params.type, params.kkptid)}
         />
       </div>
     </MainLayout>

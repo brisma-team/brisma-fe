@@ -9,7 +9,7 @@ import {
   TableField,
 } from "@/components/atoms";
 import { IconArrowRight } from "@/components/icons";
-import { loadingSwal, successSwal } from "@/helpers";
+import { infoSwal, loadingSwal, successSwal } from "@/helpers";
 import usePostKKPTQuery from "@/helpers/usePostKKPTQuery";
 import shortenWord from "@/helpers/shortenWord";
 import CodeMirror from "@uiw/react-codemirror";
@@ -34,7 +34,6 @@ const index = () => {
   const [catPat, setCatPat] = useState([]);
   const [whereClause, setWhereClause] = useState([]);
   const [dataList, setDataList] = useState([]);
-  // const fewl = [
   //   {
   //     "Nama Kolom": "kkpaid",
   //     "Tipe Data": "UUID",
@@ -195,7 +194,16 @@ const index = () => {
           "Sub Aktivitas": v?.SubActivity,
           Aksi: (
             <div className="rounded-full overflow-hidden border-2 border-atlasian-blue-light w-7 h-7 pt-0.5 mx-auto active:bg-slate-100">
-              <Link href={"/catalogue/advance-filter/kkpa/" + v?.KKPAID}>
+              <Link
+                href={
+                  "/catalogue/advance-filter/kkpa/" +
+                  v?.Source +
+                  "x1c-" +
+                  v?.KKPAID +
+                  "x1c-" +
+                  v?.ProjectYear
+                }
+              >
                 <ButtonField
                   className={"bottom-1.5"}
                   icon={<IconArrowRight primaryColor="#0051CB" size="medium" />}
@@ -218,17 +226,21 @@ const index = () => {
       year: 2023,
       page: page,
       limit: params.limit,
-    }).then((res) => {
-      successSwal(res.messages);
-      setDataList(res.data.kkpalist);
-      setParams({
-        ...params,
-        page: res.data.current_page,
-        total_page: res.data.total_page,
-        total_data: res.data.total_data,
-        limit: res.data.limit,
+    })
+      .then((res) => {
+        successSwal(res.messages);
+        setDataList(res.data.kkpalist);
+        setParams({
+          ...params,
+          page: res.data.current_page,
+          total_page: res.data.total_page,
+          total_data: res.data.total_data,
+          limit: res.data.limit,
+        });
+      })
+      .catch((err) => {
+        infoSwal(err.message);
       });
-    });
   };
 
   return (
