@@ -37,6 +37,7 @@ import QRGenerator from "./QRGenerator";
 import TextInputDecimal from "./TextInputDecimal";
 import AttachmentModal from "./AttachmentModal";
 import CustomPagination from "./CustomPagination";
+import CustomTooltip from "./CustomTooltip";
 
 export {
   AvatarDefaultExample,
@@ -78,4 +79,5 @@ export {
   TextInputDecimal,
   AttachmentModal,
   CustomPagination,
+  CustomTooltip,
 };

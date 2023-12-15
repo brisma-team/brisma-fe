@@ -92,8 +92,8 @@ const PekerjaSelect = ({
         components={customIcon && { DropdownIndicator }}
         isDisabled={isDisabled}
         className={className}
-        onMenuOpen={handleOpen}
-        onMenuClose={handleClose}
+        onMenuOpen={positionAbsolute && handleOpen}
+        onMenuClose={positionAbsolute && handleClose}
       />
     </div>
   );
