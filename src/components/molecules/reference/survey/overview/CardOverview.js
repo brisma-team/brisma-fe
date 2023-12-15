@@ -1,4 +1,4 @@
-import { ButtonIcon, Card, DivButton } from "@/components/atoms";
+import { ButtonIcon, Card, CustomTooltip, DivButton } from "@/components/atoms";
 import { IconBullet } from "@/components/icons";
 import { DropdownCard } from "@/components/molecules/commons";
 import useUser from "@/data/useUser";
@@ -78,21 +78,27 @@ const CardOverview = ({
             </div>
             <div className="flex justify-end gap-1 items-center -mt-3">
               <DropdownCard actions={listDropdown} />
-              <ButtonIcon
-                isDisabled
-                color={"red"}
-                icon={
-                  <div
-                    className={`w-full h-full flex items-center ${
-                      data.is_active
-                        ? "text-atlasian-yellow"
-                        : "text-atlasian-red"
-                    }`}
-                  >
-                    <IconBullet size="large" />
-                  </div>
-                }
-              />
+              <CustomTooltip
+                content={`Status Template : ${
+                  data.is_active ? "Aktif" : "Non-Aktif"
+                }`}
+              >
+                <ButtonIcon
+                  isDisabled
+                  color={"red"}
+                  icon={
+                    <div
+                      className={`w-full h-full flex items-center ${
+                        data.is_active
+                          ? "text-atlasian-yellow"
+                          : "text-atlasian-red"
+                      }`}
+                    >
+                      <IconBullet size="large" />
+                    </div>
+                  }
+                />
+              </CustomTooltip>
             </div>
           </div>
           <div className="flex flex-col gap-3">
