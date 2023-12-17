@@ -1,9 +1,9 @@
 import SupersetDashboard from "@/components/molecules/dashboard/SupersetDashboard";
 import { useState, useEffect } from "react";
-import useGetDashboardList from "@/data/dashboard/useGetDashboardList";
 import { useRouter } from "next/router";
 import { Select } from "@/components/atoms";
-
+import useGetDashboardList from "@/data/dashboard/useGetDashboardList";
+import useGetGuestToken from "@/data/dashboard/useGetGuestToken";
 
 const updateIntervalList = [
   {
@@ -26,14 +26,15 @@ const updateIntervalList = [
 
 export default function index() {
   const [interval, setInterval] = useState(updateIntervalList[3].value * 1000); // default 5 menit
-  const { data } = useGetDashboardList("visual", interval);
   const { id } = useRouter().query;
   const [ctoken, setCtoken] = useState("");
   const [tagName, setTagName] = useState(""); // Menambahkan state untuk tagName
+  const [noGuestToken, setNoGuestToken] = useState(false);
+  const { data } = useGetDashboardList("visual", interval);
+  const { guestData } = useGetGuestToken(id, interval);
 
   useEffect(() => {
     if (data && data) {
-      setCtoken(data.token);
       if (id) {
         // Cari label dari data yang sesuai dengan id yang dipilih
         const selectedDashboard = data.list.find(
@@ -45,6 +46,17 @@ export default function index() {
       }
     }
   }, [data, id]);
+
+  useEffect(() => {
+    if (guestData !== undefined) {
+      if (guestData.hasOwnProperty("token")) {
+        setNoGuestToken(false);
+        setCtoken(guestData.token);
+      } else {
+        setNoGuestToken(true);
+      }
+    }
+  }, [guestData]);
 
   const handleSelectIntervalChange = (selectedOption) => {
     setInterval(selectedOption.value * 1000);
@@ -63,7 +75,12 @@ export default function index() {
             />
         </div>
       </div>
-      {id && ctoken && <SupersetDashboard token={ctoken} id={id} />}
+      { noGuestToken ? (
+        <div className="text-xl text-center justify-center">
+          Tidak dapat memuat <i>dashboard</i>!
+        </div>
+      ) : id && ctoken && <SupersetDashboard token={ctoken} id={id} />
+      }
     </div>
   );
 }
