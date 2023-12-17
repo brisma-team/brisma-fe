@@ -88,12 +88,40 @@ const index = () => {
   );
 
   useEffect(() => {
+    console.log("payloadKuesioner => ", payloadKuesioner);
+  }, [payloadKuesioner]);
+
+  useEffect(() => {
     setIsNewTemplate(id === "new");
+  }, [id]);
+
+  useEffect(() => {
+    const {
+      nama_survey,
+      pelaksanaan_start,
+      pelaksanaan_end,
+      deskripsi,
+      jenis_survey_kode,
+      ref_template_id,
+    } = payloadInformasi;
+    const isInformasiComplete =
+      nama_survey &&
+      pelaksanaan_start &&
+      pelaksanaan_end &&
+      deskripsi &&
+      jenis_survey_kode &&
+      ref_template_id;
+
     setNavigationTabItems((prevItems) => [
       { ...prevItems[0], isDisabled: false },
-      { ...prevItems[1], isDisabled: false },
+      {
+        ...prevItems[1],
+        isDisabled: !(isInformasiComplete && !isNewTemplate),
+      },
     ]);
-  }, [id]);
+
+    setIsFormDisabled(!isInformasiComplete);
+  }, [payloadInformasi]);
 
   useEffect(() => {
     if (is_approval) setShowModalApproval(true);
@@ -137,11 +165,15 @@ const index = () => {
   useEffect(() => {
     if (!kuesionerError && kuesioner?.data?.kategori?.length) {
       const mapping = kuesioner.data.kategori.map((category) => {
+        const sortedQuestions = category.template_pertanyaan.sort(
+          (a, b) => a.tipe_pertanyaan_kode - b.tipe_pertanyaan_kode
+        );
+
         return {
           id: category.kategori_id,
           name: category.kategori_name,
-          pertanyaan: category.template_pertanyaan.length
-            ? category.template_pertanyaan.map((question) => {
+          pertanyaan: sortedQuestions?.length
+            ? sortedQuestions.map((question) => {
                 return {
                   id: question.pertanyaan_id,
                   guideline: question.guideline,
@@ -266,7 +298,7 @@ const index = () => {
   };
 
   const handleClickResponden = () => {
-    router.push(`/survey/initiator/overview/${id}/buat-survey/responden`);
+    router.push(`/survey/initiator/overview/${id}/responden`);
   };
 
   const handleSaveInformation = async () => {
@@ -291,7 +323,7 @@ const index = () => {
       apiPayload
     ).then((res) => {
       if (isNewTemplate) {
-        router.push(`/survey/overview/${res?.data?.id}/buat-survey`);
+        router.push(`/survey/initiator/overview/${res?.data?.id}`);
       }
     });
 
@@ -492,6 +524,7 @@ const index = () => {
             />
           ) : (
             <TabKuesioner
+              data={payloadKuesioner}
               isPreviewPage={true}
               isDisabledForm={true}
               handleClickOpenModalGuidelines={handleClickOpenModalGuidelines}

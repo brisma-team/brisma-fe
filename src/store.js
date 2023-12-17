@@ -41,6 +41,8 @@ import createSurveyReducer from "./slices/survey/initiator/createSurveySlice";
 import respondenSurveyReducer from "./slices/survey/initiator/respondenSurveySlice";
 import respondenAnswerReducer from "./slices/survey/responden/respondenAnswerSlice";
 import penilaianRespondenSurveyReducer from "./slices/survey/responden/penilaianRespondenSurvey";
+import previewSurveyReducer from "./slices/survey/initiator/previewSurveySlice";
+import approvalInitiatorSurveyReducer from "./slices/survey/initiator/approvalSurveySlice";
 
 import { configureStore } from "@reduxjs/toolkit";
 
@@ -81,5 +83,7 @@ export const store = configureStore({
     respondenSurvey: respondenSurveyReducer,
     respondenAnswer: respondenAnswerReducer,
     penilaianRespondenSurvey: penilaianRespondenSurveyReducer,
+    previewSurvey: previewSurveyReducer,
+    approvalInitiatorSurvey: approvalInitiatorSurveyReducer,
   },
 });

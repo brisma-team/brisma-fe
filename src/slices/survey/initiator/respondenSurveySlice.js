@@ -12,8 +12,8 @@ const initialState = {
     keterangan: "",
   },
   payloadNewUker: {
-    orgeh_kode: "",
-    orgeh_name: "",
+    branch_kode: "",
+    branch_name: "",
     keterangan: "",
   },
   defaultDataTables: {
@@ -27,8 +27,8 @@ const initialState = {
     keterangan: "",
   },
   defaultPayloadNewUker: {
-    orgeh_kode: "",
-    orgeh_name: "",
+    branch_kode: "",
+    branch_name: "",
     keterangan: "",
   },
 };

@@ -20,8 +20,8 @@ import { useInformation } from "@/data/survey/initiator/informasi";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
-  { name: "Reference", path: "/reference" },
-  { name: "Form Survei", path: "/reference/initiator/survey/overview" },
+  { name: "Reference", path: "/survey" },
+  { name: "Form Survei", path: "/survey/initiator/overview" },
 ];
 
 const index = () => {
@@ -63,7 +63,7 @@ const index = () => {
   const { information } = useInformation({ id: selectedSurveyId });
 
   useEffect(() => {
-    setTotalData(overview?.pagination?.totalItems);
+    setTotalData(overview?.pagination?.totalData);
     if (overview?.data?.length) {
       const mapping = overview?.data?.map((v) => {
         return {
@@ -177,7 +177,7 @@ const index = () => {
             <div className="w-36 rounded bg-atlasian-purple">
               <ButtonField
                 handler={() => router.push(`overview/new`)}
-                text={"Buat Template"}
+                text={"Buat Form"}
               />
             </div>
           </div>

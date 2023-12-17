@@ -38,7 +38,7 @@ const TableResponden = ({
           <p className="font-semibold text-base">Daftar PN Responden</p>
           {withUker ? (
             <div className="font-semibold text-base text-atlasian-blue-light">
-              {dataUker[findIndex]?.orgeh_name}
+              {dataUker[findIndex]?.branch_name}
             </div>
           ) : (
             ""
