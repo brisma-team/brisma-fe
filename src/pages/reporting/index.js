@@ -39,6 +39,7 @@ export default function index() {
   const [ctoken, setCtoken] = useState("");
   const [tagName, setTagName] = useState("");
   const [noActiveDashboard, setNoActiveDashboard] = useState(false);
+  const [noGuestToken, setNoGuestToken] = useState(false);
   const { data } = useGetDashboardList("report", interval);
   const { guestData } = useGetGuestToken(selectedID, interval);
 
@@ -67,7 +68,12 @@ export default function index() {
 
   useEffect(() => {
     if (guestData !== undefined) {
-      setCtoken(guestData.token);
+      if (guestData.hasOwnProperty("token")) {
+        setNoGuestToken(false);
+        setCtoken(guestData.token);
+      } else {
+        setNoGuestToken(true);
+      }
     }
   }, [guestData]);
 
@@ -112,7 +118,11 @@ export default function index() {
               />
             </div>
           </div>
-          {selectedID && ctoken && (
+          { noGuestToken ? (
+            <div className="text-xl text-center justify-center">
+              Tidak dapat memuat <i>dashboard</i>!
+            </div>
+          ) : selectedID && ctoken && (
             <SupersetDashboard token={ctoken} id={selectedID} />
           )}
         </div>

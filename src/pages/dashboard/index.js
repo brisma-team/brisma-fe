@@ -5,7 +5,6 @@ import { Select, ButtonField } from "@/components/atoms";
 import VidShareScreenIcon from "@atlaskit/icon/glyph/vid-share-screen";
 import useGetDashboardList from "@/data/dashboard/useGetDashboardList";
 import useGetGuestToken from "@/data/dashboard/useGetGuestToken";
-import { isObject } from "lodash";
 
 const breadcrumb = [
   {
