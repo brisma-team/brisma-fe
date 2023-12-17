@@ -30,7 +30,7 @@ const index = () => {
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Reference", path: "/reference" },
-    { name: "Dashboard", path: "/reference/active-dashboard" },
+    { name: "Dashboard", path: "/reference/active-dashboard-report" },
   ];
   // const [selected, setSelected] = useState();
 
