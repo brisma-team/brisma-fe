@@ -35,11 +35,11 @@ const index = () => {
     { name: "Overview", path: "/survey/initiator/overview" },
     {
       name: `Buat Survei / Template Kuesioner`,
-      path: `/survey/initiator/overview/${id}/buat-survey`,
+      path: `/survey/initiator/overview/${id}`,
     },
     {
       name: `Responden`,
-      path: `/survey/initiator/overview/${id}/buat-survey/responden`,
+      path: `/survey/initiator/overview/${id}/responden`,
     },
   ];
 
