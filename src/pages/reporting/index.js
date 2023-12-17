@@ -1,8 +1,9 @@
 import Main from "@/layouts/MainLayout";
 import SupersetDashboard from "@/components/molecules/dashboard/SupersetDashboard";
 import { useState, useEffect } from "react";
-import useGetToken from "@/data/dashboard/useGetToken";
 import { Select } from "@/components/atoms";
+import useGetDashboardList from "@/data/dashboard/useGetDashboardList";
+import useGetGuestToken from "@/data/dashboard/useGetGuestToken";
 
 const breadcrumb = [
   {
@@ -38,15 +39,16 @@ export default function index() {
   const [ctoken, setCtoken] = useState("");
   const [tagName, setTagName] = useState("");
   const [noActiveDashboard, setNoActiveDashboard] = useState(false);
-  const { data } = useGetToken("report", interval);
+  const { data } = useGetDashboardList("report", interval);
+  const { guestData } = useGetGuestToken(selectedID, interval);
 
   useEffect(() => {
     if (data !== undefined && Array.isArray(data.list) && data.list.length > 0) {
       const mapping = data.list.map((v, i) => {
         return {
+          id: v.embed_id,
           label: v.name,
           value: i,
-          id: v.embed_id,
         };
       });
 
@@ -57,15 +59,20 @@ export default function index() {
         setSelectedID(mapping[0].id);
       }
 
-      setCtoken(data.token);
       setNoActiveDashboard(false)
     } else {
       setNoActiveDashboard(true);
     }
   }, [data, selectedEntry]);
 
+  useEffect(() => {
+    if (guestData !== undefined) {
+      setCtoken(guestData.token);
+    }
+  }, [guestData]);
+
   const handleSelectChange = (selectedOption) => {
-    setSelectedEntry(selectedOption.value);
+    setSelectedEntry(selectedOption.entry);
     setSelectedID(selectedOption.id);
     setTagName(selectedOption.label);
   };
@@ -105,7 +112,7 @@ export default function index() {
               />
             </div>
           </div>
-          {selectedID && data.token && (
+          {selectedID && ctoken && (
             <SupersetDashboard token={ctoken} id={selectedID} />
           )}
         </div>

@@ -1,6 +1,6 @@
 import SupersetDashboard from "@/components/molecules/dashboard/SupersetDashboard";
 import { useState, useEffect } from "react";
-import useGetToken from "@/data/dashboard/useGetToken";
+import useGetDashboardList from "@/data/dashboard/useGetDashboardList";
 import { useRouter } from "next/router";
 import { Select } from "@/components/atoms";
 
@@ -26,7 +26,7 @@ const updateIntervalList = [
 
 export default function index() {
   const [interval, setInterval] = useState(updateIntervalList[3].value * 1000); // default 5 menit
-  const { data } = useGetToken("visual", interval);
+  const { data } = useGetDashboardList("visual", interval);
   const { id } = useRouter().query;
   const [ctoken, setCtoken] = useState("");
   const [tagName, setTagName] = useState(""); // Menambahkan state untuk tagName
