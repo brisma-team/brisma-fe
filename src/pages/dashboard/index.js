@@ -1,9 +1,9 @@
 import Main from "@/layouts/MainLayout";
 import SupersetDashboard from "@/components/molecules/dashboard/SupersetDashboard";
 import { useState, useEffect } from "react";
-import useGetToken from "@/data/dashboard/useGetToken";
 import { Select, ButtonField } from "@/components/atoms";
 import VidShareScreenIcon from "@atlaskit/icon/glyph/vid-share-screen";
+import useGetDashboardList from "@/data/dashboard/useGetDashboardList";
 import useGetGuestToken from "@/data/dashboard/useGetGuestToken";
 
 const breadcrumb = [
@@ -40,8 +40,9 @@ export default function index() {
   const [ctoken, setCtoken] = useState("");
   const [tagName, setTagName] = useState("");
   const [noActiveDashboard, setNoActiveDashboard] = useState(false);
-  const { data } = useGetToken("visual", interval);
-  const { guestData } = useGetGuestToken(selectedID);
+  const [noGuestToken, setNoGuestToken] = useState(false);
+  const { data } = useGetDashboardList("visual", interval);
+  const { guestData } = useGetGuestToken(selectedID, interval);
 
   useEffect(() => {
     if (
@@ -72,7 +73,12 @@ export default function index() {
 
   useEffect(() => {
     if (guestData !== undefined) {
-      setCtoken(guestData.token);
+      if (guestData.hasOwnProperty("token")) {
+        setNoGuestToken(false);
+        setCtoken(guestData.token);
+      } else {
+        setNoGuestToken(true);
+      }
     }
   }, [guestData]);
 
@@ -134,7 +140,11 @@ export default function index() {
               />
             </div>
           </div>
-          {selectedID && data.token && (
+          { noGuestToken ? (
+            <div className="text-xl text-center justify-center">
+              Tidak dapat memuat <i>dashboard</i>!
+            </div>
+          ) : selectedID && ctoken && (
             <SupersetDashboard token={ctoken} id={selectedID} />
           )}
         </div>
