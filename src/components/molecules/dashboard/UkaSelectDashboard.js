@@ -41,7 +41,7 @@ const UkaSelectDashboard = ({
     );
   };
   return (
-    <div className={`${open ? "z-60 absolute" : ""} ${width && width}`}>
+    <div className={`${open ? "z-50 absolute" : ""} ${width && width}`}>
       <Select
         {...fieldsProps}
         placeholder={placeholder}
