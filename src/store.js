@@ -43,6 +43,7 @@ import respondenAnswerReducer from "./slices/survey/responden/respondenAnswerSli
 import penilaianRespondenSurveyReducer from "./slices/survey/responden/penilaianRespondenSurvey";
 import previewSurveyReducer from "./slices/survey/initiator/previewSurveySlice";
 import approvalInitiatorSurveyReducer from "./slices/survey/initiator/approvalSurveySlice";
+import approvalRespondenSurveyReducer from "./slices/survey/responden/approvalSurveySlice";
 
 import { configureStore } from "@reduxjs/toolkit";
 
@@ -85,5 +86,6 @@ export const store = configureStore({
     penilaianRespondenSurvey: penilaianRespondenSurveyReducer,
     previewSurvey: previewSurveyReducer,
     approvalInitiatorSurvey: approvalInitiatorSurveyReducer,
+    approvalRespondenSurvey: approvalRespondenSurveyReducer,
   },
 });

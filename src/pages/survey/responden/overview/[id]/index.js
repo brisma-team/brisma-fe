@@ -46,7 +46,7 @@ import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id, is_approver, from } = useRouter().query;
+  const { id, is_approval, from } = useRouter().query;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [sidebarContent, setSidebarContent] = useState([]);
@@ -94,9 +94,9 @@ const index = () => {
     });
 
   useEffect(() => {
-    if (is_approver) setShowModalApproval(true);
+    if (is_approval) setShowModalApproval(true);
     if (from) setApproverFromPn(from);
-  }, [is_approver, from]);
+  }, [is_approval, from]);
 
   useEffect(() => {
     if (!informationError) {
@@ -269,10 +269,6 @@ const index = () => {
     dispatch(setWorkflowData(newWorkflowData));
   }, [workflowSurvey]);
 
-  useEffect(() => {
-    console.log("workflowData => ", workflowData);
-  }, [workflowData]);
-
   const handleSubmitSurvey = async () => {
     loadingSwal();
     const payload = {
@@ -405,10 +401,6 @@ const index = () => {
       })
     );
   };
-
-  useEffect(() => {
-    console.log("workflowData => ", workflowData);
-  }, [workflowData]);
 
   const handleChangeSelect = (property, index, e) => {
     const newData = [...workflowData[property]];

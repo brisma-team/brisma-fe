@@ -10,7 +10,7 @@ import TableTree, {
 } from "@atlaskit/table-tree";
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
-const TableHistory = ({ data }) => {
+const TableHistory = ({ data, isInitiator }) => {
   return (
     <Card>
       <div className="w-full px-4 pb-2">
@@ -27,7 +27,7 @@ const TableHistory = ({ data }) => {
               </div>
             </Header>
             <Header
-              width="25%"
+              width="20%"
               className="border-t border-r cell-custom-dataTables"
             >
               <div className="custom-table-header">
@@ -35,16 +35,25 @@ const TableHistory = ({ data }) => {
               </div>
             </Header>
             <Header
-              width="25%"
+              width="20%"
               className="border-t border-r cell-custom-dataTables"
             >
               <div className={`custom-table-header`}>
                 <p className="text-base font-bold">Jenis Survei</p>
               </div>
             </Header>
-
             <Header
-              width="36%"
+              width="28%"
+              className="border-t border-r cell-custom-dataTables"
+            >
+              <div className={`custom-table-header`}>
+                <p className="text-base font-bold">
+                  {isInitiator ? "Initiator" : "Responden"}
+                </p>
+              </div>
+            </Header>
+            <Header
+              width="18%"
               className="border-t border-r rounded-se-xl cell-custom-dataTables"
             >
               <div className={`custom-table-header`}>
@@ -56,6 +65,8 @@ const TableHistory = ({ data }) => {
             <Rows
               items={data}
               render={({
+                pn,
+                nama,
                 tanggal,
                 project_survey_id,
                 jenis_survey_name,
@@ -69,19 +80,24 @@ const TableHistory = ({ data }) => {
                       </p>
                     </div>
                   </Cell>
-                  <Cell width="25%" className={`border-r ${customCell} `}>
+                  <Cell width="20%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p className="text-sm">
                         {project_survey_id?.toUpperCase()}
                       </p>
                     </div>
                   </Cell>
-                  <Cell width="25%" className={`border-r ${customCell} `}>
+                  <Cell width="20%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p className="text-sm">{jenis_survey_name}</p>
                     </div>
                   </Cell>
-                  <Cell width="36%" className={`border-r ${customCell} `}>
+                  <Cell width="28%" className={`border-r ${customCell} `}>
+                    <div className="custom-table-position-center">
+                      <p className="text-sm">{pn + " - " + nama}</p>
+                    </div>
+                  </Cell>
+                  <Cell width="18%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p className="text-sm">{status_approval}</p>
                     </div>

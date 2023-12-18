@@ -1,3 +1,4 @@
 import TableApprovalQueue from "./TableApprovalQueue";
+import TableHistory from "./TableHistory";
 
-export { TableApprovalQueue };
+export { TableApprovalQueue, TableHistory };

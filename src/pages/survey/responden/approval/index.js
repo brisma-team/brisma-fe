@@ -2,11 +2,11 @@ import { Breadcrumbs, PageTitle } from "@/components/atoms";
 import { LandingLayoutSurvey } from "@/layouts/survey";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useApprovalInitiator } from "@/data/survey/initiator/approval";
+import { useApprovalResponden } from "@/data/survey/responden/approval";
 import {
   setDataTablesApprovalQueue,
   setDataTablesHistory,
-} from "@/slices/survey/initiator/approvalSurveySlice";
+} from "@/slices/survey/responden/approvalSurveySlice";
 import {
   TableApprovalQueue,
   TableHistory,
@@ -17,7 +17,7 @@ import { CardTotalListSidebar } from "@/components/molecules/commons";
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
   { name: "Survei", path: "/survey" },
-  { name: "Approval", path: "/survey/initiator/approval" },
+  { name: "Approval", path: "/survey/responden/approval" },
 ];
 
 const index = () => {
@@ -26,43 +26,43 @@ const index = () => {
   const [cardContentTotalApproval, setCardContentTotalApproval] = useState([]);
 
   const dataTablesApprovalQueue = useSelector(
-    (state) => state.approvalInitiatorSurvey.dataTablesApprovalQueue
+    (state) => state.approvalRespondenSurvey.dataTablesApprovalQueue
   );
   const dataTablesHistory = useSelector(
-    (state) => state.approvalInitiatorSurvey.dataTablesHistory
+    (state) => state.approvalRespondenSurvey.dataTablesHistory
   );
 
-  const { approvalInitiator, approvalInitiatorError } = useApprovalInitiator();
+  const { approvalResponden, approvalRespondenError } = useApprovalResponden();
 
   useEffect(() => {
-    if (!approvalInitiatorError) {
+    if (!approvalRespondenError) {
       setCardContentTotalApproval([
         {
           color: "text-atlasian-purple",
-          total: approvalInitiator?.data?.header?.newApproval?.toString(),
+          total: approvalResponden?.data?.header?.newApproval?.toString(),
           name: "NEW",
         },
         {
           color: "text-atlasian-green",
-          total: approvalInitiator?.data?.header?.totalApprove?.toString(),
+          total: approvalResponden?.data?.header?.totalApprove?.toString(),
           name: "APPROVED",
         },
         {
           color: "text-atlasian-red",
-          total: approvalInitiator?.data?.header?.totalReject?.toString(),
+          total: approvalResponden?.data?.header?.totalReject?.toString(),
           name: "REJECTED",
         },
       ]);
 
-      if (approvalInitiator?.data?.body?.antrian?.length) {
-        const mapping = approvalInitiator?.data?.body?.antrian?.map((queue) => {
-          const { survey_id, project_survey, module } = queue;
+      if (approvalResponden?.data?.body?.antrian?.length) {
+        const mapping = approvalResponden?.data?.body?.antrian?.map((queue) => {
+          const { survey_id, create_by, project_survey, module } = queue;
           return {
             survey_id,
-            pn: project_survey?.create_by?.pn,
-            nama: project_survey?.create_by?.fullName,
-            project_survey_id: project_survey?.project_survey_id,
-            jenis_survey_name: project_survey?.jenis_survey_name,
+            pn: create_by.pn,
+            nama: create_by.nama,
+            project_survey_id: project_survey.project_survey_id,
+            jenis_survey_name: project_survey.jenis_survey_name,
             fase_approval: module,
           };
         });
@@ -72,15 +72,17 @@ const index = () => {
         dispatch(setDataTablesApprovalQueue([]));
       }
 
-      if (approvalInitiator?.data?.body?.history?.length) {
-        const mapping = approvalInitiator?.data?.body?.history?.map((queue) => {
-          const { project_survey, is_signed, createdAt } = queue;
+      if (approvalResponden?.data?.body?.history?.length) {
+        const mapping = approvalResponden?.data?.body?.history?.map((queue) => {
+          const { responden_survey, is_signed, createdAt } = queue;
           return {
             tanggal: createdAt,
-            pn: project_survey?.create_by?.pn,
-            nama: project_survey?.create_by?.fullName,
-            project_survey_id: project_survey?.project_survey_id,
-            jenis_survey_name: project_survey?.jenis_survey_name,
+            pn: responden_survey?.pn_responden,
+            nama: responden_survey?.nama_responden,
+            project_survey_id:
+              responden_survey?.project_survey?.project_survey_id,
+            jenis_survey_name:
+              responden_survey?.project_survey?.jenis_survey_name,
             status_approval: is_signed ? "Approved" : "Rejected",
           };
         });
@@ -90,7 +92,7 @@ const index = () => {
         dispatch(setDataTablesHistory([]));
       }
     }
-  }, [approvalInitiator]);
+  }, [approvalResponden]);
 
   const handleClickActionOnTableApprovalQueue = (survey_id, pn) => {
     router.push(`overview/${survey_id}?is_approval=true&from=${pn}`);
@@ -104,13 +106,12 @@ const index = () => {
           <PageTitle text={"Approval Overview"} />
         </div>
         <div className="flex mt-6">
-          <div className="flex flex-col gap-4 w-[55rem]">
+          <div className="flex flex-col gap-4 w-[60rem]">
             <TableApprovalQueue
               data={dataTablesApprovalQueue}
               handleClickAction={handleClickActionOnTableApprovalQueue}
-              isInitiator={true}
             />
-            <TableHistory data={dataTablesHistory} isInitiator={true} />
+            <TableHistory data={dataTablesHistory} />
           </div>
           <div className="w-40">
             <CardTotalListSidebar data={cardContentTotalApproval} />
