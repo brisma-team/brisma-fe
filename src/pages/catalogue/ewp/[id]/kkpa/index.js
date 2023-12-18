@@ -26,7 +26,13 @@ const index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalData, setTotalData] = useState(1);
   const [showFilter, setShowFilter] = useState(false);
-  const [auditorSelect, setAuditorSelect] = useState("");
+  const [auditorSelect, setAuditorSelect] = useState({
+    pn: "",
+    name: "",
+    jabatan: "",
+  });
+  const [selectedValueAuditor, setSelectedValueAuditor] = useState(null);
+
   const [filter, setFilter] = useState({
     activity: "",
     subactivity: "",
@@ -70,7 +76,7 @@ const index = () => {
     filter.subactivity,
     filter.submajor,
     filter.riskissue,
-    auditorSelect
+    auditorSelect.pn
   );
 
   function debounce(func, delay) {
@@ -85,10 +91,35 @@ const index = () => {
       ...filter,
       [e.target.name]: e.target.value,
     });
+    setCurrentPage(1);
   }, 500); // Adjust the delay (in milliseconds) as needed
 
   const handleAuditorChange = useCallback((val) => {
-    setAuditorSelect(String(val.pn));
+    setAuditorSelect({
+      ...auditorSelect,
+      pn: String(val.pn),
+      name: String(val.name),
+      jabatan: String(val.jabatan),
+    });
+    setSelectedValueAuditor({
+      label: `${val.pn} - ${val.name}`,
+      value: {
+        pn: val.pn,
+        name: val.name,
+        jabatan: val.jabatan,
+      },
+    });
+    setCurrentPage(1);
+  }, []);
+
+  const handleResetAuditor = useCallback(async () => {
+    setAuditorSelect({
+      pn: "",
+      name: "",
+      jabatan: "",
+    });
+    setSelectedValueAuditor(null);
+    setCurrentPage(1);
   }, []);
   useEffect(() => {
     if (kkpaList != undefined) {
@@ -168,11 +199,6 @@ const index = () => {
                     className="mx-1"
                     name="activity"
                     onChange={debouncedHandleChange}
-                    elemAfterInput={
-                      <button className="justify-center">
-                        <IconClose size="large" />
-                      </button>
-                    }
                   />
                 </div>
                 <div className="w-48">
@@ -181,11 +207,6 @@ const index = () => {
                     className="mx-1"
                     name="subactivity"
                     onChange={debouncedHandleChange}
-                    elemAfterInput={
-                      <button className="justify-center">
-                        <IconClose size="large" />
-                      </button>
-                    }
                   />
                 </div>
                 <div className="w-48">
@@ -194,11 +215,6 @@ const index = () => {
                     className="mx-1"
                     name="submajor"
                     onChange={debouncedHandleChange}
-                    elemAfterInput={
-                      <button className="justify-center">
-                        <IconClose size="large" />
-                      </button>
-                    }
                   />
                 </div>
               </div>
@@ -209,29 +225,19 @@ const index = () => {
                     className="mx-1"
                     name="riskissue"
                     onChange={debouncedHandleChange}
-                    elemAfterInput={
-                      <button className="justify-center">
-                        <IconClose size="large" />
-                      </button>
-                    }
                   />
                 </div>
                 <div className="w-48">
-                  {/* <Textfield
-                    placeholder="Auditor"
-                    className="mx-1"
-                    name="auditor"
-                    onChange={debouncedHandleChange}
-                    elemAfterInput={
-                      <button className="justify-center">
-                        <IconClose size="large" />
-                      </button>
-                    }
-                  /> */}
                   <PekerjaSelect
                     placeholder={"Auditor"}
                     className={"mx-1"}
-                    customIcon={<ButtonIcon icon={<IconClose />} />}
+                    selectedValue={selectedValueAuditor}
+                    customIcon={
+                      <ButtonIcon
+                        icon={<IconClose />}
+                        handleClick={handleResetAuditor}
+                      />
+                    }
                     handleChange={(e) => handleAuditorChange(e.value)}
                   />
                 </div>
@@ -261,7 +267,7 @@ const index = () => {
                     subactivity: filter.subactivity,
                     submajor: filter.submajor,
                     riskissue: filter.riskissue,
-                    auditor: filter.auditor,
+                    auditor: auditorSelect.pn,
                   },
                 }}
               >
@@ -292,7 +298,7 @@ const index = () => {
               </div>
               <div className="flex justify-center mt-5">
                 <CustomPagination
-                  defaultCurrentPage={1}
+                  defaultCurrentPage={currentPage}
                   perPage={5}
                   totalData={totalData}
                   handleSetPagination={async (start, end, pageNow) =>
