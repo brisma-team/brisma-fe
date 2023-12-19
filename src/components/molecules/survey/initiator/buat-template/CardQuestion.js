@@ -411,7 +411,7 @@ const CardQuestion = ({
           }
         >
           <p className="text-sm font-semibold">Guidelines</p>
-          <p className="text-xs text-justify">{data.guideline}</p>
+          <div dangerouslySetInnerHTML={{ __html: data.guideline }} />
         </DivButton>
       </div>
     </div>

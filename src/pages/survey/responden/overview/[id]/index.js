@@ -29,6 +29,7 @@ import {
   errorSwal,
   fetchApi,
   loadingSwal,
+  previewPrintDocument,
   setErrorValidation,
 } from "@/helpers";
 import { useWorkflowSurvey } from "@/data/survey/initiator/buat-survey";
@@ -46,7 +47,7 @@ import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id, is_approver, from } = useRouter().query;
+  const { id, is_approval, from, is_print } = useRouter().query;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [sidebarContent, setSidebarContent] = useState([]);
@@ -59,6 +60,7 @@ const index = () => {
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [respondenId, setRespondenId] = useState("");
   const [isResponden, setIsResponden] = useState("");
+  const [isPreviewPage, setIsPreviewPage] = useState(false);
   const [approverFromPn, setApproverFromPn] = useState("");
   const [statusApprover, setStatusApprover] = useState("On Progress");
 
@@ -94,9 +96,20 @@ const index = () => {
     });
 
   useEffect(() => {
-    if (is_approver) setShowModalApproval(true);
+    if (is_approval) setShowModalApproval(true);
     if (from) setApproverFromPn(from);
-  }, [is_approver, from]);
+  }, [is_approval, from]);
+
+  useEffect(() => {
+    if (is_print) {
+      setIsPreviewPage(true);
+      setTimeout(() => {
+        if (payloadKuesioner?.length && is_print) {
+          previewPrintDocument("content-doc", true);
+        }
+      }, 500);
+    }
+  }, [is_print, payloadKuesioner]);
 
   useEffect(() => {
     if (!informationError) {
@@ -269,10 +282,6 @@ const index = () => {
     dispatch(setWorkflowData(newWorkflowData));
   }, [workflowSurvey]);
 
-  useEffect(() => {
-    console.log("workflowData => ", workflowData);
-  }, [workflowData]);
-
   const handleSubmitSurvey = async () => {
     loadingSwal();
     const payload = {
@@ -406,10 +415,6 @@ const index = () => {
     );
   };
 
-  useEffect(() => {
-    console.log("workflowData => ", workflowData);
-  }, [workflowData]);
-
   const handleChangeSelect = (property, index, e) => {
     const newData = [...workflowData[property]];
     const updated = { ...newData[index] };
@@ -526,6 +531,7 @@ const index = () => {
             </div>
           </div>
           <TabKuesioner
+            isPreviewPage={isPreviewPage}
             isDisabledForm={statusApprover !== "On Progress" || !isResponden}
             handleChangeAnswer={handleChangeAnswer}
             handleSaveAnswerPerCategory={handleSaveAnswerPerCategory}
@@ -542,6 +548,7 @@ const index = () => {
         showModal={showModalApproval}
         headerTitle={"Approval Survey"}
         handleChange={handleChangeText}
+        x
         handleChangeSelect={handleChangeSelect}
         handleDelete={handleDelete}
         handleAdd={handleAdd}

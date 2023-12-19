@@ -14,17 +14,12 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { previewPrintDocument } from "@/helpers";
-import _ from "lodash";
 import { LandingLayoutSurvey } from "@/layouts/survey";
+import { useKuesioner } from "@/data/survey/initiator/informasi";
 import {
-  useInformation,
-  useKuesioner,
-} from "@/data/survey/initiator/informasi";
-import {
-  resetPayloadKuesioner,
-  setPayloadInformasi,
   setPayloadKuesioner,
-} from "@/slices/survey/initiator/penilaianSurveySlice";
+  resetPayloadKuesioner,
+} from "@/slices/survey/initiator/previewSurveySlice";
 import { IconArrowLeft } from "@/components/icons";
 
 const index = () => {
@@ -37,11 +32,11 @@ const index = () => {
     { name: "Overview", path: "/survey/initiator/overview" },
     {
       name: `Buat Survei / Template Kuesioner`,
-      path: `/survey/initiator/overview/${id}/buat-survey`,
+      path: `/survey/initiator/overview/${id}`,
     },
     {
       name: `Preview`,
-      path: `/survey/initiator/overview/${id}/buat-survey/preview`,
+      path: `/survey/initiator/overview/${id}/preview`,
     },
   ];
 
@@ -50,36 +45,21 @@ const index = () => {
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
 
   const payloadKuesioner = useSelector(
-    (state) => state.penilaianSurvey.payloadKuesioner
+    (state) => state.previewSurvey.payloadKuesioner
   );
-
-  const { information, informationError } = useInformation({ id });
   const { kuesioner, kuesionerError } = useKuesioner({ id });
-
-  useEffect(() => {
-    if (!informationError) {
-      dispatch(
-        setPayloadInformasi(
-          _.omit(information?.data, [
-            "id",
-            "create_by",
-            "update_by",
-            "createdAt",
-            "updatedAt",
-          ])
-        )
-      );
-    }
-  }, [information]);
 
   useEffect(() => {
     if (!kuesionerError && kuesioner?.data?.kategori?.length) {
       const mapping = kuesioner.data.kategori.map((category) => {
+        const sortedQuestions = category.template_pertanyaan.sort(
+          (a, b) => a.tipe_pertanyaan_kode - b.tipe_pertanyaan_kode
+        );
         return {
           id: category.kategori_id,
           name: category.kategori_name,
-          pertanyaan: category.template_pertanyaan.length
-            ? category.template_pertanyaan.map((question) => {
+          pertanyaan: sortedQuestions?.length
+            ? sortedQuestions.map((question) => {
                 return {
                   id: question.pertanyaan_id,
                   guideline: question.guideline,
@@ -110,10 +90,6 @@ const index = () => {
       dispatch(resetPayloadKuesioner());
     }
   }, [kuesioner]);
-
-  useEffect(() => {
-    console.log("payloadKuesioner => ", payloadKuesioner);
-  }, [payloadKuesioner]);
 
   const handleClickDownloadDocument = () => {
     previewPrintDocument("content-doc");
@@ -151,7 +127,7 @@ const index = () => {
       currentQuestion.deskripsi_jawaban = value;
     } else if (type == "3") {
       const findAnswerIndex = currentAnswers.findIndex(
-        (v) => v.id === currentAnswer.id
+        (v) => v.jawaban_id === currentAnswer.jawaban_id
       );
 
       if (findAnswerIndex !== -1 && !value) {
@@ -187,7 +163,7 @@ const index = () => {
           <div className="flex justify-between items-center mb-4">
             <div className="flex gap-3 items-center">
               <LinkIcon
-                href={`/survey/overview/${id}/buat-survey`}
+                href={`/survey/initiator/overview/${id}`}
                 icon={
                   <div className="rounded-full border-2 border-atlasian-blue-light text-atlasian-blue-light w-6 h-6 flex items-center justify-center">
                     <IconArrowLeft size="medium" />
@@ -204,13 +180,14 @@ const index = () => {
             </div>
           </div>
           <TabKuesioner
+            data={payloadKuesioner}
             isPreviewPage={true}
             handleClickOpenModalGuidelines={handleClickOpenModalGuidelines}
             handleChangeAnswer={handleChangeAnswer}
           />
         </div>
       </div>
-      <Sidebar isPreviewPage={true} isDisabledForm={true} />
+      <Sidebar isPreviewPage={true} withoutButtonTop={true} />
       <ModalGuidelines
         showModal={showModalGuidelines}
         handleCloseModal={handleCloseModalGuidelines}

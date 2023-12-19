@@ -66,6 +66,7 @@ const TabInformation = ({
               title={"Tanggal Dimulai*"}
               form={
                 <DatepickerField
+                  isDisabled={!isNewTemplate}
                   placeholder={"Tanggal Dimulai"}
                   format={"DD/MM/YYYY"}
                   value={payloadInformasi?.pelaksanaan_start || ""}
@@ -79,6 +80,7 @@ const TabInformation = ({
               title={"Tanggal Selesai*"}
               form={
                 <DatepickerField
+                  isDisabled={!isNewTemplate}
                   placeholder={"Tanggal Selesai"}
                   format={"DD/MM/YYYY"}
                   value={payloadInformasi?.pelaksanaan_end || ""}
@@ -161,7 +163,7 @@ const TabInformation = ({
             }
           />
           <FormLabel
-            title={"Catatan Survei*"}
+            title={"Catatan Survei"}
             form={
               <TextAreaField
                 placeholder={"Catatan Survei"}

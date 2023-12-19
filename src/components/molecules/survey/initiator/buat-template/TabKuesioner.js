@@ -1,7 +1,7 @@
-import { useSelector } from "react-redux";
 import CardCategoryQuestion from "./CardCategoryQuestion";
 
 const TabKuesioner = ({
+  data,
   isPreviewPage,
   isDisabledForm,
   handleChangeQuestion,
@@ -12,21 +12,17 @@ const TabKuesioner = ({
   handleClickOpenModalAddQuestion,
   handleClickOpenModalGuidelines,
 }) => {
-  const dataKuesioner = useSelector(
-    (state) => state.createSurvey.payloadKuesioner
-  );
-
   return (
     <div className="flex flex-col gap-4" id="content-doc">
-      {dataKuesioner?.length ? (
-        dataKuesioner.map((category_quesioner, i) => {
+      {data?.length ? (
+        data.map((category_quesioner, i) => {
           return (
             <CardCategoryQuestion
               key={i}
               indexCategory={i}
               data={category_quesioner}
               isPreviewPage={isPreviewPage}
-              isDisabled={!dataKuesioner.length}
+              isDisabled={!data.length}
               isDisabledForm={isDisabledForm}
               handleChangeQuestion={handleChangeQuestion}
               handleDeleteQuestion={handleDeleteQuestion}

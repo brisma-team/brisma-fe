@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
 const Sidebar = ({
+  withoutButtonTop,
   isPreviewPage,
   isDisabledForm,
   isUnderChange,
@@ -26,7 +27,7 @@ const Sidebar = ({
   const { id } = useRouter().query;
   const [dataCategory, setDataCategory] = useState([]);
   const payloadKuesioner = useSelector(
-    (state) => state.createSurvey.payloadKuesioner
+    (state) => state.previewSurvey.payloadKuesioner
   );
 
   useEffect(() => {
@@ -64,13 +65,15 @@ const Sidebar = ({
     <div className="w-[31rem] minfixed min-h-screen border-x-2 border-slate-200 -mt-1.5 right-0">
       <div className="px-4 py-3 flex justify-between border-b-2 border-slate-200 bg-[#FAFBFC]">
         <p className="font-semibold text-base">Kategori</p>
-        {!isDisabledForm ? (
+        {withoutButtonTop ? (
+          ""
+        ) : !isDisabledForm ? (
           !isPreviewPage &&
           (dataCategory.length ? (
             <div className="flex gap-3 items-center">
               <LinkIcon
                 icon={<Image src={ImagePreview} alt="" />}
-                href={`/survey/overview/${id}/buat-survey/preview`}
+                href={`/survey/initiator/overview/${id}/preview`}
               />
               <ButtonIcon
                 icon={<Image src={ImageGroup} alt="" />}
@@ -99,7 +102,7 @@ const Sidebar = ({
         ) : (
           <LinkIcon
             icon={<Image src={ImagePreview} alt="" />}
-            href={`/survey/overview/${id}/buat-survey/preview`}
+            href={`/survey/initiator/overview/${id}/preview`}
           />
         )}
       </div>

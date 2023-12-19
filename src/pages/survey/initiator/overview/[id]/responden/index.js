@@ -35,11 +35,11 @@ const index = () => {
     { name: "Overview", path: "/survey/initiator/overview" },
     {
       name: `Buat Survei / Template Kuesioner`,
-      path: `/survey/initiator/overview/${id}/buat-survey`,
+      path: `/survey/initiator/overview/${id}`,
     },
     {
       name: `Responden`,
-      path: `/survey/initiator/overview/${id}/buat-survey/responden`,
+      path: `/survey/initiator/overview/${id}/responden`,
     },
   ];
 
@@ -95,12 +95,12 @@ const index = () => {
   useEffect(() => {
     if (respondenByUkerSurvey?.data?.length) {
       const mapping = respondenByUkerSurvey.data.map((responden, index) => {
-        const { id, orgeh_kode, orgeh_name, jumlah, keterangan } = responden;
+        const { id, branch_kode, branch_name, jumlah, keterangan } = responden;
         return {
           index,
           id,
-          orgeh_kode,
-          orgeh_name,
+          branch_kode,
+          branch_name,
           jumlah,
           keterangan,
           is_edit: false,
@@ -260,8 +260,8 @@ const index = () => {
       newDataTables.respondenUker.push({
         index: newDataTables.respondenUker.length,
         id: "",
-        orgeh_kode: "",
-        orgeh_name: "",
+        branch_kode: "",
+        branch_name: "",
         jumlah: 0,
         keterangan: "",
         is_edit: true,
@@ -301,8 +301,8 @@ const index = () => {
       `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/uker`,
       {
         survey_id: id,
-        orgeh_kode: payloadNewUker.orgeh_kode,
-        orgeh_name: payloadNewUker.orgeh_name,
+        branch_kode: payloadNewUker.branch_kode,
+        branch_name: payloadNewUker.branch_name,
         keterangan: payloadNewUker.keterangan,
       }
     );
@@ -314,8 +314,8 @@ const index = () => {
   const handleChangeUker = (value) => {
     const newPayload = {
       ...payloadNewUker,
-      orgeh_kode: value.orgeh_kode,
-      orgeh_name: value.orgeh_name,
+      branch_kode: value.branch_kode,
+      branch_name: value.branch_name,
     };
 
     dispatch(setPayloadNewUker(newPayload));

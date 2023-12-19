@@ -1,14 +1,16 @@
-import { ButtonIcon, CustomPagination } from "@/components/atoms";
+import { CustomPagination, LinkIcon } from "@/components/atoms";
 import { CardContentHeaderFooter } from "@/components/molecules/commons";
 import { useEffect, useState } from "react";
 import { Table, Column, HeaderCell, Cell } from "rsuite-table";
 import "rsuite-table/dist/css/rsuite-table.css";
-import { ImageDownload, ImagePreview } from "@/helpers/imagesUrl";
+import { ImageDownload } from "@/helpers/imagesUrl";
 import Image from "next/image";
 import { convertDate } from "@/helpers";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
 const TabRespondenGrade = () => {
+  const { id } = useRouter().query;
   const [rows, setRows] = useState([]);
   const [totalData, setTotalData] = useState(0);
 
@@ -42,8 +44,8 @@ const TabRespondenGrade = () => {
       return {
         index: index + 1,
         pn_responden: responden.pn_responden,
-        name_responden: responden.name_responden,
-        tanggal: "11-11-2023",
+        name_responden: responden.nama_responden,
+        tanggal: convertDate(responden.createdAt, "-", "d"),
         pertanyaan_jawaban: pertanyaan_jawaban,
       };
     });
@@ -85,13 +87,10 @@ const TabRespondenGrade = () => {
               {(rowData) => {
                 return (
                   <div className="h-full w-full flex justify-center items-center gap-3">
-                    <ButtonIcon
-                      icon={<Image src={ImagePreview} alt="" />}
-                      handleClick={() => console.log("test")}
-                    />
-                    <ButtonIcon
+                    <LinkIcon
+                      href={`${process.env.NEXT_PUBLIC_API_URL_APP}/survey/responden/overview/${id}?from=${rowData.pn_responden}&is_print=true`}
+                      isBlank={true}
                       icon={<Image src={ImageDownload} alt="" />}
-                      handleClick={() => console.log("test")}
                     />
                   </div>
                 );
@@ -119,7 +118,7 @@ const TabRespondenGrade = () => {
             <HeaderCell>Tanggal</HeaderCell>
             <Cell>
               {(rowData) => {
-                return convertDate(rowData.tanggal, "/", "d");
+                return convertDate(rowData.tanggal, "-", "d");
               }}
             </Cell>
           </Column>
@@ -133,10 +132,10 @@ const TabRespondenGrade = () => {
                       return (
                         <div
                           className={`border-r border-gray-200 text-center ${
-                            Array.isArray(v[`a${i + 1}`])
+                            Array?.isArray(v[`a${i + 1}`])
                               ? `w-[${(
                                   3 * v[`a${i + 1}`].length
-                                ).toString()}rem]`
+                                )?.toString()}rem]`
                               : `w-12`
                           }`}
                           key={i}

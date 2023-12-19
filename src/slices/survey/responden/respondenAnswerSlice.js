@@ -45,7 +45,7 @@ export const respondenAnswerSlice = createSlice({
       state.dataCategory = [];
     },
     resetWorkflowData: (state) => {
-      state.workflowData = { ...state.workflowDefaultData };
+      state.workflowData = { ...state.defaultWorkflowData };
     },
     resetHistoryWorkflow: (state) => {
       state.historyWorkflow = [];

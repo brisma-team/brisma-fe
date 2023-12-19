@@ -1,13 +1,15 @@
-import { ButtonIcon, CustomPagination } from "@/components/atoms";
+import { CustomPagination, LinkIcon } from "@/components/atoms";
 import { CardContentHeaderFooter } from "@/components/molecules/commons";
 import { useEffect, useState } from "react";
 import { Table, Column, HeaderCell, Cell } from "rsuite-table";
 import "rsuite-table/dist/css/rsuite-table.css";
-import { ImageDownload, ImagePreview } from "@/helpers/imagesUrl";
+import { ImageDownload } from "@/helpers/imagesUrl";
 import Image from "next/image";
 import { convertDate } from "@/helpers";
+import { useRouter } from "next/router";
 
 const TabRespondenGrade = ({ data }) => {
+  const { id } = useRouter().query;
   const [rows, setRows] = useState([]);
   const [totalData, setTotalData] = useState(0);
 
@@ -21,9 +23,6 @@ const TabRespondenGrade = ({ data }) => {
     setPagination({ min, max });
   };
 
-  // useEffect(() => {
-  //   console.log("data => ", data);
-  // }, [data]);
   useEffect(() => {
     const mapping = data?.nilai_responden?.map((responden, index) => {
       const pertanyaan_jawaban = [];
@@ -43,7 +42,7 @@ const TabRespondenGrade = ({ data }) => {
         index: index + 1,
         pn_responden: responden.pn_responden,
         name_responden: responden.nama_responden,
-        tanggal: responden.createdAt,
+        tanggal: convertDate(responden.createdAt, "-", "d"),
         pertanyaan_jawaban: pertanyaan_jawaban,
       };
     });
@@ -85,13 +84,10 @@ const TabRespondenGrade = ({ data }) => {
               {(rowData) => {
                 return (
                   <div className="h-full w-full flex justify-center items-center gap-3">
-                    <ButtonIcon
-                      icon={<Image src={ImagePreview} alt="" />}
-                      handleClick={() => console.log("test")}
-                    />
-                    <ButtonIcon
+                    <LinkIcon
+                      href={`${process.env.NEXT_PUBLIC_API_URL_APP}/survey/responden/overview/${id}?is_print=true`}
+                      isBlank={true}
                       icon={<Image src={ImageDownload} alt="" />}
-                      handleClick={() => console.log("test")}
                     />
                   </div>
                 );
@@ -119,7 +115,7 @@ const TabRespondenGrade = ({ data }) => {
             <HeaderCell>Tanggal</HeaderCell>
             <Cell>
               {(rowData) => {
-                return convertDate(rowData.tanggal, "/", "d");
+                return convertDate(rowData.tanggal, "-", "d");
               }}
             </Cell>
           </Column>
@@ -133,11 +129,7 @@ const TabRespondenGrade = ({ data }) => {
                       return (
                         <div
                           className={`border-r border-gray-200 text-center ${
-                            Array.isArray(v[`a${i + 1}`])
-                              ? `w-[${(
-                                  3 * v[`a${i + 1}`].length
-                                ).toString()}rem]`
-                              : `w-12`
+                            Array.isArray(v[`a${i + 1}`]) ? `w-[6rem]` : `w-12`
                           }`}
                           key={i}
                         >
