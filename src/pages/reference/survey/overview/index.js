@@ -152,7 +152,7 @@ const index = () => {
   };
 
   const handleClickDownload = (id) => {
-    console.log("download");
+    router.push(`overview/${id}/preview?is_print=true`);
   };
 
   const handleDeleteTemplate = async (id) => {
