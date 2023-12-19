@@ -126,7 +126,10 @@ const index = () => {
       );
 
       setIsFormDisabled(
-        information?.data?.status_persetujuan !== "On Progress"
+        !(
+          information?.data?.status_persetujuan === "On Progress" ||
+          !information?.data?.status_persetujuan
+        )
       );
     }
   }, [information]);
