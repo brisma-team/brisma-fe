@@ -282,49 +282,6 @@ const index = () => {
     dispatch(setWorkflowData(newWorkflowData));
   }, [workflowSurvey]);
 
-  const handleSubmitSurvey = async () => {
-    loadingSwal();
-    const payload = {
-      sub_modul_id: respondenId,
-      sub_modul: "responden",
-      approvers: [],
-      is_need_approval: false,
-      jawaban: [],
-    };
-    if (payloadKuesioner?.length) {
-      payloadKuesioner.forEach((category) => {
-        category.pertanyaan.forEach((question) => {
-          const {
-            id,
-            bobot,
-            deskripsi_jawaban,
-            tipe_pertanyaan_kode,
-            jawaban_user,
-          } = question;
-          const mappingJawabanUser = jawaban_user?.map((answer) => {
-            const { jawaban_id, bobot, text } = answer;
-            return { id: jawaban_id, bobot, text };
-          });
-
-          payload.jawaban.push({
-            pertanyaan_id: id,
-            bobot,
-            deskripsi_jawaban: deskripsi_jawaban || "",
-            tipe_pertanyaan_kode,
-            jawaban: mappingJawabanUser,
-          });
-        });
-      });
-    }
-    // await fetchApi(
-    //   "POST",
-    //   `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/create`,
-    //   payload
-    // );
-    // answerSurveyMutate();
-    loadingSwal("close");
-  };
-
   // [ START ] Handler for answer
   const handleSaveAnswerPerCategory = () => {
     console.log("save");
@@ -544,14 +501,6 @@ const index = () => {
     loadingSwal("close");
   };
   // [ END ] Handler for modal approval
-
-  useEffect(() => {
-    console.log("workflowData => ", workflowData);
-  }, [workflowData]);
-
-  // useEffect(() => {
-  //   console.log("statusApprover => ", statusApprover);
-  // }, [statusApprover]);
 
   return (
     <RespondenLayoutSurvey
