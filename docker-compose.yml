@@ -1,15 +1,15 @@
 version: "3"
 services:
   brisma-api:
-    image: localhost/brisma-fe-202
+    image: brisma-new-2.4.10
     build: .
     container_name: brisma-fe-202
     restart: unless-stopped
     volumes:
       - .env.local:/app/.env.local
       - ./src:/app/src
-      - ./out:/app/out
       - ./public:/app/public
+      - ./next.config.js:/app/next.config.js
     ports:
       - "3030:3000"
     command: npm start
