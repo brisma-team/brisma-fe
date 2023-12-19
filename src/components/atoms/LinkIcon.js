@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const LinkIcon = ({ href, color, handler, icon, isDisabled }) => {
+const LinkIcon = ({ href, color, handler, icon, isDisabled, isBlank }) => {
   let iconColor;
   switch (color) {
     case "red":
@@ -29,6 +29,7 @@ const LinkIcon = ({ href, color, handler, icon, isDisabled }) => {
 
   return (
     <Link
+      target={isBlank && "_blank"}
       href={!href ? "#" : href}
       onClick={handler && handler}
       className={`no-underline hover:no-underline ${iconColor} hover:${iconColor}`}

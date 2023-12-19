@@ -2,23 +2,15 @@ import { useSelector } from "react-redux";
 import CardCategoryQuestion from "./CardCategoryQuestion";
 
 const TabKuesioner = ({
+  isPreviewPage,
+  isDisabledForm,
   handleChangeAnswer,
   handleClickOpenModalGuidelines,
   handleSaveAnswerPerCategory,
-  isDisabledForm,
 }) => {
-  // const dataCategory = useSelector(
-  //   (state) => state.respondenAnswer.dataCategory
-  // );
   const dataKuesioner = useSelector(
     (state) => state.respondenAnswer.payloadKuesioner
   );
-
-  // const isCompleted = (categoryId) => {
-  //   if (!dataKuesioner?.length) return false;
-  //   const find = dataCategory?.find((category) => category.id === categoryId);
-  //   return find?.is_completed;
-  // };
 
   return (
     <div className="flex flex-col gap-4" id="content-doc">
@@ -28,6 +20,7 @@ const TabKuesioner = ({
             <CardCategoryQuestion
               key={i}
               indexCategory={i}
+              isPreviewPage={isPreviewPage}
               isDisabled={isDisabledForm}
               data={category_quesioner}
               handleChangeAnswer={handleChangeAnswer}
