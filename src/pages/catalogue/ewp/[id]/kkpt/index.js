@@ -35,8 +35,18 @@ const index = () => {
     auditor: undefined,
     limit: 5,
   });
-  const [ukerSelect, setUkerSelect] = useState("");
-  const [auditorSelect, setAuditorSelect] = useState("");
+  const [ukerSelect, setUkerSelect] = useState({
+    branch_kode: "",
+    branch_name: "",
+  });
+  const [auditorSelect, setAuditorSelect] = useState({
+    pn: "",
+    name: "",
+    jabatan: "",
+  });
+
+  const [selectedValueBranch, setSelectedValueBranch] = useState(null);
+  const [selectedValueAuditor, setSelectedValueAuditor] = useState(null);
 
   const [params, setParams] = useState({
     year: "2023",
@@ -57,11 +67,56 @@ const index = () => {
   }, [router.isReady]);
 
   const handleBranchChange = useCallback((val) => {
-    setUkerSelect(String(val.branch_kode));
+    setUkerSelect({
+      ...ukerSelect,
+      branch_kode: String(val.branch_kode),
+      branch_name: String(val.branch_name),
+    });
+    setSelectedValueBranch({
+      label: `${val.branch_kode} - ${val.branch_name}`,
+      value: {
+        branch_kode: val.branch_kode,
+        branch_name: val.branch_name,
+      },
+    });
+    setCurrentPage(1);
   }, []);
 
   const handleAuditorChange = useCallback((val) => {
-    setAuditorSelect(String(val.pn));
+    setAuditorSelect({
+      ...auditorSelect,
+      pn: String(val.pn),
+      name: String(val.name),
+      jabatan: String(val.jabatan),
+    });
+    setSelectedValueAuditor({
+      label: `${val.pn} - ${val.name}`,
+      value: {
+        pn: val.pn,
+        name: val.name,
+        jabatan: val.jabatan,
+      },
+    });
+    setCurrentPage(1);
+  }, []);
+
+  const handleResetBranch = useCallback(async () => {
+    setUkerSelect({
+      branch_kode: "",
+      branch_name: "",
+    });
+    setSelectedValueBranch(null);
+    setCurrentPage(1);
+  }, []);
+
+  const handleResetAuditor = useCallback(async () => {
+    setAuditorSelect({
+      pn: "",
+      name: "",
+      jabatan: "",
+    });
+    setSelectedValueAuditor(null);
+    setCurrentPage(1);
   }, []);
 
   const breadcrumbs = [
@@ -78,12 +133,12 @@ const index = () => {
     currentPage,
     filter.limit,
     filter.kkpttitle,
-    ukerSelect,
+    ukerSelect.branch_kode,
     filter.activity,
     filter.subactivity,
     filter.submajor,
     filter.riskissue,
-    auditorSelect
+    auditorSelect.pn
   );
   function debounce(func, delay) {
     let timeoutId;
@@ -97,6 +152,7 @@ const index = () => {
       ...filter,
       [e.target.name]: e.target.value,
     });
+    setCurrentPage(1);
   }, 500); // Adjust the delay (in milliseconds) as needed
   useEffect(() => {
     if (kkptList != undefined) {
@@ -190,14 +246,19 @@ const index = () => {
                     className="mx-1"
                     name="kkpttitle"
                     onChange={debouncedHandleChange}
-                    elemAfterInput={<ButtonIcon icon={<IconClose />} />}
                   />
                 </div>
                 <div className="w-48">
                   <BranchSelect
                     placeholder={"Unit Kerja"}
                     className={"mx-1"}
-                    customIcon={<ButtonIcon icon={<IconClose />} />}
+                    selectedValue={selectedValueBranch}
+                    customIcon={
+                      <ButtonIcon
+                        icon={<IconClose />}
+                        handleClick={handleResetBranch}
+                      />
+                    }
                     handleChange={(e) => handleBranchChange(e.value)}
                   />
                 </div>
@@ -207,7 +268,6 @@ const index = () => {
                     className="mx-1"
                     name="activity"
                     onChange={debouncedHandleChange}
-                    elemAfterInput={<ButtonIcon icon={<IconClose />} />}
                   />
                 </div>
                 <div className="w-48">
@@ -216,7 +276,6 @@ const index = () => {
                     className="mx-1"
                     name="subactivity"
                     onChange={debouncedHandleChange}
-                    elemAfterInput={<ButtonIcon icon={<IconClose />} />}
                   />
                 </div>
               </div>
@@ -227,7 +286,6 @@ const index = () => {
                     className="mx-1"
                     name="submajor"
                     onChange={debouncedHandleChange}
-                    elemAfterInput={<ButtonIcon icon={<IconClose />} />}
                   />
                 </div>
                 <div className="w-48">
@@ -236,14 +294,19 @@ const index = () => {
                     className="mx-1"
                     name="riskissue"
                     onChange={debouncedHandleChange}
-                    elemAfterInput={<ButtonIcon icon={<IconClose />} />}
                   />
                 </div>
                 <div className="w-48">
                   <PekerjaSelect
                     placeholder={"Auditor"}
                     className={"mx-1"}
-                    customIcon={<ButtonIcon icon={<IconClose />} />}
+                    selectedValue={selectedValueAuditor}
+                    customIcon={
+                      <ButtonIcon
+                        icon={<IconClose />}
+                        handleClick={handleResetAuditor}
+                      />
+                    }
                     handleChange={(e) => handleAuditorChange(e.value)}
                   />
                 </div>
@@ -270,12 +333,12 @@ const index = () => {
                   pathname: "/catalogue/ewp/" + params.uri + "/kkpt/view-all",
                   query: {
                     kkpttitle: filter.kkpttitle,
-                    uker: ukerSelect,
+                    uker: ukerSelect.branch_kode,
                     activity: filter.activity,
                     subactivity: filter.subactivity,
                     submajor: filter.submajor,
                     riskissue: filter.riskissue,
-                    auditor: auditorSelect,
+                    auditor: auditorSelect.pn,
                   },
                 }}
               >
