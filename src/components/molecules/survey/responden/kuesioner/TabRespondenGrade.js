@@ -85,7 +85,7 @@ const TabRespondenGrade = ({ data }) => {
                 return (
                   <div className="h-full w-full flex justify-center items-center gap-3">
                     <LinkIcon
-                      href={`${process.env.NEXT_PUBLIC_API_URL_APP}/survey/responden/overview/${id}?is_print=true`}
+                      href={`/survey/responden/overview/${id}?is_print=true`}
                       isBlank={true}
                       icon={<Image src={ImageDownload} alt="" />}
                     />
