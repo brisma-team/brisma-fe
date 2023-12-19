@@ -95,7 +95,7 @@ const rtaHtml = (data) => {
           </div>
           <div style="padding-left:10px">:</div>
           <div style="padding-left:10px"> ${
-            data?.ProductCode.length > 0 ? data.ProductName : "-"
+            data?.ProductCode?.length > 0 ? data.ProductName : "-"
           } </div>
         </div>
       </article>
