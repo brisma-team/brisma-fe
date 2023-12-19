@@ -18,7 +18,7 @@ const CardCategoryQuestion = ({
   handleClickOpenModalGuidelines,
 }) => {
   return (
-    <div className="p-0.5">
+    <div className="p-0.5 my-2">
       <div
         className="w-full rounded flex flex-col items-center"
         style={{

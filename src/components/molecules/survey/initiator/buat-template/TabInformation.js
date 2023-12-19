@@ -12,6 +12,7 @@ import {
   FormLabel,
   TypeSurveySelect,
 } from "@/components/molecules/commons";
+import { dateNow } from "@/helpers";
 import { useSelector } from "react-redux";
 
 const TabInformation = ({
@@ -73,6 +74,7 @@ const TabInformation = ({
                   handleChange={(value) =>
                     handleChangeForm("pelaksanaan_start", value)
                   }
+                  pastDate={dateNow()}
                 />
               }
             />
@@ -87,6 +89,7 @@ const TabInformation = ({
                   handleChange={(value) =>
                     handleChangeForm("pelaksanaan_end", value)
                   }
+                  pastDate={payloadInformasi?.pelaksanaan_start || null}
                 />
               }
             />

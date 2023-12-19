@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 
 const TabInformation = ({
   isNewTemplate,
+  isDisabled,
   isFormDisabled,
   handleChangeForm,
   handleSubmit,
@@ -75,6 +76,7 @@ const TabInformation = ({
             title={"Judul Template*"}
             form={
               <TextInput
+                isDisabled={isFormDisabled}
                 placeholder={"Judul template"}
                 icon={
                   <ButtonIcon
@@ -96,6 +98,7 @@ const TabInformation = ({
             title={"Deskripsi Template*"}
             form={
               <TextAreaField
+                isDisabled={isFormDisabled}
                 placeholder={"Deskripsi template"}
                 resize="auto"
                 value={payloadInformasi?.deskripsi || ""}
@@ -114,7 +117,7 @@ const TabInformation = ({
             <div className="my-5 flex flex-col gap-3">
               <div
                 className={`rounded w-36 ${
-                  isFormDisabled || isNewTemplate
+                  isDisabled || isNewTemplate
                     ? `bg-atlasian-gray-light`
                     : `bg-atlasian-purple`
                 }`}
@@ -134,33 +137,31 @@ const TabInformation = ({
               >
                 <ButtonField
                   text={"Rumus Nilai"}
-                  disabled={isFormDisabled || isNewTemplate}
+                  disabled={isDisabled || isNewTemplate}
                   handler={handleClickFormula}
                 />
               </div>
               <div
                 className={`rounded w-36 ${
-                  isFormDisabled
-                    ? `bg-atlasian-gray-light`
-                    : `bg-atlasian-yellow`
+                  isDisabled ? `bg-atlasian-gray-light` : `bg-atlasian-yellow`
                 }`}
               >
                 <ButtonField
                   text={"Simpan"}
-                  disabled={isFormDisabled}
+                  disabled={isDisabled}
                   handler={handleSubmit}
                 />
               </div>
               <div
                 className={`rounded w-36 ${
-                  isFormDisabled || isNewTemplate
+                  isDisabled || isNewTemplate
                     ? `bg-atlasian-gray-light`
                     : `bg-atlasian-green`
                 }`}
               >
                 <ButtonField
                   text={"Approval"}
-                  disabled={isFormDisabled || isNewTemplate}
+                  disabled={isDisabled || isNewTemplate}
                   handler={handleClickOpenModalApproval}
                 />
               </div>

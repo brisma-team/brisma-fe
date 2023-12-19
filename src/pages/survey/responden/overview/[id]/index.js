@@ -282,49 +282,6 @@ const index = () => {
     dispatch(setWorkflowData(newWorkflowData));
   }, [workflowSurvey]);
 
-  const handleSubmitSurvey = async () => {
-    loadingSwal();
-    const payload = {
-      sub_modul_id: respondenId,
-      sub_modul: "responden",
-      approvers: [],
-      is_need_approval: false,
-      jawaban: [],
-    };
-    if (payloadKuesioner?.length) {
-      payloadKuesioner.forEach((category) => {
-        category.pertanyaan.forEach((question) => {
-          const {
-            id,
-            bobot,
-            deskripsi_jawaban,
-            tipe_pertanyaan_kode,
-            jawaban_user,
-          } = question;
-          const mappingJawabanUser = jawaban_user?.map((answer) => {
-            const { jawaban_id, bobot, text } = answer;
-            return { id: jawaban_id, bobot, text };
-          });
-
-          payload.jawaban.push({
-            pertanyaan_id: id,
-            bobot,
-            deskripsi_jawaban: deskripsi_jawaban || "",
-            tipe_pertanyaan_kode,
-            jawaban: mappingJawabanUser,
-          });
-        });
-      });
-    }
-    await fetchApi(
-      "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/create`,
-      payload
-    );
-    answerSurveyMutate();
-    loadingSwal("close");
-  };
-
   // [ START ] Handler for answer
   const handleSaveAnswerPerCategory = () => {
     console.log("save");
@@ -390,6 +347,10 @@ const index = () => {
   // [ END ] Handler for modal guidelines
 
   // [ START ] Handler for modal approval
+  const handleCloseModalWorkflow = () => {
+    dispatch(resetWorkflowData());
+  };
+
   const handleAdd = (property) => {
     const newData = [...workflowData[property]];
     newData.push({
@@ -431,70 +392,113 @@ const index = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (statusApprover === "On Progress") await handleSubmitSurvey();
-
-    const schemaMapping = {
-      schema: workflowSchema,
-      resetErrors: resetValidationErrorsWorkflow,
-      setErrors: setValidationErrorsWorkflow,
-    };
-    const validate = setErrorValidation(workflowData, dispatch, schemaMapping);
-
-    if (validate) {
-      const actionType = e.target.offsetParent.name;
-      const data = {
-        sub_modul: "responden",
+    loadingSwal();
+    if (statusApprover === "On Progress") {
+      const payload = {
         sub_modul_id: respondenId,
+        sub_modul: "responden",
+        approvers: workflowData?.ref_tim_audit_approver,
+        is_need_approval: false,
+        jawaban: [],
       };
+      if (payloadKuesioner?.length) {
+        payloadKuesioner.forEach((category) => {
+          category.pertanyaan.forEach((question) => {
+            const {
+              id,
+              bobot,
+              deskripsi_jawaban,
+              tipe_pertanyaan_kode,
+              jawaban_user,
+            } = question;
+            const mappingJawabanUser = jawaban_user?.map((answer) => {
+              const { jawaban_id, bobot, text } = answer;
+              return { id: jawaban_id, bobot, text };
+            });
 
-      switch (actionType) {
-        case "change":
-          data.approvers = workflowData?.ref_tim_audit_approver;
-          break;
-        case "create":
-          data.approvers = workflowData?.ref_tim_audit_approver;
-          break;
-        case "reject":
-          if (!workflowData.note) {
-            await errorSwal("Silahkan berikan alasan!");
+            payload.jawaban.push({
+              pertanyaan_id: id,
+              bobot,
+              deskripsi_jawaban: deskripsi_jawaban || "",
+              tipe_pertanyaan_kode,
+              jawaban: mappingJawabanUser,
+            });
+          });
+        });
+      }
+      await fetchApi(
+        "POST",
+        `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/create`,
+        payload
+      );
+    } else {
+      const schemaMapping = {
+        schema: workflowSchema,
+        resetErrors: resetValidationErrorsWorkflow,
+        setErrors: setValidationErrorsWorkflow,
+      };
+      const validate = setErrorValidation(
+        workflowData,
+        dispatch,
+        schemaMapping
+      );
+
+      if (validate) {
+        const actionType = e.target.offsetParent.name;
+        const data = {
+          sub_modul: "responden",
+          sub_modul_id: respondenId,
+        };
+
+        switch (actionType) {
+          case "change":
+            data.approvers = workflowData?.ref_tim_audit_approver;
+            break;
+          case "create":
+            data.approvers = workflowData?.ref_tim_audit_approver;
+            break;
+          case "reject":
+            if (!workflowData.note) {
+              await errorSwal("Silahkan berikan alasan!");
+              return;
+            }
+            data.note = workflowData?.note;
+            break;
+          case "approve":
+            data.note = workflowData?.note;
+            break;
+        }
+
+        if (actionType === "reset") {
+          const confirm = await confirmationSwal(
+            "Terkait dengan workflow ini, apakah Anda yakin ingin melakukan pengaturan ulang?"
+          );
+          if (!confirm.value) {
             return;
           }
-          data.note = workflowData?.note;
-          break;
-        case "approve":
-          data.note = workflowData?.note;
-          break;
-      }
+        }
 
-      if (actionType === "reset") {
-        const confirm = await confirmationSwal(
-          "Terkait dengan workflow ini, apakah Anda yakin ingin melakukan pengaturan ulang?"
-        );
-        if (!confirm.value) {
-          return;
+        if (actionType === "change") {
+          const response = await fetchApi(
+            "PATCH",
+            `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/change`,
+            data
+          );
+          if (!response.isDismissed) return;
+        } else {
+          await fetchApi(
+            "POST",
+            `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/${actionType}`,
+            data
+          );
         }
       }
-
-      if (actionType === "change") {
-        const response = await fetchApi(
-          "PATCH",
-          `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/change`,
-          data
-        );
-        if (!response.isDismissed) return;
-      } else {
-        await fetchApi(
-          "POST",
-          `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/${actionType}`,
-          data
-        );
-      }
-
-      workflowSurveyMutate();
-      dispatch(resetWorkflowData());
-      setShowModalApproval(false);
     }
+    answerSurveyMutate();
     workflowSurveyMutate();
+    dispatch(resetWorkflowData());
+    setShowModalApproval(false);
+    loadingSwal("close");
   };
   // [ END ] Handler for modal approval
 
@@ -548,11 +552,11 @@ const index = () => {
         showModal={showModalApproval}
         headerTitle={"Approval Survey"}
         handleChange={handleChangeText}
-        x
         handleChangeSelect={handleChangeSelect}
         handleDelete={handleDelete}
         handleAdd={handleAdd}
         handleSubmit={handleSubmit}
+        handleCloseModal={handleCloseModalWorkflow}
         statusApprover={statusApprover}
         widthHeader={statusApprover !== "On Progress" && `w-[42rem]`}
       />

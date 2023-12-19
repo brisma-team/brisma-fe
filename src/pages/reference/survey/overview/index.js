@@ -66,7 +66,7 @@ const index = () => {
           jenis_kode: v.jenis_survey_kode,
           jenis_nama: v.jenis_survey_name,
           desc: v.deskripsi,
-          createdBy: v.create_by.pn,
+          createdBy: v.create_by,
           createdAt: v.createdAt,
           approvalAt:
             v.template_survey_log_persetujuan[
@@ -78,6 +78,8 @@ const index = () => {
       });
 
       setData(mapping);
+    } else {
+      setData([]);
     }
   }, [overview]);
 
@@ -152,7 +154,7 @@ const index = () => {
   };
 
   const handleClickDownload = (id) => {
-    console.log("download");
+    router.push(`overview/${id}/preview?is_print=true`);
   };
 
   const handleDeleteTemplate = async (id) => {

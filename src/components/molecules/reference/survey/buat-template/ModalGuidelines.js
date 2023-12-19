@@ -57,16 +57,16 @@ const ModalGuidelines = ({
     >
       <div className="w-[58rem] relative">
         <CloseModal handleCloseModal={closeModal} showModal={showModal} />
-        <p className="text-xl font-bold">Guidelines</p>
+        <div className="text-xl font-bold">Guidelines</div>
         {isUpdate ? (
-          <div className="mt-3">
+          <div className="mt-1">
             <TextAreaField
               handleChange={(e) => handleChange(e.target.value)}
               value={desc}
             />
           </div>
         ) : (
-          <p className="text-base font-semibold text-justify">{desc}</p>
+          <div className="mt-2" dangerouslySetInnerHTML={{ __html: desc }} />
         )}
       </div>
     </Modal>
