@@ -1,6 +1,6 @@
 import React, { use, useEffect, useState } from "react";
-import { Modal, CloseModal, ButtonField, TextInput, CheckboxField } from "@/components/atoms";
-import { IconPlus } from "@/components/icons";
+import { Modal, CloseModal, ButtonField, TextInput, CheckboxField, ButtonIcon } from "@/components/atoms";
+import { IconCrossCircle, IconPlus } from "@/components/icons";
 import UkaSelectDashboard from "@/components/molecules/dashboard/UkaSelectDashboard";
 import RoleSelectDashboard from "@/components/molecules/dashboard/RoleSelectDashboard";
 
@@ -56,6 +56,7 @@ const ModalAddDashboard = ({
   }
 
   const handleChangeRole = (e, index) => {
+    console.log(e, index)
     const newUkaRolePayload = [...ukaRolePayload];
     newUkaRolePayload[index] = {
       ...newUkaRolePayload[index],
@@ -71,6 +72,15 @@ const ModalAddDashboard = ({
       role_code: ""
     })
     setUkaRolePayload(newUkaRolePayload)
+    console.log(ukaRolePayload, ukaRolePayload.length)
+  }
+
+  const handleDeleteUkaRole = (index) => {
+    console.log("Before deletion:", ukaRolePayload);
+    const newUkaRolePayload = [...ukaRolePayload];
+    newUkaRolePayload.splice(index, 1);
+    console.log("After deletion:", newUkaRolePayload);
+    setUkaRolePayload(newUkaRolePayload);
   }
 
   useEffect(() => {
@@ -89,7 +99,7 @@ const ModalAddDashboard = ({
         return {
           ...rest,
           ...dataPayload,
-          allowlist: ukaRolePayload,
+          allowlist: ukaRolePayload.filter((item) => item.uka_code != "" && item.role_code != ""),
         }
       });
     }
@@ -133,7 +143,7 @@ const ModalAddDashboard = ({
                   const { uka_code, role_code } = item;
                   return (
                     <div className="grid grid-cols-7 col-span-7 pt-1">
-                      <div className="p-3 text-base col-span-2"></div>
+                      <div className="p-3 text-base col-span-1"></div>
                       <div className="p-1 col-span-4" key={index}>
                         <div className="mb-2 flex justify-between gap-3 overflow-x-hidden">
                             <div className="w-1/2">
@@ -155,6 +165,13 @@ const ModalAddDashboard = ({
                             </div>
                         </div>
                       </div>
+                      <div className="col-span-1 p-2 pt-3" key={index}>
+                          <ButtonIcon
+                            icon={<IconCrossCircle />}
+                            color={"red"}
+                            handleClick={(e) => handleDeleteUkaRole(index)}
+                          />
+                        </div>
                     </div>
                   )
                 })
@@ -164,7 +181,7 @@ const ModalAddDashboard = ({
             {
               isPublic == false ?
                 <div className="grid grid-cols-7 col-span-7 pt-1">
-                  <div className="p-3 text-base col-span-2 mb-2"></div>
+                  <div className="p-3 text-base col-span-1 mb-2"></div>
                   <div className="p-1 col-span-4 mb-2">
                     <div className="mb-2 flex justify-between gap-3 overflow-x-hidden">
                       <div className="w-full">
