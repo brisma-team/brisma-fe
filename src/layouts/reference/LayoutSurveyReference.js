@@ -27,7 +27,7 @@ const LayoutSurveyReference = ({
         name: "Total Enabled",
       },
       {
-        color: "text-atlasian-yellow",
+        color: "text-atlasian-red",
         total: overview?.data?.inactive_templates.toString(),
         name: "Total Disabled",
       },

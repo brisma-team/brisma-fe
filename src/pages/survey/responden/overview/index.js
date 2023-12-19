@@ -75,6 +75,8 @@ const index = () => {
       });
 
       setData(mapping);
+    } else {
+      setData([]);
     }
   }, [overview]);
 
