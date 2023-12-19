@@ -774,6 +774,7 @@ const index = () => {
             />
           ) : (
             <TabKuesioner
+              isPreviewPage={false}
               isDisabledForm={isFormDisabled}
               handleChangeQuestion={handleChangeQuestion}
               handleDeleteQuestion={handleDeleteQuestion}
