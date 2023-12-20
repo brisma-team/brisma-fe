@@ -45,41 +45,38 @@ const CardQuestion = ({
             Pertanyaan : {indexQuestion + 1}/{totalQuestionPerCategory}
           </p>
         </div>
-        {!isPreviewPage ||
-          (!isDisabledForm && (
-            <div className="h-full flex items-center gap-3 px-4">
-              <DropdownCard
-                actions={[
-                  {
-                    label: "Ubah Guideline",
-                    action: () =>
-                      handleClickOpenModalGuidelines(
-                        indexCategory,
-                        indexQuestion,
-                        true
-                      ),
-                  },
-                ]}
-              />
-              {(data.tipe_pertanyaan_kode === "2" ||
-                data.tipe_pertanyaan_kode === "3") && (
-                <ButtonIcon
-                  icon={
-                    <Image src={ImageGroup} width={20} height={20} alt="" />
-                  }
-                  handleClick={() =>
-                    handleAddAnswer(indexCategory, indexQuestion)
-                  }
-                />
-              )}
+        {!isPreviewPage && !isDisabledForm && (
+          <div className="h-full flex items-center gap-3 px-4">
+            <DropdownCard
+              actions={[
+                {
+                  label: "Ubah Guideline",
+                  action: () =>
+                    handleClickOpenModalGuidelines(
+                      indexCategory,
+                      indexQuestion,
+                      true
+                    ),
+                },
+              ]}
+            />
+            {(data.tipe_pertanyaan_kode === "2" ||
+              data.tipe_pertanyaan_kode === "3") && (
               <ButtonIcon
-                icon={<Image src={ImageTrash} width={20} height={20} alt="" />}
+                icon={<Image src={ImageGroup} width={20} height={20} alt="" />}
                 handleClick={() =>
-                  handleDeleteQuestion(indexCategory, indexQuestion)
+                  handleAddAnswer(indexCategory, indexQuestion)
                 }
               />
-            </div>
-          ))}
+            )}
+            <ButtonIcon
+              icon={<Image src={ImageTrash} width={20} height={20} alt="" />}
+              handleClick={() =>
+                handleDeleteQuestion(indexCategory, indexQuestion)
+              }
+            />
+          </div>
+        )}
       </div>
       <div className="flex w-full">
         <div className="w-28 border-r-2 border-neutral-200 gap-4 flex flex-col items-center py-2">
