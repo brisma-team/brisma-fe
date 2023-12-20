@@ -32,13 +32,13 @@ const CardOverview = ({
       isDisabled: !(
         data.status_persetujuan === "Final" &&
         !data.is_active &&
-        user?.data?.pn == data.createdBy
+        user?.data?.pn == data.createdBy.pn
       ),
     },
     {
       label: "Non-Aktifkan",
       action: () => handleDisableTemplate(data.id),
-      isDisabled: !(data.is_active && user?.data?.pn == data.createdBy),
+      isDisabled: !(data.is_active && user?.data?.pn == data.createdBy.pn),
     },
     {
       label: "Simulasi",
@@ -90,7 +90,7 @@ const CardOverview = ({
                     <div
                       className={`w-full h-full flex items-center ${
                         data.is_active
-                          ? "text-atlasian-yellow"
+                          ? "text-atlasian-green"
                           : "text-atlasian-red"
                       }`}
                     >
@@ -115,7 +115,7 @@ const CardOverview = ({
             </div>
             <hr />
             <div className="w-full flex flex-col gap-1 px-4">
-              <Content title={"Nama Pembuat"} text={data.createdBy} />
+              <Content title={"Nama Pembuat"} text={data.createdBy.fullName} />
               <Content
                 title={"Tanggal Pembuatan"}
                 text={convertDate(data.createdAt, "-", "d")}

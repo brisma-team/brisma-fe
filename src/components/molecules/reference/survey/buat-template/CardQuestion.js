@@ -20,6 +20,9 @@ const CardQuestion = ({
   indexQuestion,
   data,
   isPreviewPage,
+  isDisabled,
+  isDisabledForm,
+  totalQuestionPerCategory,
   handleChangeQuestion,
   handleDeleteQuestion,
   handleChangeAnswer,
@@ -39,10 +42,10 @@ const CardQuestion = ({
       <div className="w-full h-full flex justify-between items-center border-neutral-200 border-b-2 rounded-se-lg">
         <div className="py-2 px-4 w-full h-full flex items-center">
           <p className="text-base font-semibold">
-            Pertanyaan : {indexQuestion + 1}/4
+            Pertanyaan : {indexQuestion + 1}/{totalQuestionPerCategory}
           </p>
         </div>
-        {!isPreviewPage && (
+        {!isPreviewPage && !isDisabledForm && (
           <div className="h-full flex items-center gap-3 px-4">
             <DropdownCard
               actions={[
@@ -104,6 +107,7 @@ const CardQuestion = ({
                 }}
                 maxLength={2}
                 value={data.bobot}
+                isDisabled={isDisabledForm}
               />
             </div>
           )}
@@ -120,6 +124,7 @@ const CardQuestion = ({
             <div>
               <TextAreaField
                 value={data.uraian}
+                isDisabled={isDisabledForm}
                 handleChange={(e) =>
                   handleChangeQuestion(
                     indexCategory,
@@ -139,7 +144,7 @@ const CardQuestion = ({
               <div className="flex gap-2">
                 <RadioField
                   label={"Ya"}
-                  isDisabled={isPreviewPage}
+                  isDisabled={isPreviewPage || isDisabledForm}
                   isChecked={data.is_need_deskripsi}
                   value={true}
                   handleChange={(e) =>
@@ -153,7 +158,7 @@ const CardQuestion = ({
                 />
                 <RadioField
                   label={"Tidak"}
-                  isDisabled={isPreviewPage}
+                  isDisabled={isPreviewPage || isDisabledForm}
                   isChecked={!data.is_need_deskripsi}
                   value={false}
                   handleChange={(e) =>
@@ -240,6 +245,7 @@ const CardQuestion = ({
                         ) : data.tipe_pertanyaan_kode === "4" ? (
                           <div className="w-10">
                             <TextInputDecimal
+                              isDisabled={isDisabled}
                               style={{
                                 fontWeight: "bold",
                                 textAlign: "center",
@@ -271,6 +277,7 @@ const CardQuestion = ({
                             }}
                             maxLength={2}
                             value={answer.bobot}
+                            isDisabled={isDisabledForm}
                             onChange={(value) =>
                               handleChangeAnswer(
                                 indexCategory,
@@ -305,6 +312,7 @@ const CardQuestion = ({
                           </div>
                         ) : (
                           <TextInput
+                            isDisabled={isDisabledForm}
                             value={answer.text}
                             onChange={(e) =>
                               handleChangeAnswer(
@@ -353,6 +361,7 @@ const CardQuestion = ({
                             <RadioField
                               label={"Ya"}
                               isChecked={data.is_need_deskripsi}
+                              isDisabled={isPreviewPage || isDisabledForm}
                               value={true}
                               handleChange={(e) =>
                                 handleChangeQuestion(
@@ -366,6 +375,7 @@ const CardQuestion = ({
                             <RadioField
                               label={"Tidak"}
                               isChecked={!data.is_need_deskripsi}
+                              isDisabled={isPreviewPage || isDisabledForm}
                               value={false}
                               handleChange={(e) =>
                                 handleChangeQuestion(

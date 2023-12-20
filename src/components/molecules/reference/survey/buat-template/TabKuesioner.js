@@ -3,6 +3,7 @@ import CardCategoryQuestion from "./CardCategoryQuestion";
 
 const TabKuesioner = ({
   isPreviewPage,
+  isDisabledForm,
   handleChangeQuestion,
   handleDeleteQuestion,
   handleChangeAnswer,
@@ -16,7 +17,7 @@ const TabKuesioner = ({
   );
 
   return (
-    <div className="flex flex-col gap-4" id="content-doc">
+    <div className="flex flex-col" id="content-doc">
       {dataKuesioner?.length ? (
         dataKuesioner.map((category_quesioner, i) => {
           return (
@@ -26,6 +27,7 @@ const TabKuesioner = ({
               data={category_quesioner}
               isPreviewPage={isPreviewPage}
               isDisabled={!dataKuesioner.length}
+              isDisabledForm={isDisabledForm}
               handleChangeQuestion={handleChangeQuestion}
               handleDeleteQuestion={handleDeleteQuestion}
               handleClickOpenModalAddQuestion={handleClickOpenModalAddQuestion}

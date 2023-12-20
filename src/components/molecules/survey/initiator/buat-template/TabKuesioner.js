@@ -13,7 +13,7 @@ const TabKuesioner = ({
   handleClickOpenModalGuidelines,
 }) => {
   return (
-    <div className="flex flex-col gap-4" id="content-doc">
+    <div className="flex flex-col" id="content-doc">
       {data?.length ? (
         data.map((category_quesioner, i) => {
           return (

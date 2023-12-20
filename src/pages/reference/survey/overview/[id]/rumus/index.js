@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import { IconArrowLeft } from "@/components/icons";
 import { CardContentHeaderFooter } from "@/components/molecules/commons";
 import MonacoEditor from "@monaco-editor/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { errorSwal, fetchApi } from "@/helpers";
 import { useInformation } from "@/data/reference/admin-survey/informasi";
 
@@ -28,8 +28,15 @@ const index = () => {
 
   const editorRef = useRef(null);
   const [formula, setFormula] = useState("");
+  const [isDisabled, setIsDisabled] = useState(false);
 
-  const { information } = useInformation({ id });
+  const { information, informationError } = useInformation({ id });
+
+  useEffect(() => {
+    if (!informationError) {
+      setIsDisabled(information?.data?.status_persetujuan !== "On Progress");
+    }
+  }, [information]);
 
   // [ START ] Handler for form formula
   const handleClickAggregateFunction = (value) => {
@@ -246,8 +253,15 @@ const index = () => {
                           handler={() => console.log("download")}
                         />
                       </div>
-                      <div className="rounded w-28 bg-atlasian-green">
+                      <div
+                        className={`rounded w-28 ${
+                          isDisabled
+                            ? `bg-atlasian-gray-light`
+                            : `bg-atlasian-green`
+                        }`}
+                      >
                         <ButtonField
+                          disabled={isDisabled}
                           text="Simpan"
                           handler={handleSaveFormula}
                         />

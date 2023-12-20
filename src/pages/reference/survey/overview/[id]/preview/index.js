@@ -25,7 +25,7 @@ import { previewPrintDocument } from "@/helpers";
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id } = useRouter().query;
+  const { id, is_print } = useRouter().query;
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Reference", path: "/reference" },
@@ -46,6 +46,16 @@ const index = () => {
 
   const { category } = useCategory({ id });
   const { kuesioner, kuesionerError } = useKuesioner({ id });
+
+  useEffect(() => {
+    if (is_print) {
+      setTimeout(() => {
+        if (payloadKuesioner?.length && is_print) {
+          previewPrintDocument("content-doc", true);
+        }
+      }, 500);
+    }
+  }, [is_print, payloadKuesioner]);
 
   useEffect(() => {
     if (!kuesionerError && kuesioner?.data?.length) {
@@ -168,6 +178,7 @@ const index = () => {
           </div>
           <TabKuesioner
             isPreviewPage={true}
+            isDisabledForm={true}
             handleClickOpenModalGuidelines={handleClickOpenModalGuidelines}
             handleChangeAnswer={handleChangeAnswer}
           />

@@ -10,7 +10,12 @@ import TableTree, {
 } from "@atlaskit/table-tree";
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
-const TableApprovalQueue = ({ data, handleClickAction, isInitiator }) => {
+const TableApprovalQueue = ({
+  data,
+  handleClickAction,
+  isInitiator,
+  isTemplate,
+}) => {
   return (
     <Card>
       <div className="w-full px-4 pb-2">
@@ -31,7 +36,9 @@ const TableApprovalQueue = ({ data, handleClickAction, isInitiator }) => {
               className="border-t border-r cell-custom-dataTables"
             >
               <div className="custom-table-header">
-                <p className="text-base font-bold">Project ID</p>
+                <p className="text-base font-bold">
+                  {isTemplate ? "Template" : "Project"} ID
+                </p>
               </div>
             </Header>
             <Header
@@ -89,13 +96,13 @@ const TableApprovalQueue = ({ data, handleClickAction, isInitiator }) => {
                   <Cell width="20%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p className="text-sm">
-                        {project_survey_id?.toUpperCase()}
+                        {project_survey_id?.toUpperCase() || "-"}
                       </p>
                     </div>
                   </Cell>
                   <Cell width="19%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
-                      <p className="text-sm">{jenis_survey_name}</p>
+                      <p className="text-sm">{jenis_survey_name || "-"}</p>
                     </div>
                   </Cell>
                   <Cell width="27%" className={`border-r ${customCell} `}>

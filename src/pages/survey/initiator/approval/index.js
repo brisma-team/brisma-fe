@@ -56,13 +56,19 @@ const index = () => {
 
       if (approvalInitiator?.data?.body?.antrian?.length) {
         const mapping = approvalInitiator?.data?.body?.antrian?.map((queue) => {
-          const { survey_id, project_survey, module } = queue;
+          const {
+            survey_id,
+            jenis_survey_name,
+            project_survey_id,
+            module,
+            create_by,
+          } = queue;
           return {
             survey_id,
-            pn: project_survey?.create_by?.pn,
-            nama: project_survey?.create_by?.fullName,
-            project_survey_id: project_survey?.project_survey_id,
-            jenis_survey_name: project_survey?.jenis_survey_name,
+            pn: create_by?.pn,
+            nama: create_by?.nama,
+            project_survey_id: project_survey_id,
+            jenis_survey_name: jenis_survey_name,
             fase_approval: module,
           };
         });

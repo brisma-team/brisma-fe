@@ -6,6 +6,7 @@ const SelectSortFilter = ({ change }) => {
       <Select
         className="w-32"
         options={[
+          { label: "3", value: 3 },
           { label: "10", value: 10 },
           { label: "25", value: 25 },
           { label: "50", value: 50 },

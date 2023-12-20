@@ -51,7 +51,8 @@ const index = () => {
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [isNewTemplate, setIsNewTemplate] = useState(true);
-  const [isFormDisabled, setIsFormDisabled] = useState(true);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [isFormDisabled, setIsFormDisabled] = useState(false);
   const [isUnderChange, setIsUnderChange] = useState(false);
   const [isUpdateGuidline, setIsUpdateGuidline] = useState(false);
 
@@ -123,6 +124,13 @@ const index = () => {
           ])
         )
       );
+
+      setIsFormDisabled(
+        !(
+          information?.data?.status_persetujuan === "On Progress" ||
+          !information?.data?.status_persetujuan
+        )
+      );
     }
   }, [information]);
 
@@ -176,7 +184,7 @@ const index = () => {
       },
     ]);
 
-    setIsFormDisabled(!isInformasiComplete);
+    setIsDisabled(!isInformasiComplete);
   }, [payloadInformasi]);
 
   useEffect(() => {
@@ -693,7 +701,7 @@ const index = () => {
           data.approvers = workflowData.ref_tim_audit_approver;
           break;
         case "reject":
-          if (!data.note) {
+          if (!workflowData.note) {
             await errorSwal("Silahkan berikan alasan!");
             return;
           }
@@ -756,6 +764,7 @@ const index = () => {
           {currentContentStage === 1 ? (
             <TabInformation
               isNewTemplate={isNewTemplate}
+              isDisabled={isDisabled}
               isFormDisabled={isFormDisabled}
               handleChangeForm={handleChangeFormInformasi}
               handleClickAddKuesioner={handleClickKuesioner}
@@ -765,6 +774,8 @@ const index = () => {
             />
           ) : (
             <TabKuesioner
+              isPreviewPage={false}
+              isDisabledForm={isFormDisabled}
               handleChangeQuestion={handleChangeQuestion}
               handleDeleteQuestion={handleDeleteQuestion}
               handleChangeAnswer={handleChangeAnswer}
@@ -780,6 +791,7 @@ const index = () => {
         <Sidebar
           data={category}
           isUnderChange={isUnderChange}
+          isPreviewPage={isFormDisabled}
           handleAddCategory={handleAddCategory}
           handleMutateData={handleMutateCategory}
           handleUpdateCategory={handleUpdateCategory}
