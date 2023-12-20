@@ -185,7 +185,7 @@ const index = () => {
     ]);
 
     setIsDisabled(!isInformasiComplete);
-  }, [payloadInformasi]);
+  }, [payloadInformasi, isNewTemplate]);
 
   useEffect(() => {
     let templateName = "Buat Form / Informasi";
