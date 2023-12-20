@@ -187,7 +187,11 @@ const index = () => {
           />
         </div>
       </div>
-      <Sidebar isPreviewPage={true} withoutButtonTop={true} />
+      <Sidebar
+        data={payloadKuesioner}
+        isPreviewPage={true}
+        withoutButtonTop={true}
+      />
       <ModalGuidelines
         showModal={showModalGuidelines}
         handleCloseModal={handleCloseModalGuidelines}

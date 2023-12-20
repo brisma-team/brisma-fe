@@ -1,4 +1,4 @@
-import { Breadcrumbs, ButtonField, PageTitle } from "@/components/atoms";
+import { Breadcrumbs, PageTitle } from "@/components/atoms";
 import { useEffect, useState } from "react";
 import { NavigationTab } from "@/components/molecules/commons";
 import {
@@ -19,6 +19,7 @@ import {
   resetValidationErrorsWorkflow,
   setValidationErrorsWorkflow,
   resetPayloadInformasi,
+  resetHistoryWorkflow,
 } from "@/slices/survey/initiator/createSurveySlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
@@ -39,6 +40,7 @@ import {
   useInformation,
   useKuesioner,
 } from "@/data/survey/initiator/informasi";
+import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -47,8 +49,10 @@ const index = () => {
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [isNewTemplate, setIsNewTemplate] = useState(true);
-  const [isFormDisabled, setIsFormDisabled] = useState(true);
+  const [isDisabledButtonAction, setIsDisabledButtonAction] = useState(true);
+  const [isFormDisabled, setIsFormDisabled] = useState(false);
   const [isUpdateGuidline, setIsUpdateGuidline] = useState(false);
+  const [isRefreshWorkflow, setIsRefreshWorkflow] = useState(false);
 
   const [currentContentStage, setCurrentContentStage] = useState(1);
 
@@ -78,7 +82,9 @@ const index = () => {
     { idx: 2, title: "Kuesioner", isDisabled: true },
   ]);
 
-  const { information, informationError } = useInformation({ id });
+  const { information, informationError, informationMutate } = useInformation({
+    id,
+  });
   const { kuesioner, kuesionerError } = useKuesioner({ id });
   const { workflowSurvey, workflowSurveyMutate } = useWorkflowSurvey(
     "project_survey",
@@ -86,10 +92,12 @@ const index = () => {
       id,
     }
   );
+  const { user } = useUser();
 
   useEffect(() => {
-    console.log("payloadKuesioner => ", payloadKuesioner);
-  }, [payloadKuesioner]);
+    dispatch(resetWorkflowData());
+    dispatch(resetHistoryWorkflow());
+  }, []);
 
   useEffect(() => {
     setIsNewTemplate(id === "new");
@@ -120,31 +128,12 @@ const index = () => {
       },
     ]);
 
-    setIsFormDisabled(!isInformasiComplete);
-  }, [payloadInformasi]);
+    setIsDisabledButtonAction(!isInformasiComplete);
+  }, [payloadInformasi, isNewTemplate]);
 
   useEffect(() => {
     if (is_approval) setShowModalApproval(true);
   }, [is_approval]);
-
-  useEffect(() => {
-    const {
-      nama_survey,
-      deskripsi,
-      jenis_survey_kode,
-      pelaksanaan_start,
-      pelaksanaan_end,
-    } = payloadInformasi;
-
-    const isInformasiComplete =
-      nama_survey &&
-      deskripsi &&
-      jenis_survey_kode &&
-      pelaksanaan_start &&
-      pelaksanaan_end;
-
-    setIsFormDisabled(!isInformasiComplete);
-  }, [payloadInformasi]);
 
   useEffect(() => {
     if (!informationError) {
@@ -158,6 +147,12 @@ const index = () => {
             "updatedAt",
           ])
         )
+      );
+
+      setIsFormDisabled(
+        information?.data?.status_persetujuan === "On Approver" ||
+          information?.data?.status_persetujuan === "Final" ||
+          information?.data?.create_by?.pn !== user?.data?.pn
       );
     }
   }, [information]);
@@ -235,14 +230,9 @@ const index = () => {
     newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.fullName}`;
     newWorkflowData.maker = maker;
 
-    if (approvers?.length) {
-      const mappingApprovers = _.map(approvers, ({ pn, nama, is_signed }) => ({
-        pn,
-        nama,
-        is_signed,
-      }));
-      newWorkflowData.ref_tim_audit_approver = mappingApprovers;
-    }
+    newWorkflowData.ref_tim_audit_approver = approvers?.length
+      ? approvers.map(({ pn, nama, is_signed }) => ({ pn, nama, is_signed }))
+      : [];
 
     if (workflowSurvey?.data?.log?.length) {
       const mapping = workflowSurvey?.data?.log?.map((v) => {
@@ -262,7 +252,8 @@ const index = () => {
     }
 
     dispatch(setWorkflowData(newWorkflowData));
-  }, [workflowSurvey]);
+    setIsRefreshWorkflow(false);
+  }, [workflowSurvey, isRefreshWorkflow]);
 
   // [ START ] Handler for content stage informasi
   const handleChangeFormInformasi = (property, value) => {
@@ -365,6 +356,12 @@ const index = () => {
   // [ START ] Handler for modal approval
   const handleClickOpenModalApproval = () => {
     setShowModalApproval(true);
+  };
+
+  const handleCloseModalApproval = () => {
+    dispatch(resetHistoryWorkflow());
+    dispatch(resetWorkflowData());
+    setIsRefreshWorkflow(true);
   };
 
   const handleAdd = (property) => {
@@ -472,6 +469,7 @@ const index = () => {
         );
       }
 
+      informationMutate();
       workflowSurveyMutate();
       dispatch(resetWorkflowData());
       setShowModalApproval(false);
@@ -489,7 +487,7 @@ const index = () => {
             <PageTitle
               text={
                 currentContentStage === 1
-                  ? "Buat Survey"
+                  ? "Buat Survei"
                   : "Preview Template Kuesioner"
               }
             />
@@ -500,18 +498,19 @@ const index = () => {
               currentStage={currentContentStage}
               setCurrentStage={setCurrentContentStage}
             />
-            {currentContentStage === 2 && (
+            {/* {currentContentStage === 2 && (
               <div className="bg-atlasian-purple h-fit w-44 rounded">
                 <ButtonField
                   text={"Pertanyaan Tambahan"}
                   handler={() => console.log("test")}
                 />
               </div>
-            )}
+            )} */}
           </div>
           {currentContentStage === 1 ? (
             <TabInformation
               isNewTemplate={isNewTemplate}
+              isDisabledPickTemplate={isDisabledButtonAction}
               isFormDisabled={isFormDisabled}
               handleChangeForm={handleChangeFormInformasi}
               handleClickAddKuesioner={handleClickKuesioner}
@@ -533,7 +532,11 @@ const index = () => {
         </div>
       </div>
       {currentContentStage === 2 ? (
-        <Sidebar isPreviewPage={true} isDisabledForm={true} />
+        <Sidebar
+          data={payloadKuesioner}
+          isPreviewPage={true}
+          isDisabledForm={true}
+        />
       ) : (
         ""
       )}
@@ -549,6 +552,7 @@ const index = () => {
         handleDelete={handleDelete}
         handleAdd={handleAdd}
         handleSubmit={handleSubmit}
+        handleCloseModal={handleCloseModalApproval}
         widthHeader={`w-[42rem]`}
         withoutSigner={true}
       />

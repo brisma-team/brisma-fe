@@ -18,6 +18,10 @@ const CustomPagination = ({
   }
 
   useEffect(() => {
+    setCurrentPage(defaultCurrentPage);
+  }, [defaultCurrentPage]);
+
+  useEffect(() => {
     const newStartIndex = (currentPage - 1) * perPage;
     const newEndIndex = newStartIndex + perPage;
 

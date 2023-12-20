@@ -9,9 +9,9 @@ import Image from "next/image";
 import CardCategory from "./CardCategory";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
 
 const Sidebar = ({
+  data,
   withoutButtonTop,
   isPreviewPage,
   isDisabledForm,
@@ -26,20 +26,14 @@ const Sidebar = ({
 }) => {
   const { id } = useRouter().query;
   const [dataCategory, setDataCategory] = useState([]);
-  const payloadKuesioner = useSelector(
-    (state) => state.previewSurvey.payloadKuesioner
-  );
 
   useEffect(() => {
-    if (payloadKuesioner?.length) {
-      const total_pertanyaan_all_kategori = payloadKuesioner.reduce(
-        (acc, obj) => {
-          return acc + obj.pertanyaan.length;
-        },
-        0
-      );
+    if (data?.length) {
+      const total_pertanyaan_all_kategori = data.reduce((acc, obj) => {
+        return acc + obj.pertanyaan.length;
+      }, 0);
 
-      const mapping = payloadKuesioner.map((category, idx) => {
+      const mapping = data.map((category, idx) => {
         const { id, name } = category;
         const total_pertanyaan = category.pertanyaan
           ? category.pertanyaan.length
@@ -59,7 +53,7 @@ const Sidebar = ({
     } else {
       setDataCategory([]);
     }
-  }, [payloadKuesioner]);
+  }, [data]);
 
   return (
     <div className="w-[31rem] minfixed min-h-screen border-x-2 border-slate-200 -mt-1.5 right-0">

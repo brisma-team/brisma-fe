@@ -38,6 +38,10 @@ const index = () => {
     dispatch(setObjData(penilaian?.data));
   }, [penilaian]);
 
+  useEffect(() => {
+    console.log("dataTableScore => ", dataTableScore);
+  }, [penilaian]);
+
   const handleConvertToExcel = async () => {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet("Sheet1");

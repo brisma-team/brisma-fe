@@ -15,6 +15,7 @@ const TabInformation = ({
   isNewTemplate,
   isDisabled,
   isFormDisabled,
+  isApprovalFinal,
   handleChangeForm,
   handleSubmit,
   handleClickAddKuesioner,
@@ -123,8 +124,7 @@ const TabInformation = ({
                 }`}
               >
                 <ButtonField
-                  text={"Tambah Kuesioner"}
-                  // disabled={isFormDisabled || isNewTemplate}
+                  text={isApprovalFinal ? "Kuesioner" : "Tambah Kuesioner"}
                   handler={handleClickAddKuesioner}
                 />
               </div>
@@ -143,12 +143,14 @@ const TabInformation = ({
               </div>
               <div
                 className={`rounded w-36 ${
-                  isDisabled ? `bg-atlasian-gray-light` : `bg-atlasian-yellow`
+                  isDisabled || isApprovalFinal
+                    ? `bg-atlasian-gray-light`
+                    : `bg-atlasian-yellow`
                 }`}
               >
                 <ButtonField
                   text={"Simpan"}
-                  disabled={isDisabled}
+                  disabled={isDisabled || isApprovalFinal}
                   handler={handleSubmit}
                 />
               </div>

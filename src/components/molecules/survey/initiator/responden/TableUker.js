@@ -2,7 +2,7 @@ import {
   ButtonDelete,
   CardContentHeaderFooter,
   DataNotFound,
-  BranchSelect,
+  OrgehSelect,
 } from "@/components/molecules/commons";
 import {
   ButtonField,
@@ -99,7 +99,7 @@ const TableUker = ({
               render={({
                 index,
                 id,
-                branch_name,
+                orgeh_name,
                 jumlah,
                 keterangan,
                 is_edit,
@@ -143,14 +143,14 @@ const TableUker = ({
                   <Cell width="21%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center relative">
                       {is_edit ? (
-                        <BranchSelect
+                        <OrgehSelect
                           selectedValue={
-                            newUker?.branch_kode
+                            newUker?.orgeh_kode
                               ? {
-                                  label: newUker?.branch_name,
+                                  label: newUker?.orgeh_name,
                                   value: {
-                                    branch_kode: newUker?.branch_kode,
-                                    branch_name: newUker?.branch_name,
+                                    orgeh_kode: newUker?.orgeh_kode,
+                                    orgeh_name: newUker?.orgeh_name,
                                   },
                                 }
                               : null
@@ -160,7 +160,7 @@ const TableUker = ({
                           width="w-[13rem]"
                         />
                       ) : (
-                        <p className="text-xs">{branch_name}</p>
+                        <p className="text-xs">{orgeh_name}</p>
                       )}
                     </div>
                   </Cell>

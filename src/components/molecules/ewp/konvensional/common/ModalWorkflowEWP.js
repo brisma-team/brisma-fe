@@ -15,6 +15,7 @@ const ModalWorkflowEWP = ({
   handleChange,
   handleChangeSelect,
   handleDelete,
+  handleCloseModal,
   validationErrors,
   widthHeader,
   withoutSigner,
@@ -24,7 +25,7 @@ const ModalWorkflowEWP = ({
   isInitiator = user?.data?.pn == workflowData?.maker?.pn;
   isApproval = user?.data?.pn == workflowData?.on_approver?.pn;
 
-  const handleCloseModal = async () => {
+  const closeModal = async () => {
     const confirm = await confirmationSwal(
       "Apakah Anda ingin menutup modal ini?"
     );
@@ -34,6 +35,7 @@ const ModalWorkflowEWP = ({
     }
 
     setShowModal(false);
+    handleCloseModal && handleCloseModal();
   };
 
   const statusColors = {
@@ -49,7 +51,7 @@ const ModalWorkflowEWP = ({
           user={user?.data}
           data={workflowData}
           validationErrors={validationErrors}
-          handleCloseModal={handleCloseModal}
+          handleCloseModal={closeModal}
           showModal={showModal}
           headerTitle={headerTitle}
           handleAdd={handleAdd}
