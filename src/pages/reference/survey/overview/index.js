@@ -56,6 +56,15 @@ const index = () => {
   const { overview, overviewMutate } = useOverview("all", params);
 
   useEffect(() => {
+    setFilter((prevFilter) => {
+      return {
+        ...prevFilter,
+        page: 1,
+      };
+    });
+  }, [filter.limit]);
+
+  useEffect(() => {
     setTotalData(overview?.pagination?.totalItems);
     if (overview?.data?.length) {
       const mapping = overview?.data?.map((v) => {
@@ -236,7 +245,7 @@ const index = () => {
           handleSetPagination={(start, end, pageNow) =>
             handleChangeFilter("page", pageNow)
           }
-          defaultCurrentPage={1}
+          defaultCurrentPage={filter.page}
           totalData={totalData}
         />
         {/* End Content */}

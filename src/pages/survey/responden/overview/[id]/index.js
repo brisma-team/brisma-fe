@@ -19,6 +19,7 @@ import {
   setValidationErrorsWorkflow,
   resetDataCategory,
   resetWorkflowData,
+  resetHistoryWorkflow,
   resetPayloadKuesioner,
   resetValidationErrorsWorkflow,
 } from "@/slices/survey/responden/respondenAnswerSlice";
@@ -33,7 +34,6 @@ import {
   setErrorValidation,
 } from "@/helpers";
 import { useWorkflowSurvey } from "@/data/survey/initiator/buat-survey";
-import _ from "lodash";
 import { workflowSchema } from "@/helpers/schemas/survey/respondenSurveySchema";
 import { ModalWorkflow } from "@/components/molecules/survey/responden/kuesioner";
 import { RespondenLayoutSurvey } from "@/layouts/survey";
@@ -55,6 +55,7 @@ const index = () => {
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [showModalGuidelines, setShowModalGuidelines] = useState(false);
   const [isDisabledSubmit, setIsDisabledSubmit] = useState(true);
+  const [isRefreshWorkflow, setIsRefreshWorkflow] = useState(false);
 
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
@@ -94,6 +95,11 @@ const index = () => {
       id,
       pn: approverFromPn,
     });
+
+  useEffect(() => {
+    dispatch(resetWorkflowData());
+    dispatch(resetHistoryWorkflow());
+  }, []);
 
   useEffect(() => {
     if (is_approval) setShowModalApproval(true);
@@ -252,14 +258,9 @@ const index = () => {
     newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.nama}`;
     newWorkflowData.maker = maker;
 
-    if (approvers?.length) {
-      const mappingApprovers = _.map(approvers, ({ pn, nama, is_signed }) => ({
-        pn,
-        nama,
-        is_signed,
-      }));
-      newWorkflowData.ref_tim_audit_approver = mappingApprovers;
-    }
+    newWorkflowData.ref_tim_audit_approver = approvers?.length
+      ? approvers.map(({ pn, nama, is_signed }) => ({ pn, nama, is_signed }))
+      : [];
 
     if (workflowSurvey?.data?.log?.length) {
       const mapping = workflowSurvey?.data?.log?.map((v) => {
@@ -280,7 +281,8 @@ const index = () => {
 
     setStatusApprover(workflowInfo?.status_persetujuan);
     dispatch(setWorkflowData(newWorkflowData));
-  }, [workflowSurvey]);
+    setIsRefreshWorkflow(false);
+  }, [workflowSurvey, isRefreshWorkflow]);
 
   // [ START ] Handler for answer
   const handleSaveAnswerPerCategory = () => {
@@ -348,7 +350,9 @@ const index = () => {
 
   // [ START ] Handler for modal approval
   const handleCloseModalWorkflow = () => {
+    dispatch(resetHistoryWorkflow());
     dispatch(resetWorkflowData());
+    setIsRefreshWorkflow(true);
   };
 
   const handleAdd = (property) => {

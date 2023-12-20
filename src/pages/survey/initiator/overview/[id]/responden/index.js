@@ -12,13 +12,16 @@ import {
 import {
   resetPayloadNewResponden,
   resetPayloadNewUker,
+  resetPayloadNewRespondenPnByUker,
   setDataTables,
   setPayloadNewResponden,
   setPayloadNewUker,
+  setPayloadNewRespondenPnByUker,
 } from "@/slices/survey/initiator/respondenSurveySlice";
 import { confirmationSwal, errorSwal, fetchApi, loadingSwal } from "@/helpers";
 import {
-  TableResponden,
+  TableRespondenPn,
+  TableRespondenPnByUker,
   TableUker,
 } from "@/components/molecules/survey/initiator/responden";
 
@@ -55,6 +58,9 @@ const index = () => {
   );
   const payloadNewUker = useSelector(
     (state) => state.respondenSurvey.payloadNewUker
+  );
+  const payloadNewRespondenPnByUker = useSelector(
+    (state) => state.respondenSurvey.payloadNewRespondenPnByUker
   );
 
   const { respondenByPnSurvey, respondenByPnSurveyMutate } =
@@ -95,12 +101,12 @@ const index = () => {
   useEffect(() => {
     if (respondenByUkerSurvey?.data?.length) {
       const mapping = respondenByUkerSurvey.data.map((responden, index) => {
-        const { id, branch_kode, branch_name, jumlah, keterangan } = responden;
+        const { id, orgeh_kode, orgeh_name, jumlah, keterangan } = responden;
         return {
           index,
           id,
-          branch_kode,
-          branch_name,
+          orgeh_kode,
+          orgeh_name,
           jumlah,
           keterangan,
           is_edit: false,
@@ -260,8 +266,8 @@ const index = () => {
       newDataTables.respondenUker.push({
         index: newDataTables.respondenUker.length,
         id: "",
-        branch_kode: "",
-        branch_name: "",
+        orgeh_kode: "",
+        orgeh_name: "",
         jumlah: 0,
         keterangan: "",
         is_edit: true,
@@ -300,9 +306,9 @@ const index = () => {
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/uker`,
       {
-        survey_id: id,
-        branch_kode: payloadNewUker.branch_kode,
-        branch_name: payloadNewUker.branch_name,
+        survey_id: selectedUkerId,
+        orgeh_kode: payloadNewUker.orgeh_kode,
+        orgeh_name: payloadNewUker.orgeh_name,
         keterangan: payloadNewUker.keterangan,
       }
     );
@@ -314,8 +320,8 @@ const index = () => {
   const handleChangeUker = (value) => {
     const newPayload = {
       ...payloadNewUker,
-      branch_kode: value.branch_kode,
-      branch_name: value.branch_name,
+      orgeh_kode: value.orgeh_kode,
+      orgeh_name: value.orgeh_name,
     };
 
     dispatch(setPayloadNewUker(newPayload));
@@ -349,7 +355,7 @@ const index = () => {
             width={"w-64"}
           />
           {currentContentStage === 1 ? (
-            <TableResponden
+            <TableRespondenPn
               data={dataTables.respondenPn}
               newResponden={payloadNewResponden}
               handleChangeText={handleChangeTextResponden}
@@ -371,7 +377,7 @@ const index = () => {
                 handleClickSave={handleClickSaveUker}
                 handleSelectedUker={handleSelectedUker}
               />
-              <TableResponden
+              <TableRespondenPnByUker
                 data={dataTables.respondenUkerPn}
                 dataUker={dataTables.respondenUker}
                 newResponden={payloadNewResponden}

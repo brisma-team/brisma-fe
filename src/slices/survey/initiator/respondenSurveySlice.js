@@ -12,10 +12,11 @@ const initialState = {
     keterangan: "",
   },
   payloadNewUker: {
-    branch_kode: "",
-    branch_name: "",
+    orgeh_kode: "",
+    orgeh_name: "",
     keterangan: "",
   },
+  payloadNewRespondenPnByUker: [],
   defaultDataTables: {
     respondenPn: [],
     respondenUker: [],
@@ -27,8 +28,8 @@ const initialState = {
     keterangan: "",
   },
   defaultPayloadNewUker: {
-    branch_kode: "",
-    branch_name: "",
+    orgeh_kode: "",
+    orgeh_name: "",
     keterangan: "",
   },
 };
@@ -46,6 +47,9 @@ export const respondenSurveySlice = createSlice({
     setPayloadNewUker: (state, action) => {
       state.payloadNewUker = action.payload;
     },
+    setPayloadNewRespondenPnByUker: (state, action) => {
+      state.payloadNewRespondenPnByUker = action.payload;
+    },
     resetDataTables: (state) => {
       state.dataTables = { ...state.defaultDataTables };
     },
@@ -55,6 +59,9 @@ export const respondenSurveySlice = createSlice({
     resetPayloadNewUker: (state) => {
       state.payloadNewUker = { ...state.defaultPayloadNewUker };
     },
+    resetPayloadNewRespondenPnByUker: (state) => {
+      state.payloadNewRespondenPnByUker = [];
+    },
   },
 });
 
@@ -62,9 +69,11 @@ export const {
   setDataTables,
   setPayloadNewResponden,
   setPayloadNewUker,
+  setPayloadNewRespondenPnByUker,
   resetDataTables,
   resetPayloadNewResponden,
   resetPayloadNewUker,
+  resetPayloadNewRespondenPnByUker,
 } = respondenSurveySlice.actions;
 
 export default respondenSurveySlice.reducer;
