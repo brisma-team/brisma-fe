@@ -7,6 +7,7 @@ import {
 import {
   ButtonField,
   ButtonIcon,
+  CheckboxField,
   RadioField,
   TextAreaField,
 } from "@/components/atoms";
@@ -23,7 +24,7 @@ import Image from "next/image";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
-const TableUker = ({
+const TableRespondenPnByUker = ({
   data,
   newUker,
   selectedUkerId,
@@ -33,6 +34,7 @@ const TableUker = ({
   handleChangeUker,
   handleChangeTextUker,
   handleSelectedUker,
+  handleChangeChecbox,
 }) => {
   const findIndex = data?.findIndex((uker) => uker.id === selectedUkerId);
   return (
@@ -108,31 +110,10 @@ const TableUker = ({
                 <Row>
                   <Cell width="9%" className={`border-x ${customCell}`}>
                     <div className="custom-table-position-center justify-center">
-                      {is_new ? (
-                        <ButtonIcon
-                          icon={
-                            <Image
-                              src={ImageCircleCheckGreen}
-                              alt=""
-                              width={22}
-                              height={22}
-                            />
-                          }
-                          handleClick={handleClickSave}
-                        />
-                      ) : (
-                        <div className="flex justify-between gap-3">
-                          <RadioField
-                            isChecked={findIndex === index}
-                            handleChange={() => handleSelectedUker(id)}
-                          />
-                          <ButtonIcon
-                            icon={<ButtonDelete />}
-                            handleClick={() => handleClickDelete(id)}
-                            color={"red"}
-                          />
-                        </div>
-                      )}
+                      <CheckboxField
+                        isChecked={false}
+                        handleChange={() => handleChangeChecbox(index)}
+                      />
                     </div>
                   </Cell>
                   <Cell width="6%" className={`border-r ${customCell} `}>
@@ -197,4 +178,4 @@ const TableUker = ({
   );
 };
 
-export default TableUker;
+export default TableRespondenPnByUker;

@@ -15,6 +15,7 @@ import {
   resetPayloadKuesioner,
   resetPayloadPertanyaan,
   resetValidationErrorsWorkflow,
+  resetHistoryWorkflow,
   setDataCategory,
   setWorkflowData,
   setPayloadInformasi,
@@ -43,6 +44,7 @@ import _ from "lodash";
 import { useCategory } from "@/data/reference/admin-survey/kuesioner";
 import { workflowSchema } from "@/helpers/schemas/reference/adminSurveiSchema";
 import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common";
+import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -52,9 +54,11 @@ const index = () => {
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [isNewTemplate, setIsNewTemplate] = useState(true);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [isFormDisabled, setIsFormDisabled] = useState(false);
+  const [isFormDisabled, setIsFormDisabled] = useState(true);
   const [isUnderChange, setIsUnderChange] = useState(false);
   const [isUpdateGuidline, setIsUpdateGuidline] = useState(false);
+  const [isApprovalFinal, setIsApprovalFinal] = useState(false);
+  const [isRefreshWorkflow, setIsRefreshWorkflow] = useState(false);
 
   const [currentContentStage, setCurrentContentStage] = useState(1);
   const [
@@ -96,12 +100,20 @@ const index = () => {
   ]);
 
   const { category, categoryMutate } = useCategory({ id });
-  const { information, informationError } = useInformation({ id });
+  const { information, informationError, informationMutate } = useInformation({
+    id,
+  });
   const { kuesioner, kuesionerMutate, kuesionerError } = useKuesioner({ id });
   const { workflow, workflowMutate } = useWorkflow({
     sub_modul: "template_survey",
     sub_modul_id: id,
   });
+  const { user } = useUser();
+
+  useEffect(() => {
+    dispatch(resetWorkflowData());
+    dispatch(resetHistoryWorkflow());
+  }, []);
 
   useEffect(() => {
     setIsNewTemplate(id === "new");
@@ -126,13 +138,14 @@ const index = () => {
       );
 
       setIsFormDisabled(
-        !(
-          information?.data?.status_persetujuan === "On Progress" ||
-          !information?.data?.status_persetujuan
-        )
+        information?.data?.status_persetujuan === "On Approver" ||
+          information?.data?.status_persetujuan === "Final" ||
+          information?.data?.create_by?.pn !== user?.data?.pn
       );
+
+      setIsApprovalFinal(information?.data?.status_persetujuan === "Final");
     }
-  }, [information]);
+  }, [information, user]);
 
   useEffect(() => {
     if (!kuesionerError && kuesioner?.data?.length) {
@@ -219,14 +232,9 @@ const index = () => {
     newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.fullName}`;
     newWorkflowData.maker = maker;
 
-    if (approvers?.length) {
-      const mappingApprovers = _.map(approvers, ({ pn, nama, is_signed }) => ({
-        pn,
-        nama,
-        is_signed,
-      }));
-      newWorkflowData.ref_tim_audit_approver = mappingApprovers;
-    }
+    newWorkflowData.ref_tim_audit_approver = approvers?.length
+      ? approvers.map(({ pn, nama, is_signed }) => ({ pn, nama, is_signed }))
+      : [];
 
     if (workflow?.data?.log?.length) {
       const mapping = workflow?.data?.log?.map((v) => {
@@ -246,7 +254,8 @@ const index = () => {
     }
 
     dispatch(setWorkflowData(newWorkflowData));
-  }, [workflow]);
+    setIsRefreshWorkflow(false);
+  }, [workflow, isRefreshWorkflow]);
 
   const handleUnderChange = () => {
     if (!isUnderChange) setIsUnderChange(true);
@@ -634,6 +643,12 @@ const index = () => {
     setShowModalApproval(true);
   };
 
+  const handleCloseModalApproval = () => {
+    dispatch(resetHistoryWorkflow());
+    dispatch(resetWorkflowData());
+    setIsRefreshWorkflow(true);
+  };
+
   const handleAdd = (property) => {
     const newData = [...workflowData[property]];
     newData.push({
@@ -740,8 +755,10 @@ const index = () => {
         );
       }
 
+      informationMutate();
       workflowMutate();
       dispatch(resetWorkflowData());
+      dispatch(resetHistoryWorkflow());
       setShowModalApproval(false);
     }
     workflowMutate();
@@ -766,6 +783,7 @@ const index = () => {
               isNewTemplate={isNewTemplate}
               isDisabled={isDisabled}
               isFormDisabled={isFormDisabled}
+              isApprovalFinal={isApprovalFinal}
               handleChangeForm={handleChangeFormInformasi}
               handleClickAddKuesioner={handleClickKuesioner}
               handleSubmit={handleSaveInformation}
@@ -776,6 +794,7 @@ const index = () => {
             <TabKuesioner
               isPreviewPage={false}
               isDisabledForm={isFormDisabled}
+              isApprovalFinal={isApprovalFinal}
               handleChangeQuestion={handleChangeQuestion}
               handleDeleteQuestion={handleDeleteQuestion}
               handleChangeAnswer={handleChangeAnswer}
@@ -815,6 +834,7 @@ const index = () => {
         handleDelete={handleDelete}
         handleAdd={handleAdd}
         handleSubmit={handleSubmit}
+        handleCloseModal={handleCloseModalApproval}
         widthHeader={`w-[42rem]`}
         withoutSigner={true}
       />
