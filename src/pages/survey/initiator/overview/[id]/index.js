@@ -434,7 +434,7 @@ const index = () => {
           data.approvers = workflowData.ref_tim_audit_approver;
           break;
         case "reject":
-          if (!data.note) {
+          if (!workflowData.note) {
             await errorSwal("Silahkan berikan alasan!");
             return;
           }
