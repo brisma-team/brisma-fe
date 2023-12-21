@@ -1,5 +1,9 @@
+import { Loader } from "@/components/atoms";
 import { NavbarField } from "@/components/molecules/commons";
+import useUser from "@/data/useUser";
 import { SideNavigation } from "@atlaskit/side-navigation";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const RespondenLayoutSurvey = ({
   data,
@@ -8,6 +12,29 @@ const RespondenLayoutSurvey = ({
   withoutRightSidebar,
   overflowY,
 }) => {
+  const router = useRouter();
+  const [isShown, setIsShown] = useState(false);
+  const { user, userError } = useUser();
+
+  useEffect(() => {
+    if (userError) {
+      router.push("/login");
+
+      return;
+    }
+
+    if (user) {
+      setIsShown(true);
+    }
+  }, [user, userError]);
+
+  if (!isShown) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
   return (
     <div>
       <NavbarField />

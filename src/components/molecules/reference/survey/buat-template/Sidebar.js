@@ -1,4 +1,4 @@
-import { ButtonIcon, LinkIcon } from "@/components/atoms";
+import { ButtonIcon } from "@/components/atoms";
 import {
   ImagePreview,
   ImageGroup,
@@ -13,7 +13,6 @@ import {
   resetDataCategory,
   setDataCategory,
 } from "@/slices/reference/createTemplateReferenceSlice";
-import { useRouter } from "next/router";
 
 const Sidebar = ({
   data,
@@ -26,8 +25,8 @@ const Sidebar = ({
   handleOnEditCategory,
   handleChangeNameCategory,
   handleSaveKuesioner,
+  handlePreview,
 }) => {
-  const { id } = useRouter().query;
   const dispatch = useDispatch();
 
   const dataCategory = useSelector(
@@ -69,9 +68,9 @@ const Sidebar = ({
         {!isPreviewPage &&
           (dataCategory.length ? (
             <div className="flex gap-3 items-center">
-              <LinkIcon
+              <ButtonIcon
                 icon={<Image src={ImagePreview} alt="" />}
-                href={`/reference/survey/overview/${id}/preview`}
+                handleClick={handlePreview}
               />
               <ButtonIcon
                 icon={<Image src={ImageGroup} alt="" />}

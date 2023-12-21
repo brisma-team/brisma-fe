@@ -115,7 +115,9 @@ const TabInformation = ({
                     />
                   }
                   value={
-                    !isNewTemplate ? payloadInformasi?.project_survey_id : ""
+                    !isNewTemplate
+                      ? payloadInformasi?.project_survey_id?.toUpperCase()
+                      : ""
                   }
                 />
               }
