@@ -1,18 +1,8 @@
 import {
-  ButtonDelete,
   CardContentHeaderFooter,
   DataNotFound,
-  OrgehSelect,
 } from "@/components/molecules/commons";
-import {
-  ButtonField,
-  ButtonIcon,
-  CheckboxField,
-  RadioField,
-  TextAreaField,
-} from "@/components/atoms";
-import { IconPlus } from "@/components/icons";
-import { ImageCircleCheckGreen } from "@/helpers/imagesUrl";
+import { ButtonField, CustomCheckbox } from "@/components/atoms";
 import TableTree, {
   Cell,
   Header,
@@ -20,23 +10,17 @@ import TableTree, {
   Row,
   Rows,
 } from "@atlaskit/table-tree";
-import Image from "next/image";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
 const TableRespondenPnByUker = ({
   data,
-  newUker,
+  selectedResponden,
   selectedUkerId,
-  handleClickAddRow,
+  isDisabledButtonSave,
   handleClickSave,
-  handleClickDelete,
-  handleChangeUker,
-  handleChangeTextUker,
-  handleSelectedUker,
   handleChangeChecbox,
 }) => {
-  const findIndex = data?.findIndex((uker) => uker.id === selectedUkerId);
   return (
     <CardContentHeaderFooter
       header={
@@ -45,17 +29,18 @@ const TableRespondenPnByUker = ({
         </div>
       }
       footer={
-        <div className="p-3 flex items-center">
-          <div className="w-40 text-sm font-semibold">
+        <div className="py-3 px-4 flex items-center justify-end">
+          <div
+            className={`w-36 text-sm font-semibold rounded ${
+              !selectedUkerId || isDisabledButtonSave
+                ? `bg-atlasian-gray-light`
+                : `bg-atlasian-green`
+            }`}
+          >
             <ButtonField
-              iconAfter={
-                <div className="text-atlasian-purple">
-                  <IconPlus size="medium" />
-                </div>
-              }
-              text={"Tambah UKER"}
-              textColor={"purple"}
-              handler={() => handleClickAddRow()}
+              text={"Simpan"}
+              handler={handleClickSave}
+              disabled={!selectedUkerId || isDisabledButtonSave}
             />
           </div>
         </div>
@@ -80,13 +65,13 @@ const TableRespondenPnByUker = ({
               width="21%"
               className="border-t border-r cell-custom-dataTables"
             >
-              <div className={`custom-table-header`}>UKER</div>
+              <div className={`custom-table-header`}>PN Responden</div>
             </Header>
             <Header
               width="27%"
               className="border-t border-r cell-custom-dataTables"
             >
-              <div className={`custom-table-header`}>Jumlah</div>
+              <div className={`custom-table-header`}>Nama Responden</div>
             </Header>
             <Header
               width="37%"
@@ -98,21 +83,21 @@ const TableRespondenPnByUker = ({
           {data?.length ? (
             <Rows
               items={data}
-              render={({
-                index,
-                id,
-                orgeh_name,
-                jumlah,
-                keterangan,
-                is_edit,
-                is_new,
-              }) => (
+              render={({ index, pn_responden, nama_responden, keterangan }) => (
                 <Row>
                   <Cell width="9%" className={`border-x ${customCell}`}>
                     <div className="custom-table-position-center justify-center">
-                      <CheckboxField
-                        isChecked={false}
-                        handleChange={() => handleChangeChecbox(index)}
+                      <CustomCheckbox
+                        value={selectedResponden?.find(
+                          (responden) =>
+                            responden?.pn_responden === pn_responden
+                        )}
+                        handleChange={(e) =>
+                          handleChangeChecbox(e.target.checked, {
+                            pn_responden,
+                            nama_responden,
+                          })
+                        }
                       />
                     </div>
                   </Cell>
@@ -123,45 +108,17 @@ const TableRespondenPnByUker = ({
                   </Cell>
                   <Cell width="21%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center relative">
-                      {is_edit ? (
-                        <OrgehSelect
-                          selectedValue={
-                            newUker?.orgeh_kode
-                              ? {
-                                  label: newUker?.orgeh_name,
-                                  value: {
-                                    orgeh_kode: newUker?.orgeh_kode,
-                                    orgeh_name: newUker?.orgeh_name,
-                                  },
-                                }
-                              : null
-                          }
-                          handleChange={(e) => handleChangeUker(e.value)}
-                          positionAbsolute={true}
-                          width="w-[13rem]"
-                        />
-                      ) : (
-                        <p className="text-xs">{orgeh_name}</p>
-                      )}
+                      <p className="text-xs">{pn_responden}</p>
                     </div>
                   </Cell>
                   <Cell width="27%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
-                      <p className="text-xs">{is_edit ? "" : jumlah}</p>
+                      <p className="text-xs">{nama_responden}</p>
                     </div>
                   </Cell>
                   <Cell width="37%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
-                      {is_edit ? (
-                        <TextAreaField
-                          value={newUker?.keterangan}
-                          handleChange={(e) =>
-                            handleChangeTextUker("keterangan", e.target.value)
-                          }
-                        />
-                      ) : (
-                        <p className="text-xs">{keterangan}</p>
-                      )}
+                      <p className="text-xs">{keterangan}</p>
                     </div>
                   </Cell>
                 </Row>

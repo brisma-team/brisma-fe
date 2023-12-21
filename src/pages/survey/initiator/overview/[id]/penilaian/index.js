@@ -38,10 +38,6 @@ const index = () => {
     dispatch(setObjData(penilaian?.data));
   }, [penilaian]);
 
-  useEffect(() => {
-    console.log("dataTableScore => ", penilaian);
-  }, [penilaian]);
-
   const handleConvertToExcel = async () => {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet("Sheet1");
@@ -76,7 +72,7 @@ const index = () => {
     });
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
-    link.download = `test123.xlsx`;
+    link.download = `penilaian.xlsx`;
     link.click();
   };
 
