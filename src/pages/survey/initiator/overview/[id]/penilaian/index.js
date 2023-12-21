@@ -39,7 +39,7 @@ const index = () => {
   }, [penilaian]);
 
   useEffect(() => {
-    console.log("dataTableScore => ", dataTableScore);
+    console.log("dataTableScore => ", penilaian);
   }, [penilaian]);
 
   const handleConvertToExcel = async () => {
