@@ -148,14 +148,14 @@ const index = () => {
           ])
         )
       );
-
-      setIsFormDisabled(
-        information?.data?.status_persetujuan === "On Approver" ||
-          information?.data?.status_persetujuan === "Final" ||
-          information?.data?.create_by?.pn !== user?.data?.pn
-      );
     }
-  }, [information]);
+    setIsFormDisabled(
+      information?.data?.status_persetujuan === "On Approver" ||
+        information?.data?.status_persetujuan === "Final" ||
+        (information?.data?.create_by?.pn &&
+          information?.data?.create_by?.pn !== user?.data?.pn)
+    );
+  }, [information, user]);
 
   useEffect(() => {
     if (!kuesionerError && kuesioner?.data?.kategori?.length) {
