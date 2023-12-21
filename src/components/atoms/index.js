@@ -38,6 +38,7 @@ import TextInputDecimal from "./TextInputDecimal";
 import AttachmentModal from "./AttachmentModal";
 import CustomPagination from "./CustomPagination";
 import CustomTooltip from "./CustomTooltip";
+import CustomCheckbox from "./CustomCheckbox";
 
 export {
   AvatarDefaultExample,
@@ -80,4 +81,5 @@ export {
   AttachmentModal,
   CustomPagination,
   CustomTooltip,
+  CustomCheckbox,
 };

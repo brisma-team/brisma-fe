@@ -10,6 +10,7 @@ import {
   useRespondenByUkerSurvey,
 } from "@/data/survey/initiator/responden";
 import {
+  resetDataTables,
   resetPayloadNewResponden,
   resetPayloadNewUker,
   resetPayloadNewRespondenPnByUker,
@@ -50,6 +51,8 @@ const index = () => {
   const [isAddNewRowResponden, setIsAddNewRowResponden] = useState(false);
   const [isAddNewRowUker, setIsAddNewRowUker] = useState(false);
   const [isAddNewRowUkerPn, setIsAddNewRowUkerPn] = useState(false);
+  const [isDisabledSaveRespondenPnByUker, setIsDisabledSaveRespondenPnByUker] =
+    useState(false);
   const [selectedUkerId, setSelectedUkerId] = useState(0);
 
   const dataTables = useSelector((state) => state.respondenSurvey.dataTables);
@@ -71,10 +74,13 @@ const index = () => {
     useRespondenByUkerSurvey({
       id,
     });
-  const { respondenByUkerPnSurvey, respondenByUkerPnSurveyMutate } =
-    useRespondenByUkerPnSurvey({
-      id: selectedUkerId,
-    });
+  const {
+    respondenByUkerPnSurvey,
+    respondenByUkerPnSurveyError,
+    respondenByUkerPnSurveyMutate,
+  } = useRespondenByUkerPnSurvey({
+    id: selectedUkerId,
+  });
 
   useEffect(() => {
     if (respondenByPnSurvey?.data?.length) {
@@ -96,7 +102,7 @@ const index = () => {
     }
     setIsAddNewRowResponden(false);
     dispatch(resetPayloadNewResponden());
-  }, [respondenByPnSurvey]);
+  }, [respondenByPnSurvey, currentContentStage]);
 
   useEffect(() => {
     if (respondenByUkerSurvey?.data?.length) {
@@ -122,26 +128,48 @@ const index = () => {
   }, [respondenByUkerSurvey]);
 
   useEffect(() => {
-    if (respondenByUkerPnSurvey?.data?.length) {
-      const mapping = respondenByUkerPnSurvey.data.map((responden, index) => {
-        const { id, pn_responden, nama_responden, keterangan } = responden;
-        return {
-          index,
-          id,
-          pn_responden,
-          nama_responden,
-          keterangan,
-          is_edit: false,
-          is_new: false,
-        };
-      });
-      dispatch(setDataTables({ ...dataTables, respondenUkerPn: mapping }));
+    if (!respondenByUkerPnSurveyError) {
+      const mappingDataTablesResponden =
+        respondenByUkerPnSurvey?.data?.ref_responden?.map(
+          (responden, index) => {
+            const { pernr, sname } = responden;
+            return {
+              index,
+              pn_responden: pernr,
+              nama_responden: sname,
+            };
+          }
+        );
+
+      const mappingSelectedResponden =
+        respondenByUkerPnSurvey?.data?.responden?.map((responden, index) => {
+          const { pn_responden, nama_responden, keterangan } = responden;
+          return {
+            index,
+            pn_responden,
+            nama_responden,
+            keterangan,
+          };
+        });
+
+      dispatch(
+        setDataTables({
+          ...dataTables,
+          respondenUkerPn: mappingDataTablesResponden,
+        })
+      );
+      dispatch(setPayloadNewRespondenPnByUker(mappingSelectedResponden));
     } else {
       dispatch(setDataTables({ ...dataTables, respondenUkerPn: [] }));
+      dispatch(resetPayloadNewRespondenPnByUker());
     }
     setIsAddNewRowUkerPn(false);
     dispatch(resetPayloadNewResponden());
   }, [respondenByUkerPnSurvey]);
+
+  useEffect(() => {
+    setIsDisabledSaveRespondenPnByUker(!payloadNewRespondenPnByUker?.length);
+  }, [payloadNewRespondenPnByUker]);
 
   // [START] Handler for responden
   const handleClickAddRowResponden = () => {
@@ -297,6 +325,7 @@ const index = () => {
     respondenByPnSurveyMutate();
     respondenByUkerPnSurveyMutate();
     respondenByUkerSurveyMutate();
+    dispatch(resetDataTables());
     loadingSwal("close");
   };
 
@@ -306,13 +335,16 @@ const index = () => {
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/uker`,
       {
-        survey_id: selectedUkerId,
+        survey_id: id,
         orgeh_kode: payloadNewUker.orgeh_kode,
         orgeh_name: payloadNewUker.orgeh_name,
         keterangan: payloadNewUker.keterangan,
       }
     );
     respondenByUkerSurveyMutate();
+    respondenByUkerPnSurveyMutate();
+    dispatch(resetDataTables());
+    setSelectedUkerId(0);
     setIsAddNewRowUker(false);
     loadingSwal("close");
   };
@@ -337,9 +369,61 @@ const index = () => {
   };
 
   const handleSelectedUker = (id) => {
+    dispatch(resetPayloadNewRespondenPnByUker());
     setSelectedUkerId(id);
   };
   // [END] Handler for uker
+
+  // [START] Handler add responden by uker pn
+  const handleChangeChecboxByUkerPn = (isChecked, responden) => {
+    const updatedData = [...payloadNewRespondenPnByUker];
+
+    if (isChecked) {
+      const findId = updatedData.some(
+        (value) => value?.pn_responden === responden?.pn_responden
+      );
+
+      if (!findId) {
+        updatedData.push({
+          pn_responden: responden?.pn_responden,
+          nama_responden: responden.nama_responden,
+        });
+      }
+    } else {
+      const filter = updatedData.filter(
+        (value) => value?.pn_responden !== responden?.pn_responden
+      );
+      dispatch(setPayloadNewRespondenPnByUker(filter));
+      return;
+    }
+
+    dispatch(setPayloadNewRespondenPnByUker(updatedData));
+  };
+
+  const handleClickSaveRespondenUkerPn = async () => {
+    loadingSwal();
+    const payload = payloadNewRespondenPnByUker?.map((responden) => {
+      const { pn_responden, nama_responden } = responden;
+      return {
+        survey_id: id,
+        survey_uker_id: selectedUkerId,
+        pn_responden,
+        nama_responden,
+      };
+    });
+
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/responden_uker/${selectedUkerId}`,
+      payload
+    );
+
+    respondenByPnSurveyMutate();
+    respondenByUkerPnSurveyMutate();
+    respondenByUkerSurveyMutate();
+    loadingSwal("close");
+  };
+  // [END] Handler add responden by uker pn
 
   return (
     <LandingLayoutSurvey withoutRightSidebar={true} overflowY={true}>
@@ -379,15 +463,11 @@ const index = () => {
               />
               <TableRespondenPnByUker
                 data={dataTables.respondenUkerPn}
-                dataUker={dataTables.respondenUker}
-                newResponden={payloadNewResponden}
+                selectedResponden={payloadNewRespondenPnByUker}
                 selectedUkerId={selectedUkerId}
-                handleChangeText={handleChangeTextResponden}
-                handleChangeResponden={handleChangeResponden}
-                handleClickAddRow={handleClickAddRowResponden}
-                handleClickDelete={handleClickDeleteResponden}
-                handleClickSave={handleClickSaveResponden}
-                withUker={true}
+                isDisabledButtonSave={isDisabledSaveRespondenPnByUker}
+                handleChangeChecbox={handleChangeChecboxByUkerPn}
+                handleClickSave={handleClickSaveRespondenUkerPn}
               />
             </div>
           )}
