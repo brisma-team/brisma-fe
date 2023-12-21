@@ -54,7 +54,7 @@ const index = () => {
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [isNewTemplate, setIsNewTemplate] = useState(true);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [isFormDisabled, setIsFormDisabled] = useState(true);
+  const [isFormDisabled, setIsFormDisabled] = useState(false);
   const [isUnderChange, setIsUnderChange] = useState(false);
   const [isUpdateGuidline, setIsUpdateGuidline] = useState(false);
   const [isApprovalFinal, setIsApprovalFinal] = useState(false);
