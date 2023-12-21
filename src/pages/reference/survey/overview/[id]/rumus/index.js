@@ -263,7 +263,7 @@ const index = () => {
                         <ButtonField
                           disabled={isDisabled}
                           text="Simpan"
-                          handler={handleSaveFormula}
+                          handler={() => handleSaveFormula(false)}
                         />
                       </div>
                       <div className="rounded w-28 bg-atlasian-yellow">
