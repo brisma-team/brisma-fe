@@ -52,11 +52,11 @@ const ModalDetailSurvey = ({ showModal, handleCloseModal, data }) => {
             <div className={row}>
               <div className={`${columnBorder} w-1/4`}>Pembuat Survei</div>
               <div className={`${columnBorder} w-1/4`}>
-                {convertDate(data?.createdAt, "-", "d")}
+                {data?.create_by?.fullName}
               </div>
               <div className={`${columnBorder} w-1/4`}>Survei Code</div>
               <div className={`${columnBorderNone} w-1/4`}>
-                {data?.project_survey_id}
+                {data?.project_survey_id?.toUpperCase()}
               </div>
             </div>
             <div className={`${row} min-h-[5rem]`}>

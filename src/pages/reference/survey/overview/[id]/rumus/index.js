@@ -12,7 +12,10 @@ import { CardContentHeaderFooter } from "@/components/molecules/commons";
 import MonacoEditor from "@monaco-editor/react";
 import { useEffect, useRef, useState } from "react";
 import { errorSwal, fetchApi } from "@/helpers";
-import { useInformation } from "@/data/reference/admin-survey/informasi";
+import {
+  useInformation,
+  useFormula,
+} from "@/data/reference/admin-survey/informasi";
 
 const index = () => {
   const { id } = useRouter().query;
@@ -31,12 +34,29 @@ const index = () => {
   const [isDisabled, setIsDisabled] = useState(false);
 
   const { information, informationError } = useInformation({ id });
+  const { formulaTemplate } = useFormula({ id });
 
   useEffect(() => {
     if (!informationError) {
       setIsDisabled(information?.data?.status_persetujuan !== "On Progress");
     }
   }, [information]);
+
+  useEffect(() => {
+    if (formulaTemplate?.data?.length) {
+      let hasil = "";
+      formulaTemplate?.data?.forEach((item, index) => {
+        hasil += `${item.judul}: ${item.formula}`;
+        if (index < formulaTemplate.data.length - 1) {
+          hasil += "\n~\n";
+        }
+      });
+
+      setFormula(hasil);
+    } else {
+      setFormula("");
+    }
+  }, [formulaTemplate]);
 
   // [ START ] Handler for form formula
   const handleClickAggregateFunction = (value) => {
@@ -81,6 +101,12 @@ const index = () => {
     try {
       let path = "";
       let errorIndex;
+
+      if (lines?.length && !lines[0]) {
+        await errorSwal(`Silahkan masukkan formula!`);
+        return;
+      }
+
       const payload = {
         template_id: id,
         data: await Promise.all(
@@ -162,7 +188,7 @@ const index = () => {
                 <div className="px-4 py-2 flex justify-between w-full">
                   <div className="leading-3">
                     <p className="font-semibold">Jenis Template</p>
-                    <p>Audit Lingkungan</p>
+                    <p>{information?.data?.jenis_survey_name || "-"}</p>
                   </div>
                   <div className="leading-3">
                     <p className="font-semibold">Total Kategori</p>

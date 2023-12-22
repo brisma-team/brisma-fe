@@ -5,12 +5,30 @@ import {
 import { PatSidebarOverview } from "@/components/molecules/pat";
 import { useEffect, useState } from "react";
 import { useOverview } from "@/data/survey/initiator/overview";
+import useUser from "@/data/useUser";
+import { useRouter } from "next/router";
+import { Loader } from "@/components/atoms";
 
 const LandingLayoutSurvey = ({ overflowY, withoutRightSidebar, children }) => {
-  const [data, setData] = useState(null);
-  const { overview } = useOverview("count", {});
+  const router = useRouter();
 
-  useEffect;
+  const [data, setData] = useState(null);
+  const [isShown, setIsShown] = useState(false);
+
+  const { overview } = useOverview("count", {});
+  const { user, userError } = useUser();
+
+  useEffect(() => {
+    if (userError) {
+      router.push("/login");
+
+      return;
+    }
+
+    if (user) {
+      setIsShown(true);
+    }
+  }, [user, userError]);
 
   useEffect(() => {
     setData([
@@ -31,6 +49,15 @@ const LandingLayoutSurvey = ({ overflowY, withoutRightSidebar, children }) => {
       },
     ]);
   }, [overview]);
+
+  if (!isShown) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <div>
       <NavbarField />

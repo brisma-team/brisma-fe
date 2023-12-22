@@ -325,6 +325,8 @@ const index = () => {
     respondenByPnSurveyMutate();
     respondenByUkerPnSurveyMutate();
     respondenByUkerSurveyMutate();
+    setSelectedUkerId(0);
+    setIsDisabledSaveRespondenPnByUker(true);
     dispatch(resetDataTables());
     loadingSwal("close");
   };

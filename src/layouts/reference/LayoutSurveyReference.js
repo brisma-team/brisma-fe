@@ -5,14 +5,34 @@ import {
 import { PatSidebarOverview } from "@/components/molecules/pat";
 import { useEffect, useState } from "react";
 import { useOverview } from "@/data/reference/admin-survey/overview";
+import { Loader } from "@/components/atoms";
+import useUser from "@/data/useUser";
+import { useRouter } from "next/router";
 
 const LayoutSurveyReference = ({
   overflowY,
   withoutRightSidebar,
   children,
 }) => {
+  const router = useRouter();
+
   const [data, setData] = useState(null);
+  const [isShown, setIsShown] = useState(false);
+
   const { overview } = useOverview("count", {});
+  const { user, userError } = useUser();
+
+  useEffect(() => {
+    if (userError) {
+      router.push("/login");
+
+      return;
+    }
+
+    if (user) {
+      setIsShown(true);
+    }
+  }, [user, userError]);
 
   useEffect(() => {
     setData([
@@ -33,6 +53,14 @@ const LayoutSurveyReference = ({
       },
     ]);
   }, [overview]);
+
+  if (!isShown) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
   return (
     <div>
       <NavbarField />

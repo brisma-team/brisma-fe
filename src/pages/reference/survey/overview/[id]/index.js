@@ -293,6 +293,19 @@ const index = () => {
     loadingSwal("close");
   };
 
+  const handlePreviewKuesioner = async () => {
+    if (isUnderChange) {
+      const confirm = await confirmationSwal(
+        "Apakah anda yakin ingin pindah ke halaman preview? Pastikan untuk menyimpan kuesioner"
+      );
+      if (!confirm.value) {
+        return;
+      }
+    }
+
+    router.push(`${id}/preview`);
+  };
+
   // [ START ] Handler for content stage informasi
   const handleChangeFormInformasi = (property, value) => {
     let updatedData;
@@ -818,6 +831,7 @@ const index = () => {
           handleOnEditCategory={handleOnEditCategory}
           handleChangeNameCategory={handleChangeNameCategory}
           handleSaveKuesioner={handleSaveKuesioner}
+          handlePreview={handlePreviewKuesioner}
         />
       ) : (
         ""

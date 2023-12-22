@@ -110,15 +110,13 @@ const index = () => {
       pelaksanaan_end,
       deskripsi,
       jenis_survey_kode,
-      ref_template_id,
     } = payloadInformasi;
     const isInformasiComplete =
       nama_survey &&
       pelaksanaan_start &&
       pelaksanaan_end &&
       deskripsi &&
-      jenis_survey_kode &&
-      ref_template_id;
+      jenis_survey_kode;
 
     setNavigationTabItems((prevItems) => [
       { ...prevItems[0], isDisabled: false },
