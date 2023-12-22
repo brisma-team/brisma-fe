@@ -25,7 +25,7 @@ const TableRespondenPnByUker = ({
     <CardContentHeaderFooter
       header={
         <div className="px-4 py-2 flex items-center">
-          <p className="font-semibold text-base">Daftar UKER Responden</p>
+          <p className="font-semibold text-base">Daftar PN Responden</p>
         </div>
       }
       footer={
@@ -62,28 +62,22 @@ const TableRespondenPnByUker = ({
               <div className="custom-table-header justify-center">No.</div>
             </Header>
             <Header
-              width="21%"
+              width="31%"
               className="border-t border-r cell-custom-dataTables"
             >
               <div className={`custom-table-header`}>PN Responden</div>
             </Header>
             <Header
-              width="27%"
-              className="border-t border-r cell-custom-dataTables"
-            >
-              <div className={`custom-table-header`}>Nama Responden</div>
-            </Header>
-            <Header
-              width="37%"
+              width="54%"
               className="border-t border-r rounded-se-xl cell-custom-dataTables"
             >
-              <div className={`custom-table-header`}>Keterangan</div>
+              <div className={`custom-table-header`}>Nama Responden</div>
             </Header>
           </Headers>
           {data?.length ? (
             <Rows
               items={data}
-              render={({ index, pn_responden, nama_responden, keterangan }) => (
+              render={({ index, pn_responden, nama_responden }) => (
                 <Row>
                   <Cell width="9%" className={`border-x ${customCell}`}>
                     <div className="custom-table-position-center justify-center">
@@ -106,19 +100,14 @@ const TableRespondenPnByUker = ({
                       <p className="text-xs">{index + 1}</p>
                     </div>
                   </Cell>
-                  <Cell width="21%" className={`border-r ${customCell} `}>
+                  <Cell width="31%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center relative">
                       <p className="text-xs">{pn_responden}</p>
                     </div>
                   </Cell>
-                  <Cell width="27%" className={`border-r ${customCell} `}>
+                  <Cell width="54%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p className="text-xs">{nama_responden}</p>
-                    </div>
-                  </Cell>
-                  <Cell width="37%" className={`border-r ${customCell} `}>
-                    <div className="custom-table-position-center">
-                      <p className="text-xs">{keterangan}</p>
                     </div>
                   </Cell>
                 </Row>

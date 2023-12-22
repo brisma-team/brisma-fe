@@ -115,7 +115,7 @@ const TabRespondenGrade = ({ data }) => {
             <HeaderCell>Tanggal</HeaderCell>
             <Cell>
               {(rowData) => {
-                return convertDate(rowData.tanggal, "-", "d");
+                return <p>{rowData.tanggal}</p>;
               }}
             </Cell>
           </Column>

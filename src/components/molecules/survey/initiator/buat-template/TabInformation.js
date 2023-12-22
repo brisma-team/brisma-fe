@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 
 const TabInformation = ({
   isNewTemplate,
-  isDisabledButtonAction,
+  isDisabledPickTemplate,
   isFormDisabled,
   handleChangeForm,
   handleOpenModalSelectedTemplateSurvey,
@@ -193,42 +193,40 @@ const TabInformation = ({
             <div className="my-5 flex flex-col gap-3">
               <div
                 className={`rounded w-40 ${
-                  isDisabledButtonAction || isNewTemplate
+                  isNewTemplate
                     ? `bg-atlasian-gray-light`
                     : `bg-atlasian-purple`
                 }`}
               >
                 <ButtonField
                   text={"Kuesioner"}
-                  disabled={isDisabledButtonAction || isNewTemplate}
+                  disabled={isNewTemplate}
                   handler={handleClickAddKuesioner}
                 />
               </div>
               <div
                 className={`rounded w-40 ${
-                  isDisabledButtonAction || isNewTemplate || isFormDisabled
+                  isNewTemplate || isFormDisabled
                     ? `bg-atlasian-gray-light`
                     : `bg-atlasian-purple`
                 }`}
               >
                 <ButtonField
                   text={"Responden"}
-                  disabled={
-                    isDisabledButtonAction || isNewTemplate || isFormDisabled
-                  }
+                  disabled={isNewTemplate || isFormDisabled}
                   handler={handleClickResponden}
                 />
               </div>
               <div
                 className={`rounded w-40 ${
-                  isDisabledButtonAction || isFormDisabled
+                  isDisabledPickTemplate || isFormDisabled
                     ? `bg-atlasian-gray-light`
                     : `bg-atlasian-yellow`
                 }`}
               >
                 <ButtonField
                   text={isNewTemplate ? "Pilih Template" : "Simpan"}
-                  disabled={isDisabledButtonAction || isFormDisabled}
+                  disabled={isDisabledPickTemplate || isFormDisabled}
                   handler={
                     isNewTemplate
                       ? handleOpenModalSelectedTemplateSurvey
@@ -238,14 +236,12 @@ const TabInformation = ({
               </div>
               <div
                 className={`rounded w-40 ${
-                  isDisabledButtonAction || isNewTemplate
-                    ? `bg-atlasian-gray-light`
-                    : `bg-atlasian-green`
+                  isNewTemplate ? `bg-atlasian-gray-light` : `bg-atlasian-green`
                 }`}
               >
                 <ButtonField
                   text={"Approval"}
-                  disabled={isDisabledButtonAction || isNewTemplate}
+                  disabled={isNewTemplate}
                   handler={handleClickOpenModalApproval}
                 />
               </div>
