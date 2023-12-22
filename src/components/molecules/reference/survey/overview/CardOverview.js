@@ -47,10 +47,13 @@ const CardOverview = ({
     {
       label: "Approval",
       action: async () => await handleClickApproval(data.id),
-      isDisabled: user?.data?.pn !== data.createdBy.pn,
     },
     { label: "Download", action: async () => handleClickDownload(data.id) },
-    { label: "Hapus", action: async () => await handleDeleteTemplate(data.id) },
+    {
+      label: "Hapus",
+      action: async () => await handleDeleteTemplate(data.id),
+      isDisabled: user?.data?.pn !== data.createdBy.pn,
+    },
   ];
 
   const bgColor = {
