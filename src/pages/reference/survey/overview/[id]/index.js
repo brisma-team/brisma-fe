@@ -59,6 +59,8 @@ const index = () => {
   const [isUpdateGuidline, setIsUpdateGuidline] = useState(false);
   const [isApprovalFinal, setIsApprovalFinal] = useState(false);
   const [isRefreshWorkflow, setIsRefreshWorkflow] = useState(false);
+  const [isDisabledButtonApproval, setIsDisabledButtonApproval] =
+    useState(true);
 
   const [currentContentStage, setCurrentContentStage] = useState(1);
   const [
@@ -180,8 +182,10 @@ const index = () => {
       });
 
       dispatch(setPayloadKuesioner(mapping));
+      setIsDisabledButtonApproval(false);
     } else {
       dispatch(resetPayloadKuesioner());
+      setIsDisabledButtonApproval(true);
     }
   }, [kuesioner]);
 
@@ -260,6 +264,26 @@ const index = () => {
   const handleUnderChange = () => {
     if (!isUnderChange) setIsUnderChange(true);
   };
+
+  const handleConfirmationChangeTabStage = async () => {
+    if (!isUnderChange || currentContentStage !== 2) {
+      return true;
+    }
+
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin ingin pindah tab? Pastikan untuk menyimpan kuesioner"
+    );
+
+    return confirm?.value || false;
+  };
+
+  useEffect(() => {
+    console.log("isUnderChange => ", isUnderChange);
+  }, [isUnderChange]);
+
+  useEffect(() => {
+    console.log("currentContentStage => ", currentContentStage);
+  }, [currentContentStage]);
 
   const handleSaveKuesioner = async () => {
     loadingSwal();
@@ -758,7 +782,6 @@ const index = () => {
           `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/workflow/change`,
           data
         );
-        console.log("response => ", response);
         if (!response.isDismissed) return;
       } else {
         await fetchApi(
@@ -790,6 +813,7 @@ const index = () => {
             items={navigationTabItems}
             currentStage={currentContentStage}
             setCurrentStage={setCurrentContentStage}
+            handleConfirmation={handleConfirmationChangeTabStage}
           />
           {currentContentStage === 1 ? (
             <TabInformation
@@ -797,6 +821,7 @@ const index = () => {
               isDisabled={isDisabled}
               isFormDisabled={isFormDisabled}
               isApprovalFinal={isApprovalFinal}
+              isDisabledButtonApproval={isDisabledButtonApproval}
               handleChangeForm={handleChangeFormInformasi}
               handleClickAddKuesioner={handleClickKuesioner}
               handleSubmit={handleSaveInformation}
