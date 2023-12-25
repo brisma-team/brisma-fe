@@ -91,6 +91,7 @@
     "react-select": "^5.7.0",
     "react-spinners": "^0.13.8",
     "react-virtualized": "^9.22.3",
+    "redis": "^4.6.12",
     "rsuite-table": "^3.16.1",
     "styled-components": "^5.3.6",
     "sweetalert2": "^11.7.2",
