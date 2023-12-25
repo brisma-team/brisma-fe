@@ -18,7 +18,6 @@ import {
   setPayloadKuesioner,
   resetValidationErrorsWorkflow,
   setValidationErrorsWorkflow,
-  resetPayloadInformasi,
   resetHistoryWorkflow,
 } from "@/slices/survey/initiator/createSurveySlice";
 import { useDispatch } from "react-redux";
@@ -158,15 +157,11 @@ const index = () => {
   useEffect(() => {
     if (!kuesionerError && kuesioner?.data?.kategori?.length) {
       const mapping = kuesioner.data.kategori.map((category) => {
-        const sortedQuestions = category.template_pertanyaan.sort(
-          (a, b) => a.tipe_pertanyaan_kode - b.tipe_pertanyaan_kode
-        );
-
         return {
           id: category.kategori_id,
           name: category.kategori_name,
-          pertanyaan: sortedQuestions?.length
-            ? sortedQuestions.map((question) => {
+          pertanyaan: category.template_pertanyaan?.length
+            ? category.template_pertanyaan?.map((question) => {
                 return {
                   id: question.pertanyaan_id,
                   guideline: question.guideline,
@@ -316,7 +311,7 @@ const index = () => {
       }
     });
 
-    dispatch(resetPayloadInformasi());
+    informationMutate();
     setShowModalSelectedTemplateSurvey(false);
     loadingSwal("close");
   };

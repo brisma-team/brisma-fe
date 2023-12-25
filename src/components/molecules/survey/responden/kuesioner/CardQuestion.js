@@ -79,10 +79,11 @@ const CardQuestion = ({
                             isDisabled={isDisabled}
                             isChecked={
                               !!data?.jawaban_user?.find(
-                                (value) => value.text === answer.text
+                                (value) =>
+                                  value?.jawaban_id === answer?.jawaban_id
                               )
                             }
-                            value={answer.text}
+                            value={answer.jawaban_id}
                             handleChange={(e) =>
                               handleChangeAnswer(
                                 data.tipe_pertanyaan_kode,
@@ -100,7 +101,8 @@ const CardQuestion = ({
                             isDisabled={isDisabled}
                             isChecked={
                               !!data?.jawaban_user?.find(
-                                (value) => value.text === answer.text
+                                (value) =>
+                                  value?.jawaban_id === answer?.jawaban_id
                               )
                             }
                             handleChange={(e) =>
