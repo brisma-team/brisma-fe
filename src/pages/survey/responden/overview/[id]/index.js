@@ -176,13 +176,13 @@ const index = () => {
                   deskripsi_jawaban: question?.jawaban[0]?.deskripsi,
                   jawaban_user: question.jawaban?.length
                     ? question.jawaban.map((answer) => {
-                        const { jawaban_id, text } = answer;
+                        const { text } = answer;
                         const bobot = question?.template_jawaban?.find(
                           (value) =>
                             value?.jawaban_id == answer?.template_jawaban_id
                         )?.bobot;
                         return {
-                          jawaban_id,
+                          jawaban_id: answer.template_jawaban_id,
                           bobot,
                           text,
                         };
@@ -306,6 +306,14 @@ const index = () => {
 
     if (type === "deskripsi jawaban") {
       currentQuestion.deskripsi_jawaban = value;
+    } else if (type == "2") {
+      const findAnswer = currentQuestion.jawaban.find(
+        (v) => v.jawaban_id === value
+      );
+
+      if (findAnswer) {
+        currentAnswers[0] = findAnswer;
+      }
     } else if (type == "3") {
       const findAnswerIndex = currentAnswers.findIndex(
         (v) => v.jawaban_id === currentAnswer.jawaban_id

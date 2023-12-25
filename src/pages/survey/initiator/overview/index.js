@@ -174,7 +174,7 @@ const index = () => {
       <div className="w-full h-full pr-16 pb-20">
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">
-          <PageTitle text={"Template Kuesioner Overview"} />
+          <PageTitle text={"Survei Overview"} />
         </div>
         <div className="flex items-end gap-4">
           {/* Start Filter */}

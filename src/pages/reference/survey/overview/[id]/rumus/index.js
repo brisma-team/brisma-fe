@@ -273,12 +273,12 @@ const index = () => {
                     }
                   >
                     <div className="p-2.5 flex flex-col gap-2.5 items-center">
-                      <div className="rounded w-28 bg-atlasian-purple">
+                      {/* <div className="rounded w-28 bg-atlasian-purple">
                         <ButtonField
                           text="Simulasi"
                           handler={() => console.log("download")}
                         />
-                      </div>
+                      </div> */}
                       <div
                         className={`rounded w-28 ${
                           isDisabled

@@ -38,6 +38,7 @@ import {
 import {
   useInformation,
   useKuesioner,
+  useKuesionerFromRedis,
   useWorkflow,
 } from "@/data/reference/admin-survey/informasi";
 import _ from "lodash";
@@ -59,6 +60,8 @@ const index = () => {
   const [isUpdateGuidline, setIsUpdateGuidline] = useState(false);
   const [isApprovalFinal, setIsApprovalFinal] = useState(false);
   const [isRefreshWorkflow, setIsRefreshWorkflow] = useState(false);
+  const [isDisabledButtonApproval, setIsDisabledButtonApproval] =
+    useState(true);
 
   const [currentContentStage, setCurrentContentStage] = useState(1);
   const [
@@ -109,6 +112,8 @@ const index = () => {
     sub_modul_id: id,
   });
   const { user } = useUser();
+  const { kuesionerFromRedis, kuesionerFromRedisMutate } =
+    useKuesionerFromRedis({ id });
 
   useEffect(() => {
     dispatch(resetWorkflowData());
@@ -150,40 +155,50 @@ const index = () => {
   useEffect(() => {
     if (!kuesionerError && kuesioner?.data?.length) {
       const mapping = kuesioner.data.map((category) => {
+        const matchingRedisItem = kuesionerFromRedis?.data?.find(
+          (redisItem) => redisItem.id === category.id
+        );
         return {
           id: category.id,
           template_id: category.template_id,
           name: category.name,
-          pertanyaan: category.template_pertanyaan.length
-            ? category.template_pertanyaan.map((question) => {
-                return {
-                  id: question.id,
-                  template_id: question.template_id,
-                  guideline: question.guideline,
-                  tipe_pertanyaan_kode: question.tipe_pertanyaan_kode,
-                  tipe_pertanyaan_name: question.tipe_pertanyaan_name,
-                  uraian: question.uraian,
-                  is_need_deskripsi: question.is_need_deskripsi,
-                  bobot: question.bobot,
-                  jawaban: question.template_jawaban.length
-                    ? question.template_jawaban.map((answer) => {
-                        return {
-                          bobot: answer.bobot,
-                          text: answer.text,
-                        };
-                      })
-                    : [],
-                };
-              })
-            : [],
+          pertanyaan:
+            information?.data?.status_persetujuan === "On Progress"
+              ? matchingRedisItem
+                ? matchingRedisItem.pertanyaan
+                : []
+              : category.template_pertanyaan.length
+              ? category.template_pertanyaan.map((question) => {
+                  return {
+                    id: question.id,
+                    template_id: question.template_id,
+                    guideline: question.guideline,
+                    tipe_pertanyaan_kode: question.tipe_pertanyaan_kode,
+                    tipe_pertanyaan_name: question.tipe_pertanyaan_name,
+                    uraian: question.uraian,
+                    is_need_deskripsi: question.is_need_deskripsi,
+                    bobot: question.bobot,
+                    jawaban: question.template_jawaban.length
+                      ? question.template_jawaban.map((answer) => {
+                          return {
+                            bobot: answer.bobot,
+                            text: answer.text,
+                          };
+                        })
+                      : [],
+                  };
+                })
+              : [],
         };
       });
 
       dispatch(setPayloadKuesioner(mapping));
+      setIsDisabledButtonApproval(false);
     } else {
       dispatch(resetPayloadKuesioner());
+      setIsDisabledButtonApproval(true);
     }
-  }, [kuesioner]);
+  }, [information, kuesioner, kuesionerFromRedis]);
 
   useEffect(() => {
     const { judul, deskripsi, jenis_survey_kode } = payloadInformasi;
@@ -261,6 +276,18 @@ const index = () => {
     if (!isUnderChange) setIsUnderChange(true);
   };
 
+  const handleConfirmationChangeTabStage = async () => {
+    if (!isUnderChange || currentContentStage !== 2) {
+      return true;
+    }
+
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin ingin pindah tab? Pastikan untuk menyimpan kuesioner"
+    );
+
+    return confirm?.value || false;
+  };
+
   const handleSaveKuesioner = async () => {
     loadingSwal();
     const payload = {
@@ -282,12 +309,24 @@ const index = () => {
         }));
       }),
     };
+
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_APP}/api/redis`,
+      {
+        key: `templateId-${id}`,
+        value: JSON.stringify(payloadKuesioner),
+      },
+      true
+    );
+
     await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/kuesioner`,
       payload
     );
     setIsUnderChange(false);
+    kuesionerFromRedisMutate();
     categoryMutate();
     kuesionerMutate();
     loadingSwal("close");
@@ -374,10 +413,20 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
+      `${process.env.NEXT_PUBLIC_APP}/api/redis`,
+      {
+        key: `templateId-${id}`,
+        value: JSON.stringify(payloadKuesioner),
+      },
+      true
+    );
+    await fetchApi(
+      "POST",
       `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/kategori_pertanyaan`,
       { template_id: id }
     );
 
+    kuesionerFromRedisMutate();
     categoryMutate();
     kuesionerMutate();
     handleUnderChange();
@@ -387,11 +436,21 @@ const index = () => {
   const handleUpdateCategory = async (index, data) => {
     loadingSwal();
     await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_APP}/api/redis`,
+      {
+        key: `templateId-${id}`,
+        value: JSON.stringify(payloadKuesioner),
+      },
+      true
+    );
+    await fetchApi(
       "PATCH",
       `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/kategori_pertanyaan/update/${data.id}`,
       { name: data.name }
     );
 
+    kuesionerFromRedisMutate();
     categoryMutate();
     kuesionerMutate();
     handleUnderChange();
@@ -402,9 +461,20 @@ const index = () => {
   const handleDeleteCategory = async (category_id) => {
     loadingSwal();
     await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_APP}/api/redis`,
+      {
+        key: `templateId-${id}`,
+        value: JSON.stringify(payloadKuesioner),
+      },
+      true
+    );
+    await fetchApi(
       "DELETE",
       `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/kategori_pertanyaan/${category_id}`
     );
+
+    kuesionerFromRedisMutate();
     categoryMutate();
     kuesionerMutate();
     handleUnderChange();
@@ -531,6 +601,7 @@ const index = () => {
     setShowModalAddQuestion(false);
     setIsUpdateGuidline(false);
     handleUnderChange();
+    setCurrentContentModalAddQuestionStage(1);
     await successSwal("Berhasil menambahkan pertanyaan");
   };
 
@@ -758,7 +829,6 @@ const index = () => {
           `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/workflow/change`,
           data
         );
-        console.log("response => ", response);
         if (!response.isDismissed) return;
       } else {
         await fetchApi(
@@ -790,6 +860,7 @@ const index = () => {
             items={navigationTabItems}
             currentStage={currentContentStage}
             setCurrentStage={setCurrentContentStage}
+            handleConfirmation={handleConfirmationChangeTabStage}
           />
           {currentContentStage === 1 ? (
             <TabInformation
@@ -797,6 +868,7 @@ const index = () => {
               isDisabled={isDisabled}
               isFormDisabled={isFormDisabled}
               isApprovalFinal={isApprovalFinal}
+              isDisabledButtonApproval={isDisabledButtonApproval}
               handleChangeForm={handleChangeFormInformasi}
               handleClickAddKuesioner={handleClickKuesioner}
               handleSubmit={handleSaveInformation}

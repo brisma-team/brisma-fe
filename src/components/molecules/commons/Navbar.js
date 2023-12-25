@@ -249,7 +249,7 @@ const NavbarField = () => {
                   : "hover:border-b-4 hover:border-atlasian-blue-light"
               }`}
             >
-              Survey
+              Survei
             </button>
           </a>,
         ]
