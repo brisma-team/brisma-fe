@@ -99,7 +99,11 @@ const index = () => {
   };
 
   return (
-    <LandingLayoutSurvey overflowY={true} withoutRightSidebar={true}>
+    <LandingLayoutSurvey
+      overflowY={true}
+      withoutRightSidebar={true}
+      isLayoutResponden
+    >
       <div className="w-full h-full pr-16 pb-20 pt-2">
         <Breadcrumbs data={breadcrumbs} />
         <div className="-mt-4">
