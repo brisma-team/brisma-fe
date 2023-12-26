@@ -121,18 +121,14 @@ const index = () => {
               errorIndex = index + 1;
               return;
             }
-            const formattedFormula = formula
+            const lowercaseFormula = formula.toLocaleLowerCase();
+            const formattedFormula = lowercaseFormula
               .replace(/arraySum/gi, "arraySum")
               .replace(/arrayAvg/gi, "arrayAvg");
 
-            const lowercasedFormula = formattedFormula.replace(
-              /\([^)]+\)/g,
-              (match) => match.toLowerCase()
-            );
-
             return {
               judul,
-              formula: lowercasedFormula,
+              formula: formattedFormula,
             };
           })
         ),
