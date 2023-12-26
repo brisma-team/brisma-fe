@@ -154,16 +154,12 @@ const index = () => {
     setIsResponden(answerSurvey?.data?.info?.pn_responden === user?.data?.pn);
     if (!answerSurveyError && answerSurvey?.data?.kategori?.length) {
       const mapping = answerSurvey.data.kategori.map((category) => {
-        const sortedQuestions = category.template_pertanyaan.sort(
-          (a, b) => a.tipe_pertanyaan_kode - b.tipe_pertanyaan_kode
-        );
-
         return {
           id: category.kategori_id,
           name: category.kategori_name,
           is_saved: false,
-          pertanyaan: sortedQuestions?.length
-            ? sortedQuestions?.map((question) => {
+          pertanyaan: category?.template_pertanyaan?.length
+            ? category?.template_pertanyaan?.map((question) => {
                 return {
                   id: question.pertanyaan_id,
                   guideline: question.guideline,
