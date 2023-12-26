@@ -128,7 +128,7 @@ const index = () => {
   };
 
   return (
-    <LandingLayoutSurvey overflowY={true}>
+    <LandingLayoutSurvey overflowY={true} isLayoutResponden>
       <div className="w-full h-full pr-16 pb-20">
         <Breadcrumbs data={breadcrumbs} />
         <div className="flex justify-between items-center mb-6">

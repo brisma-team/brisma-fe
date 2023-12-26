@@ -121,8 +121,19 @@ const index = () => {
               errorIndex = index + 1;
               return;
             }
+            const formattedFormula = formula
+              .replace(/arraySum/gi, "arraySum")
+              .replace(/arrayAvg/gi, "arrayAvg");
 
-            return { judul, formula: formula.toLocaleLowerCase() };
+            const lowercasedFormula = formattedFormula.replace(
+              /\([^)]+\)/g,
+              (match) => match.toLowerCase()
+            );
+
+            return {
+              judul,
+              formula: lowercasedFormula,
+            };
           })
         ),
       };
@@ -249,7 +260,7 @@ const index = () => {
                         <ButtonField
                           text="ArrayAvg"
                           handler={() =>
-                            handleClickAggregateFunction("ArrayAVG")
+                            handleClickAggregateFunction("arrayAvg")
                           }
                         />
                       </div>
@@ -257,7 +268,7 @@ const index = () => {
                         <ButtonField
                           text="ArraySum"
                           handler={() =>
-                            handleClickAggregateFunction("ArraySUM")
+                            handleClickAggregateFunction("arraySum")
                           }
                         />
                       </div>

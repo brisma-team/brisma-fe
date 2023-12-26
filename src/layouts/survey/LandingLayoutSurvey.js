@@ -9,7 +9,12 @@ import useUser from "@/data/useUser";
 import { useRouter } from "next/router";
 import { Loader } from "@/components/atoms";
 
-const LandingLayoutSurvey = ({ overflowY, withoutRightSidebar, children }) => {
+const LandingLayoutSurvey = ({
+  overflowY,
+  withoutRightSidebar,
+  isLayoutResponden,
+  children,
+}) => {
   const router = useRouter();
 
   const [data, setData] = useState(null);
@@ -62,14 +67,18 @@ const LandingLayoutSurvey = ({ overflowY, withoutRightSidebar, children }) => {
     <div>
       <NavbarField />
       <PatSidebarOverview>
-        <div>
-          <div className="text-center text-base font-bold mt-4">
-            Riwayat Survei
+        {!isLayoutResponden ? (
+          <div>
+            <div className="text-center text-base font-bold mt-4">
+              Riwayat Survei
+            </div>
+            <div className="px-10 mt-5">
+              <CardTotalListSidebar data={data} />
+            </div>
           </div>
-          <div className="px-10 mt-5">
-            <CardTotalListSidebar data={data} />
-          </div>
-        </div>
+        ) : (
+          ""
+        )}
       </PatSidebarOverview>
       <div className="flex max-h-screen overflow-y-hidden">
         <div className="flex-1 mt-16" style={{ marginLeft: "260px" }}>

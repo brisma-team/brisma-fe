@@ -107,7 +107,7 @@ const CardOverview = ({
                     <div
                       className={`w-full h-full flex items-center ${
                         data.status_kode == 4
-                          ? "text-atlasian-yellow"
+                          ? "text-atlasian-green"
                           : "text-atlasian-red"
                       }`}
                     >
