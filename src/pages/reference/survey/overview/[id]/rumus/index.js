@@ -301,6 +301,7 @@ const index = () => {
                       </div>
                       <div className="rounded w-28 bg-atlasian-yellow">
                         <ButtonField
+                          disabled={isDisabled}
                           text="Test"
                           handler={async () => await handleSaveFormula(true)}
                         />
