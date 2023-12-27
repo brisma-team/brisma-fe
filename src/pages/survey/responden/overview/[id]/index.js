@@ -406,7 +406,7 @@ const index = () => {
         sub_modul_id: respondenId,
         sub_modul: "responden",
         approvers: workflowData?.ref_tim_audit_approver,
-        is_need_approval: false,
+        is_need_approval: !!workflowData?.ref_tim_audit_approver?.length,
         jawaban: [],
       };
       if (payloadKuesioner?.length) {
