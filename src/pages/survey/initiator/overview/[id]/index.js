@@ -8,7 +8,7 @@ import {
   TabInformation,
   TabKuesioner,
 } from "@/components/molecules/survey/initiator/buat-template";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   resetPayloadKuesioner,
   resetWorkflowData,
@@ -20,7 +20,6 @@ import {
   setValidationErrorsWorkflow,
   resetHistoryWorkflow,
 } from "@/slices/survey/initiator/createSurveySlice";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import {
   confirmationSwal,
@@ -40,6 +39,7 @@ import {
   useKuesioner,
 } from "@/data/survey/initiator/informasi";
 import useUser from "@/data/useUser";
+import useInformationTemplate from "@/data/reference/admin-survey/informasi/useInformation";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -53,6 +53,8 @@ const index = () => {
   const [isUpdateGuidline, setIsUpdateGuidline] = useState(false);
   const [isRefreshWorkflow, setIsRefreshWorkflow] = useState(false);
 
+  const [templateId, setTemplateId] = useState(0);
+  const [projectTemplateId, setProjectTemplateId] = useState(null);
   const [currentContentStage, setCurrentContentStage] = useState(1);
 
   const [showModalApproval, setShowModalApproval] = useState(false);
@@ -81,6 +83,7 @@ const index = () => {
     { idx: 2, title: "Kuesioner", isDisabled: true },
   ]);
 
+  const informationTemplate = useInformationTemplate({ id: templateId });
   const { information, informationError, informationMutate } = useInformation({
     id,
   });
@@ -101,6 +104,16 @@ const index = () => {
   useEffect(() => {
     setIsNewTemplate(id === "new");
   }, [id]);
+
+  useEffect(() => {
+    if (!informationTemplate.informationError) {
+      setProjectTemplateId(
+        informationTemplate.information?.data?.project_template_id
+      );
+    } else {
+      setProjectTemplateId(null);
+    }
+  }, [informationTemplate]);
 
   useEffect(() => {
     const {
@@ -146,6 +159,7 @@ const index = () => {
         )
       );
     }
+    setTemplateId(information?.data?.ref_template_id);
     setIsFormDisabled(
       information?.data?.status_persetujuan === "On Approver" ||
         information?.data?.status_persetujuan === "Final" ||
@@ -505,6 +519,7 @@ const index = () => {
               isNewTemplate={isNewTemplate}
               isDisabledPickTemplate={isDisabledButtonAction}
               isFormDisabled={isFormDisabled}
+              projectTemplateId={projectTemplateId}
               handleChangeForm={handleChangeFormInformasi}
               handleClickAddKuesioner={handleClickKuesioner}
               handleOpenModalSelectedTemplateSurvey={

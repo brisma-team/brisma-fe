@@ -122,8 +122,8 @@ const TabRespondenGrade = () => {
               }}
             </Cell>
           </Column>
-          <Column resizable align="center" width={300}>
-            <HeaderCell>Bobot</HeaderCell>
+          <Column flexGrow resizable align="center" width={300}>
+            <HeaderCell flexGrow>Bobot</HeaderCell>
             <Cell>
               {(rowData) => (
                 <div className="w-full -my-2">
