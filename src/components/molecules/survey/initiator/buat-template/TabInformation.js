@@ -19,6 +19,7 @@ const TabInformation = ({
   isNewTemplate,
   isDisabledPickTemplate,
   isFormDisabled,
+  projectTemplateId,
   handleChangeForm,
   handleOpenModalSelectedTemplateSurvey,
   handleSaveInformation,
@@ -152,6 +153,26 @@ const TabInformation = ({
                       : null
                   }
                   isDisabled={isFormDisabled}
+                />
+              }
+            />
+          </div>
+          <div className="w-1/2 pr-6">
+            <FormLabel
+              title={"Template ID"}
+              form={
+                <TextInput
+                  placeholder={"Template ID"}
+                  isDisabled={true}
+                  icon={
+                    <ButtonIcon
+                      isDisabled={true}
+                      icon={
+                        <ButtonIcon icon={<IconClose />} isDisabled={true} />
+                      }
+                    />
+                  }
+                  value={!isNewTemplate ? projectTemplateId?.toUpperCase() : ""}
                 />
               }
             />

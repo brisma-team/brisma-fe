@@ -9,11 +9,13 @@ import { IconClose } from "@/components/icons";
 import { FormLabel, TypeSurveySelect } from "@/components/molecules/commons";
 import { N800 } from "@atlaskit/theme/colors";
 import { token } from "@atlaskit/tokens";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 const TabInformation = ({
   isNewTemplate,
   isDisabled,
+  isDisabledButtonApproval,
   isFormDisabled,
   isApprovalFinal,
   handleChangeForm,
@@ -25,6 +27,10 @@ const TabInformation = ({
   const payloadInformasi = useSelector(
     (state) => state.createTemplateReference.payloadInformasi
   );
+
+  useEffect(() => {
+    console.log("isDisabledButtonApproval => ", isDisabledButtonApproval);
+  }, [isDisabledButtonApproval]);
 
   return (
     <div className="flex justify-between gap-4">
@@ -156,14 +162,16 @@ const TabInformation = ({
               </div>
               <div
                 className={`rounded w-36 ${
-                  isDisabled || isNewTemplate
+                  isDisabled || isNewTemplate || isDisabledButtonApproval
                     ? `bg-atlasian-gray-light`
                     : `bg-atlasian-green`
                 }`}
               >
                 <ButtonField
                   text={"Approval"}
-                  disabled={isDisabled || isNewTemplate}
+                  disabled={
+                    isDisabled || isNewTemplate || isDisabledButtonApproval
+                  }
                   handler={handleClickOpenModalApproval}
                 />
               </div>

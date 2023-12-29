@@ -272,12 +272,20 @@ const index = () => {
     setIsRefreshWorkflow(false);
   }, [workflow, isRefreshWorkflow]);
 
+  useEffect(() => {
+    setIsDisabledButtonApproval(!payloadKuesioner?.length);
+  }, [payloadKuesioner]);
+
   const handleUnderChange = () => {
     if (!isUnderChange) setIsUnderChange(true);
   };
 
   const handleConfirmationChangeTabStage = async () => {
-    if (!isUnderChange || currentContentStage !== 2) {
+    if (
+      !payloadKuesioner?.length ||
+      !isUnderChange ||
+      currentContentStage !== 2
+    ) {
       return true;
     }
 
