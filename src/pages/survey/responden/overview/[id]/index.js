@@ -281,8 +281,9 @@ const index = () => {
   }, [workflowSurvey, isRefreshWorkflow]);
 
   // [ START ] Handler for answer
-  const handleSaveAnswerPerCategory = () => {
-    console.log("save");
+  const handleSaveAnswerPerCategory = async (categoryId) => {
+    // console.log("save");
+    console.log("categoryId", categoryId);
   };
 
   const handleChangeAnswer = (

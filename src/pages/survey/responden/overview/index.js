@@ -29,10 +29,8 @@ const index = () => {
 
   const [filter, setFilter] = useState({
     nama_pembuat: "",
-    pn_responden: "",
     project_code: "",
     jenis_survey: "",
-    status_survey: "",
     tanggal_dimulai: "",
     tanggal_selesai: "",
     sort_by: "ASC",
@@ -41,10 +39,8 @@ const index = () => {
   });
   const [params, setParams] = useState({
     nama_pembuat: "",
-    pn_responden: "",
     project_code: "",
     jenis_survey: "",
-    status_survey: "",
     tanggal_dimulai: "",
     tanggal_selesai: "",
     sort_by: "ASC",

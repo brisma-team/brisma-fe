@@ -20,7 +20,7 @@ import { useInformation } from "@/data/survey/initiator/informasi";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
-  { name: "Reference", path: "/survey" },
+  { name: "Survei", path: "/survey" },
   { name: "Form Survei", path: "/survey/initiator/overview" },
 ];
 

@@ -14,6 +14,7 @@ const CardQuestion = ({
   indexQuestion,
   isDisabled,
   data,
+  totalQuestionPerCategory,
   handleChangeAnswer,
   handleClickOpenModalGuidelines,
 }) => {
@@ -29,7 +30,7 @@ const CardQuestion = ({
       <div className="w-full h-full flex justify-between items-center border-neutral-200 border-b-2 rounded-se-lg">
         <div className="py-2 px-4 w-full h-full flex items-center">
           <p className="text-base font-semibold">
-            Pertanyaan : {indexQuestion + 1}/4
+            Pertanyaan : {indexQuestion + 1}/{totalQuestionPerCategory}
           </p>
         </div>
       </div>

@@ -467,6 +467,13 @@ const index = () => {
   };
 
   const handleDeleteCategory = async (category_id) => {
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin ingin menghapus kategori ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
     loadingSwal();
     await fetchApi(
       "POST",

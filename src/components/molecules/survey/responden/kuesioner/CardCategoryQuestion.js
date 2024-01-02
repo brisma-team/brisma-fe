@@ -30,12 +30,12 @@ const CardCategoryQuestion = ({
             <div>
               <DivButton
                 className={`w-40 h-full text-base rounded-tr-lg flex justify-center items-center font-semibold ${
-                  isDisabled
+                  isDisabled || !data.is_saved
                     ? `text-gray-400 bg-atlasian-gray-light`
                     : `text-white bg-atlasian-green`
                 }`}
-                handleClick={() => handleSaveAnswerPerCategory(indexCategory)}
-                isDisabled={isDisabled}
+                handleClick={() => handleSaveAnswerPerCategory(data.id)}
+                isDisabled={isDisabled || !data.is_saved}
               >
                 Simpan
               </DivButton>
@@ -54,6 +54,7 @@ const CardCategoryQuestion = ({
                     indexQuestion={idx}
                     isDisabled={isDisabled}
                     data={kuesioner}
+                    totalQuestionPerCategory={data?.pertanyaan?.length}
                     handleChangeAnswer={handleChangeAnswer}
                     handleClickOpenModalGuidelines={
                       handleClickOpenModalGuidelines

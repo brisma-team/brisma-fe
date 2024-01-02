@@ -221,7 +221,7 @@ const index = () => {
         path: `/survey/initiator/overview/${id}`,
       },
     ]);
-  }, [currentContentStage]);
+  }, [id, currentContentStage]);
 
   useEffect(() => {
     const workflowInfo = workflowSurvey?.data?.info;
