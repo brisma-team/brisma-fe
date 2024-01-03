@@ -73,6 +73,7 @@ const TableHistory = ({ data, isInitiator, isTemplate }) => {
                 project_survey_id,
                 jenis_survey_name,
                 status_approval,
+                note,
               }) => (
                 <Row>
                   <Cell width="14%" className={`border-x ${customCell}`}>
@@ -103,7 +104,7 @@ const TableHistory = ({ data, isInitiator, isTemplate }) => {
                   </Cell>
                   <Cell width="18%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
-                      <p className="text-sm">{status_approval}</p>
+                      <p className="text-sm">{status_approval || note}</p>
                     </div>
                   </Cell>
                 </Row>
