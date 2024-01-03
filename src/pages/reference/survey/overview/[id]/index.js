@@ -33,6 +33,7 @@ import {
   convertDate,
   errorSwal,
   fetchApi,
+  infoSwal,
   loadingSwal,
   setErrorValidation,
   successSwal,
@@ -323,57 +324,56 @@ const index = () => {
   };
 
   const handleSaveKuesioner = async () => {
-    loadingSwal();
     const validation = await validateTextNotEmpty(payloadKuesioner);
 
     if (!validation.isValid) {
+      await infoSwal("Mohon lengkapi form kuesioner");
       dispatch(setValidationErrorsKuesioner(validation.errors));
-
-      loadingSwal("close");
       return;
     } else {
       dispatch(resetValidationErrorsKuesioner());
     }
 
-    // const payload = {
-    //   template_id: id,
-    //   pertanyaan: payloadKuesioner.flatMap((kategori) => {
-    //     return kategori.pertanyaan.map((pertanyaan) => ({
-    //       template_id: pertanyaan.template_id,
-    //       kategori_pertanyaan_id: kategori.id,
-    //       guideline: pertanyaan.guideline,
-    //       uraian: pertanyaan.uraian,
-    //       tipe_pertanyaan_kode: pertanyaan.tipe_pertanyaan_kode,
-    //       tipe_pertanyaan_name: pertanyaan.tipe_pertanyaan_name,
-    //       is_need_deskripsi: pertanyaan.is_need_deskripsi,
-    //       bobot: pertanyaan.bobot,
-    //       jawaban: pertanyaan.jawaban.map((jawaban) => ({
-    //         bobot: jawaban.bobot,
-    //         text: jawaban.text,
-    //       })),
-    //     }));
-    //   }),
-    // };
+    loadingSwal();
+    const payload = {
+      template_id: id,
+      pertanyaan: payloadKuesioner.flatMap((kategori) => {
+        return kategori.pertanyaan.map((pertanyaan) => ({
+          template_id: pertanyaan.template_id,
+          kategori_pertanyaan_id: kategori.id,
+          guideline: pertanyaan.guideline,
+          uraian: pertanyaan.uraian,
+          tipe_pertanyaan_kode: pertanyaan.tipe_pertanyaan_kode,
+          tipe_pertanyaan_name: pertanyaan.tipe_pertanyaan_name,
+          is_need_deskripsi: pertanyaan.is_need_deskripsi,
+          bobot: pertanyaan.bobot,
+          jawaban: pertanyaan.jawaban.map((jawaban) => ({
+            bobot: jawaban.bobot,
+            text: jawaban.text,
+          })),
+        }));
+      }),
+    };
 
-    // await fetchApi(
-    //   "POST",
-    //   `${process.env.NEXT_PUBLIC_APP}/api/redis`,
-    //   {
-    //     key: `templateId-${id}`,
-    //     value: JSON.stringify(payloadKuesioner),
-    //   },
-    //   true
-    // );
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_APP}/api/redis`,
+      {
+        key: `templateId-${id}`,
+        value: JSON.stringify(payloadKuesioner),
+      },
+      true
+    );
 
-    // await fetchApi(
-    //   "POST",
-    //   `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/kuesioner`,
-    //   payload
-    // );
-    // setIsUnderChange(false);
-    // kuesionerFromRedisMutate();
-    // categoryMutate();
-    // kuesionerMutate();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/kuesioner`,
+      payload
+    );
+    setIsUnderChange(false);
+    kuesionerFromRedisMutate();
+    categoryMutate();
+    kuesionerMutate();
     loadingSwal("close");
   };
 
