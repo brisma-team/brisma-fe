@@ -31,6 +31,7 @@ import capitalizeEveryWord from "./capitalizeEveryWord";
 import infoSwal from "./infoSwal";
 import previewPrintDocument from "./previewPrintDocument";
 import checkRoleIsAdmin from "./checkRoleIsAdmin";
+import addDaysToDate from "./addDaysToDate";
 
 export {
   loadingSwal,
@@ -66,4 +67,5 @@ export {
   infoSwal,
   previewPrintDocument,
   checkRoleIsAdmin,
+  addDaysToDate,
 };

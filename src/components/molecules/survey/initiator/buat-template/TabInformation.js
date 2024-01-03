@@ -12,7 +12,7 @@ import {
   FormLabel,
   TypeSurveySelect,
 } from "@/components/molecules/commons";
-import { dateNow } from "@/helpers";
+import { addDaysToDate, dateNow } from "@/helpers";
 import { useSelector } from "react-redux";
 
 const TabInformation = ({
@@ -92,14 +92,17 @@ const TabInformation = ({
                   handleChange={(value) =>
                     handleChangeForm("pelaksanaan_end", value)
                   }
-                  pastDate={payloadInformasi?.pelaksanaan_start || null}
+                  pastDate={
+                    addDaysToDate(payloadInformasi?.pelaksanaan_start, 1) ||
+                    null
+                  }
                 />
               }
             />
           </div>
           <div className="flex justify-between gap-12">
             <FormLabel
-              title={"Survei ID*"}
+              title={"Survei ID"}
               form={
                 <TextInput
                   placeholder={"Survei ID"}

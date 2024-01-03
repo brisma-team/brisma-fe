@@ -333,6 +333,10 @@ const index = () => {
 
   const handleClickSaveUker = async () => {
     loadingSwal();
+    if (!payloadNewUker.orgeh_kode) {
+      await errorSwal("Silahkan pilih uker terlebih dahulu");
+      return;
+    }
     await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/uker`,

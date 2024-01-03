@@ -5,7 +5,6 @@ import {
   TextInput,
 } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
-import CustomSelect from "@/components/molecules/commons/CustomSelect";
 import { useState } from "react";
 import { TypeSurveySelect } from "@/components/molecules/commons";
 
@@ -13,8 +12,6 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
   const [selectOptionValue, setSelectOptionValue] = useState({
     jenis_survey_kode: "",
     jenis_survey_nama: "",
-    status_kode: "",
-    status_name: "",
   });
 
   const handleChange = (property, value) => {
@@ -31,15 +28,6 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
         };
       });
       setFilter({ ...filter, [property]: e.value.kode });
-    } else if (property === "status_survey") {
-      setSelectOptionValue((prev) => {
-        return {
-          ...prev,
-          status_kode: e.value,
-          status_name: e.label,
-        };
-      });
-      setFilter({ ...filter, [property]: e.value });
     }
   };
 
@@ -52,7 +40,7 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
       <div className="rounded bg-white w-fit">
         <Card>
           <div className="px-3 py-1 flex gap-2">
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               <div className="w-48">
                 <TextInput
                   placeholder="Nama Pembuat"
@@ -68,19 +56,6 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
               </div>
               <div className="w-48">
                 <TextInput
-                  placeholder="PN Responden"
-                  icon={
-                    <ButtonIcon
-                      handleClick={() => handleChange("pn_responden", "")}
-                      icon={<IconClose size="large" />}
-                    />
-                  }
-                  onChange={(e) => handleChange("pn_responden", e.target.value)}
-                  value={filter.pn_responden}
-                />
-              </div>
-              <div className="w-48">
-                <TextInput
                   placeholder="Project Code"
                   icon={
                     <ButtonIcon
@@ -90,6 +65,28 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
                   }
                   onChange={(e) => handleChange("project_code", e.target.value)}
                   value={filter.project_code}
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-3">
+              <div className="w-48">
+                <DatepickerField
+                  placeholder={"Tanggal Dimulai"}
+                  value={filter.tanggal_dimulai}
+                  format={"DD-MM-YYYY"}
+                  handleChange={(value) =>
+                    handleChange("tanggal_dimulai", value)
+                  }
+                />
+              </div>
+              <div className="w-48">
+                <DatepickerField
+                  placeholder={"Tanggal Selesai"}
+                  value={filter.tanggal_selesai}
+                  format={"DD-MM-YYYY"}
+                  handleChange={(value) =>
+                    handleChange("tanggal_selesai", value)
+                  }
                 />
               </div>
             </div>
@@ -119,68 +116,6 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
                         })
                       }
                     />
-                  }
-                />
-              </div>
-              <div className="w-48">
-                <CustomSelect
-                  optionValue={[
-                    { label: "Draft", value: "1" },
-                    {
-                      label: "Pending Approval",
-                      value: "2",
-                    },
-                    {
-                      label: "Belum dimulai",
-                      value: "3",
-                    },
-                    { label: "Sedang Berlangsung", value: "4" },
-                    { label: "Selesai", value: "5" },
-                    { label: "Pending Perpanjangan", value: "6" },
-                    { label: "Pending Pemberhentian", value: "7" },
-                  ]}
-                  selectedValue={
-                    selectOptionValue.status_kode
-                      ? {
-                          label: selectOptionValue.status_name,
-                          value: selectOptionValue.status_kode,
-                        }
-                      : null
-                  }
-                  placeholder={"Status Survey"}
-                  handleChange={(e) => handleChangeSelect("status_survey", e)}
-                  customIcon={
-                    <ButtonIcon
-                      icon={<IconClose />}
-                      handleClick={() =>
-                        handleResetSelect("status_survey", {
-                          label: "",
-                          value: "",
-                        })
-                      }
-                    />
-                  }
-                />
-              </div>
-            </div>
-            <div className="flex flex-col gap-3">
-              <div className="w-48">
-                <DatepickerField
-                  placeholder={"Tanggal Dimulai"}
-                  value={filter.tanggal_dimulai}
-                  format={"DD-MM-YYYY"}
-                  handleChange={(value) =>
-                    handleChange("tanggal_dimulai", value)
-                  }
-                />
-              </div>
-              <div className="w-48">
-                <DatepickerField
-                  placeholder={"Tanggal Selesai"}
-                  value={filter.tanggal_selesai}
-                  format={"DD-MM-YYYY"}
-                  handleChange={(value) =>
-                    handleChange("tanggal_selesai", value)
                   }
                 />
               </div>

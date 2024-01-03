@@ -7,10 +7,8 @@ const useOverview = (type, params) => {
     limit,
     sort_by,
     nama_pembuat,
-    pn_responden,
     project_code,
     jenis_survey,
-    status_survey,
     tanggal_dimulai,
     tanggal_selesai,
   } = params;
@@ -18,7 +16,7 @@ const useOverview = (type, params) => {
   let query = "";
   switch (type) {
     case "all":
-      query = `?page=${page}&limit=${limit}&sort_by=${sort_by}&nama_pembuat=${nama_pembuat}&pn_responden=${pn_responden}&project_code=${project_code}&status_survey=${status_survey}&jenis_survey=${jenis_survey}&tanggal_dimulai=${tanggal_dimulai}&tanggal_selesai=${tanggal_selesai}`;
+      query = `?page=${page}&limit=${limit}&sort_by=${sort_by}&nama_pembuat=${nama_pembuat}&project_code=${project_code}&jenis_survey=${jenis_survey}&tanggal_dimulai=${tanggal_dimulai}&tanggal_selesai=${tanggal_selesai}`;
       break;
   }
   const path = `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey_responden/overview/${type}${query}`;

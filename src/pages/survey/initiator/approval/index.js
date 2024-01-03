@@ -80,14 +80,16 @@ const index = () => {
 
       if (approvalInitiator?.data?.body?.history?.length) {
         const mapping = approvalInitiator?.data?.body?.history?.map((queue) => {
-          const { project_survey, is_signed, createdAt } = queue;
+          const { project_survey, is_signed, createdAt, note } = queue;
           return {
             tanggal: createdAt,
             pn: project_survey?.create_by?.pn,
             nama: project_survey?.create_by?.fullName,
             project_survey_id: project_survey?.project_survey_id,
             jenis_survey_name: project_survey?.jenis_survey_name,
-            status_approval: is_signed ? "Approved" : "Rejected",
+            status_approval:
+              is_signed == null ? "" : is_signed ? "Approved" : "Rejected",
+            note,
           };
         });
 

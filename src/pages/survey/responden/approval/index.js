@@ -74,7 +74,7 @@ const index = () => {
 
       if (approvalResponden?.data?.body?.history?.length) {
         const mapping = approvalResponden?.data?.body?.history?.map((queue) => {
-          const { responden_survey, is_signed, createdAt } = queue;
+          const { responden_survey, is_signed, createdAt, note } = queue;
           return {
             tanggal: createdAt,
             pn: responden_survey?.pn_responden,
@@ -83,7 +83,9 @@ const index = () => {
               responden_survey?.project_survey?.project_survey_id,
             jenis_survey_name:
               responden_survey?.project_survey?.jenis_survey_name,
-            status_approval: is_signed ? "Approved" : "Rejected",
+            status_approval:
+              is_signed == null ? "" : is_signed ? "Approved" : "Rejected",
+            note,
           };
         });
 
