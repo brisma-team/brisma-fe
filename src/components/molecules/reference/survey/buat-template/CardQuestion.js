@@ -2,6 +2,7 @@ import {
   ButtonIcon,
   CheckboxField,
   DivButton,
+  ErrorValidation,
   RadioField,
   TextAreaField,
   TextInput,
@@ -14,6 +15,7 @@ import { ImageGroup, ImageTrash } from "@/helpers/imagesUrl";
 import { IconClose } from "@/components/icons";
 import { capitalizeEveryWord, generateAlphabet } from "@/helpers";
 import { DropdownCard } from "@/components/molecules/commons";
+import { useSelector } from "react-redux";
 
 const CardQuestion = ({
   indexCategory,
@@ -30,6 +32,10 @@ const CardQuestion = ({
   handleDeleteAnswer,
   handleClickOpenModalGuidelines,
 }) => {
+  const validationErrorsKuesioner = useSelector(
+    (state) => state.createTemplateReference.validationErrorsKuesioner
+  );
+
   return (
     <div
       className="rounded flex flex-col items-center"
@@ -311,31 +317,49 @@ const CardQuestion = ({
                             <p>{answer.text}</p>
                           </div>
                         ) : (
-                          <TextInput
-                            isDisabled={isDisabledForm}
-                            value={answer.text}
-                            onChange={(e) =>
-                              handleChangeAnswer(
-                                indexCategory,
-                                indexQuestion,
-                                indexAnswer,
-                                "text",
-                                e.target.value
-                              )
-                            }
-                            icon={
-                              <ButtonIcon
-                                handleClick={() =>
-                                  handleDeleteAnswer(
-                                    indexCategory,
-                                    indexQuestion,
-                                    indexAnswer
-                                  )
-                                }
-                                icon={<IconClose size="medium" />}
-                              />
-                            }
-                          />
+                          <div className="w-full">
+                            <TextInput
+                              isDisabled={isDisabledForm}
+                              value={answer.text}
+                              onChange={(e) =>
+                                handleChangeAnswer(
+                                  indexCategory,
+                                  indexQuestion,
+                                  indexAnswer,
+                                  "text",
+                                  e.target.value
+                                )
+                              }
+                              icon={
+                                <ButtonIcon
+                                  handleClick={() =>
+                                    handleDeleteAnswer(
+                                      indexCategory,
+                                      indexQuestion,
+                                      indexAnswer
+                                    )
+                                  }
+                                  icon={<IconClose size="medium" />}
+                                />
+                              }
+                            />
+                            {validationErrorsKuesioner?.length
+                              ? validationErrorsKuesioner.map(
+                                  (value, index) => {
+                                    return value ==
+                                      `${indexCategory}-${indexQuestion}-${indexAnswer}` ? (
+                                      <div className="ml-1" key={index}>
+                                        <ErrorValidation
+                                          message={"Wajib terisi"}
+                                        />
+                                      </div>
+                                    ) : (
+                                      ""
+                                    );
+                                  }
+                                )
+                              : ""}
+                          </div>
                         )
                       ) : data.tipe_pertanyaan_kode === "4" && isPreviewPage ? (
                         <TextAreaField

@@ -15,6 +15,7 @@ import {
   resetPayloadKuesioner,
   resetPayloadPertanyaan,
   resetValidationErrorsWorkflow,
+  resetValidationErrorsKuesioner,
   resetHistoryWorkflow,
   setDataCategory,
   setWorkflowData,
@@ -22,6 +23,7 @@ import {
   setPayloadKuesioner,
   setPayloadPertanyaan,
   setValidationErrorsWorkflow,
+  setValidationErrorsKuesioner,
   setHistoryWorkflow,
 } from "@/slices/reference/createTemplateReferenceSlice";
 import { useDispatch } from "react-redux";
@@ -296,47 +298,82 @@ const index = () => {
     return confirm?.value || false;
   };
 
+  const validateTextNotEmpty = async (data) => {
+    let isValid = true;
+    const errors = [];
+
+    data?.forEach((category, categoryIndex) => {
+      category?.pertanyaan?.forEach((question, questionIndex) => {
+        if (
+          (question?.tipe_pertanyaan_kode === "2" ||
+            question?.tipe_pertanyaan_kode === "3") &&
+          question?.jawaban?.some((answer) => answer?.text?.trim() === "")
+        ) {
+          isValid = false;
+          question.jawaban.forEach((answer, answerIndex) => {
+            if (answer.text.trim() === "") {
+              errors.push(`${categoryIndex}-${questionIndex}-${answerIndex}`);
+            }
+          });
+        }
+      });
+    });
+
+    return { isValid, errors };
+  };
+
   const handleSaveKuesioner = async () => {
     loadingSwal();
-    const payload = {
-      template_id: id,
-      pertanyaan: payloadKuesioner.flatMap((kategori) => {
-        return kategori.pertanyaan.map((pertanyaan) => ({
-          template_id: pertanyaan.template_id,
-          kategori_pertanyaan_id: kategori.id,
-          guideline: pertanyaan.guideline,
-          uraian: pertanyaan.uraian,
-          tipe_pertanyaan_kode: pertanyaan.tipe_pertanyaan_kode,
-          tipe_pertanyaan_name: pertanyaan.tipe_pertanyaan_name,
-          is_need_deskripsi: pertanyaan.is_need_deskripsi,
-          bobot: pertanyaan.bobot,
-          jawaban: pertanyaan.jawaban.map((jawaban) => ({
-            bobot: jawaban.bobot,
-            text: jawaban.text,
-          })),
-        }));
-      }),
-    };
+    const validation = await validateTextNotEmpty(payloadKuesioner);
 
-    await fetchApi(
-      "POST",
-      `${process.env.NEXT_PUBLIC_APP}/api/redis`,
-      {
-        key: `templateId-${id}`,
-        value: JSON.stringify(payloadKuesioner),
-      },
-      true
-    );
+    if (!validation.isValid) {
+      dispatch(setValidationErrorsKuesioner(validation.errors));
 
-    await fetchApi(
-      "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/kuesioner`,
-      payload
-    );
-    setIsUnderChange(false);
-    kuesionerFromRedisMutate();
-    categoryMutate();
-    kuesionerMutate();
+      loadingSwal("close");
+      return;
+    } else {
+      dispatch(resetValidationErrorsKuesioner());
+    }
+
+    // const payload = {
+    //   template_id: id,
+    //   pertanyaan: payloadKuesioner.flatMap((kategori) => {
+    //     return kategori.pertanyaan.map((pertanyaan) => ({
+    //       template_id: pertanyaan.template_id,
+    //       kategori_pertanyaan_id: kategori.id,
+    //       guideline: pertanyaan.guideline,
+    //       uraian: pertanyaan.uraian,
+    //       tipe_pertanyaan_kode: pertanyaan.tipe_pertanyaan_kode,
+    //       tipe_pertanyaan_name: pertanyaan.tipe_pertanyaan_name,
+    //       is_need_deskripsi: pertanyaan.is_need_deskripsi,
+    //       bobot: pertanyaan.bobot,
+    //       jawaban: pertanyaan.jawaban.map((jawaban) => ({
+    //         bobot: jawaban.bobot,
+    //         text: jawaban.text,
+    //       })),
+    //     }));
+    //   }),
+    // };
+
+    // await fetchApi(
+    //   "POST",
+    //   `${process.env.NEXT_PUBLIC_APP}/api/redis`,
+    //   {
+    //     key: `templateId-${id}`,
+    //     value: JSON.stringify(payloadKuesioner),
+    //   },
+    //   true
+    // );
+
+    // await fetchApi(
+    //   "POST",
+    //   `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/kuesioner`,
+    //   payload
+    // );
+    // setIsUnderChange(false);
+    // kuesionerFromRedisMutate();
+    // categoryMutate();
+    // kuesionerMutate();
     loadingSwal("close");
   };
 

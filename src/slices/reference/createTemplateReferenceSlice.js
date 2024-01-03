@@ -56,6 +56,7 @@ const initialState = {
     jawaban: [{ bobot: 0, text: "" }],
   },
   validationErrorsWorkflow: {},
+  validationErrorsKuesioner: {},
 };
 
 export const createTemplateReferenceSlice = createSlice({
@@ -83,6 +84,9 @@ export const createTemplateReferenceSlice = createSlice({
     setValidationErrorsWorkflow: (state, action) => {
       state.validationErrorsWorkflow = action.payload;
     },
+    setValidationErrorsKuesioner: (state, action) => {
+      state.validationErrorsKuesioner = action.payload;
+    },
     resetDataCategory: (state) => {
       state.dataCategory = [];
     },
@@ -104,6 +108,9 @@ export const createTemplateReferenceSlice = createSlice({
     resetValidationErrorsWorkflow: (state) => {
       state.validationErrorsWorkflow = {};
     },
+    resetValidationErrorsKuesioner: (state) => {
+      state.validationErrorsKuesioner = {};
+    },
   },
 });
 
@@ -115,12 +122,14 @@ export const {
   setPayloadKuesioner,
   setPayloadPertanyaan,
   setValidationErrorsWorkflow,
+  setValidationErrorsKuesioner,
   resetDataCategory,
   resetWorkflowData,
   resetPayloadInformasi,
   resetPayloadPertanyaan,
   resetPayloadKuesioner,
   resetValidationErrorsWorkflow,
+  resetValidationErrorsKuesioner,
   resetHistoryWorkflow,
 } = createTemplateReferenceSlice.actions;
 
