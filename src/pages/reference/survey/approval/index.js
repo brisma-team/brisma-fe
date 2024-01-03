@@ -91,7 +91,7 @@ const index = () => {
               nama: template_survey?.create_by?.fullName,
               project_survey_id: template_survey?.project_template_id,
               jenis_survey_name: template_survey?.jenis_survey_name,
-              status_approval: is_signed ? "Approved" : "Rejected",
+              status_approval: is_signed == null ? "" : (is_signed ? "Approved" : "Rejected"),
             };
           }
         );
