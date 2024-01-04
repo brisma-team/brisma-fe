@@ -47,7 +47,7 @@ import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id, is_approval, from, is_print } = useRouter().query;
+  const { id, is_approver, from, is_print } = useRouter().query;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [sidebarContent, setSidebarContent] = useState([]);
@@ -102,9 +102,9 @@ const index = () => {
   }, []);
 
   useEffect(() => {
-    if (is_approval) setShowModalApproval(true);
+    if (is_approver) setShowModalApproval(true);
     if (from) setApproverFromPn(from);
-  }, [is_approval, from]);
+  }, [is_approver, from]);
 
   useEffect(() => {
     if (is_print) {
