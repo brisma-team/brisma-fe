@@ -26,7 +26,10 @@ const CustomPagination = ({
     const newEndIndex = newStartIndex + perPage;
 
     handleSetPagination(newStartIndex, newEndIndex, currentPage);
-  }, [currentPage, perPage]);
+    if (currentPage > totalPage) {
+      setCurrentPage(totalPage);
+    }
+  }, [totalData, currentPage, perPage]);
 
   const handleChange = (e) => {
     if (e?.target?.offsetParent?.ariaLabel === "next") {

@@ -1,4 +1,5 @@
 import { DatePicker } from "@atlaskit/datetime-picker";
+import { useEffect } from "react";
 
 const DatepickerField = ({
   format,
@@ -6,8 +7,12 @@ const DatepickerField = ({
   handleChange,
   value,
   isDisabled,
-  pastDate,
+  minDate,
+  maxDate,
 }) => {
+  useEffect(() => {
+    console.log(`minDate => ${minDate}, maxDate => ${maxDate}`);
+  }, [minDate, maxDate]);
   return (
     <DatePicker
       placeholder={placeholder}
@@ -15,7 +20,8 @@ const DatepickerField = ({
       value={value}
       dateFormat={format}
       isDisabled={isDisabled}
-      minDate={pastDate}
+      minDate={minDate}
+      maxDate={maxDate}
     />
   );
 };
