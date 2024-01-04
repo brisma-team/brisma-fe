@@ -247,6 +247,7 @@ const index = () => {
           }
           defaultCurrentPage={filter.page}
           totalData={totalData}
+          isDynamicPageTotal
         />
         {/* End Content */}
       </div>

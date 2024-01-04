@@ -135,65 +135,56 @@ const TabRespondenGrade = ({ data }) => {
                       </p>
                     </div>
                   </Cell>
-                  <Cell
-                    width={645}
-                    className={`border-r cell-custom-dataTables-padding-0`}
-                  >
-                    <div className="max-w-[645px] overflow-x-scroll overflow-y-hidden p-2">
-                      {
-                        <div className="w-fit -my-2 mb-">
-                          <div
-                            className={`flex -mx-2 border-b border-gray-200`}
-                          >
-                            {pertanyaan_jawaban.map((v, i) => {
-                              return (
-                                <div
-                                  className={`border-r border-gray-200 text-center ${
-                                    Array?.isArray(v[`a${i + 1}`])
-                                      ? `w-[${(
-                                          3 * v[`a${i + 1}`]?.length
-                                        )?.toString()}rem]`
-                                      : `w-12`
-                                  }`}
-                                  key={i}
-                                >
-                                  <div>Q{i + 1}</div>
-                                  <div>{v[`q${i + 1}`]}</div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                          <div className="flex -mx-2">
-                            {pertanyaan_jawaban.map((v, i) => {
-                              return (
-                                <div className="flex" key={i}>
-                                  {Array.isArray(v[`a${i + 1}`]) &&
-                                  v[`a${i + 1}`]?.length
-                                    ? v[`a${i + 1}`].map((val, idx) => {
-                                        return (
-                                          <div
-                                            key={idx}
-                                            className="flex flex-col p-2 border-r border-gray-200 w-12 items-center"
-                                          >
-                                            <div>A{i + 1}</div>
-                                            <div>{val}</div>
-                                          </div>
-                                        );
-                                      })
-                                    : v[`a${i + 1}`] !== undefined && (
-                                        <div className="flex flex-col p-2 border-r border-gray-200 w-12 items-center">
+                  <div className="max-w-[645px] overflow-x-scroll overflow-y-hidden">
+                    <div className={`flex`}>
+                      {pertanyaan_jawaban.map((v, i) => {
+                        return (
+                          <div key={i}>
+                            <div
+                              className={`${
+                                Array?.isArray(v[`a${i + 1}`])
+                                  ? `w-[${(
+                                      3 * v[`a${i + 1}`]?.length
+                                    )?.toString()}rem]`
+                                  : `w-[3rem]`
+                              } flex border-b border-gray-200`}
+                            >
+                              <div
+                                className={`min-w-full flex flex-col items-center border-r border-gray-200 py-1`}
+                                key={i}
+                              >
+                                <div>Q{i + 1}</div>
+                                <div>{v[`q${i + 1}`]}</div>
+                              </div>
+                            </div>
+                            <div className="flex">
+                              <div className="flex" key={i}>
+                                {Array.isArray(v[`a${i + 1}`]) &&
+                                v[`a${i + 1}`]?.length
+                                  ? v[`a${i + 1}`].map((val, idx) => {
+                                      return (
+                                        <div
+                                          key={idx}
+                                          className="flex flex-col items-center border-r border-gray-200 w-12 py-1"
+                                        >
                                           <div>A{i + 1}</div>
-                                          <div>{v[`a${i + 1}`]}</div>
+                                          <div>{val}</div>
                                         </div>
-                                      )}
-                                </div>
-                              );
-                            })}
+                                      );
+                                    })
+                                  : v[`a${i + 1}`] !== undefined && (
+                                      <div className="flex flex-col items-center border-r border-gray-200 w-12 py-1">
+                                        <div>A{i + 1}</div>
+                                        <div>{v[`a${i + 1}`]}</div>
+                                      </div>
+                                    )}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      }
+                        );
+                      })}
                     </div>
-                  </Cell>
+                  </div>
                 </Row>
               )}
             />

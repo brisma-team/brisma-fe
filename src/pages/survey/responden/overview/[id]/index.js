@@ -47,7 +47,7 @@ import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id, is_approval, from, is_print } = useRouter().query;
+  const { id, is_approver, from, is_print } = useRouter().query;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [sidebarContent, setSidebarContent] = useState([]);
@@ -102,11 +102,12 @@ const index = () => {
   }, []);
 
   useEffect(() => {
-    if (is_approval) setShowModalApproval(true);
+    if (is_approver) setShowModalApproval(true);
     if (from) setApproverFromPn(from);
-  }, [is_approval, from]);
+  }, [is_approver, from]);
 
   useEffect(() => {
+    console.log("payloadKuesioner => ", payloadKuesioner);
     if (is_print) {
       setIsPreviewPage(true);
       setTimeout(() => {
@@ -213,9 +214,12 @@ const index = () => {
           ? category.pertanyaan.length
           : 0;
 
-        const is_completed = pertanyaan.every(
-          (pertanyaanItem) => pertanyaanItem?.jawaban_user[0]?.text
-        );
+        const is_completed = pertanyaan.every((pertanyaanItem) => {
+          return pertanyaanItem.is_need_deskripsi
+            ? pertanyaanItem?.jawaban_user[0]?.text &&
+                pertanyaanItem?.deskripsi_jawaban
+            : pertanyaanItem?.jawaban_user[0]?.text;
+        });
 
         return {
           idx: idx + 1,

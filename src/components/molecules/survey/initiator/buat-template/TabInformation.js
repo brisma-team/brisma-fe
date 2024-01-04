@@ -77,7 +77,11 @@ const TabInformation = ({
                   handleChange={(value) =>
                     handleChangeForm("pelaksanaan_start", value)
                   }
-                  pastDate={dateNow()}
+                  minDate={dateNow()}
+                  maxDate={
+                    addDaysToDate(payloadInformasi?.pelaksanaan_end, "-", 1) ||
+                    null
+                  }
                 />
               }
             />
@@ -92,8 +96,13 @@ const TabInformation = ({
                   handleChange={(value) =>
                     handleChangeForm("pelaksanaan_end", value)
                   }
-                  pastDate={
-                    addDaysToDate(payloadInformasi?.pelaksanaan_start, 1) ||
+                  minDate={
+                    addDaysToDate(
+                      payloadInformasi?.pelaksanaan_start,
+                      "+",
+                      1
+                    ) ||
+                    addDaysToDate(dateNow(), "+", 1) ||
                     null
                   }
                 />

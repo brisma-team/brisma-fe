@@ -18,6 +18,7 @@ import {
   useDeleteData,
   confirmationSwal,
   loadingSwal,
+  infoSwal,
 } from "@/helpers";
 import ModalAddDashboard from "@/components/molecules/dashboard/ModalAddDashboard";
 import ModalEditDashboard from "@/components/molecules/dashboard/ModalEditDashboard";
@@ -49,6 +50,13 @@ const index = () => {
   const [showEditModal, setShowEditModal] = useState(false);
 
   const [editData, setEditData] = useState(); // Menambah state untuk data yang akan diedit
+
+
+  function isValidUUID(input) {
+    const uuidPattern = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
+  
+    return uuidPattern.test(input);
+  }
 
   const { dashboardList, dashboardListMutate } = useDashboardList(
     "visual",
@@ -157,14 +165,31 @@ const index = () => {
 
   const handleSubmit = async () => {
     loadingSwal();
-    setShowModal(false);
+    console.log(data)
+    if(data.isPublic){
+      if(!data.embedId || !data.name ){
+        return infoSwal("Mohon lengkapi form")
+      }
+    }else{
+      if(!data.embedId || !data.name || !data.allowlist.length ){
+        return infoSwal("Mohon lengkapi form")
+      }
+    }
+    // console.log("VALID ID", isValidUUID(data.embedId))
+    if(isValidUUID(data.embedId) == false){
+      return infoSwal("Format ID Dashboard tidak valid")
+    }
     const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/createDashboard`;
     await usePostData(url, data);
+    setShowModal(false);
     fetchData();
   };
 
   const handleUpdate = async () => {
     loadingSwal();
+    if(isValidUUID(editData.embedId) == false){
+      return infoSwal("Format ID Dashboard tidak valid")
+    }
     setShowEditModal(false);
     const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/updateDashboard`;
     await useUpdateData(url, editData);

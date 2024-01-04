@@ -218,7 +218,7 @@ const index = () => {
                           placeholder="Tanggal"
                           handleChange={(e) => handleChange(property_end, e)}
                           value={payload[property_end] || ""}
-                          pastDate={convertDate(payload[property_start], "-")}
+                          minDate={convertDate(payload[property_start], "-")}
                         />
                       </Cell>
                     </Row>
