@@ -107,6 +107,7 @@ const index = () => {
   }, [is_approver, from]);
 
   useEffect(() => {
+    console.log("payloadKuesioner => ", payloadKuesioner);
     if (is_print) {
       setIsPreviewPage(true);
       setTimeout(() => {
@@ -213,9 +214,12 @@ const index = () => {
           ? category.pertanyaan.length
           : 0;
 
-        const is_completed = pertanyaan.every(
-          (pertanyaanItem) => pertanyaanItem?.jawaban_user[0]?.text
-        );
+        const is_completed = pertanyaan.every((pertanyaanItem) => {
+          return pertanyaanItem.is_need_deskripsi
+            ? pertanyaanItem?.jawaban_user[0]?.text &&
+                pertanyaanItem?.deskripsi_jawaban
+            : pertanyaanItem?.jawaban_user[0]?.text;
+        });
 
         return {
           idx: idx + 1,

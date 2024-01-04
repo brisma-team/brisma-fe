@@ -163,11 +163,12 @@ const CardQuestion = ({
                         <div className="w-full h-10 flex items-center px-2 border-2 border-neutral-200">
                           <p>{answer.text}</p>
                         </div>
-                      ) : data.tipe_pertanyaan_kode == "4" ? (
+                      ) : data.tipe_pertanyaan_kode == "4" &&
+                        data.is_need_deskripsi ? (
                         <TextAreaField
                           value={data?.deskripsi_jawaban || ""}
                           isDisabled={isDisabled}
-                          placeholder={"Deskripsi Jawaban"}
+                          placeholder={"Deskripsi Jawaban (wajib diisi!)"}
                           handleChange={(e) =>
                             handleChangeAnswer(
                               "deskripsi jawaban",
