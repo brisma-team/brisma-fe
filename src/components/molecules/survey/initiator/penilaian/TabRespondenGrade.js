@@ -24,11 +24,9 @@ const TabRespondenGrade = () => {
   const { id } = useRouter().query;
   const [rows, setRows] = useState([]);
   const [totalData, setTotalData] = useState(0);
-
-  const [perPage, setPerPage] = useState(10);
   const [pagination, setPagination] = useState({
     min: 0,
-    max: perPage,
+    max: 5,
   });
 
   const data = useSelector((state) => state.penilaianSurvey.objData);
@@ -75,7 +73,7 @@ const TabRespondenGrade = () => {
         <div className="-mt-3 pb-3 w-full">
           <CustomPagination
             defaultCurrentPage={1}
-            perPage={10}
+            perPage={5}
             totalData={totalData}
             handleSetPagination={handleSetPagination}
             getValue={(value) => {
@@ -167,33 +165,29 @@ const TabRespondenGrade = () => {
                     width={645}
                     className={`border-r cell-custom-dataTables-padding-0`}
                   >
-                    <div className="max-w-[645px] overflow-x-scroll overflow-y-hidden p-2">
-                      {
-                        <div className="w-fit -my-2 mb-">
-                          <div
-                            className={`flex -mx-2 border-b border-gray-200`}
-                          >
-                            {pertanyaan_jawaban.map((v, i) => {
-                              return (
+                    <div className="max-w-[645px] overflow-x-scroll overflow-y-hidden">
+                      <div className={`flex`}>
+                        {pertanyaan_jawaban.map((v, i) => {
+                          return (
+                            <div key={i}>
+                              <div
+                                className={`${
+                                  Array?.isArray(v[`a${i + 1}`])
+                                    ? `w-[${(
+                                        3 * v[`a${i + 1}`]?.length
+                                      )?.toString()}rem]`
+                                    : `w-[3rem]`
+                                } flex border-b border-gray-200`}
+                              >
                                 <div
-                                  className={`border-r border-gray-200 text-center ${
-                                    Array?.isArray(v[`a${i + 1}`])
-                                      ? `w-[${(
-                                          3 * v[`a${i + 1}`]?.length
-                                        )?.toString()}rem]`
-                                      : `w-12`
-                                  }`}
+                                  className={`min-w-full flex flex-col items-center border-r border-gray-200 py-1`}
                                   key={i}
                                 >
                                   <div>Q{i + 1}</div>
                                   <div>{v[`q${i + 1}`]}</div>
                                 </div>
-                              );
-                            })}
-                          </div>
-                          <div className="flex -mx-2">
-                            {pertanyaan_jawaban.map((v, i) => {
-                              return (
+                              </div>
+                              <div className="flex">
                                 <div className="flex" key={i}>
                                   {Array.isArray(v[`a${i + 1}`]) &&
                                   v[`a${i + 1}`]?.length
@@ -201,7 +195,7 @@ const TabRespondenGrade = () => {
                                         return (
                                           <div
                                             key={idx}
-                                            className="flex flex-col p-2 border-r border-gray-200 w-12 items-center"
+                                            className="flex flex-col items-center border-r border-gray-200 w-12 py-1"
                                           >
                                             <div>A{i + 1}</div>
                                             <div>{val}</div>
@@ -209,17 +203,17 @@ const TabRespondenGrade = () => {
                                         );
                                       })
                                     : v[`a${i + 1}`] !== undefined && (
-                                        <div className="flex flex-col p-2 border-r border-gray-200 w-12 items-center">
+                                        <div className="flex flex-col items-center border-r border-gray-200 w-12 py-1">
                                           <div>A{i + 1}</div>
                                           <div>{v[`a${i + 1}`]}</div>
                                         </div>
                                       )}
                                 </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      }
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </Cell>
                 </Row>
