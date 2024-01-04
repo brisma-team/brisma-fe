@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 const CustomPagination = ({
   defaultCurrentPage,
+  isDynamicPageTotal,
   perPage,
   totalData,
   handleSetPagination,
@@ -26,7 +27,7 @@ const CustomPagination = ({
     const newEndIndex = newStartIndex + perPage;
 
     handleSetPagination(newStartIndex, newEndIndex, currentPage);
-    if (currentPage > totalPage) {
+    if (currentPage > totalPage && isDynamicPageTotal) {
       setCurrentPage(totalPage);
     }
   }, [totalData, currentPage, perPage]);
