@@ -15,16 +15,21 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { previewPrintDocument } from "@/helpers";
 import { LandingLayoutSurvey } from "@/layouts/survey";
-import { useKuesioner } from "@/data/survey/initiator/informasi";
 import {
+  useInformation,
+  useKuesioner,
+} from "@/data/survey/initiator/informasi";
+import {
+  setPayloadInformasi,
   setPayloadKuesioner,
   resetPayloadKuesioner,
 } from "@/slices/survey/initiator/previewSurveySlice";
 import { IconArrowLeft } from "@/components/icons";
+import _ from "lodash";
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id } = useRouter().query;
+  const { id, is_print } = useRouter().query;
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
@@ -47,7 +52,39 @@ const index = () => {
   const payloadKuesioner = useSelector(
     (state) => state.previewSurvey.payloadKuesioner
   );
+  const payloadInformasi = useSelector(
+    (state) => state.previewSurvey.payloadInformasi
+  );
   const { kuesioner, kuesionerError } = useKuesioner({ id });
+  const { information, informationError } = useInformation({
+    id,
+  });
+
+  useEffect(() => {
+    if (is_print) {
+      setTimeout(() => {
+        if (payloadKuesioner?.length && is_print) {
+          previewPrintDocument("content-doc", true);
+        }
+      }, 500);
+    }
+  }, [is_print, payloadKuesioner]);
+
+  useEffect(() => {
+    if (!informationError) {
+      dispatch(
+        setPayloadInformasi(
+          _.omit(information?.data, [
+            "id",
+            "create_by",
+            "update_by",
+            "createdAt",
+            "updatedAt",
+          ])
+        )
+      );
+    }
+  }, [information]);
 
   useEffect(() => {
     if (!kuesionerError && kuesioner?.data?.kategori?.length) {
@@ -181,7 +218,9 @@ const index = () => {
           </div>
           <TabKuesioner
             data={payloadKuesioner}
+            dataInformasi={payloadInformasi}
             isPreviewPage={true}
+            isDownload={true}
             handleClickOpenModalGuidelines={handleClickOpenModalGuidelines}
             handleChangeAnswer={handleChangeAnswer}
           />

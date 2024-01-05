@@ -13,15 +13,20 @@ import {
 } from "@/components/molecules/reference/survey/buat-template";
 import { useSelector } from "react-redux";
 import {
-  resetPayloadKuesioner,
+  setPayloadInformasi,
   setPayloadKuesioner,
-} from "@/slices/reference/createTemplateReferenceSlice";
+  resetPayloadKuesioner,
+} from "@/slices/reference/previewTemplateReferenceSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import { useKuesioner } from "@/data/reference/admin-survey/informasi";
+import {
+  useInformation,
+  useKuesioner,
+} from "@/data/reference/admin-survey/informasi";
 import { useCategory } from "@/data/reference/admin-survey/kuesioner";
 import { IconArrowLeft } from "@/components/icons";
 import { previewPrintDocument } from "@/helpers";
+import _ from "lodash";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -41,11 +46,31 @@ const index = () => {
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
 
   const payloadKuesioner = useSelector(
-    (state) => state.createTemplateReference.payloadKuesioner
+    (state) => state.previewTemplateReference.payloadKuesioner
+  );
+  const payloadInformasi = useSelector(
+    (state) => state.previewTemplateReference.payloadInformasi
   );
 
   const { category } = useCategory({ id });
+  const { information } = useInformation({
+    id,
+  });
   const { kuesioner, kuesionerError } = useKuesioner({ id });
+
+  useEffect(() => {
+    dispatch(
+      setPayloadInformasi(
+        _.pick(information?.data, [
+          "judul",
+          "deskripsi",
+          "project_template_id",
+          "jenis_survey_kode",
+          "jenis_survey_name",
+        ])
+      )
+    );
+  }, [information]);
 
   useEffect(() => {
     if (is_print) {
@@ -179,6 +204,9 @@ const index = () => {
           <TabKuesioner
             isPreviewPage={true}
             isDisabledForm={true}
+            isDownload={is_print}
+            dataKuesioner={payloadKuesioner}
+            dataInformasi={payloadInformasi}
             handleClickOpenModalGuidelines={handleClickOpenModalGuidelines}
             handleChangeAnswer={handleChangeAnswer}
           />

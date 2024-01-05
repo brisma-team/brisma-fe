@@ -1,23 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  payloadKuesioner: [],
   payloadInformasi: {
-    nama_survey: "",
+    judul: "",
     deskripsi: "",
-    catatan: "",
+    project_template_id: "",
     jenis_survey_kode: "",
     jenis_survey_name: "",
-    pelaksanaan_start: "",
-    pelaksanaan_end: "",
-    ref_template_id: "",
-    ref_template_name: "",
-    ref_template_desc: "",
   },
+  payloadKuesioner: [],
 };
 
-export const previewSurveySlice = createSlice({
-  name: "previewSurvey",
+export const previewTemplateReferenceSlice = createSlice({
+  name: "previewTemplateReference",
   initialState,
   reducers: {
     setPayloadInformasi: (state, action) => {
@@ -36,6 +31,6 @@ export const {
   setPayloadInformasi,
   setPayloadKuesioner,
   resetPayloadKuesioner,
-} = previewSurveySlice.actions;
+} = previewTemplateReferenceSlice.actions;
 
-export default previewSurveySlice.reducer;
+export default previewTemplateReferenceSlice.reducer;
