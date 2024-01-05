@@ -39,6 +39,7 @@ import AttachmentModal from "./AttachmentModal";
 import CustomPagination from "./CustomPagination";
 import CustomTooltip from "./CustomTooltip";
 import CustomCheckbox from "./CustomCheckbox";
+import InformationDetail from "./InformationDetail";
 
 export {
   AvatarDefaultExample,
@@ -82,4 +83,5 @@ export {
   CustomPagination,
   CustomTooltip,
   CustomCheckbox,
+  InformationDetail,
 };

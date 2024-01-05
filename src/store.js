@@ -39,6 +39,7 @@ import approvalAdminSurveyReferenceReducer from "./slices/reference/approvalAdmi
 // SURVEY
 import penilaianSurveyReducer from "./slices/survey/initiator/penilaianSurveySlice";
 import createSurveyReducer from "./slices/survey/initiator/createSurveySlice";
+import previewTemplateReferenceReducer from "./slices/reference/previewTemplateReferenceSlice";
 import respondenSurveyReducer from "./slices/survey/initiator/respondenSurveySlice";
 import respondenAnswerReducer from "./slices/survey/responden/respondenAnswerSlice";
 import penilaianRespondenSurveyReducer from "./slices/survey/responden/penilaianRespondenSurvey";
@@ -85,6 +86,7 @@ export const store = configureStore({
     // SURVEY
     penilaianSurvey: penilaianSurveyReducer,
     createSurvey: createSurveyReducer,
+    previewTemplateReference: previewTemplateReferenceReducer,
     respondenSurvey: respondenSurveyReducer,
     respondenAnswer: respondenAnswerReducer,
     penilaianRespondenSurvey: penilaianRespondenSurveyReducer,
