@@ -116,7 +116,7 @@ const index = () => {
   };
 
   const handleClickDownload = (id) => {
-    router.push(`overview/${id}/preview`);
+    router.push(`overview/${id}?is_print=true`);
   };
 
   const handleClickShowScoreSurvey = (id) => {

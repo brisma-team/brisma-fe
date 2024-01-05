@@ -23,7 +23,7 @@ const TabKuesioner = ({
             <div className="w-full h-fit px-3 flex flex-col gap-2.5 ml-2 mb-2.5">
               <InformationDetail
                 title={"Survei ID"}
-                description={dataInformasi?.project_survey_id}
+                description={dataInformasi?.project_survey_id?.toUpperCase()}
                 widthTitle={"w-40"}
               />
               <InformationDetail

@@ -3,6 +3,18 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   dataCategory: [],
   payloadKuesioner: [],
+  payloadInformasi: {
+    nama_survey: "",
+    deskripsi: "",
+    catatan: "",
+    jenis_survey_kode: "",
+    jenis_survey_name: "",
+    pelaksanaan_start: "",
+    pelaksanaan_end: "",
+    ref_template_id: "",
+    ref_template_name: "",
+    ref_template_desc: "",
+  },
   workflowData: {
     sub_modul: "",
     sub_modul_id: "",
@@ -38,6 +50,9 @@ export const respondenAnswerSlice = createSlice({
     setPayloadKuesioner: (state, action) => {
       state.payloadKuesioner = action.payload;
     },
+    setPayloadInformasi: (state, action) => {
+      state.payloadInformasi = action.payload;
+    },
     setValidationErrorsWorkflow: (state, action) => {
       state.validationErrorsWorkflow = action.payload;
     },
@@ -63,6 +78,7 @@ export const {
   setDataCategory,
   setWorkflowData,
   setPayloadKuesioner,
+  setPayloadInformasi,
   setHistoryWorkflow,
   setValidationErrorsWorkflow,
   resetDataCategory,
