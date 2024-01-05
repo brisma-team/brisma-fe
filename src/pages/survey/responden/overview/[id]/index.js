@@ -15,6 +15,7 @@ import {
   setDataCategory,
   setWorkflowData,
   setPayloadKuesioner,
+  setPayloadInformasi,
   setHistoryWorkflow,
   setValidationErrorsWorkflow,
   resetDataCategory,
@@ -44,6 +45,7 @@ import {
 import { IconArrowLeft } from "@/components/icons";
 import { useAnswerSurvey } from "@/data/survey/responden/answer";
 import useUser from "@/data/useUser";
+import _ from "lodash";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -67,6 +69,9 @@ const index = () => {
 
   const payloadKuesioner = useSelector(
     (state) => state.respondenAnswer.payloadKuesioner
+  );
+  const payloadInformasi = useSelector(
+    (state) => state.respondenAnswer.payloadInformasi
   );
   const workflowData = useSelector(
     (state) => state.respondenAnswer.workflowData
@@ -107,7 +112,6 @@ const index = () => {
   }, [is_approver, from]);
 
   useEffect(() => {
-    console.log("payloadKuesioner => ", payloadKuesioner);
     if (is_print) {
       setIsPreviewPage(true);
       setTimeout(() => {
@@ -129,6 +133,18 @@ const index = () => {
           path: `/survey/responden/overview/${id}`,
         },
       ]);
+
+      dispatch(
+        setPayloadInformasi(
+          _.omit(information?.data, [
+            "id",
+            "create_by",
+            "update_by",
+            "createdAt",
+            "updatedAt",
+          ])
+        )
+      );
     }
   }, [information]);
 
@@ -550,6 +566,9 @@ const index = () => {
           <TabKuesioner
             isPreviewPage={isPreviewPage}
             isDisabledForm={statusApprover !== "On Progress" || !isResponden}
+            isDownload={is_print}
+            dataKuesioner={payloadKuesioner}
+            dataInformasi={payloadInformasi}
             handleChangeAnswer={handleChangeAnswer}
             handleSaveAnswerPerCategory={handleSaveAnswerPerCategory}
             handleClickOpenModalGuidelines={handleClickOpenModalGuidelines}
