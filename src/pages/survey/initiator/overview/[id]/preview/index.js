@@ -66,7 +66,7 @@ const index = () => {
         if (payloadKuesioner?.length && is_print) {
           previewPrintDocument("content-doc", true);
         }
-      }, 500);
+      }, 1000);
     }
   }, [is_print, payloadKuesioner]);
 
