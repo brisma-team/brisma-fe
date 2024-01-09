@@ -276,6 +276,10 @@ const index = () => {
   }, [workflow, isRefreshWorkflow]);
 
   useEffect(() => {
+    console.log("isDisabled => ", isFormDisabled);
+  }, [isFormDisabled]);
+
+  useEffect(() => {
     setIsDisabledButtonApproval(!payloadKuesioner?.length);
   }, [payloadKuesioner]);
 
@@ -932,6 +936,8 @@ const index = () => {
               isPreviewPage={false}
               isDisabledForm={isFormDisabled}
               isApprovalFinal={isApprovalFinal}
+              dataInformasi={payloadInformasi}
+              dataKuesioner={payloadKuesioner}
               handleChangeQuestion={handleChangeQuestion}
               handleDeleteQuestion={handleDeleteQuestion}
               handleChangeAnswer={handleChangeAnswer}
