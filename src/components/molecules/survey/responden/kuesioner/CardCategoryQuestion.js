@@ -30,12 +30,14 @@ const CardCategoryQuestion = ({
             <div>
               <DivButton
                 className={`w-40 h-full text-base rounded-tr-lg flex justify-center items-center font-semibold ${
-                  isDisabled || !data.is_saved
+                  isDisabled || !data.is_need_saved
                     ? `text-gray-400 bg-atlasian-gray-light`
                     : `text-white bg-atlasian-green`
                 }`}
-                handleClick={() => handleSaveAnswerPerCategory(data.id)}
-                isDisabled={isDisabled || !data.is_saved}
+                handleClick={async () =>
+                  await handleSaveAnswerPerCategory(indexCategory, data.id)
+                }
+                isDisabled={isDisabled || !data.is_need_saved}
               >
                 Simpan
               </DivButton>

@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   dataCategory: [],
   payloadKuesioner: [],
+  payloadKuesionerFromRedis: [],
   payloadInformasi: {
     nama_survey: "",
     deskripsi: "",
@@ -50,6 +51,9 @@ export const respondenAnswerSlice = createSlice({
     setPayloadKuesioner: (state, action) => {
       state.payloadKuesioner = action.payload;
     },
+    setPayloadKuesionerFromRedis: (state, action) => {
+      state.payloadKuesionerFromRedis = action.payload;
+    },
     setPayloadInformasi: (state, action) => {
       state.payloadInformasi = action.payload;
     },
@@ -78,6 +82,7 @@ export const {
   setDataCategory,
   setWorkflowData,
   setPayloadKuesioner,
+  setPayloadKuesionerFromRedis,
   setPayloadInformasi,
   setHistoryWorkflow,
   setValidationErrorsWorkflow,

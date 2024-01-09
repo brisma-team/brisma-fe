@@ -15,6 +15,7 @@ import {
   setDataCategory,
   setWorkflowData,
   setPayloadKuesioner,
+  setPayloadKuesionerFromRedis,
   setPayloadInformasi,
   setHistoryWorkflow,
   setValidationErrorsWorkflow,
@@ -43,9 +44,13 @@ import {
   useKuesioner,
 } from "@/data/survey/initiator/informasi";
 import { IconArrowLeft } from "@/components/icons";
-import { useAnswerSurvey } from "@/data/survey/responden/answer";
+import {
+  useAnswerFromRedis,
+  useAnswerSurvey,
+  useDuplicateAnswerFromRedis,
+} from "@/data/survey/responden/answer";
 import useUser from "@/data/useUser";
-import _ from "lodash";
+import _, { find } from "lodash";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -69,6 +74,9 @@ const index = () => {
 
   const payloadKuesioner = useSelector(
     (state) => state.respondenAnswer.payloadKuesioner
+  );
+  const payloadKuesionerFromRedis = useSelector(
+    (state) => state.respondenAnswer.payloadKuesionerFromRedis
   );
   const payloadInformasi = useSelector(
     (state) => state.respondenAnswer.payloadInformasi
@@ -99,6 +107,16 @@ const index = () => {
     useAnswerSurvey({
       id,
       pn: approverFromPn,
+    });
+
+  const { answerFromRedis } = useAnswerFromRedis({
+    surveyId: id,
+    pn: user?.data?.pn,
+  });
+  const { duplicateAnswerFromRedis, duplicateAnswerFromRedisMutate } =
+    useDuplicateAnswerFromRedis({
+      surveyId: id,
+      pn: user?.data?.pn,
     });
 
   useEffect(() => {
@@ -169,12 +187,63 @@ const index = () => {
   useEffect(() => {
     setRespondenId(answerSurvey?.data?.info?.id?.toString());
     setIsResponden(answerSurvey?.data?.info?.pn_responden === user?.data?.pn);
-    if (!answerSurveyError && answerSurvey?.data?.kategori?.length) {
-      const mapping = answerSurvey.data.kategori.map((category) => {
+
+    let payload;
+    if (
+      answerSurvey?.data?.info?.status_persetujuan === "On Progress" &&
+      answerFromRedis?.data?.length
+    ) {
+      payload = answerSurvey.data.kategori.map((category) => {
+        const findCategoryFromRedis = answerFromRedis?.data?.find(
+          (value) => value.id === category.kategori_id
+        );
+
+        const pertanyaan =
+          findCategoryFromRedis?.pertanyaan ||
+          (category?.template_pertanyaan?.length
+            ? category.template_pertanyaan.map((question) => {
+                return {
+                  id: question.pertanyaan_id,
+                  guideline: question.guideline,
+                  tipe_pertanyaan_kode:
+                    question?.tipe_pertanyaan_kode?.toString(),
+                  tipe_pertanyaan_name: question.tipe_pertanyaan_name,
+                  uraian: question.uraian,
+                  is_need_deskripsi: question.is_need_deskripsi,
+                  bobot: question.bobot,
+                  deskripsi_jawaban: question?.jawaban[0]?.deskripsi,
+                  jawaban_user: question.jawaban?.length
+                    ? question.jawaban.map((answer) => {
+                        const { text } = answer;
+                        const bobot = question?.template_jawaban?.find(
+                          (value) =>
+                            value?.jawaban_id == answer?.template_jawaban_id
+                        )?.bobot;
+                        return {
+                          jawaban_id: answer.template_jawaban_id,
+                          bobot,
+                          text,
+                        };
+                      })
+                    : [],
+                  jawaban: question.template_jawaban,
+                };
+              })
+            : []);
+
         return {
           id: category.kategori_id,
           name: category.kategori_name,
-          is_saved: false,
+          is_need_saved: false,
+          pertanyaan,
+        };
+      });
+    } else if (!answerSurveyError && answerSurvey?.data?.kategori?.length) {
+      payload = answerSurvey.data.kategori.map((category) => {
+        return {
+          id: category.kategori_id,
+          name: category.kategori_name,
+          is_need_saved: false,
           pertanyaan: category?.template_pertanyaan?.length
             ? category?.template_pertanyaan?.map((question) => {
                 return {
@@ -207,12 +276,17 @@ const index = () => {
             : [],
         };
       });
-
-      dispatch(setPayloadKuesioner(mapping));
     } else {
       dispatch(resetPayloadKuesioner());
+      return;
     }
-  }, [answerSurvey, user]);
+
+    dispatch(setPayloadKuesioner(payload));
+  }, [information, answerSurvey, answerFromRedis, user]);
+
+  useEffect(() => {
+    dispatch(setPayloadKuesionerFromRedis(duplicateAnswerFromRedis?.data));
+  }, [duplicateAnswerFromRedis]);
 
   useEffect(() => {
     if (payloadKuesioner?.length) {
@@ -230,12 +304,14 @@ const index = () => {
           ? category.pertanyaan.length
           : 0;
 
-        const is_completed = pertanyaan.every((pertanyaanItem) => {
-          return pertanyaanItem.is_need_deskripsi
-            ? pertanyaanItem?.jawaban_user[0]?.text &&
-                pertanyaanItem?.deskripsi_jawaban
-            : pertanyaanItem?.jawaban_user[0]?.text;
-        });
+        const is_completed = pertanyaan?.length
+          ? pertanyaan?.every((pertanyaanItem) => {
+              return pertanyaanItem.is_need_deskripsi
+                ? pertanyaanItem?.jawaban_user[0]?.text &&
+                    pertanyaanItem?.deskripsi_jawaban
+                : pertanyaanItem?.jawaban_user[0]?.text;
+            })
+          : false;
 
         return {
           idx: idx + 1,
@@ -301,9 +377,51 @@ const index = () => {
   }, [workflowSurvey, isRefreshWorkflow]);
 
   // [ START ] Handler for answer
-  const handleSaveAnswerPerCategory = async (categoryId) => {
-    // console.log("save");
-    console.log("categoryId", categoryId);
+  const handleSaveAnswerPerCategory = async (categoryIndex, categoryId) => {
+    loadingSwal();
+
+    const newPayloadKuesioner = JSON.parse(JSON.stringify(payloadKuesioner));
+    let newPayloadKuesionerFromRedis = JSON.parse(
+      JSON.stringify(duplicateAnswerFromRedis?.data)
+    );
+
+    newPayloadKuesioner[categoryIndex].is_need_saved = false;
+    const findCategory = newPayloadKuesioner.find(
+      (value) => value.id === categoryId
+    );
+
+    if (newPayloadKuesionerFromRedis?.length) {
+      const findPayloadKuesionerFromRedisIndex =
+        newPayloadKuesionerFromRedis.findIndex((obj) => obj.id === categoryId);
+
+      if (findPayloadKuesionerFromRedisIndex !== -1) {
+        newPayloadKuesionerFromRedis = payloadKuesionerFromRedis.map(
+          (obj, index) =>
+            index === findPayloadKuesionerFromRedisIndex
+              ? { ...obj, ...findCategory }
+              : obj
+        );
+      } else {
+        newPayloadKuesionerFromRedis.push({ ...findCategory });
+      }
+    } else {
+      newPayloadKuesionerFromRedis = [findCategory];
+    }
+
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_APP}/api/redis`,
+      {
+        key: `surveyId-${id}|user-${user?.data?.pn}`,
+        value: JSON.stringify(newPayloadKuesionerFromRedis),
+      },
+      false,
+      "Jawaban sementara berhasil tersimpan"
+    );
+
+    dispatch(setPayloadKuesioner(newPayloadKuesioner));
+    duplicateAnswerFromRedisMutate();
+    loadingSwal("close");
   };
 
   const handleChangeAnswer = (
@@ -356,6 +474,8 @@ const index = () => {
       ...currentQuestion,
       jawaban_user: currentAnswers,
     };
+
+    newPayloadKuesioner[categoryIndex].is_need_saved = true;
 
     dispatch(setPayloadKuesioner(newPayloadKuesioner));
   };

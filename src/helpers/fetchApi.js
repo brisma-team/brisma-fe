@@ -2,7 +2,7 @@ import withTokenConfig from "./withTokenConfig";
 import successSwal from "./successSwal";
 import errorSwal from "./errorSwal";
 
-const fetchApi = async (method, url, body, withoutSwal) => {
+const fetchApi = async (method, url, body, withoutSwal, messageSuccess) => {
   try {
     const { headers } = withTokenConfig();
     const options = {
@@ -23,7 +23,8 @@ const fetchApi = async (method, url, body, withoutSwal) => {
 
     const responseData = await response.json();
     if (!withoutSwal) {
-      await successSwal(responseData?.message);
+      messageSuccess;
+      await successSwal(messageSuccess || responseData?.message);
     }
     return responseData;
   } catch (e) {
