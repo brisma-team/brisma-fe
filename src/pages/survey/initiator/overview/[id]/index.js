@@ -44,11 +44,13 @@ import {
 import {
   useWorkflowSurvey,
   useWorkflowSurveyExtensionRequest,
+  useWorkflowSurveyTerminateRequest,
 } from "@/data/survey/initiator/buat-survey";
 import _ from "lodash";
 import {
   workflowSchema,
   workflowExtensionSchema,
+  workflowTerminateSchema,
 } from "@/helpers/schemas/survey/createSurveySchema";
 import { LandingLayoutSurvey } from "@/layouts/survey";
 import {
@@ -62,7 +64,7 @@ import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id, is_approval, extension, is_terminate } = useRouter().query;
+  const { id, is_approval, extension, terminate } = useRouter().query;
   const router = useRouter();
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -96,6 +98,8 @@ const index = () => {
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [selectedExtensionRequestId, setSelectedExtensionRequestId] =
+    useState(0);
+  const [selectedTerminateRequestId, setSelectedTerminateRequestId] =
     useState(0);
 
   const payloadInformasi = useSelector(
@@ -152,6 +156,12 @@ const index = () => {
   } = useWorkflowSurveyExtensionRequest({
     id: selectedExtensionRequestId,
   });
+  const {
+    workflowSurveyTerminateRequest,
+    workflowSurveyTerminateRequestMutate,
+  } = useWorkflowSurveyTerminateRequest({
+    id: selectedTerminateRequestId,
+  });
   const { user } = useUser();
 
   useEffect(() => {
@@ -203,7 +213,8 @@ const index = () => {
     if (is_approval && extension) {
       setSelectedExtensionRequestId(extension);
       setShowModalApprovalExtension(true);
-    } else if (is_approval && is_terminate) {
+    } else if (is_approval && terminate) {
+      setSelectedTerminateRequestId(terminate);
       setShowModalApprovalTerminate(true);
     } else {
       setShowModalApproval(true);
@@ -337,8 +348,14 @@ const index = () => {
       on_approver: workflowInfo?.status_approver,
     };
 
-    newWorkflowData.ref_tim_audit_maker = `${workflowInfo?.create_by?.pn} - ${workflowInfo?.create_by?.fullName}`;
-    newWorkflowData.maker = workflowInfo?.create_by;
+    newWorkflowData.ref_tim_audit_maker = workflowInfo?.initiator
+      ? `${workflowInfo?.initiator?.pn} - ${workflowInfo?.initiator?.nama}`
+      : `${user?.data?.pn} - ${user?.data?.fullName}`;
+
+    newWorkflowData.maker = workflowInfo?.initiator
+      ? { pn: workflowInfo?.initiator?.pn, nama: workflowInfo?.initiator?.nama }
+      : { pn: user?.data?.pn, nama: user?.data?.fullName };
+
     newWorkflowData.pelaksanaan_start = workflowInfo?.pelaksanaan_start_to;
     newWorkflowData.pelaksanaan_end = workflowInfo?.pelaksanaan_end_to;
     newWorkflowData.reason = workflowInfo?.note;
@@ -380,6 +397,66 @@ const index = () => {
   }, [
     workflowSurveyExtensionRequest,
     isRefreshWorkflowExtensionRequest,
+    extension,
+  ]);
+
+  useEffect(() => {
+    const workflowInfo = workflowSurveyTerminateRequest?.data?.info;
+    const approvers = workflowSurveyTerminateRequest?.data?.approver;
+
+    const newWorkflowData = {
+      ...workflowTerminateRequest,
+      status_approver: workflowInfo?.status_persetujuan,
+      on_approver: workflowInfo?.status_approver,
+    };
+
+    newWorkflowData.ref_tim_audit_maker = workflowInfo?.initiator
+      ? `${workflowInfo?.initiator?.pn} - ${workflowInfo?.initiator?.nama}`
+      : `${user?.data?.pn} - ${user?.data?.fullName}`;
+
+    newWorkflowData.maker = workflowInfo?.initiator
+      ? { pn: workflowInfo?.initiator?.pn, nama: workflowInfo?.initiator?.nama }
+      : { pn: user?.data?.pn, nama: user?.data?.fullName };
+
+    newWorkflowData.reason = workflowInfo?.note;
+
+    newWorkflowData.ref_tim_audit_approver = approvers?.length
+      ? approvers.map(({ pn, nama, is_signed }) => ({ pn, nama, is_signed }))
+      : [];
+
+    if (workflowSurveyTerminateRequest?.data?.log?.length) {
+      const mapping = workflowSurveyTerminateRequest?.data?.log?.map((v) => {
+        return {
+          children: v?.children?.length
+            ? v?.children?.map((child) => ({
+                role: "child",
+                pic: child?.from?.pn + " - " + child?.from?.nama,
+                alasan: child?.note,
+                status:
+                  child?.is_signed === true
+                    ? "Approved"
+                    : child?.is_signed === false
+                    ? "Rejected"
+                    : child?.note || "",
+                tanggal: convertDate(v?.createdAt, "-", "d"),
+              }))
+            : [],
+          id: v?.id,
+          role: "parent",
+          pic: v?.create_by?.pn + " - " + v?.create_by?.fullName,
+          alasan: v?.note,
+          status: "",
+          tanggal: convertDate(v?.createdAt, "-", "d"),
+        };
+      });
+      dispatch(setHistoryWorkflowTerminateRequest(mapping));
+    }
+
+    dispatch(setWorkflowTerminateRequest(newWorkflowData));
+    setIsRefreshWorkflowTerminateRequest(false);
+  }, [
+    workflowSurveyTerminateRequest,
+    isRefreshWorkflowTerminateRequest,
     extension,
   ]);
 
@@ -746,6 +823,147 @@ const index = () => {
   };
   // [ END ] Handler for modal approval
 
+  // [ START ] Handler for modal extension request
+  const handleCloseModalApprovalTerminateRequest = () => {
+    dispatch(resetHistoryWorkflowTerminateRequest());
+    dispatch(resetWorkflowTerminateRequest());
+    setIsRefreshWorkflowTerminateRequest(true);
+  };
+
+  const handleAddApproverModalTerminateRequest = (property) => {
+    const newData = [...workflowTerminateRequest[property]];
+    newData.push({
+      pn: "",
+      nama: "",
+      is_signed: false,
+    });
+    dispatch(
+      setWorkflowTerminateRequest({
+        ...workflowTerminateRequest,
+        [property]: newData,
+      })
+    );
+  };
+
+  const handleDeleteApproverModalTerminateRequest = (property, idx) => {
+    const newData = [...workflowTerminateRequest[property]];
+    newData.splice(idx, 1);
+    dispatch(
+      setWorkflowTerminateRequest({
+        ...workflowTerminateRequest,
+        [property]: newData,
+      })
+    );
+  };
+
+  const handleChangeTextModalTerminateRequest = (property, value) => {
+    dispatch(
+      setWorkflowTerminateRequest({
+        ...workflowTerminateRequest,
+        [property]: value,
+      })
+    );
+  };
+
+  const handleChangeSelectModalTerminateRequest = (property, index, e) => {
+    const newData = [...workflowTerminateRequest[property]];
+    const updated = { ...newData[index] };
+    updated["pn"] = e?.value?.pn;
+    updated["nama"] = e?.value?.name;
+    newData[index] = updated;
+    dispatch(
+      setWorkflowTerminateRequest({
+        ...workflowTerminateRequest,
+        [property]: newData,
+      })
+    );
+  };
+
+  const handleSubmitModalTerminateRequest = async (e) => {
+    e.preventDefault();
+    const schemaMapping = {
+      schema: workflowTerminateSchema,
+      resetErrors: resetValidationErrorsWorkflowTerminateRequest,
+      setErrors: setValidationErrorsWorkflowTerminateRequest,
+    };
+    const validate = setErrorValidation(
+      workflowTerminateRequest,
+      dispatch,
+      schemaMapping
+    );
+
+    if (validate) {
+      const actionType = e.target.offsetParent.name;
+      const data = {
+        sub_modul: "catatan_pemberhentian",
+        sub_modul_id: selectedTerminateRequestId,
+      };
+
+      const signedCount =
+        workflowTerminateRequest?.ref_tim_audit_approver?.filter(
+          (item) => item.is_signed
+        ).length;
+
+      switch (actionType) {
+        case "change":
+          data.approvers = workflowTerminateRequest.ref_tim_audit_approver;
+          break;
+        case "create":
+          data.approvers = workflowTerminateRequest.ref_tim_audit_approver;
+          data.pelaksanaan_start_to =
+            workflowTerminateRequest.pelaksanaan_start;
+          data.pelaksanaan_end_to = workflowTerminateRequest.pelaksanaan_end;
+          break;
+        case "reject":
+          if (!workflowTerminateRequest.note) {
+            await errorSwal("Silahkan berikan alasan!");
+            return;
+          }
+          data.note = workflowTerminateRequest.note;
+          break;
+        case "approve":
+          if (
+            signedCount >=
+            workflowTerminateRequest?.ref_tim_audit_approver?.length
+          ) {
+            data.data = "<p>pirli test</p>";
+          }
+          data.note = workflowTerminateRequest.note;
+          break;
+      }
+
+      if (actionType === "reset") {
+        const confirm = await confirmationSwal(
+          "Terkait dengan workflow ini, apakah Anda yakin ingin melakukan pengaturan ulang?"
+        );
+        if (!confirm.value) {
+          return;
+        }
+      }
+
+      if (actionType === "change") {
+        await fetchApi(
+          "PATCH",
+          `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/change`,
+          data
+        );
+      } else {
+        await fetchApi(
+          "POST",
+          `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/${actionType}`,
+          data
+        );
+      }
+
+      informationMutate();
+      workflowSurveyTerminateRequestMutate();
+      dispatch(resetWorkflowTerminateRequest());
+      setShowModalApprovalTerminate(false);
+    }
+    workflowSurveyMutate();
+  };
+  // [ END ] Handler for modal approval
+
   return (
     <LandingLayoutSurvey overflowY={true}>
       <div className="w-[71rem] max-h-screen overflow-y-scroll pb-16">
@@ -839,6 +1057,20 @@ const index = () => {
         handleAdd={handleAddApproverModalExtensionRequest}
         handleSubmit={handleSubmitModalExtensionRequest}
         handleCloseModal={handleCloseModalApprovalExtensionRequest}
+      />
+      <ModalWorkflowRequestExtensionAndTermination
+        workflowData={workflowTerminateRequest}
+        historyWorkflow={historyWorkflowTerminateRequest}
+        validationErrors={validationErrorsWorkflowTerminateRequest}
+        setShowModal={setShowModalApprovalTerminate}
+        showModal={showModalApprovalTerminate}
+        headerTitle={"Approval Pemberhentian"}
+        handleChange={handleChangeTextModalTerminateRequest}
+        handleChangeSelect={handleChangeSelectModalTerminateRequest}
+        handleDelete={handleDeleteApproverModalTerminateRequest}
+        handleAdd={handleAddApproverModalTerminateRequest}
+        handleSubmit={handleSubmitModalTerminateRequest}
+        handleCloseModal={handleCloseModalApprovalTerminateRequest}
       />
       <ModalGuidelines
         showModal={showModalGuidelines}

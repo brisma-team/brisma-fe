@@ -55,24 +55,31 @@ const index = () => {
       ]);
 
       if (approvalInitiator?.data?.body?.antrian?.length) {
-        console.log(
-          "approvalInitiator?.data?.body?.antrian => ",
-          approvalInitiator?.data?.body?.antrian
-        );
         const mapping = approvalInitiator?.data?.body?.antrian?.map((queue) => {
           const {
+            id,
+            sub_modul_id,
             survey_id,
             jenis_survey_name,
             project_survey_id,
             module,
             create_by,
           } = queue;
+
+          const subModulId = module.includes("Request")
+            ? id
+            : module.includes("Approval")
+            ? sub_modul_id
+            : undefined;
+
           return {
-            survey_id: survey_id,
+            id,
+            sub_modul_id: subModulId,
+            survey_id,
             pn: create_by?.pn,
             nama: create_by?.nama || create_by?.fullName,
-            project_survey_id: project_survey_id,
-            jenis_survey_name: jenis_survey_name,
+            project_survey_id,
+            jenis_survey_name,
             fase_approval: module,
           };
         });
@@ -104,16 +111,20 @@ const index = () => {
     }
   }, [approvalInitiator]);
 
-  const handleClickActionOnTableApprovalQueue = (survey_id, pn, module) => {
+  const handleClickActionOnTableApprovalQueue = (id, survey_id, pn, module) => {
     let query;
     if (
       module === "Approval Perpanjangan Survey" ||
       module === "Request Perpanjangan"
     ) {
-      console.log("ini perpanjangan");
-      query = `&extension=${survey_id}`;
+      query = `&extension=${id}`;
+    } else if (
+      module === "Approval Pemberhentian Survey" ||
+      module === "Request Pemberhentian"
+    ) {
+      console.log("id => ", id);
+      query = `&terminate=${id}`;
     } else {
-      console.log("bukan perpanjangan");
       query = `&from=${pn}`;
     }
     router.push(`overview/${survey_id}?is_approval=true${query}`);

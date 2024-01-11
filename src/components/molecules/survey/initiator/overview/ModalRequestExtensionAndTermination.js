@@ -22,7 +22,8 @@ const ModalFooter = ({ handleSubmit, handleCloseModal }) => {
   );
 };
 
-const ModalExtensionRequest = ({
+const ModalRequestExtensionAndTermination = ({
+  isExtensionRequest,
   showModal,
   handleChangeNote,
   handleSubmit,
@@ -55,8 +56,9 @@ const ModalExtensionRequest = ({
         <div className="p-3 text-base text-center leading-5">
           <p className="font-bold text-atlasian-red">APA ANDA YAKIN?</p>
           <p className="text-base">
-            Mengajukan perpanjangan waktu survei. Admin akan menerima pengajuan
-            Anda dan mengaktifkan kembali Survei
+            {isExtensionRequest
+              ? "Mengajukan perpanjangan waktu survei. Admin akan menerima pengajuan Anda dan mengaktifkan kembali survei"
+              : "Mengajukan pemberhentian survei. Admin akan menerima pengajuan Anda untuk menghentikan survei ini"}
           </p>
           <div className="mt-4">
             <TextAreaField handleChange={handleChangeNote} />
@@ -67,4 +69,4 @@ const ModalExtensionRequest = ({
   );
 };
 
-export default ModalExtensionRequest;
+export default ModalRequestExtensionAndTermination;

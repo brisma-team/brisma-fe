@@ -17,7 +17,7 @@ const Content = ({ title, text }) => {
 
 const CardOverview = ({
   data,
-  handleStopSurvey,
+  handleTerminateRequestSurvey,
   handleDetailSurvey,
   handleDownloadSurvey,
   handleApprovalSurvey,
@@ -39,8 +39,27 @@ const CardOverview = ({
   const listDropdown = [
     {
       label: "Hentikan",
-      action: async () => await handleStopSurvey(data.id),
-      isDisabled: !(data.status_kode == 4),
+      action: async () => {
+        if (data.status_kode == 4) {
+          await handleTerminateRequestSurvey(null, data.id, data.status_kode);
+        } else {
+          let catatanId, surveyId;
+          if (data?.catatan_pemberhentian?.length) {
+            catatanId = data?.catatan_pemberhentian[0]?.id;
+            surveyId = data?.catatan_pemberhentian[0]?.survey_id;
+          }
+
+          await handleTerminateRequestSurvey(
+            catatanId,
+            surveyId,
+            data.status_kode
+          );
+        }
+      },
+      isDisabled: !(
+        (isAdmin || isInitiator) &&
+        (data.status_kode == 4 || data.status_kode == 7)
+      ),
     },
     {
       label: "Detail",
