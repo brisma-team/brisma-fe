@@ -140,6 +140,17 @@ const CardQuestion = ({
                   )
                 }
               />
+              {validationErrorsKuesioner?.length
+                ? validationErrorsKuesioner.map((value, index) => {
+                    return value == `${indexCategory}-${indexQuestion}` ? (
+                      <div className="ml-1" key={index}>
+                        <ErrorValidation message={"Wajib terisi"} />
+                      </div>
+                    ) : (
+                      ""
+                    );
+                  })
+                : ""}
             </div>
           )}
           {!isPreviewPage && data.tipe_pertanyaan_kode !== "4" ? (

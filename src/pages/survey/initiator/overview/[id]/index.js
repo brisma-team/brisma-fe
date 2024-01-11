@@ -12,13 +12,25 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   resetPayloadKuesioner,
   resetWorkflowData,
-  setHistoryWorkflow,
-  setPayloadInformasi,
-  setWorkflowData,
-  setPayloadKuesioner,
-  resetValidationErrorsWorkflow,
-  setValidationErrorsWorkflow,
+  resetWorkflowExtensionRequest,
+  resetWorkflowTerminateRequest,
   resetHistoryWorkflow,
+  resetHistoryWorkflowExtensionRequest,
+  resetHistoryWorkflowTerminateRequest,
+  resetValidationErrorsWorkflow,
+  resetValidationErrorsWorkflowExtensionRequest,
+  resetValidationErrorsWorkflowTerminateRequest,
+  setHistoryWorkflow,
+  setHistoryWorkflowExtensionRequest,
+  setHistoryWorkflowTerminateRequest,
+  setWorkflowData,
+  setWorkflowExtensionRequest,
+  setWorkflowTerminateRequest,
+  setPayloadKuesioner,
+  setValidationErrorsWorkflow,
+  setValidationErrorsWorkflowExtensionRequest,
+  setValidationErrorsWorkflowTerminateRequest,
+  setPayloadInformasi,
 } from "@/slices/survey/initiator/createSurveySlice";
 import { useRouter } from "next/router";
 import {
@@ -29,10 +41,15 @@ import {
   loadingSwal,
   setErrorValidation,
 } from "@/helpers";
-import { useWorkflowSurvey } from "@/data/survey/initiator/buat-survey";
+import {
+  useWorkflowSurvey,
+  useWorkflowSurveyExtensionRequest,
+} from "@/data/survey/initiator/buat-survey";
 import _ from "lodash";
-import { workflowSchema } from "@/helpers/schemas/survey/createSurveySchema";
-import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common";
+import {
+  workflowSchema,
+  workflowExtensionSchema,
+} from "@/helpers/schemas/survey/createSurveySchema";
 import { LandingLayoutSurvey } from "@/layouts/survey";
 import {
   useInformation,
@@ -40,10 +57,12 @@ import {
 } from "@/data/survey/initiator/informasi";
 import useUser from "@/data/useUser";
 import useInformationTemplate from "@/data/reference/admin-survey/informasi/useInformation";
+import { ModalWorkflowRequestExtensionAndTermination } from "@/components/molecules/survey/initiator/common";
+import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common";
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id, is_approval } = useRouter().query;
+  const { id, is_approval, extension, is_terminate } = useRouter().query;
   const router = useRouter();
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -52,17 +71,32 @@ const index = () => {
   const [isFormDisabled, setIsFormDisabled] = useState(false);
   const [isUpdateGuidline, setIsUpdateGuidline] = useState(false);
   const [isRefreshWorkflow, setIsRefreshWorkflow] = useState(false);
+  const [
+    isRefreshWorkflowExtensionRequest,
+    setIsRefreshWorkflowExtensionRequest,
+  ] = useState(false);
+  const [
+    isRefreshWorkflowTerminateRequest,
+    setIsRefreshWorkflowTerminateRequest,
+  ] = useState(false);
 
   const [templateId, setTemplateId] = useState(0);
   const [projectTemplateId, setProjectTemplateId] = useState(null);
   const [currentContentStage, setCurrentContentStage] = useState(1);
 
   const [showModalApproval, setShowModalApproval] = useState(false);
+  const [showModalApprovalExtension, setShowModalApprovalExtension] =
+    useState(false);
+  const [showModalApprovalTerminate, setShowModalApprovalTerminate] =
+    useState(false);
+
   const [showModalGuidelines, setShowModalGuidelines] = useState(false);
   const [showModalSelectedTemplateSurvey, setShowModalSelectedTemplateSurvey] =
     useState(false);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
+  const [selectedExtensionRequestId, setSelectedExtensionRequestId] =
+    useState(0);
 
   const payloadInformasi = useSelector(
     (state) => state.createSurvey.payloadInformasi
@@ -71,11 +105,29 @@ const index = () => {
     (state) => state.createSurvey.payloadKuesioner
   );
   const workflowData = useSelector((state) => state.createSurvey.workflowData);
+  const workflowExtensionRequest = useSelector(
+    (state) => state.createSurvey.workflowExtensionRequest
+  );
+  const workflowTerminateRequest = useSelector(
+    (state) => state.createSurvey.workflowTerminateRequest
+  );
   const historyWorkflow = useSelector(
     (state) => state.createSurvey.historyWorkflow
   );
+  const historyWorkflowExtensionRequest = useSelector(
+    (state) => state.createSurvey.historyWorkflowExtensionRequest
+  );
+  const historyWorkflowTerminateRequest = useSelector(
+    (state) => state.createSurvey.historyWorkflowTerminateRequest
+  );
   const validationErrorsWorkflow = useSelector(
     (state) => state.createSurvey.validationErrorsWorkflow
+  );
+  const validationErrorsWorkflowExtensionRequest = useSelector(
+    (state) => state.createSurvey.validationErrorsWorkflowExtensionRequest
+  );
+  const validationErrorsWorkflowTerminateRequest = useSelector(
+    (state) => state.createSurvey.validationErrorsWorkflowTerminateRequest
   );
 
   const [navigationTabItems, setNavigationTabItems] = useState([
@@ -94,6 +146,12 @@ const index = () => {
       id,
     }
   );
+  const {
+    workflowSurveyExtensionRequest,
+    workflowSurveyExtensionRequestMutate,
+  } = useWorkflowSurveyExtensionRequest({
+    id: selectedExtensionRequestId,
+  });
   const { user } = useUser();
 
   useEffect(() => {
@@ -142,7 +200,14 @@ const index = () => {
   }, [payloadInformasi, isNewTemplate]);
 
   useEffect(() => {
-    if (is_approval) setShowModalApproval(true);
+    if (is_approval && extension) {
+      setSelectedExtensionRequestId(extension);
+      setShowModalApprovalExtension(true);
+    } else if (is_approval && is_terminate) {
+      setShowModalApprovalTerminate(true);
+    } else {
+      setShowModalApproval(true);
+    }
   }, [is_approval]);
 
   useEffect(() => {
@@ -261,6 +326,62 @@ const index = () => {
     dispatch(setWorkflowData(newWorkflowData));
     setIsRefreshWorkflow(false);
   }, [workflowSurvey, isRefreshWorkflow]);
+
+  useEffect(() => {
+    const workflowInfo = workflowSurveyExtensionRequest?.data?.info;
+    const approvers = workflowSurveyExtensionRequest?.data?.approver;
+
+    const newWorkflowData = {
+      ...workflowExtensionRequest,
+      status_approver: workflowInfo?.status_persetujuan,
+      on_approver: workflowInfo?.status_approver,
+    };
+
+    newWorkflowData.ref_tim_audit_maker = `${workflowInfo?.create_by?.pn} - ${workflowInfo?.create_by?.fullName}`;
+    newWorkflowData.maker = workflowInfo?.create_by;
+    newWorkflowData.pelaksanaan_start = workflowInfo?.pelaksanaan_start_to;
+    newWorkflowData.pelaksanaan_end = workflowInfo?.pelaksanaan_end_to;
+    newWorkflowData.reason = workflowInfo?.note;
+
+    newWorkflowData.ref_tim_audit_approver = approvers?.length
+      ? approvers.map(({ pn, nama, is_signed }) => ({ pn, nama, is_signed }))
+      : [];
+
+    if (workflowSurveyExtensionRequest?.data?.log?.length) {
+      const mapping = workflowSurveyExtensionRequest?.data?.log?.map((v) => {
+        return {
+          children: v?.children?.length
+            ? v?.children?.map((child) => ({
+                role: "child",
+                pic: child?.from?.pn + " - " + child?.from?.nama,
+                alasan: child?.note,
+                status:
+                  child?.is_signed === true
+                    ? "Approved"
+                    : child?.is_signed === false
+                    ? "Rejected"
+                    : child?.note || "",
+                tanggal: convertDate(v?.createdAt, "-", "d"),
+              }))
+            : [],
+          id: v?.id,
+          role: "parent",
+          pic: v?.create_by?.pn + " - " + v?.create_by?.fullName,
+          alasan: v?.note,
+          status: "",
+          tanggal: convertDate(v?.createdAt, "-", "d"),
+        };
+      });
+      dispatch(setHistoryWorkflowExtensionRequest(mapping));
+    }
+
+    dispatch(setWorkflowExtensionRequest(newWorkflowData));
+    setIsRefreshWorkflowExtensionRequest(false);
+  }, [
+    workflowSurveyExtensionRequest,
+    isRefreshWorkflowExtensionRequest,
+    extension,
+  ]);
 
   // [ START ] Handler for content stage informasi
   const handleChangeFormInformasi = (property, value) => {
@@ -462,12 +583,11 @@ const index = () => {
       }
 
       if (actionType === "change") {
-        const response = await fetchApi(
+        await fetchApi(
           "PATCH",
           `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/change`,
           data
         );
-        if (!response.isDismissed) return;
       } else {
         await fetchApi(
           "POST",
@@ -480,6 +600,147 @@ const index = () => {
       workflowSurveyMutate();
       dispatch(resetWorkflowData());
       setShowModalApproval(false);
+    }
+    workflowSurveyMutate();
+  };
+  // [ END ] Handler for modal approval
+
+  // [ START ] Handler for modal extension request
+  const handleCloseModalApprovalExtensionRequest = () => {
+    dispatch(resetHistoryWorkflowExtensionRequest());
+    dispatch(resetWorkflowExtensionRequest());
+    setIsRefreshWorkflowExtensionRequest(true);
+  };
+
+  const handleAddApproverModalExtensionRequest = (property) => {
+    const newData = [...workflowExtensionRequest[property]];
+    newData.push({
+      pn: "",
+      nama: "",
+      is_signed: false,
+    });
+    dispatch(
+      setWorkflowExtensionRequest({
+        ...workflowExtensionRequest,
+        [property]: newData,
+      })
+    );
+  };
+
+  const handleDeleteApproverModalExtensionRequest = (property, idx) => {
+    const newData = [...workflowExtensionRequest[property]];
+    newData.splice(idx, 1);
+    dispatch(
+      setWorkflowExtensionRequest({
+        ...workflowExtensionRequest,
+        [property]: newData,
+      })
+    );
+  };
+
+  const handleChangeTextModalExtensionRequest = (property, value) => {
+    dispatch(
+      setWorkflowExtensionRequest({
+        ...workflowExtensionRequest,
+        [property]: value,
+      })
+    );
+  };
+
+  const handleChangeSelectModalExtensionRequest = (property, index, e) => {
+    const newData = [...workflowExtensionRequest[property]];
+    const updated = { ...newData[index] };
+    updated["pn"] = e?.value?.pn;
+    updated["nama"] = e?.value?.name;
+    newData[index] = updated;
+    dispatch(
+      setWorkflowExtensionRequest({
+        ...workflowExtensionRequest,
+        [property]: newData,
+      })
+    );
+  };
+
+  const handleSubmitModalExtensionRequest = async (e) => {
+    e.preventDefault();
+    const schemaMapping = {
+      schema: workflowExtensionSchema,
+      resetErrors: resetValidationErrorsWorkflowExtensionRequest,
+      setErrors: setValidationErrorsWorkflowExtensionRequest,
+    };
+    const validate = setErrorValidation(
+      workflowExtensionRequest,
+      dispatch,
+      schemaMapping
+    );
+
+    if (validate) {
+      const actionType = e.target.offsetParent.name;
+      const data = {
+        sub_modul: "catatan_perpanjangan",
+        sub_modul_id: selectedExtensionRequestId,
+      };
+
+      const signedCount =
+        workflowExtensionRequest?.ref_tim_audit_approver?.filter(
+          (item) => item.is_signed
+        ).length;
+
+      switch (actionType) {
+        case "change":
+          data.approvers = workflowExtensionRequest.ref_tim_audit_approver;
+          break;
+        case "create":
+          data.approvers = workflowExtensionRequest.ref_tim_audit_approver;
+          data.pelaksanaan_start_to =
+            workflowExtensionRequest.pelaksanaan_start;
+          data.pelaksanaan_end_to = workflowExtensionRequest.pelaksanaan_end;
+          break;
+        case "reject":
+          if (!workflowExtensionRequest.note) {
+            await errorSwal("Silahkan berikan alasan!");
+            return;
+          }
+          data.note = workflowExtensionRequest.note;
+          break;
+        case "approve":
+          if (
+            signedCount >=
+            workflowExtensionRequest?.ref_tim_audit_approver?.length
+          ) {
+            data.data = "<p>pirli test</p>";
+          }
+          data.note = workflowExtensionRequest.note;
+          break;
+      }
+
+      if (actionType === "reset") {
+        const confirm = await confirmationSwal(
+          "Terkait dengan workflow ini, apakah Anda yakin ingin melakukan pengaturan ulang?"
+        );
+        if (!confirm.value) {
+          return;
+        }
+      }
+
+      if (actionType === "change") {
+        await fetchApi(
+          "PATCH",
+          `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/change`,
+          data
+        );
+      } else {
+        await fetchApi(
+          "POST",
+          `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/${actionType}`,
+          data
+        );
+      }
+
+      informationMutate();
+      workflowSurveyExtensionRequestMutate();
+      dispatch(resetWorkflowExtensionRequest());
+      setShowModalApprovalExtension(false);
     }
     workflowSurveyMutate();
   };
@@ -563,6 +824,21 @@ const index = () => {
         handleCloseModal={handleCloseModalApproval}
         widthHeader={`w-[42rem]`}
         withoutSigner={true}
+      />
+      <ModalWorkflowRequestExtensionAndTermination
+        isExtensionRequest
+        workflowData={workflowExtensionRequest}
+        historyWorkflow={historyWorkflowExtensionRequest}
+        validationErrors={validationErrorsWorkflowExtensionRequest}
+        setShowModal={setShowModalApprovalExtension}
+        showModal={showModalApprovalExtension}
+        headerTitle={"Approval Perpanjangan"}
+        handleChange={handleChangeTextModalExtensionRequest}
+        handleChangeSelect={handleChangeSelectModalExtensionRequest}
+        handleDelete={handleDeleteApproverModalExtensionRequest}
+        handleAdd={handleAddApproverModalExtensionRequest}
+        handleSubmit={handleSubmitModalExtensionRequest}
+        handleCloseModal={handleCloseModalApprovalExtensionRequest}
       />
       <ModalGuidelines
         showModal={showModalGuidelines}
