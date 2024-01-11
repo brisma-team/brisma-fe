@@ -321,6 +321,11 @@ const index = () => {
             }
           });
         }
+
+        if (!question?.uraian) {
+          isValid = false;
+          errors.push(`${categoryIndex}-${questionIndex}`);
+        }
       });
     });
 
