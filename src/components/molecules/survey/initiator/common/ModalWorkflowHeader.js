@@ -40,7 +40,7 @@ const ModalWorkflowHeader = ({
         <p className="font-bold text-xl text-brisma">{headerTitle}</p>
       </div>
       <div className="max-h-[26.5rem] overflow-y-scroll mt-2">
-        <div className="flex w-full justify-center gap-4 px-3 py-1">
+        <div className="flex w-full justify-center gap-4 px-3 py-1 mb-2">
           <div className="w-1/2">
             <CardFormInput
               title={"P.I.C"}
@@ -161,7 +161,19 @@ const ModalWorkflowHeader = ({
             </CardContentHeaderFooter>
           </div>
         ) : (
-          ""
+          <div className="p-1">
+            <CardContentHeaderFooter className={"px-5 py-2"}>
+              <p className="text-sm font-semibold text-atlasian-red">
+                Pemberhentian
+              </p>
+              <div className="-mx-1 mt-2 mb-1">
+                <FormLabel
+                  title={"Alasan"}
+                  form={<TextAreaField isDisabled value={data?.reason} />}
+                />
+              </div>
+            </CardContentHeaderFooter>
+          </div>
         )}
       </div>
     </div>

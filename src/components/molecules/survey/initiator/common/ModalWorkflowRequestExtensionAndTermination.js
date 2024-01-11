@@ -185,7 +185,13 @@ const ModalWorkflowRequestExtensionAndTermination = ({
                     </Cell>
                     <Cell width="20%" className={`${customCell}`}>
                       <div
-                        className={`${positionCenter} justify-center text-xs`}
+                        className={`${positionCenter} justify-center text-xs ${
+                          status === "Approved"
+                            ? `text-atlasian-green`
+                            : status === "Rejected"
+                            ? `text-atlasian-red`
+                            : ``
+                        }`}
                       >
                         {status}
                       </div>

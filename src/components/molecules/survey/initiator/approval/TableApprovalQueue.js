@@ -72,6 +72,7 @@ const TableApprovalQueue = ({
             <Rows
               items={data}
               render={({
+                sub_modul_id,
                 survey_id,
                 pn,
                 nama,
@@ -89,7 +90,12 @@ const TableApprovalQueue = ({
                           </div>
                         }
                         handleClick={() =>
-                          handleClickAction(survey_id, pn, fase_approval)
+                          handleClickAction(
+                            sub_modul_id,
+                            survey_id,
+                            pn,
+                            fase_approval
+                          )
                         }
                         color={"blue"}
                       />

@@ -9,7 +9,7 @@ import {
   CardFilterOverview,
   CardOverview,
   ModalDetailSurvey,
-  ModalExtensionRequest,
+  ModalRequestExtensionAndTermination,
 } from "@/components/molecules/survey/initiator/overview";
 import { LandingLayoutSurvey } from "@/layouts/survey";
 import { useEffect, useState } from "react";
@@ -32,9 +32,13 @@ const index = () => {
   const [showModalSurveyDetail, setShowModalSurveyDetail] = useState(false);
   const [showModalExtensionRequest, setShowModalExtensionRequest] =
     useState(false);
+  const [showModalTerminateRequest, setShowModalTerminateRequest] =
+    useState(false);
+
   const [totalData, setTotalData] = useState(0);
   const [selectedSurveyId, setSelectedSurveyId] = useState(0);
   const [noteExtension, setNoteExtension] = useState("");
+  const [noteTerminate, setNoteTerminate] = useState("");
 
   const [filter, setFilter] = useState({
     nama_pembuat: "",
@@ -129,10 +133,6 @@ const index = () => {
     });
   };
 
-  const handleClickStop = (id) => {
-    console.log("stop");
-  };
-
   const handleClickApproval = (id) => {
     router.push(`overview/${id}?is_approval=true`);
   };
@@ -148,6 +148,15 @@ const index = () => {
 
   const handleClickShowScoreSurvey = (id) => {
     router.push(`overview/${id}/penilaian`);
+  };
+
+  const handleTerminateRequestSurvey = (id, survey_id, status_kode) => {
+    if (status_kode == 4) {
+      setSelectedSurveyId(survey_id);
+      setShowModalTerminateRequest(true);
+    } else {
+      router.push(`overview/${survey_id}?is_approval=true&terminate=${id}`);
+    }
   };
 
   const handleExtensionRequestSurvey = (id, survey_id, status_kode) => {
@@ -204,6 +213,30 @@ const index = () => {
   };
   // [ END ] Handler for modal extension request
 
+  // [ START ] Handler for modal terminate request
+  const handleCloseModalTerminateRequest = () => {
+    setNoteTerminate("");
+    setShowModalTerminateRequest(false);
+  };
+
+  const handleChangeNoteTerminate = (e) => {
+    setNoteTerminate(e.target.value);
+  };
+
+  const handleSubmitTerminateRequest = async () => {
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/catatan_pemberhentian/create`,
+      { survey_id: selectedSurveyId, note: noteTerminate }
+    );
+
+    overviewMutate();
+    handleCloseModalTerminateRequest();
+    loadingSwal("close");
+  };
+  // [ END ] Handler for modal terminate request
+
   return (
     <LandingLayoutSurvey overflowY={true}>
       <div className="w-full h-full pr-16 pb-20">
@@ -249,7 +282,7 @@ const index = () => {
                   <CardOverview
                     key={idx}
                     data={item}
-                    handleStopSurvey={handleClickStop}
+                    handleTerminateRequestSurvey={handleTerminateRequestSurvey}
                     handleDetailSurvey={handleClickDetail}
                     handleDownloadSurvey={handleClickDownload}
                     handleApprovalSurvey={handleClickApproval}
@@ -277,11 +310,18 @@ const index = () => {
         handleCloseModal={handleCloseModalSurveyDetail}
         data={information?.data}
       />
-      <ModalExtensionRequest
+      <ModalRequestExtensionAndTermination
+        isExtensionRequest
         showModal={showModalExtensionRequest}
         handleChangeNote={handleChangeNoteExtension}
         handleCloseModal={handleCloseModalExtensionRequest}
         handleSubmit={handleSubmitExtensionRequest}
+      />
+      <ModalRequestExtensionAndTermination
+        showModal={showModalTerminateRequest}
+        handleChangeNote={handleChangeNoteTerminate}
+        handleCloseModal={handleCloseModalTerminateRequest}
+        handleSubmit={handleSubmitTerminateRequest}
       />
     </LandingLayoutSurvey>
   );
