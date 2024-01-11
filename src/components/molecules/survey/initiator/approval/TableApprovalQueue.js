@@ -88,7 +88,9 @@ const TableApprovalQueue = ({
                             <IconArrowRight />
                           </div>
                         }
-                        handleClick={() => handleClickAction(survey_id, pn)}
+                        handleClick={() =>
+                          handleClickAction(survey_id, pn, fase_approval)
+                        }
                         color={"blue"}
                       />
                     </div>

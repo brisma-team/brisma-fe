@@ -21,7 +21,7 @@ const CardOverview = ({
   handleDetailSurvey,
   handleDownloadSurvey,
   handleApprovalSurvey,
-  handleExtendSurvey,
+  handleExtensionRequestSurvey,
   handleShowScoreSurvey,
   handleDeleteSurvey,
 }) => {
@@ -53,8 +53,27 @@ const CardOverview = ({
     { label: "Approval", action: async () => handleApprovalSurvey(data.id) },
     {
       label: "Perpanjang",
-      action: async () => await handleExtendSurvey(data.id),
-      isDisabled: !((isAdmin || isInitiator) && data.status_kode == 5),
+      action: async () => {
+        if (data.status_kode == 5) {
+          await handleExtensionRequestSurvey(null, data.id, data.status_kode);
+        } else {
+          let catatanId, surveyId;
+          if (data?.catatan_perpanjangan?.length) {
+            catatanId = data?.catatan_perpanjangan[0]?.id;
+            surveyId = data?.catatan_perpanjangan[0]?.survey_id;
+          }
+
+          await handleExtensionRequestSurvey(
+            catatanId,
+            surveyId,
+            data.status_kode
+          );
+        }
+      },
+      isDisabled: !(
+        (isAdmin || isInitiator) &&
+        (data.status_kode == 5 || data.status_kode == 6)
+      ),
     },
     {
       label: "Lihat Nilai",

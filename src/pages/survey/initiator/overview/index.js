@@ -9,6 +9,7 @@ import {
   CardFilterOverview,
   CardOverview,
   ModalDetailSurvey,
+  ModalExtensionRequest,
 } from "@/components/molecules/survey/initiator/overview";
 import { LandingLayoutSurvey } from "@/layouts/survey";
 import { useEffect, useState } from "react";
@@ -29,8 +30,11 @@ const index = () => {
   const [data, setData] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [showModalSurveyDetail, setShowModalSurveyDetail] = useState(false);
+  const [showModalExtensionRequest, setShowModalExtensionRequest] =
+    useState(false);
   const [totalData, setTotalData] = useState(0);
   const [selectedSurveyId, setSelectedSurveyId] = useState(0);
+  const [noteExtension, setNoteExtension] = useState("");
 
   const [filter, setFilter] = useState({
     nama_pembuat: "",
@@ -88,6 +92,8 @@ const index = () => {
           status_kode: v.status_kode,
           status_name: v.status_name,
           status_persetujuan: v.status_persetujuan,
+          catatan_perpanjangan: v.catatan_perpanjangan,
+          catatan_pemberhentian: v.catatan_pemberhentian,
         };
       });
 
@@ -144,8 +150,13 @@ const index = () => {
     router.push(`overview/${id}/penilaian`);
   };
 
-  const handleExtendSurvey = (id) => {
-    console.log("extend");
+  const handleExtensionRequestSurvey = (id, survey_id, status_kode) => {
+    if (status_kode == 5) {
+      setSelectedSurveyId(survey_id);
+      setShowModalExtensionRequest(true);
+    } else {
+      router.push(`overview/${survey_id}?is_approval=true&extension=${id}`);
+    }
   };
 
   const handleDeleteSurvey = async (id) => {
@@ -168,6 +179,30 @@ const index = () => {
   const handleCloseModalSurveyDetail = () => {
     setShowModalSurveyDetail(false);
   };
+
+  // [ START ] Handler for modal extension request
+  const handleCloseModalExtensionRequest = () => {
+    setNoteExtension("");
+    setShowModalExtensionRequest(false);
+  };
+
+  const handleChangeNoteExtension = (e) => {
+    setNoteExtension(e.target.value);
+  };
+
+  const handleSubmitExtensionRequest = async () => {
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/catatan_perpanjangan/create`,
+      { survey_id: selectedSurveyId, note: noteExtension }
+    );
+
+    overviewMutate();
+    handleCloseModalExtensionRequest();
+    loadingSwal("close");
+  };
+  // [ END ] Handler for modal extension request
 
   return (
     <LandingLayoutSurvey overflowY={true}>
@@ -218,7 +253,7 @@ const index = () => {
                     handleDetailSurvey={handleClickDetail}
                     handleDownloadSurvey={handleClickDownload}
                     handleApprovalSurvey={handleClickApproval}
-                    handleExtendSurvey={handleExtendSurvey}
+                    handleExtensionRequestSurvey={handleExtensionRequestSurvey}
                     handleShowScoreSurvey={handleClickShowScoreSurvey}
                     handleDeleteSurvey={handleDeleteSurvey}
                   />
@@ -241,6 +276,12 @@ const index = () => {
         showModal={showModalSurveyDetail}
         handleCloseModal={handleCloseModalSurveyDetail}
         data={information?.data}
+      />
+      <ModalExtensionRequest
+        showModal={showModalExtensionRequest}
+        handleChangeNote={handleChangeNoteExtension}
+        handleCloseModal={handleCloseModalExtensionRequest}
+        handleSubmit={handleSubmitExtensionRequest}
       />
     </LandingLayoutSurvey>
   );
