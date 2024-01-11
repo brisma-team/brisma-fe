@@ -218,7 +218,7 @@ const index = () => {
       setSelectedTerminateRequestId(terminate);
       setShowModalApprovalTerminate(true);
       setShowModalApproval(false);
-    } else {
+    } else if (is_approval) {
       setShowModalApproval(true);
     }
   }, [is_approval, extension, terminate]);
