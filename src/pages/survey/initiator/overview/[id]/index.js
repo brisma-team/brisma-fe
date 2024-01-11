@@ -213,13 +213,15 @@ const index = () => {
     if (is_approval && extension) {
       setSelectedExtensionRequestId(extension);
       setShowModalApprovalExtension(true);
+      setShowModalApproval(false);
     } else if (is_approval && terminate) {
       setSelectedTerminateRequestId(terminate);
       setShowModalApprovalTerminate(true);
+      setShowModalApproval(false);
     } else {
       setShowModalApproval(true);
     }
-  }, [is_approval]);
+  }, [is_approval, extension, terminate]);
 
   useEffect(() => {
     if (!informationError) {
