@@ -122,7 +122,6 @@ const index = () => {
       module === "Approval Pemberhentian Survey" ||
       module === "Request Pemberhentian"
     ) {
-      console.log("id => ", id);
       query = `&terminate=${id}`;
     } else {
       query = `&from=${pn}`;
