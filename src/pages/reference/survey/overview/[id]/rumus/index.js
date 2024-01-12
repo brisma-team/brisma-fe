@@ -2,6 +2,7 @@ import {
   Breadcrumbs,
   ButtonField,
   Card,
+  DivButton,
   LinkIcon,
   PageTitle,
 } from "@/components/atoms";
@@ -11,7 +12,7 @@ import { IconArrowLeft } from "@/components/icons";
 import { CardContentHeaderFooter } from "@/components/molecules/commons";
 import MonacoEditor from "@monaco-editor/react";
 import { useEffect, useRef, useState } from "react";
-import { errorSwal, fetchApi } from "@/helpers";
+import { errorSwal, fetchApi, previewDocumentNewTab } from "@/helpers";
 import {
   useInformation,
   useFormula,
@@ -166,7 +167,6 @@ const index = () => {
   };
 
   const handleEditorDidMount = (editor) => {
-    // Menyimpan instance editor untuk digunakan nanti
     editorRef.current = editor;
   };
   // [ END ] Handler for form formula
@@ -271,6 +271,20 @@ const index = () => {
                     </div>
                   </CardContentHeaderFooter>
                 </div>
+                <DivButton
+                  className="min-h-[18rem]"
+                  handleClick={() =>
+                    previewDocumentNewTab("guideline_formula.pdf")
+                  }
+                >
+                  <CardContentHeaderFooter>
+                    <div className="px-4 py-2 h-full flex items-center justify-center">
+                      <p className="font-semibold text-base">
+                        Guidelines/Glossary
+                      </p>
+                    </div>
+                  </CardContentHeaderFooter>
+                </DivButton>
                 <div className="h-fit">
                   <CardContentHeaderFooter
                     header={
