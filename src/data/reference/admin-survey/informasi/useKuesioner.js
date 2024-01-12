@@ -3,7 +3,10 @@ import useSWR from "swr";
 
 const useKuesioner = ({ id }) => {
   const path = `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/kuesioner/${id}`;
-  const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);
+  const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   return {
     kuesioner: data,

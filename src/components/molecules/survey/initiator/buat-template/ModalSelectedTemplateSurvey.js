@@ -1,4 +1,4 @@
-import { ButtonField, ButtonIcon, Modal } from "@/components/atoms";
+import { ButtonField, ButtonIcon, ModalScroll } from "@/components/atoms";
 import { confirmationSwal } from "@/helpers";
 import {
   CardContentHeaderFooter,
@@ -75,7 +75,7 @@ const ModalSelectedTemplateSurvey = ({
   };
 
   return (
-    <Modal
+    <ModalScroll
       showModal={showModal}
       header={
         <ModalHeader
@@ -148,7 +148,7 @@ const ModalSelectedTemplateSurvey = ({
           </div>
         </CardContentHeaderFooter>
       </div>
-    </Modal>
+    </ModalScroll>
   );
 };
 

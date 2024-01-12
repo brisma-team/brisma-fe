@@ -1,4 +1,4 @@
-import { Modal, TableField } from "@/components/atoms";
+import { ModalScroll, TableField } from "@/components/atoms";
 import useUser from "@/data/useUser";
 import { confirmationSwal } from "@/helpers";
 import ModalWorkflowHeader from "./ModalWorkflowHeader";
@@ -44,7 +44,7 @@ const ModalWorkflow = ({
   };
 
   return (
-    <Modal
+    <ModalScroll
       showModal={showModal}
       header={
         <ModalWorkflowHeader
@@ -95,7 +95,7 @@ const ModalWorkflow = ({
           />
         </div>
       </div>
-    </Modal>
+    </ModalScroll>
   );
 };
 

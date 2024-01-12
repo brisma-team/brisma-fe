@@ -1,7 +1,7 @@
 import {
   ButtonField,
   CloseModal,
-  Modal,
+  ModalScroll,
   TextAreaField,
 } from "@/components/atoms";
 import { confirmationSwal } from "@/helpers";
@@ -50,7 +50,7 @@ const ModalGuidelines = ({
   };
 
   return (
-    <Modal
+    <ModalScroll
       showModal={showModal}
       footer={isUpdate && <ModalFooter handleConfirm={handleSave} />}
       positionCenter={true}
@@ -69,7 +69,7 @@ const ModalGuidelines = ({
           <div className="mt-2" dangerouslySetInnerHTML={{ __html: desc }} />
         )}
       </div>
-    </Modal>
+    </ModalScroll>
   );
 };
 

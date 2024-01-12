@@ -1,4 +1,4 @@
-import { ButtonIcon, Modal } from "@/components/atoms";
+import { ButtonIcon, ModalScroll } from "@/components/atoms";
 import useUser from "@/data/useUser";
 import { checkRoleIsAdmin, confirmationSwal } from "@/helpers";
 import ModalWorkflowHeader from "./ModalWorkflowHeader";
@@ -62,7 +62,7 @@ const ModalWorkflowRequestExtensionAndTermination = ({
   };
 
   return (
-    <Modal
+    <ModalScroll
       showModal={showModal}
       header={
         <ModalWorkflowHeader
@@ -207,7 +207,7 @@ const ModalWorkflowRequestExtensionAndTermination = ({
           </TableTree>
         </div>
       </div>
-    </Modal>
+    </ModalScroll>
   );
 };
 

@@ -94,8 +94,8 @@ const index = () => {
     (state) => state.respondenAnswer.dataCategory
   );
 
-  const { user } = useUser();
-  const { information, informationError } = useInformation({ id });
+  const { user } = useUser(true);
+  const { information, informationError } = useInformation({ id }, true);
   const { kuesioner } = useKuesioner({ id });
   const { workflowSurvey, workflowSurveyMutate } = useWorkflowSurvey(
     "responden",

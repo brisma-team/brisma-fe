@@ -1,4 +1,4 @@
-import { CloseModal, Modal } from "@/components/atoms";
+import { CloseModal, ModalScroll } from "@/components/atoms";
 import { confirmationSwal, convertDate } from "@/helpers";
 const row = "w-full flex border-b border-gray-300";
 const columnBorder =
@@ -18,7 +18,7 @@ const ModalDetailSurvey = ({ showModal, handleCloseModal, data }) => {
   };
 
   return (
-    <Modal showModal={showModal}>
+    <ModalScroll showModal={showModal}>
       <div className="w-[45rem] relative">
         <CloseModal handleCloseModal={closeModal} showModal={showModal} />
         <div className="px-2 pb-2 pt-6">
@@ -93,7 +93,7 @@ const ModalDetailSurvey = ({ showModal, handleCloseModal, data }) => {
           </div>
         </div>
       </div>
-    </Modal>
+    </ModalScroll>
   );
 };
 
