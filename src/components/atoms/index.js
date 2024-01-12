@@ -40,6 +40,7 @@ import CustomPagination from "./CustomPagination";
 import CustomTooltip from "./CustomTooltip";
 import CustomCheckbox from "./CustomCheckbox";
 import InformationDetail from "./InformationDetail";
+import ModalScroll from "./ModalScroll";
 
 export {
   AvatarDefaultExample,
@@ -84,4 +85,5 @@ export {
   CustomTooltip,
   CustomCheckbox,
   InformationDetail,
+  ModalScroll,
 };
