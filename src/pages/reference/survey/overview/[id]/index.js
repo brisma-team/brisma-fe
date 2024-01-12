@@ -276,10 +276,6 @@ const index = () => {
   }, [workflow, isRefreshWorkflow]);
 
   useEffect(() => {
-    console.log("isDisabled => ", isFormDisabled);
-  }, [isFormDisabled]);
-
-  useEffect(() => {
     setIsDisabledButtonApproval(!payloadKuesioner?.length);
   }, [payloadKuesioner]);
 
@@ -885,12 +881,11 @@ const index = () => {
       }
 
       if (actionType === "change") {
-        const response = await fetchApi(
+        await fetchApi(
           "PATCH",
           `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/workflow/change`,
           data
         );
-        if (!response.isDismissed) return;
       } else {
         await fetchApi(
           "POST",

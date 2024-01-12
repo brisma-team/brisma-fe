@@ -1,4 +1,9 @@
-import { ButtonField, CloseModal, DivButton, Modal } from "@/components/atoms";
+import {
+  ButtonField,
+  CloseModal,
+  DivButton,
+  ModalScroll,
+} from "@/components/atoms";
 import {
   CardContentHeaderFooter,
   FormLabel,
@@ -104,7 +109,7 @@ const ModalAddQuestion = ({
   // [END] Handler for content Guidelines
 
   return (
-    <Modal
+    <ModalScroll
       showModal={showModal}
       header={
         <ModalHeader
@@ -169,7 +174,7 @@ const ModalAddQuestion = ({
           </div>
         </div>
       )}
-    </Modal>
+    </ModalScroll>
   );
 };
 

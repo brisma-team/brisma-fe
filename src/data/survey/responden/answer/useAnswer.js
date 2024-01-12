@@ -7,7 +7,10 @@ const useAnswerSurvey = (params) => {
   if (pn) query = `?pn=${pn}`;
 
   const path = `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey_responden/kuesioner/jawaban/${id}${query}`;
-  const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);
+  const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   return {
     answerSurvey: data,

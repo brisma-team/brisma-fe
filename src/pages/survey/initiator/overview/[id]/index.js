@@ -260,7 +260,7 @@ const index = () => {
                   tipe_pertanyaan_kode: question.tipe_pertanyaan_kode,
                   tipe_pertanyaan_name: question.tipe_pertanyaan_name,
                   uraian: question.uraian,
-                  is_need_deskripsi: false,
+                  is_need_deskripsi: question.is_need_deskripsi,
                   bobot: question.bobot,
                   jawaban: question.template_jawaban.length
                     ? question.template_jawaban.map((answer) => {
@@ -282,6 +282,9 @@ const index = () => {
       dispatch(resetPayloadKuesioner());
     }
   }, [kuesioner]);
+  useEffect(() => {
+    console.log("payloadKuesioner => ", payloadKuesioner);
+  }, [payloadKuesioner]);
 
   useEffect(() => {
     let templateName = "Informasi";

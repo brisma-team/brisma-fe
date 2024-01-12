@@ -1,8 +1,8 @@
 import {
   CloseModal,
-  Modal,
   TextAreaField,
   ButtonField,
+  ModalScroll,
 } from "@/components/atoms";
 import { confirmationSwal } from "@/helpers";
 
@@ -41,7 +41,7 @@ const ModalRequestExtensionAndTermination = ({
   };
 
   return (
-    <Modal
+    <ModalScroll
       showModal={showModal}
       positionCenter
       footer={
@@ -65,7 +65,7 @@ const ModalRequestExtensionAndTermination = ({
           </div>
         </div>
       </div>
-    </Modal>
+    </ModalScroll>
   );
 };
 
