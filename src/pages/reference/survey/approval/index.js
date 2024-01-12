@@ -105,7 +105,7 @@ const index = () => {
     }
   }, [approvalAdminSurvey]);
 
-  const handleClickActionOnTableApprovalQueue = (survey_id) => {
+  const handleClickActionOnTableApprovalQueue = (id, survey_id) => {
     router.push(`overview/${survey_id}?is_approval=true`);
   };
 
