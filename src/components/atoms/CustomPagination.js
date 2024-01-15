@@ -11,7 +11,7 @@ const CustomPagination = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(defaultCurrentPage || 1);
 
-  const totalPage = Math.ceil(totalData / perPage);
+  const totalPage = Math.ceil(totalData / perPage) || 1;
 
   const arrPages = [];
   for (let i = 1; i <= totalPage; i++) {
