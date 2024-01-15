@@ -2,17 +2,16 @@ import React, { useState, useEffect } from "react";
 import {
   Breadcrumbs,
   ButtonField,
+  ButtonIcon,
   Card,
+  CustomTooltip,
   PageTitle,
   UploadButton,
 } from "@/components/atoms";
 import { PatLandingLayout } from "@/layouts/pat";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import {
-  PopupKlipping,
-  PrevNextNavigation,
-} from "@/components/molecules/commons";
+import { PrevNextNavigation } from "@/components/molecules/commons";
 import useLatarBelakangTujuanPat from "@/data/pat/useLatarBelakangTujuanPat";
 import { useRouter } from "next/router";
 import {
@@ -25,6 +24,7 @@ import {
 import { useStatusPat } from "@/data/pat";
 import { useDispatch, useSelector } from "react-redux";
 import { setImageClipList } from "@/slices/pat/latarBelakangSlice";
+import { IconInfo } from "@/components/icons";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -49,7 +49,9 @@ const index = () => {
   );
   const { id } = useRouter().query;
   const baseUrl = `/pat/projects/${id}`;
+
   const { statusPat } = useStatusPat(id);
+
   const [isDisabled, setIsDisabled] = useState(false);
   const [content, setContent] = useState(null);
   const breadcrumbs = [
@@ -159,7 +161,29 @@ const index = () => {
               <div className="w-full px-4 -ml-1">
                 <div className="flex justify-between">
                   <p className="text-xl font-semibold">Kliping Gambar</p>
-                  <PopupKlipping />
+                  <CustomTooltip
+                    content={
+                      <div className="p-2 w-[22rem] text-center">
+                        <p className="text-xl text-atlasian-yellow font-bold">
+                          PERHATIAN
+                        </p>
+                        <p className="text-base">
+                          Fitur ini digunakan untuk mendapatkan image url yang
+                          dapat disematkan pada text-editor. <br />
+                          <br />
+                          Gambar pada kliping tidak akan tersimpan dan akan
+                          terhapus apabila berganti atau refresh halaman.
+                        </p>
+                      </div>
+                    }
+                  >
+                    <ButtonIcon
+                      isDisabled
+                      color={"yellow"}
+                      icon={<IconInfo />}
+                    />
+                  </CustomTooltip>
+                  {/* <PopupKlipping /> */}
                 </div>
                 {/* Start Kliping Gambar */}
                 <div
@@ -206,15 +230,15 @@ const index = () => {
               onChange={(value) => setData({ ...data, latar_belakang: value })}
             />
           </div>
-          <div className="mt-3 flex justify-end">
-            <div className="w-[7.75rem] h-10 bg-atlasian-green rounded flex items-center">
-              <ButtonField
-                text={"Simpan"}
-                handler={handlePost}
-                disabled={isDisabled}
-              />
+          {!isDisabled ? (
+            <div className="mt-3 flex justify-end">
+              <div className="w-[7.75rem] bg-atlasian-green rounded flex items-center">
+                <ButtonField text={"Simpan"} handler={handlePost} />
+              </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
       {/* End Content */}
