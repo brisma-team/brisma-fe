@@ -124,6 +124,9 @@ const index = () => {
       });
       setData(mapping);
       setTotalData(projectOverview?.pagination?.totalData);
+    } else {
+      setData([]);
+      setTotalData(0);
     }
   }, [projectOverview, params]);
 
@@ -175,28 +178,28 @@ const index = () => {
       {/* Start Content */}
       {projectOverviewError ? (
         <DataNotFound />
+      ) : data?.length ? (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 my-4 overflow-hidden -ml-2">
+          {data.map((v, i) => {
+            return (
+              <CardOverview
+                key={i}
+                id={v.id}
+                title={v.title}
+                year={v.year}
+                progress={v.progress}
+                percent={v.percent}
+                documentStatus={v.documentStatus}
+                apporovalStatus={v.apporovalStatus}
+                addendum={v.addendum}
+                href={v.href}
+                handleApproval={handleApproval}
+              />
+            );
+          })}
+        </div>
       ) : (
-        data?.length && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 my-4 overflow-hidden -ml-2">
-            {data.map((v, i) => {
-              return (
-                <CardOverview
-                  key={i}
-                  id={v.id}
-                  title={v.title}
-                  year={v.year}
-                  progress={v.progress}
-                  percent={v.percent}
-                  documentStatus={v.documentStatus}
-                  apporovalStatus={v.apporovalStatus}
-                  addendum={v.addendum}
-                  href={v.href}
-                  handleApproval={handleApproval}
-                />
-              );
-            })}
-          </div>
-        )
+        ""
       )}
       <CustomPagination
         perPage={filter.limit}
