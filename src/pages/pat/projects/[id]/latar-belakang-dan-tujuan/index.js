@@ -2,16 +2,17 @@ import React, { useState, useEffect } from "react";
 import {
   Breadcrumbs,
   ButtonField,
-  ButtonIcon,
   Card,
-  CustomTooltip,
   PageTitle,
   UploadButton,
 } from "@/components/atoms";
 import { PatLandingLayout } from "@/layouts/pat";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { PrevNextNavigation } from "@/components/molecules/commons";
+import {
+  PopupKlipping,
+  PrevNextNavigation,
+} from "@/components/molecules/commons";
 import useLatarBelakangTujuanPat from "@/data/pat/useLatarBelakangTujuanPat";
 import { useRouter } from "next/router";
 import {
@@ -24,7 +25,6 @@ import {
 import { useStatusPat } from "@/data/pat";
 import { useDispatch, useSelector } from "react-redux";
 import { setImageClipList } from "@/slices/pat/latarBelakangSlice";
-import { IconInfo } from "@/components/icons";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -103,8 +103,7 @@ const index = () => {
   };
 
   useEffect(() => {
-    if (statusPat?.data?.status_pat?.toLowerCase() === "final")
-      setIsDisabled(true);
+    setIsDisabled(statusPat?.data?.status_pat !== "On Progress");
   }, [statusPat]);
 
   useEffect(() => {
@@ -161,29 +160,7 @@ const index = () => {
               <div className="w-full px-4 -ml-1">
                 <div className="flex justify-between">
                   <p className="text-xl font-semibold">Kliping Gambar</p>
-                  <CustomTooltip
-                    content={
-                      <div className="p-2 w-[22rem] text-center">
-                        <p className="text-xl text-atlasian-yellow font-bold">
-                          PERHATIAN
-                        </p>
-                        <p className="text-base">
-                          Fitur ini digunakan untuk mendapatkan image url yang
-                          dapat disematkan pada text-editor. <br />
-                          <br />
-                          Gambar pada kliping tidak akan tersimpan dan akan
-                          terhapus apabila berganti atau refresh halaman.
-                        </p>
-                      </div>
-                    }
-                  >
-                    <ButtonIcon
-                      isDisabled
-                      color={"yellow"}
-                      icon={<IconInfo />}
-                    />
-                  </CustomTooltip>
-                  {/* <PopupKlipping /> */}
+                  <PopupKlipping />
                 </div>
                 {/* Start Kliping Gambar */}
                 <div

@@ -102,8 +102,7 @@ const index = () => {
   };
 
   useEffect(() => {
-    if (statusPat?.data?.status_pat?.toLowerCase() === "final")
-      setIsDisabled(true);
+    setIsDisabled(statusPat?.data?.status_pat !== "On Progress");
   }, [statusPat]);
 
   useEffect(() => {
@@ -199,15 +198,15 @@ const index = () => {
               }
             />
           </div>
-          <div className="mt-3 flex justify-end">
-            <div className="w-[7.75rem] h-10 bg-atlasian-green rounded flex items-center">
-              <ButtonField
-                text={"Simpan"}
-                handler={handlePost}
-                disabled={isDisabled}
-              />
+          {!isDisabled ? (
+            <div className="mt-3 flex justify-end">
+              <div className="w-[7.75rem] bg-atlasian-green rounded flex items-center">
+                <ButtonField text={"Simpan"} handler={handlePost} />
+              </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
       {/* End Content */}
