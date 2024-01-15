@@ -29,7 +29,7 @@ const CardFilterProjectOverview = ({ openFilter, filter, setFilter }) => {
 
   return (
     openFilter && (
-      <div>
+      <div className="mt-4">
         <Card>
           <div className="px-2">
             <div className="flex m-2 w-[26rem] gap-4">

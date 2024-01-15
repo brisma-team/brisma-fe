@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { PatOverviewLayout } from "@/layouts/pat";
-import Button from "@atlaskit/button";
-import { IconPlus } from "@/components/icons";
 import {
   Breadcrumbs,
   ButtonField,
+  CustomPagination,
   PageTitle,
-  Pagination,
 } from "@/components/atoms";
 import {
   CardFilterProjectOverview,
@@ -17,6 +15,7 @@ import { CardOverview } from "@/components/molecules/pat/overview";
 import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
 import _ from "lodash";
 import useApprovalPat from "@/data/pat/useApprovalPat";
+import { useRouter } from "next/router";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -25,21 +24,6 @@ const breadcrumbs = [
 ];
 
 const convertProgressAndPercent = (approvers, status_approver, status_pat) => {
-  // let progress, percent;
-  // const findIndex = approvers?.findIndex((v) => v.pn === status_approver?.pn);
-  // if (status_pat === "Final") {
-  //   progress = 1;
-  //   percent = "100%";
-  // } else if (status_approver && find) {
-  //   const sum = (findIndex + 1) / approvers.length;
-  //   progress = sum;
-  //   percent = decimalToPercentage(sum);
-  // } else if (!status_approver) {
-  //   progress = 0;
-  //   percent = "0%";
-  // }
-  // return { progress, percent };
-
   let progress, percent;
   switch (status_pat) {
     case "Final":
@@ -64,8 +48,8 @@ const convertProgressAndPercent = (approvers, status_approver, status_pat) => {
 };
 
 const index = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const router = useRouter();
+  const [totalData, setTotalData] = useState(0);
   const [openFilter, setOpenFilter] = useState(false);
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -73,25 +57,33 @@ const index = () => {
     project_name: "",
     status_approver: "",
     status_pat: "",
-    sortBy: "ASC",
-    limit: 8,
     year: "",
+    sort_by: "ASC",
+    limit: 4,
+    page: 1,
   });
   const [filter, setFilter] = useState({
     project_name: "",
     status_approver: "",
     status_pat: "",
-    sortBy: "ASC",
-    limit: 8,
     year: "",
+    sort_by: "ASC",
+    limit: 8,
+    page: 1,
   });
 
   const { projectOverview, projectOverviewMutate, projectOverviewError } =
-    useProjectOverview({
-      ...params,
-      pages: currentPage,
-    });
+    useProjectOverview(params);
   const { approvalPat } = useApprovalPat();
+
+  useEffect(() => {
+    setFilter((prevFilter) => {
+      return {
+        ...prevFilter,
+        page: 1,
+      };
+    });
+  }, [filter.limit]);
 
   useEffect(() => {
     const handleSearch = () => {
@@ -131,12 +123,16 @@ const index = () => {
         };
       });
       setData(mapping);
-      setTotalPages(projectOverview?.page?.totalPage);
+      setTotalData(projectOverview?.pagination?.totalData);
     }
   }, [projectOverview, params]);
 
   const handleChangeFilter = (props, value) => {
     setFilter({ ...filter, [props]: value });
+  };
+
+  const handleApproval = (id) => {
+    router.push(`projects/${id}/dokumen?is_approval=true`);
   };
 
   return (
@@ -149,25 +145,16 @@ const index = () => {
       </div>
       {/* Start Filter */}
       <div className="flex gap-3 items-center">
-        <div className="my-3 w-40">
-          <Button
-            appearance="primary"
-            iconBefore={<IconPlus />}
-            onClick={() => setOpenFilter(!openFilter)}
-            shouldFitContainer
-          >
-            Tampilkan Filter
-          </Button>
+        <div className="w-36 rounded bg-atlasian-blue-light">
+          <ButtonField
+            handler={() => setOpenFilter(!openFilter)}
+            text={openFilter ? `Tutup Filter` : `Tampilkan Filter`}
+          />
         </div>
         <div className="w-40 rounded bg-atlasian-purple">
           <ButtonField
             handler={() => setShowModal(true)}
             text={"Buat Project"}
-          />
-          <ModalCreateProjectPAT
-            showModal={showModal}
-            setShowModal={setShowModal}
-            mutate={projectOverviewMutate}
           />
         </div>
       </div>
@@ -178,7 +165,10 @@ const index = () => {
           setFilter={setFilter}
         />
         <div className="w-full flex justify-end items-end p-2">
-          <SelectSortFilter change={handleChangeFilter} />
+          <SelectSortFilter
+            change={handleChangeFilter}
+            options={[4, 8, 16, 32, 50, 100]}
+          />
         </div>
       </div>
       {/* End Filter */}
@@ -201,14 +191,27 @@ const index = () => {
                   apporovalStatus={v.apporovalStatus}
                   addendum={v.addendum}
                   href={v.href}
+                  handleApproval={handleApproval}
                 />
               );
             })}
           </div>
         )
       )}
-      <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
+      <CustomPagination
+        perPage={filter.limit}
+        handleSetPagination={(start, end, pageNow) =>
+          handleChangeFilter("page", pageNow)
+        }
+        defaultCurrentPage={filter.page}
+        totalData={totalData}
+      />
       {/* End Content */}
+      <ModalCreateProjectPAT
+        showModal={showModal}
+        setShowModal={setShowModal}
+        mutate={projectOverviewMutate}
+      />
     </PatOverviewLayout>
   );
 };

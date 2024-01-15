@@ -2,7 +2,7 @@ import { Card, DivButton } from "@/components/atoms";
 import { IconSuccess } from "@/components/icons";
 import ProgressBar from "@atlaskit/progress-bar";
 import { useRouter } from "next/router";
-import DropdownCard from "./DropdownCard";
+import { DropdownCard } from "../../commons";
 
 const CardBody = ({ title, value, icon }) => {
   return (
@@ -28,15 +28,16 @@ const CardOverview = ({
   apporovalStatus,
   addendum,
   href,
+  handleApproval,
 }) => {
   const router = useRouter();
 
+  const listDropdown = [
+    { label: "Approval", action: async () => handleApproval(id) },
+  ];
+
   const handleClickCard = () => {
     router.push(href);
-  };
-
-  const handeClickDropdown = () => {
-    router.push(`/pat/projects/${id}/dokumen?openModal=true`);
   };
 
   return (
@@ -51,7 +52,7 @@ const CardOverview = ({
               {title}
             </div>
             <div className="w-7">
-              <DropdownCard handleClick={handeClickDropdown} />
+              <DropdownCard actions={listDropdown} />
             </div>
           </div>
           <div className="text-sm font-bold">{year}</div>
