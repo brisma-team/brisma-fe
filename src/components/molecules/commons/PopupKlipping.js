@@ -1,17 +1,10 @@
-import Popup from "@atlaskit/popup";
-import { ButtonIcon } from "@/components/atoms";
+import { ButtonIcon, CustomTooltip } from "@/components/atoms";
 import { IconInfo } from "@/components/icons";
-import { useState } from "react";
 
 const PopupKlipping = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
-    <Popup
-      isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
-      placement="bottom-start"
-      content={() => (
+    <CustomTooltip
+      content={
         <div className="p-2 w-[22rem] text-center">
           <p className="text-xl text-atlasian-yellow font-bold">PERHATIAN</p>
           <p className="text-base">
@@ -22,18 +15,10 @@ const PopupKlipping = () => {
             berganti atau refresh halaman.
           </p>
         </div>
-      )}
-      trigger={(triggerProps) => (
-        <ButtonIcon
-          color={"yellow"}
-          icon={<IconInfo />}
-          handleClick={() => setIsOpen(true)}
-          handleMouseEnter={() => setIsOpen(true)}
-          handleMouseLeave={() => setIsOpen(false)}
-          props={triggerProps}
-        />
-      )}
-    />
+      }
+    >
+      <ButtonIcon isDisabled color={"yellow"} icon={<IconInfo />} />
+    </CustomTooltip>
   );
 };
 
