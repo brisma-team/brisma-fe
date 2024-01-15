@@ -112,7 +112,7 @@ const index = () => {
   };
 
   const handleClickApproval = (id) => {
-    router.push(`overview/${id}?is_approver=true`);
+    router.push(`overview/${id}?is_approval=true`);
   };
 
   const handleClickDownload = (id) => {
