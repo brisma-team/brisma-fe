@@ -15,26 +15,17 @@ const ModalOtherScheduleDetail = ({ showModal, setShowModal, scheduleId }) => {
     const jenisAuditee =
       activityScheduleOther?.data.jadwal?.count_target_jenis_auditee;
     if (jenisAuditee?.length > 0) {
-      const mappingItems = jenisAuditee?.map((v) => {
-        if (!parseInt(v?.existing)) {
-          return {
-            "Objek Audit": v?.name,
-            Eksisting: "0",
-            Target: "0",
-            Presentase: "0%",
-          };
-        } else {
-          return {
-            "Objek Audit": v?.name,
-            Eksisting: v?.existing.toString(),
-            Target: v?.target.toString(),
-            Presentase: `${(
+      const mappingItems = jenisAuditee?.map((v) => ({
+        "Objek Audit": v?.name,
+        Eksisting: v?.existing.toString(),
+        Target: v?.target.toString(),
+        Presentase: !parseInt(v?.existing)
+          ? "0%"
+          : `${(
               (parseInt(v?.target) / parseInt(v?.existing)) *
               100
             ).toString()}%`,
-          };
-        }
-      });
+      }));
       setItems(mappingItems);
     } else {
       setItems([]);

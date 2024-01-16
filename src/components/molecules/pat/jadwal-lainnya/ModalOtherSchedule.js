@@ -177,7 +177,7 @@ const ModalOtherSchedule = ({
 
       dispatch(setActivityScheduleOtherData(mapping));
     }
-  }, [activityScheduleOther]);
+  }, [activityScheduleOther, showModal, typeModal]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

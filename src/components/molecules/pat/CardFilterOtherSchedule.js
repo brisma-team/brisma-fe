@@ -49,8 +49,8 @@ const CardFilterOtherSchedule = ({ showFilter, params, setParams }) => {
     showFilter && (
       <Card>
         <div className="flex gap-3 px-4 py-2 w-fit">
-          <div className="flex flex-col gap-3">
-            <div className="w-72 flex tems-center h-full">
+          <div className="flex flex-col justify-center gap-3">
+            <div className="w-72 flex items-center">
               <TextInput
                 placeholder="Nama Proyek"
                 onChange={(e) => handleChangeParams("nama", e.target.value)}

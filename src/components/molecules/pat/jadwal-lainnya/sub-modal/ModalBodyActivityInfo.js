@@ -154,15 +154,16 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
 
   return (
     <div className="w-[63rem]">
-      <div className="w-1/2 pr-1">
+      <div className="w-1/2">
         <TextInput
           icon={
             <ButtonIcon
               handleClick={() => handleChange("nama", "")}
-              icon={<IconClose />}
+              icon={<IconClose size="large" />}
+              className="h-full flex items-center"
             />
           }
-          className={"font-bold text-5xl rounded text-brisma"}
+          className={"font-medium text-3xl rounded text-brisma"}
           style={{ fontSize: "1.25rem" }}
           onChange={(e) => handleChange("nama", e.target.value)}
           value={activityScheduleOtherData.nama}
