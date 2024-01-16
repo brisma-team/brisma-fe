@@ -13,6 +13,7 @@ import { CardBodyContent, FormWithLabel } from "@/components/molecules/commons";
 import { useDispatch, useSelector } from "react-redux";
 import { useJenis, useMetode, useTema, useTipe } from "@/data/reference";
 import { setActivityScheduleData } from "@/slices/pat/activityScheduleSlice";
+import { addDaysToDate, dateNow } from "@/helpers";
 
 const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
   const dispatch = useDispatch();
@@ -264,7 +265,24 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
                   valueStart={activityScheduleData.pelaksanaan_start}
                   valueEnd={activityScheduleData.pelaksanaan_end}
                   isDisabled={isDisabled}
-                  pastDate={true}
+                  format={"DD/MM/YYYY"}
+                  minDateStart={dateNow()}
+                  maxDateStart={
+                    addDaysToDate(
+                      activityScheduleData?.pelaksanaan_end,
+                      "-",
+                      1
+                    ) || null
+                  }
+                  minDateEnd={
+                    addDaysToDate(
+                      activityScheduleData?.pelaksanaan_start,
+                      "+",
+                      1
+                    ) ||
+                    addDaysToDate(dateNow(), "+", 1) ||
+                    null
+                  }
                 />
               }
               widthLabel={"w-2/5"}

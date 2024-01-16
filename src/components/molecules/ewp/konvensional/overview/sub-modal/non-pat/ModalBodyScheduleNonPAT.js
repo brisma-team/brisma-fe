@@ -11,6 +11,7 @@ import { setProjectOverviewData } from "@/slices/ewp/projectOverviewEWPSlice";
 import { IconClose } from "@/components/icons";
 import { useState } from "react";
 import { useJenis, useMetode, useTema, useTipe } from "@/data/reference";
+import { addDaysToDate, dateNow } from "@/helpers";
 
 const ModalBodyScheduleNonPAT = ({ setCurrentModalStage, isDisabled }) => {
   const dispatch = useDispatch();
@@ -217,7 +218,24 @@ const ModalBodyScheduleNonPAT = ({ setCurrentModalStage, isDisabled }) => {
               placeholderStart="Pilih Tanggal"
               placeholderEnd="Pilih Tanggal"
               isDisabled={isDisabled}
-              pastDate={true}
+              format={"DD/MM/YYYY"}
+              minDateStart={dateNow()}
+              maxDateStart={
+                addDaysToDate(
+                  projectOverviewData?.info_periode_pelaksanaan_end,
+                  "-",
+                  1
+                ) || null
+              }
+              minDateEnd={
+                addDaysToDate(
+                  projectOverviewData?.info_periode_pelaksanaan_start,
+                  "+",
+                  1
+                ) ||
+                addDaysToDate(dateNow(), "+", 1) ||
+                null
+              }
             />
           }
           label="Periode Kegiatan"

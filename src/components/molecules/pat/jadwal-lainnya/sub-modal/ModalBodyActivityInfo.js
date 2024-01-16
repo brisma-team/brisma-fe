@@ -14,6 +14,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useJenis, useMetode, useTema, useTipe } from "@/data/reference";
 import { setActivityScheduleOtherData } from "@/slices/pat/activityScheduleOtherSlice";
+import { addDaysToDate, dateNow } from "@/helpers";
 
 const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
   const dispatch = useDispatch();
@@ -271,7 +272,24 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
                   valueStart={activityScheduleOtherData.pelaksanaan_start}
                   valueEnd={activityScheduleOtherData.pelaksanaan_end}
                   isDisabled={isDisabled}
-                  pastDate={true}
+                  format={"DD/MM/YYYY"}
+                  minDateStart={dateNow()}
+                  maxDateStart={
+                    addDaysToDate(
+                      activityScheduleOtherData?.pelaksanaan_end,
+                      "-",
+                      1
+                    ) || null
+                  }
+                  minDateEnd={
+                    addDaysToDate(
+                      activityScheduleOtherData?.pelaksanaan_start,
+                      "+",
+                      1
+                    ) ||
+                    addDaysToDate(dateNow(), "+", 1) ||
+                    null
+                  }
                 />
               }
               widthLabel={"w-2/5"}

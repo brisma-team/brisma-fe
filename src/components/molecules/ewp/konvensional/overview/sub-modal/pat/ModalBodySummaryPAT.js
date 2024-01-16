@@ -4,6 +4,7 @@ import { DatepickerStartEnd, TextInput } from "@/components/atoms";
 import { useDispatch, useSelector } from "react-redux";
 import { setProjectOverviewData } from "@/slices/ewp/projectOverviewEWPSlice";
 import useUser from "@/data/useUser";
+import { addDaysToDate, dateNow } from "@/helpers";
 
 const ModalBodySummaryPAT = ({ setCurrentModalStage, isDisabled, isPat }) => {
   const dispatch = useDispatch();
@@ -169,6 +170,24 @@ const ModalBodySummaryPAT = ({ setCurrentModalStage, isDisabled, isPat }) => {
                 placeholderStart="Pilih Tanggal"
                 placeholderEnd="Pilih Tanggal"
                 isDisabled={isDisabled}
+                format={"DD/MM/YYYY"}
+                minDateStart={dateNow()}
+                maxDateStart={
+                  addDaysToDate(
+                    projectOverviewData?.info_periode_pelaksanaan_end,
+                    "-",
+                    1
+                  ) || null
+                }
+                minDateEnd={
+                  addDaysToDate(
+                    projectOverviewData?.info_periode_pelaksanaan_start,
+                    "+",
+                    1
+                  ) ||
+                  addDaysToDate(dateNow(), "+", 1) ||
+                  null
+                }
               />
             </div>
           }
