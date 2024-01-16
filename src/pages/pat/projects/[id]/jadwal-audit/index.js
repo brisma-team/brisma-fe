@@ -1,8 +1,8 @@
 import {
   Breadcrumbs,
   ButtonField,
+  CustomPagination,
   PageTitle,
-  Pagination,
 } from "@/components/atoms";
 import {
   CardTypeCount,
@@ -11,7 +11,6 @@ import {
   SelectSortFilter,
 } from "@/components/molecules/commons";
 import { PatLandingLayout } from "@/layouts/pat";
-import Button from "@atlaskit/button";
 import CardAuditSchedule from "@/components/molecules/pat/CardAuditSchedule";
 import { useEffect, useState } from "react";
 import {
@@ -51,8 +50,7 @@ const index = () => {
     { name: "Jadwal Audit", path: `/pat/projects/${id}/jadwal-audit` },
   ];
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalData, setTotalData] = useState(0);
   const [content, setContent] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showModalDetail, setShowModalDetail] = useState(false);
@@ -69,6 +67,7 @@ const index = () => {
     end: "",
     sort_by: "ASC",
     limit: 3,
+    page: 1,
   });
   const [filter, setFilter] = useState({
     project_name: "",
@@ -82,13 +81,13 @@ const index = () => {
     end: "",
     sort_by: "ASC",
     limit: 3,
+    page: 1,
   });
 
   const { auditSchedule, auditScheduleMutate, auditScheduleError } =
     useAuditSchedule("all", {
       ...params,
       id,
-      pages: currentPage,
     });
 
   const [data, setData] = useState([]);
@@ -122,7 +121,7 @@ const index = () => {
     });
 
     setData(mappedData);
-    setTotalPages(auditSchedule?.detailPage?.totalPage);
+    setTotalData(auditSchedule?.pagination?.totalData);
 
     const totalCount = auditSchedule?.result?.length;
     if (totalCount) {
@@ -201,17 +200,14 @@ const index = () => {
 
       {/* Start Filter */}
       <div
-        className="flex justify-between items-center mb-6"
+        className="flex justify-between items-center mb-3"
         style={{ maxWidth: "21rem" }}
       >
-        <div className="w-40">
-          <Button
-            appearance="primary"
-            onClick={() => setShowFilter(!showFilter)}
-            shouldFitContainer
-          >
-            Tampilkan Filter
-          </Button>
+        <div className="w-40 bg-atlasian-blue-light">
+          <ButtonField
+            handler={() => setShowFilter(!showFilter)}
+            text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
+          />
         </div>
         <div className="w-40 rounded bg-atlasian-purple">
           <ButtonField
@@ -219,49 +215,31 @@ const index = () => {
             text={"Buat Jadwal Audit"}
           />
         </div>
-        <ModalBuatJadwalAudit
-          showModal={showModal}
-          setShowModal={setShowModal}
-          typeModal={typeModal}
-          mutate={auditScheduleMutate}
-          selectedScheduleId={selectedScheduleId}
-        />
-        <ModalAuditScheduleDetail
-          scheduleId={selectedScheduleId}
-          showModal={showModalDetail}
-          setShowModal={setShowModalDetail}
+      </div>
+      <div className="w-fit">
+        <CardFilterAuditSchedule
+          showFilter={showFilter}
+          params={filter}
+          setParams={setFilter}
         />
       </div>
-      <div className="flex justify-between items-end relative mb-4">
-        <div className="flex justify-center absolute z-10 bg-white top-0">
-          <CardFilterAuditSchedule
-            showFilter={showFilter}
-            params={filter}
-            setParams={setFilter}
-          />
-        </div>
-        <div
-          className={`w-full flex justify-end items-end gap-2 ${
-            showFilter && `pt-[92px]`
-          }`}
-        >
-          {countType?.length && (
-            <div className="mb-1 flex gap-2">
-              {countType.map((v, i) => {
-                return (
-                  <CardTypeCount
-                    key={i}
-                    title={v.type}
-                    total={v.count}
-                    percent={v.percent}
-                    width={"w-[12.8rem]"}
-                  />
-                );
-              })}
-            </div>
-          )}
-          <SelectSortFilter change={handleChangeFilter} />
-        </div>
+      <div className="flex justify-end items-end w-full gap-2 mt-3">
+        {countType?.length && (
+          <div className="mb-1 flex gap-2">
+            {countType.map((v, i) => {
+              return (
+                <CardTypeCount
+                  key={i}
+                  title={v.type}
+                  total={v.count}
+                  percent={v.percent}
+                  width={"w-[12.8rem]"}
+                />
+              );
+            })}
+          </div>
+        )}
+        <SelectSortFilter change={handleChangeFilter} />
       </div>
       {/* End of Filter */}
 
@@ -295,7 +273,26 @@ const index = () => {
           </div>
         )
       )}
-      <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
+      <CustomPagination
+        perPage={filter.limit}
+        handleSetPagination={(start, end, pageNow) =>
+          handleChangeFilter("page", pageNow)
+        }
+        defaultCurrentPage={filter.page}
+        totalData={totalData}
+      />
+      <ModalBuatJadwalAudit
+        showModal={showModal}
+        setShowModal={setShowModal}
+        typeModal={typeModal}
+        mutate={auditScheduleMutate}
+        selectedScheduleId={selectedScheduleId}
+      />
+      <ModalAuditScheduleDetail
+        scheduleId={selectedScheduleId}
+        showModal={showModalDetail}
+        setShowModal={setShowModalDetail}
+      />
       {/* End Content */}
     </PatLandingLayout>
   );

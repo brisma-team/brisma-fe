@@ -67,7 +67,7 @@ const CardFilterAuditSchedule = ({ showFilter, params, setParams }) => {
                 }
               />
             </div>
-            <div className="w-72">
+            <div className="w-72 flex items-center h-full">
               <DatepickerStartEnd
                 placeholderStart={"Start"}
                 placeholderEnd={"End"}

@@ -1,4 +1,4 @@
-import { DivButton, Modal } from "@/components/atoms";
+import { DivButton, ModalScroll } from "@/components/atoms";
 import { useEffect, useState } from "react";
 import {
   ModalBodyInfoKegiatan,
@@ -298,7 +298,7 @@ const ModalAuditSchedule = ({
   ];
 
   return (
-    <Modal
+    <ModalScroll
       showModal={showModal}
       header={
         <ModalHeader
@@ -334,7 +334,7 @@ const ModalAuditSchedule = ({
           isDisabled={isFormDisabled}
         />
       )}
-    </Modal>
+    </ModalScroll>
   );
 };
 

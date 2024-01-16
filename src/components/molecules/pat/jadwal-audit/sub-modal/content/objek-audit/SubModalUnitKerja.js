@@ -183,165 +183,161 @@ const SubModalUnitKerja = ({ isDisabled }) => {
       </div>
       <div className="w-full font-bold text-sm px-4">
         <div className="border-2 border-[#DFE1E6] rounded-xl">
-          <div className="overflow-y-scroll max-h-80">
-            <div className="flex h-14">
-              <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
-                <p>Aksi</p>
-              </div>
-              <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center text-justify p-3">
-                <p>Branch</p>
-              </div>
-              <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center text-justify p-3">
-                <p>Orgeh</p>
-              </div>
-              <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[14%] flex items-center px-2 py-3">
-                <p>Tipe UKER</p>
-              </div>
-              <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[10%] flex items-center">
-                <p className="ml-3">Info</p>
-              </div>
-              <div className="border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
-                <p>Lampiran</p>
-              </div>
+          <div className="flex h-14">
+            <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
+              <p>Aksi</p>
             </div>
-            {auditScheduleData?.uker?.map((v, i) => {
-              return (
-                <div className="flex" key={i}>
-                  <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
-                    <ButtonIcon
-                      color={"red"}
-                      icon={<IconCrossCircle />}
-                      handleClick={() => handleDeleteUker(i)}
-                    />
-                  </div>
-                  <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center justify-center text-justify p-3">
-                    <div className="-mb-3 -mx-2 -mt-5 w-full">
-                      <InlineEditText
-                        isDisabled={true}
-                        value={v.ref_auditee_branch_name}
-                        placeholder={v.ref_auditee_branch_name}
-                      />
-                    </div>
-                  </div>
-                  <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex-row items-center text-justify p-3">
-                    <OrgehSelect
-                      width="w-[17rem]"
-                      handleChange={(e) => handleChangeOrgeh(e.value, i)}
-                      selectedValue={{
-                        label: v.ref_auditee_orgeh_name,
-                        value: {
-                          orgeh_kode: v.ref_auditee_orgeh_kode,
-                          orgeh_name: v.ref_auditee_orgeh_name,
-                        },
-                      }}
-                      isDisabled={isDisabled}
-                      positionAbsolute={true}
-                    />
-                    {validationErrors[`uker[${i}].ref_auditee_orgeh_kode`] && (
-                      <div className="px-1 py-0.5 w-">
-                        <ErrorValidation
-                          message={
-                            validationErrors[
-                              `uker[${i}].ref_auditee_orgeh_kode`
-                            ]
-                          }
-                        />
-                      </div>
-                    )}
-                  </div>
-                  <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[14%] flex-row items-center px-2 py-3">
-                    <Select
-                      optionValue={optionUkerType}
-                      isSearchable={false}
-                      onChange={(e) => handleChangeTipeUker(e.value, i)}
-                      value={v.tipe_uker ? findUkerType(v.tipe_uker) : ""}
-                      isDisabled={isDisabled}
-                      positionAbsolute={true}
-                    />
-                    {validationErrors[`uker[${i}].tipe_uker`] && (
-                      <div className="px-1 py-0.5">
-                        <ErrorValidation
-                          message={validationErrors[`uker[${i}].tipe_uker`]}
-                        />
-                      </div>
-                    )}
-                  </div>
-                  <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[10%] flex items-center">
-                    <div className="flex w-full justify-center gap-1">
-                      <ButtonIcon
-                        color={"yellow"}
-                        icon={<IconInfo />}
-                        handleClick={() => (
-                          setShowModalAssessmentInfo(true),
-                          setSelectedIdxAssessmentInfo(i)
-                        )}
-                      />
-                      <ButtonIcon
-                        color={"blue"}
-                        icon={<IconQuestions />}
-                        handleClick={() => (
-                          setShowModalDesc(true), setSelectedIdxDesc(i)
-                        )}
-                      />
-                      <DescriptionModal
-                        showModal={showModalDesc}
-                        setShowModal={setShowModalDesc}
-                        value={
-                          auditScheduleData?.uker[selectedIdxDesc]?.deskripsi
-                        }
-                        handleConfirm={(e) =>
-                          handleChange("deskripsi", e, selectedIdxDesc)
-                        }
-                      />
-                      <ModalAssessmentInfo
-                        showModal={showModalAssessmentInfo}
-                        setShowModal={setShowModalAssessmentInfo}
-                      />
-                    </div>
-                  </div>
-                  <div className="border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
-                    <AttachmentModal
-                      file={v?.attachments[0]}
-                      handleClick={() => setSelectedIdxAttachments(i)}
-                      handleUpload={(e) =>
-                        handleUpload(e, selectedIdxAttachments)
-                      }
+            <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center text-justify p-3">
+              <p>Branch</p>
+            </div>
+            <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center text-justify p-3">
+              <p>Orgeh</p>
+            </div>
+            <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[14%] flex items-center px-2 py-3">
+              <p>Tipe UKER</p>
+            </div>
+            <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[10%] flex items-center">
+              <p className="ml-3">Info</p>
+            </div>
+            <div className="border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
+              <p>Lampiran</p>
+            </div>
+          </div>
+          {auditScheduleData?.uker?.map((v, i) => {
+            return (
+              <div className="flex" key={i}>
+                <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
+                  <ButtonIcon
+                    color={"red"}
+                    icon={<IconCrossCircle />}
+                    handleClick={() => handleDeleteUker(i)}
+                  />
+                </div>
+                <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center justify-center text-justify p-3">
+                  <div className="-mb-3 -mx-2 -mt-5 w-full">
+                    <InlineEditText
+                      isDisabled={true}
+                      value={v.ref_auditee_branch_name}
+                      placeholder={v.ref_auditee_branch_name}
                     />
                   </div>
                 </div>
-              );
-            })}
-          </div>
-          <div className="flex gap-2 items-center">
-            <div className="w-40 text-sm font-semibold p-2 my-1">
-              <ButtonField
-                iconAfter={
-                  <div className="text-atlasian-purple">
-                    <IconPlus size="medium" />
+                <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex-row items-center text-justify p-3 relative">
+                  <OrgehSelect
+                    width="w-[17rem]"
+                    handleChange={(e) => handleChangeOrgeh(e.value, i)}
+                    selectedValue={{
+                      label: v.ref_auditee_orgeh_name,
+                      value: {
+                        orgeh_kode: v.ref_auditee_orgeh_kode,
+                        orgeh_name: v.ref_auditee_orgeh_name,
+                      },
+                    }}
+                    isDisabled={isDisabled}
+                    positionAbsolute
+                  />
+                  {validationErrors[`uker[${i}].ref_auditee_orgeh_kode`] && (
+                    <div className="px-1 py-0.5 w-">
+                      <ErrorValidation
+                        message={
+                          validationErrors[`uker[${i}].ref_auditee_orgeh_kode`]
+                        }
+                      />
+                    </div>
+                  )}
+                </div>
+                <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[14%] flex-row items-center px-2 py-3">
+                  <Select
+                    optionValue={optionUkerType}
+                    isSearchable={false}
+                    onChange={(e) => handleChangeTipeUker(e.value, i)}
+                    value={v.tipe_uker ? findUkerType(v.tipe_uker) : ""}
+                    isDisabled={isDisabled}
+                    positionAbsolute
+                  />
+                  {validationErrors[`uker[${i}].tipe_uker`] && (
+                    <div className="px-1 py-0.5">
+                      <ErrorValidation
+                        message={validationErrors[`uker[${i}].tipe_uker`]}
+                      />
+                    </div>
+                  )}
+                </div>
+                <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[10%] flex items-center">
+                  <div className="flex w-full justify-center gap-1">
+                    <ButtonIcon
+                      color={"yellow"}
+                      icon={<IconInfo />}
+                      handleClick={() => (
+                        setShowModalAssessmentInfo(true),
+                        setSelectedIdxAssessmentInfo(i)
+                      )}
+                    />
+                    <ButtonIcon
+                      color={"blue"}
+                      icon={<IconQuestions />}
+                      handleClick={() => (
+                        setShowModalDesc(true), setSelectedIdxDesc(i)
+                      )}
+                    />
+                    <DescriptionModal
+                      showModal={showModalDesc}
+                      setShowModal={setShowModalDesc}
+                      value={
+                        auditScheduleData?.uker[selectedIdxDesc]?.deskripsi
+                      }
+                      handleConfirm={(e) =>
+                        handleChange("deskripsi", e, selectedIdxDesc)
+                      }
+                    />
+                    <ModalAssessmentInfo
+                      showModal={showModalAssessmentInfo}
+                      setShowModal={setShowModalAssessmentInfo}
+                    />
                   </div>
-                }
-                text={"Tambah Uker"}
-                textColor={"purple"}
-                handler={() => setShowBranch(true)}
-                disabled={isDisabled}
-              />
-            </div>
-            {showBranch && (
-              <div className="w-40">
-                <BranchSelect
-                  placeholder="Select an option"
-                  handleChange={handleAddUker}
-                  className={"w-72"}
-                />
+                </div>
+                <div className="border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
+                  <AttachmentModal
+                    file={v?.attachments[0]}
+                    handleClick={() => setSelectedIdxAttachments(i)}
+                    handleUpload={(e) =>
+                      handleUpload(e, selectedIdxAttachments)
+                    }
+                  />
+                </div>
               </div>
-            )}
+            );
+          })}
+        </div>
+        <div className="flex gap-2 items-center">
+          <div className="w-40 text-sm font-semibold p-2 my-1">
+            <ButtonField
+              iconAfter={
+                <div className="text-atlasian-purple">
+                  <IconPlus size="medium" />
+                </div>
+              }
+              text={"Tambah Uker"}
+              textColor={"purple"}
+              handler={() => setShowBranch(true)}
+              disabled={isDisabled}
+            />
           </div>
-          {validationErrors["uker"] && (
-            <div className="-mt-1 mx-3 mb-2">
-              <ErrorValidation message={validationErrors["uker"]} />
+          {showBranch && (
+            <div className="w-40">
+              <BranchSelect
+                placeholder="Select an option"
+                handleChange={handleAddUker}
+                className={"w-72"}
+              />
             </div>
           )}
         </div>
+        {validationErrors["uker"] && (
+          <div className="-mt-1 mx-3 mb-2">
+            <ErrorValidation message={validationErrors["uker"]} />
+          </div>
+        )}
       </div>
     </div>
   );
