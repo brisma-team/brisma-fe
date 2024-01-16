@@ -203,7 +203,7 @@ const index = () => {
         className="flex justify-between items-center mb-3"
         style={{ maxWidth: "21rem" }}
       >
-        <div className="w-40 bg-atlasian-blue-light">
+        <div className="w-40 bg-atlasian-blue-light rounded">
           <ButtonField
             handler={() => setShowFilter(!showFilter)}
             text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}

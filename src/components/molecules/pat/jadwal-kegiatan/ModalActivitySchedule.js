@@ -179,7 +179,7 @@ const ModalActivitySchedule = ({
 
       dispatch(setActivityScheduleData(mapping));
     }
-  }, [activitySchedule]);
+  }, [activitySchedule, showModal, typeModal]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
