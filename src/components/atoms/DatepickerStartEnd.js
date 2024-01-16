@@ -15,7 +15,7 @@ const DatepickerStartEnd = ({
   maxDateEnd,
 }) => {
   return (
-    <div className="flex">
+    <div className="flex w-full">
       <div className="w-full">
         <DatepickerField
           placeholder={placeholderStart}
