@@ -16,7 +16,8 @@ const AttachmentModal = ({ file, handleClick, handleUpload }) => {
   return (
     <>
       <ButtonIcon
-        color={"purple"}
+        className={!file ? "opacity-50" : ""}
+        color={file ? "purple" : "gray"}
         icon={<IconAttachment />}
         handleClick={() => (setShowModal(true), handleClick())}
       />
