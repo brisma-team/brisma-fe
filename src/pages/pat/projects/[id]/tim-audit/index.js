@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import {
   Breadcrumbs,
   ButtonField,
+  CustomPagination,
   PageTitle,
-  Pagination,
 } from "@/components/atoms";
 import { PatLandingLayout } from "@/layouts/pat";
-import Button from "@atlaskit/button";
 import {
   DataNotFound,
   PrevNextNavigation,
@@ -50,8 +49,8 @@ const index = () => {
     { name: statusPat?.data?.pat_name, path: `/pat/projects/${id}` },
     { name: "Tim Audit", path: `/pat/projects/${id}/tim-audit` },
   ];
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+
+  const [totalData, setTotalData] = useState(0);
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [typeModal, setTypeModal] = useState(null);
@@ -62,22 +61,23 @@ const index = () => {
     nama_ma: "",
     nama_kta: "",
     nama_ata: "",
-    sortBy: "ASC",
-    limit: "4",
+    sort_by: "ASC",
+    limit: 4,
+    page: 1,
   });
   const [params, setParams] = useState({
     tim_name: "",
     nama_ma: "",
     nama_kta: "",
     nama_ata: "",
-    sortBy: "ASC",
-    limit: "4",
+    sort_by: "ASC",
+    limit: 4,
+    page: 1,
   });
 
   const { auditTeam, auditTeamMutate, auditTeamError } = useAuditTeam("all", {
     ...params,
     id,
-    pages: currentPage,
   });
 
   useEffect(() => {
@@ -89,22 +89,36 @@ const index = () => {
   }, [statusPat]);
 
   useEffect(() => {
-    const mappedData = auditTeam?.data?.map((v) => {
+    if (auditTeam?.data?.length) {
+      const mappedData = auditTeam?.data?.map((v) => {
+        return {
+          id: v.id,
+          header_title: v.name,
+          maker: v.pic_maker_tim_audit.nama,
+          created_at: convertDate(v.createdAt, "-", "d"),
+          manajer_audit: v.ref_tim_audit_mas,
+          ketua_tim_audit: v.ref_tim_audit_kta,
+          anggota_tim_audit: v.ref_tim_audit_ata,
+          tipe_tim: v.ref_tipe_tim.nama,
+        };
+      });
+
+      setData(mappedData);
+      setTotalData(auditTeam?.d?.totalPage);
+    } else {
+      setData([]);
+      setTotalData(0);
+    }
+  }, [auditTeam, auditTeamMutate]);
+
+  useEffect(() => {
+    setFilter((prevFilter) => {
       return {
-        id: v.id,
-        header_title: v.name,
-        maker: v.pic_maker_tim_audit.nama,
-        created_at: convertDate(v.createdAt, "-", "d"),
-        manajer_audit: v.ref_tim_audit_mas,
-        ketua_tim_audit: v.ref_tim_audit_kta,
-        anggota_tim_audit: v.ref_tim_audit_ata,
-        tipe_tim: v.ref_tipe_tim.nama,
+        ...prevFilter,
+        page: 1,
       };
     });
-
-    setData(mappedData);
-    setTotalPages(auditTeam?.detailPage?.totalPage);
-  }, [auditTeam, auditTeamMutate]);
+  }, [filter.limit]);
 
   useEffect(() => {
     const handleSearch = () => {
@@ -162,29 +176,16 @@ const index = () => {
         />
       </div>
       {/* Start Filter */}
-      <div
-        className="flex justify-between items-center mb-6"
-        style={{ maxWidth: "21rem" }}
-      >
-        <div className="w-40">
-          <Button
-            appearance="primary"
-            onClick={() => setShowFilter(!showFilter)}
-            shouldFitContainer
-          >
-            Tampilkan Filter
-          </Button>
+      <div className="flex justify-between items-center gap-3 mb-6 w-fit">
+        <div className="w-40 rounded bg-atlasian-blue-light">
+          <ButtonField
+            handler={() => setShowFilter(!showFilter)}
+            text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
+          />
         </div>
         <div className="w-40 rounded bg-atlasian-purple">
           <ButtonField handler={handleCreateButton} text={"Buat Tim Audit"} />
         </div>
-        <ModalAuditTeam
-          showModal={showModal}
-          setShowModal={setShowModal}
-          typeModal={typeModal}
-          mutate={auditTeamMutate}
-          selectedTeamId={selectedTeamId}
-        />
       </div>
       <div className="flex justify-between items-end">
         <div className="w-[27rem]">
@@ -225,7 +226,21 @@ const index = () => {
           </div>
         )
       )}
-      <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
+      <CustomPagination
+        perPage={filter.limit}
+        handleSetPagination={(start, end, pageNow) =>
+          handleChangeFilter("page", pageNow)
+        }
+        defaultCurrentPage={filter.page}
+        totalData={totalData}
+      />
+      <ModalAuditTeam
+        showModal={showModal}
+        setShowModal={setShowModal}
+        typeModal={typeModal}
+        mutate={auditTeamMutate}
+        selectedTeamId={selectedTeamId}
+      />
       {/* End Content */}
     </PatLandingLayout>
   );

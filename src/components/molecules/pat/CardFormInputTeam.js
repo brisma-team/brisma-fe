@@ -11,12 +11,10 @@ import {
   BranchSelect,
   TypeTeamSelect,
 } from "../commons";
-import Link from "next/link";
 import CustomSelect from "../commons/CustomSelect";
 
 const CardFormInputTeam = ({
   type,
-  placeholder,
   data,
   handlerDeleteParent,
   handlerDeleteChild,
@@ -96,10 +94,15 @@ const CardFormInputTeam = ({
                                 handleChange={(e) =>
                                   handlerChangeParent(property, i, e)
                                 }
-                                selectedValue={{
-                                  label: `${v.pn} - ${v.nama}`,
-                                  value: { v },
-                                }}
+                                placeholder={"Anggota Tim Audit"}
+                                selectedValue={
+                                  v.pn
+                                    ? {
+                                        label: `${v.pn} - ${v.nama}`,
+                                        value: { v },
+                                      }
+                                    : ""
+                                }
                                 customIcon={
                                   <ButtonIcon
                                     icon={<IconClose />}
@@ -133,13 +136,18 @@ const CardFormInputTeam = ({
                                         handleChange={(e) =>
                                           handlerChangeChild(i, idx, e, "orgeh")
                                         }
-                                        selectedValue={{
-                                          label: `${x.orgeh_kode} - ${x.orgeh_name}`,
-                                          value: {
-                                            orgeh_kode: x.orgeh_kode,
-                                            orgeh_name: x.orgeh_name,
-                                          },
-                                        }}
+                                        placeholder={"Orgeh"}
+                                        selectedValue={
+                                          x.orgeh_kode
+                                            ? {
+                                                label: `${x.orgeh_kode} - ${x.orgeh_name}`,
+                                                value: {
+                                                  orgeh_kode: x.orgeh_kode,
+                                                  orgeh_name: x.orgeh_name,
+                                                },
+                                              }
+                                            : ""
+                                        }
                                         customIcon={
                                           <ButtonIcon
                                             icon={<IconClose />}
@@ -161,13 +169,18 @@ const CardFormInputTeam = ({
                                             "branch"
                                           )
                                         }
-                                        selectedValue={{
-                                          label: `${x.branch_kode} - ${x.branch_name}`,
-                                          value: {
-                                            orgeh_kode: x.branch_kode,
-                                            orgeh_name: x.branch_name,
-                                          },
-                                        }}
+                                        placeholder={"Branch"}
+                                        selectedValue={
+                                          x.branch_kode
+                                            ? {
+                                                label: `${x.branch_kode} - ${x.branch_name}`,
+                                                value: {
+                                                  orgeh_kode: x.branch_kode,
+                                                  orgeh_name: x.branch_name,
+                                                },
+                                              }
+                                            : ""
+                                        }
                                         customIcon={
                                           <ButtonIcon
                                             icon={<IconClose />}
@@ -181,13 +194,12 @@ const CardFormInputTeam = ({
                                     </div>
                                   </div>
                                   <div className="flex items-center justify-center gap-2">
-                                    <Link
+                                    <ButtonIcon
                                       className="no-underline hover:no-underline w-7 h-7 flex items-center justify-center rounded-full border border-atlasian-red text-atlasian-red hover:text-atlasian-red"
-                                      href={"#"}
-                                      onClick={() => handlerAddChild(i)}
-                                    >
-                                      <IconPlus />
-                                    </Link>
+                                      handleClick={() => handlerAddChild(i)}
+                                      icon={<IconPlus />}
+                                      color={"red"}
+                                    />
                                   </div>
                                 </div>
                               );
@@ -215,11 +227,15 @@ const CardFormInputTeam = ({
                   <TypeTeamSelect
                     isSearchable={false}
                     handleChange={handlerChangeParent}
-                    placeholder={placeholder}
-                    selectedValue={{
-                      label: data?.nama,
-                      value: data,
-                    }}
+                    placeholder={"Tipe Tim"}
+                    selectedValue={
+                      data?.nama
+                        ? {
+                            label: data?.nama,
+                            value: data,
+                          }
+                        : ""
+                    }
                     isDisabled={isDisabled}
                     customIcon={<ButtonIcon icon={<IconChevronDown />} />}
                   />
@@ -235,11 +251,16 @@ const CardFormInputTeam = ({
                             handleChange={(e) =>
                               handlerChangeParent(property, i, e)
                             }
+                            placeholder={type}
                             optionValue={optionValue}
-                            selectedValue={{
-                              label: `${v?.pn} - ${v?.nama}`,
-                              value: { v },
-                            }}
+                            selectedValue={
+                              v.pn
+                                ? {
+                                    label: `${v?.pn} - ${v?.nama}`,
+                                    value: { v },
+                                  }
+                                : ""
+                            }
                             customIcon={
                               <ButtonIcon
                                 icon={<IconClose />}
@@ -256,10 +277,15 @@ const CardFormInputTeam = ({
                             handleChange={(e) =>
                               handlerChangeParent(property, i, e)
                             }
-                            selectedValue={{
-                              label: `${v?.pn} - ${v?.nama}`,
-                              value: { v },
-                            }}
+                            placeholder={type}
+                            selectedValue={
+                              v.pn
+                                ? {
+                                    label: `${v?.pn} - ${v?.nama}`,
+                                    value: { v },
+                                  }
+                                : ""
+                            }
                             customIcon={
                               <ButtonIcon
                                 icon={<IconClose />}
