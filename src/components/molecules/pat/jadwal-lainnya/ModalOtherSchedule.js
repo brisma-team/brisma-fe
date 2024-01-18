@@ -41,6 +41,7 @@ const ModalOtherSchedule = ({
 
   const [currentModalStage, setCurrentModalStage] = useState(1);
   const [isFormDisabled, setIsFormDisabled] = useState(false);
+  const [isDisabledButtonSave, setIsDisabledButtonSave] = useState(true);
   const activityScheduleOtherData = useSelector(
     (state) => state.activityScheduleOther.activityScheduleOtherData
   );
@@ -64,6 +65,31 @@ const ModalOtherSchedule = ({
       setErrors: setvalidationErrorsAO,
     },
   };
+
+  useEffect(() => {
+    const {
+      nama,
+      ref_metode,
+      ref_tipe,
+      ref_jenis,
+      pelaksanaan_start,
+      pelaksanaan_end,
+      penanggung_jawab,
+      uker,
+    } = activityScheduleOtherData;
+
+    const areFieldsValid =
+      nama &&
+      ref_metode.kode &&
+      ref_tipe.kode &&
+      ref_jenis.kode &&
+      pelaksanaan_start &&
+      pelaksanaan_end &&
+      penanggung_jawab.length &&
+      uker.length;
+
+    setIsDisabledButtonSave(!areFieldsValid);
+  }, [activityScheduleOtherData]);
 
   useEffect(() => {
     if (typeModal === "detail") {
@@ -297,6 +323,7 @@ const ModalOtherSchedule = ({
       }
       footer={
         <ModalFooter
+          isDisabled={isDisabledButtonSave}
           currentModalStage={currentModalStage}
           handleSubmit={handleSubmit}
           handleNextStage={handleNextStage}
