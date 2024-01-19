@@ -285,7 +285,6 @@ const index = () => {
           Tanggal: convertDate(v?.createdAt, "-", "d"),
         };
       });
-      console.log("mapping => ", mapping);
       setHistoryWorkflow(mapping);
     }
   }, [workflowLog.workflow]);
