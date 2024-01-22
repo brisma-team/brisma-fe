@@ -1,4 +1,5 @@
 import DatepickerField from "./Datepicker";
+import ErrorValidation from "./ErrorValidation";
 
 const DatepickerStartEnd = ({
   placeholderStart,
@@ -13,6 +14,8 @@ const DatepickerStartEnd = ({
   maxDateStart,
   minDateEnd,
   maxDateEnd,
+  validationStart,
+  validationEnd,
 }) => {
   return (
     <div className="flex w-full">
@@ -26,6 +29,11 @@ const DatepickerStartEnd = ({
           minDate={minDateStart && minDateStart}
           maxDate={maxDateStart && maxDateStart}
         />
+        {validationStart ? (
+          <ErrorValidation message={validationStart} className={"ml-1 mt-4"} />
+        ) : (
+          ""
+        )}
       </div>
       <div className="text-center mx-2">
         <h1>-</h1>
@@ -40,6 +48,11 @@ const DatepickerStartEnd = ({
           minDate={minDateEnd && minDateEnd}
           maxDate={maxDateEnd && maxDateEnd}
         />
+        {validationEnd ? (
+          <ErrorValidation message={validationEnd} className={"ml-1 mt-4"} />
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
