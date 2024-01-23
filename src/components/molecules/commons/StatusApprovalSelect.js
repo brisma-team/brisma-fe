@@ -1,48 +1,44 @@
-import useUka from "@/data/useUka";
+import React from "react";
+import CustomSelect from "./CustomSelect";
+import { ButtonIcon } from "@/components/atoms";
+import { IconClose } from "@/components/icons";
 
-import React, { useEffect, useState } from "react";
-import Skeleton from "react-loading-skeleton";
-import { Controller } from "react-hook-form";
-import Select from "react-select";
-
-const UkaSelect = ({ control }) => {
-  const { uka, ukaIsLoading } = useUka();
-
-  const [options, setOptions] = useState([]);
-
-  useEffect(() => {
-    if (uka) {
-      const mappedUka = uka.data.data.map((row) => {
-        return {
-          label: row.name,
-          value: row.kode,
-        };
-      });
-
-      setOptions(mappedUka);
-    }
-  }, [uka]);
-
-  if (ukaIsLoading) {
-    return <Skeleton />;
-  }
-
-  if (uka) {
-    return (
-      <Controller
-        control={control}
-        name="uka_kode"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <Select
-            options={options}
-            onChange={onChange}
-            onBlur={onBlur}
-            value={value}
-            isClearable
-          />
-        )}
-      />
-    );
-  }
+const StatusApprovalSelect = ({
+  handleChange,
+  handleReset,
+  placeholder,
+  selectedValue,
+  isDisabled,
+  optionValue,
+}) => {
+  return (
+    <CustomSelect
+      optionValue={
+        optionValue || [
+          {
+            label: "On Progress",
+            value: { kode: "On Progress", name: "On Progress" },
+          },
+          {
+            label: "On Approver",
+            value: { kode: "On Approver", name: "On Approver" },
+          },
+          { label: "Final", value: { kode: "Final", name: "Final" } },
+        ]
+      }
+      customIcon={
+        <ButtonIcon
+          handleClick={handleReset}
+          icon={<IconClose size="large" />}
+        />
+      }
+      selectedValue={selectedValue}
+      placeholder={placeholder}
+      handleChange={handleChange}
+      isSearchable={false}
+      isDisabled={isDisabled}
+    />
+  );
 };
-export default UkaSelect;
+
+export default StatusApprovalSelect;
