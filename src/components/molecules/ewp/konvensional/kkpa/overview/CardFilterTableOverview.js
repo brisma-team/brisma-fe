@@ -29,7 +29,7 @@ const CardFilterTableOverview = ({
               </div>
               <div className="w-48">
                 <StatusApprovalSelect
-                  handleChange={(e) => handleChangeSelect("status", e)}
+                  handleChange={(e) => handleChangeSelect("status", e.value)}
                   handleReset={() => handleChangeSelect("status", "")}
                   placeholder={"Status"}
                   selectedValue={
@@ -60,7 +60,7 @@ const CardFilterTableOverview = ({
             <div className="flex flex-col justify-between gap-3">
               <div className="w-48">
                 <TextInput
-                  placeholder="Risk Issue Kode"
+                  placeholder="Risk Issue Name"
                   icon={
                     <ButtonIcon
                       handleClick={() =>
