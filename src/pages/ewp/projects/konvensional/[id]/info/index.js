@@ -5,7 +5,7 @@ import {
   RealizationTable,
 } from "@/components/molecules/ewp/konvensional/info";
 import { useAuditorEWP } from "@/data/ewp/konvensional";
-import { errorSwalTimeout, usePostData } from "@/helpers";
+import { errorSwalTimeout, fetchApi } from "@/helpers";
 import { LandingLayoutEWP } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -117,7 +117,8 @@ const index = () => {
     let path = pathMappings[statusCode] || "";
     path += `/${type === "close" ? "close" : "initiate"}`;
 
-    await usePostData(
+    await fetchApi(
+      "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/${path}/${id}`,
       {}
     );
