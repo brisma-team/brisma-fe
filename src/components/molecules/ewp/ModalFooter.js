@@ -2,7 +2,6 @@ import { ButtonField } from "@/components/atoms";
 import { PekerjaSelect } from "../commons";
 import { useDispatch, useSelector } from "react-redux";
 import { setProjectOverviewData } from "@/slices/ewp/projectOverviewEWPSlice";
-import { useEffect } from "react";
 
 const ModalFooter = ({
   currentModalStage,
@@ -19,10 +18,6 @@ const ModalFooter = ({
     (state) => state.projectOverviewEWP.projectOverviewData
   );
 
-  useEffect(() => {
-    console.log("projectOverviewData => ", projectOverviewData.pn_approver);
-  }, [projectOverviewData]);
-
   const handleChange = (e) => {
     dispatch(
       setProjectOverviewData({
@@ -35,7 +30,7 @@ const ModalFooter = ({
 
   return (
     <form
-      className="w-full flex justify-end gap-3 -my-1"
+      className="w-full flex justify-center items-center gap-3 -my-1"
       onSubmit={handleSubmit}
     >
       {differentKTA && isPat && currentModalStage === maxStage && (
@@ -73,7 +68,7 @@ const ModalFooter = ({
       {currentModalStage === maxStage ? (
         differentKTA && isPat ? (
           // Jika yang login bukan KTA dan tipe jadwalnya PAT
-          <div className="rounded w-28 bg-atlasian-green flex items-center">
+          <div className="rounded w-32 bg-atlasian-green flex items-center">
             <ButtonField
               text={"Send Approval"}
               handler={handleSubmit}

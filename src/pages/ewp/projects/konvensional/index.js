@@ -4,8 +4,8 @@ import { IconFile } from "@/components/icons";
 import {
   Breadcrumbs,
   ButtonField,
+  CustomPagination,
   PageTitle,
-  Pagination,
 } from "@/components/atoms";
 import {
   CardOverview,
@@ -64,11 +64,9 @@ const convertProgressAndPercent = (status) => {
 const index = () => {
   const ref = useRef(null);
   const [showFilter, setShowFilter] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalData, setTotalData] = useState(1);
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [sortBy, setSortBy] = useState("ASC");
   const [filter, setFilter] = useState({
     name: "",
     is_audited: false,
@@ -76,6 +74,9 @@ const index = () => {
     ref_tipe: "",
     ref_jenis: "",
     ref_tema: "",
+    sort_by: "ASC",
+    limit: 4,
+    page: 1,
   });
   const [params, setParams] = useState({
     name: "",
@@ -84,23 +85,17 @@ const index = () => {
     ref_tipe: "",
     ref_jenis: "",
     ref_tema: "",
+    sort_by: "ASC",
+    limit: 4,
+    page: 1,
   });
 
   const { overviewEWP, overviewEWPError, overviewEWPMutate } = useOverviewEWP(
     "all",
-    {
-      ...params,
-      pages: currentPage,
-      limit: 8,
-      sortBy,
-    }
+    params
   );
 
   const { approvalEWP } = useApprovalEWP("ewp");
-
-  const handleChangeSortBy = (e) => {
-    setSortBy(e.value);
-  };
 
   useEffect(() => {
     const handleSearch = () => {
@@ -115,7 +110,7 @@ const index = () => {
   }, [filter]);
 
   useEffect(() => {
-    if (overviewEWP) {
+    if (overviewEWP?.data?.length) {
       const mapping = overviewEWP.data.map((v) => {
         return {
           id: v?.id,
@@ -142,9 +137,16 @@ const index = () => {
         };
       });
       setData(mapping);
-      setTotalPages(overviewEWP?.page?.totalPage);
+      setTotalData(overviewEWP?.pagination?.totalData);
+    } else {
+      setData([]);
+      setTotalData(1);
     }
   }, [overviewEWP]);
+
+  const handleChangeFilter = (props, value) => {
+    setFilter({ ...filter, [props]: value });
+  };
 
   return (
     <OverviewLayoutEWP data={approvalEWP?.data?.header}>
@@ -157,14 +159,11 @@ const index = () => {
       <div className="flex justify-between items-end">
         {/* Start Filter */}
         <div className="flex justify-between items-center gap-2">
-          <div className="w-36">
-            <Button
-              appearance="primary"
-              onClick={() => setShowFilter(!showFilter)}
-              shouldFitContainer
-            >
-              {showFilter ? `Tutup Filter` : `Tampilkan Filter`}
-            </Button>
+          <div className="w-36 bg-atlasian-blue-light rounded">
+            <ButtonField
+              handler={() => setShowFilter(!showFilter)}
+              text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
+            />
           </div>
           <div className="w-36 rounded bg-atlasian-purple">
             <ButtonField
@@ -197,7 +196,10 @@ const index = () => {
         />
       </div>
       <div className="w-full min-h-[8.8rem] flex items-end justify-end">
-        <SelectSortFilter change={handleChangeSortBy} />
+        <SelectSortFilter
+          change={handleChangeFilter}
+          options={[4, 8, 16, 50, 100]}
+        />
       </div>
       {/* End Filter */}
       {/* Start Content */}
@@ -205,14 +207,21 @@ const index = () => {
         <DataNotFound />
       ) : (
         data?.length && (
-          <div className="grid grid-cols-4 gap-3 my-4 overflow-hidden -ml-2">
+          <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-3 my-4">
             {data.map((v, i) => {
               return <CardOverview key={i} data={v} callbackRef={ref} />;
             })}
           </div>
         )
       )}
-      <Pagination pages={totalPages} setCurrentPage={setCurrentPage} />
+      <CustomPagination
+        perPage={filter.limit}
+        defaultCurrentPage={1}
+        handleSetPagination={(start, end, pageNow) =>
+          handleChangeFilter("page", pageNow)
+        }
+        totalData={totalData}
+      />
       {/* End Content */}
     </OverviewLayoutEWP>
   );

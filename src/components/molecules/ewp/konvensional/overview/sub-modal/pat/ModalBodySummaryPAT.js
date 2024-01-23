@@ -21,10 +21,6 @@ const ModalBodySummaryPAT = ({ setCurrentModalStage, isDisabled, isPat }) => {
     setCurrentModalStage(3);
   }, []);
 
-  useEffect(() => {
-    console.log("projectOverviewData => ", projectOverviewData);
-  }, [projectOverviewData]);
-
   const handleChange = (property, value) => {
     const updatedData = {
       ...projectOverviewData,
@@ -188,10 +184,13 @@ const ModalBodySummaryPAT = ({ setCurrentModalStage, isDisabled, isPat }) => {
                   addDaysToDate(dateNow(), "+", 1) ||
                   null
                 }
+                validationStart={
+                  validationErrors["info_periode_pelaksanaan_start"]
+                }
+                validationEnd={validationErrors["info_periode_pelaksanaan_end"]}
               />
             </div>
           }
-          errors={validationErrors["info_periode_pelaksanaan_start"]}
           label="Periode Ruang Lingkup"
           widthLabel={"w-3/12"}
           widthForm={"w-9/12"}

@@ -1,5 +1,4 @@
-import { ButtonIcon, DivButton } from "@/components/atoms";
-import { IconTrash } from "@/components/icons";
+import { DivButton } from "@/components/atoms";
 import { DropdownCard } from "@/components/molecules/commons";
 import ProgressBar from "@atlaskit/progress-bar";
 import { N800 } from "@atlaskit/theme/colors";
@@ -64,11 +63,16 @@ const CardOverview = ({ data, withoutButton, withoutHover }) => {
     needApproval,
   } = data;
 
+  // const listDropdown = [
+  //   { label: "Approval", action: async () => handleApproval(id) },
+  // ];
+
   const listDropdown = [
     { label: "Change Initiator", action: "#" },
     { label: "Reset Approval PAT RAO", action: "#" },
     { label: "Reset Approval PAT HOA", action: "#" },
     { label: "Riwayat Dokumen", action: "#" },
+    { label: "Hapus Project", action: "#" },
   ];
 
   return (
@@ -106,12 +110,11 @@ const CardOverview = ({ data, withoutButton, withoutHover }) => {
             {!withoutButton && (
               <div className="flex items-center justify-end w-20 gap-1 pt-2">
                 <DropdownCard actions={listDropdown} />
-                <ButtonIcon color={"red"} icon={<IconTrash size="medium" />} />
               </div>
             )}
           </div>
           <div className="text-lg font-bold text-atlasian-blue-dark">
-            {projectId}
+            {projectId?.toUpperCase()}
           </div>
           <div className="text-base font-bold text-atlasian-blue-dark">
             {projectName}
