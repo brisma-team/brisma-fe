@@ -139,7 +139,7 @@ const index = () => {
                     className="grid grid-cols-2 -mx-1 mt-2 overflow-scroll overflow-x-hidden"
                     style={{ maxHeight: "37rem" }}
                   >
-                    {imageClipList.length
+                    {imageClipList?.length
                       ? imageClipList?.map((v, i) => {
                           return (
                             <button
@@ -195,7 +195,7 @@ const index = () => {
                 <p className="text-brisma font-bold text-xl">Riwayat</p>
               </div>
               <div className="flex flex-col gap-3 px-3 mt-4 max-h-[35rem] overflow-y-scroll">
-                {history.length
+                {history?.length
                   ? history.map((v, i) => {
                       return (
                         <div key={i}>
