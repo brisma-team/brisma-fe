@@ -1,31 +1,23 @@
 import { LandingLayoutEWP } from "@/layouts/ewp";
-import {
-  Breadcrumbs,
-  ButtonField,
-  Card,
-  PageTitle,
-  UploadButton,
-} from "@/components/atoms";
+import { Breadcrumbs, Card, DivButton, PageTitle } from "@/components/atoms";
 import { useAuditorEWP } from "@/data/ewp/konvensional";
 import { useRouter } from "next/router";
 import {
-  PopupKlipping,
+  CardContentHeaderFooter,
+  ContentLabelValue,
   PrevNextNavigation,
 } from "@/components/molecules/commons";
-import dynamic from "next/dynamic";
-import {
-  convertDate,
-  copyToClipboard,
-  loadingSwal,
-  usePostFileData,
-  useUpdateData,
-} from "@/helpers";
-import Image from "next/image";
+import { convertDate } from "@/helpers";
 import { useState, useEffect } from "react";
-import { useProgramAuditKKPA } from "@/data/ewp/konvensional/kkpa/program-audit";
-const Editor = dynamic(() => import("@/components/atoms/Editor"), {
-  ssr: false,
-});
+import { useRuangLingkupKKPA } from "@/data/ewp/konvensional/kkpa/ruang-lingkup";
+import {
+  TableSampleCSV,
+  TableSampleFile,
+} from "@/components/molecules/ewp/konvensional/kkpa/ruang-lingkup";
+
+const buttonClass =
+  "hover:bg-blue-200 hover:text-atlasian-blue-dark h-12 font-semibold text-base flex items-center px-2.5";
+const isActiveClass = "bg-blue-200 text-atlasian-blue-dark";
 
 const routes = [
   {
@@ -45,7 +37,6 @@ const routes = [
 
 const index = () => {
   const { id, kkpa_id } = useRouter().query;
-  const router = useRouter();
   const pathName = `/ewp/projects/konvensional/${id}/kkpa/audited/${kkpa_id}`;
   const { auditorEWP } = useAuditorEWP({ id });
   const breadcrumbs = [
@@ -60,54 +51,14 @@ const index = () => {
       path: `${pathName}/ruang-lingkup`,
     },
   ];
+  const [data, setData] = useState({});
+  const [selectedSample, setSelectedSample] = useState(1);
 
-  const { programAuditKKPA, programAuditKKPAMutate } = useProgramAuditKKPA({
-    kkpa_id,
-  });
-
-  const [content, setContent] = useState("");
-  const [imageClipList, setImageClipList] = useState([]);
-  const [history, setHistory] = useState([]);
+  const { ruangLingkupKKPA } = useRuangLingkupKKPA({ kkpa_id });
 
   useEffect(() => {
-    if (programAuditKKPA?.data) {
-      setContent(programAuditKKPA?.data?.program_audit || "");
-      setHistory(programAuditKKPA?.data?.history);
-    }
-  }, [programAuditKKPA]);
-  // [ END ]
-
-  const handleUpload = async (e) => {
-    loadingSwal();
-    if (e.target.files) {
-      const url = `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/cdn/upload`;
-
-      const response = await usePostFileData(url, {
-        file: e.target.files[0],
-        modul: "ewp",
-      });
-
-      setImageClipList((prev) => [
-        ...prev,
-        { url: response.url[0], name: e.target.files[0].name },
-      ]);
-    }
-    loadingSwal("close");
-  };
-
-  const handleSubmit = async () => {
-    loadingSwal();
-    const upload = await useUpdateData(
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/kkpa/program-audit/update`,
-      { program_audit: content, kkpa_id }
-    );
-    if (upload.isConfirmed) {
-      router.push(pathName);
-      return;
-    }
-    programAuditKKPAMutate();
-    loadingSwal("close");
-  };
+    setData(ruangLingkupKKPA?.data);
+  }, [ruangLingkupKKPA]);
 
   return (
     <LandingLayoutEWP>
@@ -125,47 +76,118 @@ const index = () => {
         />
       </div>
       {/* Start Content */}
-      <div className="flex flex-col w-10/12 gap-3">
+      <div className="w-10/12 flex flex-col gap-4">
         <Card>
-          <div className="px-3 py-1">
-            <div className="flex justify-between">
-              <p className="text-xl font-semibold">Kliping Gambar</p>
-              <PopupKlipping />
-            </div>
-            {/* Start Kliping Gambar */}
-            <div
-              className="grid grid-cols-2 -mx-1 mt-2 overflow-scroll overflow-x-hidden"
-              style={{ maxHeight: "37rem" }}
+          <div className="px-6 py-4 flex gap-3 w-full">
+            <CardContentHeaderFooter className={"w-1/2"}>
+              <div className="flex justify-between p-3">
+                <ContentLabelValue
+                  label={"Sumber Informasi"}
+                  value={data?.sumber_informasi}
+                />
+                <ContentLabelValue
+                  label={"Periode"}
+                  value={
+                    convertDate(data?.periode_start, "/", "d") +
+                    " - " +
+                    convertDate(data?.periode_end, "/", "d")
+                  }
+                />
+                <ContentLabelValue
+                  label={"Jumlah Sample"}
+                  value={data?.jumlah_sample}
+                />
+              </div>
+            </CardContentHeaderFooter>
+            <CardContentHeaderFooter className={"w-1/2"}>
+              <div className="flex justify-between p-3">
+                <ContentLabelValue
+                  label={"Tehnik Sampling"}
+                  value={data?.teknik_sampling_desc}
+                />
+                <ContentLabelValue
+                  label={"Jumlah Populasi"}
+                  value={data?.jumlah_populasi}
+                />
+                <ContentLabelValue
+                  label={"Uraian Sample"}
+                  value={data?.uraian_sample}
+                />
+              </div>
+            </CardContentHeaderFooter>
+          </div>
+        </Card>
+        <Card>
+          <div className="px-6 py-4 flex gap-3 w-full">
+            <CardContentHeaderFooter
+              width={"w-44"}
+              header={
+                <div className="h-12 flex items-center font-semibold text-xl px-2.5">
+                  Daftar Sample
+                </div>
+              }
+              footer={<div className="min-h-[1.5rem]" />}
             >
-              {imageClipList.length
-                ? imageClipList?.map((v, i) => {
+              <DivButton
+                className={`${buttonClass} ${
+                  selectedSample === 1 && isActiveClass
+                } border-b-2`}
+                handleClick={() => setSelectedSample(1)}
+              >
+                Sample CSV
+              </DivButton>
+              <DivButton
+                className={`${buttonClass} ${
+                  selectedSample === 2 && isActiveClass
+                } border-b-2`}
+                handleClick={() => setSelectedSample(2)}
+              >
+                Sample File
+              </DivButton>
+              <DivButton
+                className={`${buttonClass} ${
+                  selectedSample === 3 && isActiveClass
+                } border-b-2`}
+                handleClick={() => setSelectedSample(3)}
+              >
+                Sample FRD
+              </DivButton>
+              <DivButton
+                className={`${buttonClass} ${
+                  selectedSample === 4 && isActiveClass
+                }`}
+                handleClick={() => setSelectedSample(4)}
+              >
+                Sample Monber
+              </DivButton>
+            </CardContentHeaderFooter>
+            <div className="flex flex-col gap-3">
+              {selectedSample === 1 ? (
+                data?.content?.csv?.length ? (
+                  data?.content?.csv?.map((value, index) => {
+                    const { title, directory } = value;
                     return (
-                      <button
-                        key={i}
-                        className="m-2 border-2 shadow-sm rounded-lg p-3"
-                        style={{ width: "6.25rem", height: "6.25rem" }}
-                        onClick={() => copyToClipboard(v?.url)}
-                      >
-                        <Image
-                          src={v?.url}
-                          alt={v?.name}
-                          width={200}
-                          height={200}
-                        />
-                      </button>
+                      <TableSampleCSV
+                        title={title}
+                        sourceUrl={directory}
+                        selectedValue={value.data}
+                        key={index}
+                      />
                     );
                   })
-                : ""}
+                ) : (
+                  ""
+                )
+              ) : selectedSample === 2 ? (
+                data?.content?.file?.length ? (
+                  <TableSampleFile data={data?.content?.file} key={index} />
+                ) : (
+                  ""
+                )
+              ) : (
+                ""
+              )}
             </div>
-            <div className="mt-4 py-2 bg-none w-full justify-start">
-              <UploadButton
-                text={"Tambah Kliping +"}
-                fileAccept={"image/png, image/gif, image/jpeg"}
-                className={"text-atlasian-purple text-sm"}
-                handleUpload={handleUpload}
-              />
-            </div>
-            {/* End Kliping Gambar */}
           </div>
         </Card>
       </div>
