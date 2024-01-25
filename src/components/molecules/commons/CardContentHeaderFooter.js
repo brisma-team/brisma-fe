@@ -7,6 +7,8 @@ const CardContentHeaderFooter = ({
   children,
   width,
   className,
+  withoutBorderTop,
+  withoutBorderBottom,
 }) => {
   return (
     <div
@@ -20,7 +22,11 @@ const CardContentHeaderFooter = ({
       }}
     >
       {header ? (
-        <div className="w-full h-full border-b-2 border-neutral-200">
+        <div
+          className={`w-full h-full ${
+            !withoutBorderTop && `border-b-2 border-neutral-200`
+          }`}
+        >
           {header || ""}
         </div>
       ) : (
@@ -28,7 +34,11 @@ const CardContentHeaderFooter = ({
       )}
       <div className="w-full h-full border-neutral-200">{children}</div>
       {footer ? (
-        <div className="w-full h-full border-t-2 border-neutral-200">
+        <div
+          className={`w-full h-full ${
+            !withoutBorderBottom && `border-t-2 border-neutral-200`
+          }`}
+        >
           {footer}
         </div>
       ) : (
