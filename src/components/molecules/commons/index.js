@@ -65,6 +65,7 @@ import CardContentHeaderFooter from "./CardContentHeaderFooter";
 import AuditOfficeSelect from "./AuditOfficeSelect";
 import OmniSelect from "./OmniSelect";
 import StatusApprovalSelect from "./StatusApprovalSelect";
+import ContentLabelValue from "./ContentLabelValue";
 
 export {
   BackButton,
@@ -134,4 +135,5 @@ export {
   AuditOfficeSelect,
   OmniSelect,
   StatusApprovalSelect,
+  ContentLabelValue,
 };
