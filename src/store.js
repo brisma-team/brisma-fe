@@ -35,6 +35,7 @@ import catalogRPMReducer from "./slices/catalog/rpm/catalogRPMSlice";
 // REFERENCE
 import createTemplateReferenceSlice from "./slices/reference/createTemplateReferenceSlice";
 import approvalAdminSurveyReferenceReducer from "./slices/reference/approvalAdminSurveyReferenceSlice";
+import simulasiTemplateReferenceReducer from "./slices/reference/simulasiTemplateReferenceSlice";
 
 // SURVEY
 import penilaianSurveyReducer from "./slices/survey/initiator/penilaianSurveySlice";
@@ -82,6 +83,7 @@ export const store = configureStore({
     // REFERENCE
     createTemplateReference: createTemplateReferenceSlice,
     approvalAdminSurveyReference: approvalAdminSurveyReferenceReducer,
+    simulasiTemplateReference: simulasiTemplateReferenceReducer,
 
     // SURVEY
     penilaianSurvey: penilaianSurveyReducer,

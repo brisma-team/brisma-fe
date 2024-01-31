@@ -5,16 +5,19 @@ const CardContentHeaderFooter = ({
   header,
   footer,
   children,
+  height,
   width,
   className,
+  colorBorderTop,
+  colorBorderBottom,
   withoutBorderTop,
   withoutBorderBottom,
 }) => {
   return (
     <div
-      className={`${
-        width || `w-full`
-      } h-full rounded flex flex-col items-center ${className}`}
+      className={`${width || `w-full`} ${
+        height || `h-full`
+      } rounded flex flex-col items-center ${className}`}
       style={{
         color: token("color.text", N800),
         borderRadius: "10px",
@@ -24,7 +27,8 @@ const CardContentHeaderFooter = ({
       {header ? (
         <div
           className={`w-full h-full ${
-            !withoutBorderTop && `border-b-2 border-neutral-200`
+            !withoutBorderTop &&
+            `border-b-2 ${colorBorderTop || `border-neutral-200`}`
           }`}
         >
           {header || ""}
@@ -36,7 +40,8 @@ const CardContentHeaderFooter = ({
       {footer ? (
         <div
           className={`w-full h-full ${
-            !withoutBorderBottom && `border-t-2 border-neutral-200`
+            !withoutBorderBottom &&
+            `border-t-2 ${colorBorderBottom || `border-neutral-200`}`
           }`}
         >
           {footer}
