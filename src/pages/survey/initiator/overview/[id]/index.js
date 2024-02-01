@@ -290,12 +290,8 @@ const index = () => {
 
   useEffect(() => {
     if (payloadKuesioner?.length) {
-      const total_pertanyaan_all_kategori = payloadKuesioner.reduce(
-        (acc, obj) => {
-          return acc + obj.pertanyaan.length;
-        },
-        0
-      );
+      let kategoriCount = 0;
+      let tambahanCount = 0;
 
       const mapping = payloadKuesioner.map((category, idx) => {
         const { id, name, is_default } = category;
@@ -303,12 +299,22 @@ const index = () => {
           ? category.pertanyaan.length
           : 0;
 
+        let category_name;
+        if (is_default) {
+          kategoriCount++;
+          category_name = `Kategori ${kategoriCount}`;
+        } else {
+          tambahanCount++;
+          category_name = `Kategori Tambahan ${tambahanCount}`;
+        }
+
         return {
           idx: idx + 1,
           id,
+          category_name,
           name,
           total_pertanyaan,
-          total_pertanyaan_all_kategori,
+          onEdit: false,
           is_default,
         };
       });

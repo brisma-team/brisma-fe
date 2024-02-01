@@ -30,9 +30,7 @@ const CardCategory = ({
             !data?.is_default && `bg-[#EAFFE2]`
           }`}
         >
-          <p className="text-base font-bold">
-            Kategori {!data?.is_default ? "Tambahan" : ""} {data.idx}
-          </p>
+          <p className="text-base font-bold">{data?.category_name}</p>
           {!isPreviewPage && !data.is_default && (
             <div className="mr-2 flex gap-2">
               {data.onEdit ? (
