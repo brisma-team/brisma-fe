@@ -66,7 +66,11 @@ const ModalGuidelines = ({
             />
           </div>
         ) : (
-          <p className="text-base font-semibold text-justify">{desc}</p>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: data,
+            }}
+          />
         )}
       </div>
     </ModalScroll>

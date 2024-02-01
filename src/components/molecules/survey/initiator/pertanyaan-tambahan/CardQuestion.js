@@ -2,6 +2,7 @@ import {
   ButtonIcon,
   CheckboxField,
   DivButton,
+  ErrorValidation,
   RadioField,
   TextAreaField,
   TextInput,
@@ -19,8 +20,11 @@ const CardQuestion = ({
   indexCategory,
   indexQuestion,
   data,
+  validation,
   isPreviewPage,
   isDisabledForm,
+  isDisabledBobot,
+  isDisabledDescriptionAnswer,
   handleChangeQuestion,
   handleDeleteQuestion,
   handleChangeAnswer,
@@ -37,13 +41,17 @@ const CardQuestion = ({
         boxShadow: "0px 0px 4px 0px rgba(0.25, 0.25, 0.25, 0.25)",
       }}
     >
-      <div className="w-full h-full flex justify-between items-center border-neutral-200 border-b-2 rounded-se-lg">
+      <div
+        className={`w-full h-full flex justify-between items-center border-neutral-200 border-b-2 rounded-se-lg ${
+          !data?.is_default && `bg-[#EAFFE2]`
+        }`}
+      >
         <div className="py-2 px-4 w-full h-full flex items-center">
           <p className="text-base font-semibold">
             Pertanyaan : {indexQuestion + 1}/4
           </p>
         </div>
-        {!isPreviewPage ? (
+        {!isPreviewPage && !data?.is_default ? (
           <div className="h-full flex items-center gap-3 px-4">
             <DropdownCard
               actions={[
@@ -107,6 +115,7 @@ const CardQuestion = ({
                 }}
                 maxLength={2}
                 value={data.bobot}
+                isDisabled={data?.is_default || isDisabledBobot}
               />
             </div>
           )}
@@ -131,11 +140,22 @@ const CardQuestion = ({
                     e.target.value
                   )
                 }
+                isDisabled={data?.is_default}
               />
+              {validation?.length
+                ? validation.map((value, index) => {
+                    return value == `${indexCategory}-${indexQuestion}` ? (
+                      <div className="ml-1" key={index}>
+                        <ErrorValidation message={"Wajib terisi"} />
+                      </div>
+                    ) : (
+                      ""
+                    );
+                  })
+                : ""}
             </div>
           )}
-          {(!isPreviewPage && data.tipe_pertanyaan_kode !== "4") ||
-          isDisabledForm ? (
+          {data.tipe_pertanyaan_kode != "4" ? (
             <div className="border-2 border-neutral-200 p-3 rounded-lg flex justify-between items-center w-full">
               <p className="font-semibold text-xs">
                 Apakah responden wajib memberikan deskripsi dari jawaban?
@@ -143,7 +163,9 @@ const CardQuestion = ({
               <div className="flex gap-2">
                 <RadioField
                   label={"Ya"}
-                  isDisabled={isPreviewPage || isDisabledForm}
+                  isDisabled={
+                    isPreviewPage || isDisabledForm || data?.is_default
+                  }
                   isChecked={data.is_need_deskripsi}
                   value={true}
                   handleChange={(e) =>
@@ -157,7 +179,9 @@ const CardQuestion = ({
                 />
                 <RadioField
                   label={"Tidak"}
-                  isDisabled={isPreviewPage || isDisabledForm}
+                  isDisabled={
+                    isPreviewPage || isDisabledForm || data?.is_default
+                  }
                   isChecked={!data.is_need_deskripsi}
                   value={false}
                   handleChange={(e) =>
@@ -275,7 +299,11 @@ const CardQuestion = ({
                             }}
                             maxLength={2}
                             value={answer.bobot}
-                            isDisabled={isDisabledForm}
+                            isDisabled={
+                              isDisabledForm ||
+                              data?.is_default ||
+                              isDisabledBobot
+                            }
                             onChange={(value) =>
                               handleChangeAnswer(
                                 indexCategory,
@@ -291,7 +319,9 @@ const CardQuestion = ({
                       {data.tipe_pertanyaan_kode == "1" ? (
                         <TextAreaField
                           className={"h-2"}
-                          isDisabled={!isPreviewPage || isDisabledForm}
+                          isDisabled={
+                            !isPreviewPage || isDisabledForm || data?.is_default
+                          }
                           handleChange={(e) =>
                             handleChangeAnswer(
                               data.tipe_pertanyaan_kode,
@@ -309,35 +339,55 @@ const CardQuestion = ({
                             <p>{answer.text}</p>
                           </div>
                         ) : (
-                          <TextInput
-                            value={answer.text}
-                            onChange={(e) =>
-                              handleChangeAnswer(
-                                indexCategory,
-                                indexQuestion,
-                                indexAnswer,
-                                "text",
-                                e.target.value
-                              )
-                            }
-                            icon={
-                              <ButtonIcon
-                                handleClick={() =>
-                                  handleDeleteAnswer(
-                                    indexCategory,
-                                    indexQuestion,
-                                    indexAnswer
-                                  )
-                                }
-                                icon={<IconClose size="medium" />}
-                              />
-                            }
-                          />
+                          <div className="w-full">
+                            <TextInput
+                              value={answer.text}
+                              onChange={(e) =>
+                                handleChangeAnswer(
+                                  indexCategory,
+                                  indexQuestion,
+                                  indexAnswer,
+                                  "text",
+                                  e.target.value
+                                )
+                              }
+                              icon={
+                                <ButtonIcon
+                                  handleClick={() =>
+                                    handleDeleteAnswer(
+                                      indexCategory,
+                                      indexQuestion,
+                                      indexAnswer
+                                    )
+                                  }
+                                  icon={<IconClose size="medium" />}
+                                  isDisabled={data?.is_default}
+                                />
+                              }
+                              isDisabled={data?.is_default}
+                            />
+                            {validation?.length
+                              ? validation.map((value, index) => {
+                                  return value ==
+                                    `${indexCategory}-${indexQuestion}-${indexAnswer}` ? (
+                                    <div className="ml-1" key={index}>
+                                      <ErrorValidation
+                                        message={"Wajib terisi"}
+                                      />
+                                    </div>
+                                  ) : (
+                                    ""
+                                  );
+                                })
+                              : ""}
+                          </div>
                         )
                       ) : data.tipe_pertanyaan_kode == "4" && isPreviewPage ? (
                         <TextAreaField
                           placeholder={"Deskripsi Jawaban"}
-                          isDisabled={!isPreviewPage}
+                          isDisabled={
+                            !isPreviewPage || isDisabledDescriptionAnswer
+                          }
                           handleChange={(e) =>
                             handleChangeAnswer(
                               "deskripsi jawaban",
@@ -367,6 +417,7 @@ const CardQuestion = ({
                                   JSON.parse(e.target.value)
                                 )
                               }
+                              isDisabled={data?.is_default}
                             />
                             <RadioField
                               label={"Tidak"}
@@ -380,6 +431,7 @@ const CardQuestion = ({
                                   JSON.parse(e.target.value)
                                 )
                               }
+                              isDisabled={data?.is_default}
                             />
                           </div>
                         </div>
@@ -394,7 +446,7 @@ const CardQuestion = ({
           ) : data.is_need_deskripsi ? (
             <TextAreaField
               placeholder={"Deskripsi Jawaban"}
-              isDisabled={!isPreviewPage}
+              isDisabled={!isPreviewPage || isDisabledDescriptionAnswer}
               handleChange={(e) =>
                 handleChangeAnswer(
                   "deskripsi jawaban",

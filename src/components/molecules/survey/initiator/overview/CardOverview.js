@@ -21,6 +21,7 @@ const CardOverview = ({
   handleDetailSurvey,
   handleDownloadSurvey,
   handleApprovalSurvey,
+  handleChangeRespondenSurvey,
   handleExtensionRequestSurvey,
   handleShowScoreSurvey,
   handleDeleteSurvey,
@@ -70,6 +71,14 @@ const CardOverview = ({
       action: async () => await handleDownloadSurvey(data.id),
     },
     { label: "Approval", action: async () => handleApprovalSurvey(data.id) },
+    {
+      label: "Pengantian",
+      action: async () => handleChangeRespondenSurvey(data.id),
+      isDisabled: !(
+        (isAdmin || isInitiator) &&
+        (data.status_kode == 4 || data.status_kode == 7)
+      ),
+    },
     {
       label: "Perpanjang",
       action: async () => {
