@@ -22,7 +22,7 @@ import {
 } from "@/slices/pat/auditScheduleSlice";
 import { useRouter } from "next/router";
 import CardAuditTeam from "../../CardAuditTeam";
-import { convertDate } from "@/helpers";
+import { addDaysToDate, convertDate, dateNow } from "@/helpers";
 
 const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
   const { id } = useRouter().query;
@@ -159,10 +159,11 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
           icon={
             <ButtonIcon
               handleClick={() => handleChange("name_kegiatan_audit", "")}
-              icon={<IconClose size="medium" />}
+              icon={<IconClose size="large" />}
+              className="h-full flex items-center"
             />
           }
-          className={"font-bold text-5xl rounded text-brisma"}
+          className={"font-medium text-3xl rounded text-brisma"}
           style={{ fontSize: "1.25rem" }}
           onChange={(e) => handleChange("name_kegiatan_audit", e.target.value)}
           value={auditScheduleData.name_kegiatan_audit || ""}
@@ -290,7 +291,21 @@ const ModalBodyInfoKegiatan = ({ setCurrentModalStage, isDisabled }) => {
                   valueStart={auditScheduleData.pelaksanaan_start || ""}
                   valueEnd={auditScheduleData.pelaksanaan_end || ""}
                   isDisabled={isDisabled}
-                  pastDate={true}
+                  format={"DD/MM/YYYY"}
+                  minDateStart={dateNow()}
+                  maxDateStart={
+                    addDaysToDate(auditScheduleData?.pelaksanaan_end, "-", 1) ||
+                    null
+                  }
+                  minDateEnd={
+                    addDaysToDate(
+                      auditScheduleData?.pelaksanaan_start,
+                      "+",
+                      1
+                    ) ||
+                    addDaysToDate(dateNow(), "+", 1) ||
+                    null
+                  }
                 />
               }
               widthLabel={"w-2/5"}

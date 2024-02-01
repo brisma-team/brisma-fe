@@ -150,7 +150,7 @@ const SidebarLandingEWP = () => {
           <div className="flex flex-col px-5 pt-16 pb-3">
             <div className="text-base text-brisma font-bold">
               <p>Project Details</p>
-              <p>{data?.projectId}</p>
+              <p>{data?.projectId?.toUpperCase()}</p>
             </div>
             <div className="text-sm text-brisma">{data?.projectName}</div>
             <AvatarGroupField data={allAvatars} />

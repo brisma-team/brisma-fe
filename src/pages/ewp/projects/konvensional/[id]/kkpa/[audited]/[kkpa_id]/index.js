@@ -16,7 +16,7 @@ const index = () => {
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
     {
-      name: `${auditorEWP?.data?.project_info?.project_id} / KKPA`,
+      name: `${auditorEWP?.data?.project_info?.project_id?.toUpperCase()} / KKPA`,
       path: baseUrl,
     },
   ];

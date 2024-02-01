@@ -14,6 +14,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useJenis, useMetode, useTema, useTipe } from "@/data/reference";
 import { setActivityScheduleOtherData } from "@/slices/pat/activityScheduleOtherSlice";
+import { addDaysToDate, dateNow } from "@/helpers";
 
 const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
   const dispatch = useDispatch();
@@ -153,15 +154,16 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
 
   return (
     <div className="w-[63rem]">
-      <div className="w-1/2 pr-1">
+      <div className="w-1/2">
         <TextInput
           icon={
             <ButtonIcon
               handleClick={() => handleChange("nama", "")}
-              icon={<IconClose />}
+              icon={<IconClose size="large" />}
+              className="h-full flex items-center"
             />
           }
-          className={"font-bold text-5xl rounded text-brisma"}
+          className={"font-medium text-3xl rounded text-brisma"}
           style={{ fontSize: "1.25rem" }}
           onChange={(e) => handleChange("nama", e.target.value)}
           value={activityScheduleOtherData.nama}
@@ -271,7 +273,24 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled }) => {
                   valueStart={activityScheduleOtherData.pelaksanaan_start}
                   valueEnd={activityScheduleOtherData.pelaksanaan_end}
                   isDisabled={isDisabled}
-                  pastDate={true}
+                  format={"DD/MM/YYYY"}
+                  minDateStart={dateNow()}
+                  maxDateStart={
+                    addDaysToDate(
+                      activityScheduleOtherData?.pelaksanaan_end,
+                      "-",
+                      1
+                    ) || null
+                  }
+                  minDateEnd={
+                    addDaysToDate(
+                      activityScheduleOtherData?.pelaksanaan_start,
+                      "+",
+                      1
+                    ) ||
+                    addDaysToDate(dateNow(), "+", 1) ||
+                    null
+                  }
                 />
               }
               widthLabel={"w-2/5"}

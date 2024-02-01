@@ -1,12 +1,14 @@
-import { Breadcrumbs, PageTitle } from "@/components/atoms";
+import { Breadcrumbs, ButtonField, PageTitle } from "@/components/atoms";
 import { useEffect, useState } from "react";
 import { NavigationTab } from "@/components/molecules/commons";
 import {
+  Sidebar,
+  TabKuesioner,
+} from "@/components/molecules/survey/initiator/pertanyaan-tambahan";
+import {
   ModalGuidelines,
   ModalSelectedTemplateSurvey,
-  Sidebar,
   TabInformation,
-  TabKuesioner,
 } from "@/components/molecules/survey/initiator/buat-template";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -68,6 +70,7 @@ const index = () => {
   const router = useRouter();
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [dataCategory, setDataCategory] = useState([]);
   const [isNewTemplate, setIsNewTemplate] = useState(true);
   const [isDisabledButtonAction, setIsDisabledButtonAction] = useState(true);
   const [isFormDisabled, setIsFormDisabled] = useState(false);
@@ -252,6 +255,7 @@ const index = () => {
         return {
           id: category.kategori_id,
           name: category.kategori_name,
+          is_default: category.is_default,
           pertanyaan: category.template_pertanyaan?.length
             ? category.template_pertanyaan?.map((question) => {
                 return {
@@ -262,6 +266,7 @@ const index = () => {
                   uraian: question.uraian,
                   is_need_deskripsi: question.is_need_deskripsi,
                   bobot: question.bobot,
+                  is_default: question.is_default,
                   jawaban: question.template_jawaban.length
                     ? question.template_jawaban.map((answer) => {
                         return {
@@ -282,8 +287,36 @@ const index = () => {
       dispatch(resetPayloadKuesioner());
     }
   }, [kuesioner]);
+
   useEffect(() => {
-    console.log("payloadKuesioner => ", payloadKuesioner);
+    if (payloadKuesioner?.length) {
+      const total_pertanyaan_all_kategori = payloadKuesioner.reduce(
+        (acc, obj) => {
+          return acc + obj.pertanyaan.length;
+        },
+        0
+      );
+
+      const mapping = payloadKuesioner.map((category, idx) => {
+        const { id, name, is_default } = category;
+        const total_pertanyaan = category.pertanyaan
+          ? category.pertanyaan.length
+          : 0;
+
+        return {
+          idx: idx + 1,
+          id,
+          name,
+          total_pertanyaan,
+          total_pertanyaan_all_kategori,
+          is_default,
+        };
+      });
+
+      setDataCategory(mapping);
+    } else {
+      setDataCategory([]);
+    }
   }, [payloadKuesioner]);
 
   useEffect(() => {
@@ -464,6 +497,10 @@ const index = () => {
     isRefreshWorkflowTerminateRequest,
     extension,
   ]);
+
+  const handleClickAdditionalQuestions = () => {
+    router.push(`/survey/initiator/overview/${id}/pertanyaan-tambahan`);
+  };
 
   // [ START ] Handler for content stage informasi
   const handleChangeFormInformasi = (property, value) => {
@@ -983,20 +1020,20 @@ const index = () => {
               }
             />
           </div>
-          <div className="w-full flex justify-between">
+          <div className="w-full flex justify-between items-center">
             <NavigationTab
               items={navigationTabItems}
               currentStage={currentContentStage}
               setCurrentStage={setCurrentContentStage}
             />
-            {/* {currentContentStage === 2 && (
+            {currentContentStage === 2 && (
               <div className="bg-atlasian-purple h-fit w-44 rounded">
                 <ButtonField
                   text={"Pertanyaan Tambahan"}
-                  handler={() => console.log("test")}
+                  handler={handleClickAdditionalQuestions}
                 />
               </div>
-            )} */}
+            )}
           </div>
           {currentContentStage === 1 ? (
             <TabInformation
@@ -1016,19 +1053,16 @@ const index = () => {
           ) : (
             <TabKuesioner
               data={payloadKuesioner}
-              isPreviewPage={true}
-              isDisabledForm={true}
+              isPreviewPage
+              isDisabledForm
+              isDisabledDescriptionAnswer
               handleClickOpenModalGuidelines={handleClickOpenModalGuidelines}
             />
           )}
         </div>
       </div>
       {currentContentStage === 2 ? (
-        <Sidebar
-          data={payloadKuesioner}
-          isPreviewPage={true}
-          isDisabledForm={true}
-        />
+        <Sidebar data={dataCategory} isPreviewPage isDisabledForm />
       ) : (
         ""
       )}

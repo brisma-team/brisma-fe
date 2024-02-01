@@ -11,10 +11,9 @@ const ModalFooter = ({
       onSubmit={handleSubmit}
     >
       {currentModalStage < 3 && (
-        <div className="rounded w-28 bg-atlasian-blue-light">
+        <div className={`rounded w-28 bg-atlasian-blue-light`}>
           <ButtonField
             text={"Lanjut"}
-            disabled={isDisabled}
             handler={handleNextStage}
             type={"submit"}
             name={"nextButton"}
@@ -23,9 +22,14 @@ const ModalFooter = ({
       )}
 
       {currentModalStage > 1 && (
-        <div className="rounded w-28 bg-atlasian-green">
+        <div
+          className={`rounded w-28 ${
+            isDisabled ? "bg-atlasian-gray-light" : "bg-atlasian-green"
+          }`}
+        >
           <ButtonField
             text={"Simpan"}
+            disabled={isDisabled}
             handler={handleSubmit}
             type={"submit"}
             name={"saveButton"}

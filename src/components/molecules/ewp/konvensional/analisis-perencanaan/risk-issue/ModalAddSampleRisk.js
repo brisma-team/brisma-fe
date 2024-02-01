@@ -10,7 +10,9 @@ import {
 } from "@/components/atoms";
 import { useState, useEffect } from "react";
 import {
+  addDaysToDate,
   confirmationSwal,
+  dateNow,
   errorSwal,
   loadingSwal,
   useDeleteData,
@@ -412,8 +414,24 @@ const ModalAddSampleRisk = ({
                           }
                           valueStart={payloadSample?.sample_periode_start}
                           valueEnd={payloadSample?.sample_periode_end}
-                          pastDate={true}
                           format={"DD/MM/YYYY"}
+                          minDateStart={dateNow()}
+                          maxDateStart={
+                            addDaysToDate(
+                              payloadSample?.sample_periode_end,
+                              "-",
+                              1
+                            ) || null
+                          }
+                          minDateEnd={
+                            addDaysToDate(
+                              payloadSample?.sample_periode_start,
+                              "+",
+                              1
+                            ) ||
+                            addDaysToDate(dateNow(), "+", 1) ||
+                            null
+                          }
                         />
                       }
                       label="Periode"

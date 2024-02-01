@@ -14,6 +14,7 @@ import {
   TypeSelect,
 } from "../commons";
 import { useState } from "react";
+import { addDaysToDate, dateNow } from "@/helpers";
 
 const CardFilterAuditSchedule = ({ showFilter, params, setParams }) => {
   const [selectedValue, setSelectedValue] = useState({
@@ -66,7 +67,7 @@ const CardFilterAuditSchedule = ({ showFilter, params, setParams }) => {
                 }
               />
             </div>
-            <div className="w-72">
+            <div className="w-72 flex items-center h-full">
               <DatepickerStartEnd
                 placeholderStart={"Start"}
                 placeholderEnd={"End"}
@@ -74,6 +75,13 @@ const CardFilterAuditSchedule = ({ showFilter, params, setParams }) => {
                 handlerChangeEnd={(e) => handleChangeParams("end", e)}
                 valueStart={params.start}
                 valueEnd={params.end}
+                format={"DD/MM/YYYY"}
+                maxDateStart={addDaysToDate(params?.end, "-", 1) || null}
+                minDateEnd={
+                  addDaysToDate(params?.start, "+", 1) ||
+                  addDaysToDate(dateNow(), "+", 1) ||
+                  null
+                }
               />
             </div>
           </div>

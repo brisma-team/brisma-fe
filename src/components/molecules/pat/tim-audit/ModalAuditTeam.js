@@ -292,8 +292,12 @@ const ModalAuditTeam = ({
         <CloseModal handleCloseModal={handleCloseModal} showModal={showModal} />
         <div className="w-2/3">
           <TextInput
-            icon={<IconClose size="medium" />}
-            className={"font-bold text-5xl rounded text-brisma"}
+            icon={
+              <div className="h-full flex items-center">
+                <IconClose size="large" />
+              </div>
+            }
+            className={"font-medium text-3xl rounded text-brisma"}
             style={{ fontSize: "1.25rem" }}
             onChange={(e) => handleChangeText("name", e)}
             value={auditTeamData?.name}

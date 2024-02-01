@@ -10,7 +10,7 @@ const CardFilterTimAudit = ({ showFilter, filter, setFilter }) => {
   return (
     showFilter && (
       <Card>
-        <div className="flex flex-wrap m-2 gap-3 px-2">
+        <div className="flex flex-wrap items-center m-2 gap-3 px-2">
           <div className="w-48">
             <TextInput
               placeholder="Nama Tim"

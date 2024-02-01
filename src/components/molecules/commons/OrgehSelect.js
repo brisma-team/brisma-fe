@@ -95,8 +95,8 @@ const OrgehSelect = ({
         onInputChange={handleInputChange}
         components={customIcon && { DropdownIndicator }}
         isDisabled={isDisabled}
-        onMenuOpen={handleOpen}
-        onMenuClose={handleClose}
+        onMenuOpen={handleMenuOpen && handleOpen}
+        onMenuClose={handleMenuClose && handleClose}
       />
     </div>
   );

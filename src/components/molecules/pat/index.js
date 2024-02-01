@@ -1,6 +1,5 @@
 import PatSidebarOverview from "./PatSidebarOverview";
 import PatSidebarLanding from "./PatSidebarLanding";
-import { CardApprovalQueue, CardApprovalHistory } from "./approval";
 import CardAuditTeam from "./CardAuditTeam";
 import CardActivitySchedule from "./CardActivitySchedule";
 import CardFormInputTeam from "./CardFormInputTeam";
@@ -17,8 +16,6 @@ import CardFilterAuditSchedule from "./CardFilterAuditSchedule";
 export {
   PatSidebarOverview,
   PatSidebarLanding,
-  CardApprovalQueue,
-  CardApprovalHistory,
   CardAuditTeam,
   CardActivitySchedule,
   CardFormInputTeam,

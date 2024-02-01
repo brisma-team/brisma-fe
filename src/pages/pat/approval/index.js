@@ -3,12 +3,13 @@ import { PatOverviewLayout } from "@/layouts/pat";
 import useApproval from "@/data/pat/approval/useApproval";
 import { Breadcrumbs } from "@/components/atoms";
 import {
-  CardApprovalQueue,
-  CardApprovalHistory,
-} from "@/components/molecules/pat";
+  TableHistoryPAT,
+  TableApprovalQueuePAT,
+} from "@/components/molecules/pat/approval";
 import Button from "@atlaskit/button";
 import useApprovalHistory from "@/data/pat/approval/useApprovalHistory";
 import { CardApprovalList } from "@/components/molecules/commons";
+import { useRouter } from "next/router";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -17,22 +18,37 @@ const breadcrumbs = [
 ];
 
 const index = () => {
+  const router = useRouter();
   const [queue, setQueue] = useState([]);
   const [totalApproved, setTotalApproved] = useState({});
   const [history, setHistory] = useState([]);
   const { approvalList } = useApproval();
-  const { approvalHistory } = useApprovalHistory(1, 5);
+  const { approvalHistory } = useApprovalHistory();
+
   useEffect(() => {
-    if (approvalList != undefined) {
-      setQueue(approvalList.data.body);
-      setTotalApproved(approvalList.data.header);
+    if (approvalList) {
+      setQueue(approvalList?.data?.body);
+      setTotalApproved(approvalList?.data?.header);
+    } else {
+      setQueue([]);
+      setTotalApproved([]);
     }
-  }, [approvalList]);
+
+    if (approvalHistory) {
+      setHistory(approvalHistory?.data?.logPAT?.data);
+    } else {
+      setHistory([]);
+    }
+  }, [approvalList, approvalHistory]);
+
   useEffect(() => {
-    if (approvalHistory != undefined) {
-      setHistory(approvalHistory.data.logPAT.data);
-    }
-  }, [approvalHistory]);
+    console.log("history => ", history);
+  }, [history]);
+
+  const handleClickActionOnTableApprovalQueue = (pat_id) => {
+    router.push(`projects/${pat_id}/dokumen?is_approval=true`);
+  };
+
   return (
     <PatOverviewLayout withContent={false}>
       <div className="pr-24">
@@ -47,18 +63,18 @@ const index = () => {
         <div className="flex mb-6">
           <div className="flex-initial w-[850px]">
             <div className="mb-5">
-              <CardApprovalQueue data={queue} />
+              <TableApprovalQueuePAT
+                data={queue}
+                handleClickAction={handleClickActionOnTableApprovalQueue}
+              />
             </div>
             <div>
-              <CardApprovalHistory data={history} />
+              <TableHistoryPAT data={history} />
             </div>
           </div>
           <div className="flex-initial w-[260px] px-16">
             <div>
               <CardApprovalList data={totalApproved} />
-            </div>
-            <div>
-              <Button appearance="primary">Tampilkan Filter</Button>
             </div>
           </div>
         </div>

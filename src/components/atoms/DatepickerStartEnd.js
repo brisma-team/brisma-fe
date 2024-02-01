@@ -1,5 +1,5 @@
-import { dateNow } from "@/helpers";
-import { DatePicker } from "@atlaskit/datetime-picker";
+import DatepickerField from "./Datepicker";
+import ErrorValidation from "./ErrorValidation";
 
 const DatepickerStartEnd = ({
   placeholderStart,
@@ -10,32 +10,49 @@ const DatepickerStartEnd = ({
   valueEnd,
   format,
   isDisabled,
-  pastDate,
+  minDateStart,
+  maxDateStart,
+  minDateEnd,
+  maxDateEnd,
+  validationStart,
+  validationEnd,
 }) => {
   return (
-    <div className="flex">
+    <div className="flex w-full">
       <div className="w-full">
-        <DatePicker
+        <DatepickerField
           placeholder={placeholderStart}
-          onChange={handlerChangeStart}
+          handleChange={handlerChangeStart}
           value={valueStart}
-          dateFormat={format}
+          format={format}
           isDisabled={isDisabled}
-          minDate={pastDate && dateNow()}
+          minDate={minDateStart && minDateStart}
+          maxDate={maxDateStart && maxDateStart}
         />
+        {validationStart ? (
+          <ErrorValidation message={validationStart} className={"ml-1 mt-4"} />
+        ) : (
+          ""
+        )}
       </div>
       <div className="text-center mx-2">
         <h1>-</h1>
       </div>
       <div className="w-full">
-        <DatePicker
+        <DatepickerField
           placeholder={placeholderEnd}
-          onChange={handlerChangeEnd}
+          handleChange={handlerChangeEnd}
           value={valueEnd}
-          dateFormat={format}
+          format={format}
           isDisabled={isDisabled}
-          minDate={pastDate && valueStart}
+          minDate={minDateEnd && minDateEnd}
+          maxDate={maxDateEnd && maxDateEnd}
         />
+        {validationEnd ? (
+          <ErrorValidation message={validationEnd} className={"ml-1 mt-4"} />
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

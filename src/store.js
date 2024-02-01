@@ -35,6 +35,7 @@ import catalogRPMReducer from "./slices/catalog/rpm/catalogRPMSlice";
 // REFERENCE
 import createTemplateReferenceSlice from "./slices/reference/createTemplateReferenceSlice";
 import approvalAdminSurveyReferenceReducer from "./slices/reference/approvalAdminSurveyReferenceSlice";
+import simulasiTemplateReferenceReducer from "./slices/reference/simulasiTemplateReferenceSlice";
 
 // SURVEY
 import penilaianSurveyReducer from "./slices/survey/initiator/penilaianSurveySlice";
@@ -46,6 +47,7 @@ import penilaianRespondenSurveyReducer from "./slices/survey/responden/penilaian
 import previewSurveyReducer from "./slices/survey/initiator/previewSurveySlice";
 import approvalInitiatorSurveyReducer from "./slices/survey/initiator/approvalSurveySlice";
 import approvalRespondenSurveyReducer from "./slices/survey/responden/approvalSurveySlice";
+import additionalQuestionSurveyReducer from "./slices/survey/initiator/additionalQuestionSlice";
 
 import { configureStore } from "@reduxjs/toolkit";
 
@@ -82,6 +84,7 @@ export const store = configureStore({
     // REFERENCE
     createTemplateReference: createTemplateReferenceSlice,
     approvalAdminSurveyReference: approvalAdminSurveyReferenceReducer,
+    simulasiTemplateReference: simulasiTemplateReferenceReducer,
 
     // SURVEY
     penilaianSurvey: penilaianSurveyReducer,
@@ -93,5 +96,6 @@ export const store = configureStore({
     previewSurvey: previewSurveyReducer,
     approvalInitiatorSurvey: approvalInitiatorSurveyReducer,
     approvalRespondenSurvey: approvalRespondenSurveyReducer,
+    additionalQuestionSurvey: additionalQuestionSurveyReducer,
   },
 });

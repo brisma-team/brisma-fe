@@ -41,6 +41,7 @@ import CustomTooltip from "./CustomTooltip";
 import CustomCheckbox from "./CustomCheckbox";
 import InformationDetail from "./InformationDetail";
 import ModalScroll from "./ModalScroll";
+import ButtonIconBack from "./ButtonIconBack";
 
 export {
   AvatarDefaultExample,
@@ -86,4 +87,5 @@ export {
   CustomCheckbox,
   InformationDetail,
   ModalScroll,
+  ButtonIconBack,
 };

@@ -13,6 +13,7 @@ import {
   TypeSelect,
 } from "../commons";
 import { useState } from "react";
+import { addDaysToDate, dateNow } from "@/helpers";
 
 const CardFilterOtherSchedule = ({ showFilter, params, setParams }) => {
   const [selectedValue, setSelectedValue] = useState({
@@ -48,8 +49,8 @@ const CardFilterOtherSchedule = ({ showFilter, params, setParams }) => {
     showFilter && (
       <Card>
         <div className="flex gap-3 px-4 py-2 w-fit">
-          <div className="flex flex-col gap-3">
-            <div className="w-72 flex tems-center h-full">
+          <div className="flex flex-col justify-center gap-3">
+            <div className="w-72 flex items-center">
               <TextInput
                 placeholder="Nama Proyek"
                 onChange={(e) => handleChangeParams("nama", e.target.value)}
@@ -70,6 +71,13 @@ const CardFilterOtherSchedule = ({ showFilter, params, setParams }) => {
                 handlerChangeEnd={(e) => handleChangeParams("end", e)}
                 valueStart={params.start}
                 valueEnd={params.end}
+                format={"DD/MM/YYYY"}
+                maxDateStart={addDaysToDate(params?.end, "-", 1) || null}
+                minDateEnd={
+                  addDaysToDate(params?.start, "+", 1) ||
+                  addDaysToDate(dateNow(), "+", 1) ||
+                  null
+                }
               />
             </div>
           </div>

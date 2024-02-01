@@ -14,7 +14,13 @@ import {
   FormWithLabel,
 } from "@/components/molecules/commons";
 import { useDetailBudgetMapaEWP } from "@/data/ewp/konvensional/mapa/anggaran";
-import { confirmationSwal, usePostData, useUpdateData } from "@/helpers";
+import {
+  addDaysToDate,
+  confirmationSwal,
+  dateNow,
+  usePostData,
+  useUpdateData,
+} from "@/helpers";
 import {
   resetPayload,
   setPayload,
@@ -164,6 +170,14 @@ const ModalAddBudget = ({
               handlerChangeEnd={(e) => handleChange("tanggal_end", e)}
               valueStart={payload.tanggal}
               valueEnd={payload.tanggal_end}
+              format={"DD/MM/YYYY"}
+              minDateStart={dateNow()}
+              maxDateStart={addDaysToDate(payload?.tanggal_end, "-", 1) || null}
+              minDateEnd={
+                addDaysToDate(payload?.tanggal, "+", 1) ||
+                addDaysToDate(dateNow(), "+", 1) ||
+                null
+              }
             />
           }
           widthLabel={"w-2/5"}

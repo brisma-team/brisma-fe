@@ -81,7 +81,7 @@ const CardQuestion = ({
                             isChecked={
                               !!data?.jawaban_user?.find(
                                 (value) =>
-                                  value?.jawaban_id === answer?.jawaban_id
+                                  value?.jawaban_id == answer?.jawaban_id
                               )
                             }
                             value={answer.jawaban_id}
@@ -103,7 +103,7 @@ const CardQuestion = ({
                             isChecked={
                               !!data?.jawaban_user?.find(
                                 (value) =>
-                                  value?.jawaban_id === answer?.jawaban_id
+                                  value?.jawaban_id == answer?.jawaban_id
                               )
                             }
                             handleChange={(e) =>

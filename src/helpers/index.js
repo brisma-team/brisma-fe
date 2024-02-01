@@ -33,6 +33,7 @@ import previewPrintDocument from "./previewPrintDocument";
 import checkRoleIsAdmin from "./checkRoleIsAdmin";
 import addDaysToDate from "./addDaysToDate";
 import previewDocumentNewTab from "./previewDocumentNewTab";
+import getFileDetails from "./getFileDetails";
 
 export {
   loadingSwal,
@@ -70,4 +71,5 @@ export {
   checkRoleIsAdmin,
   addDaysToDate,
   previewDocumentNewTab,
+  getFileDetails,
 };

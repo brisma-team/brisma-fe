@@ -628,12 +628,11 @@ const index = () => {
         }
 
         if (actionType === "change") {
-          const response = await fetchApi(
+          await fetchApi(
             "PATCH",
             `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/change`,
             data
           );
-          if (!response.isDismissed) return;
         } else {
           await fetchApi(
             "POST",

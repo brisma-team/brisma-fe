@@ -49,7 +49,9 @@ const index = () => {
   );
   const { id } = useRouter().query;
   const baseUrl = `/pat/projects/${id}`;
+
   const { statusPat } = useStatusPat(id);
+
   const [isDisabled, setIsDisabled] = useState(false);
   const [content, setContent] = useState(null);
   const breadcrumbs = [
@@ -101,8 +103,7 @@ const index = () => {
   };
 
   useEffect(() => {
-    if (statusPat?.data?.status_pat?.toLowerCase() === "final")
-      setIsDisabled(true);
+    setIsDisabled(statusPat?.data?.status_pat !== "On Progress");
   }, [statusPat]);
 
   useEffect(() => {
@@ -206,15 +207,15 @@ const index = () => {
               onChange={(value) => setData({ ...data, latar_belakang: value })}
             />
           </div>
-          <div className="mt-3 flex justify-end">
-            <div className="w-[7.75rem] h-10 bg-atlasian-green rounded flex items-center">
-              <ButtonField
-                text={"Simpan"}
-                handler={handlePost}
-                disabled={isDisabled}
-              />
+          {!isDisabled ? (
+            <div className="mt-3 flex justify-end">
+              <div className="w-[7.75rem] bg-atlasian-green rounded flex items-center">
+                <ButtonField text={"Simpan"} handler={handlePost} />
+              </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
       {/* End Content */}

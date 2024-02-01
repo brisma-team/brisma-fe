@@ -43,7 +43,7 @@ const CardQuestion = ({
             Pertanyaan : {indexQuestion + 1}/4
           </p>
         </div>
-        {!isPreviewPage && (
+        {!isPreviewPage ? (
           <div className="h-full flex items-center gap-3 px-4">
             <DropdownCard
               actions={[
@@ -74,6 +74,8 @@ const CardQuestion = ({
               }
             />
           </div>
+        ) : (
+          ""
         )}
       </div>
       <div className="flex w-full">
@@ -387,22 +389,24 @@ const CardQuestion = ({
                 })
               : ""}
           </div>
-          {isPreviewPage && data.tipe_pertanyaan_kode == "4"
-            ? ""
-            : data.is_need_deskripsi && (
-                <TextAreaField
-                  placeholder={"Deskripsi Jawaban"}
-                  isDisabled={!isPreviewPage}
-                  handleChange={(e) =>
-                    handleChangeAnswer(
-                      "deskripsi jawaban",
-                      e.target.value,
-                      indexCategory,
-                      indexQuestion
-                    )
-                  }
-                />
-              )}
+          {isPreviewPage && data.tipe_pertanyaan_kode == "4" ? (
+            ""
+          ) : data.is_need_deskripsi ? (
+            <TextAreaField
+              placeholder={"Deskripsi Jawaban"}
+              isDisabled={!isPreviewPage}
+              handleChange={(e) =>
+                handleChangeAnswer(
+                  "deskripsi jawaban",
+                  e.target.value,
+                  indexCategory,
+                  indexQuestion
+                )
+              }
+            />
+          ) : (
+            ""
+          )}
         </div>
         <DivButton
           className={"flex w-48 flex-col p-3"}

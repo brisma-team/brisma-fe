@@ -12,14 +12,21 @@ import { IconArrowLeft } from "@/components/icons";
 import { CardContentHeaderFooter } from "@/components/molecules/commons";
 import MonacoEditor from "@monaco-editor/react";
 import { useEffect, useRef, useState } from "react";
-import { errorSwal, fetchApi, previewDocumentNewTab } from "@/helpers";
+import {
+  confirmationSwal,
+  errorSwal,
+  fetchApi,
+  previewDocumentNewTab,
+} from "@/helpers";
 import {
   useInformation,
   useFormula,
 } from "@/data/reference/admin-survey/informasi";
+import { useSimulasi } from "@/data/reference/admin-survey/simulasi";
 
 const index = () => {
   const { id } = useRouter().query;
+  const router = useRouter();
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Reference", path: "/reference" },
@@ -31,15 +38,20 @@ const index = () => {
   ];
 
   const editorRef = useRef(null);
-  const [formula, setFormula] = useState("");
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [newFormula, setNewFormula] = useState("");
+  const [oldFormula, setOldFormula] = useState("");
+  const [isDisabledButtonAction, setIsDisabledButtonAction] = useState(false);
+  const [isSimulationExists, setIsSimulationExists] = useState(false);
 
   const { information, informationError } = useInformation({ id });
   const { formulaTemplate } = useFormula({ id });
+  const { simulasi } = useSimulasi({ id });
 
   useEffect(() => {
     if (!informationError) {
-      setIsDisabled(information?.data?.status_persetujuan !== "On Progress");
+      setIsDisabledButtonAction(
+        information?.data?.status_persetujuan !== "On Progress"
+      );
     }
   }, [information]);
 
@@ -53,11 +65,21 @@ const index = () => {
         }
       });
 
-      setFormula(hasil);
+      setNewFormula(hasil);
+      setOldFormula(hasil);
     } else {
-      setFormula("");
+      setNewFormula("");
+      setOldFormula("");
     }
   }, [formulaTemplate]);
+
+  useEffect(() => {
+    if (simulasi?.data?.simulasi?.length) {
+      setIsSimulationExists(true);
+    } else {
+      setIsSimulationExists(false);
+    }
+  }, [simulasi]);
 
   // [ START ] Handler for form formula
   const handleClickAggregateFunction = (value) => {
@@ -94,11 +116,11 @@ const index = () => {
   };
 
   const handleChangeFormula = (value) => {
-    setFormula(value);
+    setNewFormula(value);
   };
 
   const handleSaveFormula = async (isTestFormula) => {
-    const lines = formula.split("~").map((line) => line.trim());
+    const lines = newFormula.split("~").map((line) => line.trim());
     try {
       let path = "";
       let errorIndex;
@@ -166,6 +188,35 @@ const index = () => {
     }
   };
 
+  const handleClickSimulation = async () => {
+    if (!isSimulationExists) {
+      const confirm = await confirmationSwal(
+        "Apakah Anda yakin ingin membuat simulasi?"
+      );
+      if (!confirm.value) {
+        return;
+      }
+
+      await fetchApi(
+        "POST",
+        `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/template_survey/simulasi/create/${id}`,
+        {},
+        true
+      );
+    } else {
+      if (newFormula !== oldFormula) {
+        const confirm = await confirmationSwal(
+          "Ada perubahan pada formula, namun rumus terbaru belum disimpan. Simulasi akan menggunakan rumus sebelumnya."
+        );
+        if (!confirm.value) {
+          return;
+        }
+      }
+    }
+
+    router.push(`/reference/survey/overview/${id}/simulasi`);
+  };
+
   const handleEditorDidMount = (editor) => {
     editorRef.current = editor;
   };
@@ -219,7 +270,7 @@ const index = () => {
               >
                 <MonacoEditor
                   height="68vh"
-                  defaultValue={formula || `// Enter the formula here`}
+                  defaultValue={newFormula || `// Enter the formula here`}
                   onChange={handleChangeFormula}
                   onMount={handleEditorDidMount}
                 />
@@ -271,20 +322,20 @@ const index = () => {
                     </div>
                   </CardContentHeaderFooter>
                 </div>
-                <DivButton
-                  className="min-h-[18rem]"
-                  handleClick={() =>
-                    previewDocumentNewTab("guideline_formula.pdf")
-                  }
-                >
-                  <CardContentHeaderFooter>
-                    <div className="px-4 py-2 h-full flex items-center justify-center">
-                      <p className="font-semibold text-base">
-                        Guidelines/Glossary
+                <CardContentHeaderFooter height={"h-fit"} className={"py-2"}>
+                  <div className="flex justify-center items-center">
+                    <DivButton
+                      handleClick={() =>
+                        previewDocumentNewTab("guideline_formula.pdf")
+                      }
+                      className="rounded bg-atlasian-blue-light w-32 py-1 text-center"
+                    >
+                      <p className="font-semibold text-white">
+                        Download Guidelines
                       </p>
-                    </div>
-                  </CardContentHeaderFooter>
-                </DivButton>
+                    </DivButton>
+                  </div>
+                </CardContentHeaderFooter>
                 <div className="h-fit">
                   <CardContentHeaderFooter
                     header={
@@ -294,30 +345,43 @@ const index = () => {
                     }
                   >
                     <div className="p-2.5 flex flex-col gap-2.5 items-center">
-                      {/* <div className="rounded w-28 bg-atlasian-purple">
-                        <ButtonField
-                          text="Simulasi"
-                          handler={() => console.log("download")}
-                        />
-                      </div> */}
                       <div
                         className={`rounded w-28 ${
-                          isDisabled
+                          isDisabledButtonAction || !newFormula
+                            ? `bg-atlasian-gray-light`
+                            : `bg-atlasian-blue-light`
+                        }`}
+                      >
+                        <ButtonField
+                          disabled={isDisabledButtonAction || !newFormula}
+                          text="Test Rumus"
+                          handler={async () => await handleSaveFormula(true)}
+                        />
+                      </div>
+                      <div
+                        className={`rounded w-28 ${
+                          isDisabledButtonAction || !newFormula
                             ? `bg-atlasian-gray-light`
                             : `bg-atlasian-green`
                         }`}
                       >
                         <ButtonField
-                          disabled={isDisabled}
+                          disabled={isDisabledButtonAction || !newFormula}
                           text="Simpan"
                           handler={async () => await handleSaveFormula(false)}
                         />
                       </div>
-                      <div className="rounded w-28 bg-atlasian-yellow">
+                      <div
+                        className={`rounded w-28 ${
+                          isDisabledButtonAction
+                            ? `bg-atlasian-gray-light`
+                            : `bg-atlasian-purple`
+                        }`}
+                      >
                         <ButtonField
-                          disabled={isDisabled}
-                          text="Test"
-                          handler={async () => await handleSaveFormula(true)}
+                          disabled={isDisabledButtonAction}
+                          text="Simulasi"
+                          handler={handleClickSimulation}
                         />
                       </div>
                     </div>

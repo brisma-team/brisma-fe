@@ -1,4 +1,9 @@
-import { CloseModal, Modal, PageTitle, TableField } from "@/components/atoms";
+import {
+  CloseModal,
+  ModalScroll,
+  PageTitle,
+  TableField,
+} from "@/components/atoms";
 import { useEffect, useState } from "react";
 import { useAuditSchedule } from "@/data/pat";
 import { useRouter } from "next/router";
@@ -14,27 +19,18 @@ const ModalAuditScheduleDetail = ({ showModal, setShowModal, scheduleId }) => {
 
   useEffect(() => {
     const jenisAuditee = auditSchedule?.data.jadwal?.count_target_jenis_auditee;
-    if (jenisAuditee?.length > 0) {
-      const mappingItems = jenisAuditee?.map((v) => {
-        if (!parseInt(v?.existing)) {
-          return {
-            "Objek Audit": v?.name,
-            Eksisting: v?.existing.toString(),
-            Target: v?.target.toString(),
-            Presentase: "0%",
-          };
-        } else {
-          return {
-            "Objek Audit": v?.name,
-            Eksisting: v?.existing.toString(),
-            Target: v?.target.toString(),
-            Presentase: `${(
+    if (jenisAuditee?.length) {
+      const mappingItems = jenisAuditee?.map((v) => ({
+        "Objek Audit": v?.name,
+        Eksisting: v?.existing.toString(),
+        Target: v?.target.toString(),
+        Presentase: !parseInt(v?.existing)
+          ? "0%"
+          : `${(
               (parseInt(v?.target) / parseInt(v?.existing)) *
               100
             ).toString()}%`,
-          };
-        }
-      });
+      }));
       setItems(mappingItems);
     } else {
       setItems([]);
@@ -54,7 +50,7 @@ const ModalAuditScheduleDetail = ({ showModal, setShowModal, scheduleId }) => {
   };
 
   return (
-    <Modal showModal={showModal}>
+    <ModalScroll showModal={showModal}>
       <div className="w-[50rem] relative">
         <CloseModal handleCloseModal={handleCloseModal} showModal={showModal} />
         <div className="mb-2">
@@ -66,7 +62,7 @@ const ModalAuditScheduleDetail = ({ showModal, setShowModal, scheduleId }) => {
           items={items}
         />
       </div>
-    </Modal>
+    </ModalScroll>
   );
 };
 
