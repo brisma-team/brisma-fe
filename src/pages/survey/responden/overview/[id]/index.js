@@ -558,6 +558,7 @@ const index = () => {
               bobot,
               deskripsi_jawaban,
               tipe_pertanyaan_kode,
+              is_default,
               jawaban_user,
             } = question;
             const mappingJawabanUser = jawaban_user?.map((answer) => {
@@ -570,6 +571,7 @@ const index = () => {
               bobot,
               deskripsi_jawaban: deskripsi_jawaban || "",
               tipe_pertanyaan_kode,
+              is_default,
               jawaban: mappingJawabanUser,
             });
           });
