@@ -210,6 +210,7 @@ const index = () => {
                   tipe_pertanyaan_name: question.tipe_pertanyaan_name,
                   uraian: question.uraian,
                   is_need_deskripsi: question.is_need_deskripsi,
+                  is_default: question?.is_default,
                   bobot: question.bobot,
                   deskripsi_jawaban: question?.jawaban[0]?.deskripsi,
                   jawaban_user: question.jawaban?.length
@@ -235,6 +236,7 @@ const index = () => {
           id: category.kategori_id,
           name: category.kategori_name,
           is_need_saved: false,
+          is_default: category?.is_default,
           pertanyaan,
         };
       });
@@ -244,6 +246,7 @@ const index = () => {
           id: category.kategori_id,
           name: category.kategori_name,
           is_need_saved: false,
+          is_default: category?.is_default,
           pertanyaan: category?.template_pertanyaan?.length
             ? category?.template_pertanyaan?.map((question) => {
                 return {
@@ -254,6 +257,7 @@ const index = () => {
                   tipe_pertanyaan_name: question.tipe_pertanyaan_name,
                   uraian: question.uraian,
                   is_need_deskripsi: question.is_need_deskripsi,
+                  is_default: question?.is_default,
                   bobot: question.bobot,
                   deskripsi_jawaban: question?.jawaban[0]?.deskripsi,
                   jawaban_user: question.jawaban?.length
