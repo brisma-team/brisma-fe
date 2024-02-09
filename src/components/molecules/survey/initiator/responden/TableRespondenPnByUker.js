@@ -15,6 +15,7 @@ const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
 const TableRespondenPnByUker = ({
   data,
+  isDisabled,
   selectedResponden,
   selectedUkerId,
   isDisabledButtonSave,
@@ -29,7 +30,11 @@ const TableRespondenPnByUker = ({
         </div>
       }
       footer={
-        <div className="py-3 px-4 flex items-center justify-end">
+        <div
+          className={`py-3 px-4 flex items-center justify-end ${
+            isDisabled && "min-h-[2.5rem]"
+          }`}
+        >
           <div
             className={`w-36 text-sm font-semibold rounded ${
               !selectedUkerId || isDisabledButtonSave
@@ -37,11 +42,15 @@ const TableRespondenPnByUker = ({
                 : `bg-atlasian-green`
             }`}
           >
-            <ButtonField
-              text={"Simpan"}
-              handler={handleClickSave}
-              disabled={!selectedUkerId || isDisabledButtonSave}
-            />
+            {!isDisabled ? (
+              <ButtonField
+                text={"Simpan"}
+                handler={handleClickSave}
+                disabled={!selectedUkerId || isDisabledButtonSave}
+              />
+            ) : (
+              ""
+            )}
           </div>
         </div>
       }
@@ -81,18 +90,22 @@ const TableRespondenPnByUker = ({
                 <Row>
                   <Cell width="9%" className={`border-x ${customCell}`}>
                     <div className="custom-table-position-center justify-center">
-                      <CustomCheckbox
-                        value={selectedResponden?.find(
-                          (responden) =>
-                            responden?.pn_responden === pn_responden
-                        )}
-                        handleChange={(e) =>
-                          handleChangeChecbox(e.target.checked, {
-                            pn_responden,
-                            nama_responden,
-                          })
-                        }
-                      />
+                      {!isDisabled ? (
+                        <CustomCheckbox
+                          value={selectedResponden?.find(
+                            (responden) =>
+                              responden?.pn_responden === pn_responden
+                          )}
+                          handleChange={(e) =>
+                            handleChangeChecbox(e.target.checked, {
+                              pn_responden,
+                              nama_responden,
+                            })
+                          }
+                        />
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </Cell>
                   <Cell width="6%" className={`border-r ${customCell} `}>

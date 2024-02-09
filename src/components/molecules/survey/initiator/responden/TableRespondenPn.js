@@ -23,6 +23,7 @@ const TableResponden = ({
   dataUker,
   newResponden,
   selectedUkerId,
+  isDisabled,
   handleClickAddRow,
   handleClickSave,
   handleClickDelete,
@@ -46,19 +47,23 @@ const TableResponden = ({
         </div>
       }
       footer={
-        <div className="p-3 flex items-center">
-          <div className="w-48 text-sm font-semibold">
-            <ButtonField
-              iconAfter={
-                <div className="text-atlasian-purple">
-                  <IconPlus size="medium" />
-                </div>
-              }
-              text={"Tambah Responden"}
-              textColor={"purple"}
-              handler={handleClickAddRow}
-            />
-          </div>
+        <div className={`p-3 flex items-center min-h-[2.5rem]`}>
+          {!isDisabled ? (
+            <div className="w-48 text-sm font-semibold">
+              <ButtonField
+                iconAfter={
+                  <div className="text-atlasian-purple">
+                    <IconPlus size="medium" />
+                  </div>
+                }
+                text={"Tambah Responden"}
+                textColor={"purple"}
+                handler={handleClickAddRow}
+              />
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       }
     >
@@ -124,31 +129,37 @@ const TableResponden = ({
                           handleClick={handleClickSave}
                         />
                       ) : is_edit ? (
-                        <div className="flex justify-between gap-2">
+                        <div className="flex justify-between items-center gap-1.5">
                           <ButtonIcon
                             icon={<ButtonDelete />}
                             handleClick={() => handleClickDelete(id)}
                             color={"red"}
                           />
-                          <ButtonIcon
-                            icon={
-                              <Image
-                                src={ImageCircleCheckGreen}
-                                alt=""
-                                width={22}
-                                height={22}
-                              />
-                            }
-                            handleClick={() => handleClickDelete(id)}
-                            color={"yellow"}
-                          />
+                          {!isDisabled ? (
+                            <ButtonIcon
+                              icon={
+                                <Image
+                                  src={ImageCircleCheckGreen}
+                                  alt=""
+                                  width={22}
+                                  height={22}
+                                />
+                              }
+                              handleClick={() => handleClickDelete(id)}
+                              color={"yellow"}
+                            />
+                          ) : (
+                            ""
+                          )}
                         </div>
-                      ) : (
+                      ) : !isDisabled ? (
                         <ButtonIcon
                           icon={<ButtonDelete />}
                           handleClick={() => handleClickDelete(id)}
                           color={"red"}
                         />
+                      ) : (
+                        ""
                       )}
                     </div>
                   </Cell>

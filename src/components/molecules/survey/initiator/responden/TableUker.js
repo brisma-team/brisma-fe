@@ -25,6 +25,7 @@ const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
 const TableUker = ({
   data,
+  isDisabled,
   newUker,
   selectedUkerId,
   handleClickAddRow,
@@ -43,19 +44,25 @@ const TableUker = ({
         </div>
       }
       footer={
-        <div className="p-3 flex items-center">
-          <div className="w-40 text-sm font-semibold">
-            <ButtonField
-              iconAfter={
-                <div className="text-atlasian-purple">
-                  <IconPlus size="medium" />
-                </div>
-              }
-              text={"Tambah UKER"}
-              textColor={"purple"}
-              handler={() => handleClickAddRow()}
-            />
-          </div>
+        <div
+          className={`p-3 flex items-center ${isDisabled && "min-h-[2.5rem]"}`}
+        >
+          {!isDisabled ? (
+            <div className="w-40 text-sm font-semibold">
+              <ButtonField
+                iconAfter={
+                  <div className="text-atlasian-purple">
+                    <IconPlus size="medium" />
+                  </div>
+                }
+                text={"Tambah UKER"}
+                textColor={"purple"}
+                handler={() => handleClickAddRow()}
+              />
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       }
     >
@@ -121,16 +128,20 @@ const TableUker = ({
                           handleClick={handleClickSave}
                         />
                       ) : (
-                        <div className="flex justify-between gap-3">
+                        <div className="flex justify-between items-center gap-1.5">
                           <RadioField
                             isChecked={findIndex === index}
                             handleChange={() => handleSelectedUker(id)}
                           />
-                          <ButtonIcon
-                            icon={<ButtonDelete />}
-                            handleClick={() => handleClickDelete(id)}
-                            color={"red"}
-                          />
+                          {!isDisabled ? (
+                            <ButtonIcon
+                              icon={<ButtonDelete />}
+                              handleClick={() => handleClickDelete(id)}
+                              color={"red"}
+                            />
+                          ) : (
+                            ""
+                          )}
                         </div>
                       )}
                     </div>

@@ -1,5 +1,8 @@
 import { CloseModal, ModalScroll } from "@/components/atoms";
 import { confirmationSwal, convertDate } from "@/helpers";
+import { ImageCheck } from "@/helpers/imagesUrl";
+import Image from "next/image";
+
 const row = "w-full flex border-b border-gray-300";
 const columnBorder =
   "border-r border-gray-300 flex items-center px-3 py-2 text-sm font-semibold";
@@ -81,8 +84,17 @@ const ModalDetailSurvey = ({ showModal, handleCloseModal, data }) => {
                   }`;
 
                   return (
-                    <div className={columnClasses} key={index}>
-                      {responden?.nama_responden}
+                    <div className={`${columnClasses}`} key={index}>
+                      <div className="flex gap-4 items-center">
+                        <div>{responden?.nama_responden}</div>
+                        {responden?.status_persetujuan === "Final" ? (
+                          <div className="w-6 h-6">
+                            <Image src={ImageCheck} alt="" />
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                      </div>
                     </div>
                   );
                 })}

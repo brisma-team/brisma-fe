@@ -1,9 +1,12 @@
-import { Breadcrumbs, PageTitle } from "@/components/atoms";
+import { Breadcrumbs, ButtonField, PageTitle } from "@/components/atoms";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { LandingLayoutSurvey } from "@/layouts/survey";
-import { NavigationTab } from "@/components/molecules/commons";
+import {
+  CardContentHeaderFooter,
+  NavigationTab,
+} from "@/components/molecules/commons";
 import {
   useRespondenByPnSurvey,
   useRespondenByUkerPnSurvey,
@@ -11,24 +14,43 @@ import {
 } from "@/data/survey/initiator/responden";
 import {
   resetDataTables,
+  resetDataWorkflow,
+  resetDataHistoryWorkflow,
   resetPayloadNewResponden,
   resetPayloadNewUker,
   resetPayloadNewRespondenPnByUker,
+  resetValidationErrorsWorkflow,
   setDataTables,
+  setDataWorkflow,
+  setDataHistoryWorkflow,
   setPayloadNewResponden,
   setPayloadNewUker,
   setPayloadNewRespondenPnByUker,
+  setValidationErrorsWorkflow,
 } from "@/slices/survey/initiator/respondenSurveySlice";
-import { confirmationSwal, errorSwal, fetchApi, loadingSwal } from "@/helpers";
+import {
+  confirmationSwal,
+  convertDate,
+  errorSwal,
+  fetchApi,
+  loadingSwal,
+  setErrorValidation,
+} from "@/helpers";
 import {
   TableRespondenPn,
   TableRespondenPnByUker,
   TableUker,
 } from "@/components/molecules/survey/initiator/responden";
+import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common";
+import { workflowSchema } from "@/helpers/schemas/survey/createSurveySchema";
+import { useWorkflowSurvey } from "@/data/survey/initiator/buat-survey";
+import { useInformation } from "@/data/survey/initiator/informasi";
+import _ from "lodash";
+import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id } = useRouter().query;
+  const { id, is_request_manage_responden } = useRouter().query;
   const navigationTabItems = [
     { idx: 1, title: "PN Responden" },
     { idx: 2, title: "UKER Responden" },
@@ -53,9 +75,19 @@ const index = () => {
   const [isAddNewRowUkerPn, setIsAddNewRowUkerPn] = useState(false);
   const [isDisabledSaveRespondenPnByUker, setIsDisabledSaveRespondenPnByUker] =
     useState(false);
+  const [isRefreshWorkflow, setIsRefreshWorkflow] = useState(false);
+
+  const [showModalApproval, setShowModalApproval] = useState(false);
   const [selectedUkerId, setSelectedUkerId] = useState(0);
+  const [statusApproval, setStatusApproval] = useState("On Progress");
 
   const dataTables = useSelector((state) => state.respondenSurvey.dataTables);
+  const dataWorkflow = useSelector(
+    (state) => state.respondenSurvey.dataWorkflow
+  );
+  const dataHistoryWorkflow = useSelector(
+    (state) => state.respondenSurvey.dataHistoryWorkflow
+  );
   const payloadNewResponden = useSelector(
     (state) => state.respondenSurvey.payloadNewResponden
   );
@@ -65,7 +97,13 @@ const index = () => {
   const payloadNewRespondenPnByUker = useSelector(
     (state) => state.respondenSurvey.payloadNewRespondenPnByUker
   );
+  const validationErrorsWorkflow = useSelector(
+    (state) => state.respondenSurvey.validationErrorsWorkflow
+  );
 
+  const { information, informationError } = useInformation({
+    id,
+  });
   const { respondenByPnSurvey, respondenByPnSurveyMutate } =
     useRespondenByPnSurvey({
       id,
@@ -81,10 +119,76 @@ const index = () => {
   } = useRespondenByUkerPnSurvey({
     id: selectedUkerId,
   });
+  const { workflowSurvey, workflowSurveyMutate } = useWorkflowSurvey(
+    "catatan_manage_responden",
+    {
+      id,
+    }
+  );
+  const { user } = useUser();
+
+  useEffect(() => {
+    if (!informationError) {
+      setStatusApproval(information?.data?.status_persetujuan);
+    }
+  }, [information]);
+
+  useEffect(() => {
+    console.log("workflowSurvey?.data => ", workflowSurvey?.data);
+    if (workflowSurvey?.data) {
+      const workflowInfo = workflowSurvey?.data?.info;
+      const maker = workflowSurvey?.data?.initiator;
+      const approvers = workflowSurvey?.data?.approver;
+
+      const newWorkflowData = {
+        ...dataWorkflow,
+        status_approver: workflowInfo?.status_persetujuan,
+        on_approver: workflowInfo?.status_approver,
+      };
+
+      newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.fullName}`;
+      newWorkflowData.maker = maker;
+
+      newWorkflowData.ref_tim_audit_approver = approvers?.length
+        ? approvers.map(({ pn, nama, is_signed }) => ({ pn, nama, is_signed }))
+        : [];
+
+      if (workflowSurvey?.data?.log?.length) {
+        const mapping = workflowSurvey?.data?.log?.map((v) => {
+          return {
+            "P.I.C": v?.from?.pn + " - " + v?.from?.nama,
+            Alasan: v?.note,
+            Status:
+              v?.is_signed === true
+                ? "Approved"
+                : v?.is_signed === false
+                ? "Rejected"
+                : "",
+            Tanggal: convertDate(v?.createdAt, "-", "d"),
+          };
+        });
+        dispatch(setDataHistoryWorkflow(mapping));
+      }
+
+      dispatch(setDataWorkflow(newWorkflowData));
+    } else {
+      const newWorkflowData = {
+        status_approver: "On Progress",
+        on_approver: "",
+        ref_tim_audit_maker: `${user?.data?.pn} - ${user?.data?.fullName}`,
+        maker: _.pick(user?.data, ["pn", "fullName"]),
+        ref_tim_audit_approver: [],
+      };
+
+      dispatch(setDataWorkflow(newWorkflowData));
+    }
+    setIsRefreshWorkflow(false);
+  }, [workflowSurvey, isRefreshWorkflow, user]);
 
   useEffect(() => {
     if (respondenByPnSurvey?.data?.length) {
-      const mapping = respondenByPnSurvey.data.map((responden, index) => {
+      const filterData = respondenByPnSurvey.data.filter((v) => v.is_active);
+      const mapping = filterData.map((responden, index) => {
         const { id, pn_responden, nama_responden, keterangan } = responden;
         return {
           index,
@@ -431,9 +535,131 @@ const index = () => {
   };
   // [END] Handler add responden by uker pn
 
+  // [ START ] Handler for modal approval
+  const handleClickOpenModalApproval = () => {
+    setShowModalApproval(true);
+  };
+
+  const handleCloseModalApproval = () => {
+    dispatch(resetDataHistoryWorkflow());
+    dispatch(resetDataWorkflow());
+    setIsRefreshWorkflow(true);
+  };
+
+  const handleAdd = (property) => {
+    const newData = [...dataWorkflow[property]];
+    newData.push({
+      pn: "",
+      nama: "",
+      is_signed: false,
+    });
+    dispatch(setDataWorkflow({ ...dataWorkflow, [property]: newData }));
+  };
+
+  const handleDelete = (property, idx) => {
+    const newData = [...dataWorkflow[property]];
+    newData.splice(idx, 1);
+    dispatch(setDataWorkflow({ ...dataWorkflow, [property]: newData }));
+  };
+
+  const handleChangeText = (property, value) => {
+    dispatch(
+      setDataWorkflow({
+        ...dataWorkflow,
+        [property]: value,
+      })
+    );
+  };
+
+  const handleChangeSelect = (property, index, e) => {
+    const newData = [...dataWorkflow[property]];
+    const updated = { ...newData[index] };
+    updated["pn"] = e?.value?.pn;
+    updated["nama"] = e?.value?.name;
+    newData[index] = updated;
+    dispatch(
+      setDataWorkflow({
+        ...dataWorkflow,
+        [property]: newData,
+      })
+    );
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const schemaMapping = {
+      schema: workflowSchema,
+      resetErrors: resetValidationErrorsWorkflow,
+      setErrors: setValidationErrorsWorkflow,
+    };
+    const validate = setErrorValidation(dataWorkflow, dispatch, schemaMapping);
+
+    if (validate) {
+      const actionType = e.target.offsetParent.name;
+      const data = {
+        sub_modul: "catatan_manage_responden",
+        sub_modul_id: id,
+      };
+
+      const signedCount = dataWorkflow?.ref_tim_audit_approver?.filter(
+        (item) => item.is_signed
+      ).length;
+
+      switch (actionType) {
+        case "change":
+          data.approvers = dataWorkflow.ref_tim_audit_approver;
+          break;
+        case "create":
+          data.approvers = dataWorkflow.ref_tim_audit_approver;
+          break;
+        case "reject":
+          if (!dataWorkflow.note) {
+            await errorSwal("Silahkan berikan alasan!");
+            return;
+          }
+          data.note = dataWorkflow.note;
+          break;
+        case "approve":
+          if (signedCount >= dataWorkflow?.ref_tim_audit_approver?.length) {
+            data.data = "<p>pirli test</p>";
+          }
+          data.note = dataWorkflow.note;
+          break;
+      }
+
+      if (actionType === "reset") {
+        const confirm = await confirmationSwal(
+          "Terkait dengan workflow ini, apakah Anda yakin ingin melakukan pengaturan ulang?"
+        );
+        if (!confirm.value) {
+          return;
+        }
+      }
+
+      if (actionType === "change") {
+        await fetchApi(
+          "PATCH",
+          `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/change`,
+          data
+        );
+      } else {
+        await fetchApi(
+          "POST",
+          `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/workflow/${actionType}`,
+          data
+        );
+      }
+
+      workflowSurveyMutate();
+      dispatch(resetDataWorkflow());
+      setShowModalApproval(false);
+    }
+    workflowSurveyMutate();
+  };
+  // [ END ] Handler for modal approval
   return (
-    <LandingLayoutSurvey withoutRightSidebar={true} overflowY={true}>
-      <div className="w-[71rem]">
+    <LandingLayoutSurvey withoutRightSidebar overflowY>
+      <div className={is_request_manage_responden ? `w-[83rem]` : `w-[71rem]`}>
         <div className="pl-0.5 pt-4 pr-4 pb-6">
           <Breadcrumbs data={breadcrumbs} />
           <PageTitle text={"Responden"} />
@@ -444,41 +670,86 @@ const index = () => {
             setCurrentStage={setCurrentContentStage}
             width={"w-64"}
           />
-          {currentContentStage === 1 ? (
-            <TableRespondenPn
-              data={dataTables.respondenPn}
-              newResponden={payloadNewResponden}
-              handleChangeText={handleChangeTextResponden}
-              handleChangeResponden={handleChangeResponden}
-              handleClickAddRow={handleClickAddRowResponden}
-              handleClickDelete={handleClickDeleteResponden}
-              handleClickSave={handleClickSaveResponden}
-            />
-          ) : (
-            <div className="flex flex-col gap-4">
-              <TableUker
-                data={dataTables.respondenUker}
-                newUker={payloadNewUker}
-                selectedUkerId={selectedUkerId}
-                handleChangeTextUker={handleChangeTextUker}
-                handleChangeUker={handleChangeUker}
-                handleClickAddRow={handleClickAddRowUker}
-                handleClickDelete={handleClickDeleteUker}
-                handleClickSave={handleClickSaveUker}
-                handleSelectedUker={handleSelectedUker}
+          <div className="flex gap-4">
+            {currentContentStage === 1 ? (
+              <TableRespondenPn
+                data={dataTables.respondenPn}
+                newResponden={payloadNewResponden}
+                isDisabled={
+                  statusApproval !== "On Progress" &&
+                  !is_request_manage_responden
+                }
+                handleChangeText={handleChangeTextResponden}
+                handleChangeResponden={handleChangeResponden}
+                handleClickAddRow={handleClickAddRowResponden}
+                handleClickDelete={handleClickDeleteResponden}
+                handleClickSave={handleClickSaveResponden}
               />
-              <TableRespondenPnByUker
-                data={dataTables.respondenUkerPn}
-                selectedResponden={payloadNewRespondenPnByUker}
-                selectedUkerId={selectedUkerId}
-                isDisabledButtonSave={isDisabledSaveRespondenPnByUker}
-                handleChangeChecbox={handleChangeChecboxByUkerPn}
-                handleClickSave={handleClickSaveRespondenUkerPn}
-              />
-            </div>
-          )}
+            ) : (
+              <div className="flex flex-col gap-4 w-full">
+                <TableUker
+                  data={dataTables.respondenUker}
+                  newUker={payloadNewUker}
+                  selectedUkerId={selectedUkerId}
+                  isDisabled={
+                    statusApproval !== "On Progress" &&
+                    !is_request_manage_responden
+                  }
+                  handleChangeTextUker={handleChangeTextUker}
+                  handleChangeUker={handleChangeUker}
+                  handleClickAddRow={handleClickAddRowUker}
+                  handleClickDelete={handleClickDeleteUker}
+                  handleClickSave={handleClickSaveUker}
+                  handleSelectedUker={handleSelectedUker}
+                />
+                <TableRespondenPnByUker
+                  data={dataTables.respondenUkerPn}
+                  selectedResponden={payloadNewRespondenPnByUker}
+                  selectedUkerId={selectedUkerId}
+                  isDisabled={
+                    statusApproval !== "On Progress" &&
+                    !is_request_manage_responden
+                  }
+                  isDisabledButtonSave={isDisabledSaveRespondenPnByUker}
+                  handleChangeChecbox={handleChangeChecboxByUkerPn}
+                  handleClickSave={handleClickSaveRespondenUkerPn}
+                />
+              </div>
+            )}
+            {is_request_manage_responden ? (
+              <CardContentHeaderFooter width={"w-fit"} className={"p-4"}>
+                <div className="flex flex-col gap-2">
+                  <p className="font-semibold text-xl">Tindakan</p>
+                  <div className="w-36 bg-atlasian-green rounded">
+                    <ButtonField
+                      text={"Approval"}
+                      handler={handleClickOpenModalApproval}
+                    />
+                  </div>
+                </div>
+              </CardContentHeaderFooter>
+            ) : (
+              ""
+            )}
+          </div>
         </div>
       </div>
+      <ModalWorkflowEWP
+        workflowData={dataWorkflow}
+        historyWorkflow={dataHistoryWorkflow}
+        validationErrors={validationErrorsWorkflow}
+        setShowModal={setShowModalApproval}
+        showModal={showModalApproval}
+        headerTitle={"Approval Survey"}
+        handleChange={handleChangeText}
+        handleChangeSelect={handleChangeSelect}
+        handleDelete={handleDelete}
+        handleAdd={handleAdd}
+        handleSubmit={handleSubmit}
+        handleCloseModal={handleCloseModalApproval}
+        widthHeader={`w-[42rem]`}
+        withoutSigner={true}
+      />
       {/* End Content */}
     </LandingLayoutSurvey>
   );
