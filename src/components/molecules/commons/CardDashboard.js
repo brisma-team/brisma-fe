@@ -2,6 +2,10 @@ import Link from "next/link";
 import React from "react";
 
 const CardDashboard = ({ data }) => {
+  //styling
+  const basicStyles = `rounded-[10px] border border-[#00000033] my-4 shadow bg-gray-50 hover:bg-gray-200 text-atlasian-blue-baby p-5`;
+  const disabledStyles = `rounded-[10px] border border-[#00000033] my-4 shadow bg-gray-200 text-atlasian-blue-baby p-5 cursor-not-allowed`;
+
   return (
     <div className="p-5">
       <div className="flex justify-between items-center mb-8">
@@ -27,6 +31,12 @@ const CardDashboard = ({ data }) => {
               </div>
               <div className="px-5">
                 {items.subcontent.map((item, key) => {
+                  //disabling check
+                  const isDisabled =
+                    item.isDisabled != undefined && item.isDisabled == true
+                      ? true
+                      : false;
+
                   return (
                     item && (
                       <Link
@@ -38,7 +48,9 @@ const CardDashboard = ({ data }) => {
                           color: "black",
                         }}
                       >
-                        <div className="rounded-[10px] border border-[#00000033] my-4 shadow bg-gray-50 hover:bg-gray-200 text-atlasian-blue-baby p-5">
+                        <div
+                          className={isDisabled ? disabledStyles : basicStyles}
+                        >
                           <h3>{item.title ? item.title : "Content Title"}</h3>
                           <div className="mt-3 mb-3">
                             {item.description
