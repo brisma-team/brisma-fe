@@ -1,5 +1,6 @@
 const setErrorValidation = (data, dispatch, schemaMapping) => {
   try {
+    if (!schemaMapping?.schema) return true;
     const validationSchema = schemaMapping.schema;
     validationSchema.validateSync(data, { abortEarly: false });
     dispatch(schemaMapping.resetErrors());

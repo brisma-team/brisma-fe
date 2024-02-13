@@ -41,12 +41,17 @@ const index = () => {
         subtitle: "E.W.P Kegiatan",
         subcontent: [
           {
-            title: "AUDITOR",
-            description: "Pengerjaan EWP Agile.",
-            url: "#",
+            title: "Konsulting",
+            description: "Pengerjaan EWP Konsulting.",
+            url: "/ewp/konsulting/overview",
           },
           {
-            title: "APPROVAL",
+            title: "Monitoring Offsite",
+            description: "Pengerjaan EWP Monitoring Offsite.",
+            url: "/ewp/monoff/overview",
+          },
+          {
+            title: "Approval",
             description: "Pelacakan flow approval proyek EWP.",
             url: "#",
           },

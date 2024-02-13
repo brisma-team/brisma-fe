@@ -23,6 +23,10 @@ import budgetMapaEWPReducer from "./slices/ewp/konvensional/mapa/budgetMapaEWPSl
 import documentMapaEWPReducer from "./slices/ewp/konvensional/mapa/documentMapaEWPSlice";
 import suratEWPReducer from "./slices/ewp/konvensional/surat/suratEWPSlice";
 import documentSuratEWPReducer from "./slices/ewp/konvensional/surat/documentSuratEWPSlice";
+
+// EWP Konsulting
+import projectOverviewEWPKonsultingReducer from "./slices/ewp/konsulting/projectOverviewEWPKonsultingSlice";
+
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
 import beritaAcaraEntranceEWPReducer from "./slices/ewp/konvensional/entrance/beritaAcaraEntranceEWPSlice";
@@ -80,6 +84,9 @@ export const store = configureStore({
     documentMapaEWP: documentMapaEWPReducer,
     suratEWP: suratEWPReducer,
     documentSuratEWP: documentSuratEWPReducer,
+
+    // EWP Konsulting
+    projectOverviewEWPKonsulting: projectOverviewEWPKonsultingReducer,
 
     // REFERENCE
     createTemplateReference: createTemplateReferenceSlice,
