@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { LandingLayoutSurvey } from "@/layouts/survey";
 import {
   CardContentHeaderFooter,
+  ModalWorkflow,
   NavigationTab,
 } from "@/components/molecules/commons";
 import {
@@ -41,7 +42,6 @@ import {
   TableRespondenPnByUker,
   TableUker,
 } from "@/components/molecules/survey/initiator/responden";
-import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common";
 import { workflowSchema } from "@/helpers/schemas/survey/createSurveySchema";
 import { useWorkflowSurvey } from "@/data/survey/initiator/buat-survey";
 import { useInformation } from "@/data/survey/initiator/informasi";
@@ -80,6 +80,8 @@ const index = () => {
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [selectedUkerId, setSelectedUkerId] = useState(0);
   const [statusApproval, setStatusApproval] = useState("On Progress");
+  const [statusApprovalResponden, setStatusApprovalResponden] =
+    useState("On Progress");
 
   const dataTables = useSelector((state) => state.respondenSurvey.dataTables);
   const dataWorkflow = useSelector(
@@ -122,7 +124,7 @@ const index = () => {
   const { workflowSurvey, workflowSurveyMutate } = useWorkflowSurvey(
     "catatan_manage_responden",
     {
-      id,
+      id: information?.data?.catatan_manage_responden[0]?.id,
     }
   );
   const { user } = useUser();
@@ -134,10 +136,9 @@ const index = () => {
   }, [information]);
 
   useEffect(() => {
-    console.log("workflowSurvey?.data => ", workflowSurvey?.data);
     if (workflowSurvey?.data) {
       const workflowInfo = workflowSurvey?.data?.info;
-      const maker = workflowSurvey?.data?.initiator;
+      const maker = workflowInfo?.create_by;
       const approvers = workflowSurvey?.data?.approver;
 
       const newWorkflowData = {
@@ -146,7 +147,9 @@ const index = () => {
         on_approver: workflowInfo?.status_approver,
       };
 
-      newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.fullName}`;
+      newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${
+        maker?.nama || maker?.fullName
+      }`;
       newWorkflowData.maker = maker;
 
       newWorkflowData.ref_tim_audit_approver = approvers?.length
@@ -156,20 +159,34 @@ const index = () => {
       if (workflowSurvey?.data?.log?.length) {
         const mapping = workflowSurvey?.data?.log?.map((v) => {
           return {
-            "P.I.C": v?.from?.pn + " - " + v?.from?.nama,
-            Alasan: v?.note,
-            Status:
-              v?.is_signed === true
-                ? "Approved"
-                : v?.is_signed === false
-                ? "Rejected"
-                : "",
-            Tanggal: convertDate(v?.createdAt, "-", "d"),
+            children: v?.children?.length
+              ? v?.children?.map((child) => ({
+                  role: "child",
+                  pic: child?.from?.pn + " - " + child?.from?.nama,
+                  alasan: child?.note,
+                  status:
+                    child?.is_signed === true
+                      ? "Approved"
+                      : child?.is_signed === false
+                      ? "Rejected"
+                      : child?.note || "",
+                  tanggal: convertDate(v?.createdAt, "-", "d"),
+                }))
+              : [],
+            id: v?.id,
+            role: "parent",
+            pic:
+              v?.create_by?.pn +
+              " - " +
+              (v?.create_by?.nama || v?.create_by?.fullName),
+            alasan: "",
+            status: "",
+            tanggal: convertDate(v?.createdAt, "-", "d"),
           };
         });
         dispatch(setDataHistoryWorkflow(mapping));
       }
-
+      setStatusApprovalResponden(workflowInfo?.status_persetujuan);
       dispatch(setDataWorkflow(newWorkflowData));
     } else {
       const newWorkflowData = {
@@ -598,7 +615,7 @@ const index = () => {
       const actionType = e.target.offsetParent.name;
       const data = {
         sub_modul: "catatan_manage_responden",
-        sub_modul_id: id,
+        sub_modul_id: information?.data?.catatan_manage_responden[0]?.id,
       };
 
       const signedCount = dataWorkflow?.ref_tim_audit_approver?.filter(
@@ -657,6 +674,14 @@ const index = () => {
     workflowSurveyMutate();
   };
   // [ END ] Handler for modal approval
+
+  useEffect(() => {
+    console.log("statusApproval => ", statusApproval);
+  }, [statusApproval]);
+
+  useEffect(() => {
+    console.log("statusApprovalResponden => ", statusApprovalResponden);
+  }, [statusApprovalResponden]);
   return (
     <LandingLayoutSurvey withoutRightSidebar overflowY>
       <div className={is_request_manage_responden ? `w-[83rem]` : `w-[71rem]`}>
@@ -676,8 +701,9 @@ const index = () => {
                 data={dataTables.respondenPn}
                 newResponden={payloadNewResponden}
                 isDisabled={
-                  statusApproval !== "On Progress" &&
-                  !is_request_manage_responden
+                  information?.data?.status_kode == "8"
+                    ? statusApprovalResponden !== "On Progress"
+                    : statusApproval !== "On Progress"
                 }
                 handleChangeText={handleChangeTextResponden}
                 handleChangeResponden={handleChangeResponden}
@@ -692,8 +718,9 @@ const index = () => {
                   newUker={payloadNewUker}
                   selectedUkerId={selectedUkerId}
                   isDisabled={
-                    statusApproval !== "On Progress" &&
-                    !is_request_manage_responden
+                    information?.data?.status_kode == "8"
+                      ? statusApprovalResponden !== "On Progress"
+                      : statusApproval !== "On Progress"
                   }
                   handleChangeTextUker={handleChangeTextUker}
                   handleChangeUker={handleChangeUker}
@@ -707,8 +734,9 @@ const index = () => {
                   selectedResponden={payloadNewRespondenPnByUker}
                   selectedUkerId={selectedUkerId}
                   isDisabled={
-                    statusApproval !== "On Progress" &&
-                    !is_request_manage_responden
+                    information?.data?.status_kode == "8"
+                      ? statusApprovalResponden !== "On Progress"
+                      : statusApproval !== "On Progress"
                   }
                   isDisabledButtonSave={isDisabledSaveRespondenPnByUker}
                   handleChangeChecbox={handleChangeChecboxByUkerPn}
@@ -734,21 +762,22 @@ const index = () => {
           </div>
         </div>
       </div>
-      <ModalWorkflowEWP
+      <ModalWorkflow
         workflowData={dataWorkflow}
         historyWorkflow={dataHistoryWorkflow}
         validationErrors={validationErrorsWorkflow}
         setShowModal={setShowModalApproval}
         showModal={showModalApproval}
         headerTitle={"Approval Survey"}
-        handleChange={handleChangeText}
+        handleChangeText={handleChangeText}
         handleChangeSelect={handleChangeSelect}
         handleDelete={handleDelete}
         handleAdd={handleAdd}
         handleSubmit={handleSubmit}
         handleCloseModal={handleCloseModalApproval}
         widthHeader={`w-[42rem]`}
-        withoutSigner={true}
+        withoutSigner
+        isLogTableTree
       />
       {/* End Content */}
     </LandingLayoutSurvey>

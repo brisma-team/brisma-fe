@@ -90,22 +90,19 @@ const TableRespondenPnByUker = ({
                 <Row>
                   <Cell width="9%" className={`border-x ${customCell}`}>
                     <div className="custom-table-position-center justify-center">
-                      {!isDisabled ? (
-                        <CustomCheckbox
-                          value={selectedResponden?.find(
-                            (responden) =>
-                              responden?.pn_responden === pn_responden
-                          )}
-                          handleChange={(e) =>
-                            handleChangeChecbox(e.target.checked, {
-                              pn_responden,
-                              nama_responden,
-                            })
-                          }
-                        />
-                      ) : (
-                        ""
-                      )}
+                      <CustomCheckbox
+                        value={selectedResponden?.find(
+                          (responden) =>
+                            responden?.pn_responden === pn_responden
+                        )}
+                        handleChange={(e) =>
+                          handleChangeChecbox(e.target.checked, {
+                            pn_responden,
+                            nama_responden,
+                          })
+                        }
+                        isDisabled={isDisabled}
+                      />
                     </div>
                   </Cell>
                   <Cell width="6%" className={`border-r ${customCell} `}>
