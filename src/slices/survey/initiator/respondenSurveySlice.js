@@ -6,6 +6,14 @@ const initialState = {
     respondenUker: [],
     respondednUkerPn: [],
   },
+  dataWorkflow: {
+    sub_modul: "",
+    sub_modul_id: "",
+    pic: "",
+    ref_tim_audit_approver: [],
+    note: "",
+  },
+  dataHistoryWorkflow: [],
   payloadNewResponden: {
     pn: "",
     name: "",
@@ -17,6 +25,7 @@ const initialState = {
     keterangan: "",
   },
   payloadNewRespondenPnByUker: [],
+  validationErrorsWorkflow: {},
   defaultDataTables: {
     respondenPn: [],
     respondenUker: [],
@@ -32,6 +41,13 @@ const initialState = {
     orgeh_name: "",
     keterangan: "",
   },
+  defaultDataWorkflow: {
+    sub_modul: "",
+    sub_modul_id: "",
+    pic: "",
+    ref_tim_audit_approver: [],
+    note: "",
+  },
 };
 
 export const respondenSurveySlice = createSlice({
@@ -40,6 +56,12 @@ export const respondenSurveySlice = createSlice({
   reducers: {
     setDataTables: (state, action) => {
       state.dataTables = action.payload;
+    },
+    setDataWorkflow: (state, action) => {
+      state.dataWorkflow = action.payload;
+    },
+    setDataHistoryWorkflow: (state, action) => {
+      state.dataHistoryWorkflow = action.payload;
     },
     setPayloadNewResponden: (state, action) => {
       state.payloadNewResponden = action.payload;
@@ -50,8 +72,17 @@ export const respondenSurveySlice = createSlice({
     setPayloadNewRespondenPnByUker: (state, action) => {
       state.payloadNewRespondenPnByUker = action.payload;
     },
+    setValidationErrorsWorkflow: (state, action) => {
+      state.validationErrorsWorkflow = action.payload;
+    },
     resetDataTables: (state) => {
       state.dataTables = { ...state.defaultDataTables };
+    },
+    resetDataWorkflow: (state) => {
+      state.dataWorkflow = { ...state.defaultDataWorkflow };
+    },
+    resetDataHistoryWorkflow: (state) => {
+      state.dataHistoryWorkflow = [];
     },
     resetPayloadNewResponden: (state) => {
       state.payloadNewResponden = { ...state.defaultPayloadNewResponden };
@@ -62,18 +93,27 @@ export const respondenSurveySlice = createSlice({
     resetPayloadNewRespondenPnByUker: (state) => {
       state.payloadNewRespondenPnByUker = [];
     },
+    resetValidationErrorsWorkflow: (state) => {
+      state.validationErrorsWorkflow = {};
+    },
   },
 });
 
 export const {
   setDataTables,
+  setDataWorkflow,
+  setDataHistoryWorkflow,
   setPayloadNewResponden,
   setPayloadNewUker,
   setPayloadNewRespondenPnByUker,
+  setValidationErrorsWorkflow,
   resetDataTables,
+  resetDataWorkflow,
+  resetDataHistoryWorkflow,
   resetPayloadNewResponden,
   resetPayloadNewUker,
   resetPayloadNewRespondenPnByUker,
+  resetValidationErrorsWorkflow,
 } = respondenSurveySlice.actions;
 
 export default respondenSurveySlice.reducer;

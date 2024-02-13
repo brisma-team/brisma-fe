@@ -66,6 +66,8 @@ import AuditOfficeSelect from "./AuditOfficeSelect";
 import OmniSelect from "./OmniSelect";
 import StatusApprovalSelect from "./StatusApprovalSelect";
 import ContentLabelValue from "./ContentLabelValue";
+import RelatedEWPSelect from "./RelatedEWPSelect";
+import ModalWorkflow from "./ModalWorkflow";
 
 export {
   BackButton,
@@ -136,4 +138,6 @@ export {
   OmniSelect,
   StatusApprovalSelect,
   ContentLabelValue,
+  RelatedEWPSelect,
+  ModalWorkflow,
 };

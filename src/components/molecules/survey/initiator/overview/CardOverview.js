@@ -73,10 +73,11 @@ const CardOverview = ({
     { label: "Approval", action: async () => handleApprovalSurvey(data.id) },
     {
       label: "Pengantian",
-      action: async () => handleChangeRespondenSurvey(data.id),
+      action: async () =>
+        handleChangeRespondenSurvey(null, data.id, data.status_kode),
       isDisabled: !(
         (isAdmin || isInitiator) &&
-        (data.status_kode == 4 || data.status_kode == 7)
+        ![1, 2, 6, 7].includes(data.status_kode)
       ),
     },
     {

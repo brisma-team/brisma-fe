@@ -10,6 +10,7 @@ import {
   CardOverview,
   ModalDetailSurvey,
   ModalRequestExtensionAndTermination,
+  ModalRequestManageResponden,
 } from "@/components/molecules/survey/initiator/overview";
 import { LandingLayoutSurvey } from "@/layouts/survey";
 import { useEffect, useState } from "react";
@@ -34,11 +35,14 @@ const index = () => {
     useState(false);
   const [showModalTerminateRequest, setShowModalTerminateRequest] =
     useState(false);
+  const [showModalManageRespondenRequest, setShowModalManageRespondenRequest] =
+    useState(false);
 
   const [totalData, setTotalData] = useState(0);
   const [selectedSurveyId, setSelectedSurveyId] = useState(0);
   const [noteExtension, setNoteExtension] = useState("");
   const [noteTerminate, setNoteTerminate] = useState("");
+  const [noteManageResponden, setNoteManageResponden] = useState("");
 
   const [filter, setFilter] = useState({
     nama_pembuat: "",
@@ -168,6 +172,17 @@ const index = () => {
     }
   };
 
+  const handleManageRespondenRequest = async (id, survey_id, status_kode) => {
+    if (status_kode != 8) {
+      setSelectedSurveyId(survey_id);
+      setShowModalManageRespondenRequest(true);
+    } else {
+      router.push(
+        `overview/${survey_id}/responden?is_request_manage_responden=true`
+      );
+    }
+  };
+
   const handleDeleteSurvey = async (id) => {
     const confirm = await confirmationSwal(
       "Apakah anda yakin ingin menghapus survey ini?"
@@ -237,6 +252,31 @@ const index = () => {
   };
   // [ END ] Handler for modal terminate request
 
+  // [ START ] Handler for modal manage responden request
+  const handleCloseModalManageRespondenRequest = () => {
+    setNoteManageResponden("");
+    setShowModalManageRespondenRequest(false);
+  };
+
+  const handleChangeNoteManageResponden = (e) => {
+    setNoteManageResponden(e.target.value);
+  };
+
+  const handleSubmitManageRespondenRequest = async () => {
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_SURVEY}/survey/catatan_manage_responden/create`,
+      { survey_id: selectedSurveyId, note: noteManageResponden },
+      true
+    );
+
+    overviewMutate();
+    handleCloseModalManageRespondenRequest();
+    loadingSwal("close");
+  };
+  // [ END ] Handler for modal manage responden request
+
   return (
     <LandingLayoutSurvey overflowY={true}>
       <div className="w-full h-full pr-16 pb-20">
@@ -286,6 +326,7 @@ const index = () => {
                     handleDetailSurvey={handleClickDetail}
                     handleDownloadSurvey={handleClickDownload}
                     handleApprovalSurvey={handleClickApproval}
+                    handleChangeRespondenSurvey={handleManageRespondenRequest}
                     handleExtensionRequestSurvey={handleExtensionRequestSurvey}
                     handleShowScoreSurvey={handleClickShowScoreSurvey}
                     handleDeleteSurvey={handleDeleteSurvey}
@@ -322,6 +363,12 @@ const index = () => {
         handleChangeNote={handleChangeNoteTerminate}
         handleCloseModal={handleCloseModalTerminateRequest}
         handleSubmit={handleSubmitTerminateRequest}
+      />
+      <ModalRequestManageResponden
+        showModal={showModalManageRespondenRequest}
+        handleChangeNote={handleChangeNoteManageResponden}
+        handleCloseModal={handleCloseModalManageRespondenRequest}
+        handleSubmit={handleSubmitManageRespondenRequest}
       />
     </LandingLayoutSurvey>
   );
