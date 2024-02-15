@@ -3,6 +3,7 @@ import useUser from "@/data/useUser";
 import { confirmationSwal } from "@/helpers";
 import ModalWorkflowHeader from "./ModalWorkflowHeader";
 import ModalWorkflowFooter from "./ModalWorkflowFooter";
+import { useEffect } from "react";
 
 const ModalWorkflowEWP = ({
   workflowData,
@@ -24,6 +25,10 @@ const ModalWorkflowEWP = ({
   let isApproval, isInitiator;
   isInitiator = user?.data?.pn == workflowData?.maker?.pn;
   isApproval = user?.data?.pn == workflowData?.on_approver?.pn;
+
+  useEffect(() => {
+    console.log("showModal => ", showModal);
+  }, [showModal]);
 
   const closeModal = async () => {
     const confirm = await confirmationSwal(

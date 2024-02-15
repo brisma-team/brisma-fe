@@ -21,6 +21,7 @@ import { useRouter } from "next/router";
 import {
   confirmationSwal,
   errorSwal,
+  errorSwalTimeout,
   fetchApi,
   infoSwal,
   loadingSwal,
@@ -125,12 +126,18 @@ const index = () => {
     } else {
       dispatch(resetPayloadKuesioner());
     }
-  }, [kuesioner, additionalQuestionsFromRedis]);
+  }, [kuesioner, additionalQuestionsFromRedis, information]);
 
   useEffect(() => {
     if (payloadKuesioner?.length) {
       let kategoriCount = 0;
       let tambahanCount = 0;
+      const total_pertanyaan_all_kategori = payloadKuesioner.reduce(
+        (acc, obj) => {
+          return acc + obj.pertanyaan.length;
+        },
+        0
+      );
 
       const mapping = payloadKuesioner.map((category, idx) => {
         const { id, name, is_default } = category;
@@ -153,6 +160,7 @@ const index = () => {
           category_name,
           name,
           total_pertanyaan,
+          total_pertanyaan_all_kategori,
           onEdit: false,
           is_default,
         };
@@ -163,6 +171,12 @@ const index = () => {
       setDataCategory([]);
     }
   }, [payloadKuesioner]);
+
+  useEffect(() => {
+    if (["On Approver", "Final"].includes(information?.data)) {
+      errorSwalTimeout("Not Authorized", `/survey/initiator/overview/${id}`);
+    }
+  }, [information]);
 
   const handleUnderChange = () => {
     if (!isUnderChange) setIsUnderChange(true);
@@ -557,12 +571,14 @@ const index = () => {
   // [ END ] Handler for sidebar
 
   return (
-    <LandingLayoutSurvey overflowY={true}>
+    <LandingLayoutSurvey overflowY>
       <div className="w-[71rem] max-h-screen overflow-y-scroll pb-16">
         <div className="pl-0.5 pt-4 pr-4 pb-6">
           <Breadcrumbs data={breadcrumbs} />
           <div className="flex gap-3 items-center">
-            <ButtonIconBack backUrl={`/survey/initiator/overview/${id}`} />
+            <ButtonIconBack
+              backUrl={`/survey/initiator/overview/${id}?is_kuesioner=true`}
+            />
             <PageTitle text={"Pertanyaan Tambahan"} />
           </div>
           <TabKuesioner

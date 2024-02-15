@@ -264,12 +264,11 @@ const index = () => {
 
       const mappingSelectedResponden =
         respondenByUkerPnSurvey?.data?.responden?.map((responden, index) => {
-          const { pn_responden, nama_responden, keterangan } = responden;
+          const { pn_responden, nama_responden } = responden;
           return {
             index,
             pn_responden,
             nama_responden,
-            keterangan,
           };
         });
 
@@ -527,6 +526,16 @@ const index = () => {
     dispatch(setPayloadNewRespondenPnByUker(updatedData));
   };
 
+  const handleClickSelectedAllRespondenPn = (e) => {
+    if (e.target.checked) {
+      dispatch(
+        setPayloadNewRespondenPnByUker(dataTables?.respondenUkerPn || [])
+      );
+    } else {
+      dispatch(setPayloadNewRespondenPnByUker([]));
+    }
+  };
+
   const handleClickSaveRespondenUkerPn = async () => {
     loadingSwal();
     const payload = payloadNewRespondenPnByUker?.map((responden) => {
@@ -740,6 +749,7 @@ const index = () => {
                   }
                   isDisabledButtonSave={isDisabledSaveRespondenPnByUker}
                   handleChangeChecbox={handleChangeChecboxByUkerPn}
+                  handleClickSelectedAll={handleClickSelectedAllRespondenPn}
                   handleClickSave={handleClickSaveRespondenUkerPn}
                 />
               </div>
