@@ -2,7 +2,7 @@ import {
   CardContentHeaderFooter,
   DataNotFound,
 } from "@/components/molecules/commons";
-import { ButtonField, CustomCheckbox } from "@/components/atoms";
+import { ButtonField, CheckboxField, CustomCheckbox } from "@/components/atoms";
 import TableTree, {
   Cell,
   Header,
@@ -20,6 +20,7 @@ const TableRespondenPnByUker = ({
   selectedUkerId,
   isDisabledButtonSave,
   handleClickSave,
+  handleClickSelectedAll,
   handleChangeChecbox,
 }) => {
   return (
@@ -62,7 +63,12 @@ const TableRespondenPnByUker = ({
               width="9%"
               className="border-x border-t rounded-ss-xl cell-custom-dataTables"
             >
-              <div className="custom-table-header justify-center">Aksi</div>
+              <div className="custom-table-header justify-center">
+                <CheckboxField
+                  handleChange={(e) => handleClickSelectedAll(e)}
+                  isDisabled={isDisabled}
+                />
+              </div>
             </Header>
             <Header
               width="6%"

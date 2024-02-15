@@ -16,6 +16,7 @@ const ModalWorkflowHeader = ({
   handleChange,
   handleDelete,
   width,
+  isScrollHeader,
 }) => {
   let isInitiator, isAdmin;
   isInitiator = user?.pn == data?.maker?.pn;
@@ -27,7 +28,11 @@ const ModalWorkflowHeader = ({
       <div className="mx-3">
         <p className="font-bold text-xl text-brisma">{headerTitle}</p>
       </div>
-      <div className="max-h-[26.5rem] overflow-y-scroll mt-2">
+      <div
+        className={`mt-2 ${
+          isScrollHeader && "max-h-[26.5rem] overflow-y-scroll"
+        }`}
+      >
         <div className="flex w-full justify-center gap-4 px-3 py-1 mb-2">
           <div className="w-1/2">
             <CardFormInput

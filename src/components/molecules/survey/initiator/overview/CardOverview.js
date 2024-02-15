@@ -72,7 +72,7 @@ const CardOverview = ({
     },
     { label: "Approval", action: async () => handleApprovalSurvey(data.id) },
     {
-      label: "Pengantian",
+      label: "Responden",
       action: async () =>
         handleChangeRespondenSurvey(null, data.id, data.status_kode),
       isDisabled: !(

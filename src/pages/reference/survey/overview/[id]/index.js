@@ -971,7 +971,7 @@ const index = () => {
         historyWorkflow={historyWorkflow}
         validationErrors={validationErrorsWorkflow}
         setShowModal={setShowModalApproval}
-        showModal={showModalApproval}
+        showModal={showModalApproval && !isDisabledButtonApproval}
         headerTitle={"Approval Template Survey"}
         handleChange={handleChangeText}
         handleChangeSelect={handleChangeSelect}

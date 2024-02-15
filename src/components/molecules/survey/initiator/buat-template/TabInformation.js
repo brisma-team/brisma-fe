@@ -19,6 +19,7 @@ const TabInformation = ({
   isNewTemplate,
   isDisabledPickTemplate,
   isFormDisabled,
+  statusSurveyCode,
   projectTemplateId,
   handleChangeForm,
   handleOpenModalSelectedTemplateSurvey,
@@ -239,14 +240,16 @@ const TabInformation = ({
               </div>
               <div
                 className={`rounded w-40 ${
-                  isNewTemplate || isFormDisabled
+                  (isNewTemplate || isFormDisabled) && statusSurveyCode != "8"
                     ? `bg-atlasian-gray-light`
                     : `bg-atlasian-purple`
                 }`}
               >
                 <ButtonField
                   text={"Responden"}
-                  disabled={isNewTemplate || isFormDisabled}
+                  disabled={
+                    (isNewTemplate || isFormDisabled) && statusSurveyCode != "8"
+                  }
                   handler={handleClickResponden}
                 />
               </div>
