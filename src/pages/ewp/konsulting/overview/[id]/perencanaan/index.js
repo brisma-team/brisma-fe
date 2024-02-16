@@ -34,34 +34,34 @@ const index = () => {
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt tristique elit ut bibendum. Quisque tellus lacus, rutrum vitae felis id, accumsan pharetra libero. Nullam quam odio, accumsan convallis velit et, ultrices sollicitudin lacus. Praesent tincidunt id mauris eu bibendum. Donec feugiat orci lorem, at sollicitudin erat vulputate sit amet. Nulla tincidunt mi nunc, nec malesuada mi interdum in. Quisque sollicitudin, dolor sed egestas accumsan, purus lacus hendrerit turpis, vel porttitor mi ligula id neque.",
         status: landingStatus?.data?.sumber_informasi ? "success" : "failed",
-        url: `${baseUrl}/sumber-informasi`,
+        url: `${baseUrl}/perencanaan/sumber-informasi`,
       },
       {
         title: "Tim & Timeplan",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt tristique elit ut bibendum. Quisque tellus lacus, rutrum vitae felis id, accumsan pharetra libero. Nullam quam odio, accumsan convallis velit et, ultrices sollicitudin lacus. Praesent tincidunt id mauris eu bibendum. Donec feugiat orci lorem, at sollicitudin erat vulputate sit amet. Nulla tincidunt mi nunc, nec malesuada mi interdum in. Quisque sollicitudin, dolor sed egestas accumsan, purus lacus hendrerit turpis, vel porttitor mi ligula id neque.",
         status: landingStatus?.data?.tim_audit ? "success" : "failed",
-        url: `${baseUrl}/tim-timeplan`,
+        url: `${baseUrl}/perencanaan/tim-timeplan`,
       },
       {
         title: "Anggaran",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt tristique elit ut bibendum. Quisque tellus lacus, rutrum vitae felis id, accumsan pharetra libero. Nullam quam odio, accumsan convallis velit et, ultrices sollicitudin lacus. Praesent tincidunt id mauris eu bibendum. Donec feugiat orci lorem, at sollicitudin erat vulputate sit amet. Nulla tincidunt mi nunc, nec malesuada mi interdum in. Quisque sollicitudin, dolor sed egestas accumsan, purus lacus hendrerit turpis, vel porttitor mi ligula id neque.",
         status: landingStatus?.data?.anggaran ? "success" : "failed",
-        url: `${baseUrl}/anggaran`,
+        url: `${baseUrl}/perencanaan/anggaran`,
       },
       {
         title: "Program Kerja",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt tristique elit ut bibendum. Quisque tellus lacus, rutrum vitae felis id, accumsan pharetra libero. Nullam quam odio, accumsan convallis velit et, ultrices sollicitudin lacus. Praesent tincidunt id mauris eu bibendum. Donec feugiat orci lorem, at sollicitudin erat vulputate sit amet. Nulla tincidunt mi nunc, nec malesuada mi interdum in. Quisque sollicitudin, dolor sed egestas accumsan, purus lacus hendrerit turpis, vel porttitor mi ligula id neque.",
         status: landingStatus?.data?.program_kerja ? "success" : "failed",
-        url: `${baseUrl}/program-kerja`,
+        url: `${baseUrl}/perencanaan/program-kerja`,
       },
       {
         title: "Dokumen",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
         status: landingStatus?.data?.doc_mapa ? "success" : "failed",
-        url: `${baseUrl}/dokumen`,
+        url: `${baseUrl}/perencanaan/dokumen`,
       },
     ]);
   }, [landingStatus]);
