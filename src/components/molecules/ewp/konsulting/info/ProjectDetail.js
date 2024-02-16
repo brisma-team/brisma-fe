@@ -7,20 +7,17 @@ const ProjectDetail = ({ data }) => {
       <div className="w-full border-l-2 border-r-2 border-t-2 border-atlasian-gray-light">
         <RowTable
           label="Project ID"
-          value={data?.project_id || "M3-U33-2023-022"}
+          value={data?.project_id?.toUpperCase() || ""}
         />
-        <RowTable
-          label="Nama Project"
-          value={data?.project_name || "Konsulting RAO Bintaro Sector 9"}
-        />
+        <RowTable label="Nama Project" value={data?.project_name || ""} />
         <RowTable
           label="Periode Ruang Lingkup"
-          start={data?.info_periode_pelaksanaan_start || "02-20-2023"}
-          end={data?.info_periode_pelaksanaan_end || "06-20-2023"}
+          start={data?.info_periode_pelaksanaan_start || ""}
+          end={data?.info_periode_pelaksanaan_end || ""}
         />
         <RowTable
           label="Ketua Tim Audit"
-          value={data?.info_team_audit?.kta || "M. Firly Ismail"}
+          value={data?.info_team_audit?.kta || ""}
         />
       </div>
     </div>

@@ -24,7 +24,7 @@ const SidebarLandingEWPConsulting = () => {
   //   const dispatch = useDispatch();
   const router = useRouter();
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const baseUrl = `/ewp/konsulting/overview/${id}`;
   //   const [data, setData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   //   const [currentPageSub, setCurrentPageSub] = useState(0);
