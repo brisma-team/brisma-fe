@@ -1,5 +1,4 @@
-const { convertToRupiah } = require("@/helpers");
-
+import { convertToRupiah } from "@/helpers";
 const CardCostDetail = ({ title, cost }) => {
   return (
     <div className="flex text-sm my-1">

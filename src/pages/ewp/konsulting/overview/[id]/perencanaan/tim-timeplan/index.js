@@ -123,10 +123,6 @@ const index = () => {
     }
   }, [timTimeplan, projectDetail]);
 
-  useEffect(() => {
-    console.log("payload => ", payload);
-  }, [payload]);
-
   const handleAddObjectInsideArray = (property) => {
     const newTimAudit = [...payload[property]];
     newTimAudit.push({ pn: "", nama: "", is_initiator: false });
@@ -176,7 +172,6 @@ const index = () => {
   };
 
   const handleSubmit = async (e) => {
-    loadingSwal();
     e.preventDefault();
     const schemaMapping = {
       schema: timTimeplanEWPKonsultingSchema,
@@ -186,14 +181,15 @@ const index = () => {
     const validate = setErrorValidation(payload, dispatch, schemaMapping);
 
     if (validate) {
+      loadingSwal();
       await fetchApi(
         "POST",
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/tim_audit/${id}`,
         { tim_audit: _.omit(payload, ["initiator"]) }
       );
       timTimeplanMutate();
+      loadingSwal("close");
     }
-    loadingSwal("close");
   };
 
   return (
