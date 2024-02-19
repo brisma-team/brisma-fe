@@ -31,7 +31,7 @@ const TextInputDecimal = ({
 
     setNumberValue(format.decimal);
 
-    if (typeof format.decimal !== "undefined") onChange(format?.integer);
+    if (typeof format.decimal != "undefined") onChange(format?.integer);
   };
 
   return (

@@ -6,7 +6,6 @@ import {
   UploadButton,
 } from "@/components/atoms";
 import { useProjectDetail } from "@/data/ewp/konsulting";
-import { useLandingStatus } from "@/data/ewp/konsulting/landing";
 import { useSumberInformasi } from "@/data/ewp/konsulting/perencanaan/sumber-informasi";
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
@@ -52,7 +51,6 @@ const index = () => {
   const [content, setContent] = useState("");
 
   const { projectDetail } = useProjectDetail({ id });
-  const { landingStatus } = useLandingStatus({ type: "mapa", id });
   const { sumberInformasi, sumberInformasiMutate } = useSumberInformasi({ id });
 
   useEffect(() => {
@@ -73,7 +71,7 @@ const index = () => {
         path: `${baseUrl}/${projectDetail?.data?.project_info?.project_id}/perencanaan/sumber-informasi`,
       },
     ]);
-  }, [landingStatus]);
+  }, [projectDetail]);
 
   useEffect(() => {
     setContent(sumberInformasi?.data || "");
