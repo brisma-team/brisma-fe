@@ -9,6 +9,9 @@ export default function useRiskControl(type, params) {
     case "all":
       query = `/all?search=${search}&limit=${limit}`;
       break;
+    case "list":
+      query = `/all`;
+      break;
   }
 
   const path = `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/mtd_control${query}`;

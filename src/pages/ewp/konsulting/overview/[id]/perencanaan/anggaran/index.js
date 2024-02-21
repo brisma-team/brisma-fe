@@ -124,8 +124,6 @@ const index = () => {
     }
   }, [detailAnggaran, typeModal, showModal]);
 
-  useEffect(() => {}, []);
-
   // [ START ] handler for modal
   const handleCloseModal = async () => {
     const confirm = await confirmationSwal(
@@ -225,7 +223,7 @@ const index = () => {
           baseUrl={pathName}
           routes={routes}
           prevUrl={"/tim-timeplan"}
-          nextUrl={"/lingkup-pemeriksaan"}
+          nextUrl={"/program-kerja"}
           marginLeft={"-60px"}
         />
       </div>
