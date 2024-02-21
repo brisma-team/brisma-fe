@@ -11,7 +11,7 @@ import {
   IconPlus,
 } from "@/components/icons";
 import { ButtonField, ButtonIcon, CustomCheckbox } from "@/components/atoms";
-import { ButtonDelete, PekerjaSelect } from "@/components/molecules/commons";
+import { ButtonDelete } from "@/components/molecules/commons";
 import Image from "next/image";
 import { ImageGroup } from "@/helpers/imagesUrl";
 const positionCenter = `w-full h-full flex justify-center items-center`;
@@ -162,16 +162,7 @@ const TablePemeriksaan = ({
                 width="20%"
                 className="border-r cell-custom-dataTables justify-center"
               >
-                <PekerjaSelect
-                  selectedValue={
-                    pic?.pn
-                      ? {
-                          label: pic?.nama,
-                          value: { pn: pic?.pn, name: pic?.nama },
-                        }
-                      : null
-                  }
-                />
+                {pic?.pic_pn}
               </Cell>
               <Cell
                 width="15%"
