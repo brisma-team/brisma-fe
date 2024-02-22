@@ -145,14 +145,14 @@ export const patHtml = (id) => {
     <h4>A.</h4>
     <section>
       <h4>Latar Belakang dan Tujuan Audit</h4>
-      ${data?.latar_belakang}
+      ${data?.latar_belakang || `<i>Data tidak ditemukan</i>`}
     </section>
   </article>
   <article>
     <h4>B.</h4>
     <section>
       <h4>Sumber Informasi</h4>
-      ${data?.sumber_informasi}
+      ${data?.sumber_informasi || `<i>Data tidak ditemukan </i>`}
     </section>
   </article>
   <article>
@@ -451,14 +451,22 @@ export const patHtml = (id) => {
                     ${
                       d.jadwal_audit.TipeAuditKode === "REG"
                         ? d.jadwal_audit.uker
-                        : `${d.jadwal_audit.uker}, ...`
+                        : d?.jadwal_audit.uker
+                        ? `${d.jadwal_audit.uker}, ...`
+                        : `<i>Data tidak ditemukan</i>`
                     }
                 </td>
                 <td>
-                    ${d.jadwal_audit.NamaTimAudit}
+                    ${
+                      d.jadwal_audit.NamaTimAudit ||
+                      `<i>Data tidak ditemukan</i>`
+                    }
                 </td>
                 <td>
-                    ${d.jadwal_audit.TipeAuditName}
+                    ${
+                      d.jadwal_audit.TipeAuditName ||
+                      `<i>Data tidak ditemukan</i>`
+                    }
                 </td>
                 ${[...Array(12)]
                   .map((_, idx) => {
