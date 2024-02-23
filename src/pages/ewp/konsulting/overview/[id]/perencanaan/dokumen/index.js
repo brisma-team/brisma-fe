@@ -10,14 +10,13 @@ import Image from "next/image";
 import { ImageChat } from "@/helpers/imagesUrl";
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { LandingLayoutEWP } from "@/layouts/ewp";
+import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 // import {
 //   useAuditorEWP,
 //   useDocumentEWP,
 //   useWorkflowDetailEWP,
 // } from "@/data/ewp/konvensional";
 import {
-  useAuditorEWP,
   useDocumentEWP,
   useWorkflowDetailEWP,
 } from "@/data/ewp/konsulting/perencanaan";
@@ -37,7 +36,7 @@ import {
   useUpdateData,
 } from "@/helpers";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
-import { useMapaEWP } from "@/data/ewp/konsulting";
+import { useMapaEWP, useProjectDetail } from "@/data/ewp/konsulting";
 import { useCommentMapaEWP } from "@/data/ewp/konsulting/perencanaan/dokumen";
 
 const routes = [
@@ -52,21 +51,13 @@ const index = () => {
   const baseUrl = `/ewp/projects/konvensional/${id}/mapa`;
   const dispatch = useDispatch();
 
-  const { auditorEWP } = useAuditorEWP({ id });
-  const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
-    { name: "EWP", path: "/ewp" },
-    {
-      name: `${auditorEWP?.data?.project_info?.project_id}`,
-      path: `${baseUrl}`,
-    },
-    {
-      name: "Dokumen",
-      path: `${baseUrl}/dokumen`,
-    },
-  ];
-
-  const [listContent, setListContent] = useState([]);
+  const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [listContent, setListContent] = useState([
+    { idx: 1, total_comment: 0, title: "Sumber Informasi" },
+    { idx: 2, total_comment: 0, title: "Tim & Timeplan" },
+    { idx: 3, total_comment: 0, title: "Anggaran" },
+    { idx: 4, total_comment: 0, title: "Program Kerja" },
+  ]);
   const [listComment, setListComment] = useState([]);
 
   const ref = useRef(null);
@@ -88,6 +79,7 @@ const index = () => {
     (state) => state.documentMapaEWP.validationErrorsWorkflow
   );
 
+  const { projectDetail } = useProjectDetail({ id });
   const { mapaEWP } = useMapaEWP("dokumen", { id });
   const { documentEWP } = useDocumentEWP("mapa", bab, { id });
   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
@@ -98,6 +90,22 @@ const index = () => {
     id,
     bab: activeIndexComment,
   });
+
+  useEffect(() => {
+    setBreadcrumbs([
+      { name: "Menu", path: "/dashboard" },
+      { name: "EWP", path: "/ewp" },
+      { name: "Overview", path: "/ewp/konsulting/overview" },
+      {
+        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Perencanaan Kegiatan`,
+        path: baseUrl,
+      },
+      {
+        name: `Dokumen`,
+        path: `${baseUrl}/perencanaan/dokumen`,
+      },
+    ]);
+  }, [projectDetail]);
 
   useEffect(() => {
     if (commentMapaEWP?.data?.length) {
@@ -140,19 +148,23 @@ const index = () => {
   }, [listComment]);
 
   useEffect(() => {
-    const response = mapaEWP?.data?.daftar_isi;
-    if (response) {
-      const mapping = response?.map((bab) => {
-        return {
-          idx: bab.key,
-          total_comment: bab?.jumlah_comment?.filter((v) => !v.is_closed)
-            .length,
-          title: bab.title,
-        };
-      });
-      setListContent(mapping);
-    }
-  }, [mapaEWP]);
+    console.log("doc => ", doc);
+  }, [doc]);
+
+  // useEffect(() => {
+  //   const response = mapaEWP?.data?.daftar_isi;
+  //   if (response) {
+  //     const mapping = response?.map((bab) => {
+  //       return {
+  //         idx: bab.key,
+  //         total_comment: bab?.jumlah_comment?.filter((v) => !v.is_closed)
+  //           .length,
+  //         title: bab.title,
+  //       };
+  //     });
+  //     setListContent(mapping);
+  //   }
+  // }, [mapaEWP]);
 
   // [ START ] Function ini berfungsi agar setiap kali class page-container-a4 melewati class parent,
   // maka akan setter setCurrentPosition akan merubah data dan setter setHitEndpointCount
@@ -451,7 +463,7 @@ const index = () => {
   // [ END ]
 
   return (
-    <LandingLayoutEWP>
+    <LandingLayoutEWPConsulting>
       <Breadcrumbs data={breadcrumbs} />
       <div className="flex justify-between items-center mb-6">
         <PageTitle text={"Dokumen"} />
@@ -468,7 +480,7 @@ const index = () => {
           <div>
             <Card>
               <div className="px-3 py-1 w-full">
-                <div className="text-xl">Daftar Isi</div>
+                <div className="text-xl">Daftar Isi 2</div>
                 <div className="pl-2 mt-0.5">
                   {listContent.map((v, i) => {
                     return (
@@ -579,7 +591,7 @@ const index = () => {
         </div>
       </div>
       {/* End Content */}
-    </LandingLayoutEWP>
+    </LandingLayoutEWPConsulting>
   );
 };
 
