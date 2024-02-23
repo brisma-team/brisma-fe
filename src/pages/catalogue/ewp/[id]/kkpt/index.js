@@ -192,7 +192,9 @@ const index = () => {
           ),
           Auditor:
             params.type == "2"
-              ? data.AuditorPN + " - " + data?.AuditorName
+              ? data.Auditor.pn +
+                " - " +
+                (data?.Auditor?.name ? data.Auditor.name : data.Auditor.nama)
               : data.PICAuditorPN + " - " + data.PICAuditorName,
           Aksi: (
             <div className="text-center col-span-3">
