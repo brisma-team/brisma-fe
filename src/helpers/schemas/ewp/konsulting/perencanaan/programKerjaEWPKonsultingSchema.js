@@ -13,6 +13,7 @@ const addControlSchema = yup
   .of(
     yup.object().shape({
       kode: yup.string().required("Wajib diisi"),
+      pn_pic: yup.string().required("Wajib diisi"),
     })
   )
   .min(1, "Wajib diisi, minimal 1 data")

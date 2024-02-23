@@ -6,6 +6,7 @@ const NavigationTab = ({
   setCurrentStage,
   width,
   handleConfirmation,
+  handleChange,
 }) => {
   const handleChangeCurrentStage = async (index) => {
     if (handleConfirmation) {
@@ -14,7 +15,12 @@ const NavigationTab = ({
         return;
       }
     }
-    setCurrentStage(index);
+
+    if (handleChange) {
+      handleChange(index);
+    } else {
+      setCurrentStage(index);
+    }
   };
 
   return items?.length ? (

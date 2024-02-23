@@ -10,7 +10,13 @@ import {
   IconChevronRight,
   IconPlus,
 } from "@/components/icons";
-import { ButtonField, ButtonIcon, CustomCheckbox } from "@/components/atoms";
+import {
+  ButtonField,
+  ButtonIcon,
+  CustomCheckbox,
+  LinkIcon,
+  LozengeField,
+} from "@/components/atoms";
 import { ButtonDelete } from "@/components/molecules/commons";
 import Image from "next/image";
 import { ImageGroup } from "@/helpers/imagesUrl";
@@ -72,7 +78,9 @@ const TablePemeriksaan = ({
             id,
             role,
             is_review,
-            name,
+            lingkup_pemeriksaan,
+            risk,
+            control,
             pic,
             uraian,
             children = [],
@@ -134,17 +142,28 @@ const TablePemeriksaan = ({
                   <div
                     className={`flex items-center w-full justify-between ml-2`}
                   >
-                    <div>{`${name}`}</div>
+                    <div>{`${
+                      lingkup_pemeriksaan
+                        ? lingkup_pemeriksaan
+                        : risk
+                        ? `${risk?.kode} - ${risk?.nama}`
+                        : control
+                        ? `${control?.kode} - ${control?.nama}`
+                        : ""
+                    }`}</div>
                     {role !== "child" ? (
                       <>
                         <ButtonIcon
                           icon={<Image src={ImageGroup} alt="" />}
                           handleClick={() => {
                             if (role === "parent") {
-                              handleSelectedLingkupPemeriksaan(id, name);
+                              handleSelectedLingkupPemeriksaan(
+                                id,
+                                lingkup_pemeriksaan
+                              );
                               handleClickAddRisk(id);
                             } else if (role === "parent-child") {
-                              handleSelectedRisk(id, name);
+                              handleSelectedRisk(id, risk?.nama);
                               handleClickAddControl(id);
                             } else {
                               return;
@@ -162,13 +181,26 @@ const TablePemeriksaan = ({
                 width="20%"
                 className="border-r cell-custom-dataTables justify-center"
               >
-                {pic?.pic_pn}
+                {pic?.nama || ""}
               </Cell>
               <Cell
                 width="15%"
                 className="border-r cell-custom-dataTables justify-center"
               >
-                {uraian}
+                {role === "child" ? (
+                  <div className={uraian ? "" : "opacity-30"}>
+                    <LinkIcon
+                      icon={
+                        <LozengeField appreance="inprogress" isBold>
+                          URAIAN
+                        </LozengeField>
+                      }
+                      href={`/ewp/konsulting/overview/10/perencanaan/program-kerja/${id}`}
+                    />
+                  </div>
+                ) : (
+                  ""
+                )}
               </Cell>
             </Row>
           )}

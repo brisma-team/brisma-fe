@@ -2,7 +2,7 @@ import useApacheToken from "@/data/dashboard/useApacheToken";
 import { useEffect, useState } from "react";
 
 const index = () => {
-  const { apacheToken } = useApacheToken();
+  const { apacheToken } = useApacheToken(true, true, true);
   const [token, setToken] = useState("");
 
   useEffect(() => {

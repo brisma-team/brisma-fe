@@ -1,4 +1,4 @@
-import { Breadcrumbs, Card, PageTitle } from "@/components/atoms";
+import { Breadcrumbs, ButtonField, Card, PageTitle } from "@/components/atoms";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
@@ -9,14 +9,16 @@ import {
 } from "@/components/molecules/commons";
 import { useDispatch } from "react-redux";
 import {
-  setObjData,
+  setObjDataPemeriksaan,
+  setObjDataRingkasan,
   setObjPayloadLingkupPemeriksaan,
   setObjPayloadRisk,
   setObjPayloadControl,
   setValidationErrorsLingkupPemeriksaan,
   setValidationErrorsRisk,
   setValidationErrorsControl,
-  resetObjData,
+  resetObjDataPemeriksaan,
+  resetObjDataRingkasan,
   resetObjPayloadLingkupPemeriksaan,
   resetObjPayloadRisk,
   resetObjPayloadControl,
@@ -36,13 +38,19 @@ import {
   ModalAddLingkupPemeriksaan,
   ModalAddRisk,
   TablePemeriksaan,
+  CardFilterTable,
+  TableRingkasan,
 } from "@/components/molecules/ewp/konsulting/perencanaan/program-kerja";
-import { useLingkupPemeriksaan } from "@/data/ewp/konsulting/perencanaan/program-kerja";
+import {
+  useLingkupPemeriksaan,
+  useRingkasan,
+} from "@/data/ewp/konsulting/perencanaan/program-kerja";
 import {
   addLingkupPemeriksaanSchema,
   addRiskSchema,
   addControlSchema,
 } from "@/helpers/schemas/ewp/konsulting/perencanaan/programKerjaEWPKonsultingSchema";
+import _ from "lodash";
 
 const routes = [
   {
@@ -82,7 +90,25 @@ const index = () => {
     useState("");
   const [selectedRisk, setSelectedRisk] = useState("");
 
-  const data = useSelector((state) => state.programKerjaEWPKonsulting.objData);
+  const [filter, setFilter] = useState({
+    judul_lingkup: "",
+    pn_pic: "",
+    risk: "",
+    control: "",
+  });
+  const [params, setParams] = useState({
+    judul_lingkup: "",
+    pn_pic: "",
+    risk: "",
+    control: "",
+  });
+
+  const dataPemeriksaan = useSelector(
+    (state) => state.programKerjaEWPKonsulting.objDataPemeriksaan
+  );
+  const dataRingkasan = useSelector(
+    (state) => state.programKerjaEWPKonsulting.objDataRingkasan
+  );
   const payloadLingkupPemeriksaan = useSelector(
     (state) => state.programKerjaEWPKonsulting.objPayloadLingkupPemeriksaan
   );
@@ -105,11 +131,8 @@ const index = () => {
 
   const { projectDetail } = useProjectDetail({ id });
   const { lingkupPemeriksaan, lingkupPemeriksaanMutate } =
-    useLingkupPemeriksaan({ id });
-
-  useEffect(() => {
-    console.log("data => ", data);
-  }, [data]);
+    useLingkupPemeriksaan({ id, ...params });
+  const { ringkasan } = useRingkasan({ id, ...params });
 
   useEffect(() => {
     setBreadcrumbs([
@@ -137,24 +160,30 @@ const index = () => {
         (parent) => {
           return {
             id: parent?.id,
-            name: parent?.judul_lingkup_pemeriksaan,
+            lingkup_pemeriksaan: parent?.judul_lingkup_pemeriksaan,
             is_review: parent?.is_review,
             role: "parent",
             children: parent?.mapa_uker_mcr?.length
               ? parent?.mapa_uker_mcr?.map((parent_child) => {
                   return {
                     id: parent_child?.id,
-                    name: `${parent_child?.ref_risk_issue_kode} - ${parent_child?.ref_risk_issue_name}`,
+                    risk: {
+                      kode: parent_child?.ref_risk_issue_kode,
+                      nama: parent_child?.ref_risk_issue_name,
+                    },
                     is_review: parent_child?.is_review,
                     role: "parent-child",
                     children: parent_child?.mapa_uker_mcr_control?.length
                       ? parent_child?.mapa_uker_mcr_control?.map((child) => {
                           return {
                             id: child?.id,
-                            name: `${child?.mtd_control_kode} - ${child?.mtd_control?.nama}`,
+                            control: {
+                              kode: child?.mtd_control_kode,
+                              nama: child?.mtd_control?.nama,
+                            },
                             is_review: child?.is_review,
                             role: "child",
-                            pic: child?.nama_pic,
+                            pic: { pn: child?.pn_pic, nama: child?.nama_pic },
                             uraian: child?.uraian,
                           };
                         })
@@ -165,11 +194,93 @@ const index = () => {
           };
         }
       );
-      dispatch(setObjData(mappingLingkupPemeriksaan));
+      dispatch(setObjDataPemeriksaan(mappingLingkupPemeriksaan));
     } else {
-      dispatch(resetObjData());
+      dispatch(resetObjDataPemeriksaan());
     }
   }, [lingkupPemeriksaan]);
+
+  useEffect(() => {
+    if (ringkasan?.data?.length) {
+      const mapping = ringkasan?.data?.map((v) => {
+        return {
+          id: v?.id,
+          auditor: v?.nama_pic,
+          lingkup_pemeriksaan:
+            v?.mapa_uker_mcr?.lingkup_pemeriksaan?.judul_lingkup_pemeriksaan,
+          risk: {
+            kode: v?.mapa_uker_mcr?.ref_risk_issue_kode,
+            nama: v?.mapa_uker_mcr?.ref_risk_issue_name,
+          },
+          control: { kode: v?.mtd_control_kode, nama: v?.mtd_control?.nama },
+          uraian: v?.uraian,
+        };
+      });
+      dispatch(setObjDataRingkasan(mapping));
+    } else {
+      dispatch(resetObjDataRingkasan());
+    }
+  }, [ringkasan]);
+
+  useEffect(() => {
+    const handleSearch = () => {
+      setParams(filter);
+    };
+    const debouncedSearch = _.debounce(handleSearch, 800);
+    debouncedSearch();
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [filter]);
+
+  useEffect(() => {
+    const findChildrenById = (parentId, currentData) => {
+      for (const item of currentData) {
+        if (item.id === parentId) {
+          if (item.children && item.children.length > 0) {
+            const mapping = item.children.map((v) => {
+              const { control, pic } = v;
+              return {
+                kode: control?.kode,
+                nama: control?.nama,
+                pn_pic: pic?.pn,
+                nama_pic: pic?.nama,
+                is_default: true,
+              };
+            });
+
+            return mapping;
+          } else {
+            return [];
+          }
+        } else if (item.children && item.children.length > 0) {
+          const result = findChildrenById(parentId, item.children);
+          if (result.length > 0) {
+            return result;
+          }
+        }
+      }
+      return [];
+    };
+
+    if (showModalControl && selectedId && dataPemeriksaan) {
+      const mappingControl = findChildrenById(selectedId, dataPemeriksaan);
+      dispatch(setObjPayloadControl(mappingControl));
+    } else {
+      dispatch(resetObjPayloadControl());
+    }
+  }, [showModalControl, selectedId, dataPemeriksaan]);
+
+  const handleChangeTab = (index) => {
+    setFilter({
+      judul_lingkup: "",
+      pn_pic: "",
+      risk: "",
+      control: "",
+    });
+    setShowFilter(false);
+    setCurrentContentStage(index);
+  };
 
   const handleToggleExpansion = (kode, role) => {
     setExpansionMap((prevState) => ({
@@ -220,6 +331,20 @@ const index = () => {
 
     lingkupPemeriksaanMutate();
   };
+
+  // [ START ] handler for filter
+  const handleChangeTextFilter = (props, value) => {
+    setFilter({ ...filter, [props]: value });
+  };
+
+  const handleChangeSelectFilter = (props, value) => {
+    setFilter({ ...filter, [props]: value });
+  };
+
+  const handleResetFilter = (props) => {
+    setFilter({ ...filter, [props]: "" });
+  };
+  // [ END ] handler for filter
 
   // [ START ] handler for modal lingkup pemeriksaan
   const handleAddLingkupPemeriksaan = (id) => {
@@ -317,9 +442,25 @@ const index = () => {
   };
 
   const handleChangeSelectControl = (index, value) => {
-    const updatedData = [...payloadControl];
-    updatedData[index] = value;
-    dispatch(setObjPayloadControl(updatedData));
+    const newData = [...payloadControl];
+    const updatedData = {
+      ...newData[index],
+      kode: value.kode,
+      nama: value.nama,
+    };
+    newData[index] = updatedData;
+    dispatch(setObjPayloadControl(newData));
+  };
+
+  const handleChangeSelectPIC = (index, value) => {
+    const newData = [...payloadControl];
+    const updatedData = {
+      ...newData[index],
+      pn_pic: value.pn,
+      nama_pic: value.name,
+    };
+    newData[index] = updatedData;
+    dispatch(setObjPayloadControl(newData));
   };
 
   const handleDeleteSelectControl = (index) => {
@@ -344,8 +485,8 @@ const index = () => {
 
     if (validate) {
       const payload = payloadControl?.map((v) => {
-        const { kode } = v;
-        return { kode };
+        const { kode, pn_pic, nama_pic } = v;
+        return { kode, pn_pic, nama_pic };
       });
 
       await fetchApi(
@@ -362,7 +503,7 @@ const index = () => {
   };
   // [ END ] handler for modal control
 
-  // [ START ] handler for table
+  // [ START ] handler for table pemeriksaan
   const handleSelectedLingkupPemeriksaan = (id, name) => {
     setSelectedId(id);
     setSelectedLingkupPemeriksaan(name);
@@ -431,7 +572,7 @@ const index = () => {
     lingkupPemeriksaanMutate();
     loadingSwal("close");
   };
-  // [ END ] handler for table
+  // [ END ] handler for table pemeriksaan
 
   return (
     <LandingLayoutEWPConsulting>
@@ -451,34 +592,52 @@ const index = () => {
       <NavigationTab
         items={navigationTabItems}
         currentStage={currentContentStage}
-        setCurrentStage={setCurrentContentStage}
         width={"w-48"}
+        handleChange={handleChangeTab}
+      />
+      <div className="w-36 rounded bg-atlasian-blue-light -mt-1">
+        <ButtonField
+          handler={() => setShowFilter(!showFilter)}
+          text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
+        />
+      </div>
+      <CardFilterTable
+        filter={filter}
+        showFilter={showFilter}
+        handleChangeSelect={handleChangeSelectFilter}
+        handleChangeText={handleChangeTextFilter}
+        handleReset={handleResetFilter}
       />
       {/* Start Content */}
-      <div className="w-full">
-        <Card>
-          <div className="px-4 py-2 w-full">
-            <TablePemeriksaan
-              data={data}
-              expansionMap={expansionMap}
-              handleSelectedLingkupPemeriksaan={
-                handleSelectedLingkupPemeriksaan
-              }
-              handleSelectedRisk={handleSelectedRisk}
-              handleClickToggleExpansion={handleToggleExpansion}
-              handleClickReview={handleClickReview}
-              handleClickAddLingkupPemeriksaan={handleAddLingkupPemeriksaan}
-              handleClickAddRisk={handleAddRisk}
-              handleClickAddControl={handleAddControl}
-              handleClickDeleteLingkupPemeriksaan={
-                handleClickDeleteLingkupPemeriksaan
-              }
-              handleClickDeleteRisk={handleClickDeleteRisk}
-              handleClickDeleteControl={handleClickDeleteControl}
-            />
-          </div>
-        </Card>
+      <div className="w-full mt-4">
+        {currentContentStage === 1 ? (
+          <Card>
+            <div className="px-4 py-2 w-full">
+              <TablePemeriksaan
+                data={dataPemeriksaan}
+                expansionMap={expansionMap}
+                handleSelectedLingkupPemeriksaan={
+                  handleSelectedLingkupPemeriksaan
+                }
+                handleSelectedRisk={handleSelectedRisk}
+                handleClickToggleExpansion={handleToggleExpansion}
+                handleClickReview={handleClickReview}
+                handleClickAddLingkupPemeriksaan={handleAddLingkupPemeriksaan}
+                handleClickAddRisk={handleAddRisk}
+                handleClickAddControl={handleAddControl}
+                handleClickDeleteLingkupPemeriksaan={
+                  handleClickDeleteLingkupPemeriksaan
+                }
+                handleClickDeleteRisk={handleClickDeleteRisk}
+                handleClickDeleteControl={handleClickDeleteControl}
+              />
+            </div>
+          </Card>
+        ) : (
+          <TableRingkasan data={dataRingkasan} />
+        )}
       </div>
+
       {/* End Content */}
       <ModalAddLingkupPemeriksaan
         data={payloadLingkupPemeriksaan}
@@ -505,7 +664,8 @@ const index = () => {
         selectedRisk={selectedRisk}
         validation={validationErrorsControl}
         handleAddSelect={handleAddSelectControl}
-        handleChangeSelect={handleChangeSelectControl}
+        handleChangeSelectControl={handleChangeSelectControl}
+        handleChangeSelectPIC={handleChangeSelectPIC}
         handleDeleteSelect={handleDeleteSelectControl}
         handleCloseModal={handleCloseModal}
         handleSubmit={handleSubmitControl}

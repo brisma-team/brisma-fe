@@ -19,11 +19,13 @@ const ModalAddControl = ({
   selectedRisk,
   showModal,
   handleAddSelect,
-  handleChangeSelect,
+  handleChangeSelectControl,
+  handleChangeSelectPIC,
   handleDeleteSelect,
   handleCloseModal,
   handleSubmit,
 }) => {
+  console.log("selectedRisk => ", selectedRisk);
   return (
     <ModalScroll
       showModal={showModal}
@@ -34,12 +36,12 @@ const ModalAddControl = ({
         <CloseModal showModal={showModal} handleCloseModal={handleCloseModal} />
         <div className="flex flex-col gap-3">
           <p className="text-sm font-semibold">Control</p>
-          <TextInput value={selectedRisk} placeholder="" isDisabled />
+          <TextInput value={selectedRisk} isDisabled />
           {data?.length
             ? data?.map((v, i) => {
                 return (
                   <div className="w-full flex gap-3" key={i}>
-                    <div className="">
+                    <div className="w-1/2">
                       <RiskControlSelect
                         selectedValue={
                           v?.kode ? { label: v?.nama, value: v } : null
@@ -48,10 +50,14 @@ const ModalAddControl = ({
                           <ButtonIcon
                             icon={<IconClose />}
                             handleClick={() => handleDeleteSelect(i)}
+                            isDisabled={v?.is_default}
                           />
                         }
-                        handleChange={(e) => handleChangeSelect(i, e.value)}
+                        handleChange={(e) =>
+                          handleChangeSelectControl(i, e.value)
+                        }
                         placeholder={"Pilih control"}
+                        isDisabled={v?.is_default}
                       />
                       {validation && validation[`[${i}].kode`] ? (
                         <ErrorValidation
@@ -62,7 +68,36 @@ const ModalAddControl = ({
                         ""
                       )}
                     </div>
-                    <PekerjaSelect />
+                    <div className="w-1/2">
+                      <PekerjaSelect
+                        selectedValue={
+                          v?.pn_pic
+                            ? {
+                                label: v?.nama_pic,
+                                value: { pn: v?.pn_pic, name: v?.nama_pic },
+                              }
+                            : null
+                        }
+                        customIcon={
+                          <ButtonIcon
+                            icon={<IconClose />}
+                            handleClick={() => handleDeleteSelect(i)}
+                            isDisabled={v?.is_default}
+                          />
+                        }
+                        handleChange={(e) => handleChangeSelectPIC(i, e.value)}
+                        isDisabled={v?.is_default}
+                        placeholder={"Pilih P.I.C"}
+                      />
+                      {validation && validation[`[${i}].pn_pic`] ? (
+                        <ErrorValidation
+                          message={validation[`[${i}].pn_pic`]}
+                          className={"ml-1"}
+                        />
+                      ) : (
+                        ""
+                      )}
+                    </div>
                   </div>
                 );
               })

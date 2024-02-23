@@ -4,6 +4,7 @@ import { CardFormInputTeam } from "@/components/molecules/pat";
 import Image from "next/image";
 import { ImageCheck, ImageGroup } from "@/helpers/imagesUrl";
 import { checkRoleIsAdmin } from "@/helpers";
+import { useEffect, useState } from "react";
 
 const ModalWorkflowHeader = ({
   user,
@@ -17,10 +18,25 @@ const ModalWorkflowHeader = ({
   handleDelete,
   width,
   isScrollHeader,
+  withSigner,
 }) => {
-  let isInitiator, isAdmin;
+  const [optionSigners, setOptionSigners] = useState([]);
+  let isInitiator, isAdmin, isApprover;
   isInitiator = user?.pn == data?.maker?.pn;
   isAdmin = checkRoleIsAdmin(user?.role_kode);
+  isApprover = user?.pn == data?.on_approver?.pn;
+
+  useEffect(() => {
+    if (data?.ref_tim_audit_approver?.length && withSigner) {
+      const mappingSigners = data?.ref_tim_audit_approver?.map((v) => {
+        const { pn, nama } = v;
+        return { label: `${v.pn} - ${v.nama}`, value: { pn, name: nama } };
+      });
+      setOptionSigners(mappingSigners);
+    } else {
+      setOptionSigners([]);
+    }
+  }, [data]);
 
   return (
     <div className={`${width ? width : `w-[61rem]`} relative`}>
@@ -34,7 +50,7 @@ const ModalWorkflowHeader = ({
         }`}
       >
         <div className="flex w-full justify-center gap-4 px-3 py-1 mb-2">
-          <div className="w-1/2">
+          <div className={withSigner ? `w-1/3` : `w-1/2`}>
             <CardFormInput
               title={"P.I.C"}
               className={"text-atlasian-blue-light"}
@@ -47,7 +63,7 @@ const ModalWorkflowHeader = ({
               />
             </CardFormInput>
           </div>
-          <div className="w-1/2">
+          <div className={withSigner ? `w-1/3` : `w-1/2`}>
             <CardFormInputTeam
               data={data?.ref_tim_audit_approver}
               type={"Approver"}
@@ -83,6 +99,38 @@ const ModalWorkflowHeader = ({
               }
             />
           </div>
+          {withSigner ? (
+            <div className="w-1/3">
+              <CardFormInputTeam
+                data={data?.ref_tim_audit_signer}
+                type={"Signer"}
+                handlerAddParent={handleAdd}
+                handlerChangeParent={handleChange}
+                handlerDeleteParent={handleDelete}
+                property={"ref_tim_audit_signer"}
+                optionValue={optionSigners}
+                validationErrors={validationErrors}
+                withoutButtonAdd={
+                  data?.status_approver === "On Progress" && isInitiator
+                    ? false
+                    : true
+                }
+                isDisabled={
+                  (data?.status_approver === "On Progress" && isInitiator) ||
+                  (data?.status_approver === "On Approver" && isApprover)
+                    ? false
+                    : true
+                }
+                isButtonChange={
+                  data?.status_approver === "On Approver" &&
+                  isInitiator &&
+                  "Ganti"
+                }
+              />
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>

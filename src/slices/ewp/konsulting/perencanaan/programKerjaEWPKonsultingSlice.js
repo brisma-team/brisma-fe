@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  objData: [],
+  objDataPemeriksaan: [],
+  objDataRingkasan: [],
   objPayloadLingkupPemeriksaan: {},
   objPayloadRisk: {},
   objPayloadControl: [],
@@ -14,8 +15,11 @@ export const programKerjaEWPKonsultingSlice = createSlice({
   name: "programKerjaEWPKonsulting",
   initialState,
   reducers: {
-    setObjData: (state, action) => {
-      state.objData = action.payload;
+    setObjDataPemeriksaan: (state, action) => {
+      state.objDataPemeriksaan = action.payload;
+    },
+    setObjDataRingkasan: (state, action) => {
+      state.objDataRingkasan = action.payload;
     },
     setObjPayloadLingkupPemeriksaan: (state, action) => {
       state.objPayloadLingkupPemeriksaan = action.payload;
@@ -35,8 +39,11 @@ export const programKerjaEWPKonsultingSlice = createSlice({
     setValidationErrorsControl: (state, action) => {
       state.validationErrorsControl = action.payload;
     },
-    resetObjData: (state) => {
-      state.objData = [];
+    resetObjDataPemeriksaan: (state) => {
+      state.objDataPemeriksaan = [];
+    },
+    resetObjDataRingkasan: (state) => {
+      state.objDataRingkasan = [];
     },
     resetObjPayloadLingkupPemeriksaan: (state) => {
       state.objPayloadLingkupPemeriksaan = {};
@@ -60,14 +67,16 @@ export const programKerjaEWPKonsultingSlice = createSlice({
 });
 
 export const {
-  setObjData,
+  setObjDataPemeriksaan,
+  setObjDataRingkasan,
   setObjPayloadLingkupPemeriksaan,
   setObjPayloadRisk,
   setObjPayloadControl,
   setValidationErrorsLingkupPemeriksaan,
   setValidationErrorsRisk,
   setValidationErrorsControl,
-  resetObjData,
+  resetObjDataPemeriksaan,
+  resetObjDataRingkasan,
   resetObjPayloadLingkupPemeriksaan,
   resetObjPayloadRisk,
   resetObjPayloadControl,

@@ -13,7 +13,7 @@ const UkaSelectDashboard = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [optionValue, setOptionValue] = useState([]);
-  
+
   const { uka } = useUkaList();
   useEffect(() => {
     const mapping = uka?.uka?.map((v) => {

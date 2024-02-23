@@ -5,8 +5,9 @@ import {
   Card,
   TableField,
   ButtonField,
-  Pagination,
+  // Pagination,
   ButtonIcon,
+  CustomPagination,
 } from "@/components/atoms";
 import { IconPlus } from "@/components/icons";
 import useDashboardList from "@/data/dashboard/useDashboardList";
@@ -40,7 +41,8 @@ const index = () => {
   const [dashboard, setDashboard] = useState([]);
   const [data, setData] = useState({ embedId: "", name: "", type: "visual" });
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  // const [totalPages, setTotalPages] = useState(1);
+  const [totalData, setTotalData] = useState(1);
   const [index, setIndex] = useState(1);
 
   const [mappedDashboard, setMappedDashboard] = useState([]);
@@ -51,10 +53,10 @@ const index = () => {
 
   const [editData, setEditData] = useState(); // Menambah state untuk data yang akan diedit
 
-
   function isValidUUID(input) {
-    const uuidPattern = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
-  
+    const uuidPattern =
+      /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
+
     return uuidPattern.test(input);
   }
 
@@ -74,8 +76,9 @@ const index = () => {
 
   useEffect(() => {
     if (dashboardList) {
+      setTotalData(dashboardList.totalItems);
       setMappedDashboard(dashboardList.list);
-      setTotalPages(dashboardList.totalPages);
+      // setTotalPages(dashboardList.totalPages);
       setIndex(dashboardList.limit * dashboardList.page + 1);
     }
   }, [dashboardList]);
@@ -165,19 +168,19 @@ const index = () => {
 
   const handleSubmit = async () => {
     loadingSwal();
-    console.log(data)
-    if(data.isPublic){
-      if(!data.embedId || !data.name ){
-        return infoSwal("Mohon lengkapi form")
+    console.log(data);
+    if (data.isPublic) {
+      if (!data.embedId || !data.name) {
+        return infoSwal("Mohon lengkapi form");
       }
-    }else{
-      if(!data.embedId || !data.name || !data.allowlist.length ){
-        return infoSwal("Mohon lengkapi form")
+    } else {
+      if (!data.embedId || !data.name || !data.allowlist.length) {
+        return infoSwal("Mohon lengkapi form");
       }
     }
     // console.log("VALID ID", isValidUUID(data.embedId))
-    if(isValidUUID(data.embedId) == false){
-      return infoSwal("Format ID Dashboard tidak valid")
+    if (isValidUUID(data.embedId) == false) {
+      return infoSwal("Format ID Dashboard tidak valid");
     }
     const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/createDashboard`;
     await usePostData(url, data);
@@ -187,8 +190,8 @@ const index = () => {
 
   const handleUpdate = async () => {
     loadingSwal();
-    if(isValidUUID(editData.embedId) == false){
-      return infoSwal("Format ID Dashboard tidak valid")
+    if (isValidUUID(editData.embedId) == false) {
+      return infoSwal("Format ID Dashboard tidak valid");
     }
     setShowEditModal(false);
     const url = `${process.env.NEXT_PUBLIC_API_URL_DASHBOARD}/admin/updateDashboard`;
@@ -318,9 +321,17 @@ const index = () => {
                 />
               </div>
               <div className="flex justify-center mt-5">
-                <Pagination
+                {/* <Pagination
                   pages={totalPages}
                   setCurrentPage={setCurrentPage}
+                /> */}
+                <CustomPagination
+                  defaultCurrentPage={1}
+                  perPage={5}
+                  totalData={totalData}
+                  handleSetPagination={async (start, end, pageNow) =>
+                    setCurrentPage(pageNow)
+                  }
                 />
               </div>
             </div>

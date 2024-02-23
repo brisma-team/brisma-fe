@@ -70,6 +70,8 @@ import RelatedEWPSelect from "./RelatedEWPSelect";
 import ModalWorkflow from "./ModalWorkflow";
 import RiskSelect from "./RiskSelect";
 import RiskControlSelect from "./RiskControlSelect";
+import ImageClipping from "./ImageClipping";
+import AttachmentClipping from "./AttachmentClipping";
 
 export {
   BackButton,
@@ -144,4 +146,6 @@ export {
   ModalWorkflow,
   RiskSelect,
   RiskControlSelect,
+  ImageClipping,
+  AttachmentClipping,
 };

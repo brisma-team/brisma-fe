@@ -1,7 +1,7 @@
 import { ButtonIcon, CustomTooltip } from "@/components/atoms";
 import { IconInfo } from "@/components/icons";
 
-const PopupKlipping = () => {
+const PopupKlipping = ({ text }) => {
   return (
     <CustomTooltip
       content={
