@@ -42,6 +42,7 @@ import CustomCheckbox from "./CustomCheckbox";
 import InformationDetail from "./InformationDetail";
 import ModalScroll from "./ModalScroll";
 import ButtonIconBack from "./ButtonIconBack";
+import UploadFileButton from "./UploadFileButton";
 
 export {
   AvatarDefaultExample,
@@ -88,4 +89,5 @@ export {
   InformationDetail,
   ModalScroll,
   ButtonIconBack,
+  UploadFileButton,
 };

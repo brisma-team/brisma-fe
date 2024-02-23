@@ -10,6 +10,7 @@ const RiskControlSelect = ({
   selectedValue,
   fieldsProps,
   customIcon,
+  isDisabled,
 }) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState("");
@@ -78,6 +79,7 @@ const RiskControlSelect = ({
       isSearchable={isSearchable}
       value={selectedValue}
       components={customIcon && { DropdownIndicator }}
+      isDisabled={isDisabled}
     />
   );
 };

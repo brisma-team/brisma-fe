@@ -33,6 +33,7 @@ const ModalWorkflow = ({
   widthHeader,
   isLogTableTree,
   isScrollHeader,
+  withSigner,
 }) => {
   const { user } = useUser();
   let isApproval, isInitiator, isAdmin;
@@ -83,6 +84,7 @@ const ModalWorkflow = ({
           handleDelete={handleDelete}
           width={widthHeader}
           isScrollHeader={isScrollHeader}
+          withSigner={withSigner}
         />
       }
       footer={
