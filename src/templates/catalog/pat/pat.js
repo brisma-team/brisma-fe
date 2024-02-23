@@ -119,7 +119,11 @@ export const patHtml = (id) => {
     />
     <div class="header">
       <h2>PT Bank Rakyat Indonesia (PERSERO), Tbk</h2>
-      <h3 >${data?.uka_name.toUpperCase()}</h3>
+      <h3 >${
+        data?.uka_name
+          ? data?.uka_name.toUpperCase()
+          : "<i>Data tidak ditemukan</i>"
+      }</h3>
     </div>
   </header>
   <div style="
@@ -179,39 +183,41 @@ export const patHtml = (id) => {
           targetAudit?.existing !== undefined &&
           Object.keys(targetAudit?.existing)
             .map((k, idx) => {
-              return `<tr>
-            <td>
-                ${idx + 1}
-            </td>
-            <td>
-                <p style="text-align:center;">${k}</p>
-            </td>
-            <td>
-                <p style="text-align:center;">${targetAudit.existing[k]}</p>
-            </td>
-            <td>
-                <p style="text-align:center;">${
-                  targetAudit.target.reguler[k] || 0
-                }</p>
-            </td>
-            <td>
-                <p style="text-align:center;">${
-                  Number(targetAudit.target.reguler[k]) === 0 ||
-                  targetAudit.target.reguler[k] === undefined
-                    ? 0
-                    : Math.round(
-                        Number(
-                          targetAudit.target.reguler[k] /
-                            Number(targetAudit.existing[k]) || 0
-                        ) * 100
-                      )
-                }%</p>
-            </td>
-            </tr>`;
+              return `
+              <tr>
+                  <td>
+                      ${idx + 1}
+                  </td>
+                  <td>
+                      <p style="text-align:center;">${k}</p>
+                  </td>
+                  <td>
+                      <p style="text-align:center;">${
+                        targetAudit.existing[k]
+                      }</p>
+                  </td>
+                  <td>
+                      <p style="text-align:center;">${
+                        targetAudit.target.reguler[k] || 0
+                      }</p>
+                  </td>
+                  <td>
+                      <p style="text-align:center;">${
+                        Number(targetAudit.target.reguler[k]) === 0 ||
+                        targetAudit.target.reguler[k] === undefined
+                          ? 0
+                          : Math.round(
+                              Number(
+                                targetAudit.target.reguler[k] /
+                                  Number(targetAudit.existing[k]) || 0
+                              ) * 100
+                            )
+                      }%</p>
+                  </td>
+              </tr>`;
             })
             .join("")
         }
-        
     </table>
     </div>
     <div class="sub_section_ruang_lingkup">
@@ -241,7 +247,9 @@ export const patHtml = (id) => {
                   <p style="text-align:center;">${k}</p>
               </td>
               <td>
-                  <p style="text-align:center;">${targetAudit.existing[k]}</p>
+                  <p style="text-align:center;">${
+                    targetAudit.existing[k] || `N/A`
+                  }</p>
               </td>
               <td>
                   <p style="text-align:center;">${
@@ -250,15 +258,17 @@ export const patHtml = (id) => {
               </td>
               <td>
                   <p style="text-align:center;">${
-                    Number(targetAudit.target.special[k]) === 0 ||
-                    targetAudit.target.special[k] === undefined
-                      ? 0
-                      : Math.round(
-                          Number(
-                            targetAudit.target.special[k] /
-                              Number(targetAudit.existing[k]) || 0
-                          ) * 100
-                        )
+                    targetAudit.target.special[k]
+                      ? Number(targetAudit.target.special[k]) === 0 ||
+                        targetAudit.target.special[k] === undefined
+                        ? 0
+                        : Math.round(
+                            Number(
+                              targetAudit.target.special[k] /
+                                Number(targetAudit.existing[k]) || 0
+                            ) * 100
+                          )
+                      : 0
                   }%</p>
               </td>
           </tr>`;
@@ -293,29 +303,32 @@ export const patHtml = (id) => {
         </thead>
         <tbody>
         ${
-          targetAudit?.target.tematik !== undefined &&
-          targetAudit?.target.tematik
-            .map((t, idx) => {
-              return `<tr>
+          targetAudit?.target.tematik !== undefined
+            ? targetAudit?.target.tematik
+                .map((t, idx) => {
+                  return `<tr>
                         <td>
                             <p style="text-align:center;">${idx + 1}</p>
                         </td>
                         <td>
                             <p style="text-align:center;">${
-                              t.tema_audit_name
+                              t.tema_audit_name || `N/A`
                             }</p>
                         </td>
                         <td>
                         ${t.uker
                           .map(
                             (u) =>
-                              `<p style="text-align:center;">${u.uker_name}</p>`
+                              `<p style="text-align:center;">${
+                                u.uker_name || `N/A`
+                              }</p>`
                           )
                           .join("")}
                         </td>
                     </tr>`;
-            })
-            .join("")
+                })
+                .join("")
+            : `<tr><td colspan="3"><i>Data tidak ditemukan</i></td></tr>`
         }
       </tbody>
   </table>
@@ -440,9 +453,11 @@ export const patHtml = (id) => {
           </tr>
       </thead>
       <tbody>
-      ${jadwalKegiatan
-        .map((d, index) => {
-          return `
+      ${
+        jadwalKegiatan
+          ? jadwalKegiatan
+              .map((d, index) => {
+                return `
             <tr>
                 <td>
                     ${index + 1}
@@ -468,39 +483,60 @@ export const patHtml = (id) => {
                       `<i>Data tidak ditemukan</i>`
                     }
                 </td>
-                ${[...Array(12)]
-                  .map((_, idx) => {
-                    return `<td ${
-                      idx + 1 >=
-                        new Date(d.jadwal_audit.JadwalMulai).getMonth() + 1 &&
-                      idx + 1 <=
-                        new Date(d.jadwal_audit.JadwalAkhir).getMonth() + 1 &&
-                      'style="background-color:hsl(210, 75%, 60%);"'
-                    }></td>`;
-                  })
-                  .join("")}
+                
+                ${
+                  d?.jadwal_audit?.JadwalMulai && d?.jadwal_audit?.JadwalAkhir
+                    ? [...Array(12)]
+                        .map((_, idx) => {
+                          return `<td ${
+                            idx + 1 >=
+                              new Date(d.jadwal_audit.JadwalMulai).getMonth() +
+                                1 &&
+                            idx + 1 <=
+                              new Date(d.jadwal_audit.JadwalAkhir).getMonth() +
+                                1 &&
+                            'style="background-color:hsl(210, 75%, 60%);"'
+                          }></td>`;
+                        })
+                        .join("")
+                    : `<td colspan="12"><i>Data tidak ditemukan</i></td>`
+                }
                 <td>
-                ${Object.keys(d.targetAudit.count_target_jenis_auditee.existing)
-                  .map((k) => {
-                    const existing =
-                      d.targetAudit.count_target_jenis_auditee.existing[k] || 0;
-                    const target =
-                      d.targetAudit.count_target_jenis_auditee.target[k] || 0;
-                    const percent = Math.round(
-                      (Number(target) / Number(existing)) * 100
-                    );
-                    return `
+                ${
+                  d?.targetAudit?.count_target_jenis_auditee?.existing
+                    ? Object.keys(
+                        d.targetAudit.count_target_jenis_auditee.existing
+                      )
+                        .map((k) => {
+                          const existing =
+                            d.targetAudit.count_target_jenis_auditee.existing[
+                              k
+                            ] || 0;
+                          const target =
+                            d.targetAudit.count_target_jenis_auditee.target[
+                              k
+                            ] || 0;
+                          const percent = Math.round(
+                            (Number(target) / Number(existing)) * 100
+                          );
+                          return `
                       <p>
                           ${k}: [${existing}][${target}] ${percent}%&nbsp;
                       </p>
                     `;
-                  })
-                  .join("")}
+                        })
+                        .join("")
+                    : `<i>Data tidak ditemukan</i>`
+                }
                 </td>
             </tr>
             `;
-        })
-        .join("")}
+              })
+              .join("")
+          : `<tr>
+        <td colspan='17'><i>Data tidak ditemukan</i>
+        </tr>`
+      }
         </tbody>
     </table>
     </figure>
@@ -608,10 +644,13 @@ export const patHtml = (id) => {
               </th>
           </tr>
       </thead>
-      ${jadwalSBP
-        .map((d, index) => {
-          return `<tbody>
-                        <tr>
+      <tbody>
+      ${
+        jadwalSBP
+          ? jadwalSBP
+              .map((d, index) => {
+                return `
+                      <tr>
                         <td>${index + 1}</td>
                         <td>${d.NamaSBP}</td>
                         <td>${d.Orgeh ? d.Orgeh : "-"}</td>
@@ -636,10 +675,12 @@ export const patHtml = (id) => {
                   )
                   .join("")}
                     </tr>
-                    </tbody>`;
-        })
-        .join("")}
-      
+                    `;
+              })
+              .join("")
+          : `<tr><td colspan="17"><i>Data tidak ditemukan</i></td></tr>>`
+      }
+        </tbody>
   </table>
 </figure>
     </section>
@@ -741,16 +782,18 @@ export const patHtml = (id) => {
               </th>
           </tr>
       </thead>
-      
-      ${jadwalLainnya
-        .map((d, index) => {
-          return `<tbody key=${index}>
-                    <tr>
+      <tbody>
+      ${
+        jadwalLainnya
+          ? jadwalLainnya
+              .map((d, index) => {
+                return `
+                  <tr key=${index}>
                     <td>${index + 1}</td>
                     <td>${d.NamaKegiatan}</td>
                     <td>${d.Orgeh}</td>
                     <td>
-                    <p>${d.PN + " - " + d.Nama + " - " + d.Jabatan}</p>
+                      <p>${d.PN + " - " + d.Nama + " - " + d.Jabatan}</p>
                     </td>
                     ${[...Array(12)]
                       .map(
@@ -763,9 +806,12 @@ export const patHtml = (id) => {
                       )
                       .join("")}
                 </tr>
-                </tbody>`;
-        })
-        .join("")}
+                `;
+              })
+              .join("")
+          : `<tr><td colspan="16"><i>Data tidak ditemukan</i></td></tr>`
+      }
+        </tbody>
   </table>
 </figure>
     </section>
@@ -807,42 +853,45 @@ export const patHtml = (id) => {
               </th>
           </tr>
       </thead>
-
-      ${timAudit
-        .map((d, index) => {
-          return `
-        <tbody key=${index}>
-            <tr>
-        <td>
-            ${index + 1}
-        </td>
-        <td>
-            ${d.NamaTim}
-        </td>
-        <td>
-            <p>
-                <b>MA</b>: ${d.MA.pn} - ${d.MA.nama}
-            </p>
-            <p>
-                <b>KTA</b>: ${d.KTA.pn} - ${d.KTA.nama}
-            </p>
-            <p>
-                <b>ATA</b>:&nbsp;
-            </p>
-            ${d.ATA.map((a) => `<p>${a[0]} - ${a[1]}</p>`).join("")}
-        </td>
-        <td style="text-align:left;">
-            ${d.ATA.map(
-              (a) =>
-                `<p style="margin-bottom:5px;">
-                ${a[0]} - ${a[1]}: ${a[2] ? a[2] : "-"}
-                </p>`
-            ).join("")}
-        </td>
-        </tr>
+      <tbody>
+      ${
+        timAudit
+          ? timAudit
+              .map((d, index) => {
+                return `
+          <tr key=${index}>
+            <td>
+                ${index + 1}
+            </td>
+            <td>
+                ${d.NamaTim}
+            </td>
+            <td>
+                <p>
+                    <b>MA</b>: ${d.MA.pn} - ${d.MA.nama}
+                </p>
+                <p>
+                    <b>KTA</b>: ${d.KTA.pn} - ${d.KTA.nama}
+                </p>
+                <p>
+                    <b>ATA</b>:&nbsp;
+                </p>
+                ${d.ATA.map((a) => `<p>${a[0]} - ${a[1]}</p>`).join("")}
+            </td>
+            <td style="text-align:left;">
+                ${d.ATA.map(
+                  (a) =>
+                    `<p style="margin-bottom:5px;">
+                    ${a[0]} - ${a[1]}: ${a[2] ? a[2] : "-"}
+                    </p>`
+                ).join("")}
+            </td>
+          </tr>
         </tbody>`;
-        })
-        .join("")}
+              })
+              .join("")
+          : `<tr><td colspan="4"><i>Data tidak ditemukan</i></td></tr>`
+      }
   </table>
 </figure>
     </section>
@@ -852,80 +901,94 @@ export const patHtml = (id) => {
     <section>
       <h4>Anggaran Audit</h4>
       <p>
-  <span style="color:rgb(0,0,0);">Rencana anggaran dalam rangka pelaksanaan audit untuk tahun ${convertToRupiah(
-    objectAnggaran.tahun
-  )}, adalah sbb:</span>
+  <span style="color:rgb(0,0,0);">Rencana anggaran dalam rangka pelaksanaan audit untuk tahun ${
+    objectAnggaran?.tahun ? convertToRupiah(objectAnggaran.tahun) : `0`
+  }, adalah sbb:</span>
 </p>
-    1. Biaya Pemeliharaan <span style="color:rgb(0,0,0);">………………………………………………………………………. Rp ${convertToRupiah(
-      objectAnggaran.total_pemeliharaan
-    )}</span>
+    1. Biaya Pemeliharaan <span style="color:rgb(0,0,0);">………………………………………………………………………. Rp ${
+      objectAnggaran?.total_pemeliharaan
+        ? convertToRupiah(objectAnggaran.total_pemeliharaan)
+        : `0`
+    }</span>
 <p style="margin-left:40px;">
-  a. Pemeliharaan dan Perbaikan AT kendaraan ....<span style="color:rgb(0,0,0);">…</span>... Rp ${convertToRupiah(
-    objectAnggaran.kendaraan
-  )}
-</p>
-<p style="margin-left:40px;">
-  b. Pemeliharaan dan Perbaikan AT mesin-mesin ..<span style="color:rgb(0,0,0);">…</span> Rp ${convertToRupiah(
-    objectAnggaran.mesin
-  )}
+  a. Pemeliharaan dan Perbaikan AT kendaraan ....<span style="color:rgb(0,0,0);">…</span>... Rp ${
+    objectAnggaran?.kendaraan ? convertToRupiah(objectAnggaran.kendaraan) : `0`
+  }
 </p>
 <p style="margin-left:40px;">
-  c. Pemeliharaan dan Perbaikan AT Inventaris .....<span style="color:rgb(0,0,0);">……</span> Rp ${convertToRupiah(
-    objectAnggaran.inventaris
-  )}
+  b. Pemeliharaan dan Perbaikan AT mesin-mesin ..<span style="color:rgb(0,0,0);">…</span> Rp ${
+    objectAnggaran?.mesin ? convertToRupiah(objectAnggaran.mesin) : `0`
+  }
+</p>
+<p style="margin-left:40px;">
+  c. Pemeliharaan dan Perbaikan AT Inventaris .....<span style="color:rgb(0,0,0);">……</span> Rp ${
+    objectAnggaran?.inventaris
+      ? convertToRupiah(objectAnggaran.inventaris)
+      : `0`
+  }
 </p>
 <p>
-  2. Biaya Perjalanan Dinas Jabatan ....................................................<span style="color:rgb(0,0,0);">………</span>...... Rp ${convertToRupiah(
-    objectAnggaran.total_dinas
-  )}
+  2. Biaya Perjalanan Dinas Jabatan ....................................................<span style="color:rgb(0,0,0);">………</span>...... Rp ${
+    objectAnggaran?.total_dinas
+      ? convertToRupiah(objectAnggaran.total_dinas)
+      : `0`
+  }
 </p>
 <p>
-  <span style="color:rgb(0,0,0);">3. Biaya Barang dan Jasa Pihak ke 3 ………………………………………………… Rp ${convertToRupiah(
-    objectAnggaran.total_barang_jasa
-  )}</span>
+  <span style="color:rgb(0,0,0);">3. Biaya Barang dan Jasa Pihak ke 3 ………………………………………………… Rp ${
+    objectAnggaran?.total_barang_jasa
+      ? convertToRupiah(objectAnggaran.total_barang_jasa)
+      : `0`
+  }</span>
 </p>
 <p style="margin-left:40px;">
-  a. Biaya Porto .......................................................<span style="color:rgb(0,0,0);">……………</span> Rp ${convertToRupiah(
-    objectAnggaran.porto
-  )}
+  a. Biaya Porto .......................................................<span style="color:rgb(0,0,0);">……………</span> Rp ${
+    objectAnggaran?.porto ? convertToRupiah(objectAnggaran.porto) : `0`
+  }
 </p>
 <p style="margin-left:40px;">
-  b. Biaya Percetakan ..............................................<span style="color:rgb(0,0,0);">…………</span>. Rp ${convertToRupiah(
-    objectAnggaran.percetakan
-  )}
+  b. Biaya Percetakan ..............................................<span style="color:rgb(0,0,0);">…………</span>. Rp ${
+    objectAnggaran?.percetakan
+      ? convertToRupiah(objectAnggaran.percetakan)
+      : `0`
+  }
 </p>
 <p style="margin-left:40px;">
-  c. Biaya Alat Tulis Kantor (ATK) .........................<span style="color:rgb(0,0,0);">……</span>.<span style="color:rgb(0,0,0);">…</span>.. Rp ${convertToRupiah(
-    objectAnggaran.atk
-  )}
+  c. Biaya Alat Tulis Kantor (ATK) .........................<span style="color:rgb(0,0,0);">……</span>.<span style="color:rgb(0,0,0);">…</span>.. Rp ${
+    objectAnggaran?.atk ? convertToRupiah(objectAnggaran.atk) : `0`
+  }
 </p>
 <p style="margin-left:40px;">
-  d. Biaya Supplies Komputer ................................<span style="color:rgb(0,0,0);">…………</span> Rp ${convertToRupiah(
-    objectAnggaran.komputer
-  )}
+  d. Biaya Supplies Komputer ................................<span style="color:rgb(0,0,0);">…………</span> Rp ${
+    objectAnggaran?.komputer ? convertToRupiah(objectAnggaran.komputer) : `0`
+  }
 </p>
 <p>
-  <span style="color:rgb(0,0,0);">4. Biaya Umum Lainnya .......................................................……………………….. Rp ${convertToRupiah(
-    objectAnggaran.total_umum_lainnya
-  )}</span>
+  <span style="color:rgb(0,0,0);">4. Biaya Umum Lainnya .......................................................……………………….. Rp ${
+    objectAnggaran?.total_umum_lainnya
+      ? convertToRupiah(objectAnggaran.total_umum_lainnya)
+      : `0`
+  }</span>
 </p>
 <p style="margin-left:40px;">
-  <span style="color:rgb(0,0,0);">a. Biaya Rapat .....................................................………….... Rp ${convertToRupiah(
-    objectAnggaran.rapat
-  )}</span>
+  <span style="color:rgb(0,0,0);">a. Biaya Rapat .....................................................………….... Rp ${
+    objectAnggaran?.rapat ? convertToRupiah(objectAnggaran.rapat) : `0`
+  }</span>
 </p>
 <p style="margin-left:40px;">
-  <span style="color:rgb(0,0,0);">b. Biaya Representasi ........................................................ Rp ${convertToRupiah(
-    objectAnggaran.representasi
-  )}</span>
+  <span style="color:rgb(0,0,0);">b. Biaya Representasi ........................................................ Rp ${
+    objectAnggaran?.representasi
+      ? convertToRupiah(objectAnggaran.representasi)
+      : `0`
+  }</span>
 </p>
 <p style="margin-left:40px;">
   &nbsp;
 </p>
 <p>
-  <span style="color:rgb(0,0,0);"><strong>Total Biaya …………………………………………………………………… Rp ${convertToRupiah(
-    objectAnggaran.total
-  )}</strong></span>
+  <span style="color:rgb(0,0,0);"><strong>Total Biaya …………………………………………………………………… Rp ${
+    objectAnggaran?.total ? convertToRupiah(objectAnggaran.total) : `0`
+  }</strong></span>
 </p>
 <p>
   <span class="text-small" style="color:rgb(0,0,0);">(Rincian Biaya Perjalanan Dinas Jabatan terlampir)</span>
@@ -1035,7 +1098,10 @@ export const patHtml = (id) => {
                               </td>
                               <td rowspan="${length}">
                                 <p style="text-align:center; word-wrap: break-word;">
-                                    ${d.nama_kegiatan}
+                                    ${
+                                      d.nama_kegiatan ||
+                                      `<i>Data tidak ditemukan</i>`
+                                    }
                                 </p>
                               </td>
                             `
@@ -1043,12 +1109,15 @@ export const patHtml = (id) => {
                           }
                           <td>
                             <p style="text-align:center; word-wrap: break-word;">
-                                ${k}
+                                ${k || `<i>Data tidak ditemukan</i>`}
                             </p>
                           </td>
                           <td>
                             <p style="text-align:center; word-wrap: break-word;">
-                                ${currJabatan.jumlah}
+                                ${
+                                  currJabatan.jumlah ||
+                                  `<i>Data tidak ditemukan</i>`
+                                }
                             </p>
                           </td>
                           ${
@@ -1056,12 +1125,15 @@ export const patHtml = (id) => {
                               ? `
                             <td rowspan="${length}">
                               <p style="text-align:center; word-wrap: break-word;">
-                                  ${d.tempat_kegiatan}
+                                  ${
+                                    d.tempat_kegiatan ||
+                                    `<i>Data tidak ditemukan</i>`
+                                  }
                               </p>
                             </td>
                             <td rowspan="${length}">
                               <p style="text-align:center; word-wrap: break-word;">
-                                  ${d.bulan}
+                                  ${d.bulan || `<i>Data tidak ditemukan</i>`}
                               </p>
                             </td>
                             `
@@ -1069,34 +1141,61 @@ export const patHtml = (id) => {
                           }
                           <td>
                             <p style="text-align:center; word-wrap: break-word;">
-                                ${currJabatan.lama_kegiatan} hari
+                                ${
+                                  currJabatan.lama_kegiatan + `hari` ||
+                                  `<i>Data tidak ditemukan</i>`
+                                } 
                             </p>
                           </td>
                           <td>
                             <p style="text-align:center; word-wrap: break-word;">
-                                ${numberWithCommas(currJabatan.biaya_tiket)}
+                                ${
+                                  currJabatan?.biaya_tiket
+                                    ? numberWithCommas(currJabatan.biaya_tiket)
+                                    : `<i>Data tidak ditemukan</i>`
+                                }
                             </p>
                           </td>
                           <td>
                             <p style="text-align:center; word-wrap: break-word;">
-                                ${numberWithCommas(currJabatan.biaya_transport)}
+                                ${
+                                  currJabatan?.biaya_transport
+                                    ? numberWithCommas(
+                                        currJabatan.biaya_transport
+                                      )
+                                    : `<i>Data tidak ditemukan</i>`
+                                }
                             </p>
                           </td>
                           <td>
                             <p style="text-align:center; word-wrap: break-word;">
-                                ${numberWithCommas(
-                                  currJabatan.biaya_perjalanan
-                                )}
+                                ${
+                                  currJabatan?.biaya_perjalanan
+                                    ? numberWithCommas(
+                                        currJabatan.biaya_perjalanan
+                                      )
+                                    : `<i>Data tidak ditemukan</i>`
+                                }
                             </p>
                           </td>
                           <td>
                             <p style="text-align:center; word-wrap: break-word;">
-                                ${numberWithCommas(currJabatan.biaya_akomodasi)}
+                                ${
+                                  currJabatan?.biaya_akomodasi
+                                    ? numberWithCommas(
+                                        currJabatan.biaya_akomodasi
+                                      )
+                                    : `<i>Data tidak ditemukan</i>`
+                                }
                             </p>
                           </td>
                           <td>
                             <p style="text-align:center; word-wrap: break-word;">
-                                ${numberWithCommas(currJabatan.total_biaya)}
+                                ${
+                                  currJabatan?.total_biaya
+                                    ? numberWithCommas(currJabatan.total_biaya)
+                                    : `<i>Data tidak ditemukan</i>`
+                                }
                             </p>
                           </td>
                       </tr>
@@ -1111,17 +1210,22 @@ export const patHtml = (id) => {
                 </td>
                 <td>
                   <p style="text-align:center;">
-                    ${numberWithCommas(
-                      anggaranDinas?.reduce((prev, curr) => {
-                        const totalSatuKegiatan = Object.keys(
-                          curr.Jabatan
-                        ).reduce(
-                          (p, c) => (p += Number(curr.Jabatan[c].total_biaya)),
-                          0
-                        );
-                        return (prev += totalSatuKegiatan);
-                      }, 0)
-                    )}
+                    ${
+                      anggaranDinas
+                        ? numberWithCommas(
+                            anggaranDinas?.reduce((prev, curr) => {
+                              const totalSatuKegiatan = Object.keys(
+                                curr.Jabatan
+                              ).reduce(
+                                (p, c) =>
+                                  (p += Number(curr.Jabatan[c].total_biaya)),
+                                0
+                              );
+                              return (prev += totalSatuKegiatan);
+                            }, 0)
+                          )
+                        : `0`
+                    }
                   </p>
                 </td>
               </tr>
@@ -1220,7 +1324,11 @@ export const patHtml = (id) => {
                                 (s) =>
                                   `<td>
                                     <p style="text-align:center;">
-                                      ${numberWithCommas(s.amount[0].amount)}
+                                      ${
+                                        s.amount[0].amount
+                                          ? numberWithCommas(s.amount[0].amount)
+                                          : `0`
+                                      }
                                     </p>
                                   </td>`
                               )
@@ -1230,126 +1338,166 @@ export const patHtml = (id) => {
                     </tr>`;
                   })
                   .join("")}
-                  <tr style="">
+          ${
+            anggaranLainnya?.length > 0
+              ? `<tr style="">
           <td><p style="text-align:center; font-size: bold;">Total</p></td>
           <td>
             <p style="text-align:center;">
-            ${numberWithCommas(
-              anggaranLainnya?.reduce(
-                (prev, d) =>
-                  (prev += Number(
-                    d.kategori[0].sub_kategori[0].amount[0].amount
-                  )),
-                0
-              )
-            )}
+            ${
+              anggaranLainnya
+                ? numberWithCommas(
+                    anggaranLainnya?.reduce(
+                      (prev, d) =>
+                        (prev += Number(
+                          d.kategori[0].sub_kategori[0].amount[0].amount
+                        )),
+                      0
+                    )
+                  )
+                : `0`
+            }
             </p>
           </td>
           <td>
             <p style="text-align:center;">
-            ${numberWithCommas(
-              anggaranLainnya?.reduce(
-                (prev, d) =>
-                  (prev += Number(
-                    d.kategori[0].sub_kategori[1].amount[0].amount
-                  )),
-                0
-              )
-            )}
+            ${
+              anggaranLainnya
+                ? numberWithCommas(
+                    anggaranLainnya?.reduce(
+                      (prev, d) =>
+                        (prev += Number(
+                          d.kategori[0].sub_kategori[1].amount[0].amount
+                        )),
+                      0
+                    )
+                  )
+                : `0`
+            }
             </p>
           </td>
           <td>
             <p style="text-align:center;">
-            ${numberWithCommas(
-              anggaranLainnya?.reduce(
-                (prev, d) =>
-                  (prev += Number(
-                    d.kategori[0].sub_kategori[2].amount[0].amount
-                  )),
-                0
-              )
-            )}
+            ${
+              anggaranLainnya
+                ? numberWithCommas(
+                    anggaranLainnya?.reduce(
+                      (prev, d) =>
+                        (prev += Number(
+                          d.kategori[0].sub_kategori[2].amount[0].amount
+                        )),
+                      0
+                    )
+                  )
+                : `0`
+            }
             </p>
           </td>
           <td>
             <p style="text-align:center;">
-            ${numberWithCommas(
-              anggaranLainnya?.reduce(
-                (prev, d) =>
-                  (prev += Number(
-                    d.kategori[1].sub_kategori[0].amount[0].amount
-                  )),
-                0
-              )
-            )}
+            ${
+              anggaranLainnya
+                ? numberWithCommas(
+                    anggaranLainnya?.reduce(
+                      (prev, d) =>
+                        (prev += Number(
+                          d.kategori[1].sub_kategori[0].amount[0].amount
+                        )),
+                      0
+                    )
+                  )
+                : `0`
+            }
             </p>
           </td>
           <td>
             <p style="text-align:center;">
-            ${numberWithCommas(
-              anggaranLainnya?.reduce(
-                (prev, d) =>
-                  (prev += Number(
-                    d.kategori[1].sub_kategori[1].amount[0].amount
-                  )),
-                0
-              )
-            )}
+            ${
+              anggaranLainnya
+                ? numberWithCommas(
+                    anggaranLainnya?.reduce(
+                      (prev, d) =>
+                        (prev += Number(
+                          d.kategori[1].sub_kategori[1].amount[0].amount
+                        )),
+                      0
+                    )
+                  )
+                : `0`
+            }
             </p>
           </td>
           <td>
             <p style="text-align:center;">
-            ${numberWithCommas(
-              anggaranLainnya?.reduce(
-                (prev, d) =>
-                  (prev += Number(
-                    d.kategori[1].sub_kategori[2].amount[0].amount
-                  )),
-                0
-              )
-            )}
+            ${
+              anggaranLainnya
+                ? numberWithCommas(
+                    anggaranLainnya?.reduce(
+                      (prev, d) =>
+                        (prev += Number(
+                          d.kategori[1].sub_kategori[2].amount[0].amount
+                        )),
+                      0
+                    )
+                  )
+                : `0`
+            }
             </p>
           </td>
           <td>
             <p style="text-align:center;">
-            ${numberWithCommas(
-              anggaranLainnya?.reduce(
-                (prev, d) =>
-                  (prev += Number(
-                    d.kategori[1].sub_kategori[3].amount[0].amount
-                  )),
-                0
-              )
-            )}
+            ${
+              anggaranLainnya
+                ? numberWithCommas(
+                    anggaranLainnya?.reduce(
+                      (prev, d) =>
+                        (prev += Number(
+                          d.kategori[1].sub_kategori[3].amount[0].amount
+                        )),
+                      0
+                    )
+                  )
+                : `0`
+            }
             </p>
           </td>
           <td>
             <p style="text-align:center;">
-            ${numberWithCommas(
-              anggaranLainnya?.reduce(
-                (prev, d) =>
-                  (prev += Number(
-                    d.kategori[2].sub_kategori[0].amount[0].amount
-                  )),
-                0
-              )
-            )}
+            ${
+              anggaranLainnya
+                ? numberWithCommas(
+                    anggaranLainnya?.reduce(
+                      (prev, d) =>
+                        (prev += Number(
+                          d.kategori[2].sub_kategori[0].amount[0].amount
+                        )),
+                      0
+                    )
+                  )
+                : `0`
+            }
             </p>
           </td>
           <td>
             <p style="text-align:center;">
-            ${numberWithCommas(
-              anggaranLainnya?.reduce(
-                (prev, d) =>
-                  (prev += Number(
-                    d.kategori[2].sub_kategori[1].amount[0].amount
-                  )),
-                0
-              )
-            )}
+            ${
+              anggaranLainnya
+                ? numberWithCommas(
+                    anggaranLainnya?.reduce(
+                      (prev, d) =>
+                        (prev += Number(
+                          d.kategori[2].sub_kategori[1].amount[0].amount
+                        )),
+                      0
+                    )
+                  )
+                : `0`
+            }
             </p>
           </td>
-      </tr>
+      </tr>`
+              : `<tr></tr>`
+          }
             </tbody>
         </table>
       </figure>
