@@ -554,11 +554,9 @@ const index = () => {
               <Card>
                 <div className="w-full">
                   <div className="px-3">
-                    <p className="text-brisma font-bold text-xl">
-                      Approval K.K.P.A
-                    </p>
+                    <p className="text-brisma font-bold text-xl">Approval</p>
                     <ApprovalItems
-                      title={"Maker"}
+                      title={"P.I.C Auditor"}
                       text={workflowData?.maker?.nama}
                     />
                     <ApprovalItems
