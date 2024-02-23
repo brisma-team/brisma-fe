@@ -5,7 +5,6 @@ import {
   PageTitle,
 } from "@/components/atoms";
 import { useProjectDetail } from "@/data/ewp/konsulting";
-import { useSumberInformasi } from "@/data/ewp/konsulting/perencanaan/sumber-informasi";
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
@@ -15,6 +14,7 @@ import {
   ImageClipping,
 } from "@/components/molecules/commons";
 import { fetchApi, loadingSwal, usePostFileData } from "@/helpers";
+import { useDetailControl } from "@/data/ewp/konsulting/perencanaan/program-kerja";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -32,7 +32,9 @@ const index = () => {
   const [typeUpload, setTypeUpload] = useState("");
 
   const { projectDetail } = useProjectDetail({ id });
-  const { sumberInformasi, sumberInformasiMutate } = useSumberInformasi({ id });
+  const { detailControl, detailControlMutate } = useDetailControl({
+    id: control_id,
+  });
 
   useEffect(() => {
     setBreadcrumbs([
@@ -40,12 +42,8 @@ const index = () => {
       { name: "EWP", path: "/ewp" },
       { name: "Overview", path: "/ewp/konsulting/overview" },
       {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
-        path: `${baseUrl}/${projectDetail?.data?.project_info?.project_id}`,
-      },
-      {
-        name: `Perencanaan Kegiatan`,
-        path: `${baseUrl}/${projectDetail?.data?.project_info?.project_id}/perencanaan`,
+        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Perencanaan Kegiatan`,
+        path: baseUrl,
       },
       {
         name: `Program Kerja`,
@@ -53,14 +51,14 @@ const index = () => {
       },
       {
         name: `Control`,
-        path: `${baseUrl}/${projectDetail?.data?.project_info?.project_id}/perencanaan/program-kerja/${control_id}`,
+        path: `${baseUrl}/perencanaan/program-kerja/${control_id}`,
       },
     ]);
   }, [projectDetail]);
 
   useEffect(() => {
-    setContent(sumberInformasi?.data || "");
-  }, [sumberInformasi]);
+    setContent(detailControl?.data?.uraian || "");
+  }, [detailControl]);
 
   const handleClickUploadAttachment = () => {
     setTypeUpload("attachment");
@@ -102,14 +100,14 @@ const index = () => {
     loadingSwal();
     const upload = await fetchApi(
       "PATCH",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/lingkup_pemeriksaan/control/update`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/lingkup_pemeriksaan/control/update/${control_id}`,
       { uraian: content }
     );
     if (upload.isConfirmed) {
       router.push(pathName);
       return;
     }
-    sumberInformasiMutate();
+    detailControlMutate();
     loadingSwal("close");
   };
 

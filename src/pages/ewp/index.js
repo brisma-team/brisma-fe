@@ -51,7 +51,7 @@ const index = () => {
           {
             title: "KONSULTING",
             description: "Pengerjaan EWP Konsulting.",
-            url: "/ewp/konsulting",
+            url: "/ewp/konsulting/overview",
           },
           {
             title: "MONITORING OFFSITE",

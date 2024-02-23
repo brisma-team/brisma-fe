@@ -59,16 +59,12 @@ const index = () => {
       { name: "EWP", path: "/ewp" },
       { name: "Overview", path: "/ewp/konsulting/overview" },
       {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
-        path: `${baseUrl}/${projectDetail?.data?.project_info?.project_id}`,
-      },
-      {
-        name: `Perencanaan Kegiatan`,
-        path: `${baseUrl}/${projectDetail?.data?.project_info?.project_id}/perencanaan`,
+        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Perencanaan Kegiatan`,
+        path: baseUrl,
       },
       {
         name: `Sumber Informasi`,
-        path: `${baseUrl}/${projectDetail?.data?.project_info?.project_id}/perencanaan/sumber-informasi`,
+        path: `${baseUrl}/perencanaan/sumber-informasi`,
       },
     ]);
   }, [projectDetail]);
