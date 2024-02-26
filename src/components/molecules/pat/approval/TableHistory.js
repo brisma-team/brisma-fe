@@ -13,40 +13,40 @@ const TableHistoryPAT = ({ data }) => {
   return (
     <Card>
       <div className="w-full px-4 pb-2">
-        <p className="text-lg font-bold ml-2">Riwayat Persetujuan</p>
+        <p className="text-lg font-bold ml-2">RIWAYAT APPROVAL</p>
         <div className="py-1" />
         <TableTree>
           <Headers>
             <Header
-              width="35%"
-              className="border-x border-t rounded-ss-xl cell-custom-dataTables"
+              width="33%"
+              className="border-t border-l  rounded-ss-xl cell-custom-dataTables"
             >
               <div className="custom-table-header">
-                <p className="text-base font-bold">Nama Project</p>
+                <p className="text-base font-bold">TANGGAL</p>
               </div>
             </Header>
             <Header
-              width="14%"
-              className="border-t border-r cell-custom-dataTables"
+              width="33%"
+              className="border-x border-t cell-custom-dataTables"
             >
               <div className="custom-table-header">
-                <p className="text-base font-bold">Tahun</p>
+                <p className="text-base font-bold">NAMA PROYEK</p>
               </div>
             </Header>
-            <Header
+            {/* <Header
               width="35%"
               className="border-t border-r cell-custom-dataTables"
             >
               <div className={`custom-table-header`}>
                 <p className="text-base font-bold">Fase Approval</p>
               </div>
-            </Header>
+            </Header> */}
             <Header
-              width="16%"
+              width="34%"
               className="border-t border-r rounded-se-xl cell-custom-dataTables"
             >
               <div className={`custom-table-header`}>
-                <p className="text-base font-bold">Status</p>
+                <p className="text-base font-bold">DOCUMENT STATUS</p>
               </div>
             </Header>
           </Headers>
@@ -55,24 +55,24 @@ const TableHistoryPAT = ({ data }) => {
               items={data}
               render={({ pat, is_approved, module }) => (
                 <Row>
-                  <Cell width="35%" className={customCell}>
+                  <Cell width="33%" className={`border-x ${customCell} `}>
+                    <div className="custom-table-position-center">
+                      <p className="text-sm">{pat?.tahun || "-"}</p>
+                    </div>
+                  </Cell>
+                  <Cell width="33%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p className="text-sm">
                         {pat?.name?.toUpperCase() || "-"}
                       </p>
                     </div>
                   </Cell>
-                  <Cell width="14%" className={customCell}>
-                    <div className="custom-table-position-center">
-                      <p className="text-sm">{pat?.tahun || "-"}</p>
-                    </div>
-                  </Cell>
-                  <Cell width="35%" className={customCell}>
+                  {/* <Cell width="35%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p className="text-sm">{module || "-"}</p>
                     </div>
-                  </Cell>
-                  <Cell width="16%" className={customCell}>
+                  </Cell> */}
+                  <Cell width="34%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p
                         className={`text-sm ${

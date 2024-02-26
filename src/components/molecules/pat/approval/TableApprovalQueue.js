@@ -14,7 +14,7 @@ const TableApprovalQueuePAT = ({ data, handleClickAction }) => {
   return (
     <Card>
       <div className="w-full px-4 pb-2">
-        <p className="text-lg font-bold ml-2">Antrian Persetujuan</p>
+        <p className="text-lg font-bold ml-2">WAITING FOR APPROVAL</p>
         <div className="py-1" />
         <TableTree>
           <Headers>
@@ -23,7 +23,7 @@ const TableApprovalQueuePAT = ({ data, handleClickAction }) => {
               className="border-x border-t rounded-ss-xl cell-custom-dataTables"
             >
               <div className="custom-table-header justify-center">
-                <p className="text-base font-bold">Aksi</p>
+                <p className="text-base font-bold">AKSI</p>
               </div>
             </Header>
             <Header
@@ -31,23 +31,23 @@ const TableApprovalQueuePAT = ({ data, handleClickAction }) => {
               className="border-t border-r cell-custom-dataTables"
             >
               <div className="custom-table-header">
-                <p className="text-base font-bold">Nama Project</p>
+                <p className="text-base font-bold">NAMA PROYEK</p>
               </div>
             </Header>
             <Header
-              width="15%"
+              width="18%"
               className="border-t border-r cell-custom-dataTables"
             >
               <div className={`custom-table-header`}>
-                <p className="text-base font-bold">Tahun</p>
+                <p className="text-base font-bold">TAHUN</p>
               </div>
             </Header>
             <Header
-              width="37%"
+              width="34%"
               className="border-t border-r rounded-se-xl cell-custom-dataTables"
             >
               <div className={`custom-table-header`}>
-                <p className="text-base font-bold">Fase Approval</p>
+                <p className="text-base font-bold">DOCUMENT STATUS</p>
               </div>
             </Header>
           </Headers>
@@ -76,12 +76,12 @@ const TableApprovalQueuePAT = ({ data, handleClickAction }) => {
                       </p>
                     </div>
                   </Cell>
-                  <Cell width="15%" className={`border-r ${customCell} `}>
+                  <Cell width="18%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p className="text-sm">{tahun || "-"}</p>
                     </div>
                   </Cell>
-                  <Cell width="37%" className={`border-r ${customCell} `}>
+                  <Cell width="34%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p className="text-sm">{module}</p>
                     </div>
