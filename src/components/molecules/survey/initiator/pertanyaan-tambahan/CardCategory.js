@@ -69,9 +69,11 @@ const CardCategory = ({
         <div className="w-full h-full p-2 flex justify-between items-center">
           <div className="font-bold text-base text-atlasian-green">
             Bobot:{" "}
-            {decimalToPercentage(
-              data.total_pertanyaan / data.total_pertanyaan_all_kategori
-            )}
+            {data.is_default
+              ? decimalToPercentage(
+                  data.total_pertanyaan / data.total_pertanyaan_all_kategori
+                )
+              : "0%"}
           </div>
           <div className="font-bold text-base text-atlasian-yellow">
             Pertanyaan: {data.total_pertanyaan.toString()}

@@ -684,13 +684,6 @@ const index = () => {
   };
   // [ END ] Handler for modal approval
 
-  useEffect(() => {
-    console.log("statusApproval => ", statusApproval);
-  }, [statusApproval]);
-
-  useEffect(() => {
-    console.log("statusApprovalResponden => ", statusApprovalResponden);
-  }, [statusApprovalResponden]);
   return (
     <LandingLayoutSurvey withoutRightSidebar overflowY>
       <div className={is_request_manage_responden ? `w-[83rem]` : `w-[71rem]`}>
@@ -704,7 +697,7 @@ const index = () => {
             setCurrentStage={setCurrentContentStage}
             width={"w-64"}
           />
-          <div className="flex gap-4">
+          <div className="flex gap-4 min-h-screen">
             {currentContentStage === 1 ? (
               <TableRespondenPn
                 data={dataTables.respondenPn}
@@ -721,7 +714,7 @@ const index = () => {
                 handleClickSave={handleClickSaveResponden}
               />
             ) : (
-              <div className="flex flex-col gap-4 w-full">
+              <div className="flex flex-col gap-4 w-full h-fit">
                 <TableUker
                   data={dataTables.respondenUker}
                   newUker={payloadNewUker}

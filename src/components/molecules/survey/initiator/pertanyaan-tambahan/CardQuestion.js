@@ -384,7 +384,7 @@ const CardQuestion = ({
                         )
                       ) : data.tipe_pertanyaan_kode == "4" && isPreviewPage ? (
                         <TextAreaField
-                          placeholder={"Deskripsi Jawaban"}
+                          placeholder={"Deskripsi jawaban (wajib diisi)"}
                           isDisabled={
                             !isPreviewPage || isDisabledDescriptionAnswer
                           }
@@ -445,7 +445,7 @@ const CardQuestion = ({
             ""
           ) : data.is_need_deskripsi ? (
             <TextAreaField
-              placeholder={"Deskripsi Jawaban"}
+              placeholder={"Deskripsi jawaban (wajib diisi)"}
               isDisabled={!isPreviewPage || isDisabledDescriptionAnswer}
               handleChange={(e) =>
                 handleChangeAnswer(

@@ -132,12 +132,11 @@ const index = () => {
     if (payloadKuesioner?.length) {
       let kategoriCount = 0;
       let tambahanCount = 0;
-      const total_pertanyaan_all_kategori = payloadKuesioner.reduce(
-        (acc, obj) => {
+      const total_pertanyaan_all_kategori = payloadKuesioner
+        .filter((v) => v.is_default)
+        .reduce((acc, obj) => {
           return acc + obj.pertanyaan.length;
-        },
-        0
-      );
+        }, 0);
 
       const mapping = payloadKuesioner.map((category, idx) => {
         const { id, name, is_default } = category;

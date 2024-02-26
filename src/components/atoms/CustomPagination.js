@@ -28,7 +28,7 @@ const CustomPagination = ({
 
     handleSetPagination(newStartIndex, newEndIndex, currentPage);
     if (currentPage > totalPage && isDynamicPageTotal) {
-      setCurrentPage(totalPage);
+      setCurrentPage(currentPage);
     }
   }, [totalData, currentPage, perPage]);
 

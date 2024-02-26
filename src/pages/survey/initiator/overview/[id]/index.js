@@ -74,6 +74,8 @@ const index = () => {
   const [dataCategory, setDataCategory] = useState([]);
   const [isNewTemplate, setIsNewTemplate] = useState(true);
   const [isDisabledButtonAction, setIsDisabledButtonAction] = useState(true);
+  const [isDisabledButtonApproval, setIsDisabledButtonApproval] =
+    useState(true);
   const [isFormDisabled, setIsFormDisabled] = useState(false);
   const [isUpdateGuidline, setIsUpdateGuidline] = useState(false);
   const [isRefreshWorkflow, setIsRefreshWorkflow] = useState(false);
@@ -301,12 +303,11 @@ const index = () => {
     if (payloadKuesioner?.length) {
       let kategoriCount = 0;
       let tambahanCount = 0;
-      const total_pertanyaan_all_kategori = payloadKuesioner.reduce(
-        (acc, obj) => {
+      const total_pertanyaan_all_kategori = payloadKuesioner
+        .filter((v) => v.is_default)
+        .reduce((acc, obj) => {
           return acc + obj.pertanyaan.length;
-        },
-        0
-      );
+        }, 0);
 
       const mapping = payloadKuesioner.map((category, idx) => {
         const { id, name, is_default } = category;
@@ -335,11 +336,18 @@ const index = () => {
         };
       });
 
+      const hasEmptyPertanyaan = payloadKuesioner.some(
+        (item) => item.pertanyaan && item.pertanyaan.length === 0
+      );
+      setIsDisabledButtonApproval(
+        hasEmptyPertanyaan || !information?.data?.responden_survey?.length
+      );
       setDataCategory(mapping);
     } else {
       setDataCategory([]);
+      setIsDisabledButtonApproval(true);
     }
-  }, [payloadKuesioner]);
+  }, [payloadKuesioner, information]);
 
   useEffect(() => {
     let templateName = "Informasi";
@@ -1068,6 +1076,7 @@ const index = () => {
               isNewTemplate={isNewTemplate}
               isDisabledPickTemplate={isDisabledButtonAction}
               isFormDisabled={isFormDisabled}
+              isDisabledButtonApproval={isDisabledButtonApproval}
               statusSurveyCode={statusSurveyCode}
               projectTemplateId={projectTemplateId}
               handleChangeForm={handleChangeFormInformasi}
@@ -1100,7 +1109,11 @@ const index = () => {
         historyWorkflow={historyWorkflow}
         validationErrors={validationErrorsWorkflow}
         setShowModal={setShowModalApproval}
-        showModal={showModalApproval && payloadKuesioner?.length}
+        showModal={
+          showModalApproval &&
+          !isDisabledButtonApproval &&
+          currentContentStage === 1
+        }
         headerTitle={"Approval Survey"}
         handleChange={handleChangeText}
         handleChangeSelect={handleChangeSelect}

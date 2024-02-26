@@ -39,6 +39,7 @@ import {
   successSwal,
 } from "@/helpers";
 import {
+  useFormula,
   useInformation,
   useKuesioner,
   useKuesionerFromRedis,
@@ -117,6 +118,7 @@ const index = () => {
   const { user } = useUser();
   const { kuesionerFromRedis, kuesionerFromRedisMutate } =
     useKuesionerFromRedis({ id });
+  const { formulaTemplate } = useFormula({ id });
 
   useEffect(() => {
     dispatch(resetWorkflowData());
@@ -196,10 +198,8 @@ const index = () => {
       });
 
       dispatch(setPayloadKuesioner(mapping));
-      setIsDisabledButtonApproval(false);
     } else {
       dispatch(resetPayloadKuesioner());
-      setIsDisabledButtonApproval(true);
     }
   }, [information, kuesioner, kuesionerFromRedis]);
 
@@ -276,8 +276,15 @@ const index = () => {
   }, [workflow, isRefreshWorkflow]);
 
   useEffect(() => {
-    setIsDisabledButtonApproval(!payloadKuesioner?.length);
-  }, [payloadKuesioner]);
+    const hasEmptyPertanyaan = payloadKuesioner.some(
+      (item) => item.pertanyaan && item.pertanyaan.length === 0
+    );
+
+    setIsDisabledButtonApproval(
+      !(payloadKuesioner?.length && formulaTemplate?.data?.length) ||
+        hasEmptyPertanyaan
+    );
+  }, [payloadKuesioner, formulaTemplate]);
 
   const handleUnderChange = () => {
     if (!isUnderChange) setIsUnderChange(true);
@@ -971,7 +978,11 @@ const index = () => {
         historyWorkflow={historyWorkflow}
         validationErrors={validationErrorsWorkflow}
         setShowModal={setShowModalApproval}
-        showModal={showModalApproval && !isDisabledButtonApproval}
+        showModal={
+          showModalApproval &&
+          !isDisabledButtonApproval &&
+          currentContentStage === 1
+        }
         headerTitle={"Approval Template Survey"}
         handleChange={handleChangeText}
         handleChangeSelect={handleChangeSelect}
