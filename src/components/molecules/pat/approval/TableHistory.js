@@ -33,14 +33,6 @@ const TableHistoryPAT = ({ data }) => {
                 <p className="text-base font-bold">NAMA PROYEK</p>
               </div>
             </Header>
-            {/* <Header
-              width="35%"
-              className="border-t border-r cell-custom-dataTables"
-            >
-              <div className={`custom-table-header`}>
-                <p className="text-base font-bold">Fase Approval</p>
-              </div>
-            </Header> */}
             <Header
               width="34%"
               className="border-t border-r rounded-se-xl cell-custom-dataTables"
@@ -67,11 +59,6 @@ const TableHistoryPAT = ({ data }) => {
                       </p>
                     </div>
                   </Cell>
-                  {/* <Cell width="35%" className={`border-r ${customCell} `}>
-                    <div className="custom-table-position-center">
-                      <p className="text-sm">{module || "-"}</p>
-                    </div>
-                  </Cell> */}
                   <Cell width="34%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p
