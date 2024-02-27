@@ -3,9 +3,9 @@ import {
   PrevNextNavigation,
   ApprovalItems,
   ModalComment,
+  ModalWorkflow,
 } from "@/components/molecules/commons";
 import { NavigationDocument } from "@/components/molecules/commons";
-import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common";
 import Image from "next/image";
 import { ImageChat } from "@/helpers/imagesUrl";
 import { useRef, useState, useEffect } from "react";
@@ -17,16 +17,16 @@ import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 //   useWorkflowDetailEWP,
 // } from "@/data/ewp/konvensional";
 import {
+  useCommentMapaEWP,
   useDocumentEWP,
-  useWorkflowDetailEWP,
-} from "@/data/ewp/konsulting/perencanaan";
+} from "@/data/ewp/konsulting/perencanaan/dokumen";
 import { useSelector, useDispatch } from "react-redux";
 import {
   resetValidationErrorsWorkflow,
   setValidationErrorsWorkflow,
   setWorkflowData,
   resetWorkflowData,
-} from "@/slices/ewp/konvensional/mapa/documentMapaEWPSlice";
+} from "@/slices/ewp/konsulting/perencanaan/documentMapaEWPKonsultingSlice";
 import _ from "lodash";
 import {
   confirmationSwal,
@@ -36,8 +36,8 @@ import {
   useUpdateData,
 } from "@/helpers";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
-import { useMapaEWP, useProjectDetail } from "@/data/ewp/konsulting";
-import { useCommentMapaEWP } from "@/data/ewp/konsulting/perencanaan/dokumen";
+import { useProjectDetail } from "@/data/ewp/konsulting";
+import { useWorkflowDetailEWP } from "@/data/ewp";
 
 const routes = [
   { name: "Sumber Informasi", slug: "sumber-informasi" },
@@ -72,15 +72,15 @@ const index = () => {
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
   const [bab, setBab] = useState(1);
   const [selectedParentCommentId, setSelectedParentCommentId] = useState(0);
+
   const workflowData = useSelector(
-    (state) => state.documentMapaEWP.workflowData
+    (state) => state.documentMapaEWPKonsulting.workflowData
   );
   const validationErrorsWorkflow = useSelector(
-    (state) => state.documentMapaEWP.validationErrorsWorkflow
+    (state) => state.documentMapaEWPKonsulting.validationErrorsWorkflow
   );
 
   const { projectDetail } = useProjectDetail({ id });
-  const { mapaEWP } = useMapaEWP("dokumen", { id });
   const { documentEWP } = useDocumentEWP("mapa", bab, { id });
   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
     "mapa",
@@ -261,54 +261,66 @@ const index = () => {
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
   useEffect(() => {
-    const workflowInfo = workflowDetailEWP?.data?.info;
-    const maker = workflowDetailEWP?.data?.initiator;
-    const approvers = workflowDetailEWP?.data?.approver;
-    const signers = workflowDetailEWP?.data?.signer;
+    console.log("workflowDetailEWP?.data => ", workflowDetailEWP?.data);
+    if (workflowDetailEWP?.data) {
+      const workflowInfo = workflowDetailEWP?.data?.info;
+      const maker = workflowDetailEWP?.data?.initiator;
+      const approvers = workflowDetailEWP?.data?.approver;
+      const signers = workflowDetailEWP?.data?.signer;
 
-    const newWorkflowData = {
-      ...workflowData,
-      status_approver: workflowInfo?.status_persetujuan_name,
-      on_approver: workflowInfo?.status_approver,
-    };
+      const newWorkflowData = {
+        ...workflowData,
+        status_approver: workflowInfo?.status_persetujuan_name,
+        on_approver: workflowInfo?.status_approver,
+      };
 
-    newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.nama}`;
-    newWorkflowData.maker = maker;
+      newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.nama}`;
+      newWorkflowData.maker = maker;
 
-    if (approvers?.length) {
-      const mappingApprovers = _.map(approvers, ({ pn, nama, is_signed }) => ({
-        pn,
-        nama,
-        is_signed,
-      }));
-      newWorkflowData.ref_tim_audit_approver = mappingApprovers;
+      if (approvers?.length) {
+        const mappingApprovers = _.map(
+          approvers,
+          ({ pn, nama, is_signed }) => ({
+            pn,
+            nama,
+            is_signed,
+          })
+        );
+        newWorkflowData.ref_tim_audit_approver = mappingApprovers;
+      }
+
+      if (signers?.length) {
+        const mappingSigners = _.map(signers, ({ nama, pn }) => ({ nama, pn }));
+        newWorkflowData.ref_tim_audit_signer = mappingSigners;
+      }
+
+      if (workflowDetailEWP?.data?.log?.length) {
+        const mapping = workflowDetailEWP?.data?.log?.map((v) => {
+          return {
+            "P.I.C": v?.pn_from + " - " + v?.name_from,
+            Alasan: v?.note,
+            Status:
+              v?.is_signed === true
+                ? "Approved"
+                : v?.is_signed === false
+                ? "Rejected"
+                : "",
+            Tanggal: convertDate(v?.createdAt, "-", "d"),
+          };
+        });
+        setHistoryWorkflow(mapping);
+      }
+
+      dispatch(setWorkflowData(newWorkflowData));
+    } else {
+      dispatch(resetWorkflowData());
     }
-
-    if (signers?.length) {
-      const mappingSigners = _.map(signers, ({ nama, pn }) => ({ nama, pn }));
-      newWorkflowData.ref_tim_audit_signer = mappingSigners;
-    }
-
-    if (workflowDetailEWP?.data?.log?.length) {
-      const mapping = workflowDetailEWP?.data?.log?.map((v) => {
-        return {
-          "P.I.C": v?.pn_from + " - " + v?.name_from,
-          Alasan: v?.note,
-          Status:
-            v?.is_signed === true
-              ? "Approved"
-              : v?.is_signed === false
-              ? "Rejected"
-              : "",
-          Tanggal: convertDate(v?.createdAt, "-", "d"),
-        };
-      });
-      setHistoryWorkflow(mapping);
-    }
-
-    dispatch(setWorkflowData(newWorkflowData));
   }, [workflowDetailEWP]);
   // [ END ]
+
+  useEffect(() => {
+    console.log("workflowData => ", workflowData);
+  }, [workflowData]);
 
   const handleClickComment = (babIdx) => {
     setOpenCardComment(true);
@@ -573,18 +585,19 @@ const index = () => {
               </Card>
             </div>
           </DivButton>
-          <ModalWorkflowEWP
+          <ModalWorkflow
             workflowData={workflowData}
             historyWorkflow={historyWorkflow}
             validationErrors={validationErrorsWorkflow}
-            setShowModal={setShowModalApproval}
             showModal={showModalApproval}
-            headerTitle={"Approval K.K.P.A"}
-            handleChange={handleChangeText}
-            handleChangeSelect={handleChangeSelect}
+            headerTitle={"Workflow & Riwayat Approval"}
             handleDelete={handleDelete}
-            handleAdd={handleAdd}
             handleSubmit={handleSubmit}
+            setShowModal={setShowModalApproval}
+            handleAdd={handleAdd}
+            handleChangeSelect={handleChangeSelect}
+            handleChangeText={handleChangeText}
+            withSigner
           />
         </div>
       </div>

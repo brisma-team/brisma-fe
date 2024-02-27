@@ -5,13 +5,14 @@ const ApprovalItems = ({ title, text, data }) => {
   let allSigned = false,
     findApproval = -1;
 
-  if (["Maker", "P.I.C"].includes(title) && text) {
+  if (["Maker", "P.I.C", "P.I.C Auditor"].includes(title) && text) {
     allSigned = true;
   } else if (title === "Signer" && text?.length) {
     allSigned = true;
   } else {
-    const checkSigned = text?.every((item) => item.is_signed === true);
-    if (checkSigned && text?.length) allSigned = true;
+    const checkSigned =
+      Array.isArray(text) && text.every((item) => item.is_signed === true);
+    if (checkSigned && Array.isArray(text) && text.length) allSigned = true;
   }
 
   if (data?.on_approver) {
