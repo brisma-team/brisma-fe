@@ -159,7 +159,7 @@ const index = () => {
 	};
 
 	return (
-		<PatOverviewLayout data={approvalPat?.data?.header}>
+		<PatOverviewLayout title={"Riwayat Approval"} data={approvalPat?.data?.header}>
 			<div className="pr-24">
 				{/* Start Breadcrumbs */}
 				<Breadcrumbs data={breadcrumbs} />

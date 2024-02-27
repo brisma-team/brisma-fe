@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { PatSidebarOverview } from "@/components/molecules/pat";
 import { NavbarField, CardApprovalList } from "@/components/molecules/commons";
 
-const PatOverviewLayout = ({ children, withContent = true, data }) => {
+const PatOverviewLayout = ({ children, withContent = true, data, title }) => {
   const router = useRouter();
 
   const { user, userError } = useUser();
@@ -41,7 +41,7 @@ const PatOverviewLayout = ({ children, withContent = true, data }) => {
         {withContent && (
           <div>
             <div className="text-center text-base font-bold mt-4">
-              Approval Information
+              {title}
             </div>
             <div className="px-10 mt-5">
               <CardApprovalList data={data} />
