@@ -24,6 +24,7 @@ const positionCenter = `w-full h-full flex justify-center items-center`;
 
 const TablePemeriksaan = ({
   data,
+  pathName,
   expansionMap,
   handleSelectedLingkupPemeriksaan,
   handleSelectedRisk,
@@ -195,7 +196,7 @@ const TablePemeriksaan = ({
                           URAIAN
                         </LozengeField>
                       }
-                      href={`/ewp/konsulting/overview/10/perencanaan/program-kerja/${id}`}
+                      href={`${pathName}/${id}`}
                     />
                   </div>
                 ) : (

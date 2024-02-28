@@ -611,6 +611,7 @@ const index = () => {
             <div className="px-4 py-2 w-full">
               <TablePemeriksaan
                 data={dataPemeriksaan}
+                pathName={`/ewp/konsulting/overview/${id}/perencanaan/program-kerja`}
                 expansionMap={expansionMap}
                 handleSelectedLingkupPemeriksaan={
                   handleSelectedLingkupPemeriksaan
