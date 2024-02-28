@@ -59,7 +59,7 @@ const Modal = ({
                 </div>
               )}
               <div
-                className={`relative w-full mx-auto rounded-md shadow-lg ${
+                className={`relative w-full p-4 mx-auto bg-white rounded-md shadow-lg ${
                   overflowScrollY &&
                   (maxHeight || `max-h-[39.5rem]`)`overflow-y-scroll relative`
                 }`}
