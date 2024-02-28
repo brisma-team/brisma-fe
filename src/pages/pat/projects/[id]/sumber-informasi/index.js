@@ -20,11 +20,11 @@ import {
   usePostFileData,
   loadingSwal,
   copyToClipboard,
+  convertDate,
 } from "@/helpers";
 import { useStatusPat, useSumberInformasiPAT } from "@/data/pat";
 
 import { setImageClipList, setLampiranList, setHistoryList } from "@/slices/pat/sumberInformasiSlice";
-import dateLocaleString from "@/helpers/dateLocaleString";
 
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
@@ -83,7 +83,7 @@ const index = () => {
       dispatch(setHistoryList([
         ...historyList,
         {
-          date: dateLocaleString(new Date()),
+          date: convertDate(new Date(),"-"),
           name: '',
           note: ''
         }
@@ -150,7 +150,12 @@ const index = () => {
 			},
 			{
 				title: "Created Date",
-				value: statusPat?.data?.status_approver,
+				value: convertDate(
+          statusPat?.data?.lb_created_at,
+          "-",
+          "d",
+          true
+        ),
 			},
 			{ title: "Document Status", value: statusPat?.data?.status_pat },
 			{ title: "Document Status", value: statusPat?.data?.status_pat },
