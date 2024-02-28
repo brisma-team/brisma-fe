@@ -1,34 +1,32 @@
-import {
-  Breadcrumbs,
-  ButtonIcon,
-  ButtonIconBack,
-  PageTitle,
-} from "@/components/atoms";
+import { Breadcrumbs, ButtonIconBack, PageTitle } from "@/components/atoms";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import _ from "lodash";
-import TableTree, {
-  Cell,
-  Header,
-  Headers,
-  Row,
-  Rows,
-} from "@atlaskit/table-tree";
 import {
   setObjData,
+  setObjPayload,
+  setValidationErrors,
   resetObjData,
-} from "@/slices/ewp/konsulting/analisa/lingkupEWPKonsultingSlice";
+  resetObjPayload,
+  resetValidationErrors,
+} from "@/slices/ewp/konsulting/analisa/matrixEWPKonsultingSlice";
 import {
   useMatrixDetail,
   useMatrixList,
 } from "@/data/ewp/konsulting/analisa/matrix";
-import { ButtonDelete, ButtonEdit } from "@/components/molecules/commons";
-import { fetchApi, loadingSwal } from "@/helpers";
-
-const customCell = `cell-width-full-height-full cell-custom-dataTables`;
+import {
+  confirmationSwal,
+  fetchApi,
+  loadingSwal,
+  setErrorValidation,
+} from "@/helpers";
+import {
+  ModalMatrix,
+  DataTables,
+} from "@/components/molecules/ewp/konsulting/analisa/matrix";
+import matrixEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/analisa/matrixEWPKonsultingSchema";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -36,11 +34,16 @@ const index = () => {
   const baseUrl = `/ewp/konsulting/overview/${id}`;
   const pathName = `${baseUrl}/analisa`;
 
+  const [showModalMatrix, setShowModalMatrix] = useState(false);
+  const [isUpdateMatrix, setIsUpdateMatrix] = useState(false);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
-
   const [selectedId, setSelectedId] = useState(0);
 
-  const data = useSelector((state) => state.lingkupEWPKonsulting.objData);
+  const data = useSelector((state) => state.matrixEWPKonsulting.objData);
+  const payload = useSelector((state) => state.matrixEWPKonsulting.objPayload);
+  const validation = useSelector(
+    (state) => state.matrixEWPKonsulting.validationErrors
+  );
 
   const { projectDetail } = useProjectDetail({ id });
   const { matrixList, matrixListMutate } = useMatrixList({ id });
@@ -64,40 +67,40 @@ const index = () => {
 
   useEffect(() => {
     if (matrixList?.data?.length) {
-      const mappingAnalisa = matrixList?.data?.map((v) => {
-        const {
-          auditor,
-          mapa_uker_mcr,
-          mapa_uker_mcr_control,
-          status_persetujuan,
-        } = v;
+      const mappingMatrix = matrixList?.data?.map((v) => {
+        const { judul, auditor, createdAt } = v;
         return {
-          kkpa_id: v?.id,
+          matrix_id: v?.id,
+          judul,
           auditor,
-          status: status_persetujuan,
-          lingkup: {
-            kode: mapa_uker_mcr?.lingkup_pemeriksaan?.id,
-            nama: mapa_uker_mcr?.lingkup_pemeriksaan?.judul_lingkup_pemeriksaan,
-          },
-          risk: {
-            kode: mapa_uker_mcr?.mtd_risk_issue?.abbr,
-            nama: mapa_uker_mcr?.mtd_risk_issue?.nama,
-          },
-          control: {
-            kode: mapa_uker_mcr_control?.mtd_control?.abbr,
-            nama: mapa_uker_mcr_control?.mtd_control?.nama,
-          },
+          tanggal: createdAt,
         };
       });
 
-      dispatch(setObjData(mappingAnalisa));
+      dispatch(setObjData(mappingMatrix));
     } else {
       dispatch(resetObjData());
     }
   }, [matrixList]);
 
+  useEffect(() => {
+    if (matrixDetail?.data) {
+      const { judul, auditor } = matrixDetail.data;
+      dispatch(setObjPayload({ judul, auditor }));
+    } else {
+      dispatch(resetObjPayload());
+    }
+  }, [matrixDetail, showModalMatrix]);
+
+  // [ START ] handler for table matrix
+  const handleClickAddMatrix = () => {
+    setShowModalMatrix(true);
+  };
+
   const handleClickEdit = (matrix_id) => {
     setSelectedId(matrix_id);
+    setIsUpdateMatrix(true);
+    setShowModalMatrix(true);
   };
 
   const handleClickDelete = async (matrix_id) => {
@@ -110,6 +113,59 @@ const index = () => {
     matrixListMutate();
     loadingSwal("close");
   };
+  // [ END ] handler for table matrix
+
+  // [ START ] handler for modal matrix
+  const handleCloseModal = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    setShowModalMatrix(false);
+    dispatch(resetObjPayload());
+  };
+
+  const handleChangePayload = (property, value) => {
+    dispatch(setObjPayload({ ...payload, [property]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const schemaMappings = {
+      schema: matrixEWPKonsultingSchema,
+      resetErrors: resetValidationErrors,
+      setErrors: setValidationErrors,
+    };
+
+    const validate = setErrorValidation(payload, dispatch, schemaMappings);
+
+    if (validate) {
+      loadingSwal();
+      if (isUpdateMatrix) {
+        await fetchApi(
+          "PATCH",
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpa/rencana_peluang/update/${selectedId}`,
+          payload
+        );
+      } else {
+        await fetchApi(
+          "POST",
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpa/rencana_peluang/create`,
+          { ...payload, ewp_id: id }
+        );
+      }
+      setShowModalMatrix(false);
+      setIsUpdateMatrix(false);
+      matrixListMutate();
+      dispatch(resetObjPayload());
+      dispatch(resetValidationErrors());
+      loadingSwal("close");
+    }
+  };
+  // [ END ] handler for modal matrix
 
   return (
     <LandingLayoutEWPConsulting>
@@ -124,76 +180,21 @@ const index = () => {
       </div>
       {/* Start Content */}
       <div className="w-[60rem]">
-        <TableTree>
-          <Headers>
-            <Header
-              width="10%"
-              className="border-x border-t rounded-ss-lg cell-custom-dataTables"
-            >
-              <div
-                className={`custom-table-header justify-center text-sm font-semibold`}
-              >
-                AKSI
-              </div>
-            </Header>
-            <Header
-              width="45%"
-              className="border-t border-r cell-custom-dataTables"
-            >
-              <div className="custom-table-header text-sm font-semibold">
-                JUDUL MATRIX PELUANG
-              </div>
-            </Header>
-            <Header
-              width="15%"
-              className="border-t border-r cell-custom-dataTables"
-            >
-              <div className="custom-table-header justify-center text-sm font-semibold">
-                TANGGAL
-              </div>
-            </Header>
-            <Header
-              width="30%"
-              className="border-t border-r cell-custom-dataTables rounded-se-lg"
-            >
-              <div className="custom-table-header text-sm font-semibold">
-                AUDITOR
-              </div>
-            </Header>
-          </Headers>
-          <Rows
-            items={data}
-            render={({ matrix_id, judul, tanggal, auditor }) => (
-              <Row>
-                <Cell width="10%" className={`border-x ${customCell}`}>
-                  <div className="custom-table-position-center justify-center gap-1">
-                    <ButtonIcon
-                      icon={<ButtonEdit />}
-                      handleClick={() => handleClickEdit(matrix_id)}
-                      color={"yellow"}
-                    />
-                    <ButtonIcon
-                      icon={<ButtonDelete />}
-                      handleClick={() => handleClickDelete(matrix_id)}
-                    />
-                  </div>
-                </Cell>
-                <Cell width="45%" className={`border-r ${customCell}`}>
-                  <div className="custom-table-position-center">{judul}</div>
-                </Cell>
-                <Cell width="15%" className={`border-r ${customCell}`}>
-                  <div className="custom-table-position-center justify-center">
-                    {tanggal}
-                  </div>
-                </Cell>
-                <Cell width="30%" className={`border-r ${customCell}`}>
-                  <div className="custom-table-position-center">{auditor}</div>
-                </Cell>
-              </Row>
-            )}
-          />
-        </TableTree>
+        <DataTables
+          data={data}
+          handleClickAddMatrix={handleClickAddMatrix}
+          handleClickEdit={handleClickEdit}
+          handleClickDelete={handleClickDelete}
+        />
       </div>
+      <ModalMatrix
+        data={payload}
+        validation={validation}
+        showModal={showModalMatrix}
+        handleChange={handleChangePayload}
+        handleCloseModal={handleCloseModal}
+        handleSubmit={handleSubmit}
+      />
       {/* End Content */}
     </LandingLayoutEWPConsulting>
   );
