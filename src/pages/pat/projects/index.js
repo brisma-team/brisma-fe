@@ -99,6 +99,7 @@ const index = () => {
 
   useEffect(() => {
     if (projectOverview) {
+      console.log(projectOverview)
       const mapping = projectOverview.data.map((v) => {
         return {
           id: v.id,
@@ -170,7 +171,6 @@ const index = () => {
         <div className="w-full flex justify-end items-end p-2">
           <SelectSortFilter
             change={handleChangeFilter}
-            options={[4, 8, 16, 32, 50, 100]}
           />
         </div>
       </div>
