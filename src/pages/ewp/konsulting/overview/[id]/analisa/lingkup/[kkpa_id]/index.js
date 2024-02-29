@@ -68,11 +68,11 @@ const index = () => {
 
       const mappingDataCarding = [
         {
-          title: "Analisis Data",
+          title: "Analisa Data",
           description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
           status: landingStatus?.data?.analisis_data ? "success" : "failed",
-          url: `${pathNameLandingPage}/analisis-data`,
+          url: `${pathNameLandingPage}/analisa-data`,
         },
         {
           title: "Resume",
