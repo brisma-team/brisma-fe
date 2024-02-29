@@ -99,7 +99,6 @@ const index = () => {
 
   useEffect(() => {
     if (projectOverview) {
-      console.log(projectOverview)
       const mapping = projectOverview.data.map((v) => {
         return {
           id: v.id,

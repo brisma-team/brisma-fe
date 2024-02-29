@@ -153,7 +153,7 @@ const index = () => {
     setContent([
       {
 				title: "Initiator",
-				value: statusPat?.data?.riwayat_adendum,
+				value: statusPat?.data?.create_by?.nama,
 			},
 			{
 				title: "Created Date",

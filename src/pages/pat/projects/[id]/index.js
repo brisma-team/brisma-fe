@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Breadcrumbs, CardLanding } from "@/components/atoms";
 import { PatLandingLayout } from "@/layouts/pat";
-import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
 import useStatusPat from "@/data/pat/useStatusPat";
 import { setSearchParam } from "@/slices/pat/statusPatSlice";
 import { useDispatch } from "react-redux";
 import { convertDate } from "@/helpers";
+import { PrevNextNavigation } from "@/components/molecules/commons";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -82,14 +82,12 @@ const index = () => {
     console.log("status Pat => ", statusPat?.data);
 
     setContent([
-      { title: "Riwayat Addendum", value: statusPat?.data?.riwayat_adendum },
-      { title: "Status Approver", value: statusPat?.data?.status_approver?.pn },
-      { title: "Status PAT", value: statusPat?.data?.status_pat },
       { title: "Initiator", value: statusPat?.data?.create_by?.nama },
       {
-        title: "Created",
+        title: "Created Date",
         value: convertDate(statusPat?.data?.createdAt, "-", "d", true),
       },
+      { title: "Status PAT", value: statusPat?.data?.status_pat },
       {
         title: "Last Modified",
         value: convertDate(statusPat?.data?.updatedAt, "-", "d", true),
@@ -105,10 +103,8 @@ const index = () => {
           <div className="text-3xl font-bold">
             Usulan Perencanaan Audit Tahunan
           </div>
-          <div className="my-3 w-40">
-            <Button appearance="danger" shouldFitContainer>
-              Addendum
-            </Button>
+          <div className="my-3 w-30">
+            <PrevNextNavigation />
           </div>
         </div>
         {/* Start Content */}

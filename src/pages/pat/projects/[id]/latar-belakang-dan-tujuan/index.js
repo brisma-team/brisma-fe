@@ -146,7 +146,7 @@ const index = () => {
     setContent([
       {
         title: "Initiator",
-        value: latarBelakangTujuanPat?.data?.pic_latar_belakang_tujuan,
+        value: latarBelakangTujuanPat?.data?.create_by?.nama,
       },
       {
         title: "Created Date",
