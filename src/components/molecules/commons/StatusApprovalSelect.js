@@ -26,12 +26,7 @@ const StatusApprovalSelect = ({
           { label: "Final", value: { kode: "Final", name: "Final" } },
         ]
       }
-      customIcon={
-        <ButtonIcon
-          handleClick={handleReset}
-          icon={<IconClose size="large" />}
-        />
-      }
+      customIcon={<ButtonIcon handleClick={handleReset} icon={<IconClose />} />}
       selectedValue={selectedValue}
       placeholder={placeholder}
       handleChange={handleChange}

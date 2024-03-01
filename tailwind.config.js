@@ -35,6 +35,10 @@ module.exports = {
             light: "#DFE1E6", // DFE1E6
           },
         },
+        hover: {
+          blue: "#0D78FF",
+          yellow: "#FDC55A",
+        },
         brisma: "#09326C",
         // Tambahkan skema warna lain sesuai kebutuhan Anda
       },
