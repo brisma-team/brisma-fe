@@ -23,11 +23,11 @@ const CardOtherSchedule = ({
     },
     {
       title: "Tanggal Inisiasi",
-      description: maker
+      description: "-"
     },
     {
       title: "Durasi Proyek",
-      description: maker
+      description: "-"
     },
     {
       title: "Rentang Waktu",
@@ -35,11 +35,11 @@ const CardOtherSchedule = ({
     },
     {
       title: "Jenis Proyek",
-      description: maker
+      description: "-"
     },
     {
       title: "Tema Proyek",
-      description: maker
+      description: "-"
     },
     {
       title: "Anggaran",
@@ -79,7 +79,7 @@ const CardOtherSchedule = ({
 								render={({ title, description }) => (
 									<div className="border">
 										<Row itemId={title}>
-											<Cell width="50%" className="font-bold">{title}</Cell>
+											<Cell width="50%" className="font-bold border-r">{title}</Cell>
 											<Cell width="50%">
 												{description}
 											</Cell>

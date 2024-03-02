@@ -31,6 +31,7 @@ const Content = ({ title, value }) => {
 };
 
 const PatSidebarLanding = ({ data, content }) => {
+
 	return (
 		<div className="fixed h-screen w-64 pt-14 shadow z-10">
 			<SideNavigation label="project" testId="side-navigation">
@@ -40,10 +41,10 @@ const PatSidebarLanding = ({ data, content }) => {
 				<NavigationContent showTopScrollIndicator>
 					<Section>
 						<div className="px-8 mt-3 text-base font-bold">
-							<div className="mt-5">
-								<p>[YYYY] [5 Unique Code]</p>
+							<div className="mt-5 font-bold text-xl text-atlasian-blue-dark">
+								<p>{data?.tahun} {data?.uka_kode}</p>
 							</div>
-							<div className="mb-5 mt-3 leading-3">
+							<div className="mb-5 mt-3 leading-3 font-bold text-xl text-atlasian-blue-dark">
 								<p>{data?.pat_name}</p>
 								<p>{data?.uka_name}</p>
 							</div>

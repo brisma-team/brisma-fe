@@ -106,7 +106,7 @@ const index = () => {
 			{
 				title: "Created Date",
 				value: convertDate(
-          statusPat?.data?.lb_created_at,
+          statusPat?.data?.createdAt,
           "-",
           "d",
           true
@@ -189,8 +189,10 @@ const index = () => {
     setFilter({ ...filter, [props]: value });
   };
 
+  console.log(data)
+
   return (
-		<PatLandingLayout data={statusPat} content={content}>
+		<PatLandingLayout data={statusPat?.data} content={content}>
 			<Breadcrumbs data={breadcrumbs} />
 			<div className="flex justify-between items-center mb-6">
 				<PageTitle text={"Jadwal Lainnya"} />
@@ -206,7 +208,7 @@ const index = () => {
 			<div className="flex justify-between">
 				{/* Start Filter */}
 				<div
-					className="flex justify-between items-center mb-4 gap-2"
+					className="flex justify-between items-center mb-4 gap-3"
 					style={{ maxWidth: "21rem" }}
 				>
 					<div className="w-40 rounded bg-atlasian-blue-light">

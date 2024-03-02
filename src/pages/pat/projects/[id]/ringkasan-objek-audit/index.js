@@ -170,7 +170,7 @@ const index = () => {
   }, [statusPat]);
 
   return (
-    <PatLandingLayout data={statusPat} content={content}>
+    <PatLandingLayout data={statusPat?.data} content={content}>
       <Breadcrumbs data={breadcrumbs} />
       <div className="flex justify-between items-center mb-6">
         <PageTitle text={"Ringkasan Objek Audit"} />
