@@ -82,16 +82,21 @@ const index = () => {
     console.log("status Pat => ", statusPat?.data);
 
     setContent([
-      { title: "Initiator", value: statusPat?.data?.create_by?.nama },
       {
-        title: "Created Date",
-        value: convertDate(statusPat?.data?.createdAt, "-", "d", true),
-      },
-      { title: "Status PAT", value: statusPat?.data?.status_pat },
-      {
-        title: "Last Modified",
-        value: convertDate(statusPat?.data?.updatedAt, "-", "d", true),
-      },
+				title: "Initiator",
+				value: statusPat?.data?.create_by?.nama,
+			},
+			{
+				title: "Created Date",
+				value: convertDate(
+          statusPat?.data?.createdAt,
+          "-",
+          "d",
+          true
+        ),
+			},
+			{ title: "Document Status", value: statusPat?.data?.status_pat },
+			{ title: "Document Status", value: statusPat?.data?.status_pat },
     ]);
   }, [statusPat]);
 
