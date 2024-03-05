@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 
-const DropdownIcon = ({ onClickOutside }) => {
+const DropdownIcon = ({ onClickOutside, color }) => {
   const ref = useRef(null);
 
   const [show, setShow] = useState(false);
@@ -27,6 +27,7 @@ const DropdownIcon = ({ onClickOutside }) => {
   return (
     <div className="relative" ref={ref}>
       <ButtonIcon
+        color={color}
         icon={<IconSetting size="medium" />}
         handleClick={(e) => (e.stopPropagation(), setShow(!show))}
       />

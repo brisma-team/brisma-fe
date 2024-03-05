@@ -17,7 +17,7 @@ const PopupKlipping = ({ text }) => {
         </div>
       }
     >
-      <ButtonIcon isDisabled color={"yellow"} icon={<IconInfo />} />
+      <ButtonIcon isDisabled color={"blue"} icon={<IconInfo />} />
     </CustomTooltip>
   );
 };

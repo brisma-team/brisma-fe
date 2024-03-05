@@ -35,6 +35,7 @@ const ModalAuditSchedule = ({
   typeModal,
   mutate,
   selectedScheduleId,
+  
 }) => {
   const { id } = useRouter().query;
   const dispatch = useDispatch();
@@ -298,7 +299,7 @@ const ModalAuditSchedule = ({
           Info Kegiatan
         </DivButton>
       ),
-      percentageComplete: currentModalStage > 1 ? 100 : 0,
+      percentageComplete: currentModalStage > 1 ? 100 : 20,
       status: currentModalStage === 1 ? "current" : "visited",
     },
     {
@@ -332,14 +333,7 @@ const ModalAuditSchedule = ({
           progressItems={items}
           handleCloseModal={handleCloseModal}
           showModal={showModal}
-        />
-      }
-      footer={
-        <ModalFooter
-          isDisabled={isDisabledButtonSave}
-          currentModalStage={currentModalStage}
-          handleSubmit={handleSubmit}
-          handleNextStage={handleNextStage}
+          width={"63rem"}
         />
       }
     >
@@ -347,18 +341,30 @@ const ModalAuditSchedule = ({
         <ModalBodyInfoKegiatan
           setCurrentModalStage={setCurrentModalStage}
           isDisabled={isFormDisabled}
+          isDisabledButtonSave={isDisabledButtonSave}
+          currentModalStage={currentModalStage}
+          handleSubmit={handleSubmit}
+          handleNextStage={handleNextStage}
         />
       )}
       {currentModalStage === 2 && (
         <ModalBodyObjekAudit
           setCurrentModalStage={setCurrentModalStage}
           isDisabled={isFormDisabled}
+          isDisabledButtonSave={isDisabledButtonSave}
+          currentModalStage={currentModalStage}
+          handleSubmit={handleSubmit}
+          handleNextStage={handleNextStage}
         />
       )}
       {currentModalStage === 3 && (
         <ModalBodyAnggaran
           setCurrentModalStage={setCurrentModalStage}
           isDisabled={isFormDisabled}
+          isDisabledButtonSave={isDisabledButtonSave}
+          currentModalStage={currentModalStage}
+          handleSubmit={handleSubmit}
+          handleNextStage={handleNextStage}
         />
       )}
     </ModalScroll>

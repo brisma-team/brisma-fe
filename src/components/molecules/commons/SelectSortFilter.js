@@ -3,7 +3,7 @@ import Select from "@atlaskit/select";
 const SelectSortFilter = ({ change, options }) => {
   return (
     <div className="flex items-center gap-3">
-      <Select
+      {options && <Select
         className="w-32"
         options={
           options?.length
@@ -19,7 +19,7 @@ const SelectSortFilter = ({ change, options }) => {
         isSearchable={false}
         onChange={(e) => change("limit", e.value)}
         placeholder={"Limit"}
-      />
+      />}
       <Select
         className="w-32"
         options={[
@@ -33,5 +33,4 @@ const SelectSortFilter = ({ change, options }) => {
     </div>
   );
 };
-
 export default SelectSortFilter;

@@ -1,5 +1,6 @@
 import { ButtonIcon, Card, DivButton } from "@/components/atoms";
 import { IconEdit, IconTrash } from "@/components/icons";
+import TableTree, { Row, Rows, Cell } from "@atlaskit/table-tree";
 
 const CardBody = ({ title, text, width, paddingLeft }) => {
 	let textColor;
@@ -26,7 +27,7 @@ const CardBody = ({ title, text, width, paddingLeft }) => {
 
 	return (
 		<div
-			className={`mt-4 leading-normal text-base ${width} ${paddingLeft}`}
+			className={`mt-4 leading-normal ${width} ${paddingLeft}`}
 		>
 			<div
 				className={`${textColor} font-bold ${
@@ -74,7 +75,7 @@ const CardBody = ({ title, text, width, paddingLeft }) => {
 	);
 };
 
-const CardAuditTeam = ({
+const CardMakeAuditTeam = ({
 	header_title,
 	maker,
 	created_at,
@@ -87,6 +88,17 @@ const CardAuditTeam = ({
 	handleUpdate,
 	handleDelete,
 }) => {
+  const projectItems = [
+    {
+      title: "Maker",
+      description: maker
+    },
+    {
+      title: "Tanggal Inisiasi",
+      description: created_at
+    },
+  ]
+
 	return (
 		<DivButton
 			className={
@@ -123,34 +135,44 @@ const CardAuditTeam = ({
 							</div>
 						)}
 					</div>
-					<div className="text-xl font-bold text-atlasian-blue-dark">
+					<div className="text-xl my-3 font-bold text-atlasian-blue-dark">
 						{header_title}
 					</div>
-					<div className="flex flex-wrap">
-						<CardBody
-							title={"Maker"}
-							text={maker}
-							width={"w-3/5"}
-						/>
-						<CardBody
-							title={"Tanggal Buat"}
-							text={created_at}
-							width={"w-2/5"}
-							paddingLeft={"pl-2"}
-						/>
+          <TableTree>
+							<Rows
+								items={projectItems}
+								render={({ title, description }) => (
+									<div className="border">
+										<Row itemId={title}>
+											<Cell
+												width="50%"
+												className="font-bold border-r"
+											>
+												{title}
+											</Cell>
+											<Cell width="50%">
+												{description}
+											</Cell>
+										</Row>
+									</div>
+								)}
+							/>
+					</TableTree>
+					<div className="flex flex-wrap p-2 border my-3 rounded-md max-h-[10rem] overflow-y-scroll">
+            <p className="w-full font-semibold text-lg">Pelaksana</p>
 						<CardBody
 							title={"Manajer Audit"}
 							text={manajer_audit?.map((v) => {
 								return v.nama_ma;
 							})}
-							width={"w-full"}
+							width={"w-3/5"}
 						/>
 						<CardBody
 							title={"Ketua Tim Audit"}
 							text={ketua_tim_audit?.map((v) => {
 								return v.nama_kta;
 							})}
-							width={"w-full"}
+							width={"w-2/5"}
 						/>
 						<CardBody
 							title={"Anggota Tim Audit"}
@@ -169,7 +191,6 @@ const CardAuditTeam = ({
 								};
 							})}
 							width={"w-2/5"}
-							paddingLeft={"pl-2"}
 						/>
 					</div>
 				</div>
@@ -178,4 +199,4 @@ const CardAuditTeam = ({
 	);
 };
 
-export default CardAuditTeam;
+export default CardMakeAuditTeam;
