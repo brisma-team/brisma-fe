@@ -20,35 +20,27 @@ import { useOverviewEWPKonsulting } from "@/data/ewp/konsulting/overview";
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
   { name: "EWP", path: "/ewp" },
-  { name: "Overview", path: "/ewp/konsulting/overview" },
+  { name: "Consulting / Overview", path: "/ewp/konsulting/overview" },
 ];
 
 const convertProgressAndPercent = (status) => {
   let progress, percent;
   switch (status) {
     case "mapa":
-      progress = 0.14;
-      percent = "14%";
-      break;
-    case "entrance":
-      progress = 0.28;
-      percent = "28%";
+      progress = 0.2;
+      percent = "20%";
       break;
     case "pelaksanaan":
-      progress = 0.42;
-      percent = "42%";
+      progress = 0.4;
+      percent = "40%";
       break;
-    case "exit":
-      progress = 0.56;
-      percent = "56%";
+    case "peluang peningkatan":
+      progress = 0.6;
+      percent = "60%";
       break;
-    case "penyusunan LHA":
-      progress = 0.7;
-      percent = "70%";
-      break;
-    case "dokumen":
+    case "wrapup":
       progress = 0.85;
-      percent = "85%";
+      percent = "80%";
       break;
     case "final":
       progress = 1;
@@ -108,11 +100,22 @@ const index = () => {
   useEffect(() => {
     if (overviewEWPKonsulting?.data?.length) {
       const mapping = overviewEWPKonsulting.data.map((v) => {
+        const {
+          createdAt,
+          need_approved,
+          number_adendum,
+          status_name,
+          status_persetujuan_name,
+          project_id,
+          project_name,
+          initiator,
+        } = v;
         return {
           id: v?.id,
+          tipe: v?.ref_tipe?.nama,
           jenis: v?.ref_jenis?.nama,
-          project_code: v?.project_id,
-          project_name: v?.project_name,
+          project_code: project_id,
+          project_name: project_name,
           period: `${convertDate(
             v?.info_periode_pelaksanaan_start,
             "-",
@@ -120,16 +123,16 @@ const index = () => {
           )} s/d ${convertDate(v?.info_periode_pelaksanaan_end, "-", "d")}`,
           progress: convertProgressAndPercent(v?.status_name).progress,
           percent: convertProgressAndPercent(v?.status_name).percent,
-          ma: v?.info_team_audit?.ma,
-          kta: v?.info_team_audit?.kta,
-          ata: v?.info_team_audit?.ata,
-          document_status: v?.status_name,
-          approval_status: v?.status_approver
-            ? `On ${v?.status_approver?.pn}`
-            : ``,
-          addendum: v?.number_adendum,
-          need_approval: v?.need_approved,
+          auditor: v?.info_team_audit?.auditor || [],
+          auditee: v?.info_team_audit?.auditee || [],
+          ata: v?.info_team_audit?.ata || [],
+          document_status: status_name,
+          approval_status: status_persetujuan_name,
+          addendum: number_adendum,
+          need_approval: need_approved,
           href: `/ewp/projects/konsulting/${v?.id}/info`,
+          created_at: createdAt,
+          maker: `${initiator?.pn} - ${initiator?.nama}`,
         };
       });
       setData(mapping);

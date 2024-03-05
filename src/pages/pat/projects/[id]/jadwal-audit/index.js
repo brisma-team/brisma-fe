@@ -98,20 +98,15 @@ const index = () => {
   useEffect(() => {
     setContent([
       {
-				title: "Initiator",
-				value: statusPat?.data?.create_by?.nama,
-			},
-			{
-				title: "Created Date",
-				value: convertDate(
-          statusPat?.data?.createdAt,
-          "-",
-          "d",
-          true
-        ),
-			},
-			{ title: "Document Status", value: statusPat?.data?.status_pat },
-			{ title: "Document Status", value: statusPat?.data?.status_pat },
+        title: "Initiator",
+        value: statusPat?.data?.create_by?.nama,
+      },
+      {
+        title: "Created Date",
+        value: convertDate(statusPat?.data?.createdAt, "-", "d", true),
+      },
+      { title: "Document Status", value: statusPat?.data?.status_pat },
+      { title: "Document Status", value: statusPat?.data?.status_pat },
     ]);
   }, [statusPat]);
 
@@ -134,7 +129,6 @@ const index = () => {
 
     setData(mappedData);
     setTotalData(auditSchedule?.pagination?.totalData);
-
   }, [auditSchedule, auditScheduleMutate]);
 
   useEffect(() => {
@@ -195,7 +189,7 @@ const index = () => {
       </div>
 
       <div className="flex justify-between">
-      {/* Start Filter */}
+        {/* Start Filter */}
         <div
           className="flex justify-between items-center mb-3 gap-3"
           style={{ maxWidth: "21rem" }}

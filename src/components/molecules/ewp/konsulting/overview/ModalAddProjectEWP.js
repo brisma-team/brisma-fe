@@ -53,10 +53,6 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
     (state) => state.projectOverviewEWPKonsulting.validationErrorsSummaryNonPAT
   );
 
-  useEffect(() => {
-    console.log("projectOverviewData => ", projectOverviewData);
-  }, [projectOverviewData]);
-
   const schemaMappings = {
     true: {
       2: {
@@ -133,10 +129,6 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
       dispatch,
       schemaMappings[isPat][currentModalStage]
     );
-
-    console.log("schemaMappings => ", schemaMappings[isPat][currentModalStage]);
-    console.log("isPat => ", isPat);
-    console.log("currentModalStage => ", currentModalStage);
 
     if (validate) {
       const buttonName = e.target.offsetParent.name;
