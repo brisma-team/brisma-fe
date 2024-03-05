@@ -144,27 +144,19 @@ const index = () => {
   }, [commentMapaEWP]);
 
   useEffect(() => {
-    console.log("listComment => ", listComment);
-  }, [listComment]);
-
-  useEffect(() => {
-    console.log("doc => ", doc);
-  }, [doc]);
-
-  // useEffect(() => {
-  //   const response = mapaEWP?.data?.daftar_isi;
-  //   if (response) {
-  //     const mapping = response?.map((bab) => {
-  //       return {
-  //         idx: bab.key,
-  //         total_comment: bab?.jumlah_comment?.filter((v) => !v.is_closed)
-  //           .length,
-  //         title: bab.title,
-  //       };
-  //     });
-  //     setListContent(mapping);
-  //   }
-  // }, [mapaEWP]);
+    const response = documentEWP?.data?.daftar_isi;
+    if (response) {
+      const mapping = response?.map((bab) => {
+        return {
+          idx: bab?.key,
+          total_comment: bab?.jumlah_comment?.filter((v) => !v.is_closed)
+            .length,
+          title: bab.title,
+        };
+      });
+      setListContent(mapping);
+    }
+  }, [documentEWP]);
 
   // [ START ] Function ini berfungsi agar setiap kali class page-container-a4 melewati class parent,
   // maka akan setter setCurrentPosition akan merubah data dan setter setHitEndpointCount
@@ -247,6 +239,7 @@ const index = () => {
   useEffect(() => {
     if (documentEWP?.data && listContent?.length) {
       const findBab = listContent?.find((value) => value?.idx === bab);
+      console.log(findBab);
       setDoc((prev) => [
         ...prev,
         {
@@ -261,7 +254,6 @@ const index = () => {
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
   useEffect(() => {
-    console.log("workflowDetailEWP?.data => ", workflowDetailEWP?.data);
     if (workflowDetailEWP?.data) {
       const workflowInfo = workflowDetailEWP?.data?.info;
       const maker = workflowDetailEWP?.data?.initiator;
@@ -317,10 +309,6 @@ const index = () => {
     }
   }, [workflowDetailEWP]);
   // [ END ]
-
-  useEffect(() => {
-    console.log("workflowData => ", workflowData);
-  }, [workflowData]);
 
   const handleClickComment = (babIdx) => {
     setOpenCardComment(true);
@@ -418,13 +406,13 @@ const index = () => {
 
       if (actionType === "change") {
         const response = await useUpdateData(
-          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/change`,
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/workflow/change`,
           data
         );
         if (!response.isDismissed) return;
       } else {
         await usePostData(
-          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/${actionType}`,
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/workflow/${actionType}`,
           data
         );
       }
