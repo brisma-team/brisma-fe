@@ -72,11 +72,8 @@ import RiskSelect from "./RiskSelect";
 import RiskControlSelect from "./RiskControlSelect";
 import ImageClipping from "./ImageClipping";
 import AttachmentClipping from "./AttachmentClipping";
-<<<<<<< HEAD
 import RetryButton from "./RetryButton";
-=======
 import ButtonSave from "./ButtonSave";
->>>>>>> 6b7cd074b0d0be5a3af342e5ba3461c17995f2bc
 
 export {
   BackButton,
