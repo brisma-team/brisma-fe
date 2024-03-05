@@ -129,7 +129,7 @@ const index = () => {
           baseUrl={pathNameLandingPage}
           routes={routes}
           nextUrl={"/resume"}
-          marginLeft={"-60px"}
+          marginLeft={"-45px"}
         />
       </div>
       {/* Start Content */}

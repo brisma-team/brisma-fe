@@ -1,8 +1,12 @@
-import { Breadcrumbs, Card, PageTitle } from "@/components/atoms";
+import { Breadcrumbs, ButtonField, Card, PageTitle } from "@/components/atoms";
+import { IconPlus } from "@/components/icons";
+import { NavigationTab } from "@/components/molecules/commons";
 import {
   ProjectDetail,
   InformativeLetter,
   RealizationTable,
+  RelatedProjectTable,
+  UkerInfoTable,
 } from "@/components/molecules/ewp/konsulting/info";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { errorSwalTimeout, fetchApi } from "@/helpers";
@@ -13,8 +17,13 @@ import { useEffect, useState } from "react";
 
 const index = () => {
   const { id } = useRouter().query;
-
+  const navigationTabItems = [
+    { idx: 1, title: "Project Details" },
+    { idx: 2, title: "Proyek Terkait" },
+    { idx: 3, title: "UKER Info" },
+  ];
   const [isError, setIsError] = useState(false);
+  const [currentContentStage, setCurrentContentStage] = useState(1);
   const [dataTables, setDataTables] = useState([]);
   const { projectDetail, projectDetailError, projectDetailMutate } =
     useProjectDetail({ id });
@@ -49,18 +58,30 @@ const index = () => {
           ? true
           : false,
         status_code: 4,
-        label: "Analisa & Peluang Peningkatan",
+        label: "Analisa",
         start_date:
           projectDetail?.data?.realisasi?.pelaksanaan_audit_real_start,
         end_date: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
         log: "Menambahkan Sesuatu...",
       },
       {
-        is_open: status_code >= 7,
+        is_open: status_code >= 6,
+        is_close: projectDetail?.data?.realisasi?.entrance_meeting_real_end
+          ? true
+          : false,
+        status_code: 6,
+        label: "Peluang Peningkatan",
+        start_date:
+          projectDetail?.data?.realisasi?.peluang_peningkatan_real_start,
+        end_date: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end,
+        log: "Menambahkan Sesuatu...",
+      },
+      {
+        is_open: status_code >= 8,
         is_close: projectDetail?.data?.realisasi?.Penyusunan_LHA_real_end
           ? true
           : false,
-        status_code: 7,
+        status_code: 8,
         label: "Meeting",
         start_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_start,
         end_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end,
@@ -68,13 +89,13 @@ const index = () => {
       },
       {
         is_open: status_code >= 8,
-        is_close: projectDetail?.data?.realisasi?.exit_meeting_real_end
+        is_close: projectDetail?.data?.realisasi?.Penyusunan_LHA_real_end
           ? true
           : false,
         status_code: 8,
-        label: "Monitoring",
-        start_date: projectDetail?.data?.realisasi?.monitoring_real_start,
-        end_date: projectDetail?.data?.realisasi?.monitoring_real_end,
+        label: "Meeting",
+        start_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_start,
+        end_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end,
         log: "Menambahkan Sesuatu...",
       },
     ]);
@@ -86,12 +107,17 @@ const index = () => {
     }
   }, [projectDetailError]);
 
+  const handleChangeTab = (index) => {
+    setCurrentContentStage(index);
+  };
+
   const handleClickInitiate = async (statusCode, type) => {
     const pathMappings = {
       2: "mapa",
       4: "pelaksanaan",
-      7: "wrapup_meeting",
-      8: "monitoring",
+      6: "peluang_peningkatan",
+      8: "wrapup_meeting",
+      9: "final",
     };
 
     let path = pathMappings[statusCode] || "";
@@ -99,7 +125,7 @@ const index = () => {
 
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/${path}/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/initiate/${path}/${id}`,
       {}
     );
     projectDetailMutate();
@@ -117,32 +143,46 @@ const index = () => {
         {/* End Breadcrumbs */}
         <PageTitle text="Project Info" />
         <div className="mt-7">
-          <Card>
-            <div className="px-6 pt-1 pb-3 w-full">
-              <div className="flex gap-9">
-                <ProjectDetail data={projectDetail?.data?.project_info} />
-                {
-                  // Jika jadwalnya bukan dari PAT, maka tampilkan Informasi Surat
-                  !projectDetail?.data?.project_info?.is_pat ? (
+          <NavigationTab
+            items={navigationTabItems}
+            currentStage={currentContentStage}
+            width={"w-80"}
+            handleChange={handleChangeTab}
+          />
+          {currentContentStage === 1 ? (
+            <div className="w-full">
+              <Card>
+                <div className="px-6 pt-1 pb-3 w-full">
+                  <div className="flex gap-9">
+                    <ProjectDetail data={projectDetail?.data?.project_info} />
                     <InformativeLetter
                       data={projectDetail?.data?.project_info}
                     />
-                  ) : (
-                    // Jika dari jadwal PAT maka tidak perlu ditampilkan
-                    <div className="w-full"></div>
-                  )
-                }
+                  </div>
+                  <div className="my-4"></div>
+                  <RealizationTable
+                    data={dataTables}
+                    currentStatusCode={parseInt(
+                      projectDetail?.data?.project_info?.status_kode
+                    )}
+                    handleClickInitiate={handleClickInitiate}
+                  />
+                </div>
+              </Card>
+              <div className="w-full flex items-center justify-end mt-4">
+                <div className="w-48 text-sm font-semibold my-1 bg-atlasian-red rounded">
+                  <ButtonField
+                    text={"Ubah Project Info"}
+                    handler={() => console.log("test")}
+                  />
+                </div>
               </div>
-              <div className="my-4"></div>
-              <RealizationTable
-                data={dataTables}
-                currentStatusCode={parseInt(
-                  projectDetail?.data?.project_info?.status_kode
-                )}
-                handleClickInitiate={handleClickInitiate}
-              />
             </div>
-          </Card>
+          ) : currentContentStage === 2 ? (
+            <RelatedProjectTable data={[]} />
+          ) : (
+            <UkerInfoTable />
+          )}
         </div>
       </div>
     </LandingLayoutEWPConsulting>

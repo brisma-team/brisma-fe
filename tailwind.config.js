@@ -39,6 +39,23 @@ module.exports = {
           blue: "#0D78FF",
           yellow: "#FDC55A",
         },
+        cardColor: {
+          orange: "#FF991F",
+          turquoise: "#00A3BF",
+          blue: {
+            dark: "#0052CC",
+            gray: "#42526E",
+          },
+          purple: {
+            dark: "#5243AA",
+          },
+          red: {
+            light: "#DE350B",
+          },
+          green: {
+            dark: "#00875A",
+          },
+        },
         brisma: "#09326C",
         // Tambahkan skema warna lain sesuai kebutuhan Anda
       },

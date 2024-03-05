@@ -8,7 +8,7 @@ const CardLanding = ({ title, description, status, url }) => {
       href={url || "#"}
     >
       <div className="px-6 py-4 h-full">
-        <h5 className="mb-2 text-base font-bold text-brisma">
+        <h5 className="mb-2 text-base font-bold text-blue-700">
           {title ? title : "No title"}
         </h5>
         <p className="text-sm text-atlasian-gray-dark">
