@@ -35,7 +35,6 @@ const ModalAuditSchedule = ({
   typeModal,
   mutate,
   selectedScheduleId,
-  
 }) => {
   const { id } = useRouter().query;
   const dispatch = useDispatch();

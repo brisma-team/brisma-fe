@@ -73,21 +73,25 @@ const CardFormInputTeam = ({
           {type === "Anggota Tim Audit" ? (
             <>
               <div className="w-full flex justify-start">
-								<div className="w-[7.75rem] bg-atlasian-purple rounded flex justify-center">
-									<ButtonField
-										text={`Tambah ${buttonText}`}
+                <div className="w-[7.75rem] bg-atlasian-purple rounded flex justify-center">
+                  <ButtonField
+                    text={`Tambah ${buttonText}`}
                     handler={() => handlerAddParent(property)}
-									/>
-								</div>
-							</div>
+                  />
+                </div>
+              </div>
               {data?.map((v, i) => {
                 return (
-                <div key={i} className=" mt-4">
-                  <div  className="w-full flex my-1">
+                  <div key={i} className=" mt-4">
+                    <div className="w-full flex my-1">
                       <div className="w-full">
                         <div className="w-full flex justify-between py-1">
                           <div className="p-4 border-gray-200 border-l border-t border-b rounded-md w-1/3 pr-1.5">
-                            <p className={`font-semibold text-sm mb-3 ${textColor}`}>{type}</p>
+                            <p
+                              className={`font-semibold text-sm mb-3 ${textColor}`}
+                            >
+                              {type}
+                            </p>
                             <div className="w-full">
                               <PekerjaSelect
                                 handleChange={(e) =>
@@ -127,12 +131,17 @@ const CardFormInputTeam = ({
                             </div>
                           </div>
                           <div className="p-4 border-gray-200 border rounded-md w-2/3 px-1.5">
-                              <p className={`font-semibold text-sm mb-3 ${textColor}`}>
-                                UKER Binaan
-                              </p>
+                            <p
+                              className={`font-semibold text-sm mb-3 ${textColor}`}
+                            >
+                              UKER Binaan
+                            </p>
                             {v?.uker_binaans?.map((x, idx) => {
                               return (
-                                <div key={idx} className="flex gap-3 mb-2 flex-wrap">
+                                <div
+                                  key={idx}
+                                  className="flex gap-3 mb-2 flex-wrap"
+                                >
                                   <div className="flex gap-3 w-full">
                                     <div className="w-1/2">
                                       <OrgehSelect
@@ -201,34 +210,33 @@ const CardFormInputTeam = ({
                                 </div>
                               );
                             })}
-                                  <div className="flex justify-end w-full items-center gap-2">
-                                    <div className="bg-none w-44 mt-3">
-                                        <ButtonField
-                                          iconAfter={
-                                            <div className="text-brisma">
-                                              <IconPlus size="medium" />
-                                            </div>
-                                          }
-                                          text={`${isButtonChange || `Tambah UKER`}`}
-                                          textColor={"purple"}
-                                          handler={() => handlerAddChild(i)}
-                                          disabled={isDisabled}
-                                        />
+                            <div className="flex justify-end w-full items-center gap-2">
+                              <div className="bg-none w-44 mt-3">
+                                <ButtonField
+                                  iconAfter={
+                                    <div className="text-brisma">
+                                      <IconPlus size="medium" />
                                     </div>
-                                  </div>
+                                  }
+                                  text={`${isButtonChange || `Tambah UKER`}`}
+                                  textColor={"purple"}
+                                  handler={() => handlerAddChild(i)}
+                                  disabled={isDisabled}
+                                />
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-               
-                  </div>
-                  {validationErrors[property] && (
-                    <div className="pl-2">
-                      <ErrorValidation message={validationErrors[property]} />
                     </div>
-                  )}
-              </div>
-                  );
-                })}
+                    {validationErrors[property] && (
+                      <div className="pl-2">
+                        <ErrorValidation message={validationErrors[property]} />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </>
           ) : (
             <>
@@ -374,23 +382,26 @@ const CardFormInputTeam = ({
               )}
             </>
           )}
-          {type !== "Maker" && type !== "Tipe Tim" && type !== "Anggota Tim Audit" && !withoutButtonAdd && (
-            <div className="flex justify-end w-full items-center gap-2">
-              <div className="bg-none w-44 mt-3">
-                <ButtonField
-                  iconAfter={
-                    <div className="text-brisma">
-                      <IconPlus size="medium" />
-                    </div>
-                  }
-                  text={`${isButtonChange || `Tambah`} ${buttonText}`}
-                  textColor={"purple"}
-                  handler={() => handlerAddParent(property)}
-                  disabled={isDisabled}
-                />
+          {type !== "Maker" &&
+            type !== "Tipe Tim" &&
+            type !== "Anggota Tim Audit" &&
+            !withoutButtonAdd && (
+              <div className="flex justify-end w-full items-center gap-2">
+                <div className="bg-none w-44 mt-3">
+                  <ButtonField
+                    iconAfter={
+                      <div className="text-brisma">
+                        <IconPlus size="medium" />
+                      </div>
+                    }
+                    text={`${isButtonChange || `Tambah`} ${buttonText}`}
+                    textColor={"purple"}
+                    handler={() => handlerAddParent(property)}
+                    disabled={isDisabled}
+                  />
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </Card>
     </div>

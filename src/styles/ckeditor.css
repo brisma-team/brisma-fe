@@ -30,6 +30,10 @@
   width: 210mm;
 }
 
+.ck-editor .fs-sticky-footer {
+  display: none !important
+}
+
 /* START CKEditor PAT */
 .ckeditor-latar-belakang-pat div div div .ck-content {
   overflow-y: scroll;

@@ -178,7 +178,7 @@ const index = () => {
   return (
     <PatLandingLayout data={statusPat?.data} content={content}>
       <Breadcrumbs data={breadcrumbs} />
-      <div className="flex justify-between items-center mb-6 w-[1075px]">
+      <div className="flex justify-between items-center mb-6 w-[1360px]">
         <PageTitle text={"Latar Belakang dan Tujuan"} className="w-full" />
         <PrevNextNavigation
           baseUrl={baseUrl}
@@ -271,7 +271,6 @@ const index = () => {
                     handleUpload={handleLampiranUpload}
                     className={"text-atlasian-purple text-sm"}
                   />
-                  {/* <input onChange={handleLampiranUpload} type="file" /> */}
                 </div>
                 {/* End Lampiran */}
               </div>
