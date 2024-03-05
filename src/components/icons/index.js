@@ -31,6 +31,7 @@ import IconNotification from "@atlaskit/icon/glyph/notification";
 import IconCross from "@atlaskit/icon/glyph/cross";
 import IconBullet from "@atlaskit/icon/glyph/presence-active";
 import IconMoreVertical from "@atlaskit/icon/glyph/more-vertical";
+import IconRetry from "@atlaskit/icon/glyph/retry";
 
 export {
   IconPlus,
@@ -66,4 +67,5 @@ export {
   IconCross,
   IconBullet,
   IconMoreVertical,
+  IconRetry,
 };
