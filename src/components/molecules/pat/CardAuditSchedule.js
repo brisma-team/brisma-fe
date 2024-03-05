@@ -1,15 +1,7 @@
-import { ButtonIcon, Card, DivButton } from "@/components/atoms";
-import { IconEdit, IconInfo, IconTrash } from "@/components/icons";
-import { convertDate, convertToRupiah } from "@/helpers";
-
-const CardBodyContent = ({ title, text, textJustify }) => {
-  return (
-    <div className="w-full text-base my-2">
-      <div className="font-semibold">{title}</div>
-      <div className={textJustify && "text-justify"}>{text}</div>
-    </div>
-  );
-};
+import { Card, DivButton } from "@/components/atoms";
+import { convertToRupiah } from "@/helpers";
+import TableTree, { Cell, Row, Rows } from "@atlaskit/table-tree";
+import { DropdownIcon } from "../commons";
 
 const CardAuditSchedule = ({
   jadwal_id,
@@ -27,6 +19,38 @@ const CardAuditSchedule = ({
   handleClickUpdate,
   handleClickDelete,
 }) => {
+  const projectItems = [
+    {
+      title: "Maker",
+      description: maker
+    },
+    {
+      title: "Tanggal Inisiasi",
+      description: start_date
+    },
+    {
+      title: "Durasi Proyek",
+      description: "-"
+    },
+    {
+      title: "Jenis Proyek",
+      description: "-"
+    }
+  ]
+  const documentItems = [
+    {
+      title: "Project Status",
+      description: "-"
+    },
+    {
+      title: "Document Status",
+      description: "-"
+    },
+    {
+      title: "Document Status",
+      description: `Rp. ${convertToRupiah(budget)}`
+    }
+  ]
   return (
     <DivButton
       className="hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
@@ -36,78 +60,80 @@ const CardAuditSchedule = ({
         <div className="w-full px-5 py-3">
           <div className="flex mb-2 justify-between items-end -ml-5 -mt-5">
             <div
-              className={`text-base font-semibold rounded-tl-lg text-brisma ${
+              className={`text-base font-semibold rounded-tl-lg text-white ${
                 type?.toLowerCase() === "individual"
-                  ? "bg-blue-300"
-                  : "bg-[#F4E3A4]"
+                  ? "bg-violet-500"
+                  : "bg-orange-400"
               } px-5 h-9 flex items-center justify-center`}
             >
-              <p>{type?.toUpperCase()}</p>
+              <p>{type}</p>
             </div>
-            <div className="flex w-20 justify-between -mb-1.5">
-              <ButtonIcon
-                color={"blue"}
-                icon={<IconInfo size="medium" />}
-                handleClick={() => handleClickInfo(jadwal_id)}
-              />
-              <ButtonIcon
-                color={"yellow"}
-                icon={<IconEdit size="medium" />}
-                handleClick={(e) => handleClickUpdate(e, jadwal_id)}
-              />
-              <ButtonIcon
-                color={"red"}
-                icon={<IconTrash size="medium" />}
-                handleClick={(e) => handleClickDelete(e, jadwal_id)}
-              />
-            </div>
+            <div className="flex justify-between -mb-1.5">
+							<DropdownIcon color={"blue"} />
+						</div>
           </div>
-          <div className="flex flex-row justify-between mb-6">
+          <div className="flex flex-row justify-between my-6">
             <div className="text-xl font-bold text-atlasian-blue-dark">
               {title}
             </div>
           </div>
           <div className="leading-3">
-            <div className="w-full flex">
-              <div className="w-8/12">
-                <CardBodyContent title={"Maker"} text={maker} />
-              </div>
-              <div className="w-4/12">
-                <CardBodyContent title={"Jenis Audit"} text={audit_type} />
-              </div>
-            </div>
-            <div className="w-full flex">
-              <div className="w-8/12">
-                <CardBodyContent title={"Tim Audit"} text={audit_team} />
-              </div>
-              <div className="w-4/12">
-                <CardBodyContent title={"Tema"} text={tema} />
-              </div>
-            </div>
-            <div className="w-full flex">
-              <div className="w-8/12">
-                <CardBodyContent
-                  title={"Periode Kegiatan"}
-                  text={`${convertDate(start_date, "-")} s/d ${convertDate(
-                    end_date,
-                    "-"
-                  )}`}
-                />
-              </div>
-              <div className="w-4/12">
-                <CardBodyContent
-                  title={"Anggaran"}
-                  text={`Rp. ${convertToRupiah(budget)}`}
-                />
-              </div>
-            </div>
-            <div className="w-full">
-              <CardBodyContent
-                title={"Deskripsi"}
-                text={desc}
-                textJustify={true}
-              />
-            </div>
+          <TableTree>
+							<Rows
+								items={projectItems}
+								render={({ title, description }) => (
+									<div className="border">
+										<Row itemId={title}>
+											<Cell
+												width="50%"
+												className="font-bold border-r"
+											>
+												{title}
+											</Cell>
+											<Cell width="50%">
+												{description}
+											</Cell>
+										</Row>
+									</div>
+								)}
+							/>
+						</TableTree>
+            <div className="w-full h-[10rem] border-2 my-3 p-3 overflow-y-scroll">
+							<p className="font-semibold text-lg">Pelaksana</p>
+							<p className="text-blue-600 font-semibold">
+								Tim Audit
+							</p>
+							<p className="">Tim Auditor HO BRI 2</p>
+						</div>
+            <TableTree>
+							<Rows
+								items={documentItems}
+								render={({ title, description }) => (
+									<div className="border">
+										<Row itemId={title}>
+											<Cell
+												width="50%"
+												className="font-bold border-r"
+											>
+												{title}
+											</Cell>
+											<Cell
+												width="50%"
+												className={`${
+													description.toLowerCase() ===
+														"on progress" &&
+													title === "Project Status"
+														? "text-blue-500"
+														: "text-orange-300"
+												}`}
+											>
+												{description}
+											</Cell>
+										</Row>
+									</div>
+								)}
+							/>
+						</TableTree>
           </div>
         </div>
       </Card>

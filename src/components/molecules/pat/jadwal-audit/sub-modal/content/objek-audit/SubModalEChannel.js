@@ -99,16 +99,16 @@ const SubModalEChannel = ({ isDisabled }) => {
         <div className="overflow-y-scroll max-h-80">
           <div className="flex h-14">
             <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[25%] flex items-center justify-center">
-              <p>Jenis E-Channel</p>
+              <p>JENIS E-CHANNEL</p>
             </div>
             <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[25%] flex items-center text-justify p-3">
-              <p>Jumlah Eksisting</p>
+              <p>EKSISTING</p>
             </div>
             <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[25%] flex items-center text-justify p-3">
-              <p>Jumlah Target Audit</p>
+              <p>TARGET AUDIT</p>
             </div>
             <div className="border-b-2 border-[#DFE1E6] w-[25%] flex items-center justify-center">
-              <p>Posisi Data</p>
+              <p>POSISI DATA</p>
             </div>
           </div>
           {auditScheduleData?.echannel?.map((v, i) => {

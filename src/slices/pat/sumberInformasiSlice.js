@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   imageClipList: [],
+  lampiranList: [],
+  historyList: []
 };
 
 export const sumberInformasiSlice = createSlice({
@@ -10,9 +12,15 @@ export const sumberInformasiSlice = createSlice({
     setImageClipList: (state, action) => {
       state.imageClipList = action.payload;
     },
+    setLampiranList: (state, action) => {
+      state.lampiranList = action.payload
+    },
+    setHistoryList: (state, action) => {
+      state.historyList = action.payload
+    }
   },
 });
 
-export const { setImageClipList } = sumberInformasiSlice.actions;
+export const { setImageClipList, setLampiranList, setHistoryList } = sumberInformasiSlice.actions;
 
 export default sumberInformasiSlice.reducer;

@@ -13,7 +13,7 @@ import {
 } from "@/helpers";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import { ModalHeader, ModalFooter } from "@/components/molecules/pat";
+import { ModalHeader } from "@/components/molecules/pat";
 import {
   activityInfoSchema,
   activityObjectSchema,
@@ -285,14 +285,14 @@ const ModalOtherSchedule = ({
           Info Kegiatan
         </DivButton>
       ),
-      percentageComplete: currentModalStage > 1 ? 100 : 0,
+      percentageComplete: currentModalStage > 1 ? 100 : 20,
       status: currentModalStage === 1 ? "current" : "visited",
     },
     {
       id: "step-2",
       label: (
         <DivButton handleClick={() => setCurrentModalStage(2)}>
-          Objek Kegiatan
+          Objek Audit
         </DivButton>
       ),
       percentageComplete: currentModalStage > 2 ? 100 : 0,
@@ -319,14 +319,7 @@ const ModalOtherSchedule = ({
           progressItems={items}
           handleCloseModal={handleCloseModal}
           showModal={showModal}
-        />
-      }
-      footer={
-        <ModalFooter
-          isDisabled={isDisabledButtonSave}
-          currentModalStage={currentModalStage}
-          handleSubmit={handleSubmit}
-          handleNextStage={handleNextStage}
+          width={"63rem"}
         />
       }
     >
@@ -334,18 +327,30 @@ const ModalOtherSchedule = ({
         <ModalBodyActivityInfo
           setCurrentModalStage={setCurrentModalStage}
           isDisabled={isFormDisabled}
+          isDisabledButtonSave={isDisabledButtonSave}
+          currentModalStage={currentModalStage}
+          handleSubmit={handleSubmit}
+          handleNextStage={handleNextStage}
         />
       )}
       {currentModalStage === 2 && (
         <ModalBodyActivityObject
           setCurrentModalStage={setCurrentModalStage}
           isDisabled={isFormDisabled}
+          isDisabledButtonSave={isDisabledButtonSave}
+          currentModalStage={currentModalStage}
+          handleSubmit={handleSubmit}
+          handleNextStage={handleNextStage}
         />
       )}
       {currentModalStage === 3 && (
         <ModalBodyBudget
           setCurrentModalStage={setCurrentModalStage}
           isDisabled={isFormDisabled}
+          isDisabledButtonSave={isDisabledButtonSave}
+          currentModalStage={currentModalStage}
+          handleSubmit={handleSubmit}
+          handleNextStage={handleNextStage}
         />
       )}
     </Modal>

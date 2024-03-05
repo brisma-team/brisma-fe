@@ -5,11 +5,11 @@ import {
   PageTitle,
 } from "@/components/atoms";
 import {
-  CardTypeCount,
   DataNotFound,
   PrevNextNavigation,
   SelectSortFilter,
 } from "@/components/molecules/commons";
+import Button from "@atlaskit/button";
 import { PatLandingLayout } from "@/layouts/pat";
 import {
   CardActivitySchedule,
@@ -26,6 +26,7 @@ import _ from "lodash";
 import { convertDate, deleteSwal } from "@/helpers";
 import { useDispatch } from "react-redux";
 import { resetActivityScheduleData } from "@/slices/pat/activityScheduleSlice";
+import { IconFile } from "@/components/icons";
 
 const routes = [
   {
@@ -54,7 +55,6 @@ const index = () => {
   ];
 
   const [totalData, setTotalData] = useState(1);
-  const [countType, setCountType] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [showModalDetail, setShowModalDetail] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
@@ -96,9 +96,21 @@ const index = () => {
 
   useEffect(() => {
     setContent([
-      { title: "Riwayat Addendum", value: statusPat?.data?.riwayat_adendum },
-      { title: "Status Approver", value: statusPat?.data?.status_approver },
-      { title: "Status PAT", value: statusPat?.data?.status_pat },
+      {
+				title: "Initiator",
+				value: statusPat?.data?.create_by?.nama,
+			},
+			{
+				title: "Created Date",
+				value: convertDate(
+          statusPat?.data?.createdAt,
+          "-",
+          "d",
+          true
+        ),
+			},
+			{ title: "Document Status", value: statusPat?.data?.status_pat },
+			{ title: "Document Status", value: statusPat?.data?.status_pat },
     ]);
   }, [statusPat]);
 
@@ -127,23 +139,6 @@ const index = () => {
     } else {
       setData([]);
       setTotalData(0);
-    }
-
-    const totalCount = activitySchedule?.data?.length;
-    if (totalCount) {
-      const typeCounts = activitySchedule?.data.reduce((acc, item) => {
-        const type = item?.ref_tipe?.nama;
-        acc[type] = (acc[type] || 0) + 1;
-        return acc;
-      }, {});
-
-      const result = Object.entries(typeCounts).map(([type, count]) => ({
-        type,
-        count,
-        percent: ((count / totalCount) * 100).toFixed(0),
-      }));
-
-      setCountType(result);
     }
   }, [activitySchedule]);
 
@@ -191,7 +186,7 @@ const index = () => {
   };
 
   return (
-    <PatLandingLayout data={statusPat} content={content}>
+    <PatLandingLayout data={statusPat?.data} content={content}>
       <Breadcrumbs data={breadcrumbs} />
       <div className="flex justify-between items-center mb-6">
         <PageTitle text={"Jadwal Kegiatan"} />
@@ -204,22 +199,34 @@ const index = () => {
         />
       </div>
 
+      <div className="flex justify-between">
       {/* Start Filter */}
-      <div
-        className="flex justify-between items-center mb-3 gap-3"
-        style={{ maxWidth: "21rem" }}
-      >
-        <div className="w-40 bg-atlasian-blue-light rounded">
-          <ButtonField
-            handler={() => setShowFilter(!showFilter)}
-            text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
-          />
+        <div
+          className="flex justify-between items-center mb-3 gap-3"
+          style={{ maxWidth: "21rem" }}
+        >
+          <div className="w-40 bg-atlasian-blue-light rounded">
+            <ButtonField
+              handler={() => setShowFilter(!showFilter)}
+              text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
+            />
+          </div>
+          <div className="w-44 rounded bg-atlasian-purple">
+            <ButtonField
+              handler={handleCreateButton}
+              text={"Buat Jadwal Kegiatan"}
+            />
+          </div>
         </div>
-        <div className="w-44 rounded bg-atlasian-purple">
-          <ButtonField
-            handler={handleCreateButton}
-            text={"Buat Jadwal Kegiatan"}
-          />
+        <div className="w-24">
+          <Button
+            appearance="primary"
+            onClick={() => setShowModal(true)}
+            shouldFitContainer
+            iconBefore={<IconFile />}
+          >
+            Arsip
+          </Button>
         </div>
       </div>
       <div className="w-fit">
@@ -230,21 +237,6 @@ const index = () => {
         />
       </div>
       <div className="flex justify-end items-end w-full gap-2 mt-3">
-        {countType?.length && (
-          <div className="mb-1 flex gap-2">
-            {countType.map((v, i) => {
-              return (
-                <CardTypeCount
-                  key={i}
-                  title={v.type}
-                  total={v.count}
-                  percent={v.percent}
-                  width={"w-[12.8rem]"}
-                />
-              );
-            })}
-          </div>
-        )}
         <SelectSortFilter change={handleChangeFilter} />
       </div>
       {/* End of Filter */}
@@ -267,6 +259,8 @@ const index = () => {
                   budget={v.budget}
                   pic={v.pic}
                   desc={v.desc}
+                  progress={v.progress}
+                  percent={v.percent}
                   handleClickInfo={handleClickInfo}
                   handleClickUpdate={handleClickUpdate}
                   handleClickDelete={handleClickDelete}

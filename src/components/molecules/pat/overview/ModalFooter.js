@@ -1,14 +1,22 @@
 import { ButtonField } from "@/components/atoms";
-const ModalFooter = ({ handleSubmit }) => {
+const ModalFooter = ({ handleSubmit, handleCloseModal }) => {
   return (
     <div className="w-full flex justify-end gap-3 -my-1">
-      <div className="rounded w-28 bg-atlasian-green">
+      <div className="rounded flex w-28 gap-6 bg-blue-600">
         <ButtonField
-          text={"Simpan"}
-          handler={handleSubmit}
+          text={"Batal"}
+          handler={handleCloseModal}
           type={"submit"}
           name={"saveButton"}
         />
+      </div>
+      <div className="rounded flex w-28 gap-6 bg-atlasian-green">
+        <ButtonField
+          text={"Buat P.A.T"}
+          handler={handleSubmit}
+          type={"submit"}
+          name={"saveButton"}
+          />
       </div>
     </div>
   );

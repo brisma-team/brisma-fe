@@ -1,38 +1,47 @@
 import { DivButton } from "@/components/atoms";
 import { DropdownCard } from "@/components/molecules/commons";
+import { capitalizeEveryWord, convertDate } from "@/helpers";
 import ProgressBar from "@atlaskit/progress-bar";
 import { N800 } from "@atlaskit/theme/colors";
 import { token } from "@atlaskit/tokens";
 import { useRouter } from "next/router";
 
-const CardBody = ({ title, value, textColor, className }) => {
-  return Array.isArray(value) ? (
-    <div className={`mt-4 leading-normal text-base ${className}`}>
-      <div className={`${textColor} font-semibold`}>{title}</div>
-      {title === "Anggota Tim Audit" ? (
-        <div className="grid grid-cols-2 gap-2">
-          {value?.map((v, i) => {
-            return <div key={i}>{v.nama}</div>;
-          })}
-        </div>
-      ) : (
-        value.map((v, i) => {
-          return <div key={i}>{v.nama}</div>;
-        })
-      )}
+const CardTeam = ({ title, value, titleColor }) => {
+  return (
+    <div className="flex flex-col gap-2.5">
+      <div className={`text-xs ${titleColor} font-semibold`}>{title}</div>
+      {value?.length
+        ? value?.map((v, i) => (
+            <div key={i} className="text-xs">{`${v?.pn} - ${v?.nama}`}</div>
+          ))
+        : ""}
     </div>
-  ) : (
-    <div className={`mt-2.5 leading-normal text-base flex w-full`}>
-      <div className="w-1/2 font-semibold">{title}</div>
-      <div className={`w-1/2 font-medium ${textColor}`}>{value}</div>
+  );
+};
+
+const CardBody = ({ title, value, textColor, className }) => {
+  return (
+    <div className={`text-base flex w-full border-b`}>
+      <div className="w-1/2 font-semibold border-r px-2 text-xs py-1 h-full flex items-center">
+        {title}
+      </div>
+      <div
+        className={`w-1/2 ${
+          className || "font-medium"
+        } text-xs px-2 py-1 ${textColor}`}
+      >
+        {value}
+      </div>
     </div>
   );
 };
 
 const CardOverview = ({ data, withoutButton, withoutHover }) => {
   const router = useRouter();
-
   const listDropdown = [{ label: "Approval", action: "#" }];
+  const colorLabel = {
+    consulting: "bg-cardColor-turquoise",
+  };
 
   return (
     <DivButton
@@ -66,9 +75,12 @@ const CardOverview = ({ data, withoutButton, withoutHover }) => {
         >
           <div className="flex justify-between mb-2">
             <div
-              className={`text-base font-semibold rounded-tl-lg text-brisma bg-blue-300 -ml-4 px-5 h-9 flex items-center justify-center`}
+              className={`${
+                colorLabel[data?.tipe?.toLowerCase()] ||
+                "bg-cardColor-blue-gray"
+              } text-base font-semibold rounded-tl-lg text-brisma -ml-[18px] -mt-0.5 min-w-[10rem] px-2 h-9 flex items-center justify-center`}
             >
-              <p>{data?.jenis}</p>
+              <p className="text-white">{data?.tipe?.toUpperCase()}</p>
             </div>
             {!withoutButton && (
               <div className="flex items-center justify-end w-20 gap-1 pt-2">
@@ -82,63 +94,78 @@ const CardOverview = ({ data, withoutButton, withoutHover }) => {
           <div className="text-base font-bold text-atlasian-blue-dark">
             {data?.project_name}
           </div>
-          <div className="text-sm font-semibold">{data?.period}</div>
           <div className="flex flex-row justify-between leading-3 mt-2 items-center">
             <ProgressBar appearance="success" value={data?.progress} />
             <div className="flex justify-end font-medium text-sm ml-3">
               {data?.percent}
             </div>
           </div>
-          <div className="flex w-full">
-            <div className="w-1/2">
+          <div className="flex flex-col gap-3 mt-2">
+            <div className="border-x border-t">
+              <CardBody title={"Maker"} value={data?.maker} />
               <CardBody
-                title={"Manajer Audit"}
-                value={data?.ma}
-                textColor={"text-atlasian-blue-light"}
+                title={"Tanggal Inisiasi"}
+                value={convertDate(data?.created_at, "-", "d")}
+              />
+              <CardBody title={"Durasi Proyek"} value={data?.period} />
+              <CardBody
+                title={"Jenis Proyek"}
+                value={capitalizeEveryWord(data?.jenis)}
+                className={"font-semibold"}
               />
             </div>
-            <div className="w-1/2">
+            <div className="flex flex-col gap-3 min-h-[5rem] max-h-[10rem] overflow-y-scroll border p-2">
+              <p className="text-sm font-semibold -mb-1">Tim Pelaksanaan</p>
+              <div className="flex w-full">
+                <div className="w-1/2">
+                  <CardTeam
+                    title={"Auditor"}
+                    value={data?.auditor}
+                    titleColor={"text-atlasian-blue-light"}
+                  />
+                </div>
+                <div className="w-1/2">
+                  <CardTeam
+                    title={"Auditee"}
+                    value={data?.auditee}
+                    titleColor={"text-atlasian-red"}
+                  />
+                </div>
+              </div>
+              <CardTeam
+                title={"Anggota Tim Audit"}
+                value={data?.ata}
+                titleColor={"text-atlasian-green"}
+              />
+            </div>
+            <div className="border-x border-t">
               <CardBody
-                title={"Ketua Tim Audit"}
-                value={data?.kta}
-                textColor={"text-atlasian-red"}
+                title={"Project Status"}
+                value={capitalizeEveryWord(data?.approval_status)}
+                textColor={
+                  data?.approval_status === "On Progress"
+                    ? "text-atlasian-blue-light"
+                    : data?.approval_status === "On Approval"
+                    ? "text-atlasian-yellow"
+                    : data?.approval_status === "Final"
+                    ? "text-atlasian-green"
+                    : ""
+                }
+              />
+              <CardBody
+                title={"Document Status"}
+                value={capitalizeEveryWord(data?.document_status)}
+                textColor={"text-atlasian-yellow"}
+              />
+              <CardBody
+                title={"Addendum"}
+                value={data?.addendum ? `Ke-${data?.addendum}` : "No Addendum"}
+                textColor={
+                  data?.addendum ? "text-atlasian-yellow" : "text-brisma"
+                }
               />
             </div>
           </div>
-          <CardBody
-            title={"Anggota Tim Audit"}
-            value={data?.ata}
-            textColor={"text-atlasian-green"}
-          />
-          <CardBody
-            title={"Status Dokumen"}
-            value={data?.document_status?.toUpperCase()}
-            textColor={
-              data?.document_status === "Pengerjaan"
-                ? "text-atlasian-blue-light"
-                : data?.document_status === "On Approve"
-                ? "text-atlasian-yellow"
-                : "text-atlasian-red"
-            }
-          />
-          <CardBody
-            title={"Status Persetujuan"}
-            value={data?.approval_status}
-            textColor={
-              data?.approval_status === "Approved"
-                ? "text-atlasian-green"
-                : "text-atlasian-yellow"
-            }
-          />
-          <CardBody
-            title={"Addendum"}
-            value={`Ke-${data?.addendum}`}
-            textColor={
-              data?.addendum
-                ? "text-atlasian-yellow"
-                : "text-atlasian-gray-dark"
-            }
-          />
         </div>
       </div>
     </DivButton>

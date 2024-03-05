@@ -183,24 +183,21 @@ const SubModalUnitKerja = ({ isDisabled }) => {
       </div>
       <div className="w-full font-bold text-sm px-4">
         <div className="border-2 border-[#DFE1E6] rounded-xl">
-          <div className="flex h-14">
-            <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
-              <p>Aksi</p>
+        <div className="flex h-14">
+            <div className="border-r-2 font-semibold border-[#DFE1E6] w-[8%] flex items-center justify-center">
+              <p>AKSI</p>
             </div>
-            <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center text-justify p-3">
-              <p>Branch</p>
+            <div className="border-r-2 font-semibold border-[#DFE1E6] w-[30%] flex items-center text-justify p-3">
+              <p>BRANCH</p>
             </div>
-            <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[30%] flex items-center text-justify p-3">
-              <p>Orgeh</p>
+            <div className="border-r-2 font-semibold border-[#DFE1E6] w-[30%] flex items-center text-justify p-3">
+              <p>ORGEH</p>
             </div>
-            <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[14%] flex items-center px-2 py-3">
-              <p>Tipe UKER</p>
+            <div className="border-r-2 font-semibold border-[#DFE1E6] w-[16%] flex items-center px-2 py-3">
+              <p>TIPE UKER</p>
             </div>
-            <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[10%] flex items-center">
-              <p className="ml-3">Info</p>
-            </div>
-            <div className="border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
-              <p>Lampiran</p>
+            <div className="font-semibold border-[#DFE1E6] w-[16%] flex items-center">
+              <p className="ml-3">INFORMASI</p>
             </div>
           </div>
           {auditScheduleData?.uker?.map((v, i) => {
@@ -246,7 +243,7 @@ const SubModalUnitKerja = ({ isDisabled }) => {
                     </div>
                   )}
                 </div>
-                <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[14%] flex-row items-center px-2 py-3">
+                <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[16%] flex-row items-center px-2 py-3">
                   <Select
                     optionValue={optionUkerType}
                     isSearchable={false}
@@ -263,7 +260,7 @@ const SubModalUnitKerja = ({ isDisabled }) => {
                     </div>
                   )}
                 </div>
-                <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[10%] flex items-center">
+                <div className="border-r-2 border-b-2 border-[#DFE1E6] w-[16%] flex items-center">
                   <div className="flex w-full justify-center gap-1">
                     <ButtonIcon
                       color={"yellow"}
@@ -280,6 +277,13 @@ const SubModalUnitKerja = ({ isDisabled }) => {
                         setShowModalDesc(true), setSelectedIdxDesc(i)
                       )}
                     />
+                    <AttachmentModal
+                      file={v?.attachments[0]}
+                      handleClick={() => setSelectedIdxAttachments(i)}
+                      handleUpload={(e) =>
+                      handleUpload(e, selectedIdxAttachments)
+                      }
+                    />
                     <DescriptionModal
                       showModal={showModalDesc}
                       setShowModal={setShowModalDesc}
@@ -295,15 +299,6 @@ const SubModalUnitKerja = ({ isDisabled }) => {
                       setShowModal={setShowModalAssessmentInfo}
                     />
                   </div>
-                </div>
-                <div className="border-b-2 border-[#DFE1E6] w-[8%] flex items-center justify-center">
-                  <AttachmentModal
-                    file={v?.attachments[0]}
-                    handleClick={() => setSelectedIdxAttachments(i)}
-                    handleUpload={(e) =>
-                      handleUpload(e, selectedIdxAttachments)
-                    }
-                  />
                 </div>
               </div>
             );

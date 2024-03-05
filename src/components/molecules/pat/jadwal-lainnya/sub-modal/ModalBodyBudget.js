@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import { CardBodyNavigation } from "@/components/molecules/commons";
 import { SubModalActivityExpense, SubModalTravelExpense } from "./content";
+import { ModalFooter } from "@/components/molecules/pat";
 
-const ModalBodyBudget = ({ setCurrentModalStage, typeModal }) => {
+const ModalBodyBudget = ({ setCurrentModalStage, typeModal, isDisabledButtonSave, currentModalStage, handleSubmit, handleNextStage }) => {
   useEffect(() => {
     setCurrentModalStage(3);
   }, []);
   const [currentStage, setCurrentStage] = useState(1);
 
   return (
-    <div className="-mx-4 w-[60.5rem]">
+    <div className="">
       <CardBodyNavigation
         currentStage={currentStage}
         setCurrentStage={setCurrentStage}
@@ -18,8 +19,18 @@ const ModalBodyBudget = ({ setCurrentModalStage, typeModal }) => {
           { stageNumber: 2, stageTitle: "Biaya Selama Kegiatan" },
         ]}
       />
-      {currentStage === 1 && <SubModalTravelExpense typeModal={typeModal} />}
-      {currentStage === 2 && <SubModalActivityExpense typeModal={typeModal} />}
+      <div className="border-2 rounded-md my-6">
+        {currentStage === 1 && <SubModalTravelExpense typeModal={typeModal} />}
+        {currentStage === 2 && <SubModalActivityExpense typeModal={typeModal} />}
+      </div>
+      <div className="mt-3">
+				<ModalFooter
+					isDisabled={isDisabledButtonSave}
+					currentModalStage={currentModalStage}
+					handleSubmit={handleSubmit}
+					handleNextStage={handleNextStage}
+				/>
+			</div>
     </div>
   );
 };

@@ -13,7 +13,7 @@ import {
   useUpdateData,
 } from "@/helpers";
 import { useRouter } from "next/router";
-import { ModalHeader, ModalFooter } from "@/components/molecules/pat";
+import { ModalHeader } from "@/components/molecules/pat";
 import {
   activityInfoSchema,
   activityObjectSchema,
@@ -287,7 +287,7 @@ const ModalActivitySchedule = ({
           Info Kegiatan
         </DivButton>
       ),
-      percentageComplete: currentModalStage > 1 ? 100 : 0,
+      percentageComplete: currentModalStage > 1 ? 100 : 20,
       status: currentModalStage === 1 ? "current" : "visited",
     },
     {
@@ -321,14 +321,7 @@ const ModalActivitySchedule = ({
           progressItems={items}
           handleCloseModal={handleCloseModal}
           showModal={showModal}
-        />
-      }
-      footer={
-        <ModalFooter
-          isDisabled={isDisabledButtonSave}
-          currentModalStage={currentModalStage}
-          handleSubmit={handleSubmit}
-          handleNextStage={handleNextStage}
+          width={"63rem"}
         />
       }
     >
@@ -336,18 +329,30 @@ const ModalActivitySchedule = ({
         <ModalBodyActivityInfo
           setCurrentModalStage={setCurrentModalStage}
           isDisabled={isFormDisabled}
+          isDisabledButtonSave={isDisabledButtonSave}
+          currentModalStage={currentModalStage}
+          handleSubmit={handleSubmit}
+          handleNextStage={handleNextStage}
         />
       )}
       {currentModalStage === 2 && (
         <ModalBodyActivityObject
           setCurrentModalStage={setCurrentModalStage}
           isDisabled={isFormDisabled}
+          isDisabledButtonSave={isDisabledButtonSave}
+          currentModalStage={currentModalStage}
+          handleSubmit={handleSubmit}
+          handleNextStage={handleNextStage}
         />
       )}
       {currentModalStage === 3 && (
         <ModalBodyBudget
           setCurrentModalStage={setCurrentModalStage}
           isDisabled={isFormDisabled}
+          isDisabledButtonSave={isDisabledButtonSave}
+          currentModalStage={currentModalStage}
+          handleSubmit={handleSubmit}
+          handleNextStage={handleNextStage}
         />
       )}
     </Modal>

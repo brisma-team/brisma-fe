@@ -15,7 +15,7 @@ const Navigation = ({
     >
       <DivButton
         handleClick={() => setCurrentStage(stageNumber)}
-        className={`no-underline hover:no-underline ${
+        className={`no-underline hover:no-underline rounded-lg ${
           currentStage === stageNumber
             ? `text-${active}`
             : `text-black hover:text-black`

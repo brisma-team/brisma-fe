@@ -139,7 +139,7 @@ const index = () => {
   };
 
   return (
-    <PatOverviewLayout data={approvalPat?.data?.header}>
+    <PatOverviewLayout title={"Approval Information"} data={approvalPat?.data?.header}>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -170,7 +170,6 @@ const index = () => {
         <div className="w-full flex justify-end items-end p-2">
           <SelectSortFilter
             change={handleChangeFilter}
-            options={[4, 8, 16, 32, 50, 100]}
           />
         </div>
       </div>

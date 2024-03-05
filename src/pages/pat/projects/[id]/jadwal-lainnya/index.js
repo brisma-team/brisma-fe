@@ -5,7 +5,6 @@ import {
   PageTitle,
 } from "@/components/atoms";
 import {
-  CardTypeCount,
   DataNotFound,
   PrevNextNavigation,
   SelectSortFilter,
@@ -20,12 +19,14 @@ import {
   ModalOtherSchedule,
   ModalOtherScheduleDetail,
 } from "@/components/molecules/pat/jadwal-lainnya";
+import Button from "@atlaskit/button";
 import { convertDate, deleteSwal } from "@/helpers";
 import { useRouter } from "next/router";
 import { useActivityScheduleOther, useStatusPat } from "@/data/pat";
 import { resetOtherScheduleData } from "@/slices/pat/activityScheduleOtherSlice";
 import { useDispatch } from "react-redux";
 import _ from "lodash";
+import { IconFile } from "@/components/icons";
 
 const routes = [
   {
@@ -54,7 +55,6 @@ const index = () => {
   ];
 
   const [totalData, setTotalData] = useState(0);
-  const [countType, setCountType] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [showModalDetail, setShowModalDetail] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
@@ -99,9 +99,21 @@ const index = () => {
 
   useEffect(() => {
     setContent([
-      { title: "Riwayat Addendum", value: statusPat?.data?.riwayat_adendum },
-      { title: "Status Approver", value: statusPat?.data?.status_approver },
-      { title: "Status PAT", value: statusPat?.data?.status_pat },
+      {
+				title: "Initiator",
+				value: statusPat?.data?.create_by?.nama,
+			},
+			{
+				title: "Created Date",
+				value: convertDate(
+          statusPat?.data?.createdAt,
+          "-",
+          "d",
+          true
+        ),
+			},
+			{ title: "Document Status", value: statusPat?.data?.status_pat },
+			{ title: "Document Status", value: statusPat?.data?.status_pat },
     ]);
   }, [statusPat]);
 
@@ -131,23 +143,6 @@ const index = () => {
     } else {
       setData([]);
       setTotalData(0);
-    }
-
-    const totalCount = activityScheduleOther?.data?.length;
-    if (totalCount) {
-      const typeCounts = activityScheduleOther?.data.reduce((acc, item) => {
-        const type = item?.ref_tipe?.nama;
-        acc[type] = (acc[type] || 0) + 1;
-        return acc;
-      }, {});
-
-      const result = Object.entries(typeCounts).map(([type, count]) => ({
-        type,
-        count,
-        percent: ((count / totalCount) * 100).toFixed(0),
-      }));
-
-      setCountType(result);
     }
   }, [activityScheduleOther, activityScheduleOtherMutate]);
 
@@ -194,111 +189,115 @@ const index = () => {
     setFilter({ ...filter, [props]: value });
   };
 
+  console.log(data)
+
   return (
-    <PatLandingLayout data={statusPat} content={content}>
-      <Breadcrumbs data={breadcrumbs} />
-      <div className="flex justify-between items-center mb-6">
-        <PageTitle text={"Jadwal Lainnya"} />
-        <PrevNextNavigation
-          baseUrl={baseUrl}
-          routes={routes}
-          prevUrl={"/jadwal-kegiatan"}
-          nextUrl={"/ringkasan-objek-audit"}
-          widthDropdown={"w-56"}
-        />
-      </div>
+		<PatLandingLayout data={statusPat?.data} content={content}>
+			<Breadcrumbs data={breadcrumbs} />
+			<div className="flex justify-between items-center mb-6">
+				<PageTitle text={"Jadwal Lainnya"} />
+				<PrevNextNavigation
+					baseUrl={baseUrl}
+					routes={routes}
+					prevUrl={"/jadwal-kegiatan"}
+					nextUrl={"/ringkasan-objek-audit"}
+					widthDropdown={"w-56"}
+				/>
+			</div>
 
-      {/* Start Filter */}
-      <div
-        className="flex justify-between items-center mb-4 gap-2"
-        style={{ maxWidth: "21rem" }}
-      >
-        <div className="w-40 rounded bg-atlasian-blue-light">
-          <ButtonField
-            handler={() => setShowFilter(!showFilter)}
-            text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
-          />
-        </div>
-        <div className="w-44 rounded bg-atlasian-purple">
-          <ButtonField handler={handleCreateButton} text={"Buat Jadwal Lain"} />
-        </div>
-      </div>
-      <div className="w-fit">
-        <CardFilterOtherSchedule
-          showFilter={showFilter}
-          params={filter}
-          setParams={setFilter}
-        />
-      </div>
-      <div className="flex justify-end items-end relative mb-4 gap-2 mt-3">
-        {countType?.length && (
-          <div className="mb-1 flex gap-2">
-            {countType.map((v, i) => {
-              return (
-                <CardTypeCount
-                  key={i}
-                  title={v.type}
-                  total={v.count}
-                  percent={v.percent}
-                  width={"w-[12.8rem]"}
-                />
-              );
-            })}
-          </div>
-        )}
-        <SelectSortFilter change={handleChangeFilter} />
-      </div>
-      {/* End of Filter */}
+			<div className="flex justify-between">
+				{/* Start Filter */}
+				<div
+					className="flex justify-between items-center mb-4 gap-3"
+					style={{ maxWidth: "21rem" }}
+				>
+					<div className="w-40 rounded bg-atlasian-blue-light">
+						<ButtonField
+							handler={() => setShowFilter(!showFilter)}
+							text={
+								showFilter ? `Tutup Filter` : `Tampilkan Filter`
+							}
+						/>
+					</div>
+					<div className="w-44 rounded bg-atlasian-purple">
+						<ButtonField
+							handler={handleCreateButton}
+							text={"Buat Jadwal Lain"}
+						/>
+					</div>
+				</div>
+				<div className="w-24">
+					<Button
+						appearance="primary"
+						onClick={() => setShowModal(true)}
+						shouldFitContainer
+						iconBefore={<IconFile />}
+					>
+						Arsip
+					</Button>
+				</div>
+			</div>
+			<div className="w-fit">
+				<CardFilterOtherSchedule
+					showFilter={showFilter}
+					params={filter}
+					setParams={setFilter}
+				/>
+			</div>
+			<div className="flex justify-end items-end relative mb-4 gap-2 mt-3">
+				<SelectSortFilter change={handleChangeFilter} />
+			</div>
+			{/* End of Filter */}
 
-      {/* Start Content */}
-      {activityScheduleOtherError ? (
-        <DataNotFound />
-      ) : data?.length ? (
-        <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 px-0.5 py-2">
-          {data.map((v, i) => {
-            return (
-              <CardOtherSchedule
-                key={i}
-                kegiatan_lain_id={v.id}
-                type={v.type}
-                title={v.title}
-                maker={v.maker}
-                audit_period={v.audit_period}
-                budget={v.budget}
-                pic={v.pic}
-                desc={v.desc}
-                handleClickInfo={handleClickInfo}
-                handleClickUpdate={handleClickUpdate}
-                handleClickDelete={handleClickDelete}
-              />
-            );
-          })}
-        </div>
-      ) : (
-        ""
-      )}
-      <CustomPagination
-        perPage={filter.limit}
-        handleSetPagination={(start, end, pageNow) =>
-          handleChangeFilter("page", pageNow)
-        }
-        defaultCurrentPage={filter.page}
-        totalData={totalData}
-      />
-      <ModalOtherSchedule
-        showModal={showModal}
-        setShowModal={setShowModal}
-        typeModal={typeModal}
-        mutate={activityScheduleOtherMutate}
-        selectedScheduleId={selectedScheduleId}
-      />
-      <ModalOtherScheduleDetail
-        scheduleId={selectedScheduleId}
-        showModal={showModalDetail}
-        setShowModal={setShowModalDetail}
-      />
-      {/* End Content */}
-    </PatLandingLayout>
+			{/* Start Content */}
+			{activityScheduleOtherError ? (
+				<DataNotFound />
+			) : data?.length ? (
+				<div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 px-0.5 py-2">
+					{data.map((v, i) => {
+						return (
+							<CardOtherSchedule
+								key={i}
+								kegiatan_lain_id={v.id}
+								type={v.type}
+								title={v.title}
+								maker={v.maker}
+								audit_period={v.audit_period}
+								budget={v.budget}
+								pic={v.pic}
+								desc={v.desc}
+								handleClickInfo={handleClickInfo}
+								handleClickUpdate={handleClickUpdate}
+								handleClickDelete={handleClickDelete}
+							/>
+						);
+					})}
+				</div>
+			) : (
+				""
+			)}
+			<CustomPagination
+				perPage={filter.limit}
+				handleSetPagination={(start, end, pageNow) =>
+					handleChangeFilter("page", pageNow)
+				}
+				defaultCurrentPage={filter.page}
+				totalData={totalData}
+			/>
+			<ModalOtherSchedule
+				showModal={showModal}
+				setShowModal={setShowModal}
+				typeModal={typeModal}
+				mutate={activityScheduleOtherMutate}
+				selectedScheduleId={selectedScheduleId}
+			/>
+			<ModalOtherScheduleDetail
+				scheduleId={selectedScheduleId}
+				showModal={showModalDetail}
+				setShowModal={setShowModalDetail}
+			/>
+			{/* End Content */}
+		</PatLandingLayout>
   );
 };
 

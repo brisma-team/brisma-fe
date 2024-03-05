@@ -41,18 +41,18 @@ const ModalCreateProjectPAT = ({ showModal, setShowModal, mutate }) => {
           handleCloseModal={handleCloseModal}
         />
       }
-      footer={<ModalFooter handleSubmit={handleSubmit} />}
+      footer={<ModalFooter handleSubmit={handleSubmit} handleCloseModal={handleCloseModal} />}
       positionCenter={true}
     >
       <div className="w-[31rem] px-4 py-2">
         <FormWithLabel
-          label={"Inisiator Proyek"}
+          label={"Inisiator Usulan*"}
           form={<TextInput isDisabled={true} value={user?.data?.fullName} />}
           widthForm={"w-3/5"}
           widthLabel={"w-2/5"}
         />
         <FormWithLabel
-          label={"Tahun Proyek"}
+          label={"Tahun Usulan*"}
           form={
             <YearPicker
               handleChange={(e) => setData({ tahun: e.value })}
