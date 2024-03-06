@@ -68,6 +68,10 @@ import StatusApprovalSelect from "./StatusApprovalSelect";
 import ContentLabelValue from "./ContentLabelValue";
 import RelatedEWPSelect from "./RelatedEWPSelect";
 import ModalWorkflow from "./ModalWorkflow";
+import RiskSelect from "./RiskSelect";
+import RiskControlSelect from "./RiskControlSelect";
+import ImageClipping from "./ImageClipping";
+import AttachmentClipping from "./AttachmentClipping";
 
 export {
   BackButton,
@@ -140,4 +144,8 @@ export {
   ContentLabelValue,
   RelatedEWPSelect,
   ModalWorkflow,
+  RiskSelect,
+  RiskControlSelect,
+  ImageClipping,
+  AttachmentClipping,
 };

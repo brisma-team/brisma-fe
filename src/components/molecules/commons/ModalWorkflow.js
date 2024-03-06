@@ -32,6 +32,8 @@ const ModalWorkflow = ({
   validationErrors,
   widthHeader,
   isLogTableTree,
+  isScrollHeader,
+  withSigner,
 }) => {
   const { user } = useUser();
   let isApproval, isInitiator, isAdmin;
@@ -81,6 +83,8 @@ const ModalWorkflow = ({
           handleChange={handleChangeSelect}
           handleDelete={handleDelete}
           width={widthHeader}
+          isScrollHeader={isScrollHeader}
+          withSigner={withSigner}
         />
       }
       footer={
@@ -107,7 +111,7 @@ const ModalWorkflow = ({
           : true
       }
     >
-      <div className="w-[61rem] px-3 max-h-[16rem] overflow-y-scroll">
+      <div className="w-[61rem] px-3">
         <p className="font-bold text-xl text-brisma">Riwayat Workflow</p>
         <div className="py-3">
           {isLogTableTree ? (

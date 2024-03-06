@@ -66,13 +66,16 @@ import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id, is_approval, extension, terminate } = useRouter().query;
+  const { id, is_approval, is_kuesioner, extension, terminate } =
+    useRouter().query;
   const router = useRouter();
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [dataCategory, setDataCategory] = useState([]);
   const [isNewTemplate, setIsNewTemplate] = useState(true);
   const [isDisabledButtonAction, setIsDisabledButtonAction] = useState(true);
+  const [isDisabledButtonApproval, setIsDisabledButtonApproval] =
+    useState(true);
   const [isFormDisabled, setIsFormDisabled] = useState(false);
   const [isUpdateGuidline, setIsUpdateGuidline] = useState(false);
   const [isRefreshWorkflow, setIsRefreshWorkflow] = useState(false);
@@ -88,6 +91,8 @@ const index = () => {
   const [templateId, setTemplateId] = useState(0);
   const [projectTemplateId, setProjectTemplateId] = useState(null);
   const [currentContentStage, setCurrentContentStage] = useState(1);
+  const [statusApproval, setStatusApproval] = useState("On Progress");
+  const [statusSurveyCode, setStatusSurveyCode] = useState(1);
 
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [showModalApprovalExtension, setShowModalApprovalExtension] =
@@ -227,6 +232,10 @@ const index = () => {
   }, [is_approval, extension, terminate]);
 
   useEffect(() => {
+    if (is_kuesioner) setCurrentContentStage(2);
+  }, [is_kuesioner]);
+
+  useEffect(() => {
     if (!informationError) {
       dispatch(
         setPayloadInformasi(
@@ -241,6 +250,8 @@ const index = () => {
       );
     }
     setTemplateId(information?.data?.ref_template_id);
+    setStatusApproval(information?.data?.status_persetujuan);
+    setStatusSurveyCode(information?.data?.status_kode);
     setIsFormDisabled(
       information?.data?.status_persetujuan === "On Approver" ||
         information?.data?.status_persetujuan === "Final" ||
@@ -292,6 +303,11 @@ const index = () => {
     if (payloadKuesioner?.length) {
       let kategoriCount = 0;
       let tambahanCount = 0;
+      const total_pertanyaan_all_kategori = payloadKuesioner
+        .filter((v) => v.is_default)
+        .reduce((acc, obj) => {
+          return acc + obj.pertanyaan.length;
+        }, 0);
 
       const mapping = payloadKuesioner.map((category, idx) => {
         const { id, name, is_default } = category;
@@ -314,16 +330,24 @@ const index = () => {
           category_name,
           name,
           total_pertanyaan,
+          total_pertanyaan_all_kategori,
           onEdit: false,
           is_default,
         };
       });
 
+      const hasEmptyPertanyaan = payloadKuesioner.some(
+        (item) => item.pertanyaan && item.pertanyaan.length === 0
+      );
+      setIsDisabledButtonApproval(
+        hasEmptyPertanyaan || !information?.data?.responden_survey?.length
+      );
       setDataCategory(mapping);
     } else {
       setDataCategory([]);
+      setIsDisabledButtonApproval(true);
     }
-  }, [payloadKuesioner]);
+  }, [payloadKuesioner, information]);
 
   useEffect(() => {
     let templateName = "Informasi";
@@ -542,7 +566,11 @@ const index = () => {
   };
 
   const handleClickResponden = () => {
-    router.push(`/survey/initiator/overview/${id}/responden`);
+    router.push(
+      `/survey/initiator/overview/${id}/responden${
+        statusSurveyCode == "8" ? `?is_request_manage_responden=true` : ""
+      }`
+    );
   };
 
   const handleSaveInformation = async () => {
@@ -1032,13 +1060,15 @@ const index = () => {
               currentStage={currentContentStage}
               setCurrentStage={setCurrentContentStage}
             />
-            {currentContentStage === 2 && (
+            {currentContentStage === 2 && statusApproval === "On Progress" ? (
               <div className="bg-atlasian-purple h-fit w-44 rounded">
                 <ButtonField
                   text={"Pertanyaan Tambahan"}
                   handler={handleClickAdditionalQuestions}
                 />
               </div>
+            ) : (
+              ""
             )}
           </div>
           {currentContentStage === 1 ? (
@@ -1046,6 +1076,8 @@ const index = () => {
               isNewTemplate={isNewTemplate}
               isDisabledPickTemplate={isDisabledButtonAction}
               isFormDisabled={isFormDisabled}
+              isDisabledButtonApproval={isDisabledButtonApproval}
+              statusSurveyCode={statusSurveyCode}
               projectTemplateId={projectTemplateId}
               handleChangeForm={handleChangeFormInformasi}
               handleClickAddKuesioner={handleClickKuesioner}
@@ -1077,7 +1109,11 @@ const index = () => {
         historyWorkflow={historyWorkflow}
         validationErrors={validationErrorsWorkflow}
         setShowModal={setShowModalApproval}
-        showModal={showModalApproval}
+        showModal={
+          showModalApproval &&
+          !isDisabledButtonApproval &&
+          currentContentStage === 1
+        }
         headerTitle={"Approval Survey"}
         handleChange={handleChangeText}
         handleChangeSelect={handleChangeSelect}

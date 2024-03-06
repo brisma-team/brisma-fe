@@ -40,7 +40,9 @@ const CardOverview = ({ data, withoutButton, withoutHover }) => {
         !withoutHover &&
         `hover:bg-gray-100 hover:rounded-[10px] hover:no-underline`
       }`}
-      handleClick={(e) => (e.stopPropagation(), router.push(data?.id))}
+      handleClick={(e) => (
+        e.stopPropagation(), router.push(`overview/${data?.id}/info`)
+      )}
     >
       <div
         className={`w-full rounded flex flex-col items-center h-full border-2 ${

@@ -21,7 +21,7 @@ import {
 } from "@/slices/reference/simulasiTemplateReferenceSlice";
 import { useRouter } from "next/router";
 import { confirmationSwal, fetchApi, loadingSwal } from "@/helpers";
-import { useInformation } from "@/data/survey/initiator/informasi";
+import { useInformation } from "@/data/reference/admin-survey/informasi";
 import { IconArrowLeft } from "@/components/icons";
 import useUser from "@/data/useUser";
 import _ from "lodash";
@@ -95,6 +95,10 @@ const index = () => {
       );
     }
   }, [information]);
+
+  useEffect(() => {
+    console.log("payloadInformasi => ", payloadInformasi);
+  }, [payloadInformasi]);
 
   useEffect(() => {
     if (!answerSimulasiError) {

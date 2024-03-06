@@ -4,7 +4,7 @@ const initialState = {
   dataTables: {
     respondenPn: [],
     respondenUker: [],
-    respondednUkerPn: [],
+    respondenUkerPn: [],
   },
   dataWorkflow: {
     sub_modul: "",
@@ -29,7 +29,7 @@ const initialState = {
   defaultDataTables: {
     respondenPn: [],
     respondenUker: [],
-    respondednUkerPn: [],
+    respondenUkerPn: [],
   },
   defaultPayloadNewResponden: {
     pn: "",

@@ -270,6 +270,9 @@ const index = () => {
       { survey_id: selectedSurveyId, note: noteManageResponden },
       true
     );
+    router.push(
+      `overview/${selectedSurveyId}/responden?is_request_manage_responden=true`
+    );
 
     overviewMutate();
     handleCloseModalManageRespondenRequest();

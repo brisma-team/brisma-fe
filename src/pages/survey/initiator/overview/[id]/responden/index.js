@@ -264,12 +264,11 @@ const index = () => {
 
       const mappingSelectedResponden =
         respondenByUkerPnSurvey?.data?.responden?.map((responden, index) => {
-          const { pn_responden, nama_responden, keterangan } = responden;
+          const { pn_responden, nama_responden } = responden;
           return {
             index,
             pn_responden,
             nama_responden,
-            keterangan,
           };
         });
 
@@ -527,6 +526,16 @@ const index = () => {
     dispatch(setPayloadNewRespondenPnByUker(updatedData));
   };
 
+  const handleClickSelectedAllRespondenPn = (e) => {
+    if (e.target.checked) {
+      dispatch(
+        setPayloadNewRespondenPnByUker(dataTables?.respondenUkerPn || [])
+      );
+    } else {
+      dispatch(setPayloadNewRespondenPnByUker([]));
+    }
+  };
+
   const handleClickSaveRespondenUkerPn = async () => {
     loadingSwal();
     const payload = payloadNewRespondenPnByUker?.map((responden) => {
@@ -675,13 +684,6 @@ const index = () => {
   };
   // [ END ] Handler for modal approval
 
-  useEffect(() => {
-    console.log("statusApproval => ", statusApproval);
-  }, [statusApproval]);
-
-  useEffect(() => {
-    console.log("statusApprovalResponden => ", statusApprovalResponden);
-  }, [statusApprovalResponden]);
   return (
     <LandingLayoutSurvey withoutRightSidebar overflowY>
       <div className={is_request_manage_responden ? `w-[83rem]` : `w-[71rem]`}>
@@ -695,7 +697,7 @@ const index = () => {
             setCurrentStage={setCurrentContentStage}
             width={"w-64"}
           />
-          <div className="flex gap-4">
+          <div className="flex gap-4 min-h-screen">
             {currentContentStage === 1 ? (
               <TableRespondenPn
                 data={dataTables.respondenPn}
@@ -712,7 +714,7 @@ const index = () => {
                 handleClickSave={handleClickSaveResponden}
               />
             ) : (
-              <div className="flex flex-col gap-4 w-full">
+              <div className="flex flex-col gap-4 w-full h-fit">
                 <TableUker
                   data={dataTables.respondenUker}
                   newUker={payloadNewUker}
@@ -740,6 +742,7 @@ const index = () => {
                   }
                   isDisabledButtonSave={isDisabledSaveRespondenPnByUker}
                   handleChangeChecbox={handleChangeChecboxByUkerPn}
+                  handleClickSelectedAll={handleClickSelectedAllRespondenPn}
                   handleClickSave={handleClickSaveRespondenUkerPn}
                 />
               </div>
