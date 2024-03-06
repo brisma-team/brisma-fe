@@ -69,8 +69,8 @@ const CardAuditSchedule = ({
       handleClick={() => console.log("test")}
     >
       <Card>
-        <div className="w-full px-5 py-3">
-          <div className="flex mb-2 justify-between items-end -ml-5 -mt-5">
+        <div className="w-full px-4 py-2">
+          <div className="flex mb-2 justify-between items-end -ml-4 -mt-4">
             <div
               className={`text-base font-semibold rounded-tl-lg text-white ${
                 type?.toLowerCase() === "individual"
