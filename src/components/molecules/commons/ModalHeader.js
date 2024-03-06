@@ -6,9 +6,10 @@ const ModalHeader = ({
   handleCloseModal,
   title,
   titleClassName,
+  width,
 }) => {
   return (
-    <div style={{ width: "31rem" }} className="relative">
+    <div className={`relative ${width || "w-[31rem]"}`}>
       <CloseModal handleCloseModal={handleCloseModal} showModal={showModal} />
       <div className="text-3xl font-semibold">{headerText}</div>
       {title && <div className={`w-full -mt-4 ${titleClassName}`}>{title}</div>}

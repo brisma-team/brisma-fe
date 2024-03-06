@@ -191,7 +191,7 @@ const UkerInfoTable = ({
           )}
         />
       ) : (
-        <div className="w-full border-x border-b">
+        <div className="w-full border-x border-b pb-3">
           <DataNotFound />
         </div>
       )}

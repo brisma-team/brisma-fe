@@ -1,5 +1,4 @@
-import { ButtonField, ButtonIcon } from "@/components/atoms";
-import { IconPlus } from "@/components/icons";
+import { ButtonIcon } from "@/components/atoms";
 import { ButtonDelete, DataNotFound } from "@/components/molecules/commons";
 import TableTree, {
   Cell,
@@ -89,7 +88,7 @@ const RelatedProjectTable = ({ data, handleClickDelete }) => {
           )}
         />
       ) : (
-        <div className="w-full border-x border-b">
+        <div className="w-full border-x border-b pb-3">
           <DataNotFound />
         </div>
       )}
