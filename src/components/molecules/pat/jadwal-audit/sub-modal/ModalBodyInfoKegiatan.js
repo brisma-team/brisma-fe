@@ -62,6 +62,7 @@ const ModalBodyInfoKegiatan = ({
 
   useEffect(() => {
     setCurrentModalStage(1);
+    console.log(auditScheduleData);
   }, []);
 
   useEffect(() => {

@@ -70,7 +70,7 @@ const CardAuditSchedule = ({
     >
       <Card>
         <div className="w-full px-4 py-2">
-          <div className="flex mb-2 justify-between items-end -ml-4 -mt-4">
+          <div className="flex mb-2 justify-between items-end -ml-4 -mr-1 -mt-4">
             <div
               className={`text-base font-semibold rounded-tl-lg text-white ${
                 type?.toLowerCase() === "individual"
@@ -84,7 +84,7 @@ const CardAuditSchedule = ({
               <DropdownIcon color={"blue"} />
             </div>
           </div>
-          <div className="flex flex-row justify-between my-6">
+          <div className="flex flex-row justify-between my-4">
             <div className="text-xl font-bold text-atlasian-blue-dark">
               {title}
             </div>
@@ -94,18 +94,23 @@ const CardAuditSchedule = ({
               <Rows
                 items={projectItems}
                 render={({ title, description }) => (
-                  <div className="border">
+                  <div className="border p-0">
                     <Row itemId={title}>
-                      <Cell width="50%" className="font-bold border-r">
+                      <Cell
+                        width="50%"
+                        className="font-bold border-r !p-2 !min-h-0"
+                      >
                         {title}
                       </Cell>
-                      <Cell width="50%">{description}</Cell>
+                      <Cell width="50%" className="!min-h-0 !p-2">
+                        {description}
+                      </Cell>
                     </Row>
                   </div>
                 )}
               />
             </TableTree>
-            <div className="w-full h-[10rem] border-2 my-3 p-3 overflow-y-scroll">
+            <div className="w-full h-[10rem] border-2 my-3 p-2 overflow-y-scroll">
               <p className="font-semibold text-lg">Pelaksana</p>
               <p className="text-blue-600 font-semibold">Tim Audit</p>
               <p className="">Tim Auditor HO BRI 2</p>
@@ -114,14 +119,17 @@ const CardAuditSchedule = ({
               <Rows
                 items={documentItems}
                 render={({ title, description }) => (
-                  <div className="border">
+                  <div className="border p-0">
                     <Row itemId={title}>
-                      <Cell width="50%" className="font-bold border-r">
+                      <Cell
+                        width="50%"
+                        className="font-bold border-r !min-h-0 !p-2"
+                      >
                         {title}
                       </Cell>
                       <Cell
                         width="50%"
-                        className={`${
+                        className={`!min-h-0 !p-2 ${
                           description.toLowerCase() === "on progress" &&
                           title === "Project Status"
                             ? "text-blue-500"
