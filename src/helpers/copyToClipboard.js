@@ -1,5 +1,5 @@
 import successSwal from "./successSwal";
-const copyToClipboard = (target) => {
+const copyToClipboard = (target, message) => {
   // Buat elemen textarea yang tidak terlihat
   const textarea = document.createElement("textarea");
   textarea.value = target;
@@ -16,7 +16,7 @@ const copyToClipboard = (target) => {
   document.body.removeChild(textarea);
 
   // Tampilkan pesan sukses (opsional)
-  return successSwal("Copy to clipboard");
+  return successSwal(message || "Copy to clipboard");
 };
 
 export default copyToClipboard;

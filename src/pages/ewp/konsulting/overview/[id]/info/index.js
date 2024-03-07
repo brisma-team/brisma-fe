@@ -1,5 +1,4 @@
 import { Breadcrumbs, ButtonField, Card, PageTitle } from "@/components/atoms";
-import { IconPlus } from "@/components/icons";
 import { NavigationTab } from "@/components/molecules/commons";
 import {
   ProjectDetail,
@@ -181,7 +180,7 @@ const index = () => {
           ) : currentContentStage === 2 ? (
             <RelatedProjectTable data={[]} />
           ) : (
-            <UkerInfoTable />
+            <UkerInfoTable data={[]} />
           )}
         </div>
       </div>

@@ -35,6 +35,7 @@ import matrixEWPKonsultingReducer from "./slices/ewp/konsulting/analisa/matrixEW
 import rekomendasiEWPKonsultingReducer from "./slices/ewp/konsulting/analisa/rekomendasiEWPKonsultingSlice";
 import overviewDetailPeluangReducer from "./slices/ewp/konsulting/peluang-peningkatan/overviewDetailPeluangSlice";
 import documentKkpaEWPKonsultingReducer from "./slices/ewp/konsulting/analisa/documentMapaEWPKonsultingSlice";
+import documentEWPKonsultingReducer from "./slices/ewp/konsulting/dokumen/documentEWPKonsultingSlice";
 
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
@@ -105,6 +106,7 @@ export const store = configureStore({
     rekomendasiEWPKonsulting: rekomendasiEWPKonsultingReducer,
     overviewDetailPeluang: overviewDetailPeluangReducer,
     documentKkpaEWPKonsulting: documentKkpaEWPKonsultingReducer,
+    documentEWPKonsulting: documentEWPKonsultingReducer,
 
     // REFERENCE
     createTemplateReference: createTemplateReferenceSlice,

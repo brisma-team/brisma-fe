@@ -74,6 +74,7 @@ import ImageClipping from "./ImageClipping";
 import AttachmentClipping from "./AttachmentClipping";
 import RetryButton from "./RetryButton";
 import ButtonSave from "./ButtonSave";
+import ButtonDownload from "./ButtonDownload";
 
 export {
   BackButton,
@@ -152,4 +153,5 @@ export {
   AttachmentClipping,
   RetryButton,
   ButtonSave,
+  ButtonDownload,
 };
