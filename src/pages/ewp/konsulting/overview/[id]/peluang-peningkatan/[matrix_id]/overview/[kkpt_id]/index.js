@@ -18,7 +18,6 @@ const index = () => {
 
   const { projectDetail } = useProjectDetail({ id });
   const { landingStatus } = useLandingStatus(kkpt_id);
-  console.log(landingStatus);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -54,7 +53,8 @@ const index = () => {
         },
         {
           label: "P.I.C Auditor",
-          value: responseInfo?.auditor?.name || "N/A",
+          value:
+            responseInfo?.auditor?.nama || responseInfo?.auditor?.name || "N/A",
         },
         {
           label: "Kode Lingkup",
@@ -86,20 +86,20 @@ const index = () => {
           url: `${pathNameContent}/sebab`,
         },
         {
+          title: "Tanggapan Client",
+          description:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          status: landingStatus?.data?.tanggapan_manajemen
+            ? "success"
+            : "failed",
+          url: `${pathNameContent}/tanggapan-client`,
+        },
+        {
           title: "Risk Issue dan Rekomendasi",
           description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
           status: landingStatus?.data?.risk_rekomendasi ? "success" : "failed",
-          url: `${pathNameContent}/#`,
-        },
-        {
-          title: "Tanggapan Client",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
-          status: landingStatus?.data?.tanggapan_management
-            ? "success"
-            : "failed",
-          url: `${pathNameContent}/tanggapan-client`,
+          url: `${pathNameContent}/risk-rekomendasi`,
         },
         {
           title: "Dokumen",

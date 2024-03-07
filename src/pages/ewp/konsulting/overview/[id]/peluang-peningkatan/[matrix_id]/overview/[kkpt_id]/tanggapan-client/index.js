@@ -23,8 +23,8 @@ const routes = [
     name: "Sebab",
     slug: "sebab",
   },
-  { name: "Risk Issue", slug: "risk-issue-dan-rekomendasi" },
   { name: "Tanggapan Client", slug: "tanggapan-client" },
+  { name: "Risk & Rekomendasi", slug: "risk-rekomendasi" },
   { name: "Dokumen", slug: "dokumen" },
 ];
 
@@ -69,7 +69,7 @@ const index = () => {
         path: `${pathNameContent}`,
       },
       {
-        name: `Kondisi`,
+        name: `Tanggapan Client`,
         path: `${pathNameContent}/tanggapan-client`,
       },
     ]);
@@ -119,7 +119,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/tanggapan/`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/tanggapan`,
       { kkpt_id, tanggapan_manajemen: content }
     );
     tanggapanClientDataMutate();
@@ -136,8 +136,8 @@ const index = () => {
         <PrevNextNavigation
           baseUrl={pathNameContent}
           routes={routes}
-          prevUrl={"/#"}
-          nextUrl={"/detail"}
+          prevUrl={"/sebab"}
+          nextUrl={"/risk-rekomendasi"}
           marginLeft={"-60px"}
         />
       </div>

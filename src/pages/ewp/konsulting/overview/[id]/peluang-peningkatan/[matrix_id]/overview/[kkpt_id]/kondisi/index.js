@@ -14,6 +14,7 @@ import { useDetailKondisi } from "@/data/ewp/konsulting/peluang-peningkatan/matr
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
+
 const routes = [
   {
     name: "Kondisi",
@@ -23,7 +24,7 @@ const routes = [
     name: "Sebab",
     slug: "sebab",
   },
-  { name: "Risk Issue", slug: "risk-issue-dan-rekomendasi" },
+  { name: "Risk & Rekomendasi", slug: "risk-rekomendasi" },
   { name: "Tanggapan Client", slug: "tanggapan-client" },
   { name: "Dokumen", slug: "dokumen" },
 ];
@@ -118,7 +119,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/kondisi/`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/kondisi`,
       { kkpt_id, kondisi: content }
     );
     kondisiDataMutate();

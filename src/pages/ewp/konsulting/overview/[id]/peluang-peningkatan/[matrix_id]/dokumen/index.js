@@ -17,11 +17,11 @@ const Editor = dynamic(() => import("@/components/atoms/Editor"), {
 
 const routes = [
   {
-    name: "Info Header",
-    slug: "info-header",
+    name: "Header",
+    slug: "header",
   },
   {
-    name: "Overview",
+    name: "Peluang Peningkatan",
     slug: "overview",
   },
   { name: "Dokumen", slug: "dokumen" },
@@ -126,15 +126,16 @@ const index = () => {
       "GET",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/matrix/doc/async/${matrix_id}`
     );
-    setContent(renderDocument(data?.info_header, data?.peluang_peningkatan));
+    setContent(renderDocument(data));
     loadingSwal("close");
   };
 
-  const renderDocument = (info_header, peluang_peningkatan) => {
-    console.table(info_header, peluang_peningkatan);
+  const renderDocument = (data) => {
     return `<div>
-        <div>${info_header}</div>
-        <div>${peluang_peningkatan}</div>
+        <div>${data?.info_header}</div>
+        <div>${data?.peluang_peningkatan[0]?.kondisi || "N/A"}</div>
+        <div>${data?.peluang_peningkatan[0]?.sebab || "N/A"}</div>
+        <div>${data?.peluang_peningkatan[0]?.tanggapan_manajemen || "N/A"}</div>
       </div>`;
   };
 

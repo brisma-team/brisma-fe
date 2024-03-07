@@ -17,11 +17,11 @@ const Editor = dynamic(() => import("@/components/atoms/Editor"), {
 
 const routes = [
   {
-    name: "Info Header",
-    slug: "info-header",
+    name: "Header",
+    slug: "header",
   },
   {
-    name: "Overview",
+    name: "Peluang Peningkatan",
     slug: "overview",
   },
   { name: "Dokumen", slug: "dokumen" },

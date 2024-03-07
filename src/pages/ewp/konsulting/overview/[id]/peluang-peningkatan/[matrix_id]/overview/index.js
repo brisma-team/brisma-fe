@@ -31,11 +31,11 @@ import overviewDetailPeluangSchema from "@/helpers/schemas/ewp/konsulting/peluan
 
 const routes = [
   {
-    name: "Info Header",
-    slug: "info-header",
+    name: "Header",
+    slug: "header",
   },
   {
-    name: "Overview",
+    name: "Peluang Peningkatan",
     slug: "overview",
   },
   { name: "Dokumen", slug: "dokumen" },
@@ -93,12 +93,13 @@ const index = () => {
   useEffect(() => {
     if (overviewPeluangList?.data?.length > 0) {
       const mappingOverview = overviewPeluangList?.data?.map((v) => {
-        const { judul_kkpt, status_persetujuan } = v;
+        const { judul_kkpt, status_persetujuan, auditor } = v;
         return {
           matrix_id,
           kkpt_id: v?.id,
           status_persetujuan,
           judul_kkpt,
+          auditor,
         };
       });
 
@@ -208,7 +209,7 @@ const index = () => {
         />
       </div>
       {/* Start Content */}
-      <div className="w-[60rem]">
+      <div className="w-[70rem]">
         <DataTables
           selectedId={id}
           data={data}
