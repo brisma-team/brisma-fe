@@ -4,6 +4,7 @@ import { useDetailTanggapanClient } from "./tanggapan-client";
 import useOverviewPeluangList from "./useOverviewPeluangList";
 import useLandingStatus from "./useLandingStatus";
 import useOverviewDetailPeluang from "./useOverviewDetailPeluang";
+import { useComment, useDocument } from "./dokumen";
 
 export {
   useDetailSebab,
@@ -12,4 +13,6 @@ export {
   useOverviewPeluangList,
   useLandingStatus,
   useOverviewDetailPeluang,
+  useComment,
+  useDocument,
 };
