@@ -4,9 +4,11 @@ const initialState = {
   objData: [],
   objPayload: {
     judul_kkpt: "",
+    auditor: {},
   },
   defaultObjPayload: {
     judul_kkpt: "",
+    auditor: {},
   },
   validationErrors: {},
 };
