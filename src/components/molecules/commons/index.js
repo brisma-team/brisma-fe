@@ -73,6 +73,7 @@ import RiskControlSelect from "./RiskControlSelect";
 import ImageClipping from "./ImageClipping";
 import AttachmentClipping from "./AttachmentClipping";
 import ButtonSave from "./ButtonSave";
+import ButtonDownload from "./ButtonDownload";
 
 export {
   BackButton,
@@ -150,4 +151,5 @@ export {
   ImageClipping,
   AttachmentClipping,
   ButtonSave,
+  ButtonDownload,
 };
