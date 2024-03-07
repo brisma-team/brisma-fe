@@ -1079,131 +1079,75 @@ export const patHtml = (id) => {
                 </tr>
             </thead>
             <tbody>
-                ${anggaranDinas
-                  ?.map((d, idx) => {
-                    const length = Object.keys(d.Jabatan).length;
+            ${anggaranDinas
+              ?.map((d, idx) => {
+                const length = Object.keys(d.Jabatan).length;
 
-                    Object.keys(d.Jabatan)
-                      ?.map((k, i) => {
-                        const currJabatan = d.Jabatan[k];
-                        return `
+                return Object.keys(d.Jabatan)
+                  ?.map((k, i) => {
+                    const currJabatan = d.Jabatan[k];
+
+                    return `
                       <tr>
                           ${
                             i === 0
-                              ? `
-                              <td rowspan="${length}">
-                                <p style="text-align:center; word-wrap: break-word;">
-                                    ${idx + 1}
-                                </p>
-                              </td>
-                              <td rowspan="${length}">
-                                <p style="text-align:center; word-wrap: break-word;">
-                                    ${
-                                      d.nama_kegiatan ||
-                                      `<i>Data tidak ditemukan</i>`
-                                    }
-                                </p>
-                              </td>
-                            `
+                              ? `<td rowspan="${length}">${
+                                  idx + 1
+                                }</td><td rowspan="${length}">${
+                                  d.nama_kegiatan ||
+                                  `<i>Data tidak ditemukan</i>`
+                                }</td>`
                               : ""
                           }
-                          <td>
-                            <p style="text-align:center; word-wrap: break-word;">
-                                ${k || `<i>Data tidak ditemukan</i>`}
-                            </p>
-                          </td>
-                          <td>
-                            <p style="text-align:center; word-wrap: break-word;">
-                                ${
-                                  currJabatan.jumlah ||
-                                  `<i>Data tidak ditemukan</i>`
-                                }
-                            </p>
-                          </td>
+                          <td>${k || `<i>Data tidak ditemukan</i>`}</td>
+                          <td>${
+                            currJabatan.jumlah || `<i>Data tidak ditemukan</i>`
+                          }</td>
                           ${
                             i === 0
-                              ? `
-                            <td rowspan="${length}">
-                              <p style="text-align:center; word-wrap: break-word;">
-                                  ${
-                                    d.tempat_kegiatan ||
-                                    `<i>Data tidak ditemukan</i>`
-                                  }
-                              </p>
-                            </td>
-                            <td rowspan="${length}">
-                              <p style="text-align:center; word-wrap: break-word;">
-                                  ${d.bulan || `<i>Data tidak ditemukan</i>`}
-                              </p>
-                            </td>
-                            `
+                              ? `<td rowspan="${length}">${
+                                  d.tempat_kegiatan ||
+                                  `<i>Data tidak ditemukan</i>`
+                                }</td><td rowspan="${length}">${
+                                  d.bulan || `<i>Data tidak ditemukan</i>`
+                                }</td>`
                               : ""
                           }
-                          <td>
-                            <p style="text-align:center; word-wrap: break-word;">
-                                ${
-                                  currJabatan.lama_kegiatan + `hari` ||
-                                  `<i>Data tidak ditemukan</i>`
-                                } 
-                            </p>
-                          </td>
-                          <td>
-                            <p style="text-align:center; word-wrap: break-word;">
-                                ${
-                                  currJabatan?.biaya_tiket
-                                    ? numberWithCommas(currJabatan.biaya_tiket)
-                                    : `<i>Data tidak ditemukan</i>`
-                                }
-                            </p>
-                          </td>
-                          <td>
-                            <p style="text-align:center; word-wrap: break-word;">
-                                ${
-                                  currJabatan?.biaya_transport
-                                    ? numberWithCommas(
-                                        currJabatan.biaya_transport
-                                      )
-                                    : `<i>Data tidak ditemukan</i>`
-                                }
-                            </p>
-                          </td>
-                          <td>
-                            <p style="text-align:center; word-wrap: break-word;">
-                                ${
-                                  currJabatan?.biaya_perjalanan
-                                    ? numberWithCommas(
-                                        currJabatan.biaya_perjalanan
-                                      )
-                                    : `<i>Data tidak ditemukan</i>`
-                                }
-                            </p>
-                          </td>
-                          <td>
-                            <p style="text-align:center; word-wrap: break-word;">
-                                ${
-                                  currJabatan?.biaya_akomodasi
-                                    ? numberWithCommas(
-                                        currJabatan.biaya_akomodasi
-                                      )
-                                    : `<i>Data tidak ditemukan</i>`
-                                }
-                            </p>
-                          </td>
-                          <td>
-                            <p style="text-align:center; word-wrap: break-word;">
-                                ${
-                                  currJabatan?.total_biaya
-                                    ? numberWithCommas(currJabatan.total_biaya)
-                                    : `<i>Data tidak ditemukan</i>`
-                                }
-                            </p>
-                          </td>
+                          <td>${
+                            currJabatan.lama_kegiatan + `hari` ||
+                            `<i>Data tidak ditemukan</i>`
+                          }</td> 
+                          <td>${
+                            currJabatan?.biaya_tiket
+                              ? numberWithCommas(currJabatan.biaya_tiket)
+                              : `<i>Data tidak ditemukan</i>`
+                          }</td>
+                          <td>${
+                            currJabatan?.biaya_transport
+                              ? numberWithCommas(currJabatan.biaya_transport)
+                              : `<i>Data tidak ditemukan</i>`
+                          }</td>
+                          <td>${
+                            currJabatan?.biaya_perjalanan
+                              ? numberWithCommas(currJabatan.biaya_perjalanan)
+                              : `<i>Data tidak ditemukan</i>`
+                          }</td>
+                          <td>${
+                            currJabatan?.biaya_akomodasi
+                              ? numberWithCommas(currJabatan.biaya_akomodasi)
+                              : `<i>Data tidak ditemukan</i>`
+                          }</td>
+                          <td>${
+                            currJabatan?.total_biaya
+                              ? numberWithCommas(currJabatan.total_biaya)
+                              : `<i>Data tidak ditemukan</i>`
+                          }</td>
                       </tr>
-                    `;
-                      })
-                      .join("");
+                  `;
                   })
-                  .join("")}
+                  .join("");
+              })
+              .join("")}
               <tr>
                 <td colspan="11">
                   Total Biaya Perjalanan Dinas

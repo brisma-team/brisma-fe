@@ -27,6 +27,9 @@ const ButtonIcon = ({
     case "purple":
       iconColor = "text-atlasian-purple";
       break;
+    case "green":
+      iconColor = "text-atlasian-green";
+      break;
     case "gray":
       iconColor = "text-atlasian-gray-dark";
       break;

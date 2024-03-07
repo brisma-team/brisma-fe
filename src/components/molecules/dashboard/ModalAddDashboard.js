@@ -24,7 +24,6 @@ const ModalFooter = ({ handleConfirm }) => {
 const ModalAddDashboard = ({
   showModal,
   setShowModal,
-  data,
   setData,
   handleSubmit,
 }) => {
@@ -65,7 +64,6 @@ const ModalAddDashboard = ({
   };
 
   const handleChangeRole = (e, index) => {
-    console.log(e, index);
     const newUkaRolePayload = [...ukaRolePayload];
     newUkaRolePayload[index] = {
       ...newUkaRolePayload[index],
@@ -81,21 +79,18 @@ const ModalAddDashboard = ({
       role_code: "",
     });
     setUkaRolePayload(newUkaRolePayload);
-    console.log(ukaRolePayload, ukaRolePayload.length);
   };
 
   const handleDeleteUkaRole = (index) => {
-    console.log("Before deletion:", ukaRolePayload);
     const newUkaRolePayload = [...ukaRolePayload];
     newUkaRolePayload.splice(index, 1);
-    console.log("After deletion:", newUkaRolePayload);
     setUkaRolePayload(newUkaRolePayload);
   };
 
   useEffect(() => {
     if (isPublic) {
       setData((curr) => {
-        const { allowlist, ...rest } = curr;
+        const { ...rest } = curr;
         return {
           ...rest,
           ...dataPayload,
@@ -104,7 +99,7 @@ const ModalAddDashboard = ({
       });
     } else if (isPublic == false) {
       setData((curr) => {
-        const { isPublic, ...rest } = curr;
+        const { ...rest } = curr;
         return {
           ...rest,
           ...dataPayload,
@@ -147,7 +142,7 @@ const ModalAddDashboard = ({
           </div>
           {isPublic == false
             ? ukaRolePayload.map((item, index) => {
-                const { uka_code, role_code } = item;
+                // const { uka_code, role_code } = item;
                 return (
                   <div className="grid grid-cols-7 col-span-7 pt-1" key={index}>
                     <div className="p-3 text-base col-span-1"></div>
@@ -176,7 +171,7 @@ const ModalAddDashboard = ({
                       <ButtonIcon
                         icon={<IconCrossCircle />}
                         color={"red"}
-                        handleClick={(e) => handleDeleteUkaRole(index)}
+                        handleClick={() => handleDeleteUkaRole(index)}
                       />
                     </div>
                   </div>

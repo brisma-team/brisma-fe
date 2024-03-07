@@ -89,10 +89,7 @@ const ModalEditDashboard = ({
     setUkaRolePayload(newUkaRolePayload);
   };
 
-  console.log(ukaRolePayload);
-
   const handleChangeRole = (e, index) => {
-    console.log("role:" + e.map((obj) => obj.label));
     const newUkaRolePayload = [...ukaRolePayload];
     newUkaRolePayload[index] = {
       ...newUkaRolePayload[index],
@@ -112,17 +109,15 @@ const ModalEditDashboard = ({
   };
 
   const handleDeleteUkaRole = (index) => {
-    console.log("Before deletion:", ukaRolePayload);
     const newUkaRolePayload = [...ukaRolePayload];
     newUkaRolePayload.splice(index, 1);
-    console.log("After deletion:", newUkaRolePayload);
     setUkaRolePayload(newUkaRolePayload);
   };
 
   useEffect(() => {
     if (isPublic) {
       setEditData((curr) => {
-        const { allowlist, ...rest } = curr;
+        const { ...rest } = curr;
         return {
           ...rest,
           ...dataPayload,
@@ -132,7 +127,7 @@ const ModalEditDashboard = ({
       });
     } else if (isPublic == false) {
       setEditData((curr) => {
-        const { isPublic, ...rest } = curr;
+        const { ...rest } = curr;
         return {
           ...rest,
           ...dataPayload,

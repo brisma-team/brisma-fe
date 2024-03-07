@@ -18,14 +18,14 @@ const SupersetDashboard = ({ id, token }) => {
             filters: {
               visible: true,
               expanded: false,
-            }
+            },
           },
         };
         if (token) {
           try {
             embedDashboard(config);
           } catch (error) {
-            console.log("Dashboard failed to load.");
+            console.error("Dashboard failed to load.");
           }
         }
       }

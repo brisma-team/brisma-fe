@@ -1,11 +1,7 @@
 import { Card, DivButton, UploadFileButton } from "@/components/atoms";
 import { copyToClipboard } from "@/helpers";
-import { useEffect } from "react";
 
 const AttachmentClipping = ({ data, handleChange, handleClick }) => {
-  useEffect(() => {
-    console.log("data => ", data);
-  }, [data]);
   return (
     <div className="h-fit">
       <Card>
