@@ -27,7 +27,7 @@ const DataTables = ({
     <TableTree>
       <Headers>
         <Header
-          width="10%"
+          width="7%"
           className="border-x border-t rounded-ss-lg cell-custom-dataTables"
         >
           <div
@@ -37,7 +37,7 @@ const DataTables = ({
           </div>
         </Header>
         <Header
-          width="20%"
+          width="10%"
           className="border-t border-r cell-custom-dataTables"
         >
           <div className="custom-table-header justify-center text-sm font-semibold">
@@ -45,7 +45,7 @@ const DataTables = ({
           </div>
         </Header>
         <Header
-          width="35%"
+          width="21%"
           className="border-t border-r cell-custom-dataTables"
         >
           <div className="custom-table-header justify-center text-sm font-semibold">
@@ -53,7 +53,15 @@ const DataTables = ({
           </div>
         </Header>
         <Header
-          width="30%"
+          width="20%"
+          className="border-t border-r cell-custom-dataTables"
+        >
+          <div className="custom-table-header justify-center text-sm font-semibold">
+            AUDITOR
+          </div>
+        </Header>
+        <Header
+          width="14%"
           className="border-t border-r cell-custom-dataTables rounded-se-lg"
         >
           <div className="custom-table-header justify-center text-sm font-semibold">
@@ -61,7 +69,7 @@ const DataTables = ({
           </div>
         </Header>
         <Header
-          width="30%"
+          width="13%"
           className="border-t border-r cell-custom-dataTables rounded-se-lg"
         >
           <div className="custom-table-header justify-center text-sm font-semibold">
@@ -69,7 +77,7 @@ const DataTables = ({
           </div>
         </Header>
         <Header
-          width="30%"
+          width="15%"
           className="border-t border-r cell-custom-dataTables rounded-se-lg"
         >
           <div className="custom-table-header justify-center text-sm font-semibold">
@@ -80,9 +88,15 @@ const DataTables = ({
       {data?.length ? (
         <Rows
           items={data}
-          render={({ matrix_id, kkpt_id, status_persetujuan, judul_kkpt }) => (
+          render={({
+            matrix_id,
+            kkpt_id,
+            status_persetujuan,
+            judul_kkpt,
+            auditor,
+          }) => (
             <Row>
-              <Cell width="10%" className={`border-x ${customCell}`}>
+              <Cell width="7%" className={`border-x ${customCell}`}>
                 <div className="custom-table-position-center justify-center gap-1">
                   <ButtonIcon
                     icon={<ButtonEdit />}
@@ -95,7 +109,7 @@ const DataTables = ({
                   />
                 </div>
               </Cell>
-              <Cell width="20%" className={`border-r ${customCell}`}>
+              <Cell width="10%" className={`border-r ${customCell}`}>
                 <div className="custom-table-position-center justify-center">
                   <p
                     className={`text-sm ${
@@ -110,7 +124,7 @@ const DataTables = ({
                   </p>
                 </div>
               </Cell>
-              <Cell width="35%" className={`border-r ${customCell}`}>
+              <Cell width="21%" className={`border-r ${customCell}`}>
                 <div className="custom-table-position-center">
                   <Link
                     href={`/ewp/konsulting/overview/${selectedId}/peluang-peningkatan/${matrix_id}/overview/${kkpt_id}`}
@@ -120,17 +134,22 @@ const DataTables = ({
                   </Link>
                 </div>
               </Cell>
-              <Cell width="30%" className={`border-r ${customCell}`}>
+              <Cell width="20%" className={`border-r ${customCell}`}>
+                <div className="custom-table-position-center justify-center">
+                  {auditor?.nama || auditor?.name || "N/A"}
+                </div>
+              </Cell>
+              <Cell width="14%" className={`border-r ${customCell}`}>
                 <div className="custom-table-position-center justify-center">
                   {"N/A"}
                 </div>
               </Cell>
-              <Cell width="30%" className={`border-r ${customCell}`}>
+              <Cell width="13%" className={`border-r ${customCell}`}>
                 <div className="custom-table-position-center justify-center">
                   {"N/A"}
                 </div>
               </Cell>
-              <Cell width="30%" className={`border-r ${customCell}`}>
+              <Cell width="15%" className={`border-r ${customCell}`}>
                 <div className="custom-table-position-center justify-center">
                   {"N/A"}
                 </div>

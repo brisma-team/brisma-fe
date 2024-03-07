@@ -136,7 +136,7 @@ const DataTables = ({
               </Cell>
               <Cell width="25%" className={`border-r ${customCell}`}>
                 <div className="custom-table-position-center">
-                  {auditor?.name || "N/A"}
+                  {auditor?.nama || "N/A"}
                 </div>
               </Cell>
               <Cell width="15%" className={`border-r ${customCell}`}>

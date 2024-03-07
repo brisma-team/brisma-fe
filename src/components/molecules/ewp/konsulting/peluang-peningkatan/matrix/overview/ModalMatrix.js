@@ -6,7 +6,8 @@ import {
   TextInput,
 } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
-import { ModalFooter } from "@/components/molecules/commons";
+import { ModalFooter, PekerjaSelect } from "@/components/molecules/commons";
+import _ from "lodash";
 
 const ModalMatrix = ({
   showModal,
@@ -40,6 +41,30 @@ const ModalMatrix = ({
             />
             {validation["judul_kkpt"] ? (
               <ErrorValidation message={validation["judul_kkpt"]} />
+            ) : (
+              ""
+            )}
+          </div>
+          <div className="w-1/3">
+            <PekerjaSelect
+              selectedValue={
+                data?.auditor?.pn
+                  ? { label: data?.auditor?.name, value: data?.auditor }
+                  : null
+              }
+              placeholder={"Auditor"}
+              handleChange={(e) =>
+                handleChange("auditor", _.pick(e?.value, ["pn", "name"]))
+              }
+              customIcon={
+                <ButtonIcon
+                  icon={<IconClose />}
+                  handleClick={() => handleChange("auditor", {})}
+                />
+              }
+            />
+            {validation["auditor.pn"] ? (
+              <ErrorValidation message={validation["auditor.pn"]} />
             ) : (
               ""
             )}
