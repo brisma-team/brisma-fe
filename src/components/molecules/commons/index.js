@@ -72,6 +72,7 @@ import RiskSelect from "./RiskSelect";
 import RiskControlSelect from "./RiskControlSelect";
 import ImageClipping from "./ImageClipping";
 import AttachmentClipping from "./AttachmentClipping";
+import RetryButton from "./RetryButton";
 import ButtonSave from "./ButtonSave";
 import ButtonDownload from "./ButtonDownload";
 
@@ -150,6 +151,7 @@ export {
   RiskControlSelect,
   ImageClipping,
   AttachmentClipping,
+  RetryButton,
   ButtonSave,
   ButtonDownload,
 };
