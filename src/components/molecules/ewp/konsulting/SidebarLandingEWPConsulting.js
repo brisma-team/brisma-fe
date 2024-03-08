@@ -29,7 +29,11 @@ const SidebarLandingEWPConsulting = () => {
       projectId: projectInfo?.project_id,
       projectName: projectInfo?.project_name,
       statusName: projectInfo?.status_persetujuan_name,
-      createdAt: convertDate(projectInfo?.info_periode_pelaksanaan_start, "D"),
+      createdAt: convertDate(
+        projectInfo?.info_periode_pelaksanaan_start,
+        "/",
+        "d"
+      ),
       initiatorName: projectInfo?.initiator?.nama,
     });
   }, [projectDetail]);
