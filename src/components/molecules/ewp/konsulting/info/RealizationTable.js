@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { DivButton, LozengeField } from "@/components/atoms";
 import { convertDate } from "@/helpers";
 import TableTree, {
@@ -23,7 +24,17 @@ const RealizationTable = ({ data, currentStatusCode, handleClickInitiate }) => {
             <div
               className={`custom-table-header justify-center text-sm font-semibold`}
             >
-              Status Aksi
+              Aksi
+            </div>
+          </Header>
+          <Header
+            width="15%"
+            className="border-x border-t cell-custom-dataTables"
+          >
+            <div
+              className={`custom-table-header justify-center text-sm font-semibold`}
+            >
+              Status
             </div>
           </Header>
           <Header
@@ -38,7 +49,7 @@ const RealizationTable = ({ data, currentStatusCode, handleClickInitiate }) => {
             width="14%"
             className="border-t border-r cell-custom-dataTables"
           >
-            <div className="custom-table-header text-sm font-semibold">
+            <div className="custom-table-header justify-center text-sm font-semibold">
               Tanggal Dimulai
             </div>
           </Header>
@@ -46,7 +57,7 @@ const RealizationTable = ({ data, currentStatusCode, handleClickInitiate }) => {
             width="14%"
             className="border-t border-r cell-custom-dataTables"
           >
-            <div className="custom-table-header text-sm font-semibold">
+            <div className="custom-table-header justify-center text-sm font-semibold">
               Tanggal Selesai
             </div>
           </Header>
@@ -67,6 +78,7 @@ const RealizationTable = ({ data, currentStatusCode, handleClickInitiate }) => {
               label,
               start_date,
               end_date,
+              url,
               log,
             }) => (
               <Row>
@@ -115,17 +127,30 @@ const RealizationTable = ({ data, currentStatusCode, handleClickInitiate }) => {
                     )}
                   </div>
                 </Cell>
-                <Cell width="28%" className={`border-r ${customCell}`}>
-                  <div className="custom-table-position-center">{label}</div>
+                <Cell width="15%" className={`border-r ${customCell}`}>
+                  <div className="custom-table-position-center justify-center">
+                    {"N/A"}
+                  </div>
                 </Cell>
-                <Cell width="14%" className={`border-r ${customCell}`}>
+                <Cell width="28%" className={`border-r ${customCell}`}>
                   <div className="custom-table-position-center">
-                    {start_date ? convertDate(start_date, "/", "d") : ""}
+                    {start_date !== null ? (
+                      <Link href={url} className="text-sm underline">
+                        {label}
+                      </Link>
+                    ) : (
+                      <p>{label}</p>
+                    )}
                   </div>
                 </Cell>
                 <Cell width="14%" className={`border-r ${customCell}`}>
-                  <div className="custom-table-position-center">
-                    {end_date ? convertDate(end_date, "/", "d") : ""}
+                  <div className="custom-table-position-center justify-center">
+                    {start_date ? convertDate(start_date, "/", "d") : "-"}
+                  </div>
+                </Cell>
+                <Cell width="14%" className={`border-r ${customCell}`}>
+                  <div className="custom-table-position-center justify-center">
+                    {end_date ? convertDate(end_date, "/", "d") : "-"}
                   </div>
                 </Cell>
                 <Cell width="28%" className={`border-r ${customCell}`}>

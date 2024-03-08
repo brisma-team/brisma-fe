@@ -49,6 +49,7 @@ const index = () => {
         label: "Perencanaan",
         start_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_start,
         end_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
+        url: `/ewp/konsulting/overview/${id}/perencanaan`,
         log: "Menambahkan Sesuatu...",
       },
       {
@@ -61,6 +62,7 @@ const index = () => {
         start_date:
           projectDetail?.data?.realisasi?.pelaksanaan_audit_real_start,
         end_date: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
+        url: `/ewp/konsulting/overview/${id}/analisa/lingkup`,
         log: "Menambahkan Sesuatu...",
       },
       {
@@ -73,6 +75,7 @@ const index = () => {
         start_date:
           projectDetail?.data?.realisasi?.peluang_peningkatan_real_start,
         end_date: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end,
+        url: `/ewp/konsulting/overview/${id}/peluang-peningkatan`,
         log: "Menambahkan Sesuatu...",
       },
       {
@@ -81,9 +84,10 @@ const index = () => {
           ? true
           : false,
         status_code: 8,
-        label: "Meeting",
+        label: "Wrap-Up",
         start_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_start,
         end_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end,
+        url: `/ewp/konsulting/overview/${id}/#`,
         log: "Menambahkan Sesuatu...",
       },
       {
@@ -92,9 +96,10 @@ const index = () => {
           ? true
           : false,
         status_code: 8,
-        label: "Meeting",
+        label: "Close",
         start_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_start,
         end_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end,
+        url: `/ewp/konsulting/overview/${id}/#`,
         log: "Menambahkan Sesuatu...",
       },
     ]);
