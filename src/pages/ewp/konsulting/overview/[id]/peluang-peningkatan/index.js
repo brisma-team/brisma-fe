@@ -4,22 +4,47 @@ import { useLandingStatus } from "@/data/ewp/konsulting/peluang-peningkatan/matr
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import { errorSwal } from "@/helpers";
 
 const index = () => {
-  const { id } = useRouter().query;
+  const router = useRouter();
+  const { id } = router.query;
   const [matrixId, setMatrixId] = useState(undefined);
   const baseUrl = `/ewp/konsulting/overview/${id}`;
 
   const [dataCarding, setDataCarding] = useState([]);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [isError, setIsError] = useState(false);
+  const [params, setParams] = useState({
+    id: 1,
+  });
 
-  const { projectDetail } = useProjectDetail({ id });
-  const { landingStatus } = useLandingStatus(id);
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      id,
+    });
+  }, [router.isReady]);
+
+  const { projectDetail } = useProjectDetail({ id: params?.id });
+  const { landingStatus, landingStatusError } = useLandingStatus(params?.id);
 
   const [pathName, setPathName] = useState({
     base: `${baseUrl}/peluang-peningkatan`,
     content: "",
   });
+
+  useEffect(() => {
+    if (landingStatusError !== undefined) {
+      setIsError(true);
+      errorSwal("Selesaikan Analisa Data terlebih dahulu").then((response) => {
+        if (response?.isConfirmed || response?.isDismissed) {
+          router.push(`/ewp/konsulting/overview/${params?.id}/info`);
+        }
+      });
+    }
+  }, [landingStatusError]);
 
   useEffect(() => {
     if (matrixId !== undefined) {
@@ -90,21 +115,30 @@ const index = () => {
         <PageTitle text="Peluang Peningkatan" />
       </div>
       {/* Start Content */}
-      <div className="flex flex-col gap-3">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
-          {dataCarding.map((v, i) => {
-            return (
-              <CardLanding
-                key={i}
-                title={v?.title}
-                description={v?.description}
-                status={v?.status}
-                url={v?.url}
-              />
-            );
-          })}
+      {!isError ? (
+        <div className="flex flex-col gap-3">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+            {dataCarding.map((v, i) => {
+              return (
+                <CardLanding
+                  key={i}
+                  title={v?.title}
+                  description={v?.description}
+                  status={v?.status}
+                  url={v?.url}
+                />
+              );
+            })}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div>
+          <h5>
+            <strong>Selesaikan Analisa Data terlebih dahulu</strong>
+          </h5>
+        </div>
+      )}
+
       {/* End Content */}
     </LandingLayoutEWPConsulting>
   );
