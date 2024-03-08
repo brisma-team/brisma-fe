@@ -4,7 +4,7 @@ import { useLandingStatus } from "@/data/ewp/konsulting/peluang-peningkatan/matr
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import { errorSwal } from "@/helpers";
+// import { errorSwal } from "@/helpers";
 
 const index = () => {
   const router = useRouter();
@@ -14,7 +14,10 @@ const index = () => {
 
   const [dataCarding, setDataCarding] = useState([]);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
-  const [isError, setIsError] = useState(false);
+  const [
+    isError,
+    // setIsError
+  ] = useState(false);
   const [params, setParams] = useState({
     id: 1,
   });
@@ -28,23 +31,26 @@ const index = () => {
   }, [router.isReady]);
 
   const { projectDetail } = useProjectDetail({ id: params?.id });
-  const { landingStatus, landingStatusError } = useLandingStatus(params?.id);
+  const {
+    landingStatus,
+    // landingStatusError
+  } = useLandingStatus(params?.id);
 
   const [pathName, setPathName] = useState({
     base: `${baseUrl}/peluang-peningkatan`,
     content: "",
   });
 
-  useEffect(() => {
-    if (landingStatusError !== undefined) {
-      setIsError(true);
-      errorSwal("Selesaikan Analisa Data terlebih dahulu").then((response) => {
-        if (response?.isConfirmed || response?.isDismissed) {
-          router.push(`/ewp/konsulting/overview/${params?.id}/info`);
-        }
-      });
-    }
-  }, [landingStatusError]);
+  // useEffect(() => {
+  //   if (landingStatusError !== undefined) {
+  //     setIsError(true);
+  //     errorSwal("Selesaikan Analisa Data terlebih dahulu").then((response) => {
+  //       if (response?.isConfirmed || response?.isDismissed) {
+  //         router.push(`/ewp/konsulting/overview/${params?.id}/info`);
+  //       }
+  //     });
+  //   }
+  // }, [landingStatusError]);
 
   useEffect(() => {
     if (matrixId !== undefined) {
