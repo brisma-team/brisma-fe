@@ -224,6 +224,7 @@ const index = () => {
         ewp_id: id,
         doc_name: payload.document_name,
         deskripsi: payload.desc,
+        by_system: false,
         ..._.pick(payload, [
           "file_url",
           "file_name",

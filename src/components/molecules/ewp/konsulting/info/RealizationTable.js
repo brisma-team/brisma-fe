@@ -74,6 +74,7 @@ const RealizationTable = ({ data, currentStatusCode, handleClickInitiate }) => {
             render={({
               is_open,
               is_close,
+              prev_status_code,
               status_code,
               label,
               start_date,
@@ -85,43 +86,45 @@ const RealizationTable = ({ data, currentStatusCode, handleClickInitiate }) => {
                 <Cell width="15%" className={`border-x ${customCell}`}>
                   <div className="custom-table-position-center justify-center">
                     {is_close ? (
-                      <LozengeField appreance="success" isBold={true}>
+                      <LozengeField appreance="success" isBold>
                         <DivButton
-                          className={"py-1 flex justify-center w-16"}
-                          isDisabled={true}
+                          className={"py-1 flex justify-center w-20"}
+                          isDisabled
                         >
-                          Selesai
+                          Completed
                         </DivButton>
                       </LozengeField>
                     ) : is_open && !is_close ? (
-                      <LozengeField appreance="removed" isBold={true}>
+                      <LozengeField appreance="removed" isBold>
                         <DivButton
-                          className={"py-1 flex justify-center w-16"}
+                          className={"py-1 flex justify-center w-20"}
                           handleClick={() =>
                             handleClickInitiate(status_code, "close")
                           }
                         >
-                          Akhiri
+                          Terminate
                         </DivButton>
                       </LozengeField>
-                    ) : !is_open && currentStatusCode === status_code - 1 ? (
-                      <LozengeField appreance="inprogress" isBold={true}>
+                    ) : !is_open &&
+                      !is_close &&
+                      currentStatusCode === prev_status_code ? (
+                      <LozengeField appreance="new" isBold>
                         <DivButton
-                          className={"py-1 flex justify-center w-16"}
+                          className={"py-1 flex justify-center w-20"}
                           handleClick={() =>
                             handleClickInitiate(status_code, "start")
                           }
                         >
-                          Mulai
+                          Initiate
                         </DivButton>
                       </LozengeField>
                     ) : (
                       <LozengeField appreance="default">
                         <DivButton
-                          className={"py-1 flex justify-center w-16 text-white"}
-                          isDisabled={true}
+                          className={"py-1 flex justify-center w-20 text-white"}
+                          isDisabled
                         >
-                          Mulai
+                          Waiting
                         </DivButton>
                       </LozengeField>
                     )}
@@ -129,7 +132,17 @@ const RealizationTable = ({ data, currentStatusCode, handleClickInitiate }) => {
                 </Cell>
                 <Cell width="15%" className={`border-r ${customCell}`}>
                   <div className="custom-table-position-center justify-center">
-                    {"N/A"}
+                    {is_close ? (
+                      <p className="font-semibold text-sm text-atlasian-blue-light">
+                        Final
+                      </p>
+                    ) : is_open && !is_close ? (
+                      <p className="font-semibold text-sm text-atlasian-purple">
+                        On Progress
+                      </p>
+                    ) : (
+                      <p className="font-semibold text-sm text-brisma">-</p>
+                    )}
                   </div>
                 </Cell>
                 <Cell width="28%" className={`border-r ${customCell}`}>

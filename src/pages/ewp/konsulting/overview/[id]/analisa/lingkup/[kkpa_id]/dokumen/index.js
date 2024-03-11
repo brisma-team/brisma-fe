@@ -98,6 +98,7 @@ const index = () => {
   });
 
   useEffect(() => {
+    console.log("project_id => ", projectDetail);
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
@@ -306,7 +307,7 @@ const index = () => {
       if (workflowDetailEWP?.data?.log?.length) {
         const mapping = workflowDetailEWP?.data?.log?.map((v) => {
           return {
-            "P.I.C": v?.pn_from + " - " + v?.name_from,
+            "P.I.C": v?.from?.pn + " - " + v?.from?.nama,
             Alasan: v?.note,
             Status:
               v?.is_signed === true
@@ -314,7 +315,7 @@ const index = () => {
                 : v?.is_signed === false
                 ? "Rejected"
                 : "",
-            Tanggal: convertDate(v?.createdAt, "-", "d"),
+            Tanggal: convertDate(v?.created_at, "-", "d"),
           };
         });
         setHistoryWorkflow(mapping);
@@ -326,6 +327,10 @@ const index = () => {
     }
   }, [workflowDetailEWP]);
   // [ END ]
+
+  useEffect(() => {
+    console.log("workflowData => ", workflowData);
+  }, [workflowData]);
 
   const handleClickComment = (babIdx) => {
     setOpenCardComment(true);

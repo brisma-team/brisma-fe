@@ -38,6 +38,7 @@ module.exports = {
         hover: {
           blue: "#0D78FF",
           yellow: "#FDC55A",
+          red: "#D95038",
         },
         cardColor: {
           orange: "#FF991F",
