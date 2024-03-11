@@ -39,12 +39,14 @@ const index = () => {
   useEffect(() => {
     const status_code =
       parseInt(projectDetail?.data?.project_info?.status_kode) || 0;
+    console.log("status_kode => ", status_code);
     setDataTables([
       {
         is_open: status_code >= 2,
         is_close: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end
           ? true
           : false,
+        prev_status_code: 1,
         status_code: 2,
         label: "Perencanaan",
         start_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_start,
@@ -54,9 +56,10 @@ const index = () => {
       },
       {
         is_open: status_code >= 4,
-        is_close: projectDetail?.data?.realisasi?.entrance_meeting_real_end
+        is_close: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end
           ? true
           : false,
+        prev_status_code: 2,
         status_code: 4,
         label: "Analisa",
         start_date:
@@ -67,9 +70,10 @@ const index = () => {
       },
       {
         is_open: status_code >= 6,
-        is_close: projectDetail?.data?.realisasi?.entrance_meeting_real_end
+        is_close: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end
           ? true
           : false,
+        prev_status_code: 4,
         status_code: 6,
         label: "Peluang Peningkatan",
         start_date:
@@ -80,26 +84,15 @@ const index = () => {
       },
       {
         is_open: status_code >= 8,
-        is_close: projectDetail?.data?.realisasi?.Penyusunan_LHA_real_end
+        is_close: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end
           ? true
           : false,
+        prev_status_code: 6,
         status_code: 8,
         label: "Wrap-Up",
         start_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_start,
         end_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end,
-        url: `/ewp/konsulting/overview/${id}/#`,
-        log: "Menambahkan Sesuatu...",
-      },
-      {
-        is_open: status_code >= 8,
-        is_close: projectDetail?.data?.realisasi?.Penyusunan_LHA_real_end
-          ? true
-          : false,
-        status_code: 8,
-        label: "Close",
-        start_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_start,
-        end_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end,
-        url: `/ewp/konsulting/overview/${id}/#`,
+        url: `/ewp/konsulting/overview/${id}/wrapup`,
         log: "Menambahkan Sesuatu...",
       },
     ]);
