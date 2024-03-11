@@ -11,7 +11,7 @@ import TableTree, {
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
-const RealizationTable = ({ data, currentStatusCode, handleClickInitiate }) => {
+const RealizationTable = ({ data, handleClickInitiate }) => {
   return (
     <>
       <p className="text-base font-bold mb-2 ml-2">Realisasi</p>
@@ -74,7 +74,7 @@ const RealizationTable = ({ data, currentStatusCode, handleClickInitiate }) => {
             render={({
               is_open,
               is_close,
-              prev_status_code,
+              is_onprogress,
               status_code,
               label,
               start_date,
@@ -85,16 +85,7 @@ const RealizationTable = ({ data, currentStatusCode, handleClickInitiate }) => {
               <Row>
                 <Cell width="15%" className={`border-x ${customCell}`}>
                   <div className="custom-table-position-center justify-center">
-                    {is_close ? (
-                      <LozengeField appreance="success" isBold>
-                        <DivButton
-                          className={"py-1 flex justify-center w-20"}
-                          isDisabled
-                        >
-                          Completed
-                        </DivButton>
-                      </LozengeField>
-                    ) : is_open && !is_close ? (
+                    {is_onprogress ? (
                       <LozengeField appreance="removed" isBold>
                         <DivButton
                           className={"py-1 flex justify-center w-20"}
@@ -105,9 +96,16 @@ const RealizationTable = ({ data, currentStatusCode, handleClickInitiate }) => {
                           Terminate
                         </DivButton>
                       </LozengeField>
-                    ) : !is_open &&
-                      !is_close &&
-                      currentStatusCode === prev_status_code ? (
+                    ) : is_close ? (
+                      <LozengeField appreance="success" isBold>
+                        <DivButton
+                          className={"py-1 flex justify-center w-20"}
+                          isDisabled
+                        >
+                          Completed
+                        </DivButton>
+                      </LozengeField>
+                    ) : is_open ? (
                       <LozengeField appreance="new" isBold>
                         <DivButton
                           className={"py-1 flex justify-center w-20"}
@@ -136,7 +134,7 @@ const RealizationTable = ({ data, currentStatusCode, handleClickInitiate }) => {
                       <p className="font-semibold text-sm text-atlasian-blue-light">
                         Final
                       </p>
-                    ) : is_open && !is_close ? (
+                    ) : is_onprogress ? (
                       <p className="font-semibold text-sm text-atlasian-purple">
                         On Progress
                       </p>
