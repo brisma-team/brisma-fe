@@ -3,7 +3,6 @@ import { DropdownCard } from "@/components/molecules/commons";
 import { convertDate } from "@/helpers";
 import { N800 } from "@atlaskit/theme/colors";
 import { token } from "@atlaskit/tokens";
-import { useRouter } from "next/router";
 
 const CardTeam = ({ title, value, titleColor }) => {
   return (
@@ -50,9 +49,9 @@ const CardOverview = ({
   data,
   withoutButton,
   withoutHover,
+  handleClickCarding,
   handleClickUrl,
 }) => {
-  const router = useRouter();
   const listDropdown = [{ label: "Approval", action: "#" }];
   const colorLabel = {
     online: "bg-cardColor-blue-dark",
@@ -65,9 +64,7 @@ const CardOverview = ({
         !withoutHover &&
         `hover:bg-gray-100 hover:rounded-[10px] hover:no-underline`
       }`}
-      handleClick={(e) => (
-        e.stopPropagation(), router.push(`overview/${data?.id}/info`)
-      )}
+      handleClick={(e) => handleClickCarding(e, data?.id)}
     >
       <div
         className={`w-full rounded flex flex-col items-center h-full border-2 relative`}

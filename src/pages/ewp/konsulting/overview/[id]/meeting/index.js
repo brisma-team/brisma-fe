@@ -32,21 +32,20 @@ import {
 } from "@/slices/ewp/konsulting/meeting/overviewMeetingEWPKonsultingSlice";
 import { useRouter } from "next/router";
 import createMeetingEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/meeting/createMeetingEWPKonsultingSchema";
-
-const breadcrumbs = [
-  { name: "Menu", path: "/dashboard" },
-  { name: "EWP", path: "/ewp" },
-  { name: "Meeting Overview", path: "/ewp/konsulting/meeting" },
-];
+import { useProjectDetail } from "@/data/ewp/konsulting";
 
 const index = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const { id } = useRouter().query;
+  const baseUrl = `/ewp/konsulting/overview/${id}`;
+  const pathNameSubModulMeeting = `${baseUrl}/meeting`;
 
   const [showFilter, setShowFilter] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   const [totalData, setTotalData] = useState(1);
+  const [breadcrumbs, setBreadcrumbs] = useState([]);
 
   const data = useSelector(
     (state) => state.overviewMeetingEWPKonsulting.objData
@@ -83,7 +82,24 @@ const index = () => {
     page: 1,
   });
 
+  const { projectDetail } = useProjectDetail({ id });
   const { overview, overviewMutate } = useOverview({ id, ...params });
+
+  useEffect(() => {
+    setBreadcrumbs([
+      { name: "Menu", path: "/dashboard" },
+      { name: "EWP", path: "/ewp" },
+      { name: "Overview", path: "/ewp/konsulting/overview" },
+      {
+        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
+        path: `${baseUrl}/info`,
+      },
+      {
+        name: `Meeting`,
+        path: pathNameSubModulMeeting,
+      },
+    ]);
+  }, [projectDetail]);
 
   useEffect(() => {
     const handleSearch = () => {
@@ -161,6 +177,11 @@ const index = () => {
   const handleClickUrl = (e, url) => {
     e.stopPropagation();
     copyToClipboard(url, "Link meeting berhasil disalin ke clipboard.");
+  };
+
+  const handleClickCarding = (e, meeting_id) => {
+    e.stopPropagation();
+    router.push(`/ewp/konsulting/overview/${id}/meeting/${meeting_id}`);
   };
 
   // [ START ] handler for modal add meeting
@@ -303,7 +324,12 @@ const index = () => {
         <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-3 my-4">
           {data.map((v, i) => {
             return (
-              <CardOverview key={i} data={v} handleClickUrl={handleClickUrl} />
+              <CardOverview
+                key={i}
+                data={v}
+                handleClickCarding={handleClickCarding}
+                handleClickUrl={handleClickUrl}
+              />
             );
           })}
         </div>
