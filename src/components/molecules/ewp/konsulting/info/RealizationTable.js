@@ -85,7 +85,7 @@ const RealizationTable = ({ data, handleClickInitiate }) => {
               <Row>
                 <Cell width="15%" className={`border-x ${customCell}`}>
                   <div className="custom-table-position-center justify-center">
-                    {is_onprogress ? (
+                    {is_onprogress && !is_close ? (
                       <LozengeField appreance="removed" isBold>
                         <DivButton
                           className={"py-1 flex justify-center w-20"}

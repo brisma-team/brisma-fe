@@ -55,7 +55,8 @@ const CardOverview = ({
   const router = useRouter();
   const listDropdown = [{ label: "Approval", action: "#" }];
   const colorLabel = {
-    consulting: "bg-cardColor-turquoise",
+    online: "bg-cardColor-blue-dark",
+    onsite: "bg-cardColor-green",
   };
 
   return (
@@ -80,11 +81,13 @@ const CardOverview = ({
           <div className="flex justify-between mb-2">
             <div
               className={`${
-                colorLabel[data?.tipe?.toLowerCase()] ||
+                colorLabel[data?.metode_meeting?.nama?.toLowerCase()] ||
                 "bg-cardColor-blue-gray"
               } text-base font-semibold rounded-tl-lg text-brisma -ml-[18px] -mt-0.5 min-w-[10rem] px-2 h-9 flex items-center justify-center`}
             >
-              <p className="text-white">{data?.tipe?.toUpperCase()}</p>
+              <p className="text-white">
+                {data?.metode_meeting?.nama?.toUpperCase()}
+              </p>
             </div>
             {!withoutButton && (
               <div className="flex items-center justify-end w-20 gap-1 pt-2">
@@ -93,33 +96,44 @@ const CardOverview = ({
             )}
           </div>
           <div className="text-lg font-bold text-atlasian-blue-dark">
-            {data?.meeting_code?.toUpperCase()}
-          </div>
-          <div className="text-base font-bold text-atlasian-blue-dark">
-            {data?.meeting_name}
+            {data?.judul_meeting}
           </div>
           <div className="flex flex-col gap-3 mt-2">
             <div className="border-x border-t">
-              <CardBody title={"Maker"} value={data?.maker} />
+              <CardBody
+                title={"Maker"}
+                value={
+                  data?.create_by?.pn
+                    ? `${data?.create_by?.pn} - ${data?.create_by?.nama}`
+                    : "-"
+                }
+              />
               <CardBody
                 title={"Tanggal Inisiasi"}
-                value={convertDate(data?.created_at, "-", "d")}
+                value={convertDate(data?.createdAt, "/", "d")}
               />
-              <CardBody title={"Periode Meeting"} value={data?.period} />
+              <CardBody
+                title={"Periode Meeting"}
+                value={`${convertDate(
+                  data?.periode_start,
+                  "/",
+                  "d"
+                )} - ${convertDate(data?.periode_end, "/", "d")}`}
+              />
             </div>
             <div className="flex flex-col gap-3 min-h-[5rem] max-h-[10rem] overflow-y-scroll border p-2">
               <div className="flex w-full">
                 <div className="w-1/2">
                   <CardTeam
                     title={"PIC"}
-                    value={data?.pic}
+                    value={data?.pic_meeting}
                     titleColor={"text-atlasian-blue-light"}
                   />
                 </div>
                 <div className="w-1/2">
                   <CardTeam
                     title={"Pembicara"}
-                    value={data?.pembicara}
+                    value={data?.pembicara_meeting}
                     titleColor={"text-atlasian-red"}
                   />
                 </div>
@@ -133,12 +147,12 @@ const CardOverview = ({
               <CardBody
                 title={"Link Meeting"}
                 value={
-                  data?.link ? (
+                  data?.link_meeting ? (
                     <DivButton
                       className={"underline text-[#0C66E4]"}
-                      handleClick={(e) => handleClickUrl(e, data?.link)}
+                      handleClick={(e) => handleClickUrl(e, data?.link_meeting)}
                     >
-                      {data?.link}
+                      {data?.link_meeting}
                     </DivButton>
                   ) : (
                     "-"
