@@ -35,8 +35,8 @@ const routes = [
     name: "Sebab",
     slug: "sebab",
   },
-  { name: "Risk & Rekomendasi", slug: "risk-rekomendasi" },
   { name: "Tanggapan Client", slug: "tanggapan-client" },
+  { name: "Risk & Rekomendasi", slug: "risk-rekomendasi" },
   { name: "Dokumen", slug: "dokumen" },
 ];
 

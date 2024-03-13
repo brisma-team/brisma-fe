@@ -1,11 +1,6 @@
 import Link from "next/link";
-import { ButtonField, ButtonIcon } from "@/components/atoms";
-import { IconPlus } from "@/components/icons";
-import {
-  DataNotFound,
-  ButtonEdit,
-  ButtonDelete,
-} from "@/components/molecules/commons";
+import { useRouter } from "next/router";
+import { DataNotFound } from "@/components/molecules/commons";
 import TableTree, {
   Cell,
   Header,
@@ -16,29 +11,15 @@ import TableTree, {
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
-const DataTables = ({
-  selectedId,
-  data,
-  handleClickEdit,
-  handleClickDelete,
-  handleClickAddMatrix,
-}) => {
+const DataTables = ({ data }) => {
+  const router = useRouter();
+  const { id } = router.query;
   return (
     <TableTree>
       <Headers>
         <Header
-          width="7%"
-          className="border-x border-t rounded-ss-lg cell-custom-dataTables"
-        >
-          <div
-            className={`custom-table-header justify-center text-sm font-semibold`}
-          >
-            AKSI
-          </div>
-        </Header>
-        <Header
           width="10%"
-          className="border-t border-r cell-custom-dataTables"
+          className="border-t border-l border-r rounded-ss-lg cell-custom-dataTables"
         >
           <div className="custom-table-header justify-center text-sm font-semibold">
             STATUS
@@ -53,7 +34,7 @@ const DataTables = ({
           </div>
         </Header>
         <Header
-          width="20%"
+          width="27%"
           className="border-t border-r cell-custom-dataTables"
         >
           <div className="custom-table-header justify-center text-sm font-semibold">
@@ -96,20 +77,7 @@ const DataTables = ({
             auditor,
           }) => (
             <Row>
-              <Cell width="7%" className={`border-x ${customCell}`}>
-                <div className="custom-table-position-center justify-center gap-1">
-                  <ButtonIcon
-                    icon={<ButtonEdit />}
-                    handleClick={() => handleClickEdit(kkpt_id)}
-                    color={"yellow"}
-                  />
-                  <ButtonIcon
-                    icon={<ButtonDelete />}
-                    handleClick={() => handleClickDelete(kkpt_id)}
-                  />
-                </div>
-              </Cell>
-              <Cell width="10%" className={`border-r ${customCell}`}>
+              <Cell width="10%" className={`border-l border-r ${customCell}`}>
                 <div className="custom-table-position-center justify-center">
                   <p
                     className={`text-sm ${
@@ -127,14 +95,14 @@ const DataTables = ({
               <Cell width="21%" className={`border-r ${customCell}`}>
                 <div className="custom-table-position-center">
                   <Link
-                    href={`/ewp/konsulting/overview/${selectedId}/peluang-peningkatan/${matrix_id}/overview/${kkpt_id}`}
+                    href={`/ewp/konsulting/overview/${id}/peluang-peningkatan/${matrix_id}/overview/${kkpt_id}`}
                     className="text-sm underline"
                   >
                     {judul_kkpt || "N/A"}
                   </Link>
                 </div>
               </Cell>
-              <Cell width="20%" className={`border-r ${customCell}`}>
+              <Cell width="27%" className={`border-r ${customCell}`}>
                 <div className="custom-table-position-center justify-center">
                   {auditor?.nama || auditor?.name || "N/A"}
                 </div>
@@ -162,20 +130,6 @@ const DataTables = ({
           <DataNotFound />
         </div>
       )}
-      <div className="flex justify-end w-full border-x border-b rounded-es-xl rounded-ee-xl">
-        <div className="w-48 text-sm font-semibold p-2 my-1">
-          <ButtonField
-            iconAfter={
-              <div className="text-atlasian-purple">
-                <IconPlus size="medium" />
-              </div>
-            }
-            text={"Tambah Peluang"}
-            textColor={"purple"}
-            handler={handleClickAddMatrix}
-          />
-        </div>
-      </div>
     </TableTree>
   );
 };
