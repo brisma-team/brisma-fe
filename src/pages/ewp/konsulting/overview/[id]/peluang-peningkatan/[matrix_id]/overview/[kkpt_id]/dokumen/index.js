@@ -3,7 +3,7 @@ import {
   PrevNextNavigation,
   ApprovalItems,
   ModalComment,
-  //   ModalWorkflow,
+  ModalWorkflow,
 } from "@/components/molecules/commons";
 import { NavigationDocument } from "@/components/molecules/commons";
 import Image from "next/image";
@@ -11,40 +11,28 @@ import { ImageChat } from "@/helpers/imagesUrl";
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
-// import {
-//   useAuditorEWP,
-//   useDocumentEWP,
-//   useWorkflowDetailEWP,
-// } from "@/data/ewp/konvensional";
-// import {
-//   useCommentMapaEWP,
-//   useDocumentEWP,
-// } from "@/data/ewp/konsulting/perencanaan/dokumen";
 import {
   useComment,
   useDocument,
 } from "@/data/ewp/konsulting/peluang-peningkatan/matrix/detail";
+import { useSelector, useDispatch } from "react-redux";
 import {
-  useSelector,
-  // useDispatch
-} from "react-redux";
-// import {
-//   resetValidationErrorsWorkflow,
-//   setValidationErrorsWorkflow,
-//   setWorkflowData,
-//   resetWorkflowData,
-// } from "@/slices/ewp/konsulting/perencanaan/documentMapaEWPKonsultingSlice";
-// import _ from "lodash";
+  resetValidationErrorsWorkflow,
+  setValidationErrorsWorkflow,
+  setWorkflowData,
+  resetWorkflowData,
+} from "@/slices/ewp/konsulting/peluang-peningkatan/documentMatrixPeluangKonsultingSlice";
+import _ from "lodash";
 import {
-  //   confirmationSwal,
-  //   convertDate,
-  //   setErrorValidation,
+  confirmationSwal,
+  convertDate,
+  setErrorValidation,
   usePostData,
-  //   useUpdateData,
+  useUpdateData,
 } from "@/helpers";
-// import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
+import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useProjectDetail } from "@/data/ewp/konsulting";
-// import { useWorkflowDetailEWP } from "@/data/ewp";
+import { useWorkflowMatrix } from "@/data/ewp/konsulting/peluang-peningkatan/matrix";
 
 const routes = [
   {
@@ -72,7 +60,7 @@ const index = () => {
   const pathNameBase = `${baseUrl}/peluang-peningkatan`;
   const pathNameOverview = `${baseUrl}/peluang-peningkatan/${params?.matrix_id}/overview`;
   const pathNameContent = `${baseUrl}/peluang-peningkatan/${params?.matrix_id}/overview/${params?.kkpt_id}`;
-  //   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [listContent, setListContent] = useState([
@@ -84,10 +72,7 @@ const index = () => {
   const [listComment, setListComment] = useState([]);
 
   const ref = useRef(null);
-  const [
-    // showModalApproval,
-    setShowModalApproval,
-  ] = useState(false);
+  const [showModalApproval, setShowModalApproval] = useState(false);
   const [openCardComment, setOpenCardComment] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
   const [activeIndexComment, setActiveIndexComment] = useState(1);
@@ -95,7 +80,7 @@ const index = () => {
   const [hitEndpointCount, setHitEndpointCount] = useState(1);
   const [doc, setDoc] = useState([]);
   const [currentPosition, setCurrentPosition] = useState(1);
-  //   const [historyWorkflow, setHistoryWorkflow] = useState([]);
+  const [historyWorkflow, setHistoryWorkflow] = useState([]);
   const [bab, setBab] = useState(1);
   const [selectedParentCommentId, setSelectedParentCommentId] = useState(0);
   const [mappingCommentId, setMappingCommentId] = useState([]);
@@ -110,18 +95,18 @@ const index = () => {
     });
   }, [router.isReady]);
   const workflowData = useSelector(
-    (state) => state.documentMapaEWPKonsulting.workflowData
+    (state) => state.documentMatrixPeluangKonsulting.workflowData
   );
-  //   const validationErrorsWorkflow = useSelector(
-  //     (state) => state.documentMapaEWPKonsulting.validationErrorsWorkflow
-  //   );
+  const validationErrorsWorkflow = useSelector(
+    (state) => state.documentMatrixPeluangKonsulting.validationErrorsWorkflow
+  );
 
   const { projectDetail } = useProjectDetail({ id: params?.id });
   const { documentData } = useDocument(params?.kkpt_id, bab);
-  //   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
-  //     "mapa",
-  //     { id }
-  //   );
+  const { workflowMatrixData, workflowMatrixMutate } = useWorkflowMatrix({
+    type: "matrix_peluang_peningkatan",
+    id: params?.matrix_id,
+  });
   const { commentData, commentDataMutate } = useComment(
     params?.kkpt_id,
     activeIndexComment
@@ -204,7 +189,6 @@ const index = () => {
           title: bab.title,
         };
       });
-      console.log(mapping);
       setListContent(mapping);
       setMappingCommentId(accumulator);
     }
@@ -312,61 +296,61 @@ const index = () => {
 
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
-  //   useEffect(() => {
-  //     if (workflowDetailEWP?.data) {
-  //       const workflowInfo = workflowDetailEWP?.data?.info;
-  //       const maker = workflowDetailEWP?.data?.initiator;
-  //       const approvers = workflowDetailEWP?.data?.approver;
-  //       const signers = workflowDetailEWP?.data?.signer;
+  useEffect(() => {
+    if (workflowMatrixData?.data) {
+      const workflowInfo = workflowMatrixData?.data?.info;
+      const maker = workflowMatrixData?.data?.initiator;
+      const approvers = workflowMatrixData?.data?.approver;
+      const signers = workflowMatrixData?.data?.signer;
 
-  //       const newWorkflowData = {
-  //         ...workflowData,
-  //         status_approver: workflowInfo?.status_persetujuan_name,
-  //         on_approver: workflowInfo?.status_approver,
-  //       };
+      const newWorkflowData = {
+        ...workflowData,
+        status_approver: workflowInfo?.status_persetujuan,
+        on_approver: workflowInfo?.status_approver,
+      };
 
-  //       newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.nama}`;
-  //       newWorkflowData.maker = maker;
+      newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.nama}`;
+      newWorkflowData.maker = maker;
 
-  //       if (approvers?.length) {
-  //         const mappingApprovers = _.map(
-  //           approvers,
-  //           ({ pn, nama, is_signed }) => ({
-  //             pn,
-  //             nama,
-  //             is_signed,
-  //           })
-  //         );
-  //         newWorkflowData.ref_tim_audit_approver = mappingApprovers;
-  //       }
+      if (approvers?.length) {
+        const mappingApprovers = _.map(
+          approvers,
+          ({ pn, nama, is_signed }) => ({
+            pn,
+            nama,
+            is_signed,
+          })
+        );
+        newWorkflowData.ref_tim_audit_approver = mappingApprovers;
+      }
 
-  //       if (signers?.length) {
-  //         const mappingSigners = _.map(signers, ({ nama, pn }) => ({ nama, pn }));
-  //         newWorkflowData.ref_tim_audit_signer = mappingSigners;
-  //       }
+      if (signers?.length) {
+        const mappingSigners = _.map(signers, ({ nama, pn }) => ({ nama, pn }));
+        newWorkflowData.ref_tim_audit_signer = mappingSigners;
+      }
 
-  //       if (workflowDetailEWP?.data?.log?.length) {
-  //         const mapping = workflowDetailEWP?.data?.log?.map((v) => {
-  //           return {
-  //             "P.I.C": v?.pn_from + " - " + v?.name_from,
-  //             Alasan: v?.note,
-  //             Status:
-  //               v?.is_signed === true
-  //                 ? "Approved"
-  //                 : v?.is_signed === false
-  //                 ? "Rejected"
-  //                 : "",
-  //             Tanggal: convertDate(v?.createdAt, "-", "d"),
-  //           };
-  //         });
-  //         setHistoryWorkflow(mapping);
-  //       }
+      if (workflowMatrixData?.data?.log?.length) {
+        const mapping = workflowMatrixData?.data?.log?.map((v) => {
+          return {
+            "P.I.C": v?.pn_from + " - " + v?.name_from,
+            Alasan: v?.note,
+            Status:
+              v?.is_signed === true
+                ? "Approved"
+                : v?.is_signed === false
+                ? "Rejected"
+                : "",
+            Tanggal: convertDate(v?.createdAt, "-", "d"),
+          };
+        });
+        setHistoryWorkflow(mapping);
+      }
 
-  //       dispatch(setWorkflowData(newWorkflowData));
-  //     } else {
-  //       dispatch(resetWorkflowData());
-  //     }
-  //   }, [workflowDetailEWP]);
+      dispatch(setWorkflowData(newWorkflowData));
+    } else {
+      dispatch(resetWorkflowData());
+    }
+  }, [workflowMatrixData]);
   // [ END ]
 
   const handleClickComment = (id) => {
@@ -375,113 +359,113 @@ const index = () => {
   };
 
   // [ START ] function untuk Modal Workflow
-  //   const handleAdd = (property) => {
-  //     const newData = [...workflowData[property]];
-  //     newData.push({
-  //       pn: "",
-  //       nama: "",
-  //       is_signed: false,
-  //     });
-  //     dispatch(setWorkflowData({ ...workflowData, [property]: newData }));
-  //   };
+  const handleAdd = (property) => {
+    const newData = [...workflowData[property]];
+    newData.push({
+      pn: "",
+      nama: "",
+      is_signed: false,
+    });
+    dispatch(setWorkflowData({ ...workflowData, [property]: newData }));
+  };
 
-  //   const handleDelete = (property, idx) => {
-  //     const newData = [...workflowData[property]];
-  //     newData.splice(idx, 1);
-  //     dispatch(setWorkflowData({ ...workflowData, [property]: newData }));
-  //   };
+  const handleDelete = (property, idx) => {
+    const newData = [...workflowData[property]];
+    newData.splice(idx, 1);
+    dispatch(setWorkflowData({ ...workflowData, [property]: newData }));
+  };
 
-  //   const handleChangeText = (property, value) => {
-  //     dispatch(
-  //       setWorkflowData({
-  //         ...workflowData,
-  //         [property]: value,
-  //       })
-  //     );
-  //   };
+  const handleChangeText = (property, value) => {
+    dispatch(
+      setWorkflowData({
+        ...workflowData,
+        [property]: value,
+      })
+    );
+  };
 
-  //   const handleChangeSelect = (property, index, e) => {
-  //     const newData = [...workflowData[property]];
-  //     const updated = { ...newData[index] };
-  //     updated["pn"] = e?.value?.pn;
-  //     updated["nama"] = e?.value?.name;
-  //     newData[index] = updated;
-  //     dispatch(
-  //       setWorkflowData({
-  //         ...workflowData,
-  //         [property]: newData,
-  //       })
-  //     );
-  //   };
+  const handleChangeSelect = (property, index, e) => {
+    const newData = [...workflowData[property]];
+    const updated = { ...newData[index] };
+    updated["pn"] = e?.value?.pn;
+    updated["nama"] = e?.value?.name;
+    newData[index] = updated;
+    dispatch(
+      setWorkflowData({
+        ...workflowData,
+        [property]: newData,
+      })
+    );
+  };
 
-  //   const handleSubmit = async (e) => {
-  //     e.preventDefault();
-  //     const schemaMapping = {
-  //       schema: workflowSchema,
-  //       resetErrors: resetValidationErrorsWorkflow,
-  //       setErrors: setValidationErrorsWorkflow,
-  //     };
-  //     const validate = setErrorValidation(workflowData, dispatch, schemaMapping);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const schemaMapping = {
+      schema: workflowSchema,
+      resetErrors: resetValidationErrorsWorkflow,
+      setErrors: setValidationErrorsWorkflow,
+    };
+    const validate = setErrorValidation(workflowData, dispatch, schemaMapping);
 
-  //     if (validate) {
-  //       const actionType = e.target.offsetParent.name;
-  //       const data = {
-  //         sub_modul: "mapa",
-  //         sub_modul_id: id,
-  //       };
+    if (validate) {
+      const actionType = e.target.offsetParent.name;
+      const data = {
+        sub_modul: "matrix_peluang_peningkatan",
+        sub_modul_id: params?.matrix_id,
+      };
 
-  //       const signedCount = workflowData?.ref_tim_audit_approver?.filter(
-  //         (item) => item.is_signed
-  //       ).length;
+      const signedCount = workflowData?.ref_tim_audit_approver?.filter(
+        (item) => item.is_signed
+      ).length;
 
-  //       switch (actionType) {
-  //         case "change":
-  //           data.approvers = workflowData.ref_tim_audit_approver;
-  //           data.signers = workflowData.ref_tim_audit_signer;
-  //           break;
-  //         case "create":
-  //           data.approvers = workflowData.ref_tim_audit_approver;
-  //           data.signers = workflowData.ref_tim_audit_signer;
-  //           break;
-  //         case "reject":
-  //           data.note = workflowData.note;
-  //           break;
-  //         case "approve":
-  //           if (signedCount < 2) {
-  //             data.data = "<p>pirli test</p>";
-  //           }
-  //           data.note = workflowData.note;
-  //           break;
-  //       }
+      switch (actionType) {
+        case "change":
+          data.approvers = workflowData.ref_tim_audit_approver;
+          data.signers = workflowData.ref_tim_audit_signer;
+          break;
+        case "create":
+          data.approvers = workflowData.ref_tim_audit_approver;
+          data.signers = workflowData.ref_tim_audit_signer;
+          break;
+        case "reject":
+          data.note = workflowData.note;
+          break;
+        case "approve":
+          if (signedCount < 2) {
+            data.data = "<p>pirli test</p>";
+          }
+          data.note = workflowData.note;
+          break;
+      }
 
-  //       if (actionType === "reset") {
-  //         const confirm = await confirmationSwal(
-  //           "Terkait dengan workflow ini, apakah Anda yakin ingin melakukan pengaturan ulang?"
-  //         );
-  //         if (!confirm.value) {
-  //           return;
-  //         }
-  //       }
+      if (actionType === "reset") {
+        const confirm = await confirmationSwal(
+          "Terkait dengan workflow ini, apakah Anda yakin ingin melakukan pengaturan ulang?"
+        );
+        if (!confirm.value) {
+          return;
+        }
+      }
 
-  //       if (actionType === "change") {
-  //         const response = await useUpdateData(
-  //           `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/workflow/change`,
-  //           data
-  //         );
-  //         if (!response.isDismissed) return;
-  //       } else {
-  //         await usePostData(
-  //           `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/workflow/${actionType}`,
-  //           data
-  //         );
-  //       }
+      if (actionType === "change") {
+        const response = await useUpdateData(
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/change`,
+          data
+        );
+        if (!response.isDismissed) return;
+      } else {
+        await usePostData(
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/${actionType}`,
+          data
+        );
+      }
 
-  //       workflowDetailEWPMutate();
-  //       dispatch(resetWorkflowData());
-  //       setShowModalApproval(false);
-  //     }
-  //     workflowDetailEWPMutate();
-  //   };
+      workflowMatrixMutate();
+      dispatch(resetWorkflowData());
+      setShowModalApproval(false);
+    }
+    workflowMatrixMutate();
+  };
   // [ END ]
 
   // [ START ] COMMENT
@@ -527,7 +511,7 @@ const index = () => {
       <div className="flex justify-between items-center mb-6">
         <PageTitle text={"Dokumen Peluang Peningkatan"} />
         <PrevNextNavigation
-          baseUrl={baseUrl}
+          baseUrl={pathNameContent}
           routes={routes}
           prevUrl={"/risk-rekomendasi"}
           marginLeft={"-60px"}
@@ -600,7 +584,7 @@ const index = () => {
                             dangerouslySetInnerHTML={{ __html: v.content }}
                           />
                         ) : v?.content?.rekomendasi.length > 0 ? (
-                          "There is Data"
+                          "Data tersedia, namun tidak dapat menampilkan sesuai format."
                         ) : (
                           <i>Data tidak ditemukan</i>
                         )}
@@ -615,7 +599,7 @@ const index = () => {
         <div>
           <DivButton
             handleClick={() => setShowModalApproval(true)}
-            className="no-underline hover:no-underline w-56"
+            className="no-underline hover:no-underline w-56 mb-5"
           >
             <div>
               <Card>
@@ -640,7 +624,7 @@ const index = () => {
               </Card>
             </div>
           </DivButton>
-          {/* <ModalWorkflow
+          <ModalWorkflow
             workflowData={workflowData}
             historyWorkflow={historyWorkflow}
             validationErrors={validationErrorsWorkflow}
@@ -652,8 +636,8 @@ const index = () => {
             handleAdd={handleAdd}
             handleChangeSelect={handleChangeSelect}
             handleChangeText={handleChangeText}
-            withSigner
-          /> */}
+            withSigner={true}
+          />
         </div>
       </div>
       {/* End Content */}
