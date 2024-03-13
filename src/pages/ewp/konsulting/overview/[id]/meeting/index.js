@@ -155,14 +155,12 @@ const index = () => {
       });
 
       dispatch(setObjData(mapping));
+      setTotalData(overview?.pagination?.totalData || 1);
     } else {
       dispatch(resetObjData());
+      setTotalData(1);
     }
   }, [overview]);
-
-  useEffect(() => {
-    console.log("data => ", data);
-  }, [data]);
 
   // [ START ] handler for card filter
   const handleChangeFilter = (props, value) => {

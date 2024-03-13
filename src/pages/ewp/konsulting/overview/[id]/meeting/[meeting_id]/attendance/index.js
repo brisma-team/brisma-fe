@@ -1,4 +1,10 @@
-import { Breadcrumbs, Card, PageTitle, QRGenerator } from "@/components/atoms";
+import {
+  Breadcrumbs,
+  Card,
+  DivButton,
+  PageTitle,
+  QRGenerator,
+} from "@/components/atoms";
 import { useRouter } from "next/router";
 import { PrevNextNavigation } from "@/components/molecules/commons";
 import {
@@ -45,6 +51,7 @@ const index = () => {
   const [valueQR, setValueQR] = useState("");
   const [breadcrumbs, setBreadcrumbs] = useState([]);
 
+  const [isMeetingOpen, setIsMeetingOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSuccessCheckIn, setIsSuccessCheckIn] = useState(false);
   const [selectedAttendanceId, setSelectedAttendanceId] = useState(0);
@@ -63,7 +70,9 @@ const index = () => {
   );
 
   const { projectDetail } = useProjectDetail({ id });
-  const { landingStatus } = useLandingStatus({ id: meeting_id });
+  const { landingStatus, landingStatusMutate } = useLandingStatus({
+    id: meeting_id,
+  });
   const { attendance, attendanceMutate } = useAttendance({
     id: selectedAttendanceId,
   });
@@ -159,6 +168,7 @@ const index = () => {
 
   useEffect(() => {
     setSelectedAttendanceId(landingStatus?.data?.attendance?.id || 0);
+    setIsMeetingOpen(landingStatus?.data?.attendance?.is_open || false);
   }, [landingStatus]);
 
   useEffect(() => {
@@ -250,6 +260,16 @@ const index = () => {
     );
   }
 
+  const handleClickMeetingOpen = async () => {
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/meeting/attendance/enable/${selectedAttendanceId}`,
+      {},
+      true
+    );
+    landingStatusMutate();
+  };
+
   return (
     <LandingLayoutEWPConsulting>
       {/* Start Breadcrumbs */}
@@ -263,6 +283,31 @@ const index = () => {
           nextUrl={"/notulen"}
           marginLeft={"-55px"}
         />
+      </div>
+      <div className="flex justify-end items-center mb-3 gap-4">
+        <p className="text-lg font-semibold">ABSENSI</p>
+        <div className="flex h-10">
+          <DivButton
+            className={`flex justify-center items-center h-full w-20 font-bold ${
+              isMeetingOpen
+                ? "bg-atlasian-green text-white"
+                : "bg-atlasian-gray-light text-gray-500"
+            } rounded-l-lg`}
+            handleClick={handleClickMeetingOpen}
+          >
+            BUKA
+          </DivButton>
+          <DivButton
+            className={`flex justify-center items-center h-full w-20 font-bold ${
+              !isMeetingOpen
+                ? "bg-atlasian-green text-white"
+                : "bg-atlasian-gray-light text-gray-500"
+            } rounded-r-lg`}
+            handleClick={handleClickMeetingOpen}
+          >
+            TUTUP
+          </DivButton>
+        </div>
       </div>
       <div className="w-[82rem]">
         <Card>

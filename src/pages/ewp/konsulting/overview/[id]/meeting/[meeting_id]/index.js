@@ -38,7 +38,6 @@ const index = () => {
   }, [projectDetail]);
 
   useEffect(() => {
-    console.log("landingStatus => ", landingStatus?.data);
     if (landingStatus?.data) {
       const mappingDataCarding = [
         {
@@ -78,7 +77,7 @@ const index = () => {
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
       <div className="flex justify-between items-center mb-7">
-        <PageTitle text="Kertas Kerja Analisa" />
+        <PageTitle text="Meeting" />
       </div>
       {/* Start Content */}
       <div className="flex flex-col gap-3">
