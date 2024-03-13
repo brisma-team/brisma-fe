@@ -76,6 +76,7 @@ import RetryButton from "./RetryButton";
 import ButtonSave from "./ButtonSave";
 import ButtonDownload from "./ButtonDownload";
 import MeetingTypeSelect from "./MeetingTypeSelect";
+import CardFormInputTeam from "./CardFormInputTeam";
 
 export {
   BackButton,
@@ -156,4 +157,5 @@ export {
   ButtonSave,
   ButtonDownload,
   MeetingTypeSelect,
+  CardFormInputTeam,
 };

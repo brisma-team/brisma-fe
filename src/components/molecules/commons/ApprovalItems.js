@@ -5,7 +5,7 @@ const ApprovalItems = ({ title, text, data }) => {
   let allSigned = false,
     findApproval = -1;
 
-  if (["Maker", "P.I.C", "P.I.C Auditor"].includes(title) && text) {
+  if (["Maker", "P.I.C", "P.I.C Auditor", "Proposer"].includes(title) && text) {
     allSigned = true;
   } else if (title === "Signer" && text?.length) {
     allSigned = true;
