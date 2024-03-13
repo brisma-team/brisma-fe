@@ -406,13 +406,13 @@ const index = () => {
 
       if (actionType === "change") {
         const response = await useUpdateData(
-          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/workflow/change`,
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/change`,
           data
         );
         if (!response.isDismissed) return;
       } else {
         await usePostData(
-          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/workflow/${actionType}`,
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/${actionType}`,
           data
         );
       }

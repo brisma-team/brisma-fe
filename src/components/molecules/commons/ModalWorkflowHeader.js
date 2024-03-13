@@ -1,6 +1,6 @@
 import { CardFormInput } from "@/components/molecules/commons";
 import { CloseModal, TextInput } from "@/components/atoms";
-import { CardFormInputTeam } from "@/components/molecules/pat";
+import { CardFormInputTeam } from "@/components/molecules/commons";
 import Image from "next/image";
 import { ImageCheck, ImageGroup } from "@/helpers/imagesUrl";
 import { checkRoleIsAdmin } from "@/helpers";
@@ -19,6 +19,7 @@ const ModalWorkflowHeader = ({
   width,
   isScrollHeader,
   withSigner,
+  isProposer,
 }) => {
   const [optionSigners, setOptionSigners] = useState([]);
   let isInitiator, isAdmin, isApprover;
@@ -52,7 +53,7 @@ const ModalWorkflowHeader = ({
         <div className="flex w-full justify-center gap-4 px-3 py-1 mb-2">
           <div className={withSigner ? `w-1/3` : `w-1/2`}>
             <CardFormInput
-              title={"P.I.C"}
+              title={isProposer ? "Proposer" : "P.I.C"}
               className={"text-atlasian-blue-light"}
               icon={<Image src={ImageGroup} alt="" />}
             >

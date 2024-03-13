@@ -7,27 +7,55 @@ import {
   PageTitle,
 } from "@/components/atoms";
 import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
-import { convertDate, copyToClipboard } from "@/helpers";
+import { convertDate } from "@/helpers";
 import _ from "lodash";
 import {
   CardFilterOverview,
-  ModalAddProjectEWP,
+  // ModalAddProjectEWP,
 } from "@/components/molecules/ewp/konsulting/overview";
-import { CardOverview } from "@/components/molecules/ewp/konsulting/meeting/overview";
+import { CardOverview } from "@/components/molecules/rpm/kegiatan";
 import { useApprovalEWP } from "@/data/ewp";
 import { useOverviewEWPKonsulting } from "@/data/ewp/konsulting/overview";
+import { IconFile } from "@/components/icons";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
-  { name: "EWP", path: "/ewp" },
-  { name: "Meeting Overview", path: "/ewp/konsulting/meeting" },
+  { name: "RPM", path: "/rpm" },
+  { name: "Kegiatan / Overview", path: "/rpm/kegiatan/overview" },
 ];
+
+const convertProgressAndPercent = (status) => {
+  let progress, percent;
+  switch (status) {
+    case "mapa":
+      progress = 0.2;
+      percent = "20%";
+      break;
+    case "pelaksanaan":
+      progress = 0.4;
+      percent = "40%";
+      break;
+    case "peluang peningkatan":
+      progress = 0.6;
+      percent = "60%";
+      break;
+    case "wrapup":
+      progress = 0.85;
+      percent = "80%";
+      break;
+    case "final":
+      progress = 1;
+      percent = "100%";
+      break;
+  }
+  return { progress, percent };
+};
 
 const index = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [totalData, setTotalData] = useState(1);
   const [data, setData] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
   const [filter, setFilter] = useState({
     project_code: "",
     project_name: "",
@@ -71,36 +99,53 @@ const index = () => {
   }, [filter]);
 
   useEffect(() => {
-    // if (overviewEWPKonsulting?.data?.length) {
-    setData([
-      {
-        id: 1,
-        tipe: "Onsite",
-        meeting_code: "TEST123",
-        meeting_name: "Meeting Konsultasi",
-        maker: "00999002 - Dandy",
-        created_at: "2024-12-12",
-        period: "2024-12-12 s/d 2024-12-12",
-        pic: [{ pn: "999002", nama: "Dandy" }],
-        pembicara: [{ pn: "999002", nama: "Dandy" }],
-        desc: "test meeting desc",
-        link: "http://localhost:3000/ewp/konsulting/meeting",
-      },
-    ]);
-    setTotalData(1);
-    // } else {
-    //   setData([]);
-    //   setTotalData(1);
-    // }
-  }, []);
+    if (overviewEWPKonsulting?.data?.length) {
+      const mapping = overviewEWPKonsulting.data.map((v) => {
+        const {
+          createdAt,
+          need_approved,
+          number_adendum,
+          status_name,
+          status_persetujuan_name,
+          project_id,
+          project_name,
+          initiator,
+        } = v;
+        return {
+          id: v?.id,
+          tipe: v?.ref_tipe?.nama,
+          jenis: v?.ref_jenis?.nama,
+          project_code: project_id,
+          project_name: project_name,
+          period: `${convertDate(
+            v?.info_periode_pelaksanaan_start,
+            "-",
+            "d"
+          )} s/d ${convertDate(v?.info_periode_pelaksanaan_end, "-", "d")}`,
+          progress: convertProgressAndPercent(v?.status_name).progress,
+          percent: convertProgressAndPercent(v?.status_name).percent,
+          auditor: v?.info_team_audit?.auditor || [],
+          auditee: v?.info_team_audit?.auditee || [],
+          ata: v?.info_team_audit?.ata || [],
+          document_status: status_name,
+          approval_status: status_persetujuan_name,
+          addendum: number_adendum,
+          need_approval: need_approved,
+          href: `/ewp/projects/konsulting/${v?.id}/infox`,
+          created_at: createdAt,
+          maker: `${initiator?.pn} - ${initiator?.nama}`,
+        };
+      });
+      setData(mapping);
+      setTotalData(overviewEWPKonsulting?.pagination?.totalData);
+    } else {
+      setData([]);
+      setTotalData(1);
+    }
+  }, [overviewEWPKonsulting]);
 
   const handleChangeFilter = (props, value) => {
     setFilter({ ...filter, [props]: value });
-  };
-
-  const handleClickUrl = (e, url) => {
-    e.stopPropagation();
-    copyToClipboard(url, "Link meeting berhasil disalin ke clipboard.");
   };
 
   return (
@@ -109,7 +154,7 @@ const index = () => {
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
       <div className="flexitems-center mb-6">
-        <PageTitle text={"Project Overview"} />
+        <PageTitle text={"RPM Kegiatan Overview"} />
       </div>
       <div className="flex justify-between items-end">
         <div className="flex justify-between items-center gap-2">
@@ -119,7 +164,7 @@ const index = () => {
               text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
             />
           </div>
-          <div className="w-36 rounded bg-atlasian-purple">
+          {/* <div className="w-36 rounded bg-atlasian-purple">
             <ButtonField
               handler={() => setShowModal(true)}
               text={"Buat Project"}
@@ -129,10 +174,14 @@ const index = () => {
               setShowModal={setShowModal}
               mutate={overviewEWPKonsultingMutate}
             />
-          </div>
+          </div> */}
         </div>
         <div className="w-24 rounded bg-atlasian-blue-light">
-          <ButtonField handler={() => console.log("test")} text={`Arsip`} />
+          <ButtonField
+            icon={<IconFile primaryColor="white" />}
+            isCentered={false}
+            text={`Arsip`}
+          />
         </div>
       </div>
       <div className="">
@@ -153,9 +202,7 @@ const index = () => {
       {data?.length ? (
         <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-3 my-4">
           {data.map((v, i) => {
-            return (
-              <CardOverview key={i} data={v} handleClickUrl={handleClickUrl} />
-            );
+            return <CardOverview key={i} data={v} />;
           })}
         </div>
       ) : (

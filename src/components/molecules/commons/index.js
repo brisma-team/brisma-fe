@@ -75,6 +75,9 @@ import AttachmentClipping from "./AttachmentClipping";
 import RetryButton from "./RetryButton";
 import ButtonSave from "./ButtonSave";
 import ButtonDownload from "./ButtonDownload";
+import CardHistory from "./CardHistory";
+import MeetingTypeSelect from "./MeetingTypeSelect";
+import CardFormInputTeam from "./CardFormInputTeam";
 
 export {
   BackButton,
@@ -154,4 +157,7 @@ export {
   RetryButton,
   ButtonSave,
   ButtonDownload,
+  CardHistory,
+  MeetingTypeSelect,
+  CardFormInputTeam,
 };

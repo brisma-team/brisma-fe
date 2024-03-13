@@ -31,7 +31,7 @@ const index = () => {
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
     {
-      name: `${projectDetail?.data?.project_info?.project_id} / Info`,
+      name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Info`,
       path: `/ewp/projects/konvensional/${id}/info`,
     },
   ];
@@ -39,14 +39,15 @@ const index = () => {
   useEffect(() => {
     const status_code =
       parseInt(projectDetail?.data?.project_info?.status_kode) || 0;
+
     console.log("status_kode => ", status_code);
     setDataTables([
       {
-        is_open: status_code >= 2,
+        is_open: true,
+        is_onprogress: status_code === 2,
         is_close: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end
           ? true
           : false,
-        prev_status_code: 1,
         status_code: 2,
         label: "Perencanaan",
         start_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_start,
@@ -55,11 +56,11 @@ const index = () => {
         log: "Menambahkan Sesuatu...",
       },
       {
-        is_open: status_code >= 4,
+        is_open: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
+        is_onprogress: status_code === 4,
         is_close: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end
           ? true
           : false,
-        prev_status_code: 2,
         status_code: 4,
         label: "Analisa",
         start_date:
@@ -69,11 +70,11 @@ const index = () => {
         log: "Menambahkan Sesuatu...",
       },
       {
-        is_open: status_code >= 6,
+        is_open: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
+        is_onprogress: status_code === 6,
         is_close: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end
           ? true
           : false,
-        prev_status_code: 4,
         status_code: 6,
         label: "Peluang Peningkatan",
         start_date:
@@ -83,11 +84,11 @@ const index = () => {
         log: "Menambahkan Sesuatu...",
       },
       {
-        is_open: status_code >= 8,
+        is_open: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end,
+        is_onprogress: status_code === 8,
         is_close: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end
           ? true
           : false,
-        prev_status_code: 6,
         status_code: 8,
         label: "Wrap-Up",
         start_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_start,
@@ -97,6 +98,10 @@ const index = () => {
       },
     ]);
   }, [projectDetail]);
+
+  useEffect(() => {
+    console.log("dataTables => ", dataTables);
+  }, [dataTables]);
 
   useEffect(() => {
     if (projectDetailError) {
@@ -159,9 +164,6 @@ const index = () => {
                   <div className="my-4"></div>
                   <RealizationTable
                     data={dataTables}
-                    currentStatusCode={parseInt(
-                      projectDetail?.data?.project_info?.status_kode
-                    )}
                     handleClickInitiate={handleClickInitiate}
                   />
                 </div>

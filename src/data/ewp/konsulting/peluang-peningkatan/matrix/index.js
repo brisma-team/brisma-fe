@@ -3,6 +3,8 @@ import useMatrixDetail from "./useMatrixDetail";
 import useLandingStatus from "./landing/useLandingStatus";
 import { useHeaderMatrixData } from "./header-matrix";
 import { useMatrixDocument } from "./dokumen";
+import useWorkflowMatrix from "./useWorkflowPeluangMatrix";
+import useWorkflowPeluang from "./useWorkflowPeluang";
 import {
   useDetailKondisi,
   useDetailSebab,
@@ -22,4 +24,6 @@ export {
   useDetailTanggapanClient,
   useOverviewPeluangList,
   useOverviewDetailPeluang,
+  useWorkflowMatrix,
+  useWorkflowPeluang,
 };

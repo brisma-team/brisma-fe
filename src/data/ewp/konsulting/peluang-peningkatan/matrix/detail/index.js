@@ -5,6 +5,7 @@ import useOverviewPeluangList from "./useOverviewPeluangList";
 import useLandingStatus from "./useLandingStatus";
 import useOverviewDetailPeluang from "./useOverviewDetailPeluang";
 import { useComment, useDocument } from "./dokumen";
+import { useKKPTRisk, useKKPTRekomendasi } from "./risk-rekomendasi";
 
 export {
   useDetailSebab,
@@ -15,4 +16,6 @@ export {
   useOverviewDetailPeluang,
   useComment,
   useDocument,
+  useKKPTRisk,
+  useKKPTRekomendasi,
 };

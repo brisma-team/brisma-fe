@@ -62,7 +62,7 @@ const DataTables = ({
         </Header>
         <Header
           width="14%"
-          className="border-t border-r cell-custom-dataTables rounded-se-lg"
+          className="border-t border-r cell-custom-dataTables"
         >
           <div className="custom-table-header justify-center text-sm font-semibold">
             LINGKUP
@@ -70,7 +70,7 @@ const DataTables = ({
         </Header>
         <Header
           width="13%"
-          className="border-t border-r cell-custom-dataTables rounded-se-lg"
+          className="border-t border-r cell-custom-dataTables"
         >
           <div className="custom-table-header justify-center text-sm font-semibold">
             RISK

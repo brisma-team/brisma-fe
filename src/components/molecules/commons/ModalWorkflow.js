@@ -33,6 +33,7 @@ const ModalWorkflow = ({
   widthHeader,
   isLogTableTree,
   isScrollHeader,
+  isProposer,
   withSigner,
 }) => {
   const { user } = useUser();
@@ -85,6 +86,7 @@ const ModalWorkflow = ({
           width={widthHeader}
           isScrollHeader={isScrollHeader}
           withSigner={withSigner}
+          isProposer={isProposer}
         />
       }
       footer={

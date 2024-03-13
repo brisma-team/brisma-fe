@@ -8,6 +8,7 @@ import {
   AttachmentClipping,
   ImageClipping,
   PrevNextNavigation,
+  CardHistory,
 } from "@/components/molecules/commons";
 import { fetchApi, loadingSwal, usePostFileData } from "@/helpers";
 import { useHeaderMatrixData } from "@/data/ewp/konsulting/peluang-peningkatan/matrix";
@@ -157,6 +158,9 @@ const index = () => {
               <ButtonField text={"Simpan"} handler={handleSubmit} />
             </div>
           </div>
+        </div>
+        <div>
+          <CardHistory />
         </div>
       </div>
       {/* End Content */}
