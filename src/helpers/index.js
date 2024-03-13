@@ -34,6 +34,7 @@ import checkRoleIsAdmin from "./checkRoleIsAdmin";
 import addDaysToDate from "./addDaysToDate";
 import previewDocumentNewTab from "./previewDocumentNewTab";
 import getFileDetails from "./getFileDetails";
+import downloadFromUrl from "./downloadFromUrl";
 
 export {
   loadingSwal,
@@ -72,4 +73,5 @@ export {
   addDaysToDate,
   previewDocumentNewTab,
   getFileDetails,
+  downloadFromUrl,
 };

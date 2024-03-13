@@ -13,17 +13,16 @@ import { useProjectDetail } from "@/data/ewp/konsulting";
 import { convertDate } from "@/helpers";
 
 const SidebarLandingEWPConsulting = () => {
-  //   const dispatch = useDispatch();
-  const router = useRouter();
   const { id } = useRouter().query;
   const baseUrl = `/ewp/konsulting/overview/${id}`;
   const [data, setData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
-  //   const [currentPageSub, setCurrentPageSub] = useState(0);
   const { projectDetail } = useProjectDetail({ id });
+  const [menu, setMenu] = useState([]);
 
   useEffect(() => {
     const projectInfo = projectDetail?.data?.project_info;
+    const projectRealisasi = projectDetail?.data?.realisasi;
     setData({
       projectId: projectInfo?.project_id,
       projectName: projectInfo?.project_name,
@@ -35,41 +34,36 @@ const SidebarLandingEWPConsulting = () => {
       ),
       initiatorName: projectInfo?.initiator?.nama,
     });
-  }, [projectDetail]);
 
-  const menu = [
-    { name: "Info", href: `/info`, isActive: true },
-    {
-      name: "Perencanaan",
-      href: `/perencanaan`,
-      isActive:
-        projectDetail?.data?.realisasi?.penyusunan_mapa_real_start !== null,
-    },
-    {
-      name: "Analisa",
-      href: `/analisa/lingkup`,
-      isActive:
-        projectDetail?.data?.realisasi?.pelaksanaan_audit_real_start !== null,
-    },
-    {
-      name: "Peluang Peningkatan",
-      href: `/peluang-peningkatan`,
-      isActive:
-        projectDetail?.data?.realisasi?.peluang_peningkatan_real_start !== null,
-    },
-    {
-      name: "Wrap up",
-      href: `/wrap-up`,
-      isActive:
-        projectDetail?.data?.realisasi?.Wrapup_Meeting_real_start !== null,
-    },
-    {
-      name: "Close",
-      href: `/Close`,
-      isActive:
-        projectDetail?.data?.realisasi?.Wrapup_Meeting_real_start !== null,
-    },
-  ];
+    setMenu([
+      { name: "Info", href: `/info`, isActive: true },
+      {
+        name: "Perencanaan",
+        href: `/perencanaan`,
+        isActive: projectRealisasi?.penyusunan_mapa_real_start,
+      },
+      {
+        name: "Analisa",
+        href: `/analisa/lingkup`,
+        isActive: projectRealisasi?.pelaksanaan_audit_real_start,
+      },
+      {
+        name: "Peluang Peningkatan",
+        href: `/peluang-peningkatan`,
+        isActive: projectRealisasi?.peluang_peningkatan_real_start,
+      },
+      {
+        name: "Wrap up",
+        href: `/wrapup`,
+        isActive: projectRealisasi?.Wrapup_Meeting_real_start,
+      },
+      {
+        name: "Close",
+        href: `/close`,
+        isActive: projectRealisasi?.Wrapup_Meeting_real_end,
+      },
+    ]);
+  }, [projectDetail]);
 
   const subMenu = [
     { name: "Log", href: `/log` },
@@ -78,60 +72,14 @@ const SidebarLandingEWPConsulting = () => {
   ];
 
   useEffect(() => {
-    const getCurrentPage = () => {
-      const currentPath = router.asPath;
+    const url = window.location.href;
+    const regex = /\/overview\/\d+\/([^\/]+)/;
+    const match = url.match(regex);
 
-      const regex = new RegExp(
-        `^${menu.map((item) => `(${item.href})`).join("|")}$`,
-        "i"
-      );
-
-      const match = currentPath.match(regex);
-
-      if (match) {
-        const matchedPath = match[0];
-        const matchedIndex = menu.findIndex(
-          (item) => item.href === matchedPath
-        );
-
-        if (matchedIndex !== -1) {
-          return matchedIndex;
-        }
-      }
-
-      return 0;
-    };
-
-    setCurrentPage(getCurrentPage());
+    if (match && match[1]) {
+      setCurrentPage(match[1]);
+    }
   }, []);
-
-  //   useEffect(() => {
-  //     const getCurrentPageSub = () => {
-  //       const currentPath = router.asPath;
-
-  //       const regex = new RegExp(
-  //         `^${subMenu.map((item) => `(${item.href})`).join("|")}$`,
-  //         "i"
-  //       );
-
-  //       const match = currentPath.match(regex);
-
-  //       if (match) {
-  //         const matchedPath = match[0];
-  //         const matchedIndex = menu.findIndex(
-  //           (item) => item.href === matchedPath
-  //         );
-
-  //         if (matchedIndex !== -1) {
-  //           return matchedIndex;
-  //         }
-  //       }
-
-  //       return 0;
-  //     };
-
-  //     setCurrentPageSub(getCurrentPageSub());
-  //   }, []);
 
   return (
     <div className="fixed h-screen w-64 pt-8- shadow z-10">
@@ -144,13 +92,13 @@ const SidebarLandingEWPConsulting = () => {
             <div className="mb-2">
               <div className="text-sm text-brisma font-bold">PIC</div>
               <div className="text-sm text-brisma">
-                {data?.initiatorName || "N/A"}
+                {data?.initiatorName || "-"}
               </div>
             </div>
             <div className="mb-2">
               <div className="text-sm text-brisma font-bold">Created At</div>
               <div className="text-sm text-brisma">
-                {data?.createdAt || "N/A"}
+                {data?.createdAt || "-"}
               </div>
             </div>
             <div className="mb-2">
@@ -158,7 +106,7 @@ const SidebarLandingEWPConsulting = () => {
                 Document Status
               </div>
               <div className="text-sm text-brisma">
-                {data?.statusName || "N/A"}
+                {data?.statusName || "-"}
               </div>
             </div>
           </div>
@@ -171,29 +119,29 @@ const SidebarLandingEWPConsulting = () => {
                   return (
                     <Link
                       key={i}
-                      href={baseUrl + v.href}
+                      href={baseUrl + v?.href}
                       className={`flex ${
-                        currentPage === i
+                        currentPage === v?.href?.replace(/\//g, "")
                           ? `text-atlasian-blue-light`
                           : `text-black`
-                      }  gap-2 items-center hover:no-underline no-underline py-2 px-7 ${
-                        v.isActive
+                      } gap-2 items-center hover:no-underline no-underline py-2 px-7 ${
+                        v?.isActive
                           ? `cursor-pointer`
-                          : `hover:cursor-not-allowed pointer-events-none`
+                          : `hover:cursor-not-allowed pointer-events-none opacity-20`
                       }`}
                       style={{
-                        pointerEvents: v.isActive ? "auto" : "none",
-                        opacity: v.isActive ? 1 : 0.5,
-                        color: v.isActive ? "inherit" : "gray", // Change 'gray' to your desired color
+                        pointerEvents: v?.isActive ? "auto" : "none",
                       }}
                     >
                       <div>
                         <Image
-                          src={v.name === "Close" ? ImageCircleCheck : ImageBar}
+                          src={
+                            v?.name === "Close" ? ImageCircleCheck : ImageBar
+                          }
                           alt=""
                         />
                       </div>
-                      <div className="font-semibold text-base">{v.name}</div>
+                      <div className="font-semibold text-base">{v?.name}</div>
                     </Link>
                   );
                 })}
@@ -208,13 +156,17 @@ const SidebarLandingEWPConsulting = () => {
                   return (
                     <Link
                       key={i}
-                      href={baseUrl + v.href}
-                      className={`flex text-black gap-2 items-center hover:no-underline no-underline py-2 px-7`}
+                      href={baseUrl + v?.href}
+                      className={`flex gap-2 items-center ${
+                        currentPage === v?.href?.replace(/\//g, "")
+                          ? `text-atlasian-blue-light`
+                          : `text-black`
+                      } hover:no-underline no-underline py-2 px-7`}
                     >
                       <div>
                         <Image src={ImageBar} alt="" />
                       </div>
-                      <div className="font-semibold text-base">{v.name}</div>
+                      <div className="font-semibold text-base">{v?.name}</div>
                     </Link>
                   );
                 })}
