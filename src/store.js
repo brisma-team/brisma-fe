@@ -36,6 +36,8 @@ import rekomendasiEWPKonsultingReducer from "./slices/ewp/konsulting/analisa/rek
 import overviewDetailPeluangReducer from "./slices/ewp/konsulting/peluang-peningkatan/overviewDetailPeluangSlice";
 import documentKkpaEWPKonsultingReducer from "./slices/ewp/konsulting/analisa/documentMapaEWPKonsultingSlice";
 import documentEWPKonsultingReducer from "./slices/ewp/konsulting/dokumen/documentEWPKonsultingSlice";
+import overviewMeetingEWPKonsultingReducer from "./slices/ewp/konsulting/meeting/overviewMeetingEWPKonsultingSlice";
+import attendanceMeetingEWPKonsultingReducer from "./slices/ewp/konsulting/meeting/attendanceMeetingEWPKonsultingSlice";
 import riskRekomendasiReducer from "./slices/ewp/konsulting/peluang-peningkatan/riskRekomendasiSlice";
 import documentMatrixPeluangKonsultingReducer from "./slices/ewp/konsulting/peluang-peningkatan/documentMatrixPeluangKonsultingSlice";
 
@@ -109,6 +111,8 @@ export const store = configureStore({
     overviewDetailPeluang: overviewDetailPeluangReducer,
     documentKkpaEWPKonsulting: documentKkpaEWPKonsultingReducer,
     documentEWPKonsulting: documentEWPKonsultingReducer,
+    overviewMeetingEWPKonsulting: overviewMeetingEWPKonsultingReducer,
+    attendanceMeetingEWPKonsulting: attendanceMeetingEWPKonsultingReducer,
     riskRekomendasi: riskRekomendasiReducer,
     documentMatrixPeluangKonsulting: documentMatrixPeluangKonsultingReducer,
 
