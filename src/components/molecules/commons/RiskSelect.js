@@ -21,10 +21,10 @@ const RiskSelect = ({
   useEffect(() => {
     if (risk?.data?.length) {
       const mapping = risk?.data?.map((v) => {
-        const { kode, nama } = v;
+        const { kode, abbr, nama } = v;
         return {
           label: v.nama,
-          value: { kode, nama },
+          value: { kode, abbr, nama },
         };
       });
       setOptions(mapping);

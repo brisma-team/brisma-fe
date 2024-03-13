@@ -10,6 +10,7 @@ import TableTree, {
   Row,
   Rows,
 } from "@atlaskit/table-tree";
+import { convertDate } from "@/helpers";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
@@ -19,7 +20,7 @@ const TableRekomendasi = ({
   selectedRekomendasi,
   handleClickSave,
   // handleClickSelectedAll,
-  // handleChangeChecbox,
+  handleChangeCheckbox,
 }) => {
   return (
     <CardContentHeaderFooter
@@ -81,40 +82,49 @@ const TableRekomendasi = ({
               items={data}
               render={({
                 // index,
-                pn_responden,
-                // nama_responden
+                id,
+                rekomendasi_name,
+                deadline,
+                control_abbr,
+                control_name,
+                // is_edit,
+                // is_new,
               }) => (
                 <Row>
                   <Cell width="10%" className={`border-x ${customCell}`}>
                     <div className="custom-table-position-center justify-center">
                       <CustomCheckbox
                         value={selectedRekomendasi?.find(
-                          (responden) =>
-                            responden?.pn_responden === pn_responden
+                          (data) => data?.id === id
                         )}
-                        // handleChange={(e) =>
-                        //   handleChangeChecbox(e.target.checked, {
-                        //     pn_responden,
-                        //     nama_responden,
-                        //   })
-                        // }
+                        handleChange={(e) => {
+                          handleChangeCheckbox(e.target.checked, {
+                            id,
+                            rekomendasi_name,
+                            deadline,
+                          });
+                        }}
                         isDisabled={isDisabled}
                       />
                     </div>
                   </Cell>
                   <Cell width="25%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center justify-center">
-                      <p className="text-xs">{"DD/MM/YY"}</p>
+                      <p className="text-xs">
+                        {convertDate(deadline, "/", "d")}
+                      </p>
                     </div>
                   </Cell>
                   <Cell width="40%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center justify-center relative">
-                      <p className="text-xs">{"N/A"}</p>
+                      <p className="text-xs">{rekomendasi_name || "-"}</p>
                     </div>
                   </Cell>
                   <Cell width="25%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center justify-center">
-                      <p className="text-xs">{"N/A"}</p>
+                      <p className="text-xs">
+                        {control_abbr + " - " + control_name}
+                      </p>
                     </div>
                   </Cell>
                 </Row>

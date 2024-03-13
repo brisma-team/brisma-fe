@@ -3,9 +3,11 @@ import {
   CardContentHeaderFooter,
   DataNotFound,
   // RiskIssueSelect,
-  RiskSelect,
+  // RiskSelect,
+  // RiskSelectKKPT,
   // OrgehSelect,
 } from "@/components/molecules/commons";
+import { RiskSelectKKPT, LingkupSelectKKPT } from "../../../commons";
 import {
   ButtonField,
   ButtonIcon,
@@ -13,7 +15,7 @@ import {
   // TextAreaField,
 } from "@/components/atoms";
 import { IconPlus } from "@/components/icons";
-// import { ImageCircleCheckGreen } from "@/helpers/imagesUrl";
+import { ImageCircleCheckGreen } from "@/helpers/imagesUrl";
 import TableTree, {
   Cell,
   Header,
@@ -21,23 +23,29 @@ import TableTree, {
   Row,
   Rows,
 } from "@atlaskit/table-tree";
-// import Image from "next/image";
+import Image from "next/image";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
 const TableRiskIssue = ({
   data,
   isDisabled,
-  newUker,
-  selectedUkerId,
+  newRisk,
+  newLingkup,
+  selectedEWPId,
+  selectedLingkupId,
+  selectedRiskId,
   handleClickAddRow,
-  // handleClickSave,
+  handleClickSave,
   handleClickDelete,
-  handleChangeUker,
+  handleChangeRisk,
+  handleChangeLingkup,
   // handleChangeTextUker,
-  handleSelectedUker,
+  handleSelectedRisk,
 }) => {
-  const findIndex = data?.findIndex((uker) => uker.id === selectedUkerId);
+  const findIndex = data?.findIndex(
+    (value) => value.kkpt_risk_id === selectedRiskId
+  );
   return (
     <CardContentHeaderFooter
       header={
@@ -107,17 +115,18 @@ const TableRiskIssue = ({
               items={data}
               render={({
                 index,
-                id,
-                // orgeh_name,
-                // jumlah,
-                // keterangan,
-                // is_edit,
-                // is_new,
+                kkpt_risk_id,
+                abbr,
+                lingkup_pemeriksaan,
+                rekomendasi_name,
+                rekomendasi_terpilih,
+                is_edit,
+                is_new,
               }) => (
                 <Row>
                   <Cell width="10%" className={`border-x ${customCell}`}>
                     <div className="custom-table-position-center justify-center">
-                      {/* {is_new ? (
+                      {is_new ? (
                         <ButtonIcon
                           icon={
                             <Image
@@ -129,53 +138,93 @@ const TableRiskIssue = ({
                           }
                           handleClick={handleClickSave}
                         />
-                      ) : ( */}
-                      <div className="flex justify-between items-center gap-1.5">
-                        <RadioField
-                          isChecked={findIndex === index}
-                          handleChange={() => handleSelectedUker(id)}
-                        />
-                        {!isDisabled ? (
-                          <ButtonIcon
-                            icon={<ButtonDelete />}
-                            handleClick={() => handleClickDelete(id)}
-                            color={"red"}
+                      ) : (
+                        <div className="flex justify-between items-center gap-1.5">
+                          <RadioField
+                            isChecked={findIndex === index}
+                            handleChange={() => {
+                              handleSelectedRisk(kkpt_risk_id);
+                            }}
                           />
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                      {/* )} */}
+                          {!isDisabled ? (
+                            <ButtonIcon
+                              icon={<ButtonDelete />}
+                              handleClick={() =>
+                                handleClickDelete(kkpt_risk_id)
+                              }
+                              color={"red"}
+                            />
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      )}
                     </div>
                   </Cell>
                   <Cell width="25%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center justify-center">
-                      <p className="text-xs">{"N/A"}</p>
+                      {/* <p className="text-xs">{lingkup_pemeriksaan || "N/A"}</p> */}
+                      {is_edit ? (
+                        <LingkupSelectKKPT
+                          selectedEWP={selectedEWPId}
+                          selectedValue={
+                            newLingkup?.lingkup_pemeriksaan_id
+                              ? {
+                                  label: newLingkup?.lingkup_pemeriksaan_name,
+                                  value: {
+                                    lingkup_pemeriksaan_id:
+                                      newLingkup?.lingkup_pemeriksaan_id,
+                                    lingkup_pemeriksaan_name:
+                                      newLingkup?.lingkup_pemeriksaan_name,
+                                  },
+                                }
+                              : null
+                          }
+                          handleChange={(e) => {
+                            handleChangeLingkup(e.value);
+                          }}
+                          positionAbsolute={true}
+                          width="w-[20rem]"
+                        />
+                      ) : (
+                        <p className="text-xs">
+                          {lingkup_pemeriksaan || "N/A"}
+                        </p>
+                      )}
                     </div>
                   </Cell>
                   <Cell width="40%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center justify-center relative">
-                      <RiskSelect
-                        selectedValue={
-                          newUker?.orgeh_kode
-                            ? {
-                                label: newUker?.orgeh_name,
-                                value: {
-                                  orgeh_kode: newUker?.orgeh_kode,
-                                  orgeh_name: newUker?.orgeh_name,
-                                },
-                              }
-                            : null
-                        }
-                        handleChange={(e) => handleChangeUker(e.value)}
-                        positionAbsolute={true}
-                        width="w-[13rem]"
-                      />
+                      {is_edit ? (
+                        <RiskSelectKKPT
+                          selectedLingkupId={selectedLingkupId}
+                          selectedValue={
+                            newRisk?.risk_kode
+                              ? {
+                                  label: newRisk?.risk_name,
+                                  value: {
+                                    kode: newRisk?.risk_kode,
+                                    name: newRisk?.risk_name,
+                                  },
+                                }
+                              : null
+                          }
+                          handleChange={(e) => {
+                            handleChangeRisk(e.value);
+                          }}
+                          positionAbsolute={true}
+                          width="w-[20rem]"
+                        />
+                      ) : (
+                        <p>
+                          <strong>{abbr}</strong> - {rekomendasi_name}
+                        </p>
+                      )}
                     </div>
                   </Cell>
                   <Cell width="25%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center justify-center">
-                      <p className="text-xs">{"N/A"}</p>
+                      <p className="text-xs">{rekomendasi_terpilih || 0}</p>
                     </div>
                   </Cell>
                 </Row>
