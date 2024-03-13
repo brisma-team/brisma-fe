@@ -39,6 +39,7 @@ import documentEWPKonsultingReducer from "./slices/ewp/konsulting/dokumen/docume
 import overviewMeetingEWPKonsultingReducer from "./slices/ewp/konsulting/meeting/overviewMeetingEWPKonsultingSlice";
 import attendanceMeetingEWPKonsultingReducer from "./slices/ewp/konsulting/meeting/attendanceMeetingEWPKonsultingSlice";
 import riskRekomendasiReducer from "./slices/ewp/konsulting/peluang-peningkatan/riskRekomendasiSlice";
+import notulenMeetingEWPKonsultingReducer from "./slices/ewp/konsulting/meeting/notulenMeetingEWPKonsultingSlice";
 
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
@@ -113,6 +114,7 @@ export const store = configureStore({
     overviewMeetingEWPKonsulting: overviewMeetingEWPKonsultingReducer,
     attendanceMeetingEWPKonsulting: attendanceMeetingEWPKonsultingReducer,
     riskRekomendasi: riskRekomendasiReducer,
+    notulenMeetingEWPKonsulting: notulenMeetingEWPKonsultingReducer,
 
     // REFERENCE
     createTemplateReference: createTemplateReferenceSlice,
