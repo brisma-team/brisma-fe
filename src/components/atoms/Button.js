@@ -12,6 +12,7 @@ const ButtonField = ({
   name,
   style,
   className,
+  isCentered = true,
 }) => {
   let txtColor;
   switch (textColor) {
@@ -45,9 +46,9 @@ const ButtonField = ({
       name={name && name}
     >
       <p
-        className={`${
-          textColor ? txtColor : `text-white`
-        } flex items-center justify-center font-semibold ${style && style}`}
+        className={`${textColor ? txtColor : `text-white`} flex items-center ${
+          isCentered ? "justify-center" : ""
+        } font-semibold ${style && style}`}
       >
         {text && text}
       </p>

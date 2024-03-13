@@ -10,17 +10,18 @@ import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
 import { convertDate } from "@/helpers";
 import _ from "lodash";
 import {
-  CardOverview,
   CardFilterOverview,
-  ModalAddProjectEWP,
+  // ModalAddProjectEWP,
 } from "@/components/molecules/ewp/konsulting/overview";
+import { CardOverview } from "@/components/molecules/rpm/kegiatan";
 import { useApprovalEWP } from "@/data/ewp";
 import { useOverviewEWPKonsulting } from "@/data/ewp/konsulting/overview";
+import { IconFile } from "@/components/icons";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
-  { name: "EWP", path: "/ewp" },
-  { name: "Consulting / Overview", path: "/ewp/konsulting/overview" },
+  { name: "RPM", path: "/rpm" },
+  { name: "Kegiatan / Overview", path: "/rpm/kegiatan/overview" },
 ];
 
 const convertProgressAndPercent = (status) => {
@@ -54,7 +55,7 @@ const index = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [totalData, setTotalData] = useState(1);
   const [data, setData] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
   const [filter, setFilter] = useState({
     project_code: "",
     project_name: "",
@@ -130,7 +131,7 @@ const index = () => {
           approval_status: status_persetujuan_name,
           addendum: number_adendum,
           need_approval: need_approved,
-          href: `/ewp/projects/konsulting/${v?.id}/info`,
+          href: `/ewp/projects/konsulting/${v?.id}/infox`,
           created_at: createdAt,
           maker: `${initiator?.pn} - ${initiator?.nama}`,
         };
@@ -153,7 +154,7 @@ const index = () => {
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
       <div className="flexitems-center mb-6">
-        <PageTitle text={"Project Overview"} />
+        <PageTitle text={"RPM Kegiatan Overview"} />
       </div>
       <div className="flex justify-between items-end">
         <div className="flex justify-between items-center gap-2">
@@ -163,7 +164,7 @@ const index = () => {
               text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
             />
           </div>
-          <div className="w-36 rounded bg-atlasian-purple">
+          {/* <div className="w-36 rounded bg-atlasian-purple">
             <ButtonField
               handler={() => setShowModal(true)}
               text={"Buat Project"}
@@ -173,10 +174,14 @@ const index = () => {
               setShowModal={setShowModal}
               mutate={overviewEWPKonsultingMutate}
             />
-          </div>
+          </div> */}
         </div>
         <div className="w-24 rounded bg-atlasian-blue-light">
-          <ButtonField handler={() => console.log("test")} text={`Arsip`} />
+          <ButtonField
+            icon={<IconFile primaryColor="white" />}
+            isCentered={false}
+            text={`Arsip`}
+          />
         </div>
       </div>
       <div className="">
