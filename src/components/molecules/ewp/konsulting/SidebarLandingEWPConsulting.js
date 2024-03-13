@@ -21,7 +21,6 @@ const SidebarLandingEWPConsulting = () => {
   const [currentPage, setCurrentPage] = useState(0);
   //   const [currentPageSub, setCurrentPageSub] = useState(0);
   const { projectDetail } = useProjectDetail({ id });
-  console.log("projectDetail", projectDetail);
 
   useEffect(() => {
     const projectInfo = projectDetail?.data?.project_info;
