@@ -1,7 +1,7 @@
 import { Breadcrumbs, Card, DivButton, PageTitle } from "@/components/atoms";
 import {
   PrevNextNavigation,
-  //   ApprovalItems,
+  ApprovalItems,
   ModalComment,
   //   ModalWorkflow,
 } from "@/components/molecules/commons";
@@ -24,7 +24,10 @@ import {
   useComment,
   useDocument,
 } from "@/data/ewp/konsulting/peluang-peningkatan/matrix/detail";
-// import { useSelector, useDispatch } from "react-redux";
+import {
+  useSelector,
+  // useDispatch
+} from "react-redux";
 // import {
 //   resetValidationErrorsWorkflow,
 //   setValidationErrorsWorkflow,
@@ -81,7 +84,10 @@ const index = () => {
   const [listComment, setListComment] = useState([]);
 
   const ref = useRef(null);
-  //   const [showModalApproval, setShowModalApproval] = useState(false);
+  const [
+    // showModalApproval,
+    setShowModalApproval,
+  ] = useState(false);
   const [openCardComment, setOpenCardComment] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
   const [activeIndexComment, setActiveIndexComment] = useState(1);
@@ -103,9 +109,9 @@ const index = () => {
       kkpt_id,
     });
   }, [router.isReady]);
-  //   const workflowData = useSelector(
-  //     (state) => state.documentMapaEWPKonsulting.workflowData
-  //   );
+  const workflowData = useSelector(
+    (state) => state.documentMapaEWPKonsulting.workflowData
+  );
   //   const validationErrorsWorkflow = useSelector(
   //     (state) => state.documentMapaEWPKonsulting.validationErrorsWorkflow
   //   );
@@ -606,7 +612,7 @@ const index = () => {
             </div>
           </Card>
         </div>
-        {/* <div>
+        <div>
           <DivButton
             handleClick={() => setShowModalApproval(true)}
             className="no-underline hover:no-underline w-56"
@@ -634,7 +640,7 @@ const index = () => {
               </Card>
             </div>
           </DivButton>
-          <ModalWorkflow
+          {/* <ModalWorkflow
             workflowData={workflowData}
             historyWorkflow={historyWorkflow}
             validationErrors={validationErrorsWorkflow}
@@ -647,8 +653,8 @@ const index = () => {
             handleChangeSelect={handleChangeSelect}
             handleChangeText={handleChangeText}
             withSigner
-          />
-        </div> */}
+          /> */}
+        </div>
       </div>
       {/* End Content */}
     </LandingLayoutEWPConsulting>

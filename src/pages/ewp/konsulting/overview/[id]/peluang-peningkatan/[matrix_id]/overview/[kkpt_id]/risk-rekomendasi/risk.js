@@ -1,30 +1,31 @@
 import { Breadcrumbs, PageTitle } from "@/components/atoms";
 import { useProjectDetail } from "@/data/ewp/konsulting";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
-import { PrevNextNavigation } from "@/components/molecules/commons";
-import { useDispatch } from "react-redux";
-import {
-  useKKPTRekomendasi,
-  useKKPTRisk,
-} from "@/data/ewp/konsulting/peluang-peningkatan/matrix/detail";
-import { useSelector } from "react-redux";
+import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
+// import { useRespondenByPnSurvey } from "@/data/survey/initiator/responden";
+// import { useKKPTRisk } from "@/data/ewp/konsulting/peluang-peningkatan/matrix/detail";
 import {
   resetDataTables,
+  resetPayloadNewRisk,
   resetPayloadNewLingkup,
   resetPayloadNewRekomendasi,
-  resetPayloadNewRisk,
   setDataTables,
+  setPayloadNewRisk,
   setPayloadNewLingkup,
   setPayloadNewRekomendasi,
-  setPayloadNewRisk,
 } from "@/slices/ewp/konsulting/peluang-peningkatan/riskRekomendasiSlice";
 import { confirmationSwal, errorSwal, fetchApi, loadingSwal } from "@/helpers";
 import {
   TableRekomendasi,
   TableRiskIssue,
 } from "@/components/molecules/ewp/konsulting/peluang-peningkatan/matrix";
+import { PrevNextNavigation } from "@/components/molecules/commons";
+import {
+  useKKPTRisk,
+  useKKPTRekomendasi,
+} from "@/data/ewp/konsulting/peluang-peningkatan/matrix/detail";
 
 const routes = [
   {
@@ -35,8 +36,8 @@ const routes = [
     name: "Sebab",
     slug: "sebab",
   },
-  { name: "Risk & Rekomendasi", slug: "risk-rekomendasi" },
   { name: "Tanggapan Client", slug: "tanggapan-client" },
+  { name: "Risk & Rekomendasi", slug: "risk-rekomendasi" },
   { name: "Dokumen", slug: "dokumen" },
 ];
 
@@ -45,39 +46,27 @@ const index = () => {
   const { id, matrix_id, kkpt_id } = useRouter().query;
   const baseUrl = `/ewp/konsulting/overview/${id}`;
   const pathNameBase = `${baseUrl}/peluang-peningkatan`;
-  const pathNameOverview = `${baseUrl}/peluang-peningkatan/${matrix_id}/overview`;
-  const pathNameContent = `${baseUrl}/peluang-peningkatan/${matrix_id}/overview/${kkpt_id}`;
-
-  const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const pathNameContent = `${baseUrl}/peluang-peningkatan/${matrix_id}`;
 
   const { projectDetail } = useProjectDetail({ id });
-  useEffect(() => {
-    setBreadcrumbs([
-      { name: "Menu", path: "/dashboard" },
-      { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting/overview" },
-      {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
-        path: `${baseUrl}/info`,
-      },
-      {
-        name: `Peluang Peningkatan`,
-        path: `${pathNameBase}`,
-      },
-      {
-        name: `Overview`,
-        path: `${pathNameOverview}`,
-      },
-      {
-        name: `Landing`,
-        path: `${pathNameContent}`,
-      },
-      {
-        name: `Risk Issue & Rekomendasi`,
-        path: `${pathNameContent}/risk-rekomendasi`,
-      },
-    ]);
-  }, [projectDetail]);
+
+  const breadcrumbs = [
+    { name: "Menu", path: "/dashboard" },
+    { name: "EWP", path: "/ewp" },
+    { name: "Overview", path: "/ewp/konsulting/overview" },
+    {
+      name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
+      path: `${baseUrl}/info`,
+    },
+    {
+      name: `Peluang Peningkatan`,
+      path: `${pathNameBase}`,
+    },
+    {
+      name: `Risk Issue & Rekomendasi`,
+      path: `${pathNameContent}/risk-rekomendasi`,
+    },
+  ];
 
   const [isAddNewRow, setIsAddNewRow] = useState(false);
 
@@ -340,49 +329,51 @@ const index = () => {
     rekomendasiMutate();
     loadingSwal("close");
   };
-
+  // [END] Handler add responden by uker pn
   return (
     <LandingLayoutEWPConsulting>
-      {/* Start Breadcrumbs */}
-      <Breadcrumbs data={breadcrumbs} />
-      {/* End Breadcrumbs */}
-      <div className="flex justify-between items-center mb-7">
-        <PageTitle text="Risk Issue & Rekomendasi" />
-        <PrevNextNavigation
-          baseUrl={pathNameContent}
-          routes={routes}
-          prevUrl={"/tanggapan-client"}
-          nextUrl={"/dokumen"}
-          marginLeft={"-60px"}
-        />
-      </div>
-      {/* Start Content */}
-      <div className="my-4 flex gap-6">
-        <div className="flex flex-col gap-4 w-full h-fit">
-          <TableRiskIssue
-            data={dataTables.riskList}
-            newLingkup={payloadNewLingkup}
-            newRisk={payloadNewRisk}
-            selectedEWPId={id}
-            selectedLingkupId={payloadNewLingkup?.lingkup_pemeriksaan_id}
-            selectedRiskId={selectedRiskId}
-            isDisabled={false}
-            handleChangeRisk={handleChangeValue}
-            handleChangeLingkup={handleChangeValueLingkup}
-            handleClickAddRow={handleClickAddRow}
-            handleClickDelete={handleClickDelete}
-            handleClickSave={handleClickSave}
-            handleSelectedRisk={handleSelectedValue}
-            handleSelectedLingkup={handleSelectedValueLingkup}
-          />
-          <TableRekomendasi
-            data={dataTables.rekomendasiList}
-            selectedRekomendasi={payloadNewRekomendasi}
-            isDisabled={false}
-            handleChangeCheckbox={handleChangeChecboxRekomendasi}
-            // handleClickSelectedAll={handleClickSelectedAllRespondenPn}
-            handleClickSave={handleClickSaveRekomendasi}
-          />
+      <div className="w-[71rem]">
+        <div className="pl-0.5 pt-4 pr-4 pb-6">
+          <Breadcrumbs data={breadcrumbs} />
+          <div className="flex justify-between items-center mb-7">
+            <PageTitle text="Risk Issue dan Rekomendasi" />
+            <PrevNextNavigation
+              baseUrl={pathNameContent}
+              routes={routes}
+              prevUrl={"/tanggapan-client"}
+              nextUrl={"/dokumen"}
+              marginLeft={"-60px"}
+            />
+          </div>
+          <div className="mb-4" />
+          <div className="flex gap-4 min-h-screen">
+            <div className="flex flex-col gap-4 w-full h-fit">
+              <TableRiskIssue
+                data={dataTables.riskList}
+                newLingkup={payloadNewLingkup}
+                newRisk={payloadNewRisk}
+                selectedEWPId={id}
+                selectedLingkupId={payloadNewLingkup?.lingkup_pemeriksaan_id}
+                selectedRiskId={selectedRiskId}
+                isDisabled={false}
+                handleChangeRisk={handleChangeValue}
+                handleChangeLingkup={handleChangeValueLingkup}
+                handleClickAddRow={handleClickAddRow}
+                handleClickDelete={handleClickDelete}
+                handleClickSave={handleClickSave}
+                handleSelectedRisk={handleSelectedValue}
+                handleSelectedLingkup={handleSelectedValueLingkup}
+              />
+              <TableRekomendasi
+                data={dataTables.rekomendasiList}
+                selectedRekomendasi={payloadNewRekomendasi}
+                isDisabled={false}
+                handleChangeCheckbox={handleChangeChecboxRekomendasi}
+                // handleClickSelectedAll={handleClickSelectedAllRespondenPn}
+                handleClickSave={handleClickSaveRekomendasi}
+              />
+            </div>
+          </div>
         </div>
       </div>
       {/* End Content */}
