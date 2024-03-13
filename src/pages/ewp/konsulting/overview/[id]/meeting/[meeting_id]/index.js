@@ -38,13 +38,16 @@ const index = () => {
   }, [projectDetail]);
 
   useEffect(() => {
+    console.log("landingStatus => ", landingStatus?.data);
     if (landingStatus?.data) {
       const mappingDataCarding = [
         {
           title: "Daftar Kehadiran",
           description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
-          status: !landingStatus?.data?.attendance ? "success" : "failed",
+          status: !landingStatus?.data?.attendance?.is_open
+            ? "success"
+            : "failed",
           url: `${pathNameLandingPage}/attendance`,
         },
         {
@@ -58,7 +61,7 @@ const index = () => {
           title: "Berita Acara",
           description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
-          status: landingStatus?.data?.ba?.notulen ? "success" : "failed",
+          status: landingStatus?.data?.ba?.content ? "success" : "failed",
           url: `${pathNameLandingPage}/berita-acara`,
         },
       ];
