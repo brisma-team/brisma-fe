@@ -105,7 +105,6 @@ const index = () => {
           title: "Dokumen",
           description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-          status: landingStatus?.data?.doc === "Final" ? "success" : "failed",
           url: `${pathNameContent}/dokumen`,
         },
       ];
