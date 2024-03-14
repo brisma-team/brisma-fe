@@ -332,7 +332,7 @@ const index = () => {
       if (workflowMatrixData?.data?.log?.length) {
         const mapping = workflowMatrixData?.data?.log?.map((v) => {
           return {
-            "P.I.C": v?.pn_from + " - " + v?.name_from,
+            "P.I.C": v?.from?.pn + " - " + v?.from?.nama,
             Alasan: v?.note,
             Status:
               v?.is_signed === true
@@ -340,7 +340,7 @@ const index = () => {
                 : v?.is_signed === false
                 ? "Rejected"
                 : "",
-            Tanggal: convertDate(v?.createdAt, "-", "d"),
+            Tanggal: convertDate(v?.created_at, "/", "d"),
           };
         });
         setHistoryWorkflow(mapping);
