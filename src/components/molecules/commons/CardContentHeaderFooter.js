@@ -12,6 +12,7 @@ const CardContentHeaderFooter = ({
   colorBorderBottom,
   withoutBorderTop,
   withoutBorderBottom,
+  headerHeight,
 }) => {
   return (
     <div
@@ -26,7 +27,7 @@ const CardContentHeaderFooter = ({
     >
       {header ? (
         <div
-          className={`w-full h-full ${
+          className={`w-full ${headerHeight || "h-full"} ${
             !withoutBorderTop &&
             `border-b-2 ${colorBorderTop || `border-neutral-200`}`
           }`}

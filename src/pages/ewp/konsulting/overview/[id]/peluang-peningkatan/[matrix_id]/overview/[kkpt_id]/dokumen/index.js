@@ -21,7 +21,7 @@ import {
   setValidationErrorsWorkflow,
   setWorkflowData,
   resetWorkflowData,
-} from "@/slices/ewp/konsulting/peluang-peningkatan/documentMatrixPeluangKonsultingSlice";
+} from "@/slices/ewp/konsulting/peluang-peningkatan/documentDetailPeluangKonsultingSlice";
 import _ from "lodash";
 import {
   confirmationSwal,
@@ -95,17 +95,17 @@ const index = () => {
     });
   }, [router.isReady]);
   const workflowData = useSelector(
-    (state) => state.documentMatrixPeluangKonsulting.workflowData
+    (state) => state.documentDetailPeluangKonsulting.workflowData
   );
   const validationErrorsWorkflow = useSelector(
-    (state) => state.documentMatrixPeluangKonsulting.validationErrorsWorkflow
+    (state) => state.documentDetailPeluangKonsulting.validationErrorsWorkflow
   );
 
   const { projectDetail } = useProjectDetail({ id: params?.id });
   const { documentData } = useDocument(params?.kkpt_id, bab);
   const { workflowMatrixData, workflowMatrixMutate } = useWorkflowMatrix({
-    type: "matrix_peluang_peningkatan",
-    id: params?.matrix_id,
+    type: "kkpt",
+    id: params?.kkpt_id,
   });
   const { commentData, commentDataMutate } = useComment(
     params?.kkpt_id,
@@ -410,8 +410,8 @@ const index = () => {
     if (validate) {
       const actionType = e.target.offsetParent.name;
       const data = {
-        sub_modul: "matrix_peluang_peningkatan",
-        sub_modul_id: params?.matrix_id,
+        sub_modul: "kkpt",
+        sub_modul_id: params?.kkpt_id,
       };
 
       const signedCount = workflowData?.ref_tim_audit_approver?.filter(

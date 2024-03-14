@@ -10,7 +10,7 @@ import {
   PrevNextNavigation,
   CardHistory,
 } from "@/components/molecules/commons";
-import { fetchApi, loadingSwal, usePostFileData } from "@/helpers";
+import { convertDate, fetchApi, loadingSwal, usePostFileData } from "@/helpers";
 import { useHeaderMatrixData } from "@/data/ewp/konsulting/peluang-peningkatan/matrix";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
@@ -39,6 +39,7 @@ const index = () => {
   const [attachmentClipList, setAttachmentClipList] = useState([]);
   const [content, setContent] = useState("");
   const [typeUpload, setTypeUpload] = useState("");
+  const [documentLog, setDocumentLog] = useState([]);
 
   const { projectDetail } = useProjectDetail({ id });
   const { headerMatrixData, headerMatrixDataMutate } = useHeaderMatrixData({
@@ -67,6 +68,17 @@ const index = () => {
 
   useEffect(() => {
     setContent(headerMatrixData?.data?.info_header || "");
+    const logs = headerMatrixData?.data?.log_perubahan_info?.map(
+      (val, index) => {
+        return {
+          id: index,
+          date: convertDate(val?.createdAt, "/", "d"),
+          subject: val?.pn + " - " + val?.nama,
+          description: "Mengubah Document",
+        };
+      }
+    );
+    setDocumentLog(logs);
   }, [headerMatrixData]);
 
   const handleClickUploadAttachment = () => {
@@ -160,7 +172,7 @@ const index = () => {
           </div>
         </div>
         <div>
-          <CardHistory />
+          <CardHistory data={documentLog} />
         </div>
       </div>
       {/* End Content */}

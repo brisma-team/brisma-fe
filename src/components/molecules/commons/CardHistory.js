@@ -17,17 +17,20 @@ const CardHistory = ({ className, title, data = sampleData }) => {
           <Card>
             <div className="w-full">
               <div className="px-3">
-                <p className="text-brisma font-bold text-xl">
+                <p className="text-brisma font-bold text-xl mb-4">
                   {title || "Riwayat"}
                 </p>
                 {data?.length > 0 ? (
                   data?.map((val, i) => (
-                    <div className="space-y-0 mt-4" key={i}>
+                    <div
+                      className={`space-y-0 ${i !== 0 ? "mt-4" : ""}`}
+                      key={i}
+                    >
                       <p className="text-brisma text-sm font-semibold">
                         {val?.date}
                       </p>
-                      <p className="text-sm">{val?.subject}</p>
-                      <p className="text-sm">{val?.description}</p>
+                      <p className="text-xs">{val?.subject}</p>
+                      <p className="text-xs">{val?.description}</p>
                     </div>
                   ))
                 ) : (
