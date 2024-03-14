@@ -13,6 +13,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import {
   resetPayloadKuesioner,
+  resetPayloadInformasi,
   resetWorkflowData,
   resetWorkflowExtensionRequest,
   resetWorkflowTerminateRequest,
@@ -173,6 +174,8 @@ const index = () => {
   const { user } = useUser();
 
   useEffect(() => {
+    dispatch(resetPayloadInformasi());
+    dispatch(resetPayloadKuesioner());
     dispatch(resetWorkflowData());
     dispatch(resetHistoryWorkflow());
   }, []);

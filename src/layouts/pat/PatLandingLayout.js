@@ -41,7 +41,7 @@ const PatLandingLayout = ({ data, content, children }) => {
       <div className="flex">
         <div className="flex-1 mt-16" style={{ marginLeft: "260px" }}>
           <div className="main">
-            <div className="pl-5 py-4 w-[95rem]">{children}</div>
+            <div className="pl-5 py-4 w-[84rem]">{children}</div>
           </div>
         </div>
       </div>
