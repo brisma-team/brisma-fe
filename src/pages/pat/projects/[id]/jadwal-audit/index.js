@@ -235,7 +235,7 @@ const index = () => {
         <DataNotFound />
       ) : (
         data?.length && (
-          <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 px-0.5 py-2">
+          <div className="grid grid-cols-3 gap-8 px-0.5 py-2">
             {data.map((v, i) => {
               return (
                 <CardAuditSchedule

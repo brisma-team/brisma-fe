@@ -97,20 +97,15 @@ const index = () => {
   useEffect(() => {
     setContent([
       {
-				title: "Initiator",
-				value: statusPat?.data?.create_by?.nama,
-			},
-			{
-				title: "Created Date",
-				value: convertDate(
-          statusPat?.data?.createdAt,
-          "-",
-          "d",
-          true
-        ),
-			},
-			{ title: "Document Status", value: statusPat?.data?.status_pat },
-			{ title: "Document Status", value: statusPat?.data?.status_pat },
+        title: "Initiator",
+        value: statusPat?.data?.create_by?.nama,
+      },
+      {
+        title: "Created Date",
+        value: convertDate(statusPat?.data?.createdAt, "-", "d", true),
+      },
+      { title: "Document Status", value: statusPat?.data?.status_pat },
+      { title: "Document Status", value: statusPat?.data?.status_pat },
     ]);
   }, [statusPat]);
 
@@ -200,7 +195,7 @@ const index = () => {
       </div>
 
       <div className="flex justify-between">
-      {/* Start Filter */}
+        {/* Start Filter */}
         <div
           className="flex justify-between items-center mb-3 gap-3"
           style={{ maxWidth: "21rem" }}
@@ -246,7 +241,7 @@ const index = () => {
         <DataNotFound />
       ) : (
         data?.length && (
-          <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 px-0.5 py-2">
+          <div className="grid grid-cols-3 gap-4 px-0.5 py-2">
             {data.map((v, i) => {
               return (
                 <CardActivitySchedule

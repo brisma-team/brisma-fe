@@ -15,7 +15,14 @@ import { useJenis, useMetode, useTema, useTipe } from "@/data/reference";
 import { setActivityScheduleData } from "@/slices/pat/activityScheduleSlice";
 import { addDaysToDate, dateNow } from "@/helpers";
 
-const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled, currentModalStage, handleSubmit, handleNextStage, isDisabledButtonSave }) => {
+const ModalBodyActivityInfo = ({
+  setCurrentModalStage,
+  isDisabled,
+  currentModalStage,
+  handleSubmit,
+  handleNextStage,
+  isDisabledButtonSave,
+}) => {
   const dispatch = useDispatch();
   const activityScheduleData = useSelector(
     (state) => state.activitySchedule.activityScheduleData
@@ -323,13 +330,13 @@ const ModalBodyActivityInfo = ({ setCurrentModalStage, isDisabled, currentModalS
         </div>
       </div>
       <div className="mt-3">
-				<ModalFooter
-					isDisabled={isDisabledButtonSave}
-					currentModalStage={currentModalStage}
-					handleSubmit={handleSubmit}
-					handleNextStage={handleNextStage}
-				/>
-			</div>
+        <ModalFooter
+          isDisabled={isDisabledButtonSave}
+          currentModalStage={currentModalStage}
+          handleSubmit={handleSubmit}
+          handleNextStage={handleNextStage}
+        />
+      </div>
     </div>
   );
 };

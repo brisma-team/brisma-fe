@@ -38,7 +38,7 @@ const Modal = ({
               : "overflow-y-auto"
           }`}
         >
-          <div className="absolute inset-0 w-full h-full bg-black opacity-80"></div>
+          <div className="fixed inset-0 w-full h-full bg-black opacity-80"></div>
           <motion.div
             className={`flex flex-col ${
               !positionCenter
