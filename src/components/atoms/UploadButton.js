@@ -2,7 +2,7 @@ const UploadButton = ({ text, fileAccept, handleUpload, className }) => {
   return (
     <>
       <label
-        htmlFor="fileInput"
+        htmlFor={`fileInput${text}`}
         className={`cursor-pointer ${
           className
             ? className
@@ -12,7 +12,7 @@ const UploadButton = ({ text, fileAccept, handleUpload, className }) => {
         {text}
       </label>
       <input
-        id="fileInput"
+        id={`fileInput${text}`}
         type="file"
         accept={fileAccept && fileAccept}
         className="hidden"

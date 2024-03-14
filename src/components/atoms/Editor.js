@@ -73,6 +73,7 @@ const EditorField = ({ contentData, ready, onChange }) => {
     mediaEmbed: {
       toolbar: ["mediaEmbed"],
     },
+    removePlugins: ["elementspath"],
   };
   return (
     <div>

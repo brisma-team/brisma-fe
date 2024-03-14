@@ -17,7 +17,7 @@ const SidebarLandingRPMKegiatan = () => {
   const baseUrl = `/rpm/kegiatan/overview/${id}`;
   const [data, setData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
-  const { projectDetail } = useProjectDetail({ id });
+  const { projectDetail } = useProjectDetail({ id: id || 1 });
   const [menu, setMenu] = useState([]);
 
   useEffect(() => {

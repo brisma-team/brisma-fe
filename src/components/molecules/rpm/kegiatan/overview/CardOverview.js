@@ -90,7 +90,7 @@ const CardOverview = ({ data, withoutButton, withoutHover }) => {
           </div>
           <div className="flex flex-col gap-3 mt-2">
             <div className="border-x border-t">
-              <CardBody title={"PIC"} value={data?.maker} />
+              <CardBody title={"Inisiator"} value={data?.maker} />
               <CardBody
                 title={"Tanggal Inisiasi"}
                 value={convertDate(data?.created_at, "/", "d")}

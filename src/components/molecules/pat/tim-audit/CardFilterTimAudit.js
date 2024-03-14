@@ -16,6 +16,8 @@ const CardFilterTimAudit = ({ showFilter, filter, setFilter }) => {
               placeholder="Nama Tim"
               icon={<IconClose size="large" />}
               onChange={(e) => handleChange("tim_name", e.target.value)}
+              handleClick={() => handleChange("tim_name", "")}
+              value={filter.tim_name}
             />
           </div>
           <div className="w-48">

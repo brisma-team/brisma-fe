@@ -22,43 +22,55 @@ const CardAuditSchedule = ({
   const projectItems = [
     {
       title: "Maker",
-      description: maker
+      description: maker,
     },
     {
       title: "Tanggal Inisiasi",
-      description: start_date
+      description: start_date,
     },
     {
       title: "Durasi Proyek",
-      description: "-"
+      description: "-",
+    },
+    {
+      title: "Rentang Waktu",
+      description: "-",
     },
     {
       title: "Jenis Proyek",
-      description: "-"
-    }
-  ]
+      description: "-",
+    },
+    {
+      title: "Tema Proyek",
+      description: "-",
+    },
+    {
+      title: "Anggaran",
+      description: `Rp. ${convertToRupiah(budget)}`,
+    },
+  ];
   const documentItems = [
     {
       title: "Project Status",
-      description: "-"
+      description: "-",
     },
     {
       title: "Document Status",
-      description: "-"
+      description: "-",
     },
     {
       title: "Document Status",
-      description: `Rp. ${convertToRupiah(budget)}`
-    }
-  ]
+      description: `-`,
+    },
+  ];
   return (
     <DivButton
       className="hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
       handleClick={() => console.log("test")}
     >
       <Card>
-        <div className="w-full px-5 py-3">
-          <div className="flex mb-2 justify-between items-end -ml-5 -mt-5">
+        <div className="w-full px-4 py-2">
+          <div className="flex mb-2 justify-between items-end -ml-4 -mr-1 -mt-4">
             <div
               className={`text-base font-semibold rounded-tl-lg text-white ${
                 type?.toLowerCase() === "individual"
@@ -69,71 +81,68 @@ const CardAuditSchedule = ({
               <p>{type}</p>
             </div>
             <div className="flex justify-between -mb-1.5">
-							<DropdownIcon color={"blue"} />
-						</div>
+              <DropdownIcon color={"blue"} />
+            </div>
           </div>
-          <div className="flex flex-row justify-between my-6">
+          <div className="flex flex-row justify-between my-4">
             <div className="text-xl font-bold text-atlasian-blue-dark">
               {title}
             </div>
           </div>
           <div className="leading-3">
-          <TableTree>
-							<Rows
-								items={projectItems}
-								render={({ title, description }) => (
-									<div className="border">
-										<Row itemId={title}>
-											<Cell
-												width="50%"
-												className="font-bold border-r"
-											>
-												{title}
-											</Cell>
-											<Cell width="50%">
-												{description}
-											</Cell>
-										</Row>
-									</div>
-								)}
-							/>
-						</TableTree>
-            <div className="w-full h-[10rem] border-2 my-3 p-3 overflow-y-scroll">
-							<p className="font-semibold text-lg">Pelaksana</p>
-							<p className="text-blue-600 font-semibold">
-								Tim Audit
-							</p>
-							<p className="">Tim Auditor HO BRI 2</p>
-						</div>
             <TableTree>
-							<Rows
-								items={documentItems}
-								render={({ title, description }) => (
-									<div className="border">
-										<Row itemId={title}>
-											<Cell
-												width="50%"
-												className="font-bold border-r"
-											>
-												{title}
-											</Cell>
-											<Cell
-												width="50%"
-												className={`${
-													description.toLowerCase() ===
-														"on progress" &&
-													title === "Project Status"
-														? "text-blue-500"
-														: "text-orange-300"
-												}`}
-											>
-												{description}
-											</Cell>
-										</Row>
-									</div>
-								)}
-							/>
-						</TableTree>
+              <Rows
+                items={projectItems}
+                render={({ title, description }) => (
+                  <div className="border p-0">
+                    <Row itemId={title}>
+                      <Cell
+                        width="50%"
+                        className="font-bold border-r !p-2 !min-h-0"
+                      >
+                        {title}
+                      </Cell>
+                      <Cell width="50%" className="!min-h-0 !p-2">
+                        {description}
+                      </Cell>
+                    </Row>
+                  </div>
+                )}
+              />
+            </TableTree>
+            <div className="w-full h-[10rem] border-2 my-3 p-2 overflow-y-scroll">
+              <p className="font-semibold text-lg">Pelaksana</p>
+              <p className="text-blue-600 font-semibold">Tim Audit</p>
+              <p className="">Tim Auditor HO BRI 2</p>
+            </div>
+            <TableTree>
+              <Rows
+                items={documentItems}
+                render={({ title, description }) => (
+                  <div className="border p-0">
+                    <Row itemId={title}>
+                      <Cell
+                        width="50%"
+                        className="font-bold border-r !min-h-0 !p-2"
+                      >
+                        {title}
+                      </Cell>
+                      <Cell
+                        width="50%"
+                        className={`!min-h-0 !p-2 ${
+                          description.toLowerCase() === "on progress" &&
+                          title === "Project Status"
+                            ? "text-blue-500"
+                            : "text-orange-300"
+                        }`}
+                      >
+                        {description}
+                      </Cell>
+                    </Row>
+                  </div>
+                )}
+              />
+            </TableTree>
           </div>
         </div>
       </Card>

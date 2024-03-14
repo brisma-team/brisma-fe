@@ -1,9 +1,4 @@
-import {
-  Breadcrumbs,
-  Card,
-  PageTitle,
-  TableField,
-} from "@/components/atoms";
+import { Breadcrumbs, Card, PageTitle, TableField } from "@/components/atoms";
 import { PrevNextNavigation } from "@/components/molecules/commons";
 import { PatLandingLayout } from "@/layouts/pat";
 import { useEffect, useState } from "react";
@@ -152,20 +147,15 @@ const index = () => {
   useEffect(() => {
     setContent([
       {
-				title: "Initiator",
-				value: statusPat?.data?.create_by?.nama,
-			},
-			{
-				title: "Created Date",
-				value: convertDate(
-          statusPat?.data?.lb_created_at,
-          "-",
-          "d",
-          true
-        ),
-			},
-			{ title: "Document Status", value: statusPat?.data?.status_pat },
-			{ title: "Document Status", value: statusPat?.data?.status_pat },
+        title: "Initiator",
+        value: statusPat?.data?.create_by?.nama,
+      },
+      {
+        title: "Created Date",
+        value: convertDate(statusPat?.data?.lb_created_at, "-", "d", true),
+      },
+      { title: "Document Status", value: statusPat?.data?.status_pat },
+      { title: "Document Status", value: statusPat?.data?.status_pat },
     ]);
   }, [statusPat]);
 

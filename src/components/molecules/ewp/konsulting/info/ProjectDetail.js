@@ -16,8 +16,12 @@ const ProjectDetail = ({ data }) => {
           end={data?.info_periode_pelaksanaan_end || ""}
         />
         <RowTable
-          label="Ketua Tim Audit"
-          value={data?.info_team_audit?.kta || ""}
+          label="Inisiator"
+          value={
+            data?.initiator?.pn +
+              " - " +
+              (data?.initiator?.nama || data?.initiator?.name) || "-"
+          }
         />
       </div>
     </div>
