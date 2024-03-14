@@ -26,6 +26,7 @@ const SidebarLandingEWPConsulting = () => {
     setData({
       projectId: projectInfo?.project_id,
       projectName: projectInfo?.project_name,
+      documentName: projectInfo?.status_name,
       statusName: projectInfo?.status_persetujuan_name,
       createdAt: convertDate(
         projectInfo?.info_periode_pelaksanaan_start,
@@ -90,15 +91,25 @@ const SidebarLandingEWPConsulting = () => {
               <p>{data?.projectName?.toUpperCase()}</p>
             </div>
             <div className="mb-2">
-              <div className="text-sm text-brisma font-bold">PIC</div>
+              <div className="text-sm text-brisma font-bold">P.I.C</div>
               <div className="text-sm text-brisma">
                 {data?.initiatorName || "-"}
               </div>
             </div>
             <div className="mb-2">
-              <div className="text-sm text-brisma font-bold">Created At</div>
+              <div className="text-sm text-brisma font-bold">
+                Tanggal Inisiasi
+              </div>
               <div className="text-sm text-brisma">
                 {data?.createdAt || "-"}
+              </div>
+            </div>
+            <div className="mb-2">
+              <div className="text-sm text-brisma font-bold">
+                Project Status
+              </div>
+              <div className="text-sm text-brisma">
+                {data?.statusName || "-"}
               </div>
             </div>
             <div className="mb-2">
@@ -106,7 +117,9 @@ const SidebarLandingEWPConsulting = () => {
                 Document Status
               </div>
               <div className="text-sm text-brisma">
-                {data?.statusName || "-"}
+                {data?.documentName?.toLowerCase() == "final"
+                  ? "Final"
+                  : data?.documentName || "-"}
               </div>
             </div>
           </div>

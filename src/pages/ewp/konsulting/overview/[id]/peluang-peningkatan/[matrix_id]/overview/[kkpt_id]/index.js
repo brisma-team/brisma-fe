@@ -50,23 +50,34 @@ const index = () => {
         {
           label: "Judul Peluang",
           value: responseInfo?.judul_kkpt || "N/A",
+          isArray: false,
         },
         {
           label: "P.I.C Auditor",
           value:
             responseInfo?.auditor?.nama || responseInfo?.auditor?.name || "N/A",
+          isArray: false,
         },
         {
-          label: "Kode Lingkup",
-          value: "N/A",
+          label: "Lingkup Pemeriksaan",
+          value: landingStatus?.data?.lingkup?.map((v) => {
+            return { content: v?.judul_lingkup_pemeriksaan };
+          }),
+          isArray: true,
         },
         {
-          label: "Kode Risk",
-          value: "N/A",
+          label: "Risk Issue",
+          value: landingStatus?.data?.risk_issue?.map((v) => {
+            return { content: v?.abbr + " - " + v?.nama };
+          }),
+          isArray: true,
         },
         {
-          label: "Kode Control",
-          value: "N/A",
+          label: "Control",
+          value: landingStatus?.data?.control?.map((v) => {
+            return { content: v?.abbr + " - " + v?.nama };
+          }),
+          isArray: true,
         },
       ];
 
@@ -135,7 +146,13 @@ const index = () => {
                     <Card key={i}>
                       <div className="w-full px-4 min-h-[4rem]">
                         <p className="font-bold text-sm">{v?.label}</p>
-                        <p className="text-sm mt-0">{v?.value}</p>
+                        <p className="text-sm mt-0">
+                          {!v.isArray
+                            ? v?.value
+                            : v?.value.map((val, index) => {
+                                return <li key={index}>{val?.content}</li>;
+                              })}
+                        </p>
                       </div>
                     </Card>
                   );
