@@ -1,52 +1,52 @@
 import { useState, useEffect } from "react";
 import { CardBodyNavigation } from "@/components/molecules/commons";
 import {
-	SubModalBiayaPerjalananDinas,
-	SubModalBiayaSelamaKegiatan,
+  SubModalBiayaPerjalananDinas,
+  SubModalBiayaSelamaKegiatan,
 } from "./content";
 import { ModalFooter } from "@/components/molecules/pat";
 
 const ModalBodyAnggaran = ({
-	setCurrentModalStage,
-	typeModal,
-	isDisabledButtonSave,
-	currentModalStage,
-	handleSubmit,
-	handleNextStage,
+  setCurrentModalStage,
+  typeModal,
+  isDisabledButtonSave,
+  currentModalStage,
+  handleSubmit,
+  handleNextStage,
 }) => {
-	useEffect(() => {
-		setCurrentModalStage(3);
-	}, []);
-	const [currentStage, setCurrentStage] = useState(1);
+  useEffect(() => {
+    setCurrentModalStage(3);
+  }, []);
+  const [currentStage, setCurrentStage] = useState(1);
 
-	return (
-		<div className="">
-			<CardBodyNavigation
-				currentStage={currentStage}
-				setCurrentStage={setCurrentStage}
-				stage={[
-					{ stageNumber: 1, stageTitle: "Biaya Perjalanan Dinas" },
-					{ stageNumber: 2, stageTitle: "Biaya Selama Kegiatan" },
-				]}
-			/>
-			<div className="border-2 rounded-md my-6">
-				{currentStage === 1 && (
-					<SubModalBiayaPerjalananDinas typeModal={typeModal} />
-				)}
-				{currentStage === 2 && (
-					<SubModalBiayaSelamaKegiatan typeModal={typeModal} />
-				)}
-			</div>
-			<div className="mt-3">
-				<ModalFooter
-					isDisabled={isDisabledButtonSave}
-					currentModalStage={currentModalStage}
-					handleSubmit={handleSubmit}
-					handleNextStage={handleNextStage}
-				/>
-			</div>
-		</div>
-	);
+  return (
+    <div className="">
+      <CardBodyNavigation
+        currentStage={currentStage}
+        setCurrentStage={setCurrentStage}
+        stage={[
+          { stageNumber: 1, stageTitle: "Biaya Perjalanan Dinas" },
+          { stageNumber: 2, stageTitle: "Biaya Selama Kegiatan" },
+        ]}
+      />
+      <div className="border-2 rounded-md my-6">
+        {currentStage === 1 && (
+          <SubModalBiayaPerjalananDinas typeModal={typeModal} />
+        )}
+        {currentStage === 2 && (
+          <SubModalBiayaSelamaKegiatan typeModal={typeModal} />
+        )}
+      </div>
+      <div className="mt-3">
+        <ModalFooter
+          isDisabled={isDisabledButtonSave}
+          currentModalStage={currentModalStage}
+          handleSubmit={handleSubmit}
+          handleNextStage={handleNextStage}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default ModalBodyAnggaran;
