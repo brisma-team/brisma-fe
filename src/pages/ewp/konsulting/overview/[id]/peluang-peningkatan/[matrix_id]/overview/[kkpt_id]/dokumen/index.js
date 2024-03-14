@@ -340,7 +340,7 @@ const index = () => {
                 : v?.is_signed === false
                 ? "Rejected"
                 : "",
-            Tanggal: convertDate(v?.created_at, "/", "d"),
+            Tanggal: convertDate(v?.createdAt, "/", "d"),
           };
         });
         setHistoryWorkflow(mapping);
