@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { OverviewLayoutEWP } from "@/layouts/ewp";
 import {
   Breadcrumbs,
   ButtonField,
@@ -14,9 +13,9 @@ import {
   // ModalAddProjectEWP,
 } from "@/components/molecules/ewp/konsulting/overview";
 import { CardOverview } from "@/components/molecules/rpm/kegiatan";
-import { useApprovalEWP } from "@/data/ewp";
 import { useOverviewEWPKonsulting } from "@/data/ewp/konsulting/overview";
 import { IconFile } from "@/components/icons";
+import { LandingLayoutRPMKegiatan } from "@/layouts/rpm";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -84,8 +83,6 @@ const index = () => {
   const { overviewEWPKonsulting, overviewEWPKonsultingMutate } =
     useOverviewEWPKonsulting(params);
 
-  const { approvalEWP } = useApprovalEWP("ewp");
-
   useEffect(() => {
     const handleSearch = () => {
       setParams(filter);
@@ -149,7 +146,7 @@ const index = () => {
   };
 
   return (
-    <OverviewLayoutEWP data={approvalEWP?.data?.header}>
+    <LandingLayoutRPMKegiatan>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -217,7 +214,7 @@ const index = () => {
         totalData={totalData}
       />
       {/* End Content */}
-    </OverviewLayoutEWP>
+    </LandingLayoutRPMKegiatan>
   );
 };
 

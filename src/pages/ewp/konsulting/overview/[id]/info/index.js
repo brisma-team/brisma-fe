@@ -40,7 +40,6 @@ const index = () => {
     const status_code =
       parseInt(projectDetail?.data?.project_info?.status_kode) || 0;
 
-    console.log("status_kode => ", status_code);
     setDataTables([
       {
         is_open: true,
@@ -98,10 +97,7 @@ const index = () => {
       },
     ]);
   }, [projectDetail]);
-
-  useEffect(() => {
-    console.log("dataTables => ", dataTables);
-  }, [dataTables]);
+  console.log(projectDetail);
 
   useEffect(() => {
     if (projectDetailError) {

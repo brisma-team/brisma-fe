@@ -16,6 +16,7 @@ const index = () => {
   const pathNameSubModulClose = `${baseUrl}/meeting`;
 
   const [showModal, setShowModal] = useState(false);
+  const [isClosed, setIsClosed] = useState(false);
   const [closingStatement, setClosingStatement] = useState("");
   const [dataTables, setDataTables] = useState([]);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -86,6 +87,16 @@ const index = () => {
         path: pathNameSubModulClose,
       },
     ]);
+    const closingStatement =
+      projectDetail?.data?.project_info?.closing_statement;
+    if (
+      closingStatement !== null ||
+      closingStatement !== "" ||
+      closingStatement !== undefined
+    ) {
+      setIsClosed(true);
+      setClosingStatement(projectDetail?.data?.project_info?.closing_statement);
+    }
   }, [projectDetail]);
 
   const handleClickCloseStatement = () => {
@@ -104,7 +115,7 @@ const index = () => {
     await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/initiate/final/initiate/${id}`,
-      {}
+      { closing_statement: closingStatement }
     );
     projectDetailMutate();
     loadingSwal("close");
@@ -144,20 +155,22 @@ const index = () => {
                   <RealizationTable data={dataTables} />
                 </div>
               </Card>
-              <div className="w-full flex items-center justify-end gap-4">
-                <div className="w-40 text-sm font-semibold bg-atlasian-blue-light rounded">
-                  <ButtonField
-                    text={"Closing Statement"}
-                    handler={handleClickCloseStatement}
-                  />
+              {!isClosed && (
+                <div className="w-full flex items-center justify-end gap-4">
+                  <div className="w-40 text-sm font-semibold bg-atlasian-blue-light rounded">
+                    <ButtonField
+                      text={"Closing Statement"}
+                      handler={handleClickCloseStatement}
+                    />
+                  </div>
+                  <div className="w-40 text-sm font-semibold bg-atlasian-red rounded">
+                    <ButtonField
+                      text={"Close Project"}
+                      handler={handleClickCloseProject}
+                    />
+                  </div>
                 </div>
-                <div className="w-40 text-sm font-semibold bg-atlasian-red rounded">
-                  <ButtonField
-                    text={"Close Project"}
-                    handler={handleClickCloseProject}
-                  />
-                </div>
-              </div>
+              )}
             </div>
             <CardContentHeaderFooter
               header={
