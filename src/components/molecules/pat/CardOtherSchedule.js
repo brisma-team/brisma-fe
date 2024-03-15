@@ -1,5 +1,5 @@
 import { Card, DivButton } from "@/components/atoms";
-import { convertToRupiah } from "@/helpers";
+import { convertDate, convertToRupiah } from "@/helpers";
 import { DropdownIcon } from "../commons";
 import TableTree, { Cell, Row, Rows } from "@atlaskit/table-tree";
 
@@ -8,7 +8,12 @@ const CardOtherSchedule = ({
   type,
   title,
   maker,
+  created_date,
+  start_date,
+  end_date,
   audit_period,
+  jenis,
+  tema,
   budget,
   pic,
   desc,
@@ -23,23 +28,22 @@ const CardOtherSchedule = ({
     },
     {
       title: "Tanggal Inisiasi",
-      description: "-",
+      description: convertDate(created_date, "-", "d"),
     },
     {
       title: "Durasi Proyek",
-      description: "-",
-    },
-    {
-      title: "Rentang Waktu",
-      description: audit_period,
+      description:
+        convertDate(start_date, "-", "d") +
+        " - " +
+        convertDate(end_date, "-", "d"),
     },
     {
       title: "Jenis Proyek",
-      description: "-",
+      description: jenis,
     },
     {
       title: "Tema Proyek",
-      description: "-",
+      description: tema,
     },
     {
       title: "Anggaran",
@@ -94,19 +98,20 @@ const CardOtherSchedule = ({
                 )}
               />
             </TableTree>
-            <div className="w-full h-[10rem] border-2 my-3 p-2 overflow-y-scroll">
+            <div className="w-full h-[10rem] border-2 my-3 p-2 overflow-y-auto">
               <p className="font-semibold text-lg">Pelaksana</p>
-              <p className="text-blue-600 font-semibold">Tim Audit</p>
-              <p className="">Tim Auditor HO BRI 2</p>
+              <p className="text-blue-600 font-semibold">PIC</p>
+              {pic.map((v) => {
+                return (
+                  <p className="" key={v}>
+                    {v}
+                  </p>
+                );
+              })}
             </div>
-            <div className="w-full h-[10rem] border-2 my-3 p-3 overflow-y-scroll">
+            <div className="w-full h-[10rem] border-2 my-3 p-3 overflow-y-auto">
               <p className="font-semibold text-lg">Deskripsi</p>
-              <p className="leading-5">
-                Figma ipsum component variant main layer. Arrow clip variant
-                line union. Figma pixel plugin reesizing vector reesizing link
-                line fill strikethrough. Content group shadow horizontal image
-                line. Horizontal object auto rectangle component layer.
-              </p>
+              <p className="leading-5">{desc}</p>
             </div>
           </div>
         </div>

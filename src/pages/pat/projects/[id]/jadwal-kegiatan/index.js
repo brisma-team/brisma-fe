@@ -119,12 +119,13 @@ const index = () => {
           id: v?.id,
           type: v?.ref_tipe.nama,
           title: v?.nama,
+          jenis: v?.ref_jenis?.nama,
+          tema: v?.ref_tema?.nama,
+          createdDate: v?.createdAt,
           maker: v?.pic_maker_jadwal_sbp.nama,
           budget: v?.total_anggaran,
-          audit_period: `${convertDate(
-            v?.pelaksanaan_start,
-            "-"
-          )} s/d ${convertDate(v?.pelaksanaan_end, "-")}`,
+          start_date: v?.pelaksanaan_start,
+          end_date: v?.pelaksanaan_end,
           pic: mappingPIC,
           desc: v?.deskripsi,
         };
@@ -249,8 +250,12 @@ const index = () => {
                   jadwal_sbp_id={v.id}
                   type={v.type}
                   title={v.title}
+                  jenis={v.jenis}
+                  tema={v.tema}
+                  createdDate={v.createdDate}
                   maker={v.maker}
-                  audit_period={v.audit_period}
+                  start_date={v.start_date}
+                  end_date={v.end_date}
                   budget={v.budget}
                   pic={v.pic}
                   desc={v.desc}
