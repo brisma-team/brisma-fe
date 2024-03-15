@@ -21,7 +21,9 @@ const Sidebar = ({ handleSidebarItemClick }) => {
   const [listMenu, setListMenu] = useState([]);
 
   const { user } = useUser();
-  const roleKodeSuperAdmin = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  const roleKodeSuperAdmin = Array.from({ length: 9 }, (_, i) =>
+    (i + 1).toString()
+  );
 
   useEffect(() => {
     if (user?.data) {
