@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { PatLandingLayout } from "@/layouts/pat";
-import { Breadcrumbs, ButtonField, Card, PageTitle } from "@/components/atoms";
+import { Breadcrumbs, ButtonField, PageTitle } from "@/components/atoms";
 import {
   AttachmentClipping,
+  CardHistory,
   ImageClipping,
-  PopupKlipping,
   PrevNextNavigation,
 } from "@/components/molecules/commons";
 import {
@@ -151,7 +151,7 @@ const index = () => {
   return (
     <PatLandingLayout data={statusPat?.data} content={content}>
       <Breadcrumbs data={breadcrumbs} />
-      <div className="flex justify-between items-center mb-6 w-[1360px]">
+      <div className="flex justify-between items-center mb-6">
         <PageTitle text={"Sumber Informasi"} className="w-full" />
         <PrevNextNavigation
           baseUrl={baseUrl}
@@ -163,7 +163,7 @@ const index = () => {
         />
       </div>
       {/* Start Content */}
-      <div className="my-4 flex">
+      <div className="my-4 flex gap-6">
         <div className="w-64 flex flex-col gap-4">
           <ImageClipping
             data={imageClipList}
@@ -176,61 +176,31 @@ const index = () => {
             handleClick={handleClickUploadAttachment}
           />
         </div>
-        <div>
-          <div className="flex gap-6 items-start">
-            <div className="ckeditor-sumber-informasi-pat overflow-x-hidden">
-              <Editor
-                contentData={data.sumber_informasi}
-                disabled={false}
-                ready={true}
-                onChange={(value) =>
-                  setData({
-                    ...data,
-                    sumber_informasi: value,
-                  })
-                }
-              />
-            </div>
-            <div className="w-64">
-              <Card>
-                <div className="w-full px-4 -ml-1">
-                  <div className="flex justify-between">
-                    <p className="text-xl font-semibold">Riwayat</p>
-                    <PopupKlipping />
-                  </div>
-                  {/* Start Riwayat */}
-                  <div
-                    className="grid mt-4 overflow-x-hidden"
-                    style={{ maxHeight: "37rem" }}
-                  >
-                    {historyList.map((v, i) => {
-                      return (
-                        <div key={i} className="mt-2">
-                          <p className="mt-0 font-bold text-lg underline">
-                            {v.date}
-                          </p>
-                          <p className="mt-0">{v.name}</p>
-                          <p className="mt-0">{v.note}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  {/* End Riwayat */}
-                </div>
-              </Card>
-            </div>
-          </div>
-          {!isDisabled ? (
-            <div className="mt-3 flex justify-end">
-              <div className="w-[7.75rem] bg-atlasian-green rounded flex items-center">
-                <ButtonField text={"Simpan"} handler={handlePost} />
-              </div>
-            </div>
-          ) : (
-            ""
-          )}
+        <div className="ckeditor-sumber-informasi-pat overflow-x-hidden">
+          <Editor
+            contentData={data.sumber_informasi}
+            disabled={false}
+            ready={true}
+            onChange={(value) =>
+              setData({
+                ...data,
+                sumber_informasi: value,
+              })
+            }
+          />
         </div>
+
+        <CardHistory />
       </div>
+      {!isDisabled ? (
+        <div className="mt-3 flex justify-end">
+          <div className="w-[7.75rem] bg-atlasian-green rounded flex items-center">
+            <ButtonField text={"Simpan"} handler={handlePost} />
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
       {/* End Content */}
     </PatLandingLayout>
   );

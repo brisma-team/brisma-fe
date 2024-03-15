@@ -194,6 +194,26 @@ const ModalBodyInfoKegiatan = ({
           <div className="w-1/2 h-fit">
             <CardBodyContent>
               <FormWithLabel
+                label={"Metode Kegiatan"}
+                form={
+                  <Select
+                    optionValue={optionMetode}
+                    isSearchable={false}
+                    onChange={(e) => handleChangeRef("ref_metode", e.value)}
+                    value={
+                      auditScheduleData.ref_metode?.nama !== "" && {
+                        label: auditScheduleData.ref_metode?.nama,
+                        value: auditScheduleData.ref_metode?.kode,
+                      }
+                    }
+                    isDisabled={isDisabled}
+                  />
+                }
+                errors={validationErrors["ref_metode.kode"]}
+                widthLabel={"w-2/5"}
+                widthForm={"w-3/5"}
+              />
+              <FormWithLabel
                 label={"Tipe Audit"}
                 form={
                   <Select
@@ -330,6 +350,7 @@ const ModalBodyInfoKegiatan = ({
                 auditTeam?.data?.createdAt &&
                 convertDate(auditTeam?.data?.createdAt, "-", "d")
               }
+              tipe_tim={auditTeam?.data?.ref_tipe_tim?.nama}
               manajer_audit={auditTeam?.data?.ref_tim_audit_mas}
               ketua_tim_audit={auditTeam?.data?.ref_tim_audit_kta}
               anggota_tim_audit={auditTeam?.data?.ref_tim_audit_ata}

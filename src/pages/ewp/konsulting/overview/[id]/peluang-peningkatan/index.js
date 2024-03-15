@@ -81,25 +81,22 @@ const index = () => {
     if (landingStatus?.data) {
       const mappingDataCarding = [
         {
-          title: "Header Matrix Peluang",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          title: "Header Peluang Peningkatan",
+          description: "Informasi Header proses Peluang Peningkatan.",
           status: landingStatus?.data?.info_header ? "success" : "failed",
           url: `${pathName?.content}/header`,
         },
         {
           title: "Detail Peluang Peningkatan",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Rincian lanjut proses Peluang Peningkatan.",
           status: landingStatus?.data?.peluang_peningkatan
             ? "success"
             : "failed",
           url: `${pathName?.content}/overview`,
         },
         {
-          title: "Dokumen",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+          title: "Dokumen Peluang Peningkatan",
+          description: "Hasil dokumen proses Peluang Peningkatan.",
           url: `${pathName?.content}/dokumen`,
         },
       ];
