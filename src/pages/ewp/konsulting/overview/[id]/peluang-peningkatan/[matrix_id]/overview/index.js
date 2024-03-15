@@ -93,13 +93,23 @@ const index = () => {
   useEffect(() => {
     if (overviewPeluangList?.data?.length > 0) {
       const mappingOverview = overviewPeluangList?.data?.map((v) => {
-        const { judul_kkpt, status_persetujuan, auditor } = v;
+        const {
+          judul_kkpt,
+          status_persetujuan,
+          auditor,
+          risk_issue,
+          lingkup,
+          control,
+        } = v;
         return {
           matrix_id,
           kkpt_id: v?.id,
           status_persetujuan,
           judul_kkpt,
           auditor,
+          risk_issue,
+          lingkup,
+          control,
         };
       });
 
@@ -209,7 +219,7 @@ const index = () => {
         />
       </div>
       {/* Start Content */}
-      <div className="w-[70rem]">
+      <div className="w-[83rem]">
         <DataTables
           selectedId={id}
           data={data}

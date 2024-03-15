@@ -176,10 +176,10 @@ const index = () => {
 
       const mappingSelectedResponden =
         rekomendasiData?.data?.kkpt_rekomendasi_list?.map((val, index) => {
-          const { id, deadline, desc } = val;
+          const { kkpa_rekomendasi_id, deadline, desc } = val;
           return {
             index,
-            id,
+            id: parseInt(kkpa_rekomendasi_id),
             rekomendasi_name: desc,
             deadline,
           };
@@ -297,21 +297,23 @@ const index = () => {
   // [END] Handler for uker
 
   // [START] Handler add responden by uker pn
-  const handleChangeChecboxRekomendasi = (isChecked, responden) => {
+  const handleChangeChecboxRekomendasi = (isChecked, rekomendasi) => {
     const updatedData = [...payloadNewRekomendasi];
 
     if (isChecked) {
-      const findId = updatedData.some((value) => value?.id === responden?.id);
+      const findId = updatedData.some((value) => value?.id === rekomendasi?.id);
 
       if (!findId) {
         updatedData.push({
-          id: responden?.id,
-          deadline: responden?.deadline,
-          rekomendasi_name: responden?.rekomendasi_name,
+          id: rekomendasi?.id,
+          deadline: rekomendasi?.deadline,
+          rekomendasi_name: rekomendasi?.rekomendasi_name,
         });
       }
     } else {
-      const filter = updatedData.filter((value) => value?.id !== responden?.id);
+      const filter = updatedData.filter(
+        (value) => value?.id !== rekomendasi?.id
+      );
       dispatch(setPayloadNewRekomendasi(filter));
       return;
     }
