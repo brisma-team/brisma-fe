@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -145,6 +145,8 @@ const NavbarField = () => {
   const { pathname } = router;
 
   const { user } = useUser();
+
+  const [listMenu, setListMenu] = useState([]);
   const { notification, notificationMutate } = useNotification("all", {
     page: 1,
     limit: 10,
@@ -186,6 +188,54 @@ const NavbarField = () => {
     notificationMutate();
   };
 
+  const roleKodeSuperAdmin = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+  useEffect(() => {
+    if (user?.data) {
+      const userRole = user?.data?.role_kode;
+      const updatedListMenu = [
+        {
+          path: "/dashboard",
+          name: "Dashboard",
+          is_hide: false,
+        },
+        {
+          path: "/pat",
+          name: "P.A.T",
+          is_hide: !userRole.some((role) => roleKodeSuperAdmin.includes(role)),
+        },
+        {
+          path: "/ewp",
+          name: "E.W.P",
+          is_hide: !userRole.some(
+            (role) =>
+              roleKodeSuperAdmin.includes(role) ||
+              role === "10" ||
+              role === "11"
+          ),
+        },
+        {
+          path: "/rpm",
+          name: "R.P.M",
+          is_hide: !userRole.some(
+            (role) => roleKodeSuperAdmin.includes(role) || role === "12"
+          ),
+        },
+        {
+          path: "/survey",
+          name: "Survey",
+          is_hide: !userRole.some(
+            (role) => roleKodeSuperAdmin.includes(role) || role === "13"
+          ),
+        },
+      ];
+      const filterMapping = updatedListMenu.filter((v) => !v?.is_hide);
+      setListMenu(filterMapping);
+    } else {
+      setListMenu([]);
+    }
+  }, [user]);
+
   const firstSegment = pathname.split("/")[1];
   const ar =
     pathname != "/pat" &&
@@ -197,61 +247,23 @@ const NavbarField = () => {
     firstSegment != "reporting" &&
     firstSegment != "reference"
       ? [
-          <a href="/dashboard" key={1}>
-            <button
-              className={`font-semibold text-xl text-atlasian-dark px-2 p-3 ${
-                firstSegment == "dashboard"
-                  ? "border-b-4 border-atlasian-blue-light "
-                  : "hover:border-b-4 hover:border-atlasian-blue-light"
-              }`}
-            >
-              Dashboard
-            </button>
-          </a>,
-          <a href="/pat" key={2}>
-            <button
-              className={`font-semibold text-xl text-atlasian-dark px-2 p-3 ${
-                firstSegment == "pat"
-                  ? "border-b-4 border-atlasian-blue-light"
-                  : "hover:border-b-4 hover:border-atlasian-blue-light"
-              }`}
-            >
-              P.A.T
-            </button>
-          </a>,
-          <a href="/ewp" key={3}>
-            <button
-              className={`font-semibold text-xl text-atlasian-dark px-2 p-3 ${
-                firstSegment == "ewp"
-                  ? "border-b-4 border-atlasian-blue-light"
-                  : "hover:border-b-4 hover:border-atlasian-blue-light"
-              }`}
-            >
-              E.W.P
-            </button>
-          </a>,
-          <a href="/rpm" key={4}>
-            <button
-              className={`font-semibold text-xl text-atlasian-dark px-2 p-3 ${
-                firstSegment == "rpm"
-                  ? "border-b-4 border-atlasian-blue-light"
-                  : "hover:border-b-4 hover:border-atlasian-blue-light"
-              }`}
-            >
-              R.P.M
-            </button>
-          </a>,
-          <a href="/survey" key={5}>
-            <button
-              className={`font-semibold text-xl text-atlasian-dark px-2 p-3 ${
-                firstSegment == "survey"
-                  ? "border-b-4 border-atlasian-blue-light"
-                  : "hover:border-b-4 hover:border-atlasian-blue-light"
-              }`}
-            >
-              Survei
-            </button>
-          </a>,
+          listMenu?.length
+            ? listMenu?.map((v, i) => {
+                return (
+                  <a href={v?.path} key={i}>
+                    <button
+                      className={`font-semibold text-xl text-atlasian-dark px-2 p-3 ${
+                        firstSegment == v?.path?.replace("/", "")
+                          ? "border-b-4 border-atlasian-blue-light "
+                          : "hover:border-b-4 hover:border-atlasian-blue-light"
+                      }`}
+                    >
+                      {v?.name}
+                    </button>
+                  </a>
+                );
+              })
+            : [],
         ]
       : [];
   return (

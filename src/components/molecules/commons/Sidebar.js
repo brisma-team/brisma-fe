@@ -7,17 +7,96 @@ import {
 } from "@/components/icons";
 import {
   ButtonItem,
-  LinkItem,
   NestableNavigationContent,
   NavigationHeader,
   Section,
   SideNavigation,
 } from "@atlaskit/side-navigation";
 import ProfileDetail from "./ProfileDetail";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useUser from "@/data/useUser";
 
 const Sidebar = ({ handleSidebarItemClick }) => {
   const [selectedItem, setSelectedItem] = useState(null);
+  const [listMenu, setListMenu] = useState([]);
+
+  const { user } = useUser();
+  const roleKodeSuperAdmin = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+  useEffect(() => {
+    if (user?.data) {
+      const userRole = user?.data?.role_kode;
+      const updatedListMenu = [
+        {
+          icon: <IconGraphBar label="" />,
+          path: "/dashboard",
+          name: "Dashboard",
+          is_hide: false,
+        },
+        {
+          icon: <IconMediaServicesDocument label="" />,
+          path: "/pat",
+          name: "P.A.T",
+          is_hide: !userRole.some((role) => roleKodeSuperAdmin.includes(role)),
+        },
+        {
+          icon: <IconMediaServicesDocument label="" />,
+          path: "/ewp",
+          name: "E.W.P",
+          is_hide: !userRole.some(
+            (role) =>
+              roleKodeSuperAdmin.includes(role) ||
+              role === "10" ||
+              role === "11"
+          ),
+        },
+        {
+          icon: <IconMediaServicesDocument label="" />,
+          path: "/rpm",
+          name: "R.P.M",
+          is_hide: !userRole.some(
+            (role) => roleKodeSuperAdmin.includes(role) || role === "12"
+          ),
+        },
+        {
+          icon: <IconPreferences label="" />,
+          path: "/reference",
+          name: "Reference",
+          is_hide: !userRole.some((role) => roleKodeSuperAdmin.includes(role)),
+        },
+        {
+          icon: <IconMediaServicesSpreadsheet label="" />,
+          path: "/catalogue",
+          name: "Catalogue",
+          is_hide: !userRole.some((role) => roleKodeSuperAdmin.includes(role)),
+        },
+        {
+          icon: <IconMediaServicesSpreadsheet label="" />,
+          path: "/survey",
+          name: "Survey",
+          is_hide: !userRole.some(
+            (role) => roleKodeSuperAdmin.includes(role) || role === "13"
+          ),
+        },
+        {
+          icon: <IconGraphBar label="" />,
+          path: "/reporting",
+          name: "Reporting",
+          is_hide: !userRole.some((role) => roleKodeSuperAdmin.includes(role)),
+        },
+        {
+          icon: <IconFile label="" />,
+          path: "/naf",
+          name: "NAF",
+          is_hide: !userRole.some((role) => roleKodeSuperAdmin.includes(role)),
+        },
+      ];
+      const filterMapping = updatedListMenu.filter((v) => !v?.is_hide);
+      setListMenu(filterMapping);
+    } else {
+      setListMenu([]);
+    }
+  }, [user]);
 
   const handleItemClick = (e, path) => {
     setSelectedItem(path);
@@ -37,62 +116,21 @@ const Sidebar = ({ handleSidebarItemClick }) => {
           <Section>
             <div className="items-center justify-center p-8">
               <h3 className="px-2 mb-2">Menu</h3>
-              <ButtonItem
-                iconBefore={<IconGraphBar label="" />}
-                href="/dashboard"
-                isSelected={selectedItem === "/dashboard"}
-                onClick={(e) => handleItemClick(e, "/dashboard")}
-              >
-                <p className="text-base">Dashboard</p>
-              </ButtonItem>
-              <LinkItem
-                href="/pat"
-                iconBefore={<IconMediaServicesDocument label="" />}
-              >
-                <p className="text-base">P.A.T</p>
-              </LinkItem>
-              <LinkItem
-                href="/ewp"
-                iconBefore={<IconMediaServicesDocument label="" />}
-              >
-                <p className="text-base">E.W.P</p>
-              </LinkItem>
-              <ButtonItem iconBefore={<IconMediaServicesDocument label="" />}>
-                <p className="text-base">R.P.M</p>
-              </ButtonItem>
-              <LinkItem
-                href="/reference"
-                iconBefore={<IconPreferences label="" />}
-              >
-                <p className="text-base">Reference</p>
-              </LinkItem>
-              <ButtonItem
-                iconBefore={<IconMediaServicesSpreadsheet label="" />}
-                href="/catalogue"
-                isSelected={selectedItem === "/catalogue"}
-                onClick={(e) => handleItemClick(e, "/catalogue")}
-              >
-                <p className="text-base">Catalogue</p>
-              </ButtonItem>
-              <ButtonItem
-                iconBefore={<IconMediaServicesSpreadsheet label="" />}
-                href="/survey"
-                isSelected={selectedItem === "/survey"}
-                onClick={(e) => handleItemClick(e, "/survey")}
-              >
-                <p className="text-base">Survey</p>
-              </ButtonItem>
-              <ButtonItem
-                iconBefore={<IconGraphBar label="" />}
-                href="/reporting"
-                isSelected={selectedItem === "/reporting"}
-                onClick={(e) => handleItemClick(e, "/reporting")}
-              >
-                <p className="text-base">Reporting</p>
-              </ButtonItem>
-              <LinkItem href="#" iconBefore={<IconFile label="" />}>
-                <p className="text-base">NAF</p>
-              </LinkItem>
+              {listMenu?.length
+                ? listMenu?.map((v, i) => {
+                    return (
+                      <ButtonItem
+                        key={i}
+                        iconBefore={v?.icon}
+                        href="/dashboard"
+                        isSelected={selectedItem === v?.path}
+                        onClick={(e) => handleItemClick(e, v?.path)}
+                      >
+                        <p className="text-base">{v?.name}</p>
+                      </ButtonItem>
+                    );
+                  })
+                : ""}
             </div>
           </Section>
         </NestableNavigationContent>
