@@ -149,9 +149,11 @@ const index = () => {
                         <p className="text-sm mt-0">
                           {!v.isArray
                             ? v?.value
-                            : v?.value.map((val, index) => {
+                            : v?.value?.length
+                            ? v?.value.map((val, index) => {
                                 return <li key={index}>{val?.content}</li>;
-                              })}
+                              })
+                            : "N/A"}
                         </p>
                       </div>
                     </Card>

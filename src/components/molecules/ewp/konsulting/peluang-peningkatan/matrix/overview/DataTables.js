@@ -45,7 +45,7 @@ const DataTables = ({
           </div>
         </Header>
         <Header
-          width="21%"
+          width="18%"
           className="border-t border-r cell-custom-dataTables"
         >
           <div className="custom-table-header justify-center text-sm font-semibold">
@@ -61,7 +61,7 @@ const DataTables = ({
           </div>
         </Header>
         <Header
-          width="14%"
+          width="17%"
           className="border-t border-r cell-custom-dataTables"
         >
           <div className="custom-table-header justify-center text-sm font-semibold">
@@ -69,7 +69,7 @@ const DataTables = ({
           </div>
         </Header>
         <Header
-          width="13%"
+          width="15%"
           className="border-t border-r cell-custom-dataTables"
         >
           <div className="custom-table-header justify-center text-sm font-semibold">
@@ -77,7 +77,7 @@ const DataTables = ({
           </div>
         </Header>
         <Header
-          width="15%"
+          width="13%"
           className="border-t border-r cell-custom-dataTables rounded-se-lg"
         >
           <div className="custom-table-header justify-center text-sm font-semibold">
@@ -94,6 +94,9 @@ const DataTables = ({
             status_persetujuan,
             judul_kkpt,
             auditor,
+            risk_issue,
+            lingkup,
+            control,
           }) => (
             <Row>
               <Cell width="7%" className={`border-x ${customCell}`}>
@@ -124,8 +127,8 @@ const DataTables = ({
                   </p>
                 </div>
               </Cell>
-              <Cell width="21%" className={`border-r ${customCell}`}>
-                <div className="custom-table-position-center">
+              <Cell width="18%" className={`border-r ${customCell}`}>
+                <div className="custom-table-position-center justify-center">
                   <Link
                     href={`/ewp/konsulting/overview/${selectedId}/peluang-peningkatan/${matrix_id}/overview/${kkpt_id}`}
                     className="text-sm underline"
@@ -139,19 +142,49 @@ const DataTables = ({
                   {auditor?.nama || auditor?.name || "N/A"}
                 </div>
               </Cell>
-              <Cell width="14%" className={`border-r ${customCell}`}>
-                <div className="custom-table-position-center justify-center">
-                  {"N/A"}
-                </div>
-              </Cell>
-              <Cell width="13%" className={`border-r ${customCell}`}>
-                <div className="custom-table-position-center justify-center">
-                  {"N/A"}
+              <Cell width="17%" className={`border-r ${customCell}`}>
+                <div
+                  className={`custom-table-position-center ${
+                    lingkup?.length ? "justify-start" : "justify-center"
+                  }`}
+                >
+                  <p className="px-2">
+                    {lingkup?.length
+                      ? lingkup?.map((v, index) => (
+                          <li key={index}>{v?.judul_lingkup_pemeriksaan}</li>
+                        ))
+                      : "N/A"}
+                  </p>
                 </div>
               </Cell>
               <Cell width="15%" className={`border-r ${customCell}`}>
-                <div className="custom-table-position-center justify-center">
-                  {"N/A"}
+                <div
+                  className={`custom-table-position-center ${
+                    risk_issue?.length ? "justify-start" : "justify-center"
+                  }`}
+                >
+                  <p className="px-2">
+                    {risk_issue?.length
+                      ? risk_issue?.map((v, index) => (
+                          <li key={index}>{v?.abbr + " - " + v?.nama}</li>
+                        ))
+                      : "N/A"}
+                  </p>
+                </div>
+              </Cell>
+              <Cell width="13%" className={`border-r ${customCell}`}>
+                <div
+                  className={`custom-table-position-center ${
+                    control?.length ? "justify-start" : "justify-center"
+                  }`}
+                >
+                  <p className="px-2">
+                    {control?.length
+                      ? control?.map((v, index) => (
+                          <li key={index}>{v?.abbr + " - " + v?.nama}</li>
+                        ))
+                      : "N/A"}
+                  </p>
                 </div>
               </Cell>
             </Row>
