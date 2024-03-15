@@ -476,9 +476,9 @@ const index = () => {
       <div className="flex justify-between items-center mb-6">
         <PageTitle text={"Dokumen"} />
         <PrevNextNavigation
-          baseUrl={baseUrl}
+          baseUrl={PrevNextNavigation}
           routes={routes}
-          prevUrl={"/anggaran"}
+          prevUrl={"/program-kerja"}
           marginLeft={"-60px"}
         />
       </div>
