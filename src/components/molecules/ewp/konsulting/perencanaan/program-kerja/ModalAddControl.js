@@ -25,7 +25,7 @@ const ModalAddControl = ({
   handleCloseModal,
   handleSubmit,
 }) => {
-  console.log("selectedRisk => ", selectedRisk);
+  console.log("payloadControl => ", data);
   return (
     <ModalScroll
       showModal={showModal}
@@ -39,6 +39,7 @@ const ModalAddControl = ({
           <TextInput value={selectedRisk} isDisabled />
           {data?.length
             ? data?.map((v, i) => {
+                console.log("v => ", v);
                 return (
                   <div className="w-full flex gap-3" key={i}>
                     <div className="w-1/2">

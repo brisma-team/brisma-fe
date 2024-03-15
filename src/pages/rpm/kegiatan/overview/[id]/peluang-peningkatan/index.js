@@ -62,10 +62,10 @@ const index = () => {
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
       <div className="flex justify-between items-center mb-7">
-        <PageTitle text="Peluang Peningkatan Overview" />
+        <PageTitle text="Monitoring Overview" />
       </div>
       {/* Start Content */}
-      <div className="w-[70rem]">
+      <div className="w-[92rem]">
         <DataTables data={data} />
       </div>
       {/* End Content */}

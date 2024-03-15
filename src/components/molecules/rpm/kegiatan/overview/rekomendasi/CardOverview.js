@@ -1,7 +1,6 @@
 import { DivButton } from "@/components/atoms";
 import { DropdownCard } from "@/components/molecules/commons";
-import { capitalizeEveryWord, convertDate } from "@/helpers";
-import ProgressBar from "@atlaskit/progress-bar";
+import { convertDate } from "@/helpers";
 import { N800 } from "@atlaskit/theme/colors";
 import { token } from "@atlaskit/tokens";
 import { useRouter } from "next/router";
@@ -27,7 +26,8 @@ const CardOverview = ({ data, withoutButton, withoutHover }) => {
   const router = useRouter();
   const listDropdown = [{ label: "Approval", action: "#" }];
   const colorLabel = {
-    consulting: "bg-cardColor-turquoise",
+    // consulting: "bg-cardColor-turquoise",
+    consulting: "bg-cardColor-orange",
   };
 
   return (
@@ -37,7 +37,7 @@ const CardOverview = ({ data, withoutButton, withoutHover }) => {
         `hover:bg-gray-100 hover:rounded-[10px] hover:no-underline`
       }`}
       handleClick={(e) => (
-        e.stopPropagation(), router.push(`overview/${data?.id}`)
+        e.stopPropagation(), router.push(`overview/${data?.id}/info`)
       )}
     >
       <div
@@ -75,43 +75,32 @@ const CardOverview = ({ data, withoutButton, withoutHover }) => {
               </div>
             )}
           </div>
-          <div className="text-lg font-bold text-atlasian-blue-dark">
+          {/* <div className="text-lg font-bold text-atlasian-blue-dark">
             {data?.project_code?.toUpperCase()}
           </div>
           <div className="text-base font-bold text-atlasian-blue-dark">
             {data?.project_name}
-          </div>
-          <div className="flex flex-row justify-between leading-3 mt-2 items-center">
-            <ProgressBar appearance="success" value={data?.progress} />
-            <div className="flex justify-end font-medium text-sm ml-3">
-              {data?.percent}
-            </div>
-          </div>
+          </div> */}
           <div className="flex flex-col gap-3 mt-2">
+            <div className="flex flex-col gap-3 min-h-[5rem] max-h-[10rem] overflow-y-scroll border p-2">
+              <p className="text-sm font-semibold -mb-1">Rekomendasi</p>
+              <div className="flex w-full max-h-24 overflow-y-scroll">
+                <p>
+                  lorem ipsum dolor sit amet lorem ipsum dolor sit lorem ipsum
+                  dolor sit amet lorem ipsum dolor sitlorem ipsum dolor sit amet
+                  lorem ipsum dolor sitlorem ipsum dolor sit amet lorem ipsum
+                  dolor sit
+                </p>
+              </div>
+            </div>
             <div className="border-x border-t">
-              <CardBody title={"Inisiator"} value={data?.maker} />
+              <CardBody title={"P.I.C"} value={data?.maker} />
               <CardBody
-                title={"Tanggal Inisiasi"}
-                value={convertDate(data?.created_at, "/", "d")}
+                title={"Deadline"}
+                value={convertDate(data?.created_at, "-", "d")}
               />
-              <CardBody
-                title={"Project Status"}
-                value={capitalizeEveryWord(data?.approval_status)}
-                textColor={
-                  data?.approval_status === "On Progress"
-                    ? "text-atlasian-blue-light"
-                    : data?.approval_status === "On Approval"
-                    ? "text-atlasian-yellow"
-                    : data?.approval_status === "Final"
-                    ? "text-atlasian-green"
-                    : ""
-                }
-              />
-              <CardBody
-                title={"Document Status"}
-                value={capitalizeEveryWord(data?.document_status)}
-                textColor={"text-atlasian-yellow"}
-              />
+              <CardBody title={"Risk Issue"} value={"Kode Risk Issue"} />
+              <CardBody title={"Control"} value={"Kode Control"} />
             </div>
           </div>
         </div>
