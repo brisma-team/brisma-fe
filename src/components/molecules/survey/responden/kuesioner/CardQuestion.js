@@ -125,7 +125,7 @@ const CardQuestion = ({
                               textAlign: "center",
                               borderRadius: 4,
                             }}
-                            maxLength={2}
+                            maxLength={100}
                             value={data?.jawaban_user?.[0]?.text ?? null}
                             isDisabled={isDisabled}
                             onChange={(value) =>

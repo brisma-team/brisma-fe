@@ -15,23 +15,46 @@ const TextInputDecimal = ({
   handleClick,
   onKeyDown,
   maxLength,
+  maxNumber,
+  withoutSeparation,
 }) => {
   const [numberValue, setNumberValue] = useState("");
 
   useEffect(() => {
     if (typeof value == "undefined") {
       setNumberValue(undefined);
+    } else if (withoutSeparation) {
+      setNumberValue(convertIntegerToDecimal(value).integer);
     } else {
       setNumberValue(convertIntegerToDecimal(value).decimal);
     }
   }, [value]);
 
+  useEffect(() => {
+    console.log("numberValue => ", numberValue);
+  }, [numberValue]);
+
   const handleChange = (e) => {
     const format = convertIntegerToDecimal(e.target.value);
 
-    setNumberValue(format.decimal);
-
-    if (typeof format.decimal != "undefined") onChange(format?.integer);
+    if (maxNumber) {
+      if (isNaN(parseInt(e.target.value))) {
+        setNumberValue(0);
+        onChange(0);
+      } else if (withoutSeparation && parseInt(e.target.value) > maxNumber) {
+        setNumberValue(maxNumber);
+        onChange(maxNumber);
+      } else if (parseInt(e.target.value) > maxNumber) {
+        setNumberValue(maxNumber);
+        onChange(maxNumber);
+      } else {
+        setNumberValue(format.integer);
+        onChange(format?.integer);
+      }
+    } else {
+      setNumberValue(format.decimal);
+      onChange(format?.decimal);
+    }
   };
 
   return (

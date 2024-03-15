@@ -111,9 +111,10 @@ const CardQuestion = ({
                   textAlign: "center",
                   borderRadius: 4,
                 }}
-                maxLength={2}
+                maxNumber={100}
                 value={data.bobot}
                 isDisabled={isDisabledForm}
+                withoutSeparation
               />
             </div>
           )}
@@ -268,7 +269,7 @@ const CardQuestion = ({
                                 textAlign: "center",
                                 borderRadius: 4,
                               }}
-                              maxLength={2}
+                              maxNumber={100}
                               value={data?.jawaban_user?.[0]?.text ?? null}
                               onChange={(value) =>
                                 handleChangeAnswer(
@@ -279,6 +280,7 @@ const CardQuestion = ({
                                   indexAnswer
                                 )
                               }
+                              withoutSeparation
                             />
                           </div>
                         ) : (
@@ -292,7 +294,7 @@ const CardQuestion = ({
                               textAlign: "center",
                               borderRadius: 4,
                             }}
-                            maxLength={2}
+                            maxNumber={100}
                             value={answer.bobot}
                             isDisabled={isDisabledForm}
                             onChange={(value) =>
@@ -304,6 +306,7 @@ const CardQuestion = ({
                                 value
                               )
                             }
+                            withoutSeparation
                           />
                         </div>
                       )}
