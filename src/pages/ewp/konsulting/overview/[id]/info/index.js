@@ -97,7 +97,6 @@ const index = () => {
       },
     ]);
   }, [projectDetail]);
-  console.log(projectDetail);
 
   useEffect(() => {
     if (projectDetailError) {
