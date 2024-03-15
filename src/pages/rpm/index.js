@@ -27,7 +27,7 @@ const index = () => {
         title: "Kegiatan",
         description:
           "Modul pengerjaan Rencana Perbaikan Manajemen Audit dengan metode Konvensional.",
-        url: "#",
+        url: "/rpm/kegiatan",
         isDisabled: true,
       },
       {
@@ -35,7 +35,7 @@ const index = () => {
         title: "Approval Monitoring",
         description:
           "Monitoring proses approval pada aktivitas RPM Audit dan Non-Audit per masing-masing user.",
-        url: "/rpm/kegiatan",
+        url: "/rpm/approval",
       },
     ],
   };
