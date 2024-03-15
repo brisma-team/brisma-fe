@@ -40,15 +40,23 @@ import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useWorkflowDetailEWP } from "@/data/ewp";
 
 const routes = [
-  { name: "Sumber Informasi", slug: "sumber-informasi" },
-  { name: "Tim & Timeplan", slug: "tim-and-timeplan" },
+  {
+    name: "Sumber Informasi",
+    slug: "sumber-informasi",
+  },
+  {
+    name: "Tim & Timeplan",
+    slug: "tim-timeplan",
+  },
   { name: "Anggaran", slug: "anggaran" },
   { name: "Program Kerja", slug: "program-kerja" },
+  { name: "Dokumen", slug: "dokumen" },
 ];
 
 const index = () => {
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/projects/konvensional/${id}/mapa`;
+  const baseUrl = `/ewp/konsulting/overview/${id}`;
+  const pathName = `${baseUrl}/perencanaan`;
   const dispatch = useDispatch();
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -468,9 +476,9 @@ const index = () => {
       <div className="flex justify-between items-center mb-6">
         <PageTitle text={"Dokumen"} />
         <PrevNextNavigation
-          baseUrl={baseUrl}
+          baseUrl={pathName}
           routes={routes}
-          prevUrl={"/anggaran"}
+          prevUrl={"/program-kerja"}
           marginLeft={"-60px"}
         />
       </div>
@@ -480,7 +488,7 @@ const index = () => {
           <div>
             <Card>
               <div className="px-3 py-1 w-full">
-                <div className="text-xl">Daftar Isi 2</div>
+                <div className="text-xl">Daftar Isi</div>
                 <div className="pl-2 mt-0.5">
                   {listContent.map((v, i) => {
                     return (
