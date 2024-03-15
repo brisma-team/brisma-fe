@@ -79,6 +79,7 @@ import CardHistory from "./CardHistory";
 import MeetingTypeSelect from "./MeetingTypeSelect";
 import CardFormInputTeam from "./CardFormInputTeam";
 import PopupHistory from "./PopupHistory";
+import CardModuleDashboard from "./CardModuleDashboard";
 
 export {
   BackButton,
@@ -162,4 +163,5 @@ export {
   MeetingTypeSelect,
   CardFormInputTeam,
   PopupHistory,
+  CardModuleDashboard,
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import { MainLayout } from "@/layouts";
-import { CardDashboard } from "@/components/molecules/commons";
+import { CardModuleDashboard } from "@/components/molecules/commons";
 
 const index = () => {
   const data = {
@@ -8,39 +8,47 @@ const index = () => {
     content: [
       {
         subtitle: "R.P.M Audit",
-        subcontent: [
-          {
-            title: "Konvensional",
-            description:
-              "Modul pengerjaan Rencana Perbaikan Manajemen Audit dengan metode Konvensional.",
-            url: "#",
-            isDisabled: true,
-          },
-          {
-            title: "Agile",
-            description:
-              "Modul pengerjaan Rencana Perbaikan Manajemen Audit dengan metode Agile Scrum.",
-            url: "#",
-            isDisabled: true,
-          },
-        ],
+        title: "Konvensional",
+        description:
+          "Modul pengerjaan Rencana Perbaikan Manajemen Audit dengan metode Konvensional.",
+        url: "#",
+        isDisabled: true,
       },
       {
-        subtitle: "R.P.M Non Audit",
-        subcontent: [
-          {
-            title: "Kegiatan",
-            description:
-              "Modul pengerjaan Rencana Perbaikan Manajemen Non Audit Kegiatan.",
-            url: "/rpm/kegiatan/overview",
-          },
-        ],
+        subtitle: "R.P.M Audit",
+        title: "Agile",
+        description:
+          "Modul pengerjaan Rencana Perbaikan Manajemen Audit dengan metode Agile Scrum.",
+        url: "#",
+        isDisabled: true,
+      },
+      {
+        subtitle: "R.P.M Non-Audit",
+        title: "Kegiatan",
+        description:
+          "Modul pengerjaan Rencana Perbaikan Manajemen Audit dengan metode Konvensional.",
+        url: "#",
+        isDisabled: true,
+      },
+      {
+        subtitle: "R.P.M",
+        title: "Approval Monitoring",
+        description:
+          "Monitoring proses approval pada aktivitas RPM Audit dan Non-Audit per masing-masing user.",
+        url: "/rpm/kegiatan",
       },
     ],
   };
   return (
     <MainLayout>
-      <CardDashboard data={data} />
+      <div className="p-5">
+        <div className="mb-8">
+          <p className="text-3xl font-bold">{data?.title}</p>
+        </div>
+        <div className="grid grid-cols-2 gap-5 w-fit mt-12">
+          <CardModuleDashboard data={data} />
+        </div>
+      </div>
     </MainLayout>
   );
 };
