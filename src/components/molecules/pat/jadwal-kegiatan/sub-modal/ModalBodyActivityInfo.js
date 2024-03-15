@@ -35,7 +35,7 @@ const ModalBodyActivityInfo = ({
   const [selectedTipe, setSelectedTipe] = useState(null);
   const [selectedJenis, setSelectedJenis] = useState(null);
 
-  const { metode } = useMetode("all", 1);
+  const { metode } = useMetode("all", 2);
   const { tipe } = useTipe("all", selectedMetode);
   const { jenis } = useJenis("all", selectedTipe);
   const { tema } = useTema("all", selectedJenis);
