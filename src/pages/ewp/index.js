@@ -27,7 +27,7 @@ const index = () => {
         title: "Kegiatan",
         description:
           "Modul pengerjaan Electronic Working Paper Audit untuk Kegiatan Non-Audit.",
-        url: "/rpm/kegiatan",
+        url: "/ewp/konsulting",
       },
       {
         subtitle: "E.W.P Non-Audit",
