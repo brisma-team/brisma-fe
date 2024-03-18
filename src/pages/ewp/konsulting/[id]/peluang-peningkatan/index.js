@@ -10,7 +10,7 @@ const index = () => {
   const router = useRouter();
   const { id } = router.query;
   const [matrixId, setMatrixId] = useState(undefined);
-  const baseUrl = `/ewp/konsulting/overview/${id}`;
+  const baseUrl = `/ewp/konsulting/${id}`;
 
   const [dataCarding, setDataCarding] = useState([]);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -41,17 +41,6 @@ const index = () => {
     content: "",
   });
 
-  // useEffect(() => {
-  //   if (landingStatusError !== undefined) {
-  //     setIsError(true);
-  //     errorSwal("Selesaikan Analisa Data terlebih dahulu").then((response) => {
-  //       if (response?.isConfirmed || response?.isDismissed) {
-  //         router.push(`/ewp/konsulting/overview/${params?.id}/info`);
-  //       }
-  //     });
-  //   }
-  // }, [landingStatusError]);
-
   useEffect(() => {
     if (matrixId !== undefined) {
       setPathName({
@@ -65,7 +54,7 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting/overview" },
+      { name: "Overview", path: "/ewp/konsulting" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
