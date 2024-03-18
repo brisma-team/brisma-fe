@@ -33,9 +33,10 @@ const index = () => {
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
+    { name: "Overview", path: "/ewp/konsulting" },
     {
       name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Info`,
-      path: `/ewp/projects/konvensional/${id}/info`,
+      path: `/ewp/konsulting/${id}/info`,
     },
   ];
 

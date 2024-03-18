@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 
 const index = () => {
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/overview/${id}`;
+  const baseUrl = `/ewp/konsulting/${id}`;
   const [data, setData] = useState([]);
 
   const { projectDetail } = useProjectDetail({ id });
@@ -16,47 +16,43 @@ const index = () => {
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
-    { name: "Overview", path: "/ewp/konsulting/overview" },
+    { name: "Overview", path: "/ewp/konsulting" },
     {
-      name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Perencanaan Kegiatan`,
-      path: baseUrl,
+      name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
+      path: baseUrl + "/info",
     },
+    { name: "Perencanaan Kegiatan", path: baseUrl + "/perencanaan" },
   ];
 
   useEffect(() => {
     setData([
       {
         title: "Sumber Informasi",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt tristique elit ut bibendum. Quisque tellus lacus, rutrum vitae felis id, accumsan pharetra libero. Nullam quam odio, accumsan convallis velit et, ultrices sollicitudin lacus. Praesent tincidunt id mauris eu bibendum. Donec feugiat orci lorem, at sollicitudin erat vulputate sit amet. Nulla tincidunt mi nunc, nec malesuada mi interdum in. Quisque sollicitudin, dolor sed egestas accumsan, purus lacus hendrerit turpis, vel porttitor mi ligula id neque.",
+        description: "Usulan terkait Sumber Informasi Kegiatan.",
         status: landingStatus?.data?.sumber_informasi ? "success" : "failed",
         url: `${baseUrl}/perencanaan/sumber-informasi`,
       },
       {
         title: "Tim & Timeplan",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt tristique elit ut bibendum. Quisque tellus lacus, rutrum vitae felis id, accumsan pharetra libero. Nullam quam odio, accumsan convallis velit et, ultrices sollicitudin lacus. Praesent tincidunt id mauris eu bibendum. Donec feugiat orci lorem, at sollicitudin erat vulputate sit amet. Nulla tincidunt mi nunc, nec malesuada mi interdum in. Quisque sollicitudin, dolor sed egestas accumsan, purus lacus hendrerit turpis, vel porttitor mi ligula id neque.",
+        description: "Perencanaan Tim dan Timeplan Kegiatan.",
         status: landingStatus?.data?.tim_audit ? "success" : "failed",
         url: `${baseUrl}/perencanaan/tim-timeplan`,
       },
       {
         title: "Anggaran",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt tristique elit ut bibendum. Quisque tellus lacus, rutrum vitae felis id, accumsan pharetra libero. Nullam quam odio, accumsan convallis velit et, ultrices sollicitudin lacus. Praesent tincidunt id mauris eu bibendum. Donec feugiat orci lorem, at sollicitudin erat vulputate sit amet. Nulla tincidunt mi nunc, nec malesuada mi interdum in. Quisque sollicitudin, dolor sed egestas accumsan, purus lacus hendrerit turpis, vel porttitor mi ligula id neque.",
+        description: "Perancangan Anggaran Kegiatan.",
         status: landingStatus?.data?.anggaran ? "success" : "failed",
         url: `${baseUrl}/perencanaan/anggaran`,
       },
       {
         title: "Program Kerja",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt tristique elit ut bibendum. Quisque tellus lacus, rutrum vitae felis id, accumsan pharetra libero. Nullam quam odio, accumsan convallis velit et, ultrices sollicitudin lacus. Praesent tincidunt id mauris eu bibendum. Donec feugiat orci lorem, at sollicitudin erat vulputate sit amet. Nulla tincidunt mi nunc, nec malesuada mi interdum in. Quisque sollicitudin, dolor sed egestas accumsan, purus lacus hendrerit turpis, vel porttitor mi ligula id neque.",
+        description: "Perencanaan Program Kerja Kegiatan.",
         status: landingStatus?.data?.program_kerja ? "success" : "failed",
         url: `${baseUrl}/perencanaan/program-kerja`,
       },
       {
         title: "Dokumen",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        status: landingStatus?.data?.doc_mapa ? "success" : "failed",
+        description: "Hasil Dokumen Perencanaan Kegiatan.",
         url: `${baseUrl}/perencanaan/dokumen`,
       },
     ]);

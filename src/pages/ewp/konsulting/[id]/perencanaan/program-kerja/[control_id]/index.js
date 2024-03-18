@@ -22,7 +22,7 @@ const Editor = dynamic(() => import("@/components/atoms/Editor"), {
 const index = () => {
   const { id, control_id } = useRouter().query;
   const router = useRouter();
-  const baseUrl = `/ewp/konsulting/overview/${id}`;
+  const baseUrl = `/ewp/konsulting/${id}`;
   const pathName = `${baseUrl}/perencanaan`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -40,18 +40,22 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting/overview" },
+      { name: "Overview", path: "/ewp/konsulting" },
       {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Perencanaan Kegiatan`,
-        path: baseUrl,
+        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
+        path: baseUrl + "/info",
+      },
+      {
+        name: `Perencanaan Kegiatan`,
+        path: pathName,
       },
       {
         name: `Program Kerja`,
-        path: `${baseUrl}/${projectDetail?.data?.project_info?.project_id}/perencanaan/program-kerja`,
+        path: `${pathName}/program-kerja`,
       },
       {
         name: `Control`,
-        path: `${baseUrl}/perencanaan/program-kerja/${control_id}`,
+        path: `${pathName}/program-kerja/${control_id}`,
       },
     ]);
   }, [projectDetail]);
@@ -118,7 +122,7 @@ const index = () => {
       {/* End Breadcrumbs */}
       <div className="flex gap-3 items-center mb-7">
         <ButtonIconBack
-          backUrl={`/ewp/konsulting/overview/${id}/perencanaan/program-kerja`}
+          backUrl={`/ewp/konsulting/${id}/perencanaan/program-kerja`}
         />
         <PageTitle text="Uraian Lingkup Pemeriksaan" />
       </div>
