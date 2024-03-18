@@ -39,7 +39,7 @@ const routes = [
 const index = () => {
   const dispatch = useDispatch();
   const { id, kkpa_id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/overview/${id}`;
+  const baseUrl = `/ewp/konsulting/${id}`;
   const pathNameSubModulAnalisa = `${baseUrl}/analisa`;
   const pathNameLandingPage = `${baseUrl}/analisa/lingkup/${kkpa_id}`;
 
@@ -60,13 +60,13 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting/overview" },
+      { name: "Overview", path: "/ewp/konsulting" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
       },
       {
-        name: `Analisa / Lingkup Konsulting Ringkasan`,
+        name: `Analisa Lingkup Konsulting`,
         path: `${pathNameSubModulAnalisa}/lingkup`,
       },
       {
