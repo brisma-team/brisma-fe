@@ -1,7 +1,7 @@
 import { N800 } from "@atlaskit/theme/colors";
 import { token } from "@atlaskit/tokens";
 
-const Card = ({ children, hoverBorderColor = "green" }) => {
+const Card = ({ children, hoverBorderColor }) => {
   return (
     <div
       className="py-2 w-full rounded flex flex-col items-center h-full"

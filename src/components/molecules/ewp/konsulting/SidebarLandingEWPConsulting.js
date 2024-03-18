@@ -14,7 +14,7 @@ import { convertDate } from "@/helpers";
 
 const SidebarLandingEWPConsulting = () => {
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/overview/${id}`;
+  const baseUrl = `/ewp/konsulting/${id}`;
   const [data, setData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const { projectDetail } = useProjectDetail({ id });
