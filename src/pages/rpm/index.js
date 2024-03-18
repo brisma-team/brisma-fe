@@ -28,7 +28,6 @@ const index = () => {
         description:
           "Modul pengerjaan Rencana Perbaikan Manajemen Audit dengan metode Konvensional.",
         url: "/rpm/kegiatan",
-        isDisabled: true,
       },
       {
         subtitle: "R.P.M",
@@ -45,8 +44,8 @@ const index = () => {
         <div className="mb-8">
           <p className="text-3xl font-bold">{data?.title}</p>
         </div>
-        <div className="grid grid-cols-2 gap-5 w-fit mt-12">
-          <CardModuleDashboard data={data} />
+        <div className="grid xl:grid-cols-2 lg:grid-cols-1 gap-5 w-fit mt-12">
+          <CardModuleDashboard data={data?.content} />
         </div>
       </div>
     </MainLayout>
