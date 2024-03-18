@@ -19,7 +19,7 @@ const index = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/overview/${id}`;
+  const baseUrl = `/ewp/konsulting/${id}`;
   const pathName = `${baseUrl}/analisa`;
 
   const [showFilter, setShowFilter] = useState(false);
@@ -49,13 +49,13 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting/overview" },
+      { name: "Overview", path: "/ewp/konsulting" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
       },
       {
-        name: `Analisa / Lingkup Konsulting Ringkasan`,
+        name: `Analisa Lingkup Konsulting`,
         path: `${pathName}/lingkup`,
       },
     ]);
@@ -126,16 +126,16 @@ const index = () => {
   };
   // [ END ] handler for filter
 
-  const handleClickMatrix = () => {
-    router.push(`/ewp/konsulting/overview/${id}/analisa/matrix`);
-  };
+  // const handleClickMatrix = () => {
+  //   router.push(`/ewp/konsulting/${id}/analisa/matrix`);
+  // };
 
   const handleClickDokumenPerencanaan = () => {
-    router.push(`/ewp/konsulting/overview/${id}/perencanaan/dokumen`);
+    router.push(`/ewp/konsulting/${id}/perencanaan/dokumen`);
   };
 
   const handleClickKertasKerja = (kkpa_id) => {
-    router.push(`/ewp/konsulting/overview/${id}/analisa/lingkup/${kkpa_id}`);
+    router.push(`/ewp/konsulting/${id}/analisa/lingkup/${kkpa_id}`);
   };
 
   return (
@@ -155,9 +155,9 @@ const index = () => {
               text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
             />
           </div>
-          <div className="w-36 rounded bg-atlasian-purple">
+          {/* <div className="w-36 rounded bg-atlasian-purple">
             <ButtonField handler={handleClickMatrix} text={"Matrix Peluang"} />
-          </div>
+          </div> */}
         </div>
       </div>
       <CardFilterTable

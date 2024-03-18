@@ -31,7 +31,7 @@ import matrixEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/analisa/
 const index = () => {
   const dispatch = useDispatch();
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/overview/${id}`;
+  const baseUrl = `/ewp/konsulting/${id}`;
   const pathName = `${baseUrl}/analisa`;
 
   const [showModalMatrix, setShowModalMatrix] = useState(false);
@@ -53,13 +53,17 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting/overview" },
+      { name: "Overview", path: "/ewp/konsulting" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
       },
       {
-        name: `Analisa / Matrix Peluang`,
+        name: `Matrix Peluang`,
+        path: `${pathName}/lingkup`,
+      },
+      {
+        name: `Matrix Peluang`,
         path: `${pathName}/matrix`,
       },
     ]);
@@ -173,9 +177,7 @@ const index = () => {
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
       <div className="flex gap-3 items-center mb-7">
-        <ButtonIconBack
-          backUrl={`/ewp/konsulting/overview/${id}/analisa/lingkup`}
-        />
+        <ButtonIconBack backUrl={`/ewp/konsulting/${id}/analisa/lingkup`} />
         <PageTitle text="Matrix Peluang Peningkatan" />
       </div>
       {/* Start Content */}
