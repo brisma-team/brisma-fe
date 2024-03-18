@@ -1,10 +1,4 @@
-import {
-  Breadcrumbs,
-  ButtonField,
-  Card,
-  PageTitle,
-  UploadButton,
-} from "@/components/atoms";
+import { Breadcrumbs, ButtonField, PageTitle } from "@/components/atoms";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useSumberInformasi } from "@/data/ewp/konsulting/perencanaan/sumber-informasi";
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
@@ -12,16 +6,11 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import {
-  PopupKlipping,
+  AttachmentClipping,
+  ImageClipping,
   PrevNextNavigation,
 } from "@/components/molecules/commons";
-import {
-  copyToClipboard,
-  fetchApi,
-  loadingSwal,
-  usePostFileData,
-} from "@/helpers";
-import Image from "next/image";
+import { fetchApi, loadingSwal, usePostFileData } from "@/helpers";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -48,6 +37,8 @@ const index = () => {
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [imageClipList, setImageClipList] = useState([]);
+  const [attachmentClipList, setAttachmentClipList] = useState([]);
+  const [typeUpload, setTypeUpload] = useState("");
   const [content, setContent] = useState("");
 
   const { projectDetail } = useProjectDetail({ id });
@@ -77,21 +68,39 @@ const index = () => {
     setContent(sumberInformasi?.data || "");
   }, [sumberInformasi]);
 
-  const handleUpload = async (e) => {
+  const handleClickUploadAttachment = () => {
+    setTypeUpload("attachment");
+  };
+
+  const handleClickUploadImage = () => {
+    setTypeUpload("image");
+  };
+
+  const handleUploadFile = async (e) => {
     loadingSwal();
     if (e.target.files) {
       const url = `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/cdn/upload`;
-
       const response = await usePostFileData(url, {
         file: e.target.files[0],
         modul: "ewp",
       });
 
-      setImageClipList((prev) => [
-        ...prev,
-        { url: response.url[0], name: e.target.files[0].name },
-      ]);
+      switch (typeUpload) {
+        case "attachment":
+          setAttachmentClipList((prev) => [
+            ...prev,
+            { url: response.url[0], name: e.target.files[0].name },
+          ]);
+          break;
+        case "image":
+          setImageClipList((prev) => [
+            ...prev,
+            { url: response.url[0], name: e.target.files[0].name },
+          ]);
+          break;
+      }
     }
+    setTypeUpload("");
     loadingSwal("close");
   };
 
@@ -127,51 +136,17 @@ const index = () => {
       {/* Start Content */}
       <div className="my-4 flex justify-between">
         <div className="flex gap-6">
-          <div className="w-64">
-            <div>
-              <Card>
-                <div className="w-full px-4 -ml-1">
-                  <div className="flex justify-between">
-                    <p className="text-xl font-semibold">Kliping Gambar</p>
-                    <PopupKlipping />
-                  </div>
-                  {/* Start Kliping Gambar */}
-                  <div
-                    className="grid grid-cols-2 -mx-1 mt-2 overflow-scroll overflow-x-hidden"
-                    style={{ maxHeight: "37rem" }}
-                  >
-                    {imageClipList?.length
-                      ? imageClipList?.map((v, i) => {
-                          return (
-                            <button
-                              key={i}
-                              className="m-2 border-2 shadow-sm rounded-lg p-3"
-                              style={{ width: "6.25rem", height: "6.25rem" }}
-                              onClick={() => copyToClipboard(v?.url)}
-                            >
-                              <Image
-                                src={v?.url}
-                                alt={v?.name}
-                                width={200}
-                                height={200}
-                              />
-                            </button>
-                          );
-                        })
-                      : ""}
-                  </div>
-                  <div className="mt-4 py-2 bg-none w-full justify-start">
-                    <UploadButton
-                      text={"Tambah Kliping +"}
-                      fileAccept={"image/png, image/gif, image/jpeg"}
-                      className={"text-atlasian-purple text-sm"}
-                      handleUpload={handleUpload}
-                    />
-                  </div>
-                  {/* End Kliping Gambar */}
-                </div>
-              </Card>
-            </div>
+          <div className="w-64 flex flex-col gap-4">
+            <ImageClipping
+              data={imageClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadImage}
+            />
+            <AttachmentClipping
+              data={attachmentClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadAttachment}
+            />
           </div>
           <div>
             <div className="ckeditor-latar-belakang-mapa-ewp">

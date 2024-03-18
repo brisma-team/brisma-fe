@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import _ from "lodash";
 import { useOverview } from "@/data/survey/initiator/overview";
 import { useRouter } from "next/router";
-import { confirmationSwal, fetchApi, loadingSwal } from "@/helpers";
+import { confirmationSwal, fetchApi, infoSwal, loadingSwal } from "@/helpers";
 import { useInformation } from "@/data/survey/initiator/informasi";
 
 const breadcrumbs = [
@@ -263,6 +263,13 @@ const index = () => {
   };
 
   const handleSubmitManageRespondenRequest = async () => {
+    if (!noteManageResponden) {
+      infoSwal(
+        "Silakan berikan alasan mengapa Anda mengajukan permohonan untuk mengelola responden"
+      );
+      return;
+    }
+
     loadingSwal();
     await fetchApi(
       "POST",
