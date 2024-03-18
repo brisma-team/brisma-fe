@@ -21,18 +21,14 @@ const TextInputDecimal = ({
   const [numberValue, setNumberValue] = useState("");
 
   useEffect(() => {
-    if (typeof value == "undefined") {
-      setNumberValue(undefined);
+    if (typeof value === "undefined" || value === null || value === "") {
+      setNumberValue("");
     } else if (withoutSeparation) {
       setNumberValue(convertIntegerToDecimal(value).integer);
     } else {
       setNumberValue(convertIntegerToDecimal(value).decimal);
     }
   }, [value]);
-
-  useEffect(() => {
-    console.log("numberValue => ", numberValue);
-  }, [numberValue]);
 
   const handleChange = (e) => {
     const format = convertIntegerToDecimal(e.target.value);
