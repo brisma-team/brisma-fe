@@ -123,6 +123,11 @@ const index = () => {
           type: v?.ref_tipe.nama,
           title: v?.nama,
           maker: v?.pic_maker_kegiatan_lain.nama,
+          created_date: v?.createdAt,
+          start_date: v?.pelaksanaan_start,
+          end_date: v?.pelaksanaan_end,
+          jenis: v?.ref_jenis?.nama,
+          tema: v?.ref_tema?.nama,
           budget: v?.total_anggaran,
           audit_period: `${convertDate(
             v?.pelaksanaan_start,
@@ -132,7 +137,7 @@ const index = () => {
           desc: v?.deskripsi,
         };
       });
-
+      console.log(mappedData);
       setData(mappedData);
       setTotalData(activityScheduleOther?.pagination?.totalData);
     } else {
@@ -183,8 +188,6 @@ const index = () => {
   const handleChangeFilter = (props, value) => {
     setFilter({ ...filter, [props]: value });
   };
-
-  console.log(data);
 
   return (
     <PatLandingLayout data={statusPat?.data} content={content}>
@@ -253,6 +256,11 @@ const index = () => {
                 key={i}
                 kegiatan_lain_id={v.id}
                 type={v.type}
+                created_date={v.created_date}
+                start_date={v.start_date}
+                end_date={v.end_date}
+                jenis={v.jenis}
+                tema={v.tema}
                 title={v.title}
                 maker={v.maker}
                 audit_period={v.audit_period}

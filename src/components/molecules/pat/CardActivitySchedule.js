@@ -1,5 +1,5 @@
 import { Card, DivButton } from "@/components/atoms";
-import { convertToRupiah } from "@/helpers";
+import { convertDate, convertToRupiah } from "@/helpers";
 import TableTree, { Cell, Row, Rows } from "@atlaskit/table-tree";
 import { DropdownIcon } from "../commons";
 import ProgressBar from "@atlaskit/progress-bar";
@@ -8,10 +8,14 @@ const CardActivitySchedule = ({
   jadwal_sbp_id,
   type,
   title,
+  jenis,
   maker,
-  audit_period,
+  createdDate,
+  start_date,
+  end_date,
   budget,
   pic,
+  tema,
   desc,
   handleClickInfo,
   handleClickUpdate,
@@ -27,32 +31,22 @@ const CardActivitySchedule = ({
     },
     {
       title: "Tanggal Inisiasi",
-      description: "-",
+      description: convertDate(createdDate, "-", "d"),
     },
     {
       title: "Durasi Proyek",
-      description: audit_period,
+      description: convertDate(start_date, "-", "d") + " - " + convertDate(end_date, "-", "d"),
     },
     {
       title: "Jenis Proyek",
-      description: "-",
-    },
-  ];
-  const documentItems = [
-    {
-      title: "Survey Terkait",
-      description: "-",
+      description: jenis,
     },
     {
-      title: "Project Status",
-      description: "-",
+      title: "Tema Proyek",
+      description: tema,
     },
     {
-      title: "Document Status",
-      description: "-",
-    },
-    {
-      title: "Document Status",
+      title: "Anggaran",
       description: `Rp. ${convertToRupiah(budget)}`,
     },
   ];
@@ -112,39 +106,17 @@ const CardActivitySchedule = ({
                 )}
               />
             </TableTree>
-            <div className="w-full h-[10rem] border-2 my-3 p-2 overflow-y-scroll">
+            <div className="w-full h-[10rem] border-2 my-3 p-2 overflow-y-auto">
               <p className="font-semibold text-lg">Pelaksana</p>
-              <p className="text-blue-600 font-semibold">Tim Audit</p>
-              <p className="">Tim Auditor HO BRI 2</p>
+              <p className="text-blue-600 font-semibold">PIC</p>
+              {pic.map((v) => {
+                return (
+                  <p className="" key={v}>
+                    {v}
+                  </p>
+                );
+              })}
             </div>
-            <TableTree>
-              <Rows
-                items={documentItems}
-                render={({ title, description }) => (
-                  <div className="border">
-                    <Row itemId={title}>
-                      <Cell
-                        width="50%"
-                        className="font-bold border-r !min-h-0 !p-2"
-                      >
-                        {title}
-                      </Cell>
-                      <Cell
-                        width="50%"
-                        className={`!min-h-0 !p-2 ${
-                          description.toLowerCase() === "on progress" &&
-                          title === "Project Status"
-                            ? "text-blue-500"
-                            : "text-orange-300"
-                        }`}
-                      >
-                        {description}
-                      </Cell>
-                    </Row>
-                  </div>
-                )}
-              />
-            </TableTree>
           </div>
         </div>
       </Card>

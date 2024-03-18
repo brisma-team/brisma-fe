@@ -115,6 +115,7 @@ const index = () => {
       return {
         id: v?.id,
         type: v?.ref_tipe?.nama,
+        jenis: v?.ref_jenis?.nama,
         title: v?.name_kegiatan_audit,
         maker: v?.pic_jadwal_audit?.nama,
         audit_team: v?.tim_audit?.name,
@@ -126,7 +127,7 @@ const index = () => {
         desc: v?.deskripsi,
       };
     });
-
+    console.log(auditSchedule?.result)
     setData(mappedData);
     setTotalData(auditSchedule?.pagination?.totalData);
   }, [auditSchedule, auditScheduleMutate]);
@@ -243,6 +244,7 @@ const index = () => {
                   jadwal_id={v.id}
                   type={v.type}
                   title={v.title}
+                  jenis={v.jenis}
                   maker={v.maker}
                   audit_team={v.audit_team}
                   start_date={v.start_date}

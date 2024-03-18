@@ -37,8 +37,7 @@ const CardOverview = ({ data, withoutButton, withoutHover }) => {
         `hover:bg-gray-100 hover:rounded-[10px] hover:no-underline`
       }`}
       handleClick={(e) => (
-        e.stopPropagation(),
-        router.push(`overview/${data?.id}/peluang-peningkatan`)
+        e.stopPropagation(), router.push(`overview/${data?.id}`)
       )}
     >
       <div

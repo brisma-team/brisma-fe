@@ -1,5 +1,5 @@
 import { Card, DivButton } from "@/components/atoms";
-import { convertToRupiah } from "@/helpers";
+import { convertDate, convertToRupiah } from "@/helpers";
 import TableTree, { Cell, Row, Rows } from "@atlaskit/table-tree";
 import { DropdownIcon } from "../commons";
 
@@ -11,6 +11,7 @@ const CardAuditSchedule = ({
   audit_team,
   start_date,
   end_date,
+  jenis,
   budget,
   audit_type,
   tema,
@@ -26,41 +27,23 @@ const CardAuditSchedule = ({
     },
     {
       title: "Tanggal Inisiasi",
-      description: start_date,
+      description: convertDate(start_date, "-", "d"),
     },
     {
       title: "Durasi Proyek",
-      description: "-",
-    },
-    {
-      title: "Rentang Waktu",
-      description: "-",
+      description: convertDate(start_date, "-", "d") + " - " + convertDate(end_date, "-", "d"),
     },
     {
       title: "Jenis Proyek",
-      description: "-",
+      description: jenis,
     },
     {
       title: "Tema Proyek",
-      description: "-",
+      description: tema,
     },
     {
       title: "Anggaran",
       description: `Rp. ${convertToRupiah(budget)}`,
-    },
-  ];
-  const documentItems = [
-    {
-      title: "Project Status",
-      description: "-",
-    },
-    {
-      title: "Document Status",
-      description: "-",
-    },
-    {
-      title: "Document Status",
-      description: `-`,
     },
   ];
   return (
@@ -110,39 +93,11 @@ const CardAuditSchedule = ({
                 )}
               />
             </TableTree>
-            <div className="w-full h-[10rem] border-2 my-3 p-2 overflow-y-scroll">
+            <div className="w-full h-[10rem] border-2 my-3 p-2 overflow-y-auto">
               <p className="font-semibold text-lg">Pelaksana</p>
               <p className="text-blue-600 font-semibold">Tim Audit</p>
-              <p className="">Tim Auditor HO BRI 2</p>
+              <p className="">{audit_team}</p>
             </div>
-            <TableTree>
-              <Rows
-                items={documentItems}
-                render={({ title, description }) => (
-                  <div className="border p-0">
-                    <Row itemId={title}>
-                      <Cell
-                        width="50%"
-                        className="font-bold border-r !min-h-0 !p-2"
-                      >
-                        {title}
-                      </Cell>
-                      <Cell
-                        width="50%"
-                        className={`!min-h-0 !p-2 ${
-                          description.toLowerCase() === "on progress" &&
-                          title === "Project Status"
-                            ? "text-blue-500"
-                            : "text-orange-300"
-                        }`}
-                      >
-                        {description}
-                      </Cell>
-                    </Row>
-                  </div>
-                )}
-              />
-            </TableTree>
           </div>
         </div>
       </Card>
