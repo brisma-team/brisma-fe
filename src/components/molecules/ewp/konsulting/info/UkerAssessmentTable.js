@@ -24,7 +24,7 @@ import TableTree, {
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
-const UkerInfoTable = ({
+const UkerAssessmentTable = ({
   data,
   handleChange,
   handleReset,
@@ -60,15 +60,13 @@ const UkerInfoTable = ({
           width="25%"
           className="border-t border-r cell-custom-dataTables"
         >
-          <div className="custom-table-header justify-center text-sm font-semibold">
-            ORGEH
-          </div>
+          <div className="custom-table-header text-sm font-semibold">ORGEH</div>
         </Header>
         <Header
           width="20%"
           className="border-t border-r cell-custom-dataTables"
         >
-          <div className="custom-table-header justify-center text-sm font-semibold">
+          <div className="custom-table-header text-sm font-semibold">
             TIPE UKER
           </div>
         </Header>
@@ -124,7 +122,7 @@ const UkerInfoTable = ({
                 </div>
               </Cell>
               <Cell width="15%" className={`border-r ${customCell}`}>
-                <div className="custom-table-position-center justify-center">
+                <div className="custom-table-position-center">
                   {is_new ? (
                     <OrgehSelect
                       customIcon={
@@ -146,7 +144,7 @@ const UkerInfoTable = ({
                 </div>
               </Cell>
               <Cell width="15%" className={`border-r ${customCell}`}>
-                <div className="custom-table-position-center justify-center">
+                <div className="custom-table-position-center">
                   {is_new ? (
                     <UkerTypeSelect
                       handleChange={(e) =>
@@ -213,4 +211,4 @@ const UkerInfoTable = ({
   );
 };
 
-export default UkerInfoTable;
+export default UkerAssessmentTable;

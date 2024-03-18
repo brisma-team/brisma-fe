@@ -5,7 +5,8 @@ import {
   InformativeLetter,
   RealizationTable,
   RelatedProjectTable,
-  UkerInfoTable,
+  UkerAssessmentTable,
+  InfoPAT,
 } from "@/components/molecules/ewp/konsulting/info";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { errorSwalTimeout, fetchApi } from "@/helpers";
@@ -15,11 +16,13 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const index = () => {
+  const router = useRouter();
   const { id } = useRouter().query;
   const navigationTabItems = [
     { idx: 1, title: "Project Details" },
     { idx: 2, title: "Proyek Terkait" },
-    { idx: 3, title: "UKER Info" },
+    { idx: 3, title: "UKER Assessment" },
+    { idx: 4, title: "UKER Info" },
   ];
   const [isError, setIsError] = useState(false);
   const [currentContentStage, setCurrentContentStage] = useState(1);
@@ -51,8 +54,7 @@ const index = () => {
         label: "Perencanaan",
         start_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_start,
         end_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
-        url: `/ewp/konsulting/overview/${id}/perencanaan`,
-        log: "Menambahkan Sesuatu...",
+        url: `/ewp/konsulting/${id}/perencanaan`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
@@ -65,8 +67,7 @@ const index = () => {
         start_date:
           projectDetail?.data?.realisasi?.pelaksanaan_audit_real_start,
         end_date: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
-        url: `/ewp/konsulting/overview/${id}/analisa/lingkup`,
-        log: "Menambahkan Sesuatu...",
+        url: `/ewp/konsulting/${id}/analisa/lingkup`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
@@ -79,8 +80,7 @@ const index = () => {
         start_date:
           projectDetail?.data?.realisasi?.peluang_peningkatan_real_start,
         end_date: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end,
-        url: `/ewp/konsulting/overview/${id}/peluang-peningkatan`,
-        log: "Menambahkan Sesuatu...",
+        url: `/ewp/konsulting/${id}/peluang-peningkatan`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end,
@@ -92,8 +92,7 @@ const index = () => {
         label: "Wrap-Up",
         start_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_start,
         end_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end,
-        url: `/ewp/konsulting/overview/${id}/wrapup`,
-        log: "Menambahkan Sesuatu...",
+        url: `/ewp/konsulting/${id}/wrapup`,
       },
     ]);
   }, [projectDetail]);
@@ -114,7 +113,6 @@ const index = () => {
       4: "pelaksanaan",
       6: "peluang_peningkatan",
       8: "wrapup_meeting",
-      9: "final",
     };
 
     let path = pathMappings[statusCode] || "";
@@ -129,8 +127,12 @@ const index = () => {
   };
 
   if (isError) {
-    errorSwalTimeout(projectDetailError, "/ewp/konsulting/overview");
+    errorSwalTimeout(projectDetailError, "/ewp/konsulting");
   }
+
+  const handleClickLog = () => {
+    router.push(`/ewp/konsulting/${id}/log`);
+  };
 
   return (
     <LandingLayoutEWPConsulting>
@@ -143,7 +145,7 @@ const index = () => {
           <NavigationTab
             items={navigationTabItems}
             currentStage={currentContentStage}
-            width={"w-80"}
+            width={"w-[30rem]"}
             handleChange={handleChangeTab}
           />
           {currentContentStage === 1 ? (
@@ -160,6 +162,7 @@ const index = () => {
                   <RealizationTable
                     data={dataTables}
                     handleClickInitiate={handleClickInitiate}
+                    handleClickLog={handleClickLog}
                   />
                 </div>
               </Card>
@@ -174,8 +177,10 @@ const index = () => {
             </div>
           ) : currentContentStage === 2 ? (
             <RelatedProjectTable data={[]} />
+          ) : currentContentStage === 3 ? (
+            <UkerAssessmentTable data={[]} />
           ) : (
-            <UkerInfoTable data={[]} />
+            <InfoPAT />
           )}
         </div>
       </div>

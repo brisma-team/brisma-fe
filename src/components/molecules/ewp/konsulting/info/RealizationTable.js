@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DivButton, LozengeField } from "@/components/atoms";
+import { ButtonIcon, DivButton, LozengeField } from "@/components/atoms";
 import { convertDate } from "@/helpers";
 import TableTree, {
   Cell,
@@ -8,10 +8,11 @@ import TableTree, {
   Row,
   Rows,
 } from "@atlaskit/table-tree";
+import { IconArrowRight } from "@/components/icons";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
-const RealizationTable = ({ data, handleClickInitiate }) => {
+const RealizationTable = ({ data, handleClickInitiate, handleClickLog }) => {
   return (
     <>
       <p className="text-base font-bold mb-2 ml-2">Realisasi</p>
@@ -80,7 +81,6 @@ const RealizationTable = ({ data, handleClickInitiate }) => {
               start_date,
               end_date,
               url,
-              log,
             }) => (
               <Row>
                 <Cell width="15%" className={`border-x ${customCell}`}>
@@ -165,7 +165,16 @@ const RealizationTable = ({ data, handleClickInitiate }) => {
                   </div>
                 </Cell>
                 <Cell width="28%" className={`border-r ${customCell}`}>
-                  <div className="custom-table-position-center">{log}</div>
+                  <div className="custom-table-position-center justify-center">
+                    <ButtonIcon
+                      handleClick={handleClickLog}
+                      icon={
+                        <div className="w-6 h-6 p-0.5 flex items-center justify-center rounded-full border border-atlasian-blue-light text-atlasian-blue-light">
+                          <IconArrowRight size="medium" />
+                        </div>
+                      }
+                    />
+                  </div>
                 </Cell>
               </Row>
             )}
