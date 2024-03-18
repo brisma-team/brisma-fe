@@ -19,8 +19,8 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
     setFilter({ ...filter, [property]: e.value });
   };
 
-  const handleResetSelected = (property) => {
-    handleChangeSelect(property, "");
+  const handleReset = (property) => {
+    setFilter({ ...filter, [property]: "" });
   };
 
   return showFilter ? (
@@ -33,7 +33,7 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
                 placeholder="Project Code"
                 icon={
                   <ButtonIcon
-                    handleClick={() => handleResetSelected("project_code")}
+                    handleClick={() => handleReset("project_code")}
                     icon={<IconClose size="large" />}
                   />
                 }
@@ -48,7 +48,7 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
                 placeholder="Project Name"
                 icon={
                   <ButtonIcon
-                    handleClick={() => handleResetSelected("project_name")}
+                    handleClick={() => handleReset("project_name")}
                     icon={<IconClose size="large" />}
                   />
                 }
@@ -80,20 +80,20 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
                 ]}
                 customIcon={
                   <ButtonIcon
-                    handleClick={() => handleResetSelected("status_dokumen")}
+                    handleClick={() => handleReset("status_document")}
                     icon={<IconClose size="large" />}
                   />
                 }
                 selectedValue={
-                  filter?.status_dokumen
+                  filter?.status_document
                     ? {
-                        label: filter?.status_dokumen?.name,
-                        value: filter?.status_dokumen,
+                        label: filter?.status_document?.name,
+                        value: filter?.status_document,
                       }
                     : null
                 }
                 placeholder={"Status Dokumen"}
-                handleChange={(e) => handleChangeSelect("status_dokumen", e)}
+                handleChange={(e) => handleChangeSelect("status_document", e)}
               />
             </div>
           </div>
@@ -103,12 +103,14 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
                 placeholder="Anggota Tim Audit"
                 icon={
                   <ButtonIcon
-                    handleClick={() => handleResetSelected("ata")}
+                    handleClick={() => handleReset("anggota_tim_audit")}
                     icon={<IconClose size="large" />}
                   />
                 }
-                onChange={(e) => handleChangeTextInput("ata", e.target.value)}
-                value={filter?.ata}
+                onChange={(e) =>
+                  handleChangeTextInput("anggota_tim_audit", e.target.value)
+                }
+                value={filter?.anggota_tim_audit}
               />
             </div>
             <div className="w-[30%]">
@@ -117,15 +119,12 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
                 selectedValue={
                   filter?.status_approval?.kode
                     ? {
-                        label: filter?.status_approval,
-                        value: {
-                          kode: filter?.status_approval,
-                          value: filter?.status_approval,
-                        },
+                        label: filter?.status_approval?.name,
+                        value: filter?.status_approval,
                       }
                     : null
                 }
-                handleReset={() => handleResetSelected("status_approval")}
+                handleReset={() => handleReset("status_approval")}
                 placeholder={"Status Persetujuan"}
               />
             </div>
