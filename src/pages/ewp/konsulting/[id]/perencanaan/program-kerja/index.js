@@ -69,7 +69,7 @@ const routes = [
 const index = () => {
   const dispatch = useDispatch();
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/overview/${id}`;
+  const baseUrl = `/ewp/konsulting/${id}`;
   const pathName = `${baseUrl}/perencanaan`;
   const navigationTabItems = [
     { idx: 1, title: "Pemeriksaan" },
@@ -138,14 +138,18 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting/overview" },
+      { name: "Overview", path: "/ewp/konsulting" },
       {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Perencanaan Kegiatan`,
-        path: baseUrl,
+        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
+        path: baseUrl + "/info",
+      },
+      {
+        name: `Perencanaan Kegiatan`,
+        path: pathName,
       },
       {
         name: `Program Kerja`,
-        path: `${baseUrl}/perencanaan/anggaran`,
+        path: `${pathName}/anggaran`,
       },
     ]);
   }, [projectDetail]);
@@ -611,7 +615,7 @@ const index = () => {
             <div className="px-4 py-2 w-full">
               <TablePemeriksaan
                 data={dataPemeriksaan}
-                pathName={`/ewp/konsulting/overview/${id}/perencanaan/program-kerja`}
+                pathName={`/ewp/konsulting/${id}/perencanaan/program-kerja`}
                 expansionMap={expansionMap}
                 handleSelectedLingkupPemeriksaan={
                   handleSelectedLingkupPemeriksaan

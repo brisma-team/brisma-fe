@@ -30,9 +30,10 @@ const index = () => {
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
+    { name: "Overview", path: "/ewp/konsulting" },
     {
       name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Info`,
-      path: `/ewp/projects/konvensional/${id}/info`,
+      path: `/ewp/konsulting/${id}/info`,
     },
   ];
 
@@ -51,7 +52,7 @@ const index = () => {
         label: "Perencanaan",
         start_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_start,
         end_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
-        url: `/ewp/konsulting/overview/${id}/perencanaan`,
+        url: `/ewp/konsulting/${id}/perencanaan`,
         log: "Menambahkan Sesuatu...",
       },
       {
@@ -65,7 +66,7 @@ const index = () => {
         start_date:
           projectDetail?.data?.realisasi?.pelaksanaan_audit_real_start,
         end_date: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
-        url: `/ewp/konsulting/overview/${id}/analisa/lingkup`,
+        url: `/ewp/konsulting/${id}/analisa/lingkup`,
         log: "Menambahkan Sesuatu...",
       },
       {
@@ -79,7 +80,7 @@ const index = () => {
         start_date:
           projectDetail?.data?.realisasi?.peluang_peningkatan_real_start,
         end_date: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end,
-        url: `/ewp/konsulting/overview/${id}/peluang-peningkatan`,
+        url: `/ewp/konsulting/${id}/peluang-peningkatan`,
         log: "Menambahkan Sesuatu...",
       },
       {
@@ -92,7 +93,7 @@ const index = () => {
         label: "Wrap-Up",
         start_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_start,
         end_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end,
-        url: `/ewp/konsulting/overview/${id}/wrapup`,
+        url: `/ewp/konsulting/${id}/wrapup`,
         log: "Menambahkan Sesuatu...",
       },
     ]);

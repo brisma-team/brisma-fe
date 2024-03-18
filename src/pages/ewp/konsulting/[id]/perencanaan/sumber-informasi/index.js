@@ -43,7 +43,7 @@ const routes = [
 const index = () => {
   const { id } = useRouter().query;
   const router = useRouter();
-  const baseUrl = `/ewp/konsulting/overview/${id}`;
+  const baseUrl = `/ewp/konsulting/${id}`;
   const pathName = `${baseUrl}/perencanaan`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -57,10 +57,14 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting/overview" },
+      { name: "Overview", path: "/ewp/konsulting" },
       {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Perencanaan Kegiatan`,
-        path: baseUrl,
+        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
+        path: baseUrl + "/info",
+      },
+      {
+        name: `Perencanaan Kegiatan`,
+        path: pathName,
       },
       {
         name: `Sumber Informasi`,
