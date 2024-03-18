@@ -265,21 +265,6 @@ const index = () => {
             </div>
           </Card>
         </div>
-        {/* <div className="px-5 pb-5 w-full">
-          <CardTeam
-            data={payload}
-            validation={validation}
-            property={"ata"}
-            title={"Anggota Tim Audit"}
-            textColorTitle={"text-atlasian-green"}
-            handleAdd={handleAddObjectInsideArray}
-            handleDelete={handleDeleteObjectInsideArray}
-            handleChangeSelect={handleChangeSelectValueObjectInsideArray}
-            handleChangeText={handleChangeTextValueObjectInsideArray}
-            withMandays
-            withDescription
-          />
-        </div> */}
       </Card>
       <div className="mt-3 flex justify-end">
         <div className="w-36 bg-atlasian-green rounded">
