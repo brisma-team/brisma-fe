@@ -36,7 +36,7 @@ import _ from "lodash";
 const index = () => {
   const dispatch = useDispatch();
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/overview/${id}`;
+  const baseUrl = `/ewp/konsulting/${id}`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -65,10 +65,14 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting/overview" },
+      { name: "Overview", path: "/ewp/konsulting" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Berkas Dokumen`,
-        path: baseUrl,
+        path: baseUrl + "/info",
+      },
+      {
+        name: `Berkas Dokumen`,
+        path: baseUrl + "/dokumen",
       },
     ]);
   }, [projectDetail]);
