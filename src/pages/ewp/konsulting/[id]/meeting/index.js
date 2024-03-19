@@ -38,7 +38,7 @@ const index = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/overview/${id}`;
+  const baseUrl = `/ewp/konsulting/${id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
 
   const [showFilter, setShowFilter] = useState(false);
@@ -89,7 +89,7 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting/overview" },
+      { name: "Overview", path: "/ewp/konsulting" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
@@ -179,7 +179,7 @@ const index = () => {
 
   const handleClickCarding = (e, meeting_id) => {
     e.stopPropagation();
-    router.push(`/ewp/konsulting/overview/${id}/meeting/${meeting_id}`);
+    router.push(`/ewp/konsulting/${id}/meeting/${meeting_id}`);
   };
 
   // [ START ] handler for modal add meeting
@@ -206,10 +206,6 @@ const index = () => {
 
     dispatch(setObjPayload(updatedPayload));
   };
-
-  useEffect(() => {
-    console.log("payload => ", payload);
-  }, [payload]);
 
   const handleResetPayload = (property) => {
     dispatch(setObjPayload({ ...payload, [property]: "" }));
@@ -284,7 +280,7 @@ const index = () => {
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
       <div className="flexitems-center mb-6">
-        <PageTitle text={"Project Overview"} />
+        <PageTitle text={"Meeting Overview"} />
       </div>
       <div className="flex justify-between items-end">
         <div className="flex justify-between items-center gap-2">

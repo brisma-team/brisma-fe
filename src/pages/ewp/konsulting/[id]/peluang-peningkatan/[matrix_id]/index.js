@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 const MyComponent = () => {
   const router = useRouter();
   const { id } = router.query;
-  const baseUrl = `/ewp/konsulting/overview/${id}`;
+  const baseUrl = `/ewp/konsulting/${id}`;
   const redirectUrl = `${baseUrl}/peluang-peningkatan`;
 
   useEffect(() => {
