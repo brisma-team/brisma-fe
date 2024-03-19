@@ -1,6 +1,6 @@
 import { ButtonIcon, ModalScroll, TableField } from "@/components/atoms";
 import useUser from "@/data/useUser";
-import { checkRoleIsAdmin, confirmationSwal } from "@/helpers";
+import { confirmationSwal } from "@/helpers";
 import ModalWorkflowHeader from "./ModalWorkflowHeader";
 import ModalWorkflowFooter from "./ModalWorkflowFooter";
 import TableTree, {
@@ -37,10 +37,11 @@ const ModalWorkflow = ({
   withSigner,
 }) => {
   const { user } = useUser();
-  let isApproval, isInitiator, isAdmin;
+  let isApproval, isInitiator, statusApprover;
   isInitiator = user?.data?.pn == workflowData?.maker?.pn;
   isApproval = user?.data?.pn == workflowData?.on_approver?.pn;
-  isAdmin = checkRoleIsAdmin(user?.data?.role_kode);
+  // isAdmin = checkRoleIsAdmin(user?.data?.role_kode);
+  statusApprover = workflowData?.status_approver;
 
   const statusColors = {
     Approved: "text-atlasian-green",
@@ -101,17 +102,24 @@ const ModalWorkflow = ({
         workflowData?.status_approver === "On Approver" && isApproval && true
       }
       withoutFooter={
-        workflowData?.status_approver === "On Progress" && isInitiator
+        statusApprover === "On Progress" && isInitiator
           ? false
-          : workflowData?.status_approver === "On Approver" && isApproval
-          ? false
-          : workflowData?.maker?.pn === user?.data?.pn &&
-            workflowData?.status_approver === "On Approver"
-          ? false
-          : workflowData?.status_approver === "On Progress" && isAdmin
+          : statusApprover === "On Approver" && (isApproval || isInitiator)
           ? false
           : true
       }
+      // withoutFooter={
+      //   workflowData?.status_approver === "On Progress" && isInitiator
+      //     ? false
+      //     : workflowData?.status_approver === "On Approver" && isApproval
+      //     ? false
+      //     : isInitiator &&
+      //       workflowData?.status_approver === "On Approver"
+      //     ? false
+      //     : workflowData?.status_approver === "On Progress" && isAdmin
+      //     ? false
+      //     : true
+      // }
     >
       <div className="w-[61rem] px-3">
         <p className="font-bold text-xl text-brisma">Riwayat Workflow</p>

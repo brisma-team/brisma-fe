@@ -309,7 +309,7 @@ const index = () => {
         on_approver: workflowInfo?.status_approver,
       };
 
-      newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.nama}`;
+      newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.name}`;
       newWorkflowData.maker = maker;
 
       if (approvers?.length) {
@@ -608,7 +608,7 @@ const index = () => {
                     <p className="text-brisma font-bold text-xl">Approval</p>
                     <ApprovalItems
                       title={"P.I.C Auditor"}
-                      text={workflowData?.maker?.nama}
+                      text={workflowData?.maker?.name}
                     />
                     <ApprovalItems
                       title={"Approver"}
