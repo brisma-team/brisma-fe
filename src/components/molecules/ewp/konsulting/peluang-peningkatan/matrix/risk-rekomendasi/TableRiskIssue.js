@@ -80,29 +80,25 @@ const TableRiskIssue = ({
         <TableTree>
           <Headers>
             <Header
-              width="10%"
+              width="8%"
               className="border-x border-t rounded-ss-xl cell-custom-dataTables"
             >
               <div className="custom-table-header justify-center">Aksi</div>
             </Header>
             <Header
-              width="25%"
+              width="30%"
               className="border-t border-r cell-custom-dataTables"
             >
-              <div className="custom-table-header justify-center">
-                Lingkup Pemeriksaan
-              </div>
+              <div className="custom-table-header">Lingkup Pemeriksaan</div>
             </Header>
             <Header
-              width="40%"
+              width="47%"
               className="border-t border-r cell-custom-dataTables"
             >
-              <div className={`custom-table-header justify-center`}>
-                Risk Issue
-              </div>
+              <div className={`custom-table-header`}>Risk Issue</div>
             </Header>
             <Header
-              width="25%"
+              width="15%"
               className="border-t border-r cell-custom-dataTables"
             >
               <div className={`custom-table-header justify-center`}>
@@ -124,7 +120,7 @@ const TableRiskIssue = ({
                 is_new,
               }) => (
                 <Row>
-                  <Cell width="10%" className={`border-x ${customCell}`}>
+                  <Cell width="8%" className={`border-x ${customCell}`}>
                     <div className="custom-table-position-center justify-center">
                       {is_new ? (
                         <ButtonIcon
@@ -161,8 +157,8 @@ const TableRiskIssue = ({
                       )}
                     </div>
                   </Cell>
-                  <Cell width="25%" className={`border-r ${customCell} `}>
-                    <div className="custom-table-position-center justify-center">
+                  <Cell width="30%" className={`border-r ${customCell} `}>
+                    <div className="cell-width-full-height-full justify-center">
                       {/* <p className="text-xs">{lingkup_pemeriksaan || "N/A"}</p> */}
                       {is_edit ? (
                         <LingkupSelectKKPT
@@ -193,8 +189,8 @@ const TableRiskIssue = ({
                       )}
                     </div>
                   </Cell>
-                  <Cell width="40%" className={`border-r ${customCell} `}>
-                    <div className="custom-table-position-center justify-center relative">
+                  <Cell width="47%" className={`border-r ${customCell} `}>
+                    <div className="cell-width-full-height-full justify-center relative">
                       {is_edit ? (
                         <RiskSelectKKPT
                           selectedLingkupId={selectedLingkupId}
@@ -222,7 +218,7 @@ const TableRiskIssue = ({
                       )}
                     </div>
                   </Cell>
-                  <Cell width="25%" className={`border-r ${customCell} `}>
+                  <Cell width="15%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center justify-center">
                       <p className="text-xs">{rekomendasi_terpilih || 0}</p>
                     </div>

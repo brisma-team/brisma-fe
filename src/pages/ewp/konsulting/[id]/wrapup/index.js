@@ -24,6 +24,7 @@ const index = () => {
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [data, setData] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [filter, setFilter] = useState({
     start_date: "",
     date_date: "",
@@ -48,11 +49,13 @@ const index = () => {
     };
   }, [filter]);
 
-  const { projectDetail } = useProjectDetail({ id });
+  const { projectDetail, projectDetailMutate } = useProjectDetail({ id });
 
   const { wrapup } = useWrapup({ id, ...params });
 
   useEffect(() => {
+    const projectRealisasi = projectDetail?.data?.realisasi;
+    setIsDisabled(Boolean(projectRealisasi?.Wrapup_Meeting_real_end));
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
@@ -108,6 +111,7 @@ const index = () => {
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/initiate/wrapup_meeting/close/${id}`,
       {}
     );
+    projectDetailMutate();
     loadingSwal("close");
   };
 
@@ -163,8 +167,18 @@ const index = () => {
                   handler={handleClickDocumentFile}
                 />
               </div>
-              <div className="w-36 rounded bg-atlasian-red hover:bg-hover-red">
-                <ButtonField text={`Wrap-Up`} handler={handleClickWrapup} />
+              <div
+                className={`w-36 rounded ${
+                  isDisabled
+                    ? `bg-atlasian-gray-light`
+                    : `bg-atlasian-red hover:bg-hover-red`
+                }`}
+              >
+                <ButtonField
+                  text={`Wrap-Up`}
+                  handler={handleClickWrapup}
+                  disabled={isDisabled}
+                />
               </div>
             </div>
           </div>

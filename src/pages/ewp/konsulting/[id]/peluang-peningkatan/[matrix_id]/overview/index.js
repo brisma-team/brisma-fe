@@ -121,8 +121,8 @@ const index = () => {
 
   useEffect(() => {
     if (overviewPeluangDetail?.data) {
-      const { judul_kkpt } = overviewPeluangDetail.data;
-      dispatch(setObjPayload({ judul_kkpt }));
+      const { judul_kkpt, auditor } = overviewPeluangDetail.data;
+      dispatch(setObjPayload({ judul_kkpt, auditor }));
     } else {
       dispatch(resetObjPayload());
     }
@@ -140,6 +140,13 @@ const index = () => {
   };
 
   const handleClickDelete = async (id) => {
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin ingin menghapus data ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
     loadingSwal();
     await fetchApi(
       "DELETE",
