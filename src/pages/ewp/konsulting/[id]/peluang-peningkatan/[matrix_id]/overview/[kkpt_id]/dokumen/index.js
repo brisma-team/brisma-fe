@@ -56,7 +56,7 @@ const index = () => {
     kkpt_id: 1,
   });
 
-  const baseUrl = `/ewp/konsulting/overview/${params?.id}`;
+  const baseUrl = `/ewp/konsulting/${params?.id}`;
   const pathNameBase = `${baseUrl}/peluang-peningkatan`;
   const pathNameOverview = `${baseUrl}/peluang-peningkatan/${params?.matrix_id}/overview`;
   const pathNameContent = `${baseUrl}/peluang-peningkatan/${params?.matrix_id}/overview/${params?.kkpt_id}`;
@@ -116,7 +116,7 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting/overview" },
+      { name: "Overview", path: "/ewp/konsulting" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
@@ -130,7 +130,7 @@ const index = () => {
         path: `${pathNameOverview}`,
       },
       {
-        name: `Landing`,
+        name: `Landing Peningkatan`,
         path: `${pathNameContent}`,
       },
       {

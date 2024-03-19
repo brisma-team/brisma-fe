@@ -130,7 +130,7 @@ const DataTables = ({
               <Cell width="18%" className={`border-r ${customCell}`}>
                 <div className="custom-table-position-center justify-center">
                   <Link
-                    href={`/ewp/konsulting/overview/${selectedId}/peluang-peningkatan/${matrix_id}/overview/${kkpt_id}`}
+                    href={`/ewp/konsulting/${selectedId}/peluang-peningkatan/${matrix_id}/overview/${kkpt_id}`}
                     className="text-sm underline"
                   >
                     {judul_kkpt || "N/A"}

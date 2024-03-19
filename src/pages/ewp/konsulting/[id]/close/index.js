@@ -12,8 +12,8 @@ import { useEffect, useState } from "react";
 
 const index = () => {
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/overview/${id}`;
-  const pathNameSubModulClose = `${baseUrl}/meeting`;
+  const baseUrl = `/ewp/konsulting/${id}`;
+  const pathNameSubModulClose = `${baseUrl}/close`;
 
   const [showModal, setShowModal] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
@@ -35,7 +35,7 @@ const index = () => {
         label: "Perencanaan",
         start_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_start,
         end_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
-        url: `/ewp/konsulting/overview/${id}/perencanaan`,
+        url: `/ewp/konsulting/${id}/perencanaan`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
@@ -47,7 +47,7 @@ const index = () => {
         start_date:
           projectDetail?.data?.realisasi?.pelaksanaan_audit_real_start,
         end_date: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
-        url: `/ewp/konsulting/overview/${id}/analisa/lingkup`,
+        url: `/ewp/konsulting/${id}/analisa/lingkup`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
@@ -59,7 +59,7 @@ const index = () => {
         start_date:
           projectDetail?.data?.realisasi?.peluang_peningkatan_real_start,
         end_date: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end,
-        url: `/ewp/konsulting/overview/${id}/peluang-peningkatan`,
+        url: `/ewp/konsulting/${id}/peluang-peningkatan`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end,
@@ -70,14 +70,14 @@ const index = () => {
         label: "Wrap-Up",
         start_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_start,
         end_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end,
-        url: `/ewp/konsulting/overview/${id}/wrapup`,
+        url: `/ewp/konsulting/${id}/wrapup`,
       },
     ]);
 
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting/overview" },
+      { name: "Overview", path: "/ewp/konsulting" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,

@@ -44,7 +44,7 @@ import {
 const index = () => {
   const dispatch = useDispatch();
   const { id, meeting_id, code } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/overview/${id}`;
+  const baseUrl = `/ewp/konsulting/${id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
   const pathNameLanding = `${baseUrl}/meeting/${meeting_id}`;
 
@@ -97,7 +97,7 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting/overview" },
+      { name: "Overview", path: "/ewp/konsulting" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
@@ -185,7 +185,7 @@ const index = () => {
           })
         : [];
       setValueQR(
-        `${window.location.protocol}//${window.location.host}/ewp/konsulting/overview/${id}/meeting/${meeting_id}/attendance?code=${attendance?.data?.attendance_info?.meet_code}`
+        `${window.location.protocol}//${window.location.host}/ewp/konsulting/${id}/meeting/${meeting_id}/attendance?code=${attendance?.data?.attendance_info?.meet_code}`
       );
       dispatch(setObjDataAttendance(mappingAttendance));
     } else {
