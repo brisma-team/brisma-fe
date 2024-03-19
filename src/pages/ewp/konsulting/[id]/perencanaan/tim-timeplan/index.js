@@ -13,7 +13,10 @@ import {
 } from "@/slices/ewp/konsulting/perencanaan/timTimePlanEWPKonsultingSlice";
 import { useSelector } from "react-redux";
 import { useTimTimeplan } from "@/data/ewp/konsulting/perencanaan/tim-timeplan";
-import { CardTeam } from "@/components/molecules/ewp/konsulting/perencanaan/tim-timeplan";
+import {
+  CardMemberTeam,
+  CardTeam,
+} from "@/components/molecules/ewp/konsulting/perencanaan/tim-timeplan";
 import { fetchApi, loadingSwal, setErrorValidation } from "@/helpers";
 import _ from "lodash";
 import timTimeplanEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/perencanaan/timTimeplanEWPKonsultingSchema";
@@ -216,9 +219,6 @@ const index = () => {
             property={"initiator"}
             title={"Initiator"}
             textColorTitle={"text-atlasian-yellow"}
-            handleAdd={handleAddObjectInsideArray}
-            handleDelete={handleDeleteObjectInsideArray}
-            handleChangeSelect={handleChangeSelectValueObjectInsideArray}
             withoutButton
             isDisabled
           />
@@ -243,20 +243,27 @@ const index = () => {
             handleChangeSelect={handleChangeSelectValueObjectInsideArray}
           />
         </div>
-        <div className="px-5 pb-5 w-full">
-          <CardTeam
-            data={payload}
-            validation={validation}
-            property={"ata"}
-            title={"Anggota Tim Audit"}
-            textColorTitle={"text-atlasian-green"}
-            handleAdd={handleAddObjectInsideArray}
-            handleDelete={handleDeleteObjectInsideArray}
-            handleChangeSelect={handleChangeSelectValueObjectInsideArray}
-            handleChangeText={handleChangeTextValueObjectInsideArray}
-            withMandays
-            withDescription
-          />
+        <div className="p-5 w-full">
+          <Card>
+            <div className="px-4 py-2 flex flex-col gap-4 w-full">
+              <div className="bg-atlasian-purple rounded w-fit">
+                <ButtonField
+                  text={"Tambah Anggota Tim"}
+                  handler={() => handleAddObjectInsideArray("ata")}
+                />
+              </div>
+              <CardMemberTeam
+                title={"Anggota Tim Audit"}
+                textColorTitle={"text-atlasian-green"}
+                property={"ata"}
+                data={payload}
+                validation={validation}
+                handleDelete={handleDeleteObjectInsideArray}
+                handleChangeSelect={handleChangeSelectValueObjectInsideArray}
+                handleChangeText={handleChangeTextValueObjectInsideArray}
+              />
+            </div>
+          </Card>
         </div>
       </Card>
       <div className="mt-3 flex justify-end">

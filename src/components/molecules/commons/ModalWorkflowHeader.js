@@ -80,19 +80,32 @@ const ModalWorkflowHeader = ({
               childProperty={"is_signed"}
               validationErrors={validationErrors}
               withoutButtonAdd={
-                (data?.status_approver === "On Progress" &&
-                  (isInitiator || isAdmin)) ||
+                (data?.status_approver === "On Progress" && isInitiator) ||
                 (data?.status_approver === "On Approver" && isInitiator)
                   ? false
                   : true
               }
               isDisabled={
-                (data?.status_approver === "On Progress" &&
-                  (isInitiator || isAdmin)) ||
-                (data?.status_approver === "On Approver" && isInitiator)
+                (data?.status_approver === "On Progress" ||
+                  data?.status_approver === "On Approver") &&
+                isInitiator
                   ? false
                   : true
               }
+              // withoutButtonAdd={
+              //   (data?.status_approver === "On Progress" &&
+              //     (isInitiator || isAdmin)) ||
+              //   (data?.status_approver === "On Approver" && isInitiator)
+              //     ? false
+              //     : true
+              // }
+              // isDisabled={
+              //   (data?.status_approver === "On Progress" &&
+              //     (isInitiator || isAdmin)) ||
+              //   (data?.status_approver === "On Approver" && isInitiator)
+              //     ? false
+              //     : true
+              // }
               isButtonChange={
                 data?.status_approver === "On Approver" &&
                 isInitiator &&
@@ -117,8 +130,7 @@ const ModalWorkflowHeader = ({
                     : true
                 }
                 isDisabled={
-                  (data?.status_approver === "On Progress" && isInitiator) ||
-                  (data?.status_approver === "On Approver" && isApprover)
+                  data?.status_approver === "On Progress" && isInitiator
                     ? false
                     : true
                 }

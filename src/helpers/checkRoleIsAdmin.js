@@ -3,8 +3,8 @@ const checkRoleIsAdmin = (role) => {
   const mappingRole = role?.map((value) => {
     return Number(value);
   });
-  const roleAdmin = [1, 2, 6];
-  const isAdmin = roleAdmin?.some((userRole) =>
+  const roleKodeSuperAdmin = Array.from({ length: 9 }, (_, i) => i + 1);
+  const isAdmin = roleKodeSuperAdmin?.some((userRole) =>
     mappingRole?.includes(userRole)
   );
 

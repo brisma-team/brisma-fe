@@ -101,7 +101,6 @@ const index = () => {
     });
   useEffect(() => {
     if (riskData?.data?.length) {
-      setSelectedRiskId(riskData?.data[0]?.id || 0);
       const filterData = riskData.data.filter((v) => v.is_active);
       const mapping = filterData.map((value, index) => {
         const {
@@ -210,9 +209,8 @@ const index = () => {
         is_edit: true,
         is_new: true,
       });
-      dispatch(setDataTables(newDataTables));
-      riskMutate();
       setIsAddNewRow(true);
+      dispatch(setDataTables(newDataTables));
     }
   };
 
@@ -231,8 +229,6 @@ const index = () => {
       {}
     );
 
-    // respondenByPnSurveyMutate();
-    // respondenByUkerPnSurveyMutate();
     rekomendasiMutate();
     setSelectedRiskId(0);
     dispatch(resetDataTables());
@@ -258,8 +254,8 @@ const index = () => {
       }
     );
     riskMutate();
-    dispatch(resetDataTables());
-    setSelectedRiskId(0);
+    dispatch(resetPayloadNewRisk());
+    dispatch(resetPayloadNewRisk());
     setIsAddNewRow(false);
     loadingSwal("close");
   };
@@ -278,8 +274,7 @@ const index = () => {
   const handleChangeValueLingkup = (value) => {
     const newPayload = {
       ...payloadNewLingkup,
-      lingkup_pemeriksaan_id: value.lingkup_pemeriksaan_id,
-      lingkup_pemeriksaan_name: value.lingkup_pemeriksaan_name,
+      ...value,
     };
 
     dispatch(setPayloadNewLingkup(newPayload));
@@ -338,7 +333,6 @@ const index = () => {
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/kkpt_rekomendasi/${selectedRiskId}`,
       payload
     );
-
     rekomendasiMutate();
     loadingSwal("close");
   };

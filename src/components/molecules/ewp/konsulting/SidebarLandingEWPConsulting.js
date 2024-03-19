@@ -10,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useProjectDetail } from "@/data/ewp/konsulting";
-import { convertDate } from "@/helpers";
+import { capitalizeEveryWord, convertDate } from "@/helpers";
 
 const SidebarLandingEWPConsulting = () => {
   const { id } = useRouter().query;
@@ -74,7 +74,7 @@ const SidebarLandingEWPConsulting = () => {
 
   useEffect(() => {
     const url = window.location.href;
-    const regex = /\/overview\/\d+\/([^\/]+)/;
+    const regex = /\/konsulting\/\d+\/([^\/]+)/;
     const match = url.match(regex);
 
     if (match && match[1]) {
@@ -119,7 +119,7 @@ const SidebarLandingEWPConsulting = () => {
               <div className="text-sm text-brisma">
                 {data?.documentName?.toLowerCase() == "final"
                   ? "Final"
-                  : data?.documentName || "-"}
+                  : capitalizeEveryWord(data?.documentName) || "-"}
               </div>
             </div>
           </div>
@@ -134,7 +134,8 @@ const SidebarLandingEWPConsulting = () => {
                       key={i}
                       href={baseUrl + v?.href}
                       className={`flex ${
-                        currentPage === v?.href?.replace(/\//g, "")
+                        currentPage ===
+                        v?.href?.split("/")?.filter((item) => item !== "")[0]
                           ? `text-atlasian-blue-light`
                           : `text-black`
                       } gap-2 items-center hover:no-underline no-underline py-2 px-7 ${
@@ -171,7 +172,8 @@ const SidebarLandingEWPConsulting = () => {
                       key={i}
                       href={baseUrl + v?.href}
                       className={`flex gap-2 items-center ${
-                        currentPage === v?.href?.replace(/\//g, "")
+                        currentPage ===
+                        v?.href?.split("/")?.filter((item) => item !== "")[0]
                           ? `text-atlasian-blue-light`
                           : `text-black`
                       } hover:no-underline no-underline py-2 px-7`}

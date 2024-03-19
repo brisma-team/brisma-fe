@@ -106,10 +106,6 @@ const index = () => {
     }
   }, [lingkupAnalisa]);
 
-  useEffect(() => {
-    console.log("filter => ", filter);
-  }, [filter]);
-
   // [ START ] handler for filter
   const handleShowFilter = () => {
     setShowFilter((prev) => {
@@ -126,9 +122,9 @@ const index = () => {
   };
   // [ END ] handler for filter
 
-  // const handleClickMatrix = () => {
-  //   router.push(`/ewp/konsulting/${id}/analisa/matrix`);
-  // };
+  const handleClickMatrix = () => {
+    router.push(`/ewp/konsulting/${id}/analisa/matrix`);
+  };
 
   const handleClickDokumenPerencanaan = () => {
     router.push(`/ewp/konsulting/${id}/perencanaan/dokumen`);
@@ -155,9 +151,9 @@ const index = () => {
               text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
             />
           </div>
-          {/* <div className="w-36 rounded bg-atlasian-purple">
+          <div className="w-36 rounded bg-atlasian-purple">
             <ButtonField handler={handleClickMatrix} text={"Matrix Peluang"} />
-          </div> */}
+          </div>
         </div>
       </div>
       <CardFilterTable

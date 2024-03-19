@@ -49,13 +49,13 @@ const TableRekomendasi = ({
         <TableTree>
           <Headers>
             <Header
-              width="10%"
+              width="8%"
               className="border-x border-t rounded-ss-xl cell-custom-dataTables"
             >
               <div className="custom-table-header justify-center">Terpilih</div>
             </Header>
             <Header
-              width="25%"
+              width="12%"
               className="border-t border-r cell-custom-dataTables"
             >
               <div className="custom-table-header justify-center">Deadline</div>
@@ -64,17 +64,13 @@ const TableRekomendasi = ({
               width="40%"
               className="border-t border-r cell-custom-dataTables"
             >
-              <div className={`custom-table-header justify-center`}>
-                Rekomendasi
-              </div>
+              <div className={`custom-table-header`}>Rekomendasi</div>
             </Header>
             <Header
-              width="25%"
+              width="40%"
               className="border-t border-r rounded-se-xl cell-custom-dataTables"
             >
-              <div className={`custom-table-header justify-center`}>
-                Control
-              </div>
+              <div className={`custom-table-header`}>Control</div>
             </Header>
           </Headers>
           {data?.length ? (
@@ -91,7 +87,7 @@ const TableRekomendasi = ({
                 // is_new,
               }) => (
                 <Row>
-                  <Cell width="10%" className={`border-x ${customCell}`}>
+                  <Cell width="8%" className={`border-x ${customCell}`}>
                     <div className="custom-table-position-center justify-center">
                       <CustomCheckbox
                         value={selectedRekomendasi?.find(
@@ -108,7 +104,7 @@ const TableRekomendasi = ({
                       />
                     </div>
                   </Cell>
-                  <Cell width="25%" className={`border-r ${customCell} `}>
+                  <Cell width="12%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center justify-center">
                       <p className="text-xs">
                         {convertDate(deadline, "/", "d")}
@@ -116,12 +112,12 @@ const TableRekomendasi = ({
                     </div>
                   </Cell>
                   <Cell width="40%" className={`border-r ${customCell} `}>
-                    <div className="custom-table-position-center justify-center relative">
+                    <div className="cell-width-full-height-full relative">
                       <p className="text-xs">{rekomendasi_name || "-"}</p>
                     </div>
                   </Cell>
-                  <Cell width="25%" className={`border-r ${customCell} `}>
-                    <div className="custom-table-position-center justify-center">
+                  <Cell width="40%" className={`border-r ${customCell} `}>
+                    <div className="cell-width-full-height-full">
                       <p className="text-xs">
                         {control_abbr + " - " + control_name}
                       </p>

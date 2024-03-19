@@ -87,16 +87,8 @@ const index = () => {
         path: pathNameSubModulClose,
       },
     ]);
-    const closingStatement =
-      projectDetail?.data?.project_info?.closing_statement;
-    if (
-      closingStatement !== null ||
-      closingStatement !== "" ||
-      closingStatement !== undefined
-    ) {
-      setIsClosed(true);
-      setClosingStatement(projectDetail?.data?.project_info?.closing_statement);
-    }
+    setIsClosed(Boolean(status_code === 9)); // is final
+    setClosingStatement(projectDetail?.data?.project_info?.closing_statement);
   }, [projectDetail]);
 
   const handleClickCloseStatement = () => {
@@ -155,7 +147,7 @@ const index = () => {
                   <RealizationTable data={dataTables} />
                 </div>
               </Card>
-              {!isClosed && (
+              {!isClosed ? (
                 <div className="w-full flex items-center justify-end gap-4">
                   <div className="w-40 text-sm font-semibold bg-atlasian-blue-light rounded">
                     <ButtonField
@@ -170,6 +162,8 @@ const index = () => {
                     />
                   </div>
                 </div>
+              ) : (
+                ""
               )}
             </div>
             <CardContentHeaderFooter
