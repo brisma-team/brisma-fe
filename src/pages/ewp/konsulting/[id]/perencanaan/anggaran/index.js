@@ -158,19 +158,24 @@ const index = () => {
     };
     const validate = setErrorValidation(payload, dispatch, schemaMapping);
 
+    const objPayload = {
+      amount: parseInt(payload?.amount?.replace(/\./g, "")),
+      ..._.omit(payload, ["amount"]),
+    };
+
     if (validate) {
       loadingSwal();
       if (typeModal === "update") {
         await fetchApi(
           "PATCH",
           `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/anggaran/${id}`,
-          { id: selectedId, ...payload }
+          { id: selectedId, ...objPayload }
         );
       } else {
         await fetchApi(
           "POST",
           `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/anggaran/${id}`,
-          payload
+          objPayload
         );
       }
 

@@ -8,6 +8,7 @@ const ModalScroll = ({
   footer,
   withoutFooter,
   widthFullFooter,
+  widthFullHeader,
   children,
   positionCenter,
 }) => {
@@ -42,7 +43,11 @@ const ModalScroll = ({
         >
           <div className="flex flex-col gap-3">
             {header && (
-              <div className="relative p-4 mx-auto bg-white rounded-md shadow-lg">
+              <div
+                className={`relative p-4 mx-auto bg-white rounded-md shadow-lg ${
+                  widthFullHeader && `w-full`
+                }`}
+              >
                 {header}
               </div>
             )}
