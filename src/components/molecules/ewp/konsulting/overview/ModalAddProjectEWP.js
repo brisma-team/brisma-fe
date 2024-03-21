@@ -1,10 +1,10 @@
-import { Modal } from "@/components/atoms";
+import { ModalScroll } from "@/components/atoms";
 import { useEffect, useState } from "react";
 import {
   ModalBodySource,
   ModalBodySchedulePAT,
   ModalBodySummaryPAT,
-  ModalBodyDocumentNonPAT,
+  ModalBodyRelatedProjectNonPAT,
   ModalBodyScheduleNonPAT,
   ModalBodySummaryNonPAT,
 } from "./sub-modal";
@@ -15,11 +15,9 @@ import {
   resetProjectOverviewData,
   setValidationErrorsSchedulePAT,
   setValidationErrorsSummaryPAT,
-  setValidationErrorsDocumentNonPAT,
   setValidationErrorsScheduleNonPAT,
   resetValidationErrorsSchedulePAT,
   resetValidationErrorsSummaryPAT,
-  resetValidationErrorsDocumentNonPAT,
   resetValidationErrorsScheduleNonPAT,
 } from "@/slices/ewp/konsulting/projectOverviewEWPKonsultingSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,7 +25,6 @@ import {
   schedulePATSchema,
   summaryPATSchema,
   scheduleNonPATSchema,
-  documentNonPATSchema,
 } from "@/helpers/schemas/ewp/konsulting/overview/projectOverviewEWPKonsultingSchema";
 import { confirmationSwal, fetchApi, setErrorValidation } from "@/helpers";
 import useUser from "@/data/useUser";
@@ -35,7 +32,7 @@ import useUser from "@/data/useUser";
 const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
   const dispatch = useDispatch();
   const [currentModalStage, setCurrentModalStage] = useState(1);
-  const [isPat, setIsPat] = useState(true);
+  const [isPat, setIsPat] = useState(false);
   const [maxStage, setMaxStage] = useState(null);
   const [isFormDisabled, setIsFormDisabled] = useState(false);
   const [differentPIC, setDifferentPIC] = useState(true);
@@ -49,8 +46,8 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
   const validationErrorsSummaryPAT = useSelector(
     (state) => state.projectOverviewEWPKonsulting.validationErrorsSummaryPAT
   );
-  const validationErrorsSummaryNonPAT = useSelector(
-    (state) => state.projectOverviewEWPKonsulting.validationErrorsSummaryNonPAT
+  const validationErrorsScheduleNonPAT = useSelector(
+    (state) => state.projectOverviewEWPKonsulting.validationErrorsScheduleNonPAT
   );
 
   const schemaMappings = {
@@ -71,11 +68,6 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
         schema: scheduleNonPATSchema,
         resetErrors: resetValidationErrorsScheduleNonPAT,
         setErrors: setValidationErrorsScheduleNonPAT,
-      },
-      3: {
-        schema: documentNonPATSchema,
-        resetErrors: resetValidationErrorsDocumentNonPAT,
-        setErrors: setValidationErrorsDocumentNonPAT,
       },
     },
   };
@@ -213,6 +205,9 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
       ref_tipe,
       ref_tema,
       audited,
+      createdAt,
+      create_by,
+      deskripsi,
     } = value;
 
     const updatedData = {
@@ -224,6 +219,10 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
       ref_tipe,
       ref_tema,
       audited,
+      deskripsi,
+      ref_penanggung_jawabs,
+      createdAt,
+      create_by,
     };
     dispatch(setProjectOverviewData(updatedData));
 
@@ -256,12 +255,6 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
     if (isPat) {
       return [
         {
-          id: "step-1",
-          label: <span>Sumber</span>,
-          percentageComplete: currentModalStage > 1 ? 100 : 0,
-          status: currentModalStage === 1 ? "current" : "visited",
-        },
-        {
           id: "step-2",
           label: <span>Jadwal</span>,
           percentageComplete: currentModalStage > 2 ? 100 : 0,
@@ -277,12 +270,6 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
     } else {
       return [
         {
-          id: "step-4",
-          label: <span>Sumber</span>,
-          percentageComplete: currentModalStage > 1 ? 100 : 0,
-          status: currentModalStage === 1 ? "current" : "visited",
-        },
-        {
           id: "step-5",
           label: <span>Jadwal</span>,
           percentageComplete: currentModalStage > 2 ? 100 : 0,
@@ -290,7 +277,7 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
         },
         {
           id: "step-6",
-          label: <span>Surat</span>,
+          label: <span>Proyek Terkait</span>,
           percentageComplete: currentModalStage > 3 ? 100 : 0,
           status: currentModalStage === 3 ? "current" : "visited",
         },
@@ -307,17 +294,89 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
   const progressItems = generateProgressItems();
 
   return (
-    <Modal
+    <ModalScroll
       showModal={showModal}
       header={
         <ModalHeader
-          headerText={"Buat Consulting"}
+          headerText={`Buat Proyek ${
+            currentModalStage > 1 && isPat
+              ? " - Sumber P.A.T"
+              : currentModalStage > 1 && !isPat
+              ? " - Sumber Non-P.A.T"
+              : ""
+          }`}
           progressItems={progressItems}
+          currentModalStage={currentModalStage}
           showModal={showModal}
           handleCloseModal={handleCloseModal}
         />
       }
-      footer={
+      withoutFooter
+    >
+      <div>
+        {
+          currentModalStage === 1 ? (
+            <ModalBodySource
+              currentModalStage={currentModalStage}
+              setCurrentModalStage={setCurrentModalStage}
+              handleIsPAT={handleIsPAT}
+            />
+          ) : isPat ? (
+            // Start Submodal sumber audit PAT
+            currentModalStage === 2 ? (
+              <ModalBodySchedulePAT
+                data={projectOverviewData}
+                user={user?.data}
+                validationErrors={validationErrorsSchedulePAT}
+                isDisabled={isFormDisabled}
+                setCurrentModalStage={setCurrentModalStage}
+                handleChangeData={handleClickTableOnModalBodySchedulePAT}
+                handleChangeFilter={handleChangeFilterYear}
+              />
+            ) : (
+              currentModalStage === 3 && (
+                <ModalBodySummaryPAT
+                  data={projectOverviewData}
+                  validationErrors={validationErrorsSummaryPAT}
+                  isDisabled={isFormDisabled}
+                  isPat={isPat}
+                  handleChange={handleChangeText}
+                  setCurrentModalStage={setCurrentModalStage}
+                />
+              )
+            )
+          ) : // End Submodal sumber audit PAT
+          // Start Submodal sumber audit Non-PAT
+          currentModalStage === 2 ? (
+            <ModalBodyScheduleNonPAT
+              data={projectOverviewData}
+              validationErrors={validationErrorsScheduleNonPAT}
+              isDisabled={isFormDisabled}
+              setCurrentModalStage={setCurrentModalStage}
+              handleChangeText={handleChangeText}
+              handleChangeSelect={handleChangeSelect}
+              handleUpload={handleUploadSurat}
+            />
+          ) : currentModalStage === 3 ? (
+            <ModalBodyRelatedProjectNonPAT
+              data={projectOverviewData}
+              // validationErrors={validationErrorsDocumentNonPAT}
+              isDisabled={isFormDisabled}
+              setCurrentModalStage={setCurrentModalStage}
+            />
+          ) : (
+            currentModalStage === 4 && (
+              <ModalBodySummaryNonPAT
+                data={projectOverviewData}
+                isDisabled={isFormDisabled}
+                isPat={isPat}
+                setCurrentModalStage={setCurrentModalStage}
+                handleChange={handleChangeText}
+              />
+            )
+          )
+          // End Submodal sumber audit Non-PAT
+        }
         <ModalFooter
           data={projectOverviewData}
           currentModalStage={currentModalStage}
@@ -331,74 +390,8 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
           handleNextStage={handleNextStage}
           handleChange={handleChangePIC}
         />
-      }
-      withoutFooter={currentModalStage < 2}
-      widthFullFooter={differentPIC && isPat && currentModalStage === maxStage}
-    >
-      {
-        currentModalStage === 1 ? (
-          <ModalBodySource
-            currentModalStage={currentModalStage}
-            setCurrentModalStage={setCurrentModalStage}
-            handleIsPAT={handleIsPAT}
-          />
-        ) : isPat ? (
-          // Start Submodal sumber audit PAT
-          currentModalStage === 2 ? (
-            <ModalBodySchedulePAT
-              data={projectOverviewData}
-              user={user?.data}
-              validationErrors={validationErrorsSchedulePAT}
-              isDisabled={isFormDisabled}
-              setCurrentModalStage={setCurrentModalStage}
-              handleChangeData={handleClickTableOnModalBodySchedulePAT}
-              handleChangeFilter={handleChangeFilterYear}
-            />
-          ) : (
-            currentModalStage === 3 && (
-              <ModalBodySummaryPAT
-                data={projectOverviewData}
-                validationErrors={validationErrorsSummaryPAT}
-                isDisabled={isFormDisabled}
-                isPat={isPat}
-                handleChange={handleChangeText}
-                setCurrentModalStage={setCurrentModalStage}
-              />
-            )
-          )
-        ) : // End Submodal sumber audit PAT
-        // Start Submodal sumber audit Non-PAT
-        currentModalStage === 2 ? (
-          <ModalBodyScheduleNonPAT
-            data={projectOverviewData}
-            isDisabled={isFormDisabled}
-            setCurrentModalStage={setCurrentModalStage}
-            handleChangeText={handleChangeText}
-            handleChangeSelect={handleChangeSelect}
-          />
-        ) : currentModalStage === 3 ? (
-          <ModalBodyDocumentNonPAT
-            data={projectOverviewData}
-            isDisabled={isFormDisabled}
-            setCurrentModalStage={setCurrentModalStage}
-            handleChange={handleChangeText}
-            handleUpload={handleUploadSurat}
-          />
-        ) : (
-          currentModalStage === 4 && (
-            <ModalBodySummaryNonPAT
-              data={projectOverviewData}
-              validationErrors={validationErrorsSummaryNonPAT}
-              isDisabled={isFormDisabled}
-              isPat={isPat}
-              setCurrentModalStage={setCurrentModalStage}
-              handleChange={handleChangeText}
-            />
-          )
-        )
-        // End Submodal sumber audit Non-PAT
-      }
-    </Modal>
+      </div>
+    </ModalScroll>
   );
 };
 

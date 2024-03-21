@@ -44,7 +44,7 @@ const ModalAddBudget = ({
               onChange={(e) =>
                 handleChangeText("tipe_anggaran_name", e.target.value)
               }
-              placeholder="Nominal Pengeluaran"
+              placeholder="Nama Pengeluaran"
               icon={
                 <ButtonIcon
                   handleClick={() => handleChangeText("tipe_anggaran_name", "")}

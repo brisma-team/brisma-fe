@@ -1,7 +1,13 @@
 import { DivButton, RadioField, TooltipField } from "@/components/atoms";
 import shortenWord from "@/helpers/shortenWord";
 
-const RowTable = ({ idx, totalData, handleClick, value, selectedValue }) => {
+const RowTableSchedulePAT = ({
+  idx,
+  totalData,
+  handleClick,
+  value,
+  selectedValue,
+}) => {
   let borderBottom = "";
   if (idx < totalData) borderBottom = "border-b-2";
 
@@ -27,7 +33,7 @@ const RowTable = ({ idx, totalData, handleClick, value, selectedValue }) => {
 
   return (
     <DivButton
-      className="flex font-semibold"
+      className="flex font-semibold hover:bg-gray-100"
       handleClick={() => handleClick(value)}
     >
       <div
@@ -80,4 +86,4 @@ const RowTable = ({ idx, totalData, handleClick, value, selectedValue }) => {
   );
 };
 
-export default RowTable;
+export default RowTableSchedulePAT;

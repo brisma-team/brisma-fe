@@ -32,6 +32,7 @@ const initialState = {
     url_file_surat: "",
     nama_file_surat: "",
     audited: false,
+    project_terkait: [],
   },
   defaultData: {
     project_name: "",
@@ -64,6 +65,7 @@ const initialState = {
     url_file_surat: "",
     nama_file_surat: "",
     audited: false,
+    project_terkait: [],
   },
   validationErrorsSchedulePAT: {},
   validationErrorsSummaryPAT: {},
