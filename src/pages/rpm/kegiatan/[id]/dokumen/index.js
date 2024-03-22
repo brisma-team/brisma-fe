@@ -1,16 +1,10 @@
 import { Breadcrumbs, Card, DivButton, PageTitle } from "@/components/atoms";
-import {
-  PrevNextNavigation,
-  ApprovalItems,
-  ModalComment,
-  ModalWorkflow,
-} from "@/components/molecules/commons";
+import { ApprovalItems, ModalComment } from "@/components/molecules/commons";
 import { NavigationDocument } from "@/components/molecules/commons";
 import Image from "next/image";
 import { ImageChat } from "@/helpers/imagesUrl";
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import {
   useComment,
   useDocument,
@@ -31,22 +25,9 @@ import {
   useUpdateData,
 } from "@/helpers";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
-import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useWorkflowMatrix } from "@/data/ewp/konsulting/peluang-peningkatan/matrix";
-
-const routes = [
-  {
-    name: "Kondisi",
-    slug: "kondisi",
-  },
-  {
-    name: "Sebab",
-    slug: "sebab",
-  },
-  { name: "Tanggapan Client", slug: "tanggapan-client" },
-  { name: "Risk & Rekomendasi", slug: "risk-rekomendasi" },
-  { name: "Dokumen", slug: "dokumen" },
-];
+import { LandingLayoutRPMKegiatan } from "@/layouts/rpm";
+import { ModalWorkflowRPMKegiatan } from "@/components/molecules/rpm/kegiatan";
 
 const index = () => {
   const router = useRouter();
@@ -57,17 +38,11 @@ const index = () => {
   });
 
   const baseUrl = `/ewp/konsulting/${params?.id}`;
-  const pathNameBase = `${baseUrl}/peluang-peningkatan`;
-  const pathNameOverview = `${baseUrl}/peluang-peningkatan/${params?.matrix_id}/overview`;
-  const pathNameContent = `${baseUrl}/peluang-peningkatan/${params?.matrix_id}/overview/${params?.kkpt_id}`;
   const dispatch = useDispatch();
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [listContent, setListContent] = useState([
-    { idx: 1, total_comment: 0, title: "Kondisi" },
-    { idx: 2, total_comment: 0, title: "Penyebab" },
-    { idx: 3, total_comment: 0, title: "Tanggapan" },
-    { idx: 4, total_comment: 0, title: "Rekomendasi" },
+    { idx: 1, total_comment: 0, title: "Monitoring" },
   ]);
   const [listComment, setListComment] = useState([]);
 
@@ -83,7 +58,7 @@ const index = () => {
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
   const [bab, setBab] = useState(1);
   const [selectedParentCommentId, setSelectedParentCommentId] = useState(0);
-  const [mappingCommentId, setMappingCommentId] = useState([]);
+  // const [mappingCommentId, setMappingCommentId] = useState([]);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -101,7 +76,6 @@ const index = () => {
     (state) => state.documentDetailPeluangKonsulting.validationErrorsWorkflow
   );
 
-  const { projectDetail } = useProjectDetail({ id: params?.id });
   const { documentData } = useDocument(params?.kkpt_id, bab);
   const { workflowMatrixData, workflowMatrixMutate } = useWorkflowMatrix({
     type: "kkpt",
@@ -115,30 +89,18 @@ const index = () => {
   useEffect(() => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
-      { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting" },
+      { name: "RPM", path: "/rpm" },
+      { name: "Kegiatan Overview", path: "/rpm/kegiatan" },
       {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
-        path: `${baseUrl}/info`,
-      },
-      {
-        name: `Peluang Peningkatan`,
-        path: `${pathNameBase}`,
-      },
-      {
-        name: `Overview`,
-        path: `${pathNameOverview}`,
-      },
-      {
-        name: `Landing Peningkatan`,
-        path: `${pathNameContent}`,
+        name: `Landing Monitoring`,
+        path: `${baseUrl}`,
       },
       {
         name: `Dokumen`,
-        path: `${pathNameContent}/dokumen`,
+        path: `${baseUrl}/dokumen`,
       },
     ]);
-  }, [projectDetail]);
+  }, [params?.id]);
 
   useEffect(() => {
     if (commentData?.data?.length) {
@@ -176,23 +138,23 @@ const index = () => {
     }
   }, [commentData]);
 
-  useEffect(() => {
-    const response = documentData?.data?.daftar_isi;
-    let accumulator = [];
-    if (response) {
-      const mapping = response?.map((bab) => {
-        accumulator.push(bab?.id);
-        return {
-          idx: bab?.key,
-          total_comment: bab?.jumlah_comment?.filter((v) => !v.is_closed)
-            .length,
-          title: bab.title,
-        };
-      });
-      setListContent(mapping);
-      setMappingCommentId(accumulator);
-    }
-  }, [documentData]);
+  // useEffect(() => {
+  //   const response = documentData?.data?.daftar_isi;
+  //   let accumulator = [];
+  //   if (response) {
+  //     const mapping = response?.map((bab) => {
+  //       accumulator.push(bab?.id);
+  //       return {
+  //         idx: bab?.key,
+  //         total_comment: bab?.jumlah_comment?.filter((v) => !v.is_closed)
+  //           .length,
+  //         title: bab.title,
+  //       };
+  //     });
+  //     // setListContent(mapping);
+  //     setMappingCommentId(accumulator);
+  //   }
+  // }, [documentData]);
 
   // [ START ] Function ini berfungsi agar setiap kali class page-container-a4 melewati class parent,
   // maka akan setter setCurrentPosition akan merubah data dan setter setHitEndpointCount
@@ -506,16 +468,10 @@ const index = () => {
   // [ END ]
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutRPMKegiatan>
       <Breadcrumbs data={breadcrumbs} />
       <div className="flex justify-between items-center mb-6">
         <PageTitle text={"Dokumen Monitoring"} />
-        <PrevNextNavigation
-          baseUrl={pathNameContent}
-          routes={routes}
-          prevUrl={"/risk-rekomendasi"}
-          marginLeft={"-60px"}
-        />
       </div>
       {/* Start Content */}
       <div className="flex w-full gap-6">
@@ -568,7 +524,7 @@ const index = () => {
                       <div className="px-4 h-full w-full relative page-content-a4">
                         <div className="flex justify-between">
                           <div className="font-bold text-xl">{v.title}</div>
-                          <div className="flex items-center" ref={ref}>
+                          {/* <div className="flex items-center" ref={ref}>
                             <DivButton
                               handleClick={() =>
                                 handleClickComment(mappingCommentId[i])
@@ -576,7 +532,7 @@ const index = () => {
                             >
                               <Image src={ImageChat} alt="chat" />
                             </DivButton>
-                          </div>
+                          </div> */}
                         </div>
                         {v.idx != 4 ? (
                           <div
@@ -624,7 +580,7 @@ const index = () => {
               </Card>
             </div>
           </DivButton>
-          <ModalWorkflow
+          <ModalWorkflowRPMKegiatan
             workflowData={workflowData}
             historyWorkflow={historyWorkflow}
             validationErrors={validationErrorsWorkflow}
@@ -641,7 +597,7 @@ const index = () => {
         </div>
       </div>
       {/* End Content */}
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutRPMKegiatan>
   );
 };
 
