@@ -56,7 +56,9 @@ const ModalBodySummaryPAT = ({
             <FormWithLabel
               form={
                 <CardContent>
-                  <p>{data?.ref_tema?.nama}</p>
+                  <div className="min-h-[1.3rem]">
+                    <p>{data?.ref_tema?.nama}</p>
+                  </div>
                 </CardContent>
               }
               label="Tema Audit"

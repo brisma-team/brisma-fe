@@ -81,6 +81,8 @@ import CardFormInputTeam from "./CardFormInputTeam";
 import PopupHistory from "./PopupHistory";
 import CardModuleDashboard from "./CardModuleDashboard";
 import CardTitleValue from "./CardTitleValue";
+import ModalDescription from "./ModalDescription";
+import ModalAttachment from "./ModalAttachment";
 
 export {
   BackButton,
@@ -166,4 +168,6 @@ export {
   PopupHistory,
   CardModuleDashboard,
   CardTitleValue,
+  ModalDescription,
+  ModalAttachment,
 };

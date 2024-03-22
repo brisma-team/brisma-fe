@@ -1,7 +1,6 @@
 import {
   ButtonIcon,
   CloseModal,
-  DivButton,
   ErrorValidation,
   Modal,
   TextAreaField,
