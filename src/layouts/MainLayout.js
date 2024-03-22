@@ -1,5 +1,5 @@
 import useUser from "@/data/useUser";
-import { Loader } from "@/components/atoms";
+import { Loader, MainLayout as MainLayoutBackground } from "@/components/atoms";
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -42,14 +42,15 @@ const MainLayout = ({ children }) => {
     <div>
       <NavbarField />
       <Sidebar handleSidebarItemClick={handleSidebarItemClick} />
-      <div className="flex">
+      <MainLayoutBackground>{children}</MainLayoutBackground>
+      {/* <div className="flex">
         <div className="flex-1 overflow-x-hidden ml-64 pt-16 h-screen overflow-y-scroll">
           <div className="p-4"></div>
           <div className="main">
             <div className="content p-4">{children}</div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

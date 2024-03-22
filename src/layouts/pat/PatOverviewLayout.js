@@ -1,5 +1,5 @@
 import useUser from "@/data/useUser";
-import { Loader } from "@/components/atoms";
+import { Loader, MainLayout } from "@/components/atoms";
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -40,22 +40,21 @@ const PatOverviewLayout = ({ children, withContent = true, data, title }) => {
       <PatSidebarOverview>
         {withContent && (
           <div>
-            <div className="text-center text-base font-bold mt-4">
-              {title}
-            </div>
+            <div className="text-center text-base font-bold mt-4">{title}</div>
             <div className="px-10 mt-5">
               <CardApprovalList data={data} />
             </div>
           </div>
         )}
       </PatSidebarOverview>
-      <div className="flex">
+      <MainLayout>{children}</MainLayout>
+      {/* <div className="flex">
         <div className="flex-1 mt-16 " style={{ marginLeft: "260px" }}>
           <div className="main">
             <div className="pl-5 py-4 w-[95rem]">{children}</div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

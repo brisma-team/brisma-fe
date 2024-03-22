@@ -6,56 +6,78 @@ import {
   PageTitle,
 } from "@/components/atoms";
 import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
-import { convertDate } from "@/helpers";
 import _ from "lodash";
-import { CardFilterOverview } from "@/components/molecules/ewp/konsulting/overview";
-import { CardOverview } from "@/components/molecules/rpm/kegiatan/overview/rekomendasi";
-import { useOverviewEWPKonsulting } from "@/data/ewp/konsulting/overview";
+import {
+  CardOverview,
+  CardFilterOverview,
+} from "@/components/molecules/rpm/kegiatan/overview/rekomendasi";
+import { useRekomendasiList } from "@/data/rpm/kegiatan";
 import { LandingLayoutRPMKegiatan } from "@/layouts/rpm";
 import { IconFile } from "@/components/icons";
-
-const breadcrumbs = [
-  { name: "Menu", path: "/dashboard" },
-  { name: "EWP", path: "/ewp" },
-  { name: "Consulting / Overview", path: "/ewp/konsulting/overview" },
-];
+import { useRouter } from "next/router";
 
 const index = () => {
+  const { id, kkpt_id } = useRouter().query;
   const [showFilter, setShowFilter] = useState(false);
+  const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [totalData, setTotalData] = useState(1);
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState({
-    project_code: "",
-    project_name: "",
-    status_approval: "",
-    status_document: "",
-    anggota_tim_audit: "",
-    start_date: "",
-    end_date: "",
+    control_kode: "",
+    risk_kode: "",
+    judul_lingkup: "",
+    batas_waktu_start: "",
+    batas_waktu_end: "",
+    status_complete: "",
+    desc: "",
     sort_by: "ASC",
     limit: 4,
     page: 1,
   });
+  const baseUrl = `/rpm/kegiatan/${id}`;
   const [params, setParams] = useState({
-    project_code: "",
-    project_name: "",
-    status_approval: "",
-    status_document: "",
-    anggota_tim_audit: "",
-    start_date: "",
-    end_date: "",
+    control_kode: "",
+    risk_kode: "",
+    judul_lingkup: "",
+    batas_waktu_start: "",
+    batas_waktu_end: "",
+    status_complete: "",
+    desc: "",
     sort_by: "ASC",
     limit: 4,
     page: 1,
   });
 
-  const { overviewEWPKonsulting, overviewEWPKonsultingMutate } =
-    useOverviewEWPKonsulting(params);
+  useEffect(() => {
+    setBreadcrumbs([
+      { name: "Menu", path: "/dashboard" },
+      { name: "RPM", path: "/rpm" },
+      { name: "Kegiatan Overview", path: "/rpm/kegiatan" },
+      {
+        name: `Landing Monitoring`,
+        path: `${baseUrl}`,
+      },
+      {
+        name: `Peluang Peningkatan`,
+        path: `${baseUrl}/peluang-peningkatan`,
+      },
+      {
+        name: `Rekomendasi Overview`,
+        path: `${baseUrl}/peluang-peningkatan/${kkpt_id}`,
+      },
+    ]);
+  }, [id]);
+
+  const { rekomendasiList, rekomendasiListMutate } = useRekomendasiList({
+    kkpt_id,
+    rpm_id: id,
+    params,
+  });
 
   useEffect(() => {
     const handleSearch = () => {
       setParams(filter);
-      overviewEWPKonsultingMutate();
+      rekomendasiListMutate();
     };
     const debouncedSearch = _.debounce(handleSearch, 800);
     debouncedSearch();
@@ -65,48 +87,32 @@ const index = () => {
   }, [filter]);
 
   useEffect(() => {
-    if (overviewEWPKonsulting?.data?.length) {
-      const mapping = overviewEWPKonsulting.data.map((v) => {
-        const {
-          createdAt,
-          need_approved,
-          number_adendum,
-          status_name,
-          status_persetujuan_name,
-          project_id,
-          project_name,
-          initiator,
-        } = v;
+    if (rekomendasiList?.data?.rekomendasi?.length) {
+      const mapping = rekomendasiList?.data?.rekomendasi?.map((v) => {
+        const { batas_waktu, status_complete, rekomendasi_kkpt } = v;
         return {
-          id: v?.id,
-          tipe: v?.ref_tipe?.nama,
-          jenis: v?.ref_jenis?.nama,
-          project_code: project_id,
-          project_name: project_name,
-          period: `${convertDate(
-            v?.info_periode_pelaksanaan_start,
-            "-",
-            "d"
-          )} s/d ${convertDate(v?.info_periode_pelaksanaan_end, "-", "d")}`,
-          auditor: v?.info_team_audit?.auditor || [],
-          auditee: v?.info_team_audit?.auditee || [],
-          ata: v?.info_team_audit?.ata || [],
-          document_status: status_name,
-          approval_status: status_persetujuan_name,
-          addendum: number_adendum,
-          need_approval: need_approved,
-          href: `/ewp/projects/konsulting/${v?.id}/info`,
-          created_at: createdAt,
-          maker: `${initiator?.pn} - ${initiator?.nama}`,
+          tipe: status_complete,
+          rekomendasi: rekomendasi_kkpt?.description,
+          lingkup: rekomendasi_kkpt?.lingkup?.judul_lingkup_pemeriksaan,
+          risk:
+            rekomendasi_kkpt?.risk?.mtd_risk_issue?.abbr +
+            " - " +
+            rekomendasi_kkpt?.risk?.mtd_risk_issue?.nama,
+          control:
+            rekomendasi_kkpt?.control?.mtd_control?.abbr +
+            " - " +
+            rekomendasi_kkpt?.control?.mtd_control?.nama,
+          deadline: batas_waktu,
+          href: `/rpm/kegiatan/${id}/peluang-peningkatan/${kkpt_id}/rekomendasi/${v?.id}/tindak-lanjut`,
         };
       });
       setData(mapping);
-      setTotalData(overviewEWPKonsulting?.pagination?.totalData);
+      setTotalData(rekomendasiList?.data?.pagination?.totalData);
     } else {
       setData([]);
       setTotalData(1);
     }
-  }, [overviewEWPKonsulting]);
+  }, [rekomendasiList]);
 
   const handleChangeFilter = (props, value) => {
     setFilter({ ...filter, [props]: value });
@@ -132,12 +138,11 @@ const index = () => {
         <div className="w-24 rounded bg-atlasian-blue-light">
           <ButtonField
             icon={<IconFile primaryColor="white" />}
-            handler={() => console.log("test")}
             text={`Arsip`}
           />
         </div>
       </div>
-      <div className="">
+      <div>
         <CardFilterOverview
           showFilter={showFilter}
           filter={filter}

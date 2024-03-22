@@ -9,29 +9,26 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useProjectDetail } from "@/data/ewp/konsulting";
+import { useLandingStatus } from "@/data/rpm/kegiatan";
 import { convertDate } from "@/helpers";
 
 const SidebarLandingRPMKegiatan = () => {
   const { id } = useRouter().query;
-  const baseUrl = `/rpm/kegiatan/overview/${id}`;
+  const baseUrl = `/rpm/kegiatan/${id}`;
   const [data, setData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
-  const { projectDetail } = useProjectDetail({ id: id || 1 });
+  const { landingStatus } = useLandingStatus(id);
+
   const [menu, setMenu] = useState([]);
 
   useEffect(() => {
-    const projectInfo = projectDetail?.data?.project_info;
+    const projectInfo = landingStatus?.data?.project;
     setData({
       projectId: projectInfo?.project_id,
-      projectName: projectInfo?.project_name,
-      statusName: projectInfo?.status_persetujuan_name,
-      createdAt: convertDate(
-        projectInfo?.info_periode_pelaksanaan_start,
-        "/",
-        "d"
-      ),
-      initiatorName: projectInfo?.initiator?.nama,
+      projectName: projectInfo?.nama_project,
+      statusName: projectInfo?.status_persetujuan,
+      createdAt: convertDate(projectInfo?.createdAt, "/", "d"),
+      initiatorName: projectInfo?.create_by?.nama,
     });
 
     setMenu([
@@ -41,7 +38,7 @@ const SidebarLandingRPMKegiatan = () => {
         isActive: true,
       },
     ]);
-  }, [projectDetail]);
+  }, [landingStatus]);
 
   const subMenu = [
     { name: "Log", href: `/log` },
@@ -51,7 +48,7 @@ const SidebarLandingRPMKegiatan = () => {
 
   useEffect(() => {
     const url = window.location.href;
-    const regex = /\/overview\/\d+\/([^\/]+)/;
+    const regex = /\/kegiatan\/\d+\/([^\/]+)/;
     const match = url.match(regex);
 
     if (match && match[1]) {
@@ -74,7 +71,9 @@ const SidebarLandingRPMKegiatan = () => {
               </div>
             </div>
             <div className="mb-2">
-              <div className="text-sm text-brisma font-bold">Created At</div>
+              <div className="text-sm text-brisma font-bold">
+                Tanggal Inisiasi
+              </div>
               <div className="text-sm text-brisma">
                 {data?.createdAt || "-"}
               </div>
