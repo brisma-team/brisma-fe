@@ -1,5 +1,5 @@
 import useUser from "@/data/useUser";
-import { Loader } from "@/components/atoms";
+import { Loader, MainLayout } from "@/components/atoms";
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -38,13 +38,21 @@ const LandingLayoutRPMKegiatan = ({ children }) => {
     <div>
       <NavbarField />
       <SidebarLandingRPMKegiatan />
-      <div className="flex">
+      <MainLayout>{children}</MainLayout>
+      {/* <div
+        className="flex bg-cover"
+        style={{
+          backgroundImage: "url('/images/backdrop.png')",
+          backgroundSize: "cover",
+          height: "100vh",
+        }}
+      >
         <div className="flex-1 mt-16" style={{ marginLeft: "260px" }}>
           <div className="main">
             <div className="pl-5 py-4 w-[84rem]">{children}</div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

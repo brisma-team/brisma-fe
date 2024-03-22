@@ -8,41 +8,30 @@ import {
 import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
 import { convertDate } from "@/helpers";
 import _ from "lodash";
-import {
-  CardFilterOverview,
-  // ModalAddProjectEWP,
-} from "@/components/molecules/ewp/konsulting/overview";
 import { CardOverview } from "@/components/molecules/rpm/kegiatan";
-import { useOverviewEWPKonsulting } from "@/data/ewp/konsulting/overview";
+import { CardFilterOverview } from "@/components/molecules/rpm/kegiatan/overview";
+import { useApprovalRPM, useOverviewRPMKonsulting } from "@/data/rpm/kegiatan";
 import { IconFile } from "@/components/icons";
-import { LandingLayoutRPMKegiatan } from "@/layouts/rpm";
+import { OverviewLayoutEWP } from "@/layouts/ewp";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
   { name: "RPM", path: "/rpm" },
-  { name: "Kegiatan / Overview", path: "/rpm/kegiatan/overview" },
+  { name: "Kegiatan Overview", path: "/rpm/kegiatan/overview" },
 ];
 
 const convertProgressAndPercent = (status) => {
   let progress, percent;
   switch (status) {
-    case "mapa":
-      progress = 0.2;
-      percent = "20%";
+    case "On Progress":
+      progress = 0.3;
+      percent = "30%";
       break;
-    case "pelaksanaan":
-      progress = 0.4;
-      percent = "40%";
-      break;
-    case "peluang peningkatan":
+    case "On Approver":
       progress = 0.6;
       percent = "60%";
       break;
-    case "wrapup":
-      progress = 0.85;
-      percent = "80%";
-      break;
-    case "final":
+    case "Final":
       progress = 1;
       percent = "100%";
       break;
@@ -58,11 +47,9 @@ const index = () => {
   const [filter, setFilter] = useState({
     project_code: "",
     project_name: "",
-    status_approval: "",
-    status_document: "",
-    anggota_tim_audit: "",
-    start_date: "",
-    end_date: "",
+    status_persetujuan: "",
+    inisiator: "",
+    tanggal_inisiasi: "",
     sort_by: "ASC",
     limit: 4,
     page: 1,
@@ -70,23 +57,23 @@ const index = () => {
   const [params, setParams] = useState({
     project_code: "",
     project_name: "",
-    status_approval: "",
-    status_document: "",
-    anggota_tim_audit: "",
-    start_date: "",
-    end_date: "",
+    status_persetujuan: "",
+    inisiator: "",
+    tanggal_inisiasi: "",
     sort_by: "ASC",
     limit: 4,
     page: 1,
   });
 
-  const { overviewEWPKonsulting, overviewEWPKonsultingMutate } =
-    useOverviewEWPKonsulting(params);
+  const { approvalRPM } = useApprovalRPM();
+
+  const { overviewRPMKonsulting, overviewRPMKonsultingMutate } =
+    useOverviewRPMKonsulting(params);
 
   useEffect(() => {
     const handleSearch = () => {
       setParams(filter);
-      overviewEWPKonsultingMutate();
+      overviewRPMKonsultingMutate();
     };
     const debouncedSearch = _.debounce(handleSearch, 800);
     debouncedSearch();
@@ -96,57 +83,54 @@ const index = () => {
   }, [filter]);
 
   useEffect(() => {
-    if (overviewEWPKonsulting?.data?.length) {
-      const mapping = overviewEWPKonsulting.data.map((v) => {
+    if (overviewRPMKonsulting?.data?.length) {
+      const mapping = overviewRPMKonsulting.data.map((v) => {
         const {
           createdAt,
-          need_approved,
-          number_adendum,
-          status_name,
-          status_persetujuan_name,
+          num_evaluasi,
+          status_rpm,
+          status_persetujuan,
           project_id,
-          project_name,
-          initiator,
+          nama_project,
+          create_by,
         } = v;
         return {
           id: v?.id,
           tipe: v?.ref_tipe?.nama,
           jenis: v?.ref_jenis?.nama,
           project_code: project_id,
-          project_name: project_name,
+          project_name: nama_project,
           period: `${convertDate(
             v?.info_periode_pelaksanaan_start,
             "-",
             "d"
           )} s/d ${convertDate(v?.info_periode_pelaksanaan_end, "-", "d")}`,
-          progress: convertProgressAndPercent(v?.status_name).progress,
-          percent: convertProgressAndPercent(v?.status_name).percent,
+          progress: convertProgressAndPercent(v?.status_persetujuan).progress,
+          percent: convertProgressAndPercent(v?.status_persetujuan).percent,
           auditor: v?.info_team_audit?.auditor || [],
           auditee: v?.info_team_audit?.auditee || [],
           ata: v?.info_team_audit?.ata || [],
-          document_status: status_name,
-          approval_status: status_persetujuan_name,
-          addendum: number_adendum,
-          need_approval: need_approved,
-          href: `/ewp/projects/konsulting/${v?.id}/infox`,
+          document_status: status_rpm,
+          approval_status: status_persetujuan,
+          evaluasi: num_evaluasi,
+          href: `/rpm/kegiatan/${v?.id}`,
           created_at: createdAt,
-          maker: `${initiator?.pn} - ${initiator?.nama}`,
+          maker: `${create_by?.pn} - ${create_by?.nama}`,
         };
       });
       setData(mapping);
-      setTotalData(overviewEWPKonsulting?.pagination?.totalData);
+      setTotalData(overviewRPMKonsulting?.pagination?.totalData);
     } else {
       setData([]);
       setTotalData(1);
     }
-  }, [overviewEWPKonsulting]);
+  }, [overviewRPMKonsulting]);
 
   const handleChangeFilter = (props, value) => {
     setFilter({ ...filter, [props]: value });
   };
-
   return (
-    <LandingLayoutRPMKegiatan>
+    <OverviewLayoutEWP data={approvalRPM?.data?.header}>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -161,17 +145,6 @@ const index = () => {
               text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
             />
           </div>
-          {/* <div className="w-36 rounded bg-atlasian-purple">
-            <ButtonField
-              handler={() => setShowModal(true)}
-              text={"Buat Project"}
-            />
-            <ModalAddProjectEWP
-              showModal={showModal}
-              setShowModal={setShowModal}
-              mutate={overviewEWPKonsultingMutate}
-            />
-          </div> */}
         </div>
         <div className="w-24 rounded bg-atlasian-blue-light">
           <ButtonField
@@ -214,7 +187,7 @@ const index = () => {
         totalData={totalData}
       />
       {/* End Content */}
-    </LandingLayoutRPMKegiatan>
+    </OverviewLayoutEWP>
   );
 };
 

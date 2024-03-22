@@ -1,10 +1,13 @@
 import React from "react";
 import { LoginForm } from "../auth";
 import { LeftSidebar } from "@atlaskit/page-layout";
-// import { Card } from "@/components/atoms";
-// import Image from "next/image";
+import { Card } from "@/components/atoms";
+import Carousel from "./Carousel";
+import Image from "next/image";
 
 const SidebarLanding = () => {
+  const images = ["/images/banner_brisma.png", "/images/banner_brisma21.png"];
+
   return (
     <>
       <LeftSidebar
@@ -16,11 +19,14 @@ const SidebarLanding = () => {
       >
         <LoginForm />
       </LeftSidebar>
-      {/* <div className="flex">
-        <div className="flex-1 overflow-x-hidden ml-5 pt-14 h-screen overflow-y-scroll">
+      <div className="flex">
+        <div className="flex-1 overflow-x-hidden ml-5 h-screen overflow-y-scroll">
           <div className="p-4"></div>
           <div className="main">
             <div className="content p-4">
+              <div className="flex mb-4">
+                <Carousel images={images} />
+              </div>
               <div className="mt-5">
                 <div className="flex gap-6">
                   <div>
@@ -32,9 +38,7 @@ const SidebarLanding = () => {
                           </h5>
                           <Image
                             className="rounded-lg"
-                            src={
-                              "https://i.pinimg.com/564x/b2/61/d4/b261d4e690bc7434f4c2b2bba52aab10.jpg"
-                            }
+                            src={"/images/banner_brilink.png"}
                             width={322}
                             height={257}
                             alt="chat"
@@ -43,10 +47,10 @@ const SidebarLanding = () => {
                             “Program BRISMA 2.0.2 adalah sebuah komitmen untuk
                             meningkatkan kualitas kerja audit secara menyeluruh”
                           </p>
-                          <p className="text-center font-bold">
+                          {/* <p className="text-center font-bold">
                             Muhammad Firly Ismail <br></br>Kepala Divisi Audit
                             Intern 2023
-                          </p>
+                          </p> */}
                         </div>
                       </Card>
                     </div>
@@ -79,9 +83,7 @@ const SidebarLanding = () => {
                         <div className="max-w-xs h-full px-5 py-3">
                           <Image
                             className="rounded-lg"
-                            src={
-                              "https://i.pinimg.com/564x/24/13/d1/2413d199ef41196284c9eec33b90a2a0.jpg"
-                            }
+                            src={"/images/banner_brilink.png"}
                             width={322}
                             height={257}
                             alt="chat"
@@ -98,9 +100,7 @@ const SidebarLanding = () => {
                         <div className="max-w-xs h-full px-5 py-3">
                           <Image
                             className="rounded-lg"
-                            src={
-                              "https://i.pinimg.com/564x/b2/61/d4/b261d4e690bc7434f4c2b2bba52aab10.jpg"
-                            }
+                            src={"/images/banner_brilink.png"}
                             width={322}
                             height={200}
                             alt="chat"
@@ -119,9 +119,7 @@ const SidebarLanding = () => {
                         <div className="max-w-xs h-full px-5 py-3">
                           <Image
                             className="rounded-lg"
-                            src={
-                              "https://i.pinimg.com/564x/b2/61/d4/b261d4e690bc7434f4c2b2bba52aab10.jpg"
-                            }
+                            src={"/images/banner_brilink.png"}
                             width={322}
                             height={257}
                             alt="chat"
@@ -138,9 +136,43 @@ const SidebarLanding = () => {
                         <div className="max-w-xs h-full px-5 py-3">
                           <Image
                             className="rounded-lg"
-                            src={
-                              "https://i.pinimg.com/564x/24/13/d1/2413d199ef41196284c9eec33b90a2a0.jpg"
-                            }
+                            src={"/images/banner_brilink.png"}
+                            width={322}
+                            height={200}
+                            alt="chat"
+                          />
+                          <h5 className="text-lg font-semibold text-brisma">
+                            Semarak Hadiah BriLink
+                          </h5>
+                          <p>20 Agustus 2023 - 20 September 2023</p>
+                        </div>
+                      </Card>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="mb-5">
+                      <Card>
+                        <div className="max-w-xs h-full px-5 py-3">
+                          <Image
+                            className="rounded-lg"
+                            src={"/images/banner_brilink.png"}
+                            width={322}
+                            height={257}
+                            alt="chat"
+                          />
+                          <h5 className="text-lg font-semibold text-brisma">
+                            Semarak Hadiah BriLink
+                          </h5>
+                          <p>20 Agustus 2023 - 20 September 2023</p>
+                        </div>
+                      </Card>
+                    </div>
+                    <div>
+                      <Card>
+                        <div className="max-w-xs h-full px-5 py-3">
+                          <Image
+                            className="rounded-lg"
+                            src={"/images/banner_brilink.png"}
                             width={322}
                             height={200}
                             alt="chat"
@@ -158,7 +190,7 @@ const SidebarLanding = () => {
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
     </>
   );
 };

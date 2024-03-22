@@ -1,103 +1,122 @@
+import { Breadcrumbs, Card, DivButton, PageTitle } from "@/components/atoms";
 import {
-  Breadcrumbs,
-  ButtonField,
-  Card,
-  DivButton,
-  PageTitle,
-} from "@/components/atoms";
-import { useProjectDetail } from "@/data/ewp/konsulting";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
-import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
-import {
-  ApprovalItems,
-  AttachmentClipping,
-  CardHistory,
-  ImageClipping,
-  ModalWorkflow,
   PrevNextNavigation,
+  ApprovalItems,
+  ModalComment,
+  ModalWorkflow,
 } from "@/components/molecules/commons";
+import { NavigationDocument } from "@/components/molecules/commons";
+import Image from "next/image";
+import { ImageChat } from "@/helpers/imagesUrl";
+import { useRef, useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
+import {
+  useComment,
+  useDocument,
+} from "@/data/ewp/konsulting/peluang-peningkatan/matrix/detail";
+import { useSelector, useDispatch } from "react-redux";
 import {
   resetValidationErrorsWorkflow,
   setValidationErrorsWorkflow,
   setWorkflowData,
   resetWorkflowData,
-} from "@/slices/ewp/konsulting/peluang-peningkatan/documentMatrixPeluangKonsultingSlice";
+} from "@/slices/ewp/konsulting/peluang-peningkatan/documentDetailPeluangKonsultingSlice";
+import _ from "lodash";
 import {
   confirmationSwal,
   convertDate,
   setErrorValidation,
   usePostData,
   useUpdateData,
-  fetchApi,
-  loadingSwal,
-  usePostFileData,
 } from "@/helpers";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
-import {
-  useMatrixDocument,
-  useWorkflowMatrix,
-} from "@/data/ewp/konsulting/peluang-peningkatan/matrix";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import _ from "lodash";
-const Editor = dynamic(() => import("@/components/atoms/Editor"), {
-  ssr: false,
-});
+import { useProjectDetail } from "@/data/ewp/konsulting";
+import { useWorkflowMatrix } from "@/data/ewp/konsulting/peluang-peningkatan/matrix";
 
 const routes = [
   {
-    name: "Header",
-    slug: "header",
+    name: "Kondisi",
+    slug: "kondisi",
   },
   {
-    name: "Peluang Peningkatan",
-    slug: "overview",
+    name: "Sebab",
+    slug: "sebab",
   },
+  { name: "Tanggapan Client", slug: "tanggapan-client" },
+  { name: "Risk & Rekomendasi", slug: "risk-rekomendasi" },
   { name: "Dokumen", slug: "dokumen" },
 ];
 
 const index = () => {
+  const router = useRouter();
+  const [params, setParams] = useState({
+    id: 1,
+    matrix_id: 1,
+    kkpt_id: 1,
+  });
+
+  const baseUrl = `/ewp/konsulting/${params?.id}`;
+  const pathNameBase = `${baseUrl}/peluang-peningkatan`;
+  const pathNameOverview = `${baseUrl}/peluang-peningkatan/${params?.matrix_id}/overview`;
+  const pathNameContent = `${baseUrl}/peluang-peningkatan/${params?.matrix_id}/overview/${params?.kkpt_id}`;
   const dispatch = useDispatch();
-  const { id, matrix_id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/overview/${id}`;
-  const pathNameBase = `${baseUrl}/peluang-peningkatan/`;
-  const pathNameContent = `${baseUrl}/peluang-peningkatan/${matrix_id}`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
-  const [imageClipList, setImageClipList] = useState([]);
-  const [attachmentClipList, setAttachmentClipList] = useState([]);
-  const [content, setContent] = useState("");
-  const [typeUpload, setTypeUpload] = useState("");
-  const [isReset, setIsReset] = useState(false);
-  const [documentLog, setDocumentLog] = useState([]);
+  const [listContent, setListContent] = useState([
+    { idx: 1, total_comment: 0, title: "Kondisi" },
+    { idx: 2, total_comment: 0, title: "Penyebab" },
+    { idx: 3, total_comment: 0, title: "Tanggapan" },
+    { idx: 4, total_comment: 0, title: "Rekomendasi" },
+  ]);
+  const [listComment, setListComment] = useState([]);
 
-  //workflow
-  const [historyWorkflow, setHistoryWorkflow] = useState([]);
+  const ref = useRef(null);
   const [showModalApproval, setShowModalApproval] = useState(false);
+  const [openCardComment, setOpenCardComment] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndexComment, setActiveIndexComment] = useState(1);
+  const activeDivRef = useRef(null);
+  const [hitEndpointCount, setHitEndpointCount] = useState(1);
+  const [doc, setDoc] = useState([]);
+  const [currentPosition, setCurrentPosition] = useState(1);
+  const [historyWorkflow, setHistoryWorkflow] = useState([]);
+  const [bab, setBab] = useState(1);
+  const [selectedParentCommentId, setSelectedParentCommentId] = useState(0);
+  const [mappingCommentId, setMappingCommentId] = useState([]);
 
-  const { projectDetail } = useProjectDetail({ id });
-  const { matrixDocument, matrixDocumentMutate } = useMatrixDocument({
-    id: matrix_id,
-  });
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id, matrix_id, kkpt_id } = router.query;
+    setParams({
+      id,
+      matrix_id,
+      kkpt_id,
+    });
+  }, [router.isReady]);
   const workflowData = useSelector(
-    (state) => state.documentMatrixPeluangKonsulting.workflowData
+    (state) => state.documentDetailPeluangKonsulting.workflowData
   );
   const validationErrorsWorkflow = useSelector(
-    (state) => state.documentMatrixPeluangKonsulting.validationErrorsWorkflow
+    (state) => state.documentDetailPeluangKonsulting.validationErrorsWorkflow
   );
 
+  const { projectDetail } = useProjectDetail({ id: params?.id });
+  const { documentData } = useDocument(params?.kkpt_id, bab);
   const { workflowMatrixData, workflowMatrixMutate } = useWorkflowMatrix({
-    type: "matrix_peluang_peningkatan",
-    id: matrix_id,
+    type: "kkpt",
+    id: params?.kkpt_id,
   });
+  const { commentData, commentDataMutate } = useComment(
+    params?.kkpt_id,
+    activeIndexComment
+  );
 
   useEffect(() => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting/overview" },
+      { name: "Overview", path: "/ewp/konsulting" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
@@ -107,11 +126,173 @@ const index = () => {
         path: `${pathNameBase}`,
       },
       {
-        name: `Document Matrix`,
+        name: `Overview`,
+        path: `${pathNameOverview}`,
+      },
+      {
+        name: `Landing Peningkatan`,
         path: `${pathNameContent}`,
+      },
+      {
+        name: `Dokumen`,
+        path: `${pathNameContent}/dokumen`,
       },
     ]);
   }, [projectDetail]);
+
+  useEffect(() => {
+    if (commentData?.data?.length) {
+      const mapping = commentData?.data?.map((parent) => {
+        const {
+          id,
+          create_by,
+          createdAt,
+          is_closed,
+          deskripsi,
+          child_comment,
+        } = parent;
+        return {
+          id,
+          created_by: create_by,
+          created_at: createdAt,
+          is_closed,
+          deskripsi,
+          child_comment: child_comment?.length
+            ? child_comment?.map((child) => {
+                const { id, create_by, createdAt, is_closed, deskripsi } =
+                  child;
+                return {
+                  id,
+                  created_by: create_by,
+                  created_at: createdAt,
+                  is_closed,
+                  deskripsi,
+                };
+              })
+            : [],
+        };
+      });
+      setListComment(mapping);
+    }
+  }, [commentData]);
+
+  useEffect(() => {
+    const response = documentData?.data?.daftar_isi;
+    let accumulator = [];
+    if (response) {
+      const mapping = response?.map((bab) => {
+        accumulator.push(bab?.id);
+        return {
+          idx: bab?.key,
+          total_comment: bab?.jumlah_comment?.filter((v) => !v.is_closed)
+            .length,
+          title: bab.title,
+        };
+      });
+      setListContent(mapping);
+      setMappingCommentId(accumulator);
+    }
+  }, [documentData]);
+
+  // [ START ] Function ini berfungsi agar setiap kali class page-container-a4 melewati class parent,
+  // maka akan setter setCurrentPosition akan merubah data dan setter setHitEndpointCount
+  // akan menambahkan data sebanyak +1
+  const handleScrollHitEndpoint = () => {
+    const parentContainer = document.querySelector(".parent");
+    if (parentContainer) {
+      const elements = Array.from(
+        parentContainer.querySelectorAll(".page-container-a4")
+      );
+      const positions = elements.map((element) => {
+        const rect = element.getBoundingClientRect();
+        return rect.top + parentContainer.scrollTop;
+      });
+
+      const viewportTop = parentContainer.scrollTop + 235;
+
+      let activeIndex = positions.findIndex((position, index) => {
+        const nextPosition = positions[index + 1];
+        return (
+          position <= viewportTop &&
+          (nextPosition ? nextPosition > viewportTop : true)
+        );
+      });
+
+      setCurrentPosition(activeIndex + 1);
+
+      const isAtBottom =
+        parentContainer.scrollTop + parentContainer.clientHeight ===
+        parentContainer.scrollHeight;
+      if (isAtBottom && hitEndpointCount <= 10) {
+        setHitEndpointCount((prev) => Math.min(prev + 1, 10));
+      }
+    }
+  };
+  // [ END ]
+
+  // [ START ] Hook ini berfungsi untuk merubah fokus dokumen berdasarkan current active index
+  // yang diklik pada bagian Navigation Document
+  useEffect(() => {
+    if (activeDivRef.current) {
+      activeDivRef.current.focus();
+      const parentContainer = activeDivRef.current.closest(".parent");
+      if (parentContainer) {
+        const topOffset = activeDivRef.current.offsetTop - 220;
+        parentContainer.scrollTo({ top: topOffset, behavior: "smooth" });
+      }
+    }
+  }, [activeIndex]);
+  // [ END ]
+
+  // [ START ] Hook ini berfungsi agar ketika class page-container-a4 melewati class parent, maka
+  // akan memanggil function handleScrollHitEndpoint
+  useEffect(() => {
+    const addScrollListener = () => {
+      const parentContainer = document.querySelector(".parent");
+      if (parentContainer) {
+        parentContainer.addEventListener("scroll", handleScrollHitEndpoint);
+        return () => {
+          parentContainer.removeEventListener(
+            "scroll",
+            handleScrollHitEndpoint
+          );
+        };
+      }
+    };
+
+    const timeoutId = setTimeout(() => {
+      addScrollListener();
+    }, 1500);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+  // [ END ]
+
+  useEffect(() => {
+    setBab(hitEndpointCount);
+  }, [hitEndpointCount]);
+
+  useEffect(() => {
+    if (documentData?.data && listContent?.length) {
+      const findBab = listContent?.find((value) => value?.idx === bab);
+      const isFilled = doc?.find((value) => value?.idx === bab) !== undefined;
+      if (!isFilled) {
+        setDoc((prev) => [
+          ...prev,
+          {
+            idx: findBab?.idx,
+            title: findBab?.title,
+            content: documentData?.data?.data,
+          },
+        ]);
+        if (bab <= listContent.length) {
+          setBab(bab + 1);
+        }
+      }
+
+      return;
+    }
+  }, [documentData, listContent]);
 
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
@@ -172,105 +353,9 @@ const index = () => {
   }, [workflowMatrixData]);
   // [ END ]
 
-  useEffect(() => {
-    if (!isReset) {
-      setContent(matrixDocument?.data?.doc || "");
-    }
-    const logs = matrixDocument?.data?.log_perubahan_matrix?.map(
-      (val, index) => {
-        return {
-          id: index,
-          date: convertDate(val?.createdAt, "/", "d"),
-          subject: val?.pn + " - " + val?.nama,
-          description: "Mengubah Document",
-        };
-      }
-    );
-    setDocumentLog(logs);
-  }, [matrixDocument, isReset]);
-
-  const handleClickUploadAttachment = () => {
-    setTypeUpload("attachment");
-  };
-
-  const handleClickUploadImage = () => {
-    setTypeUpload("image");
-  };
-
-  const handleUploadFile = async (e) => {
-    loadingSwal();
-    if (e.target.files) {
-      const url = `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/cdn/upload`;
-      const response = await usePostFileData(url, {
-        file: e.target.files[0],
-        modul: "ewp",
-      });
-
-      switch (typeUpload) {
-        case "attachment":
-          setAttachmentClipList((prev) => [
-            ...prev,
-            { url: response.url[0], name: e.target.files[0].name },
-          ]);
-          break;
-        case "image":
-          setImageClipList((prev) => [
-            ...prev,
-            { url: response.url[0], name: e.target.files[0].name },
-          ]);
-          break;
-      }
-    }
-    setTypeUpload("");
-    loadingSwal("close");
-  };
-
-  const handleSubmit = async () => {
-    loadingSwal();
-    const confirm = await confirmationSwal(
-      "Apakah Anda yakin untuk menyimpan perubahan?"
-    );
-
-    if (!confirm.value) {
-      return;
-    }
-    await fetchApi(
-      "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/matrix/doc`,
-      { matrix_id, doc: content }
-    );
-    setIsReset(false);
-    matrixDocumentMutate();
-    loadingSwal("close");
-  };
-
-  const handleAsync = async () => {
-    loadingSwal();
-    const confirm = await confirmationSwal(
-      "Konten akan direset sesuai sumber. Apakah Anda yakin?"
-    );
-
-    if (!confirm.value) {
-      return;
-    }
-    setIsReset(true);
-    const { data } = await fetchApi(
-      "GET",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/matrix/doc/async/${matrix_id}`
-    );
-    setContent(renderDocument(data));
-    loadingSwal("close");
-  };
-
-  const renderDocument = (data) => {
-    return `<div>
-          <div>${data?.info_header}</div>
-          <div>${data?.peluang_peningkatan[0]?.kondisi || "N/A"}</div>
-          <div>${data?.peluang_peningkatan[0]?.sebab || "N/A"}</div>
-          <div>${
-            data?.peluang_peningkatan[0]?.tanggapan_manajemen || "N/A"
-          }</div>
-        </div>`;
+  const handleClickComment = (id) => {
+    setOpenCardComment(true);
+    setActiveIndexComment(id);
   };
 
   // [ START ] function untuk Modal Workflow
@@ -313,7 +398,7 @@ const index = () => {
     );
   };
 
-  const handleSubmitWorkFlow = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const schemaMapping = {
       schema: workflowSchema,
@@ -325,8 +410,8 @@ const index = () => {
     if (validate) {
       const actionType = e.target.offsetParent.name;
       const data = {
-        sub_modul: "matrix_peluang_peningkatan",
-        sub_modul_id: matrix_id,
+        sub_modul: "kkpt",
+        sub_modul_id: params?.kkpt_id,
       };
 
       const signedCount = workflowData?.ref_tim_audit_approver?.filter(
@@ -383,59 +468,133 @@ const index = () => {
   };
   // [ END ]
 
+  // [ START ] COMMENT
+  const handleSubmitCommentParent = async (e, value) => {
+    e.stopPropagation();
+    const body = {
+      ref_bab_mapa_id: activeIndexComment.toString(),
+      deskripsi: value,
+    };
+
+    await usePostData(
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${params?.id}?ref_bab_mapa_id=${activeIndexComment}`,
+      body
+    );
+
+    commentDataMutate();
+  };
+
+  const handleSubmitCommentChild = async (e, value) => {
+    e.stopPropagation();
+    const body = {
+      ref_bab_mapa_id: activeIndexComment.toString(),
+      deskripsi: value,
+      parent_comment_id: selectedParentCommentId,
+    };
+
+    await usePostData(
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${params?.id}?ref_bab_mapa_id=${activeIndexComment}`,
+      body
+    );
+
+    commentDataMutate();
+  };
+
+  const handleSelectedParentComment = (id) => {
+    setSelectedParentCommentId(id);
+  };
+  // [ END ]
+
   return (
     <LandingLayoutEWPConsulting>
-      {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
-      {/* End Breadcrumbs */}
-      <div className="flex justify-between items-center mb-7">
-        <PageTitle text="Matrix Document" />
+      <div className="flex justify-between items-center mb-6">
+        <PageTitle text={"Dokumen Monitoring"} />
         <PrevNextNavigation
           baseUrl={pathNameContent}
           routes={routes}
-          prevUrl={"/overview"}
+          prevUrl={"/risk-rekomendasi"}
           marginLeft={"-60px"}
         />
       </div>
       {/* Start Content */}
-      <div className="my-4 flex gap-6">
-        <div className="w-64 flex flex-col gap-4">
-          <ImageClipping
-            data={imageClipList}
-            handleChange={handleUploadFile}
-            handleClick={handleClickUploadImage}
-          />
-          <AttachmentClipping
-            data={attachmentClipList}
-            handleChange={handleUploadFile}
-            handleClick={handleClickUploadAttachment}
-          />
+      <div className="flex w-full gap-6">
+        <div className="w-64">
+          <div>
+            <Card>
+              <div className="px-3 py-1 w-full">
+                <div className="text-xl">Daftar Isi</div>
+                <div className="pl-2 mt-0.5">
+                  {listContent.map((v, i) => {
+                    return (
+                      <NavigationDocument
+                        key={i}
+                        no={i + 1}
+                        title={v.title}
+                        handleClick={() => setActiveIndex(v.idx)}
+                        activeIndex={currentPosition}
+                        count={v.total_comment}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            </Card>
+          </div>
         </div>
         <div>
-          <div className="ckeditor-latar-belakang-mapa-ewp">
-            <Editor
-              contentData={content}
-              disabled={false}
-              ready={true}
-              onChange={(value) => setContent(value)}
-            />
-          </div>
-          <div className="mt-3 flex justify-end gap-2">
-            <div
-              className={`w-[7.75rem] ${
-                isReset == true ? "bg-atlasian-gray-dark" : "bg-atlasian-yellow"
-              } rounded`}
-            >
-              <ButtonField
-                text={"Reset"}
-                disabled={isReset}
-                handler={handleAsync}
+          <Card>
+            <div className="overflow-y-scroll my-2 parent max-h-[40rem]">
+              <ModalComment
+                callbackRef={ref}
+                show={openCardComment}
+                handleClickOutside={() => setOpenCardComment(false)}
+                handleSubmitParent={handleSubmitCommentParent}
+                handleSubmitChild={handleSubmitCommentChild}
+                handleSelectedParentComment={handleSelectedParentComment}
+                data={listComment}
               />
+              {doc.map((v, i) => {
+                return (
+                  <div
+                    key={i}
+                    className={`page-container-a4 shrink-0 ${
+                      i + 1 === activeIndex ? "active" : ""
+                    }`}
+                    tabIndex={i + 1 === activeIndex ? 0 : -1}
+                    ref={i + 1 === activeIndex ? activeDivRef : null}
+                  >
+                    {v.content && (
+                      <div className="px-4 h-full w-full relative page-content-a4">
+                        <div className="flex justify-between">
+                          <div className="font-bold text-xl">{v.title}</div>
+                          <div className="flex items-center" ref={ref}>
+                            <DivButton
+                              handleClick={() =>
+                                handleClickComment(mappingCommentId[i])
+                              }
+                            >
+                              <Image src={ImageChat} alt="chat" />
+                            </DivButton>
+                          </div>
+                        </div>
+                        {v.idx != 4 ? (
+                          <div
+                            className="mt-4"
+                            dangerouslySetInnerHTML={{ __html: v.content }}
+                          />
+                        ) : v?.content?.rekomendasi.length > 0 ? (
+                          "Data tersedia, namun tidak dapat menampilkan sesuai format."
+                        ) : (
+                          <i>Data tidak ditemukan</i>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
-            <div className="w-[7.75rem] bg-atlasian-green rounded">
-              <ButtonField text={"Simpan"} handler={handleSubmit} />
-            </div>
-          </div>
+          </Card>
         </div>
         <div>
           <DivButton
@@ -465,9 +624,6 @@ const index = () => {
               </Card>
             </div>
           </DivButton>
-          <div>
-            <CardHistory data={documentLog} />
-          </div>
           <ModalWorkflow
             workflowData={workflowData}
             historyWorkflow={historyWorkflow}
@@ -475,7 +631,7 @@ const index = () => {
             showModal={showModalApproval}
             headerTitle={"Workflow & Riwayat Approval"}
             handleDelete={handleDelete}
-            handleSubmit={handleSubmitWorkFlow}
+            handleSubmit={handleSubmit}
             setShowModal={setShowModalApproval}
             handleAdd={handleAdd}
             handleChangeSelect={handleChangeSelect}

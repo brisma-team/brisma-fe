@@ -1,6 +1,6 @@
 import { Breadcrumbs, CardLanding, PageTitle } from "@/components/atoms";
 import { useProjectDetail } from "@/data/ewp/konsulting";
-import { useLandingStatus } from "@/data/ewp/konsulting/peluang-peningkatan/matrix";
+import { useLandingStatus } from "@/data/rpm/kegiatan";
 import { LandingLayoutRPMKegiatan } from "@/layouts/rpm";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 const index = () => {
   const router = useRouter();
   const { id } = router.query;
-  const baseUrl = `/rpm/kegiatan/overview/${id}`;
+  const baseUrl = `/rpm/kegiatan/${id}`;
 
   const [dataCarding, setDataCarding] = useState([]);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -32,7 +32,7 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "RPM", path: "/rpm" },
-      { name: "Overview", path: "/rpm/kegiatan/overview" },
+      { name: "Kegiatan Overview", path: "/rpm/kegiatan" },
       {
         name: `Landing Monitoring`,
         path: `${baseUrl}`,
@@ -46,7 +46,7 @@ const index = () => {
         {
           title: "Peluang Peningkatan",
           description: "Rincian lanjut proses Peluang Peningkatan.",
-          status: landingStatus?.data?.peluang_peningkatan
+          status: !landingStatus?.data?.status_incomplete
             ? "success"
             : "failed",
           url: `${baseUrl}/peluang-peningkatan`,
