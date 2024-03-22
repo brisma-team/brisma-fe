@@ -87,13 +87,15 @@ const InfoPAT = ({ data }) => {
             <div className="w-full h-[10rem] border-2 my-3 p-2 overflow-y-auto">
               <p className="font-semibold text-lg">Pelaksana</p>
               <p className="text-blue-600 font-semibold">PIC</p>
-              {data?.pic.map((v) => {
-                return (
-                  <p className="" key={v}>
-                    {v}
-                  </p>
-                );
-              })}
+              {data?.pic?.length
+                ? data?.pic.map((v) => {
+                    return (
+                      <p className="" key={v}>
+                        {v}
+                      </p>
+                    );
+                  })
+                : ""}
             </div>
           </div>
         </div>
