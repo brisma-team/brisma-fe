@@ -342,10 +342,6 @@ const index = () => {
     setShowModalAttachment(false);
   };
 
-  useEffect(() => {
-    console.log("payloadUkerAssessment => ", payloadUkerAssessment);
-  }, [payloadUkerAssessment]);
-
   const handleUploadAttachment = async (e) => {
     loadingSwal();
     if (e.target.files) {
