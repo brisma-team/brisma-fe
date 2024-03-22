@@ -1,5 +1,9 @@
 import { Breadcrumbs, ButtonField, Card, PageTitle } from "@/components/atoms";
-import { NavigationTab } from "@/components/molecules/commons";
+import {
+  NavigationTab,
+  ModalDescription,
+  ModalAttachment,
+} from "@/components/molecules/commons";
 import {
   ProjectDetail,
   InformativeLetter,
@@ -7,28 +11,79 @@ import {
   RelatedProjectTable,
   UkerAssessmentTable,
   InfoPAT,
+  ModalAddRelatedProject,
 } from "@/components/molecules/ewp/konsulting/info";
 import { useProjectDetail } from "@/data/ewp/konsulting";
-import { errorSwalTimeout, fetchApi } from "@/helpers";
-
+import {
+  useRelatedProjectInfo,
+  useUkerAssessmentInfo,
+} from "@/data/ewp/konsulting/info";
+import {
+  confirmationSwal,
+  errorSwalTimeout,
+  fetchApi,
+  infoSwal,
+  loadingSwal,
+  usePostFileData,
+} from "@/helpers";
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import _ from "lodash";
+import {
+  setObjDataInfoPAT,
+  setObjPayloadRelatedProject,
+  setObjPayloadUkerAssessment,
+  resetObjDataInfoPAT,
+  resetObjPayloadRelatedProject,
+  resetObjPayloadUkerAssessment,
+} from "@/slices/ewp/konsulting/info/infoEWPKonsultingSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useActivitySchedule } from "@/data/pat";
 
 const index = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
   const { id } = useRouter().query;
   const navigationTabItems = [
     { idx: 1, title: "Project Details" },
     { idx: 2, title: "Proyek Terkait" },
     { idx: 3, title: "UKER Assessment" },
-    { idx: 4, title: "UKER Info" },
+    { idx: 4, title: "Info PAT" },
   ];
   const [isError, setIsError] = useState(false);
+  const [isAddNewRowUker, setIsAddNewRowUker] = useState(false);
   const [currentContentStage, setCurrentContentStage] = useState(1);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [patId, setPatId] = useState(0);
+  const [scheduleActivityId, setScheduleActivityId] = useState(0);
   const [dataTables, setDataTables] = useState([]);
+  const [dataRelatedProject, setDataRelatedProject] = useState([]);
+  const [dataUkerAssessment, setDataUkerAssessment] = useState([]);
+  const [showModalRelatedProject, setShowModalRelatedProject] = useState(false);
+  const [showModalDescription, setShowModalDescription] = useState(false);
+  const [showModalAttachment, setShowModalAttachment] = useState(false);
+
   const { projectDetail, projectDetailError, projectDetailMutate } =
     useProjectDetail({ id });
+  const { relatedProjectInfo, relatedProjectInfoMutate } =
+    useRelatedProjectInfo({ id });
+  const { ukerAssessmentInfo, ukerAssessmentInfoMutate } =
+    useUkerAssessmentInfo({ id });
+  const { activitySchedule } = useActivitySchedule("detail", {
+    id: patId,
+    jadwal_sbp_id: scheduleActivityId,
+  });
+
+  const dataInfoPAT = useSelector(
+    (state) => state.infoEWPKonsulting.objDataInfoPAT
+  );
+  const payloadRelatedProject = useSelector(
+    (state) => state.infoEWPKonsulting.objPayloadRelatedProject
+  );
+  const payloadUkerAssessment = useSelector(
+    (state) => state.infoEWPKonsulting.objPayloadUkerAssessment
+  );
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
@@ -44,6 +99,16 @@ const index = () => {
     const status_code =
       parseInt(projectDetail?.data?.project_info?.status_kode) || 0;
 
+    setPatId(
+      projectDetail?.data?.project_info?.is_pat
+        ? projectDetail?.data?.project_info?.pat_id
+        : 0
+    );
+    setScheduleActivityId(
+      projectDetail?.data?.project_info?.is_pat
+        ? projectDetail?.data?.project_info?.pat_jadwal_kegiatan_id
+        : 0
+    );
     setDataTables([
       {
         is_open: true,
@@ -104,6 +169,78 @@ const index = () => {
     }
   }, [projectDetailError]);
 
+  useEffect(() => {
+    if (relatedProjectInfo?.data?.length) {
+      const mappingRelatedProject = relatedProjectInfo?.data?.map((v) => {
+        return {
+          id: v?.id,
+          ..._.pick(v?.ref_ewp, [
+            "project_name",
+            "project_id",
+            "ref_tipe",
+            "ref_jenis",
+          ]),
+        };
+      });
+      setDataRelatedProject(mappingRelatedProject);
+    } else {
+      setDataRelatedProject([]);
+    }
+  }, [relatedProjectInfo]);
+
+  useEffect(() => {
+    if (ukerAssessmentInfo?.data?.length) {
+      const mapping = ukerAssessmentInfo?.data?.map((v, i) => {
+        return {
+          index: i,
+          uker_id: v?.id,
+          branch: {
+            branch_kode: v?.ref_auditee_branch_kode,
+            branch_name: v?.ref_auditee_branch_name,
+          },
+          orgeh: {
+            orgeh_kode: v?.ref_auditee_orgeh_kode,
+            orgeh_name: v?.ref_auditee_orgeh_name,
+          },
+          uker_type: { name: v?.tipe_uker },
+          description: v?.desc,
+          attachments: v?.attachments,
+          is_edit: false,
+          is_new: false,
+        };
+      });
+      setDataUkerAssessment(mapping);
+    } else {
+      setDataUkerAssessment([]);
+    }
+  }, [ukerAssessmentInfo]);
+
+  useEffect(() => {
+    if (activitySchedule?.data) {
+      const response = activitySchedule?.data;
+      const mappingInfoPAT = {
+        title: response?.jadwal?.nama,
+        type: response?.jadwal?.ref_tipe?.nama,
+        jenis: response?.jadwal?.ref_jenis?.nama,
+        tema: response?.jadwal?.ref_tema?.nama,
+        maker: response?.jadwal?.create_by?.nama,
+        createdDate: response?.jadwal?.createdAt,
+        start_date: response?.jadwal?.pelaksanaan_start,
+        end_date: response?.jadwal?.pelaksanaan_end,
+        budget: response?.jadwal?.total_anggaran,
+        desc: response?.jadwal?.deskripsi,
+        pic: response?.penanggung_jawab?.length
+          ? response?.penanggung_jawab?.map((v) => {
+              return v?.nama;
+            })
+          : [],
+      };
+      dispatch(setObjDataInfoPAT(mappingInfoPAT));
+    } else {
+      dispatch(resetObjDataInfoPAT());
+    }
+  }, [activitySchedule]);
+
   const handleChangeTab = (index) => {
     setCurrentContentStage(index);
   };
@@ -134,6 +271,232 @@ const index = () => {
   const handleClickLog = () => {
     router.push(`/ewp/konsulting/${id}/log`);
   };
+
+  // [ START ] handler for related project table
+  const handleClickAddRelatedProject = () => {
+    setShowModalRelatedProject(true);
+  };
+
+  const handleClickDeleteRelatedProject = async (id) => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin ingin menghapus data ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "DELETE",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/project_terkait/${id}`,
+      {}
+    );
+
+    relatedProjectInfoMutate();
+    loadingSwal("close");
+  };
+  // [ END ] handler for related project table
+
+  // [ START ] handler for modal description
+  const handleClickDescription = (index) => {
+    setSelectedIndex(index);
+    setShowModalDescription(true);
+  };
+
+  const handleCloseModalDescription = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    setShowModalDescription(false);
+  };
+
+  const handleSubmitDescription = (value) => {
+    dispatch(
+      setObjPayloadUkerAssessment({
+        ...payloadUkerAssessment,
+        description: value,
+      })
+    );
+    setShowModalDescription(false);
+  };
+  // [ END ] handler for modal description
+
+  // [ START ] handler for modal attachment
+  const handleClickAttachment = (index) => {
+    setSelectedIndex(index);
+    setShowModalAttachment(true);
+  };
+
+  const handleCloseModalAttachment = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    setShowModalAttachment(false);
+  };
+
+  useEffect(() => {
+    console.log("payloadUkerAssessment => ", payloadUkerAssessment);
+  }, [payloadUkerAssessment]);
+
+  const handleUploadAttachment = async (e) => {
+    loadingSwal();
+    if (e.target.files) {
+      const url = `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/cdn/upload`;
+
+      const response = await usePostFileData(url, {
+        file: e.target.files[0],
+        modul: "pat",
+      });
+
+      console.log("response?.url => ", response?.url);
+
+      dispatch(
+        setObjPayloadUkerAssessment({
+          ...payloadUkerAssessment,
+          attachments: response?.url,
+        })
+      );
+      setShowModalDescription(false);
+    }
+    loadingSwal("close");
+  };
+  // [ END ] handler for modal attachment
+
+  // [ START ] handler for uker assessment table
+  const handleChangePayloadUkerAssessment = (property, value) => {
+    dispatch(
+      setObjPayloadUkerAssessment({
+        ...payloadUkerAssessment,
+        [property]: value,
+      })
+    );
+  };
+
+  const handleClickEditUkerAssessment = (index) => {
+    const objData = dataUkerAssessment[index];
+    const newData = [...dataUkerAssessment];
+    newData[index] = { ...newData[index], is_edit: true };
+    setDataUkerAssessment(newData);
+    dispatch(
+      setObjPayloadUkerAssessment({
+        branch: {
+          branch_kode: objData?.branch?.branch_kode,
+          branch_name: objData?.branch?.branch_name,
+        },
+        orgeh: {
+          orgeh_kode: objData?.orgeh?.orgeh_kode,
+          orgeh_name: objData?.orgeh?.orgeh_name,
+        },
+        tipe_uker: objData?.uker_type?.name,
+        deskripsi: objData?.desc,
+      })
+    );
+  };
+
+  const handleClickAddRowUkerAssessment = () => {
+    if (!isAddNewRowUker) {
+      const newDataUkerAssessment = [...dataUkerAssessment];
+      newDataUkerAssessment.push({
+        ...payloadUkerAssessment,
+        index: dataUkerAssessment?.length,
+        is_edit: false,
+        is_new: true,
+      });
+      setDataUkerAssessment(newDataUkerAssessment);
+      setIsAddNewRowUker(true);
+    }
+  };
+
+  const handleClickDeleteUkerAssessment = async (uker_id) => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin ingin menghapus data ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "DELETE",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/uker_info/${uker_id}`,
+      {}
+    );
+
+    relatedProjectInfoMutate();
+    ukerAssessmentInfoMutate();
+    loadingSwal("close");
+  };
+
+  const handleSaveUkerAssessment = async (isUpdate, uker_id) => {
+    loadingSwal();
+    const response = await fetchApi(
+      isUpdate ? "PATCH" : "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/uker_info/${
+        isUpdate ? uker_id : id
+      }`,
+      {
+        ref_auditee_branch_kode: parseInt(
+          payloadUkerAssessment?.branch?.branch_kode
+        ),
+        ref_auditee_branch_name: payloadUkerAssessment?.branch?.branch_name,
+        ref_auditee_orgeh_kode: parseInt(
+          payloadUkerAssessment?.orgeh?.orgeh_kode
+        ),
+        ref_auditee_orgeh_name: payloadUkerAssessment?.orgeh?.orgeh_name,
+        tipe_uker: payloadUkerAssessment?.tipe_uker,
+        desc: payloadUkerAssessment?.description,
+        attachments: payloadUkerAssessment?.attachments,
+      }
+    );
+    if (response.isDismissed) return;
+    setIsAddNewRowUker(false);
+    ukerAssessmentInfoMutate();
+    dispatch(resetObjPayloadUkerAssessment());
+    loadingSwal("close");
+  };
+  // [ END ] handler for uker assessment table
+
+  // [ START ] handler for modal related project
+  const handleClickRowRelatedProject = (ref_ewp_id) => {
+    dispatch(setObjPayloadRelatedProject({ ref_ewp_id }));
+  };
+
+  const handleCloseModalRelatedProject = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    setShowModalRelatedProject(false);
+    dispatch(resetObjPayloadRelatedProject());
+  };
+
+  const handleSubmitRelatedProject = async () => {
+    if (!payloadRelatedProject?.ref_ewp_id) {
+      infoSwal("Silahkan pilih proyek terkait!");
+      return;
+    }
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/project_terkait`,
+      { ewp_id: id, ...payloadRelatedProject }
+    );
+    relatedProjectInfoMutate();
+    setShowModalRelatedProject(false);
+    loadingSwal("close");
+  };
+  // [ END ] handler for modal related project
 
   return (
     <LandingLayoutEWPConsulting>
@@ -177,13 +540,67 @@ const index = () => {
               </div>
             </div>
           ) : currentContentStage === 2 ? (
-            <RelatedProjectTable data={[]} />
+            <RelatedProjectTable
+              data={dataRelatedProject}
+              handleClickDelete={handleClickDeleteRelatedProject}
+              handleClickAdd={handleClickAddRelatedProject}
+            />
           ) : currentContentStage === 3 ? (
-            <UkerAssessmentTable data={[]} />
+            <UkerAssessmentTable
+              data={dataUkerAssessment}
+              payload={payloadUkerAssessment}
+              handleChange={handleChangePayloadUkerAssessment}
+              handleClickAddUkerAssessment={handleClickAddRowUkerAssessment}
+              handleClickSave={handleSaveUkerAssessment}
+              handleClickEdit={handleClickEditUkerAssessment}
+              handleClickDelete={handleClickDeleteUkerAssessment}
+              handleClickDescription={handleClickDescription}
+              handleClickAttachment={handleClickAttachment}
+            />
+          ) : scheduleActivityId ? (
+            <InfoPAT data={dataInfoPAT} />
           ) : (
-            <InfoPAT />
+            ""
           )}
         </div>
+        <ModalAddRelatedProject
+          showModal={showModalRelatedProject}
+          data={payloadRelatedProject}
+          handleSubmit={handleSubmitRelatedProject}
+          handleClickRow={handleClickRowRelatedProject}
+          handleCloseModal={handleCloseModalRelatedProject}
+        />
+        <ModalDescription
+          data={
+            dataUkerAssessment[selectedIndex]?.is_new ||
+            dataUkerAssessment[selectedIndex]?.is_edit
+              ? payloadUkerAssessment?.description
+              : dataUkerAssessment[selectedIndex]?.description
+          }
+          showModal={showModalDescription}
+          handleCloseModal={handleCloseModalDescription}
+          isEdit={
+            dataUkerAssessment[selectedIndex]?.is_new ||
+            dataUkerAssessment[selectedIndex]?.is_edit
+          }
+          handleSubmit={handleSubmitDescription}
+        />
+        <ModalAttachment
+          data={
+            dataUkerAssessment[selectedIndex]?.is_new ||
+            dataUkerAssessment[selectedIndex]?.is_edit
+              ? payloadUkerAssessment?.attachments[0]
+              : dataUkerAssessment[selectedIndex]?.attachments
+          }
+          isEdit
+          // isEdit={
+          //   dataUkerAssessment[selectedIndex]?.is_new ||
+          //   dataUkerAssessment[selectedIndex]?.is_edit
+          // }
+          showModal={showModalAttachment}
+          handleCloseModal={handleCloseModalAttachment}
+          handleUpload={handleUploadAttachment}
+        />
       </div>
     </LandingLayoutEWPConsulting>
   );

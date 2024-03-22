@@ -11,16 +11,12 @@ import TableTree, {
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
-const RelatedProjectTable = ({
-  data,
-  handleClickDelete,
-  handleAddRelatedProject,
-}) => {
+const RelatedProjectTable = ({ data, handleClickDelete, handleClickAdd }) => {
   return (
     <TableTree>
       <Headers>
         <Header
-          width="10%"
+          width="8%"
           className="border-x border-t rounded-ss-lg cell-custom-dataTables"
         >
           <div
@@ -38,7 +34,7 @@ const RelatedProjectTable = ({
           </div>
         </Header>
         <Header
-          width="15%"
+          width="17%"
           className="border-t border-r cell-custom-dataTables"
         >
           <div className="custom-table-header text-sm font-semibold">
@@ -61,29 +57,35 @@ const RelatedProjectTable = ({
       {data?.length ? (
         <Rows
           items={data}
-          render={({ matrix_id, judul, project_id, tipe, jenis }) => (
+          render={({ id, project_name, project_id, ref_tipe, ref_jenis }) => (
             <Row>
-              <Cell width="10%" className={`border-x ${customCell}`}>
-                <div className="custom-table-position-center">
+              <Cell width="8%" className={`border-x ${customCell}`}>
+                <div className="custom-table-position-center justify-center">
                   <ButtonIcon
                     icon={<ButtonDelete />}
-                    handleClick={() => handleClickDelete(matrix_id)}
+                    handleClick={() => handleClickDelete(id)}
                   />
                 </div>
               </Cell>
               <Cell width="45%" className={`border-r ${customCell}`}>
-                <div className="custom-table-position-center">{judul}</div>
+                <div className="custom-table-position-center">
+                  {project_name}
+                </div>
               </Cell>
-              <Cell width="15%" className={`border-r ${customCell}`}>
+              <Cell width="17%" className={`border-r ${customCell}`}>
                 <div className="custom-table-position-center">
                   {project_id?.toUpperCase()}
                 </div>
               </Cell>
               <Cell width="15%" className={`border-r ${customCell}`}>
-                <div className="custom-table-position-center">{tipe}</div>
+                <div className="custom-table-position-center">
+                  {ref_tipe?.nama}
+                </div>
               </Cell>
               <Cell width="15%" className={`border-r ${customCell}`}>
-                <div className="custom-table-position-center">{jenis}</div>
+                <div className="custom-table-position-center">
+                  {ref_jenis?.nama}
+                </div>
               </Cell>
             </Row>
           )}
@@ -103,7 +105,7 @@ const RelatedProjectTable = ({
             }
             text={"Proyek Terkait"}
             textColor={"purple"}
-            handler={handleAddRelatedProject}
+            handler={handleClickAdd}
           />
         </div>
       </div>

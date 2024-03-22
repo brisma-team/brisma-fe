@@ -3,7 +3,7 @@ import { CardContentHeaderFooter } from "@/components/molecules/commons";
 
 const ModalDescription = ({ data, showModal, handleCloseModal }) => {
   return (
-    <ModalScroll showModal={showModal}>
+    <ModalScroll showModal={showModal} positionCenter>
       <div className="w-[37rem] relative h-full">
         <div className="flex flex-col gap-4">
           <div className="flex items-center">

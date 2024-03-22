@@ -4,7 +4,7 @@ import { token } from "@atlaskit/tokens";
 const Card = ({ children, hoverBorderColor }) => {
   return (
     <div
-      className="py-2 w-full rounded flex flex-col items-center h-full"
+      className="py-2 w-full rounded flex flex-col items-center h-full bg-white"
       style={{
         color: token("color.text", N800),
         borderRadius: "10px",

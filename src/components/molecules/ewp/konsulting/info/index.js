@@ -4,6 +4,7 @@ import RealizationTable from "./RealizationTable";
 import RelatedProjectTable from "./RelatedProjectTable";
 import UkerAssessmentTable from "./UkerAssessmentTable";
 import InfoPAT from "./InfoPAT";
+import ModalAddRelatedProject from "./ModalAddRelatedProject";
 
 export {
   ProjectDetail,
@@ -12,4 +13,5 @@ export {
   RelatedProjectTable,
   UkerAssessmentTable,
   InfoPAT,
+  ModalAddRelatedProject,
 };

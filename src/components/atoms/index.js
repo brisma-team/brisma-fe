@@ -43,6 +43,7 @@ import InformationDetail from "./InformationDetail";
 import ModalScroll from "./ModalScroll";
 import ButtonIconBack from "./ButtonIconBack";
 import UploadFileButton from "./UploadFileButton";
+import MainLayout from "./MainLayout";
 
 export {
   AvatarDefaultExample,
@@ -90,4 +91,5 @@ export {
   ModalScroll,
   ButtonIconBack,
   UploadFileButton,
+  MainLayout,
 };
