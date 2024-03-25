@@ -4,6 +4,8 @@ import useMonitoringPeluangList from "./useMonitoringPeluangList";
 import useRekomendasiList from "./useRekomendasiList";
 import useTindakLanjutRekomendasi from "./useTindakLanjutRekomendasi";
 import useApprovalRPM from "./useApprovalRPM";
+import useDocument from "./useDocument";
+import useWorkflow from "./useWorkflow";
 
 export {
   useOverviewRPMKonsulting,
@@ -12,4 +14,6 @@ export {
   useRekomendasiList,
   useTindakLanjutRekomendasi,
   useApprovalRPM,
+  useDocument,
+  useWorkflow,
 };
