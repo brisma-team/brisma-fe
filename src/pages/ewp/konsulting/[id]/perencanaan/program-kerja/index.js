@@ -78,12 +78,13 @@ const index = () => {
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [expansionMap, setExpansionMap] = useState({});
+  const [currentContentStage, setCurrentContentStage] = useState(1);
   const [showModalLingkupPemeriksaan, setShowModalLingkupPemeriksaan] =
     useState(false);
   const [showModalRisk, setShowModalRisk] = useState(false);
   const [showModalControl, setShowModalControl] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
-  const [currentContentStage, setCurrentContentStage] = useState(1);
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
 
   const [selectedId, setSelectedId] = useState("");
   const [selectedLingkupPemeriksaan, setSelectedLingkupPemeriksaan] =
@@ -152,6 +153,9 @@ const index = () => {
         path: `${pathName}/anggaran`,
       },
     ]);
+    setIsCloseSubmodule(
+      Boolean(projectDetail?.data?.realisasi?.penyusunan_mapa_real_end)
+    );
   }, [projectDetail]);
 
   useEffect(() => {
@@ -615,6 +619,7 @@ const index = () => {
             <div className="px-4 py-2 w-full">
               <TablePemeriksaan
                 data={dataPemeriksaan}
+                withoutButton={isCloseSubmodule}
                 pathName={`/ewp/konsulting/${id}/perencanaan/program-kerja`}
                 expansionMap={expansionMap}
                 handleSelectedLingkupPemeriksaan={

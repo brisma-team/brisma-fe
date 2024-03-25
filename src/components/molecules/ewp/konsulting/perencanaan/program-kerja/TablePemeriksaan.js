@@ -24,6 +24,7 @@ const positionCenter = `w-full h-full flex justify-center items-center`;
 
 const TablePemeriksaan = ({
   data,
+  withoutButton,
   pathName,
   expansionMap,
   handleSelectedLingkupPemeriksaan,
@@ -101,24 +102,29 @@ const TablePemeriksaan = ({
                 <CustomCheckbox
                   handleChange={(e) => handleClickReview(e, id, role)}
                   value={is_review}
+                  isDisabled={withoutButton}
                 />
               </Cell>
               <Cell
                 width="8%"
                 className="border-r cell-custom-dataTables justify-center"
               >
-                <ButtonIcon
-                  icon={<ButtonDelete />}
-                  handleClick={async () => {
-                    if ((await role) === "parent") {
-                      handleClickDeleteLingkupPemeriksaan(id);
-                    } else if (role === "parent-child") {
-                      handleClickDeleteRisk(id);
-                    } else {
-                      handleClickDeleteControl(id);
-                    }
-                  }}
-                />
+                {!withoutButton ? (
+                  <ButtonIcon
+                    icon={<ButtonDelete />}
+                    handleClick={async () => {
+                      if ((await role) === "parent") {
+                        handleClickDeleteLingkupPemeriksaan(id);
+                      } else if (role === "parent-child") {
+                        handleClickDeleteRisk(id);
+                      } else {
+                        handleClickDeleteControl(id);
+                      }
+                    }}
+                  />
+                ) : (
+                  ""
+                )}
               </Cell>
               <Cell
                 width="49%"
@@ -153,7 +159,7 @@ const TablePemeriksaan = ({
                         : ""
                     }`}</div>
                     {role !== "child" ? (
-                      <>
+                      !withoutButton ? (
                         <ButtonIcon
                           icon={<Image src={ImageGroup} alt="" />}
                           handleClick={() => {
@@ -171,7 +177,9 @@ const TablePemeriksaan = ({
                             }
                           }}
                         />
-                      </>
+                      ) : (
+                        ""
+                      )
                     ) : (
                       ""
                     )}
