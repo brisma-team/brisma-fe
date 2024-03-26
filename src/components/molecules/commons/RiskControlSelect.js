@@ -17,17 +17,17 @@ const RiskControlSelect = ({
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState(false);
 
-  const { riskControl, riskControlMutate } = useRiskControl("list", {
-    keyword,
+  const { riskControl, riskControlMutate } = useRiskControl("all", {
+    search: keyword,
   });
 
   useEffect(() => {
     if (riskControl?.data?.length) {
       const mapping = riskControl?.data?.map((v) => {
-        const { kode, nama } = v;
+        const { kode, nama, abbr } = v;
         return {
-          label: v.nama,
-          value: { kode, nama },
+          label: `${abbr} - ${nama}`,
+          value: { kode, nama, abbr },
         };
       });
       setOptions(mapping);
@@ -38,7 +38,7 @@ const RiskControlSelect = ({
   }, [riskControl, search]);
 
   useEffect(() => {
-    if (value.length > 2) {
+    if (value.length > 1) {
       const handleSearch = () => {
         setKeyword(value);
         setSearch(true);
@@ -55,7 +55,7 @@ const RiskControlSelect = ({
   }, [value]);
 
   function handleInputChange(e) {
-    if (e.length > 2) {
+    if (e.length > 1) {
       setValue(e);
     } else {
       setOptions([]);

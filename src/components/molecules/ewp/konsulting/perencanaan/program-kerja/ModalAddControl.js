@@ -8,13 +8,15 @@ import {
 } from "@/components/atoms";
 import { IconClose, IconPlus } from "@/components/icons";
 import {
+  CustomSelect,
   ModalFooter,
-  PekerjaSelect,
   RiskControlSelect,
 } from "@/components/molecules/commons";
+import { useEffect } from "react";
 
 const ModalAddControl = ({
   data,
+  dataPIC,
   validation,
   selectedRisk,
   showModal,
@@ -25,7 +27,9 @@ const ModalAddControl = ({
   handleCloseModal,
   handleSubmit,
 }) => {
-  console.log("payloadControl => ", data);
+  useEffect(() => {
+    console.log("data => ", data);
+  }, [data]);
   return (
     <ModalScroll
       showModal={showModal}
@@ -39,13 +43,14 @@ const ModalAddControl = ({
           <TextInput value={selectedRisk} isDisabled />
           {data?.length
             ? data?.map((v, i) => {
-                console.log("v => ", v);
                 return (
                   <div className="w-full flex gap-3" key={i}>
                     <div className="w-1/2">
                       <RiskControlSelect
                         selectedValue={
-                          v?.kode ? { label: v?.nama, value: v } : null
+                          v?.kode
+                            ? { label: `${v?.abbr} - ${v?.nama}`, value: v }
+                            : null
                         }
                         customIcon={
                           <ButtonIcon
@@ -70,7 +75,8 @@ const ModalAddControl = ({
                       )}
                     </div>
                     <div className="w-1/2">
-                      <PekerjaSelect
+                      <CustomSelect
+                        optionValue={dataPIC}
                         selectedValue={
                           v?.pn_pic
                             ? {

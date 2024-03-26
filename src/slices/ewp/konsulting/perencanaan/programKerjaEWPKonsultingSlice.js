@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   objDataPemeriksaan: [],
   objDataRingkasan: [],
+  objDataPicControl: [],
   objPayloadLingkupPemeriksaan: {},
   objPayloadRisk: {},
   objPayloadControl: [],
@@ -20,6 +21,9 @@ export const programKerjaEWPKonsultingSlice = createSlice({
     },
     setObjDataRingkasan: (state, action) => {
       state.objDataRingkasan = action.payload;
+    },
+    setObjDataPicControl: (state, action) => {
+      state.objDataPicControl = action.payload;
     },
     setObjPayloadLingkupPemeriksaan: (state, action) => {
       state.objPayloadLingkupPemeriksaan = action.payload;
@@ -45,6 +49,9 @@ export const programKerjaEWPKonsultingSlice = createSlice({
     resetObjDataRingkasan: (state) => {
       state.objDataRingkasan = [];
     },
+    resetObjDataPicControl: (state) => {
+      state.objDataPicControl = [];
+    },
     resetObjPayloadLingkupPemeriksaan: (state) => {
       state.objPayloadLingkupPemeriksaan = {};
     },
@@ -69,6 +76,7 @@ export const programKerjaEWPKonsultingSlice = createSlice({
 export const {
   setObjDataPemeriksaan,
   setObjDataRingkasan,
+  setObjDataPicControl,
   setObjPayloadLingkupPemeriksaan,
   setObjPayloadRisk,
   setObjPayloadControl,
@@ -77,6 +85,7 @@ export const {
   setValidationErrorsControl,
   resetObjDataPemeriksaan,
   resetObjDataRingkasan,
+  resetObjDataPicControl,
   resetObjPayloadLingkupPemeriksaan,
   resetObjPayloadRisk,
   resetObjPayloadControl,

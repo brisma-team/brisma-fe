@@ -19,11 +19,11 @@ const PekerjaSelect = ({
   const [value, setValue] = useState("");
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState(false);
-  const { pekerja, pekerjaMutate } = usePekerja(keyword, "skai");
+  const { pekerja, pekerjaMutate } = usePekerja(keyword);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (search) {
+    if (pekerja?.data?.length) {
       const mappedPekerja = pekerja?.data?.map((row) => {
         return {
           label: `${row?.pn} - ${row?.name}`,
@@ -31,7 +31,10 @@ const PekerjaSelect = ({
         };
       });
       setOptions(mappedPekerja);
+    } else {
+      setOptions([]);
     }
+    setSearch(false);
   }, [pekerja, search]);
 
   useEffect(() => {

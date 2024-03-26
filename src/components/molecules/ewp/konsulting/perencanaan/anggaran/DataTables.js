@@ -15,6 +15,7 @@ const DataTables = ({
   handleClickAdd,
   handleClickDelete,
   handleClickUpdate,
+  withoutButtonAction,
 }) => {
   return (
     <div className="dataTables-custom">
@@ -68,17 +69,21 @@ const DataTables = ({
                 width="8%"
                 className="border-x cell-custom-dataTables flex justify-center"
               >
-                <div className="flex justify-center items-center gap-1">
-                  <ButtonIcon
-                    icon={<ButtonEdit />}
-                    handleClick={() => handleClickUpdate(id)}
-                    color={"yellow"}
-                  />
-                  <ButtonIcon
-                    icon={<ButtonDelete />}
-                    handleClick={() => handleClickDelete(id)}
-                  />
-                </div>
+                {!withoutButtonAction ? (
+                  <div className="flex justify-center items-center gap-1">
+                    <ButtonIcon
+                      icon={<ButtonEdit />}
+                      handleClick={() => handleClickUpdate(id)}
+                      color={"yellow"}
+                    />
+                    <ButtonIcon
+                      icon={<ButtonDelete />}
+                      handleClick={() => handleClickDelete(id)}
+                    />
+                  </div>
+                ) : (
+                  ""
+                )}
               </Cell>
               <Cell width="25%" className="border-r cell-custom-dataTables">
                 {tipe_anggaran_name}
@@ -121,19 +126,23 @@ const DataTables = ({
           )}
         />
       </TableTree>
-      <div className="w-full border rounded-ee-lg rounded-es-lg">
-        <div className="w-52 p-2">
-          <ButtonField
-            iconAfter={
-              <div className="text-atlasian-purple">
-                <IconPlus size="medium" />
-              </div>
-            }
-            text={"Tambah Anggaran"}
-            textColor={"purple"}
-            handler={handleClickAdd}
-          />
-        </div>
+      <div className="w-full border rounded-ee-lg rounded-es-lg min-h-[1.3rem]">
+        {!withoutButtonAction ? (
+          <div className="w-52 p-2 ">
+            <ButtonField
+              iconAfter={
+                <div className="text-atlasian-purple">
+                  <IconPlus size="medium" />
+                </div>
+              }
+              text={"Tambah Anggaran"}
+              textColor={"purple"}
+              handler={handleClickAdd}
+            />
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

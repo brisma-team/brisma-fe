@@ -11,6 +11,7 @@ import {
   PrevNextNavigation,
 } from "@/components/molecules/commons";
 import { fetchApi, loadingSwal, usePostFileData } from "@/helpers";
+import useUser from "@/data/useUser";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -40,7 +41,10 @@ const index = () => {
   const [attachmentClipList, setAttachmentClipList] = useState([]);
   const [typeUpload, setTypeUpload] = useState("");
   const [content, setContent] = useState("");
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
 
+  const { user } = useUser();
   const { projectDetail } = useProjectDetail({ id });
   const { sumberInformasi, sumberInformasiMutate } = useSumberInformasi({ id });
 
@@ -62,7 +66,16 @@ const index = () => {
         path: `${baseUrl}/perencanaan/sumber-informasi`,
       },
     ]);
-  }, [projectDetail]);
+
+    setIsCloseSubmodule(
+      Boolean(projectDetail?.data?.realisasi?.penyusunan_mapa_real_end)
+    );
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+  }, [projectDetail, user]);
 
   useEffect(() => {
     setContent(sumberInformasi?.data || "");
@@ -141,27 +154,32 @@ const index = () => {
               data={imageClipList}
               handleChange={handleUploadFile}
               handleClick={handleClickUploadImage}
+              isHideButton={!(isInitiator && !isCloseSubmodule)}
             />
             <AttachmentClipping
               data={attachmentClipList}
               handleChange={handleUploadFile}
               handleClick={handleClickUploadAttachment}
+              isHideButton={!(isInitiator && !isCloseSubmodule)}
             />
           </div>
           <div>
             <div className="ckeditor-latar-belakang-mapa-ewp">
               <Editor
                 contentData={content}
-                disabled={false}
-                ready={true}
+                ready
                 onChange={(value) => setContent(value)}
               />
             </div>
-            <div className="mt-3 flex justify-end">
-              <div className="w-[7.75rem] bg-atlasian-green rounded">
-                <ButtonField text={"Simpan"} handler={handleSubmit} />
+            {isInitiator && !isCloseSubmodule ? (
+              <div className="mt-3 flex justify-end">
+                <div className="w-[7.75rem] bg-atlasian-green rounded">
+                  <ButtonField text={"Simpan"} handler={handleSubmit} />
+                </div>
               </div>
-            </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

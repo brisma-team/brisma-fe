@@ -1,4 +1,10 @@
-import { Breadcrumbs, ButtonField, Card, PageTitle } from "@/components/atoms";
+import {
+  Breadcrumbs,
+  ButtonField,
+  Card,
+  ErrorValidation,
+  PageTitle,
+} from "@/components/atoms";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
@@ -17,9 +23,15 @@ import {
   CardMemberTeam,
   CardTeam,
 } from "@/components/molecules/ewp/konsulting/perencanaan/tim-timeplan";
-import { fetchApi, loadingSwal, setErrorValidation } from "@/helpers";
+import {
+  convertIntegerToDecimal,
+  fetchApi,
+  loadingSwal,
+  setErrorValidation,
+} from "@/helpers";
 import _ from "lodash";
 import timTimeplanEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/perencanaan/timTimeplanEWPKonsultingSchema";
+import useUser from "@/data/useUser";
 
 const routes = [
   {
@@ -42,6 +54,8 @@ const index = () => {
   const pathName = `${baseUrl}/perencanaan`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
 
   const payload = useSelector(
     (state) => state.timTimePlanEWPKonsulting.objData
@@ -50,6 +64,7 @@ const index = () => {
     (state) => state.timTimePlanEWPKonsulting.validationErrors
   );
 
+  const { user } = useUser();
   const { projectDetail } = useProjectDetail({ id });
   const { timTimeplan, timTimeplanMutate, timTimeplanError } = useTimTimeplan({
     id,
@@ -73,6 +88,9 @@ const index = () => {
         path: `${pathName}tim-timeplan`,
       },
     ]);
+    setIsCloseSubmodule(
+      Boolean(projectDetail?.data?.realisasi?.penyusunan_mapa_real_end)
+    );
   }, [projectDetail]);
 
   useEffect(() => {
@@ -107,7 +125,7 @@ const index = () => {
               pn,
               nama,
               is_initiator,
-              mandays,
+              mandays: convertIntegerToDecimal(mandays).decimal,
               deskripsi,
             };
           })
@@ -121,10 +139,16 @@ const index = () => {
           ata: mappingATA,
         })
       );
+      setIsInitiator(
+        Boolean(
+          projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+        )
+      );
     } else {
       dispatch(resetObjData());
+      setIsInitiator(false);
     }
-  }, [timTimeplan, projectDetail]);
+  }, [timTimeplan, projectDetail, user]);
 
   const handleAddObjectInsideArray = (property) => {
     const newTimAudit = [...payload[property]];
@@ -184,11 +208,21 @@ const index = () => {
     const validate = setErrorValidation(payload, dispatch, schemaMapping);
 
     if (validate) {
+      const mappingATA = payload.ata.map((v) => {
+        return {
+          ..._.omit(v, ["mandays"]),
+          mandays: convertIntegerToDecimal(v?.mandays).integer,
+        };
+      });
+      const objPayload = {
+        ..._.omit(payload, ["ata"]),
+        ata: mappingATA,
+      };
       loadingSwal();
       await fetchApi(
         "POST",
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/tim_audit/${id}`,
-        { tim_audit: _.omit(payload, ["initiator"]) }
+        { tim_audit: _.omit(objPayload, ["initiator"]) }
       );
       timTimeplanMutate();
       loadingSwal("close");
@@ -223,8 +257,10 @@ const index = () => {
             isDisabled
           />
           <CardTeam
+            isUserSKAI
             data={payload}
             validation={validation}
+            withoutButton={!isInitiator && !isCloseSubmodule}
             property={"auditor"}
             title={"P.I.C Auditor"}
             textColorTitle={"text-atlasian-blue-light"}
@@ -235,6 +271,7 @@ const index = () => {
           <CardTeam
             data={payload}
             validation={validation}
+            withoutButton={!isInitiator && !isCloseSubmodule}
             property={"auditee"}
             title={"P.I.C Auditee"}
             textColorTitle={"text-atlasian-red"}
@@ -246,18 +283,31 @@ const index = () => {
         <div className="p-5 w-full">
           <Card>
             <div className="px-4 py-2 flex flex-col gap-4 w-full">
-              <div className="bg-atlasian-purple rounded w-fit">
-                <ButtonField
-                  text={"Tambah Anggota Tim"}
-                  handler={() => handleAddObjectInsideArray("ata")}
+              {isInitiator && !isCloseSubmodule ? (
+                <div className="bg-atlasian-purple rounded w-fit">
+                  <ButtonField
+                    text={"Tambah Anggota Tim"}
+                    handler={() => handleAddObjectInsideArray("ata")}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
+              {validation["ata"] ? (
+                <ErrorValidation
+                  className={"mt-3"}
+                  message={validation["ata"]}
                 />
-              </div>
+              ) : (
+                ""
+              )}
               <CardMemberTeam
                 title={"Anggota Tim Audit"}
                 textColorTitle={"text-atlasian-green"}
                 property={"ata"}
                 data={payload}
                 validation={validation}
+                withoutButton={!isInitiator && !isCloseSubmodule}
                 handleDelete={handleDeleteObjectInsideArray}
                 handleChangeSelect={handleChangeSelectValueObjectInsideArray}
                 handleChangeText={handleChangeTextValueObjectInsideArray}
@@ -266,11 +316,15 @@ const index = () => {
           </Card>
         </div>
       </Card>
-      <div className="mt-3 flex justify-end">
-        <div className="w-36 bg-atlasian-green rounded">
-          <ButtonField text={"Simpan"} handler={handleSubmit} />
+      {isInitiator && !isCloseSubmodule ? (
+        <div className="mt-3 flex justify-end">
+          <div className="w-36 bg-atlasian-green rounded">
+            <ButtonField text={"Simpan"} handler={handleSubmit} />
+          </div>
         </div>
-      </div>
+      ) : (
+        ""
+      )}
       {/* End Content */}
     </LandingLayoutEWPConsulting>
   );

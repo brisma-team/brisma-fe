@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import {
   setObjDataPemeriksaan,
   setObjDataRingkasan,
+  setObjDataPicControl,
   setObjPayloadLingkupPemeriksaan,
   setObjPayloadRisk,
   setObjPayloadControl,
@@ -19,6 +20,7 @@ import {
   setValidationErrorsControl,
   resetObjDataPemeriksaan,
   resetObjDataRingkasan,
+  resetObjDataPicControl,
   resetObjPayloadLingkupPemeriksaan,
   resetObjPayloadRisk,
   resetObjPayloadControl,
@@ -51,6 +53,8 @@ import {
   addControlSchema,
 } from "@/helpers/schemas/ewp/konsulting/perencanaan/programKerjaEWPKonsultingSchema";
 import _ from "lodash";
+import useUser from "@/data/useUser";
+import { useTimTimeplan } from "@/data/ewp/konsulting/perencanaan/tim-timeplan";
 
 const routes = [
   {
@@ -85,6 +89,7 @@ const index = () => {
   const [showModalControl, setShowModalControl] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
 
   const [selectedId, setSelectedId] = useState("");
   const [selectedLingkupPemeriksaan, setSelectedLingkupPemeriksaan] =
@@ -110,6 +115,9 @@ const index = () => {
   const dataRingkasan = useSelector(
     (state) => state.programKerjaEWPKonsulting.objDataRingkasan
   );
+  const dataPIC = useSelector(
+    (state) => state.programKerjaEWPKonsulting.objDataPicControl
+  );
   const payloadLingkupPemeriksaan = useSelector(
     (state) => state.programKerjaEWPKonsulting.objPayloadLingkupPemeriksaan
   );
@@ -130,10 +138,14 @@ const index = () => {
     (state) => state.programKerjaEWPKonsulting.validationErrorsControl
   );
 
+  const { user } = useUser();
   const { projectDetail } = useProjectDetail({ id });
   const { lingkupPemeriksaan, lingkupPemeriksaanMutate } =
     useLingkupPemeriksaan({ id, ...params });
   const { ringkasan } = useRingkasan({ id, ...params });
+  const { timTimeplan, timTimeplanError } = useTimTimeplan({
+    id,
+  });
 
   useEffect(() => {
     setBreadcrumbs([
@@ -156,10 +168,16 @@ const index = () => {
     setIsCloseSubmodule(
       Boolean(projectDetail?.data?.realisasi?.penyusunan_mapa_real_end)
     );
-  }, [projectDetail]);
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+  }, [projectDetail, user]);
 
   useEffect(() => {
     if (lingkupPemeriksaan?.data?.length) {
+      console.log("lingkupPemeriksaan?.data => ", lingkupPemeriksaan?.data);
       const mappingLingkupPemeriksaan = lingkupPemeriksaan?.data?.map(
         (parent) => {
           return {
@@ -173,7 +191,8 @@ const index = () => {
                     id: parent_child?.id,
                     risk: {
                       kode: parent_child?.ref_risk_issue_kode,
-                      nama: parent_child?.ref_risk_issue_name,
+                      abbr: parent_child?.mtd_risk_issue?.abbr,
+                      nama: parent_child?.mtd_risk_issue?.nama,
                     },
                     is_review: parent_child?.is_review,
                     role: "parent-child",
@@ -183,6 +202,7 @@ const index = () => {
                             id: child?.id,
                             control: {
                               kode: child?.mtd_control_kode,
+                              abbr: child?.mtd_control?.abbr,
                               nama: child?.mtd_control?.nama,
                             },
                             is_review: child?.is_review,
@@ -227,6 +247,41 @@ const index = () => {
   }, [ringkasan]);
 
   useEffect(() => {
+    if (!timTimeplanError) {
+      const timAuditInfo = timTimeplan?.data?.tim_audit;
+      const mappingAuditor = timAuditInfo?.auditor?.length
+        ? timAuditInfo?.auditor?.map((v) => {
+            const { pn, nama } = v;
+            return {
+              pn,
+              nama,
+            };
+          })
+        : [];
+
+      const mappingATA = timAuditInfo?.ata?.length
+        ? timAuditInfo?.ata?.map((v) => {
+            const { pn, nama } = v;
+            return {
+              pn,
+              nama,
+            };
+          })
+        : [];
+
+      const mergeMapping = [...mappingAuditor, ...mappingATA];
+      const mapping = mergeMapping?.length
+        ? mergeMapping?.map((v) => {
+            return { label: v?.nama, value: { pn: v?.pn, name: v?.nama } };
+          })
+        : [];
+      dispatch(setObjDataPicControl(mapping));
+    } else {
+      dispatch(resetObjDataPicControl());
+    }
+  }, [timTimeplan]);
+
+  useEffect(() => {
     const handleSearch = () => {
       setParams(filter);
     };
@@ -246,6 +301,7 @@ const index = () => {
               const { control, pic } = v;
               return {
                 kode: control?.kode,
+                abbr: control?.abbr,
                 nama: control?.nama,
                 pn_pic: pic?.pn,
                 nama_pic: pic?.nama,
@@ -441,7 +497,7 @@ const index = () => {
 
   const handleAddSelectControl = () => {
     const updatedData = [...payloadControl];
-    updatedData.push({ kode: "", nama: "" });
+    updatedData.push({ kode: "", nama: "", abbr: "" });
     dispatch(setObjPayloadControl(updatedData));
   };
 
@@ -451,6 +507,7 @@ const index = () => {
       ...newData[index],
       kode: value.kode,
       nama: value.nama,
+      abbr: value.abbr,
     };
     newData[index] = updatedData;
     dispatch(setObjPayloadControl(newData));
@@ -619,7 +676,9 @@ const index = () => {
             <div className="px-4 py-2 w-full">
               <TablePemeriksaan
                 data={dataPemeriksaan}
-                withoutButton={isCloseSubmodule}
+                user={user?.data}
+                isInitiator={isInitiator}
+                withoutButton={!(isInitiator && !isCloseSubmodule)}
                 pathName={`/ewp/konsulting/${id}/perencanaan/program-kerja`}
                 expansionMap={expansionMap}
                 handleSelectedLingkupPemeriksaan={
@@ -666,6 +725,7 @@ const index = () => {
       />
       <ModalAddControl
         data={payloadControl}
+        dataPIC={dataPIC}
         showModal={showModalControl}
         selectedRisk={selectedRisk}
         validation={validationErrorsControl}

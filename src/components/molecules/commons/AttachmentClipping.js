@@ -1,7 +1,12 @@
 import { Card, DivButton, UploadFileButton } from "@/components/atoms";
 import { copyToClipboard } from "@/helpers";
 
-const AttachmentClipping = ({ data, handleChange, handleClick }) => {
+const AttachmentClipping = ({
+  data,
+  handleChange,
+  handleClick,
+  isHideButton,
+}) => {
   return (
     <div className="h-fit">
       <Card>
@@ -28,14 +33,18 @@ const AttachmentClipping = ({ data, handleChange, handleClick }) => {
               ""
             )}
           </div>
-          <div className="mt-4 py-2 bg-none w-full justify-start">
-            <UploadFileButton
-              text={"Tambah Lampiran +"}
-              className={"text-atlasian-purple text-sm"}
-              handleChange={handleChange}
-              handleClick={handleClick}
-            />
-          </div>
+          {!isHideButton ? (
+            <div className="mt-4 py-2 bg-none w-full justify-start">
+              <UploadFileButton
+                text={"Tambah Lampiran +"}
+                className={"text-atlasian-purple text-sm"}
+                handleChange={handleChange}
+                handleClick={handleClick}
+              />
+            </div>
+          ) : (
+            ""
+          )}
           {/* End Kliping Lampiran */}
         </div>
       </Card>

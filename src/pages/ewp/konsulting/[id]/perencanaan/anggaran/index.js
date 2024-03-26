@@ -30,6 +30,7 @@ import {
   useDetailAnggaran,
 } from "@/data/ewp/konsulting/perencanaan/anggaran";
 import anggaranEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/perencanaan/anggaranEWPKonsultingSchema";
+import useUser from "@/data/useUser";
 
 const routes = [
   {
@@ -53,6 +54,8 @@ const index = () => {
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
   const [typeModal, setTypeModal] = useState("");
   const [selectedId, setSelectedId] = useState("");
 
@@ -64,6 +67,7 @@ const index = () => {
     (state) => state.anggaranEWPKonsulting.validationErrors
   );
 
+  const { user } = useUser();
   const { projectDetail } = useProjectDetail({ id });
   const { anggaran, anggaranMutate } = useAnggaran({ id });
   const { detailAnggaran } = useDetailAnggaran({ id: selectedId });
@@ -86,6 +90,14 @@ const index = () => {
         path: `${pathName}/anggaran`,
       },
     ]);
+    setIsCloseSubmodule(
+      Boolean(projectDetail?.data?.realisasi?.penyusunan_mapa_real_end)
+    );
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
   }, [projectDetail]);
 
   useEffect(() => {
@@ -244,6 +256,7 @@ const index = () => {
               handleClickAdd={handleClickAddTable}
               handleClickUpdate={handleClickUpdateTable}
               handleClickDelete={handleClickDeleteTable}
+              withoutButtonAction={!(isInitiator && !isCloseSubmodule)}
             />
           </div>
         </Card>
