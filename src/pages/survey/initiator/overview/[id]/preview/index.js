@@ -103,7 +103,7 @@ const index = () => {
                   tipe_pertanyaan_kode: question.tipe_pertanyaan_kode,
                   tipe_pertanyaan_name: question.tipe_pertanyaan_name,
                   uraian: question.uraian,
-                  is_need_deskripsi: false,
+                  is_need_deskripsi: question.is_need_deskripsi,
                   bobot: question.bobot,
                   deskripsi_jawaban: "",
                   jawaban_user: [],
@@ -121,6 +121,8 @@ const index = () => {
             : [],
         };
       });
+
+      console.log("mapping => ", mapping);
 
       dispatch(setPayloadKuesioner(mapping));
     } else {
@@ -219,8 +221,8 @@ const index = () => {
           <TabKuesioner
             data={payloadKuesioner}
             dataInformasi={payloadInformasi}
-            isPreviewPage={true}
-            isDownload={true}
+            isPreviewPage
+            isDownload
             handleClickOpenModalGuidelines={handleClickOpenModalGuidelines}
             handleChangeAnswer={handleChangeAnswer}
           />

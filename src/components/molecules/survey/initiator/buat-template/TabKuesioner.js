@@ -52,6 +52,7 @@ const TabKuesioner = ({
               isPreviewPage={isPreviewPage}
               isDisabled={!data.length}
               isDisabledForm={isDisabledForm}
+              isDownload={isDownload}
               handleChangeQuestion={handleChangeQuestion}
               handleDeleteQuestion={handleDeleteQuestion}
               handleClickOpenModalAddQuestion={handleClickOpenModalAddQuestion}

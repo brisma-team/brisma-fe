@@ -9,6 +9,7 @@ const CardCategoryQuestion = ({
   isPreviewPage,
   isDisabled,
   isDisabledForm,
+  isDownload,
   handleChangeQuestion,
   handleDeleteQuestion,
   handleClickOpenModalAddQuestion,
@@ -60,6 +61,7 @@ const CardCategoryQuestion = ({
                     data={kuesioner}
                     isPreviewPage={isPreviewPage}
                     isDisabledForm={isDisabledForm}
+                    isDownload={isDownload}
                     handleChangeQuestion={handleChangeQuestion}
                     handleDeleteQuestion={handleDeleteQuestion}
                     handleChangeAnswer={handleChangeAnswer}

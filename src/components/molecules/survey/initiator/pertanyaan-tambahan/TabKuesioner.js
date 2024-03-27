@@ -1,5 +1,6 @@
 import { Card, InformationDetail } from "@/components/atoms";
 import CardCategoryQuestion from "./CardCategoryQuestion";
+import { useEffect } from "react";
 
 const TabKuesioner = ({
   data,
@@ -18,6 +19,9 @@ const TabKuesioner = ({
   handleClickOpenModalAddQuestion,
   handleClickOpenModalGuidelines,
 }) => {
+  useEffect(() => {
+    console.log("data => ", data);
+  }, [data]);
   return (
     <div className="flex flex-col" id="content-doc">
       {isDownload ? (

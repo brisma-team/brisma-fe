@@ -46,6 +46,7 @@ const TabKuesioner = ({
               indexCategory={i}
               isPreviewPage={isPreviewPage}
               isDisabled={isDisabledForm}
+              isDownload={isDownload}
               data={category_quesioner}
               handleChangeAnswer={handleChangeAnswer}
               handleSaveAnswerPerCategory={handleSaveAnswerPerCategory}

@@ -112,11 +112,14 @@ const TableResponden = ({
                 keterangan,
                 is_edit,
                 is_new,
+                is_disabled,
               }) => (
                 <Row>
                   <Cell width="9%" className={`border-x ${customCell}`}>
                     <div className="custom-table-position-center justify-center">
-                      {is_new ? (
+                      {is_disabled ? (
+                        ""
+                      ) : is_new ? (
                         <ButtonIcon
                           icon={
                             <Image

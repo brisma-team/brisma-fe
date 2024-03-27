@@ -296,6 +296,8 @@ const index = () => {
         };
       });
 
+      console.log("mapping => ", mapping);
+
       dispatch(setPayloadKuesioner(mapping));
     } else {
       dispatch(resetPayloadKuesioner());

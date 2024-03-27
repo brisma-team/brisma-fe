@@ -9,6 +9,7 @@ const CardCategoryQuestion = ({
   isPreviewPage,
   isDisabled,
   isDisabledForm,
+  isDownload,
   handleChangeQuestion,
   handleDeleteQuestion,
   handleClickOpenModalAddQuestion,
@@ -61,6 +62,7 @@ const CardCategoryQuestion = ({
                     isPreviewPage={isPreviewPage}
                     isDisabled={isDisabledForm}
                     isDisabledForm={isDisabledForm}
+                    isDownload={isDownload}
                     totalQuestionPerCategory={data?.pertanyaan?.length}
                     handleChangeQuestion={handleChangeQuestion}
                     handleDeleteQuestion={handleDeleteQuestion}

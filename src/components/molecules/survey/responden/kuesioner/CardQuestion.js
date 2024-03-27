@@ -13,6 +13,7 @@ const CardQuestion = ({
   indexCategory,
   indexQuestion,
   isDisabled,
+  isDownload,
   data,
   totalQuestionPerCategory,
   handleChangeAnswer,
@@ -42,7 +43,11 @@ const CardQuestion = ({
             </p>
           </div>
         </div>
-        <div className="flex flex-col gap-4 px-4 py-3 justify-center border-r-2 w-full">
+        <div
+          className={`flex flex-col gap-4 px-4 py-3 ${
+            !isDownload ? "border-r-2" : ""
+          } w-full`}
+        >
           <p className="text-xl font-bold">
             {capitalizeEveryWord(data.tipe_pertanyaan_name)}
           </p>
@@ -118,27 +123,33 @@ const CardQuestion = ({
                           />
                         </div>
                       ) : data.tipe_pertanyaan_kode == "4" ? (
-                        <div className="w-10">
-                          <TextInputDecimal
-                            style={{
-                              fontWeight: "bold",
-                              textAlign: "center",
-                              borderRadius: 4,
-                            }}
-                            maxLength={100}
-                            value={data?.jawaban_user?.[0]?.text ?? null}
-                            isDisabled={isDisabled}
-                            onChange={(value) =>
-                              handleChangeAnswer(
-                                data.tipe_pertanyaan_kode,
-                                value,
-                                indexCategory,
-                                indexQuestion,
-                                indexAnswer
-                              )
-                            }
-                          />
-                        </div>
+                        isDownload ? (
+                          <div className="w-14 h-14 border-neutral-200 border-2 rounded-lg flex items-center justify-center">
+                            {data?.jawaban_user?.[0]?.text}
+                          </div>
+                        ) : (
+                          <div className="w-10">
+                            <TextInputDecimal
+                              style={{
+                                fontWeight: "bold",
+                                textAlign: "center",
+                                borderRadius: 4,
+                              }}
+                              maxLength={100}
+                              value={data?.jawaban_user?.[0]?.text ?? null}
+                              isDisabled={isDisabled}
+                              onChange={(value) =>
+                                handleChangeAnswer(
+                                  data.tipe_pertanyaan_kode,
+                                  value,
+                                  indexCategory,
+                                  indexQuestion,
+                                  indexAnswer
+                                )
+                              }
+                            />
+                          </div>
+                        )
                       ) : (
                         ""
                       )}
@@ -206,20 +217,41 @@ const CardQuestion = ({
           ) : (
             ""
           )}
+          {isDownload ? (
+            <DivButton
+              className={"-mx-4 p-4 border-t-2 border-neutral-200"}
+              handleClick={() =>
+                handleClickOpenModalGuidelines(indexCategory, indexQuestion)
+              }
+            >
+              <p className="text-sm font-semibold">Guidelines</p>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: data.guideline,
+                }}
+              />
+            </DivButton>
+          ) : (
+            ""
+          )}
         </div>
-        <DivButton
-          className={"flex w-48 flex-col p-3"}
-          handleClick={() =>
-            handleClickOpenModalGuidelines(indexCategory, indexQuestion)
-          }
-        >
-          <p className="text-sm font-semibold">Guidelines</p>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: data.guideline,
-            }}
-          />
-        </DivButton>
+        {!isDownload ? (
+          <DivButton
+            className={"flex w-48 flex-col p-3"}
+            handleClick={() =>
+              handleClickOpenModalGuidelines(indexCategory, indexQuestion)
+            }
+          >
+            <p className="text-sm font-semibold">Guidelines</p>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: data.guideline,
+              }}
+            />
+          </DivButton>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
