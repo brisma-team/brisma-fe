@@ -3,11 +3,11 @@ import withTokenFetcher from "@/fetchers/withTokenFetcher";
 import useSWR from "swr";
 
 export default function useRiskControl(type, params) {
-  const { search, limit } = params;
+  const { search } = params;
   let query = "";
   switch (type) {
     case "all":
-      query = `/all?search=${search}&limit=${limit}`;
+      query = `/all?search=${search}`;
       break;
     case "list":
       query = `/all`;

@@ -3,7 +3,7 @@ import PopupKlipping from "./PopupKlipping";
 import { copyToClipboard } from "@/helpers";
 import Image from "next/image";
 
-const ImageClipping = ({ data, handleChange, handleClick }) => {
+const ImageClipping = ({ data, handleChange, handleClick, isHideButton }) => {
   return (
     <div className="h-fit">
       <Card>
@@ -34,16 +34,20 @@ const ImageClipping = ({ data, handleChange, handleClick }) => {
                 })
               : ""}
           </div>
-          <div className="mt-4 py-2 bg-none w-full justify-start">
-            <UploadFileButton
-              text={"Tambah Kliping +"}
-              fileAccept={"image/png, image/gif, image/jpeg"}
-              className={"text-atlasian-purple text-sm"}
-              handleChange={handleChange}
-              handleClick={handleClick}
-              type={"image"}
-            />
-          </div>
+          {!isHideButton ? (
+            <div className="mt-4 py-2 bg-none w-full justify-start">
+              <UploadFileButton
+                text={"Tambah Kliping +"}
+                fileAccept={"image/png, image/gif, image/jpeg"}
+                className={"text-atlasian-purple text-sm"}
+                handleChange={handleChange}
+                handleClick={handleClick}
+                type={"image"}
+              />
+            </div>
+          ) : (
+            ""
+          )}
           {/* End Kliping Gambar */}
         </div>
       </Card>

@@ -1,31 +1,49 @@
 import usePekerja from "@/data/usePekerja";
 import React, { useEffect, useState } from "react";
-import Select from "react-select";
-import { Controller } from "react-hook-form";
 import _ from "lodash";
+import Select, { components } from "@atlaskit/select";
 
-const UserSKAISelect = ({ control, change }) => {
+const UserSKAISelect = ({
+  handleChange,
+  isSearchable,
+  placeholder,
+  selectedValue,
+  fieldsProps,
+  customIcon,
+  isDisabled,
+  className,
+  positionAbsolute,
+  width,
+}) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState("");
-  const [params, setParams] = useState("");
-  const { pekerja, pekerjaMutate } = usePekerja(params);
+  const [keyword, setKeyword] = useState("");
+  const [search, setSearch] = useState(false);
+  const { pekerja, pekerjaMutate } = usePekerja(keyword, "skai");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const mappedPekerja = pekerja?.data?.map((row) => {
-      return {
-        ...row,
-        label: `${row?.pn} - ${row.name}`,
-        value: row?.pn,
-      };
-    });
-    setOptions(mappedPekerja);
-  }, [pekerja]);
+    if (pekerja?.data?.length) {
+      const mappedPekerja = pekerja?.data?.map((row) => {
+        return {
+          ...row,
+          label: `${row?.pn} - ${row.name}`,
+          value: { pn: row?.pn, name: row?.name, jabatan: row?.jabatan },
+        };
+      });
+      setOptions(mappedPekerja);
+    } else {
+      setOptions([]);
+    }
+    setSearch(false);
+  }, [pekerja, search]);
 
   useEffect(() => {
-    if (value > 2) {
+    if (value?.length > 2) {
       const handleSearch = () => {
-        setParams(value);
-        pekerjaMutate;
+        setSearch(true);
+        setKeyword(value);
+        pekerjaMutate();
       };
       const debouncedSearch = _.debounce(handleSearch, 400);
       debouncedSearch();
@@ -43,24 +61,43 @@ const UserSKAISelect = ({ control, change }) => {
     }
   }
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const DropdownIndicator = (props) => {
+    return (
+      <components.DropdownIndicator {...props}>
+        {customIcon && customIcon}
+      </components.DropdownIndicator>
+    );
+  };
+
   return (
-    <Controller
-      control={control}
-      name="pn"
-      render={({ field: { onChange, onBlur, value } }) => (
-        <Select
-          options={options}
-          onChange={(e) => {
-            onChange(e);
-            change(e);
-          }}
-          onBlur={onBlur}
-          value={value}
-          onInputChange={(e) => handleInputChange(e)}
-          isClearable
-        />
-      )}
-    />
+    <div
+      className={`${positionAbsolute && open ? `z-50 absolute` : ``} ${
+        width && width
+      }`}
+    >
+      <Select
+        {...fieldsProps}
+        placeholder={placeholder}
+        options={options}
+        onChange={handleChange}
+        isSearchable={isSearchable}
+        value={selectedValue}
+        onInputChange={handleInputChange}
+        components={customIcon && { DropdownIndicator }}
+        isDisabled={isDisabled}
+        className={className}
+        onMenuOpen={positionAbsolute && handleOpen}
+        onMenuClose={positionAbsolute && handleClose}
+      />
+    </div>
   );
 };
 

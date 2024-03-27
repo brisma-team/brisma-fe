@@ -24,6 +24,9 @@ const positionCenter = `w-full h-full flex justify-center items-center`;
 
 const TablePemeriksaan = ({
   data,
+  user,
+  isInitiator,
+  withoutButton,
   pathName,
   expansionMap,
   handleSelectedLingkupPemeriksaan,
@@ -98,27 +101,40 @@ const TablePemeriksaan = ({
                 width="8%"
                 className="border-x cell-custom-dataTables justify-center"
               >
-                <CustomCheckbox
-                  handleChange={(e) => handleClickReview(e, id, role)}
-                  value={is_review}
-                />
+                {isInitiator ? (
+                  <CustomCheckbox
+                    handleChange={(e) => handleClickReview(e, id, role)}
+                    value={is_review}
+                  />
+                ) : user?.pn === pic?.pn && role === "child" ? (
+                  <CustomCheckbox
+                    handleChange={(e) => handleClickReview(e, id, role)}
+                    value={is_review}
+                  />
+                ) : (
+                  ""
+                )}
               </Cell>
               <Cell
                 width="8%"
                 className="border-r cell-custom-dataTables justify-center"
               >
-                <ButtonIcon
-                  icon={<ButtonDelete />}
-                  handleClick={async () => {
-                    if ((await role) === "parent") {
-                      handleClickDeleteLingkupPemeriksaan(id);
-                    } else if (role === "parent-child") {
-                      handleClickDeleteRisk(id);
-                    } else {
-                      handleClickDeleteControl(id);
-                    }
-                  }}
-                />
+                {!withoutButton ? (
+                  <ButtonIcon
+                    icon={<ButtonDelete />}
+                    handleClick={async () => {
+                      if ((await role) === "parent") {
+                        handleClickDeleteLingkupPemeriksaan(id);
+                      } else if (role === "parent-child") {
+                        handleClickDeleteRisk(id);
+                      } else {
+                        handleClickDeleteControl(id);
+                      }
+                    }}
+                  />
+                ) : (
+                  ""
+                )}
               </Cell>
               <Cell
                 width="49%"
@@ -147,13 +163,13 @@ const TablePemeriksaan = ({
                       lingkup_pemeriksaan
                         ? lingkup_pemeriksaan
                         : risk
-                        ? `${risk?.kode} - ${risk?.nama}`
+                        ? `${risk?.abbr} - ${risk?.nama}`
                         : control
-                        ? `${control?.kode} - ${control?.nama}`
+                        ? `${control?.abbr} - ${control?.nama}`
                         : ""
                     }`}</div>
                     {role !== "child" ? (
-                      <>
+                      !withoutButton ? (
                         <ButtonIcon
                           icon={<Image src={ImageGroup} alt="" />}
                           handleClick={() => {
@@ -171,7 +187,9 @@ const TablePemeriksaan = ({
                             }
                           }}
                         />
-                      </>
+                      ) : (
+                        ""
+                      )
                     ) : (
                       ""
                     )}
@@ -207,19 +225,23 @@ const TablePemeriksaan = ({
           )}
         />
       </TableTree>
-      <div className="w-full border rounded-ee-lg rounded-es-lg">
-        <div className="w-fit p-2">
-          <ButtonField
-            iconAfter={
-              <div className="text-atlasian-purple">
-                <IconPlus size="medium" />
-              </div>
-            }
-            text={"Tambah Lingkup Pemeriksaan"}
-            textColor={"purple"}
-            handler={handleClickAddLingkupPemeriksaan}
-          />
-        </div>
+      <div className="w-full border rounded-ee-lg rounded-es-lg min-h-[1.3rem]">
+        {!withoutButton ? (
+          <div className="w-fit p-2">
+            <ButtonField
+              iconAfter={
+                <div className="text-atlasian-purple">
+                  <IconPlus size="medium" />
+                </div>
+              }
+              text={"Tambah Lingkup Pemeriksaan"}
+              textColor={"purple"}
+              handler={handleClickAddLingkupPemeriksaan}
+            />
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
