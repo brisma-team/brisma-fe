@@ -75,6 +75,7 @@ const index = () => {
   const [isAddNewRowUkerPn, setIsAddNewRowUkerPn] = useState(false);
   const [isDisabledSaveRespondenPnByUker, setIsDisabledSaveRespondenPnByUker] =
     useState(false);
+  const [isDisabledCheckAll, setIsDisabledCheckAll] = useState(false);
   const [isRefreshWorkflow, setIsRefreshWorkflow] = useState(false);
 
   const [showModalApproval, setShowModalApproval] = useState(false);
@@ -206,7 +207,13 @@ const index = () => {
     if (respondenByPnSurvey?.data?.length) {
       const filterData = respondenByPnSurvey.data.filter((v) => v.is_active);
       const mapping = filterData.map((responden, index) => {
-        const { id, pn_responden, nama_responden, keterangan } = responden;
+        const {
+          id,
+          pn_responden,
+          nama_responden,
+          keterangan,
+          status_persetujuan,
+        } = responden;
         return {
           index,
           id,
@@ -215,6 +222,7 @@ const index = () => {
           keterangan,
           is_edit: false,
           is_new: false,
+          is_disabled: Boolean(status_persetujuan === "Final"),
         };
       });
       dispatch(setDataTables({ ...dataTables, respondenPn: mapping }));
@@ -264,13 +272,20 @@ const index = () => {
 
       const mappingSelectedResponden =
         respondenByUkerPnSurvey?.data?.responden?.map((responden, index) => {
-          const { pn_responden, nama_responden } = responden;
+          const { pn_responden, nama_responden, status_persetujuan } =
+            responden;
           return {
             index,
             pn_responden,
             nama_responden,
+            is_disabled: Boolean(status_persetujuan === "Final"),
           };
         });
+
+      const disabledCheckAll = mappingSelectedResponden?.some(
+        (item) => item.is_disabled
+      );
+      setIsDisabledCheckAll(Boolean(disabledCheckAll));
 
       dispatch(
         setDataTables({
@@ -280,6 +295,7 @@ const index = () => {
       );
       dispatch(setPayloadNewRespondenPnByUker(mappingSelectedResponden));
     } else {
+      setIsDisabledCheckAll(false);
       dispatch(setDataTables({ ...dataTables, respondenUkerPn: [] }));
       dispatch(resetPayloadNewRespondenPnByUker());
     }
@@ -724,6 +740,7 @@ const index = () => {
                       ? statusApprovalResponden !== "On Progress"
                       : statusApproval !== "On Progress"
                   }
+                  withoutButtonDelete={statusApproval === "Final"}
                   handleChangeTextUker={handleChangeTextUker}
                   handleChangeUker={handleChangeUker}
                   handleClickAddRow={handleClickAddRowUker}
@@ -740,6 +757,7 @@ const index = () => {
                       ? statusApprovalResponden !== "On Progress"
                       : statusApproval !== "On Progress"
                   }
+                  isDisabledCheckAll={isDisabledCheckAll}
                   isDisabledButtonSave={isDisabledSaveRespondenPnByUker}
                   handleChangeChecbox={handleChangeChecboxByUkerPn}
                   handleClickSelectedAll={handleClickSelectedAllRespondenPn}

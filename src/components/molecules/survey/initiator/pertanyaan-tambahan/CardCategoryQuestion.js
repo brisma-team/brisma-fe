@@ -70,6 +70,7 @@ const CardCategoryQuestion = ({
                     isDisabledForm={isDisabledForm}
                     isDisabledBobot={isDisabledBobot}
                     isDisabledDescriptionAnswer={isDisabledDescriptionAnswer}
+                    totalQuestion={data?.pertanyaan?.length}
                     handleChangeQuestion={handleChangeQuestion}
                     handleDeleteQuestion={handleDeleteQuestion}
                     handleChangeAnswer={handleChangeAnswer}

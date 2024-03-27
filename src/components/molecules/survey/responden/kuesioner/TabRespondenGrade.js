@@ -42,7 +42,7 @@ const TabRespondenGrade = ({ data }) => {
         index: index + 1,
         pn_responden: responden.pn_responden,
         name_responden: responden.nama_responden,
-        tanggal: convertDate(responden.createdAt, "-", "d"),
+        tanggal: responden.createdAt,
         pertanyaan_jawaban: pertanyaan_jawaban,
       };
     });

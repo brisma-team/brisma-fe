@@ -7,6 +7,7 @@ const CardCategoryQuestion = ({
   indexCategory,
   isPreviewPage,
   isDisabled,
+  isDownload,
   data,
   handleChangeAnswer,
   handleClickOpenModalGuidelines,
@@ -55,6 +56,7 @@ const CardCategoryQuestion = ({
                     indexCategory={indexCategory}
                     indexQuestion={idx}
                     isDisabled={isDisabled}
+                    isDownload={isDownload}
                     data={kuesioner}
                     totalQuestionPerCategory={data?.pertanyaan?.length}
                     handleChangeAnswer={handleChangeAnswer}

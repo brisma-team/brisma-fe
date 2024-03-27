@@ -28,6 +28,7 @@ const TableUker = ({
   isDisabled,
   newUker,
   selectedUkerId,
+  withoutButtonDelete,
   handleClickAddRow,
   handleClickSave,
   handleClickDelete,
@@ -133,7 +134,7 @@ const TableUker = ({
                             isChecked={findIndex === index}
                             handleChange={() => handleSelectedUker(id)}
                           />
-                          {!isDisabled ? (
+                          {!withoutButtonDelete && !isDisabled ? (
                             <ButtonIcon
                               icon={<ButtonDelete />}
                               handleClick={() => handleClickDelete(id)}

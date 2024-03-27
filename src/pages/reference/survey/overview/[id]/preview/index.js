@@ -202,9 +202,9 @@ const index = () => {
             </div>
           </div>
           <TabKuesioner
-            isPreviewPage={true}
-            isDisabledForm={true}
-            isDownload={is_print}
+            isPreviewPage
+            isDisabledForm
+            isDownload
             dataKuesioner={payloadKuesioner}
             dataInformasi={payloadInformasi}
             handleClickOpenModalGuidelines={handleClickOpenModalGuidelines}

@@ -25,6 +25,7 @@ const CardQuestion = ({
   isDisabledForm,
   isDisabledBobot,
   isDisabledDescriptionAnswer,
+  totalQuestion,
   handleChangeQuestion,
   handleDeleteQuestion,
   handleChangeAnswer,
@@ -48,7 +49,7 @@ const CardQuestion = ({
       >
         <div className="py-2 px-4 w-full h-full flex items-center">
           <p className="text-base font-semibold">
-            Pertanyaan : {indexQuestion + 1}/4
+            Pertanyaan : {indexQuestion + 1}/{totalQuestion || 0}
           </p>
         </div>
         {!isPreviewPage && !data?.is_default ? (
@@ -120,7 +121,7 @@ const CardQuestion = ({
             </div>
           )}
         </div>
-        <div className="flex flex-col gap-4 px-4 py-3 justify-center border-r-2 w-full">
+        <div className="flex flex-col gap-4 px-4 py-3 border-r-2 w-full">
           <p className="text-xl font-bold">
             {capitalizeEveryWord(data.tipe_pertanyaan_name)}
           </p>

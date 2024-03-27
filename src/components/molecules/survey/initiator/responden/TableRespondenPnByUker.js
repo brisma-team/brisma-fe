@@ -10,12 +10,14 @@ import TableTree, {
   Row,
   Rows,
 } from "@atlaskit/table-tree";
+import { useEffect } from "react";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
 const TableRespondenPnByUker = ({
   data,
   isDisabled,
+  isDisabledCheckAll,
   selectedResponden,
   selectedUkerId,
   isDisabledButtonSave,
@@ -23,6 +25,12 @@ const TableRespondenPnByUker = ({
   handleClickSelectedAll,
   handleChangeChecbox,
 }) => {
+  useEffect(() => {
+    console.log("data => ", data);
+  }, [data]);
+  useEffect(() => {
+    console.log("selectedResponden => ", selectedResponden);
+  }, [selectedResponden]);
   return (
     <CardContentHeaderFooter
       header={
@@ -66,7 +74,7 @@ const TableRespondenPnByUker = ({
               <div className="custom-table-header justify-center">
                 <CheckboxField
                   handleChange={(e) => handleClickSelectedAll(e)}
-                  isDisabled={isDisabled}
+                  isDisabled={isDisabled || isDisabledCheckAll}
                 />
               </div>
             </Header>
@@ -107,7 +115,13 @@ const TableRespondenPnByUker = ({
                             nama_responden,
                           })
                         }
-                        isDisabled={isDisabled}
+                        isDisabled={
+                          isDisabled ||
+                          selectedResponden?.find(
+                            (responden) =>
+                              responden?.pn_responden === pn_responden
+                          )?.is_disabled
+                        }
                       />
                     </div>
                   </Cell>
