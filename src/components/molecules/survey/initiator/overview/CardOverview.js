@@ -77,7 +77,7 @@ const CardOverview = ({
         handleChangeRespondenSurvey(null, data.id, data.status_kode),
       isDisabled: !(
         (isAdmin || isInitiator) &&
-        [3, 4, 5, 8].includes(data.status_kode)
+        [3, 4, 5, 8].includes(parseInt(data.status_kode))
       ),
     },
     {
