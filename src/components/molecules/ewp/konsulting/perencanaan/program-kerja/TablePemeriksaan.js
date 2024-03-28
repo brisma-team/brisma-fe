@@ -225,7 +225,7 @@ const TablePemeriksaan = ({
           )}
         />
       </TableTree>
-      <div className="w-full border rounded-ee-lg rounded-es-lg min-h-[1.3rem]">
+      <div className="w-full border rounded-ee-lg rounded-es-lg min-h-[2rem]">
         {!withoutButton ? (
           <div className="w-fit p-2">
             <ButtonField

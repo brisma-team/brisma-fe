@@ -28,7 +28,10 @@ const ModalWorkflowHeader = ({
   isApprover = user?.pn == data?.on_approver?.pn;
 
   useEffect(() => {
-    if (data?.ref_tim_audit_approver?.length && withSigner) {
+    if (
+      data?.ref_tim_audit_approver?.filter((v) => v?.pn)?.length &&
+      withSigner
+    ) {
       const mappingSigners = data?.ref_tim_audit_approver?.map((v) => {
         const { pn, nama } = v;
         return { label: `${v.pn} - ${v.nama}`, value: { pn, name: nama } };

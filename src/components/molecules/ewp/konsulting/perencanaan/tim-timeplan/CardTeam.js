@@ -62,7 +62,7 @@ const CardTeam = ({
                                     handleClick={() =>
                                       handleDelete(i, property)
                                     }
-                                    isDisabled={isDisabled}
+                                    isDisabled={isDisabled || v?.is_initiator}
                                   />
                                 ) : (
                                   ""
@@ -72,7 +72,7 @@ const CardTeam = ({
                                 handleChangeSelect(property, i, e.value)
                               }
                               width={"w-full"}
-                              isDisabled={isDisabled}
+                              isDisabled={isDisabled || v?.is_initiator}
                             />
                           ) : (
                             <PekerjaSelect

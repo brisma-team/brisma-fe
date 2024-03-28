@@ -15,6 +15,7 @@ import {
 } from "@/components/molecules/commons";
 import { fetchApi, loadingSwal, usePostFileData } from "@/helpers";
 import { useDetailControl } from "@/data/ewp/konsulting/perencanaan/program-kerja";
+import useUser from "@/data/useUser";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -31,10 +32,15 @@ const index = () => {
   const [content, setContent] = useState("");
   const [typeUpload, setTypeUpload] = useState("");
 
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
+  const [isPIC, setIsPIC] = useState(false);
+
   const { projectDetail } = useProjectDetail({ id });
   const { detailControl, detailControlMutate } = useDetailControl({
     id: control_id,
   });
+  const { user } = useUser();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -58,11 +64,21 @@ const index = () => {
         path: `${pathName}/program-kerja/${control_id}`,
       },
     ]);
-  }, [projectDetail]);
+
+    setIsCloseSubmodule(
+      Boolean(projectDetail?.data?.realisasi?.penyusunan_mapa_real_end)
+    );
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+  }, [projectDetail, user]);
 
   useEffect(() => {
     setContent(detailControl?.data?.uraian || "");
-  }, [detailControl]);
+    setIsPIC(Boolean(detailControl?.data?.pn_pic == user?.data?.pn));
+  }, [detailControl, user]);
 
   const handleClickUploadAttachment = () => {
     setTypeUpload("attachment");
@@ -133,11 +149,13 @@ const index = () => {
             data={imageClipList}
             handleChange={handleUploadFile}
             handleClick={handleClickUploadImage}
+            isHideButton={!((isInitiator || isPIC) && !isCloseSubmodule)}
           />
           <AttachmentClipping
             data={attachmentClipList}
             handleChange={handleUploadFile}
             handleClick={handleClickUploadAttachment}
+            isHideButton={!((isInitiator || isPIC) && !isCloseSubmodule)}
           />
         </div>
         <div>
@@ -149,11 +167,15 @@ const index = () => {
               onChange={(value) => setContent(value)}
             />
           </div>
-          <div className="mt-3 flex justify-end">
-            <div className="w-[7.75rem] bg-atlasian-green rounded">
-              <ButtonField text={"Simpan"} handler={handleSubmit} />
+          {(isInitiator || isPIC) && !isCloseSubmodule ? (
+            <div className="mt-3 flex justify-end">
+              <div className="w-[7.75rem] bg-atlasian-green rounded">
+                <ButtonField text={"Simpan"} handler={handleSubmit} />
+              </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
       {/* End Content */}

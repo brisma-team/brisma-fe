@@ -319,7 +319,7 @@ const index = () => {
     } else {
       dispatch(resetWorkflowData());
     }
-  }, [workflowDetailEWP]);
+  }, [workflowDetailEWP, showModalApproval]);
   // [ END ]
 
   const handleClickComment = (babIdx) => {
@@ -328,6 +328,11 @@ const index = () => {
   };
 
   // [ START ] function untuk Modal Workflow
+  const handleCloseModalWorkflow = () => {
+    dispatch(resetWorkflowData());
+    workflowDetailEWPMutate();
+  };
+
   const handleAdd = (property) => {
     const newData = [...workflowData[property]];
     newData.push({
@@ -597,6 +602,7 @@ const index = () => {
             handleAdd={handleAdd}
             handleChangeSelect={handleChangeSelect}
             handleChangeText={handleChangeText}
+            handleCloseModal={handleCloseModalWorkflow}
             withSigner
           />
         </div>

@@ -63,10 +63,10 @@ const TableRingkasan = ({ data }) => {
                 {lingkup_pemeriksaan}
               </Cell>
               <Cell width="21%" className="border-r cell-custom-dataTables">
-                {risk?.kode + " - " + risk?.nama}
+                {risk?.abbr + " - " + risk?.nama}
               </Cell>
               <Cell width="21%" className="border-r cell-custom-dataTables">
-                {control?.kode + " - " + control?.nama}
+                {control?.abbr + " - " + control?.nama}
               </Cell>
               <Cell
                 width="12%"

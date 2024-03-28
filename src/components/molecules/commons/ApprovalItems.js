@@ -7,7 +7,7 @@ const ApprovalItems = ({ title, text, data }) => {
 
   if (["Maker", "P.I.C", "P.I.C Auditor", "Proposer"].includes(title) && text) {
     allSigned = true;
-  } else if (title === "Signer" && text?.length) {
+  } else if (title === "Signer" && text?.filter((v) => v?.pn)?.length) {
     allSigned = true;
   } else {
     const checkSigned =
@@ -34,7 +34,7 @@ const ApprovalItems = ({ title, text, data }) => {
       {!text || !text?.length ? (
         <div className="font-brisma text-base my-0.5">-</div>
       ) : Array.isArray(text) ? (
-        text.map((v, i) => {
+        text?.map((v, i) => {
           return (
             <div
               key={i}

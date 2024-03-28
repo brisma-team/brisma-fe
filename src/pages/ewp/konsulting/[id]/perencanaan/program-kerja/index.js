@@ -177,7 +177,6 @@ const index = () => {
 
   useEffect(() => {
     if (lingkupPemeriksaan?.data?.length) {
-      console.log("lingkupPemeriksaan?.data => ", lingkupPemeriksaan?.data);
       const mappingLingkupPemeriksaan = lingkupPemeriksaan?.data?.map(
         (parent) => {
           return {
@@ -233,10 +232,10 @@ const index = () => {
           lingkup_pemeriksaan:
             v?.mapa_uker_mcr?.lingkup_pemeriksaan?.judul_lingkup_pemeriksaan,
           risk: {
-            kode: v?.mapa_uker_mcr?.ref_risk_issue_kode,
-            nama: v?.mapa_uker_mcr?.ref_risk_issue_name,
+            abbr: v?.mapa_uker_mcr?.mtd_risk_issue?.abbr,
+            nama: v?.mapa_uker_mcr?.mtd_risk_issue?.nama,
           },
-          control: { kode: v?.mtd_control_kode, nama: v?.mtd_control?.nama },
+          control: { abbr: v?.mtd_control?.abbr, nama: v?.mtd_control?.nama },
           uraian: v?.uraian,
         };
       });
