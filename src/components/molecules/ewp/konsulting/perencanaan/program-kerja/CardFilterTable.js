@@ -20,7 +20,7 @@ const CardFilterTable = ({
                 icon={
                   <ButtonIcon
                     handleClick={() => handleReset("judul_lingkup")}
-                    icon={<IconClose size="large" />}
+                    icon={<IconClose />}
                   />
                 }
                 onChange={(e) =>
@@ -33,7 +33,7 @@ const CardFilterTable = ({
                 icon={
                   <ButtonIcon
                     handleClick={() => handleReset("pn_pic")}
-                    icon={<IconClose size="large" />}
+                    icon={<IconClose />}
                   />
                 }
                 onChange={(e) => handleChangeText("pn_pic", e.target.value)}
