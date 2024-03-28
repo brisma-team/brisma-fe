@@ -37,7 +37,10 @@ const index = () => {
   const dispatch = useDispatch();
   const { id, simulasi_id } = useRouter().query;
 
-  const arrTotalResponden = [];
+  const arrTotalResponden = [
+    { label: 1, value: 1 },
+    { label: 5, value: 5 },
+  ];
   for (let i = 1; i <= 10; i++) {
     const fixedResult = i * 10;
     arrTotalResponden.push({ label: fixedResult, value: fixedResult });
@@ -95,10 +98,6 @@ const index = () => {
       );
     }
   }, [information]);
-
-  useEffect(() => {
-    console.log("payloadInformasi => ", payloadInformasi);
-  }, [payloadInformasi]);
 
   useEffect(() => {
     if (!answerSimulasiError) {
@@ -207,7 +206,7 @@ const index = () => {
                     ? question?.simulasi_jawaban?.map((answer) => {
                         const { text } = answer;
                         const bobot = question?.template_jawaban?.find(
-                          (value) => value?.jawaban_id == answer?.jawaban_id
+                          (value) => value?.id == answer?.jawaban_id
                         )?.bobot;
                         return {
                           jawaban_id: answer?.jawaban_id,
