@@ -38,6 +38,11 @@ import {
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useWorkflowDetailEWP } from "@/data/ewp";
+import {
+  anggaranHtml,
+  programKerjaHtml,
+  timTimeplanHtml,
+} from "@/templates/ewp/konsulting/perencanaan";
 
 const routes = [
   {
@@ -61,10 +66,10 @@ const index = () => {
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [listContent, setListContent] = useState([
-    { idx: 1, total_comment: 0, title: "Sumber Informasi" },
-    { idx: 2, total_comment: 0, title: "Tim & Timeplan" },
-    { idx: 3, total_comment: 0, title: "Anggaran" },
-    { idx: 4, total_comment: 0, title: "Program Kerja" },
+    // { idx: 1, total_comment: 0, title: "Sumber Informasi" },
+    // { idx: 2, total_comment: 0, title: "Tim & Timeplan" },
+    // { idx: 3, total_comment: 0, title: "Anggaran" },
+    // { idx: 4, total_comment: 0, title: "Program Kerja" },
   ]);
   const [listComment, setListComment] = useState([]);
 
@@ -167,6 +172,8 @@ const index = () => {
         };
       });
       setListContent(mapping);
+    } else {
+      setListContent([]);
     }
   }, [documentEWP]);
 
@@ -199,8 +206,8 @@ const index = () => {
       const isAtBottom =
         parentContainer.scrollTop + parentContainer.clientHeight ===
         parentContainer.scrollHeight;
-      if (isAtBottom && hitEndpointCount <= 10) {
-        setHitEndpointCount((prev) => Math.min(prev + 1, 10));
+      if (isAtBottom && hitEndpointCount <= 4) {
+        setHitEndpointCount((prev) => Math.min(prev + 1, 4));
       }
     }
   };
@@ -251,7 +258,6 @@ const index = () => {
   useEffect(() => {
     if (documentEWP?.data && listContent?.length) {
       const findBab = listContent?.find((value) => value?.idx === bab);
-      console.log(findBab);
       setDoc((prev) => [
         ...prev,
         {
@@ -262,6 +268,10 @@ const index = () => {
       ]);
     }
   }, [documentEWP, listContent]);
+
+  useEffect(() => {
+    console.log("listContent => ", listContent);
+  }, [listContent]);
 
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
@@ -442,6 +452,10 @@ const index = () => {
   };
   // [ END ]
 
+  useEffect(() => {
+    console.log("doc => ", doc);
+  }, [doc]);
+
   // [ START ] COMMENT
   const handleSubmitCommentParent = async (e, value) => {
     e.stopPropagation();
@@ -552,7 +566,18 @@ const index = () => {
                         </div>
                         <div
                           className="mt-4"
-                          dangerouslySetInnerHTML={{ __html: v.content }}
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              v?.idx === 1
+                                ? v.content
+                                : v?.idx === 2
+                                ? timTimeplanHtml(v?.content?.tim)
+                                : v?.idx === 3
+                                ? anggaranHtml(v?.content?.anggaran)
+                                : v?.idx === 4
+                                ? programKerjaHtml(v?.content?.lingkup)
+                                : "",
+                          }}
                         />
                       </div>
                     )}
