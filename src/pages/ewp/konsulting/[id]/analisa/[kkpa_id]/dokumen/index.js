@@ -54,7 +54,7 @@ const index = () => {
   const { id, kkpa_id } = useRouter().query;
   const baseUrl = `/ewp/konsulting/${id}`;
   const pathNameSubModulAnalisa = `${baseUrl}/analisa`;
-  const pathNameLandingPage = `${baseUrl}/analisa/lingkup/${kkpa_id}`;
+  const pathNameLandingPage = `${pathNameSubModulAnalisa}/${kkpa_id}`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [listContent, setListContent] = useState([
@@ -109,7 +109,7 @@ const index = () => {
       },
       {
         name: `Analisa Lingkup Konsulting`,
-        path: `${pathNameSubModulAnalisa}/lingkup`,
+        path: pathNameSubModulAnalisa,
       },
       {
         name: `Kertas Kerja`,

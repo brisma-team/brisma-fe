@@ -39,4 +39,14 @@ const scheduleNonPATSchema = yup.object().shape({
   url_file_surat: yup.string().required("Wajib diisi"),
 });
 
-export { schedulePATSchema, summaryPATSchema, scheduleNonPATSchema };
+const relatedProjectNonPATSchema = yup.object().shape({
+  project_id: yup.string().required("Wajib diisi"),
+  project_name: yup.string().required("Wajib diisi"),
+});
+
+export {
+  schedulePATSchema,
+  summaryPATSchema,
+  scheduleNonPATSchema,
+  relatedProjectNonPATSchema,
+};

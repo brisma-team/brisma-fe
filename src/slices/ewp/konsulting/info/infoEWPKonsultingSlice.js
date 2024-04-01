@@ -2,7 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   objDataInfoPAT: {},
-  objPayloadRelatedProject: {},
+  objPayloadRelatedProject: {
+    project_id: "",
+    project_name: "",
+    is_new: true,
+  },
   objPayloadUkerAssessment: {
     branch: "",
     orgeh: "",
@@ -16,14 +20,13 @@ const initialState = {
     tipe_uker: "",
     deskripsi: "",
     attachments: [""],
-    // ref_auditee_orgeh_kode: "",
-    // ref_auditee_orgeh_name: "",
-    // ref_auditee_branch_kode: "",
-    // ref_auditee_branch_name: "",
-    // tipe_uker: "",
-    // attachments: [""],
-    // deskripsi: "",
   },
+  resetObjPayloadRelatedProject: {
+    project_id: "",
+    project_name: "",
+    is_new: true,
+  },
+  validationErrorsRelatedProject: {},
 };
 
 export const infoEWPKonsultingSlice = createSlice({
@@ -39,16 +42,24 @@ export const infoEWPKonsultingSlice = createSlice({
     setObjPayloadUkerAssessment: (state, action) => {
       state.objPayloadUkerAssessment = action.payload;
     },
+    setValidationErrorsRelatedProject: (state, action) => {
+      state.validationErrorsRelatedProject = action.payload;
+    },
     resetObjDataInfoPAT: (state) => {
       state.objDataInfoPAT = {};
     },
     resetObjPayloadRelatedProject: (state) => {
-      state.objPayloadRelatedProject = {};
+      state.objPayloadRelatedProject = {
+        ...state.resetObjPayloadRelatedProject,
+      };
     },
     resetObjPayloadUkerAssessment: (state) => {
       state.objPayloadUkerAssessment = {
         ...state.resetObjPayloadUkerAssessment,
       };
+    },
+    resetValidationErrorsRelatedProject: (state) => {
+      state.validationErrorsRelatedProject = {};
     },
   },
 });
@@ -57,9 +68,11 @@ export const {
   setObjDataInfoPAT,
   setObjPayloadRelatedProject,
   setObjPayloadUkerAssessment,
+  setValidationErrorsRelatedProject,
   resetObjDataInfoPAT,
   resetObjPayloadRelatedProject,
   resetObjPayloadUkerAssessment,
+  resetValidationErrorsRelatedProject,
 } = infoEWPKonsultingSlice.actions;
 
 export default infoEWPKonsultingSlice.reducer;

@@ -27,6 +27,7 @@ const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 const UkerAssessmentTable = ({
   data,
   payload,
+  withoutButton,
   handleChange,
   handleReset,
   handleClickSave,
@@ -99,35 +100,39 @@ const UkerAssessmentTable = ({
               <Row>
                 <Cell width="8%" className={`border-x ${customCell}`}>
                   <div className="custom-table-position-center justify-center gap-1">
-                    {is_new ? (
-                      <ButtonIcon
-                        icon={<ButtonSave />}
-                        handleClick={async () => await handleClickSave(false)}
-                      />
-                    ) : is_edit ? (
-                      <>
+                    {!withoutButton ? (
+                      is_new ? (
                         <ButtonIcon
                           icon={<ButtonSave />}
-                          handleClick={async () =>
-                            await handleClickSave(true, uker_id)
-                          }
+                          handleClick={async () => await handleClickSave(false)}
                         />
-                        <ButtonIcon
-                          icon={<ButtonDelete />}
-                          handleClick={() => handleClickDelete(uker_id)}
-                        />
-                      </>
+                      ) : is_edit ? (
+                        <>
+                          <ButtonIcon
+                            icon={<ButtonSave />}
+                            handleClick={async () =>
+                              await handleClickSave(true, uker_id)
+                            }
+                          />
+                          <ButtonIcon
+                            icon={<ButtonDelete />}
+                            handleClick={() => handleClickDelete(uker_id)}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <ButtonIcon
+                            icon={<ButtonEdit />}
+                            handleClick={() => handleClickEdit(index)}
+                          />
+                          <ButtonIcon
+                            icon={<ButtonDelete />}
+                            handleClick={() => handleClickDelete(uker_id)}
+                          />
+                        </>
+                      )
                     ) : (
-                      <>
-                        <ButtonIcon
-                          icon={<ButtonEdit />}
-                          handleClick={() => handleClickEdit(index)}
-                        />
-                        <ButtonIcon
-                          icon={<ButtonDelete />}
-                          handleClick={() => handleClickDelete(uker_id)}
-                        />
-                      </>
+                      ""
                     )}
                   </div>
                 </Cell>
@@ -227,18 +232,22 @@ const UkerAssessmentTable = ({
           </div>
         )}
         <div className="flex justify-end w-full border-x border-b rounded-es-xl rounded-ee-xl">
-          <div className="w-48 text-sm font-semibold p-2 my-1">
-            <ButtonField
-              iconAfter={
-                <div className="text-atlasian-purple">
-                  <IconPlus size="medium" />
-                </div>
-              }
-              text={"Tambah UKER"}
-              textColor={"purple"}
-              handler={handleClickAddUkerAssessment}
-            />
-          </div>
+          {!withoutButton ? (
+            <div className="w-48 text-sm font-semibold p-2 my-1">
+              <ButtonField
+                iconAfter={
+                  <div className="text-atlasian-purple">
+                    <IconPlus size="medium" />
+                  </div>
+                }
+                text={"Tambah UKER"}
+                textColor={"purple"}
+                handler={handleClickAddUkerAssessment}
+              />
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </TableTree>
     </div>

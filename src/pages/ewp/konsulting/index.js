@@ -20,7 +20,7 @@ import { useOverviewEWPKonsulting } from "@/data/ewp/konsulting/overview";
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
   { name: "EWP", path: "/ewp" },
-  { name: "Consulting / Overview", path: "/ewp/konsulting/overview" },
+  { name: "Consulting / Overview", path: "/ewp/konsulting" },
 ];
 
 const convertProgressAndPercent = (status) => {

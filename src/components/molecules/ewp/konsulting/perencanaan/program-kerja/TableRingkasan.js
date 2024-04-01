@@ -7,7 +7,7 @@ import TableTree, {
   Rows,
 } from "@atlaskit/table-tree";
 
-const TableRingkasan = ({ data }) => {
+const TableRingkasan = ({ data, pathName }) => {
   return (
     <div className="dataTables-custom">
       <TableTree>
@@ -79,7 +79,7 @@ const TableRingkasan = ({ data }) => {
                         URAIAN
                       </LozengeField>
                     }
-                    href={`/ewp/konsulting/overview/10/perencanaan/program-kerja/${id}`}
+                    href={`${pathName}/${id}`}
                   />
                 </div>
               </Cell>

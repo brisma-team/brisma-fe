@@ -41,7 +41,7 @@ const index = () => {
   const { id, kkpa_id } = useRouter().query;
   const baseUrl = `/ewp/konsulting/${id}`;
   const pathNameSubModulAnalisa = `${baseUrl}/analisa`;
-  const pathNameLandingPage = `${baseUrl}/analisa/lingkup/${kkpa_id}`;
+  const pathNameLandingPage = `${pathNameSubModulAnalisa}/${kkpa_id}`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
 
@@ -67,7 +67,7 @@ const index = () => {
       },
       {
         name: `Analisa Lingkup Konsulting`,
-        path: `${pathNameSubModulAnalisa}/lingkup`,
+        path: pathNameSubModulAnalisa,
       },
       {
         name: `Kertas Kerja`,
@@ -151,7 +151,7 @@ const index = () => {
       <div className="flex flex-col gap-4">
         <Card>
           <div className="w-full px-4 pb-2">
-            <p className="text-base font-bold">Daftar Penyebab</p>
+            <p className="text-base font-bold">Daftar Rekomendasi</p>
             <div className="w-full mt-2">
               <DataTables data={data} handleClickDelete={handleClickDelete} />
             </div>

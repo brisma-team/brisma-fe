@@ -8,10 +8,8 @@ import {
   ProjectDetail,
   InformativeLetter,
   RealizationTable,
-  RelatedProjectTable,
   UkerAssessmentTable,
   InfoPAT,
-  ModalAddRelatedProject,
 } from "@/components/molecules/ewp/konsulting/info";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import {
@@ -22,8 +20,8 @@ import {
   confirmationSwal,
   errorSwalTimeout,
   fetchApi,
-  infoSwal,
   loadingSwal,
+  setErrorValidation,
   usePostFileData,
 } from "@/helpers";
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
@@ -34,12 +32,17 @@ import {
   setObjDataInfoPAT,
   setObjPayloadRelatedProject,
   setObjPayloadUkerAssessment,
+  setValidationErrorsRelatedProject,
   resetObjDataInfoPAT,
   resetObjPayloadRelatedProject,
   resetObjPayloadUkerAssessment,
+  resetValidationErrorsRelatedProject,
 } from "@/slices/ewp/konsulting/info/infoEWPKonsultingSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useActivitySchedule } from "@/data/pat";
+import TableRelatedProject from "@/components/molecules/ewp/konsulting/overview/sub-modal/non-pat/TableRelatedProject";
+import { relatedProjectNonPATSchema } from "@/helpers/schemas/ewp/konsulting/overview/projectOverviewEWPKonsultingSchema";
+import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -51,8 +54,11 @@ const index = () => {
     { idx: 3, title: "UKER Assessment" },
     { idx: 4, title: "Info PAT" },
   ];
+  const [isInitiator, setIsInitiator] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isAddNewRowUker, setIsAddNewRowUker] = useState(false);
+  const [isAddNewRowRelatedProject, setIsAddNewRowRelatedProject] =
+    useState(false);
   const [currentContentStage, setCurrentContentStage] = useState(1);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [patId, setPatId] = useState(0);
@@ -60,10 +66,10 @@ const index = () => {
   const [dataTables, setDataTables] = useState([]);
   const [dataRelatedProject, setDataRelatedProject] = useState([]);
   const [dataUkerAssessment, setDataUkerAssessment] = useState([]);
-  const [showModalRelatedProject, setShowModalRelatedProject] = useState(false);
   const [showModalDescription, setShowModalDescription] = useState(false);
   const [showModalAttachment, setShowModalAttachment] = useState(false);
 
+  const { user } = useUser();
   const { projectDetail, projectDetailError, projectDetailMutate } =
     useProjectDetail({ id });
   const { relatedProjectInfo, relatedProjectInfoMutate } =
@@ -83,6 +89,9 @@ const index = () => {
   );
   const payloadUkerAssessment = useSelector(
     (state) => state.infoEWPKonsulting.objPayloadUkerAssessment
+  );
+  const validationRelatedProject = useSelector(
+    (state) => state.infoEWPKonsulting.validationErrorsRelatedProject
   );
 
   const breadcrumbs = [
@@ -161,7 +170,12 @@ const index = () => {
         url: `/ewp/konsulting/${id}/wrapup`,
       },
     ]);
-  }, [projectDetail]);
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn == user?.data?.pn
+      )
+    );
+  }, [projectDetail, user]);
 
   useEffect(() => {
     if (projectDetailError) {
@@ -272,31 +286,6 @@ const index = () => {
     router.push(`/ewp/konsulting/${id}/log`);
   };
 
-  // [ START ] handler for related project table
-  const handleClickAddRelatedProject = () => {
-    setShowModalRelatedProject(true);
-  };
-
-  const handleClickDeleteRelatedProject = async (id) => {
-    const confirm = await confirmationSwal(
-      "Apakah Anda yakin ingin menghapus data ini?"
-    );
-    if (!confirm.value) {
-      return;
-    }
-
-    loadingSwal();
-    await fetchApi(
-      "DELETE",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/project_terkait/${id}`,
-      {}
-    );
-
-    relatedProjectInfoMutate();
-    loadingSwal("close");
-  };
-  // [ END ] handler for related project table
-
   // [ START ] handler for modal description
   const handleClickDescription = (index) => {
     setSelectedIndex(index);
@@ -351,8 +340,6 @@ const index = () => {
         file: e.target.files[0],
         modul: "pat",
       });
-
-      console.log("response?.url => ", response?.url);
 
       dispatch(
         setObjPayloadUkerAssessment({
@@ -461,36 +448,80 @@ const index = () => {
   // [ END ] handler for uker assessment table
 
   // [ START ] handler for modal related project
-  const handleClickRowRelatedProject = (ref_ewp_id) => {
-    dispatch(setObjPayloadRelatedProject({ ref_ewp_id }));
+  const handleSubmitRelatedProject = async () => {
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/project_terkait/${id}`,
+      _.map(dataRelatedProject, ({ project_id, project_name }) => ({
+        project_id,
+        project_name,
+      }))
+    );
+    loadingSwal("close");
   };
 
-  const handleCloseModalRelatedProject = async () => {
-    const confirm = await confirmationSwal(
-      "Apakah Anda ingin menutup modal ini?"
+  const handleChangeTextRelatedProject = (props, value) => {
+    const newPayload = {
+      ...payloadRelatedProject,
+      [props]: value,
+    };
+    dispatch(setObjPayloadRelatedProject(newPayload));
+  };
+
+  const handleClickAddRowRelatedProject = () => {
+    if (!isAddNewRowRelatedProject) {
+      const newDataTables = [...dataRelatedProject];
+      newDataTables?.push(payloadRelatedProject);
+      setDataRelatedProject(newDataTables);
+      setIsAddNewRowRelatedProject(true);
+    }
+  };
+
+  const handleClickSaveRelatedProject = (project_id) => {
+    const newDataTables = [...dataRelatedProject];
+    const findIndex = newDataTables.findIndex(
+      (v) => v.project_id === project_id
     );
+    if (findIndex !== -1) {
+      const schemaMapping = {
+        schema: relatedProjectNonPATSchema,
+        resetErrors: resetValidationErrorsRelatedProject,
+        setErrors: setValidationErrorsRelatedProject,
+      };
+      const validate = setErrorValidation(
+        payloadRelatedProject,
+        dispatch,
+        schemaMapping
+      );
+
+      if (validate) {
+        newDataTables[findIndex] = { ...payloadRelatedProject, is_new: false };
+        setDataRelatedProject(newDataTables);
+        dispatch(resetObjPayloadRelatedProject());
+        dispatch(resetValidationErrorsRelatedProject());
+        setIsAddNewRowRelatedProject(false);
+      }
+    }
+  };
+
+  const handleClickDeleteRelatedProject = async (project_id) => {
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin ingin menghapus data ini?"
+    );
+
     if (!confirm.value) {
       return;
     }
 
-    setShowModalRelatedProject(false);
-    dispatch(resetObjPayloadRelatedProject());
-  };
-
-  const handleSubmitRelatedProject = async () => {
-    if (!payloadRelatedProject?.ref_ewp_id) {
-      infoSwal("Silahkan pilih proyek terkait!");
-      return;
-    }
-    loadingSwal();
-    await fetchApi(
-      "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/project_terkait`,
-      { ewp_id: id, ...payloadRelatedProject }
+    const newDataTables = [...dataRelatedProject];
+    const findAnswerIndex = newDataTables?.findIndex(
+      (v) => v.project_id == project_id
     );
-    relatedProjectInfoMutate();
-    setShowModalRelatedProject(false);
-    loadingSwal("close");
+    newDataTables.splice(findAnswerIndex, 1);
+    setDataRelatedProject(newDataTables);
+    dispatch(resetValidationErrorsRelatedProject());
+    setIsAddNewRowRelatedProject(false);
   };
   // [ END ] handler for modal related project
 
@@ -523,28 +554,60 @@ const index = () => {
                     data={dataTables}
                     handleClickInitiate={handleClickInitiate}
                     handleClickLog={handleClickLog}
+                    isHideButton={!isInitiator}
                   />
                 </div>
               </Card>
-              <div className="w-full flex items-center justify-end mt-4">
-                <div className="w-48 text-sm font-semibold my-1 bg-atlasian-red rounded">
-                  <ButtonField
-                    text={"Ubah Project Info"}
-                    handler={() => console.log("test")}
-                  />
+              {isInitiator ? (
+                <div className="w-full flex items-center justify-end mt-4">
+                  <div className="w-48 text-sm font-semibold my-1 bg-atlasian-red rounded">
+                    <ButtonField
+                      text={"Ubah Project Info"}
+                      handler={() => console.log("test")}
+                    />
+                  </div>
                 </div>
-              </div>
+              ) : (
+                ""
+              )}
             </div>
           ) : currentContentStage === 2 ? (
-            <RelatedProjectTable
-              data={dataRelatedProject}
-              handleClickDelete={handleClickDeleteRelatedProject}
-              handleClickAdd={handleClickAddRelatedProject}
-            />
+            <div className="">
+              <TableRelatedProject
+                data={dataRelatedProject}
+                handleChangeText={handleChangeTextRelatedProject}
+                handleClickAddRow={handleClickAddRowRelatedProject}
+                handleClickDelete={handleClickDeleteRelatedProject}
+                handleClickSave={handleClickSaveRelatedProject}
+                payload={payloadRelatedProject}
+                validation={validationRelatedProject}
+                withoutButton={!isInitiator}
+              />
+              {isInitiator ? (
+                <div className="w-full flex items-center justify-end mt-4">
+                  <div
+                    className={`w-fit text-sm font-semibold my-1 ${
+                      dataRelatedProject?.length
+                        ? "bg-atlasian-green"
+                        : "bg-atlasian-gray-light"
+                    } rounded`}
+                  >
+                    <ButtonField
+                      text={"Simpan"}
+                      handler={handleSubmitRelatedProject}
+                      disabled={!dataRelatedProject?.length}
+                    />
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
           ) : currentContentStage === 3 ? (
             <UkerAssessmentTable
               data={dataUkerAssessment}
               payload={payloadUkerAssessment}
+              withoutButton={!isInitiator}
               handleChange={handleChangePayloadUkerAssessment}
               handleClickAddUkerAssessment={handleClickAddRowUkerAssessment}
               handleClickSave={handleSaveUkerAssessment}
@@ -559,13 +622,6 @@ const index = () => {
             ""
           )}
         </div>
-        <ModalAddRelatedProject
-          showModal={showModalRelatedProject}
-          data={payloadRelatedProject}
-          handleSubmit={handleSubmitRelatedProject}
-          handleClickRow={handleClickRowRelatedProject}
-          handleCloseModal={handleCloseModalRelatedProject}
-        />
         <ModalDescription
           data={
             dataUkerAssessment[selectedIndex]?.is_new ||

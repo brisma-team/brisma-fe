@@ -162,7 +162,7 @@ const index = () => {
       },
       {
         name: `Program Kerja`,
-        path: `${pathName}/anggaran`,
+        path: `${pathName}/program-kerja`,
       },
     ]);
     setIsCloseSubmodule(
@@ -698,7 +698,10 @@ const index = () => {
             </div>
           </Card>
         ) : (
-          <TableRingkasan data={dataRingkasan} />
+          <TableRingkasan
+            data={dataRingkasan}
+            pathName={`/ewp/konsulting/${id}/perencanaan/program-kerja`}
+          />
         )}
       </div>
 

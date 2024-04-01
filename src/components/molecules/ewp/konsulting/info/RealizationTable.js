@@ -12,7 +12,12 @@ import { IconArrowRight } from "@/components/icons";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
-const RealizationTable = ({ data, handleClickInitiate, handleClickLog }) => {
+const RealizationTable = ({
+  data,
+  isHideButton,
+  handleClickInitiate,
+  handleClickLog,
+}) => {
   return (
     <>
       <p className="text-base font-bold mb-2 ml-2">Realisasi</p>
@@ -85,46 +90,52 @@ const RealizationTable = ({ data, handleClickInitiate, handleClickLog }) => {
               <Row>
                 <Cell width="15%" className={`border-x ${customCell}`}>
                   <div className="custom-table-position-center justify-center">
-                    {is_onprogress && !is_close ? (
-                      <LozengeField appreance="removed" isBold>
-                        <DivButton
-                          className={"py-1 flex justify-center w-20"}
-                          handleClick={() =>
-                            handleClickInitiate(status_code, "close")
-                          }
-                        >
-                          Terminate
-                        </DivButton>
-                      </LozengeField>
-                    ) : is_close ? (
-                      <LozengeField appreance="success" isBold>
-                        <DivButton
-                          className={"py-1 flex justify-center w-20"}
-                          isDisabled
-                        >
-                          Completed
-                        </DivButton>
-                      </LozengeField>
-                    ) : is_open ? (
-                      <LozengeField appreance="new" isBold>
-                        <DivButton
-                          className={"py-1 flex justify-center w-20"}
-                          handleClick={() =>
-                            handleClickInitiate(status_code, "start")
-                          }
-                        >
-                          Initiate
-                        </DivButton>
-                      </LozengeField>
+                    {!isHideButton ? (
+                      is_onprogress && !is_close ? (
+                        <LozengeField appreance="removed" isBold>
+                          <DivButton
+                            className={"py-1 flex justify-center w-20"}
+                            handleClick={() =>
+                              handleClickInitiate(status_code, "close")
+                            }
+                          >
+                            Terminate
+                          </DivButton>
+                        </LozengeField>
+                      ) : is_close ? (
+                        <LozengeField appreance="success" isBold>
+                          <DivButton
+                            className={"py-1 flex justify-center w-20"}
+                            isDisabled
+                          >
+                            Completed
+                          </DivButton>
+                        </LozengeField>
+                      ) : is_open ? (
+                        <LozengeField appreance="new" isBold>
+                          <DivButton
+                            className={"py-1 flex justify-center w-20"}
+                            handleClick={() =>
+                              handleClickInitiate(status_code, "start")
+                            }
+                          >
+                            Initiate
+                          </DivButton>
+                        </LozengeField>
+                      ) : (
+                        <LozengeField appreance="default">
+                          <DivButton
+                            className={
+                              "py-1 flex justify-center w-20 text-white"
+                            }
+                            isDisabled
+                          >
+                            Waiting
+                          </DivButton>
+                        </LozengeField>
+                      )
                     ) : (
-                      <LozengeField appreance="default">
-                        <DivButton
-                          className={"py-1 flex justify-center w-20 text-white"}
-                          isDisabled
-                        >
-                          Waiting
-                        </DivButton>
-                      </LozengeField>
+                      ""
                     )}
                   </div>
                 </Cell>
