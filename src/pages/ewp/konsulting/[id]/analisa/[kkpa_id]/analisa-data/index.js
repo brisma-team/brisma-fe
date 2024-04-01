@@ -54,7 +54,7 @@ const index = () => {
       },
       {
         name: `Analisa Lingkup Konsulting`,
-        path: pathNameSubModulAnalisa},
+        path: pathNameSubModulAnalisa,
       },
       {
         name: `Kertas Kerja`,
