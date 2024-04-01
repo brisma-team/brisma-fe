@@ -9,7 +9,7 @@ const index = () => {
   const { id, kkpa_id } = useRouter().query;
   const baseUrl = `/ewp/konsulting/${id}`;
   const pathNameSubModulAnalisa = `${baseUrl}/analisa`;
-  const pathNameLandingPage = `${baseUrl}/analisa/lingkup/${kkpa_id}`;
+  const pathNameLandingPage = `${pathNameSubModulAnalisa}/${kkpa_id}`;
 
   const [dataInfo, setDataInfo] = useState([]);
   const [dataCarding, setDataCarding] = useState([]);
@@ -29,7 +29,7 @@ const index = () => {
       },
       {
         name: `Analisa Lingkup Konsulting`,
-        path: `${pathNameSubModulAnalisa}/lingkup`,
+        path: pathNameSubModulAnalisa,
       },
       {
         name: `Kertas Kerja`,
@@ -99,10 +99,6 @@ const index = () => {
           title: "Dokumen",
           description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-          status:
-            landingStatus?.data?.status_persetujuan === "Final"
-              ? "success"
-              : "failed",
           url: `${pathNameLandingPage}/dokumen`,
         },
       ];

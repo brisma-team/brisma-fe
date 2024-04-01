@@ -37,10 +37,25 @@ const index = () => {
   useEffect(() => {
     if (logSBP?.data?.length) {
       const mappingLog = logSBP?.data?.map((v) => {
+        let _subModule;
+        switch (v?.jenis) {
+          case "mapa":
+            _subModule = "Perencanaan";
+            break;
+          case "kkpa":
+            _subModule = "Analisa";
+            break;
+          case "peluang":
+            _subModule = "Peluang Peningkatan";
+            break;
+          default:
+            _subModule = v?.jenis;
+            break;
+        }
         return {
           tanggal: convertDate(v?.createdAt, "/", "d"),
           pnNama: v?.create_by?.nama,
-          subModul: capitalizeEveryWord(v?.jenis),
+          subModul: capitalizeEveryWord(_subModule),
           aktifitas: v?.perihal,
         };
       });

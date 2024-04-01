@@ -56,7 +56,7 @@ const index = () => {
       },
       {
         name: `Analisa Lingkup Konsulting`,
-        path: `${pathName}/lingkup`,
+        path: pathName,
       },
     ]);
   }, [projectDetail]);
@@ -122,16 +122,12 @@ const index = () => {
   };
   // [ END ] handler for filter
 
-  const handleClickMatrix = () => {
-    router.push(`/ewp/konsulting/${id}/analisa/matrix`);
-  };
-
   const handleClickDokumenPerencanaan = () => {
     router.push(`/ewp/konsulting/${id}/perencanaan/dokumen`);
   };
 
   const handleClickKertasKerja = (kkpa_id) => {
-    router.push(`/ewp/konsulting/${id}/analisa/lingkup/${kkpa_id}`);
+    router.push(`/ewp/konsulting/${id}/analisa/${kkpa_id}`);
   };
 
   return (
@@ -150,9 +146,6 @@ const index = () => {
               handler={handleShowFilter}
               text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
             />
-          </div>
-          <div className="w-36 rounded bg-atlasian-purple">
-            <ButtonField handler={handleClickMatrix} text={"Matrix Peluang"} />
           </div>
         </div>
       </div>

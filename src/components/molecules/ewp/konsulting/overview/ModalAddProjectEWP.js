@@ -28,6 +28,7 @@ import {
 } from "@/helpers/schemas/ewp/konsulting/overview/projectOverviewEWPKonsultingSchema";
 import { confirmationSwal, fetchApi, setErrorValidation } from "@/helpers";
 import useUser from "@/data/useUser";
+import _ from "lodash";
 
 const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
   const dispatch = useDispatch();
@@ -130,6 +131,11 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
         audit_year: !isPat
           ? parseInt(new Date().getFullYear())
           : projectOverviewData.audit_year,
+        project_terkait:
+          _.map(
+            projectOverviewData?.project_terkait,
+            ({ project_id, project_name }) => ({ project_id, project_name })
+          ) || [],
       };
 
       if (buttonName === "saveButton" || buttonName === "sendApprovalButton") {

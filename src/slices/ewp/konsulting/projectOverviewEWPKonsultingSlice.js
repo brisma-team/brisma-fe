@@ -34,6 +34,11 @@ const initialState = {
     audited: false,
     project_terkait: [],
   },
+  objPayloadRelatedProject: {
+    project_id: "",
+    project_name: "",
+    is_new: true,
+  },
   defaultData: {
     project_name: "",
     info_periode_pelaksanaan_start: "",
@@ -67,11 +72,17 @@ const initialState = {
     audited: false,
     project_terkait: [],
   },
+  resetObjPayloadRelatedProject: {
+    project_id: "",
+    project_name: "",
+    is_new: true,
+  },
   validationErrorsSchedulePAT: {},
   validationErrorsSummaryPAT: {},
   validationErrorsDocumentNonPAT: {},
   validationErrorsScheduleNonPAT: {},
   validationErrorsSummaryNonPAT: {},
+  validationErrorsRelatedProjectNonPAT: {},
 };
 
 export const projectOverviewEWPKonsultingSlice = createSlice({
@@ -80,6 +91,9 @@ export const projectOverviewEWPKonsultingSlice = createSlice({
   reducers: {
     setProjectOverviewData: (state, action) => {
       state.projectOverviewData = action.payload;
+    },
+    setObjPayloadRelatedProject: (state, action) => {
+      state.objPayloadRelatedProject = action.payload;
     },
     setValidationErrorsSchedulePAT: (state, action) => {
       state.validationErrorsSchedulePAT = action.payload;
@@ -96,6 +110,9 @@ export const projectOverviewEWPKonsultingSlice = createSlice({
     setValidationErrorsSummaryNonPAT: (state, action) => {
       state.validationErrorsSummaryNonPAT = action.payload;
     },
+    setValidationErrorsRelatedProjectNonPAT: (state, action) => {
+      state.validationErrorsRelatedProjectNonPAT = action.payload;
+    },
     resetValidationErrorsSchedulePAT: (state) => {
       state.validationErrorsSchedulePAT = {};
     },
@@ -111,25 +128,37 @@ export const projectOverviewEWPKonsultingSlice = createSlice({
     resetValidationErrorsSummaryNonPAT: (state) => {
       state.validationErrorsSummaryNonPAT = {};
     },
+    resetValidationErrorsRelatedProjectNonPAT: (state) => {
+      state.validationErrorsRelatedProjectNonPAT = {};
+    },
     resetProjectOverviewData: (state) => {
       state.projectOverviewData = { ...state.defaultData };
+    },
+    resetObjPayloadRelatedProject: (state) => {
+      state.objPayloadRelatedProject = {
+        ...state.resetObjPayloadRelatedProject,
+      };
     },
   },
 });
 
 export const {
   setProjectOverviewData,
+  setObjPayloadRelatedProject,
   setValidationErrorsSchedulePAT,
   setValidationErrorsSummaryPAT,
   setValidationErrorsDocumentNonPAT,
   setValidationErrorsScheduleNonPAT,
   setValidationErrorsSummaryNonPAT,
+  setValidationErrorsRelatedProjectNonPAT,
   resetValidationErrorsSchedulePAT,
   resetValidationErrorsSummaryPAT,
   resetValidationErrorsDocumentNonPAT,
   resetValidationErrorsScheduleNonPAT,
   resetValidationErrorsSummaryNonPAT,
+  resetValidationErrorsRelatedProjectNonPAT,
   resetProjectOverviewData,
+  resetObjPayloadRelatedProject,
 } = projectOverviewEWPKonsultingSlice.actions;
 
 export default projectOverviewEWPKonsultingSlice.reducer;

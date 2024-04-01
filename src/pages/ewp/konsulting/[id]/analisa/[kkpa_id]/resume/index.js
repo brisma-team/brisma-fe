@@ -10,7 +10,7 @@ import {
   PrevNextNavigation,
 } from "@/components/molecules/commons";
 import { fetchApi, loadingSwal, usePostFileData } from "@/helpers";
-import { useAnalisaData } from "@/data/ewp/konsulting/analisa/lingkup/analisa-data";
+import { useResume } from "@/data/ewp/konsulting/analisa/lingkup/resume";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -32,7 +32,7 @@ const index = () => {
   const { id, kkpa_id } = useRouter().query;
   const baseUrl = `/ewp/konsulting/${id}`;
   const pathNameSubModulAnalisa = `${baseUrl}/analisa`;
-  const pathNameLandingPage = `${baseUrl}/analisa/lingkup/${kkpa_id}`;
+  const pathNameLandingPage = `${pathNameSubModulAnalisa}/${kkpa_id}`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [imageClipList, setImageClipList] = useState([]);
@@ -41,7 +41,7 @@ const index = () => {
   const [typeUpload, setTypeUpload] = useState("");
 
   const { projectDetail } = useProjectDetail({ id });
-  const { analisaData, analisaDataMutate } = useAnalisaData({ id: kkpa_id });
+  const { resume, resumeMutate } = useResume({ id: kkpa_id });
 
   useEffect(() => {
     setBreadcrumbs([
@@ -54,22 +54,22 @@ const index = () => {
       },
       {
         name: `Analisa Lingkup Konsulting`,
-        path: `${pathNameSubModulAnalisa}/lingkup`,
+        path: pathNameSubModulAnalisa,
       },
       {
         name: `Kertas Kerja`,
         path: `${pathNameLandingPage}`,
       },
       {
-        name: `Analisa Data`,
-        path: `${pathNameLandingPage}/analisa-data`,
+        name: `Resume`,
+        path: `${pathNameLandingPage}/resume`,
       },
     ]);
   }, [projectDetail]);
 
   useEffect(() => {
-    setContent(analisaData?.data?.analisis_data || "");
-  }, [analisaData]);
+    setContent(resume?.data?.resume || "");
+  }, [resume]);
 
   const handleClickUploadAttachment = () => {
     setTypeUpload("attachment");
@@ -111,10 +111,10 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpa/analisis_data/${kkpa_id}`,
-      { analisis_data: content }
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpa/resume/${kkpa_id}`,
+      { resume: content }
     );
-    analisaDataMutate();
+    resumeMutate();
     loadingSwal("close");
   };
 
@@ -124,11 +124,12 @@ const index = () => {
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
       <div className="flex justify-between items-center mb-7">
-        <PageTitle text="Analisa Data" />
+        <PageTitle text="Resume" />
         <PrevNextNavigation
           baseUrl={pathNameLandingPage}
           routes={routes}
-          nextUrl={"/resume"}
+          prevUrl={"/analisa-data"}
+          nextUrl={"/hasil-analisa"}
           marginLeft={"-45px"}
         />
       </div>
