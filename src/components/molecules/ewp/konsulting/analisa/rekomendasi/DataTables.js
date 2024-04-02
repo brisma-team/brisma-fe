@@ -9,7 +9,7 @@ import { convertDate } from "@/helpers";
 import { ButtonIcon } from "@/components/atoms";
 import { ButtonDelete, DataNotFound } from "@/components/molecules/commons";
 
-const DataTables = ({ data, handleClickDelete }) => {
+const DataTables = ({ data, withoutButton, handleClickDelete }) => {
   return (
     <div className="dataTables-custom">
       <TableTree>
@@ -48,10 +48,14 @@ const DataTables = ({ data, handleClickDelete }) => {
                     className="border-x cell-custom-dataTables flex justify-center"
                   >
                     <div className="flex justify-center items-center gap-1">
-                      <ButtonIcon
-                        icon={<ButtonDelete />}
-                        handleClick={async () => await handleClickDelete(id)}
-                      />
+                      {!withoutButton ? (
+                        <ButtonIcon
+                          icon={<ButtonDelete />}
+                          handleClick={async () => await handleClickDelete(id)}
+                        />
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </Cell>
                   <Cell width="17%" className="border-r cell-custom-dataTables">

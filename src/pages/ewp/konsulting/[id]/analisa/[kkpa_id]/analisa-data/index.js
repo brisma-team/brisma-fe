@@ -11,6 +11,8 @@ import {
 } from "@/components/molecules/commons";
 import { fetchApi, loadingSwal, usePostFileData } from "@/helpers";
 import { useAnalisaData } from "@/data/ewp/konsulting/analisa/lingkup/analisa-data";
+import { useLandingStatus } from "@/data/ewp/konsulting/landing";
+import useUser from "@/data/useUser";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -39,9 +41,14 @@ const index = () => {
   const [attachmentClipList, setAttachmentClipList] = useState([]);
   const [content, setContent] = useState("");
   const [typeUpload, setTypeUpload] = useState("");
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
+  const [isAuditor, setIsAuditor] = useState(false);
 
   const { projectDetail } = useProjectDetail({ id });
   const { analisaData, analisaDataMutate } = useAnalisaData({ id: kkpa_id });
+  const { landingStatus } = useLandingStatus({ type: "kkpa", id: kkpa_id });
+  const { user } = useUser();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -65,11 +72,23 @@ const index = () => {
         path: `${pathNameLandingPage}/analisa-data`,
       },
     ]);
-  }, [projectDetail]);
+    setIsCloseSubmodule(
+      Boolean(projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end)
+    );
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+  }, [projectDetail, user]);
 
   useEffect(() => {
     setContent(analisaData?.data?.analisis_data || "");
   }, [analisaData]);
+
+  useEffect(() => {
+    setIsAuditor(landingStatus?.data?.info?.auditor?.pn == user?.data?.pn);
+  }, [landingStatus, user]);
 
   const handleClickUploadAttachment = () => {
     setTypeUpload("attachment");
@@ -155,11 +174,16 @@ const index = () => {
               onChange={(value) => setContent(value)}
             />
           </div>
-          <div className="mt-3 flex justify-end">
-            <div className="w-[7.75rem] bg-atlasian-green rounded">
-              <ButtonField text={"Simpan"} handler={handleSubmit} />
+
+          {(isInitiator || isAuditor) && !isCloseSubmodule ? (
+            <div className="mt-3 flex justify-end">
+              <div className="w-[7.75rem] bg-atlasian-green rounded">
+                <ButtonField text={"Simpan"} handler={handleSubmit} />
+              </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
       {/* End Content */}

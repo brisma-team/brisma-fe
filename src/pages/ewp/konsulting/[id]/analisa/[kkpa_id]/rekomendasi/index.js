@@ -21,6 +21,8 @@ import {
   DataTables,
 } from "@/components/molecules/ewp/konsulting/analisa/rekomendasi";
 import rekomendasiEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/analisa/rekomendasiEWPKonsultingSchema";
+import { useLandingStatus } from "@/data/ewp/konsulting/landing";
+import useUser from "@/data/useUser";
 
 const routes = [
   {
@@ -44,6 +46,9 @@ const index = () => {
   const pathNameLandingPage = `${pathNameSubModulAnalisa}/${kkpa_id}`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
+  const [isAuditor, setIsAuditor] = useState(false);
 
   const data = useSelector((state) => state.rekomendasiEWPKonsulting.objData);
   const payload = useSelector(
@@ -55,6 +60,8 @@ const index = () => {
 
   const { projectDetail } = useProjectDetail({ id });
   const { rekomendasi, rekomendasiMutate } = useRekomendasi({ id: kkpa_id });
+  const { landingStatus } = useLandingStatus({ type: "kkpa", id: kkpa_id });
+  const { user } = useUser();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -78,7 +85,15 @@ const index = () => {
         path: `${pathNameLandingPage}/rekomendasi`,
       },
     ]);
-  }, [projectDetail]);
+    setIsCloseSubmodule(
+      Boolean(projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end)
+    );
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+  }, [projectDetail, user]);
 
   useEffect(() => {
     if (rekomendasi?.data?.length) {
@@ -90,6 +105,10 @@ const index = () => {
       dispatch(resetObjData());
     }
   }, [rekomendasi]);
+
+  useEffect(() => {
+    setIsAuditor(landingStatus?.data?.info?.auditor?.pn == user?.data?.pn);
+  }, [landingStatus, user]);
 
   const handleClickDelete = async (rekomendasi_id) => {
     loadingSwal();
@@ -153,20 +172,31 @@ const index = () => {
           <div className="w-full px-4 pb-2">
             <p className="text-base font-bold">Daftar Rekomendasi</p>
             <div className="w-full mt-2">
-              <DataTables data={data} handleClickDelete={handleClickDelete} />
+              <DataTables
+                data={data}
+                withoutButton={
+                  !((isInitiator || isAuditor) && !isCloseSubmodule)
+                }
+                handleClickDelete={handleClickDelete}
+              />
             </div>
           </div>
         </Card>
         <CardAddRekomendasi
           data={payload}
           validation={validation}
+          isDisabled={isCloseSubmodule}
           handleChange={handleChangePayload}
         />
-        <div className="w-full flex justify-end">
-          <div className="w-48 rounded bg-atlasian-green">
-            <ButtonField text={"Tambah Rekomendasi"} handler={handleSubmit} />
+        {(isInitiator || isAuditor) && !isCloseSubmodule ? (
+          <div className="w-full flex justify-end">
+            <div className="w-48 rounded bg-atlasian-green">
+              <ButtonField text={"Tambah Rekomendasi"} handler={handleSubmit} />
+            </div>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
       </div>
       {/* End Content */}
     </LandingLayoutEWPConsulting>

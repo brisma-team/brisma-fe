@@ -21,12 +21,25 @@ const SidebarLandingEWPConsulting = () => {
   const [menu, setMenu] = useState([]);
 
   useEffect(() => {
+    let subModule;
     const projectInfo = projectDetail?.data?.project_info;
     const projectRealisasi = projectDetail?.data?.realisasi;
+    switch (projectInfo?.status_name) {
+      case "mapa":
+        subModule = "Perencanaan";
+        break;
+      case "pelaksanaan":
+        subModule = "Analisa";
+        break;
+      default:
+        subModule = projectInfo?.status_name;
+        break;
+    }
+
     setData({
       projectId: projectInfo?.project_id,
       projectName: projectInfo?.project_name,
-      documentName: projectInfo?.status_name,
+      documentName: subModule,
       statusName: projectInfo?.status_persetujuan_name,
       createdAt: convertDate(
         projectInfo?.info_periode_pelaksanaan_start,
@@ -45,7 +58,7 @@ const SidebarLandingEWPConsulting = () => {
       },
       {
         name: "Analisa",
-        href: `/analisa/lingkup`,
+        href: `/analisa`,
         isActive: projectRealisasi?.pelaksanaan_audit_real_start,
       },
       {
