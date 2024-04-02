@@ -42,7 +42,7 @@ const programKerjaHtml = (data) => {
         <th width="5"></th>
             <th width="16%"><p style="font-size:14px; font-weight: 500">Uraian</p></th>
             <th width="1%"><p style="font-size:14px; font-weight: 500">:</p></th>
-            <th width="80%">${v?.uraian}</th>
+            <th width="80%">${v?.uraian || ""}</th>
         </tr>
     </tbody>
     <tbody>

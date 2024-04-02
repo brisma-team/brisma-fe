@@ -2,18 +2,9 @@ import {
   ButtonDelete,
   CardContentHeaderFooter,
   DataNotFound,
-  // RiskIssueSelect,
-  // RiskSelect,
-  // RiskSelectKKPT,
-  // OrgehSelect,
 } from "@/components/molecules/commons";
 import { RiskSelectKKPT, LingkupSelectKKPT } from "../../../commons";
-import {
-  ButtonField,
-  ButtonIcon,
-  RadioField,
-  // TextAreaField,
-} from "@/components/atoms";
+import { ButtonField, ButtonIcon, RadioField } from "@/components/atoms";
 import { IconPlus } from "@/components/icons";
 import { ImageCircleCheckGreen } from "@/helpers/imagesUrl";
 import TableTree, {
@@ -40,7 +31,6 @@ const TableRiskIssue = ({
   handleClickDelete,
   handleChangeRisk,
   handleChangeLingkup,
-  // handleChangeTextUker,
   handleSelectedRisk,
 }) => {
   const findIndex = data?.findIndex(
@@ -158,64 +148,67 @@ const TableRiskIssue = ({
                     </div>
                   </Cell>
                   <Cell width="30%" className={`border-r ${customCell} `}>
-                    <div className="cell-width-full-height-full justify-center">
-                      {/* <p className="text-xs">{lingkup_pemeriksaan || "N/A"}</p> */}
-                      {is_edit ? (
-                        <LingkupSelectKKPT
-                          selectedEWP={selectedEWPId}
-                          selectedValue={
-                            newLingkup?.lingkup_pemeriksaan_id
-                              ? {
-                                  label: newLingkup?.lingkup_pemeriksaan_name,
-                                  value: {
-                                    lingkup_pemeriksaan_id:
-                                      newLingkup?.lingkup_pemeriksaan_id,
-                                    lingkup_pemeriksaan_name:
-                                      newLingkup?.lingkup_pemeriksaan_name,
-                                  },
-                                }
-                              : null
-                          }
-                          handleChange={(e) => {
-                            handleChangeLingkup(e.value);
-                          }}
-                          positionAbsolute={true}
-                          width="w-[20rem]"
-                        />
-                      ) : (
-                        <p className="text-xs">
-                          {lingkup_pemeriksaan || "N/A"}
-                        </p>
-                      )}
+                    <div className="custom-table-position-center">
+                      <div className="w-full">
+                        {is_edit ? (
+                          <LingkupSelectKKPT
+                            selectedEWP={selectedEWPId}
+                            selectedValue={
+                              newLingkup?.lingkup_pemeriksaan_id
+                                ? {
+                                    label: newLingkup?.lingkup_pemeriksaan_name,
+                                    value: {
+                                      lingkup_pemeriksaan_id:
+                                        newLingkup?.lingkup_pemeriksaan_id,
+                                      lingkup_pemeriksaan_name:
+                                        newLingkup?.lingkup_pemeriksaan_name,
+                                    },
+                                  }
+                                : null
+                            }
+                            handleChange={(e) => {
+                              handleChangeLingkup(e.value);
+                            }}
+                            positionAbsolute={true}
+                            width="w-[20rem]"
+                          />
+                        ) : (
+                          <p className="text-xs">
+                            {lingkup_pemeriksaan || "-"}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </Cell>
                   <Cell width="47%" className={`border-r ${customCell} `}>
-                    <div className="cell-width-full-height-full justify-center relative">
-                      {is_edit ? (
-                        <RiskSelectKKPT
-                          selectedLingkupId={selectedLingkupId}
-                          selectedValue={
-                            newRisk?.risk_kode
-                              ? {
-                                  label: newRisk?.risk_name,
-                                  value: {
-                                    kode: newRisk?.risk_kode,
-                                    name: newRisk?.risk_name,
-                                  },
-                                }
-                              : null
-                          }
-                          handleChange={(e) => {
-                            handleChangeRisk(e.value);
-                          }}
-                          positionAbsolute={true}
-                          width="w-[20rem]"
-                        />
-                      ) : (
-                        <p>
-                          <strong>{abbr}</strong> - {rekomendasi_name}
-                        </p>
-                      )}
+                    <div className="custom-table-position-center relative">
+                      <div className="w-full">
+                        {is_edit ? (
+                          <RiskSelectKKPT
+                            selectedLingkupId={selectedLingkupId}
+                            selectedValue={
+                              newRisk?.risk_kode
+                                ? {
+                                    label: newRisk?.risk_name,
+                                    value: {
+                                      kode: newRisk?.risk_kode,
+                                      name: newRisk?.risk_name,
+                                    },
+                                  }
+                                : null
+                            }
+                            handleChange={(e) => {
+                              handleChangeRisk(e.value);
+                            }}
+                            positionAbsolute={true}
+                            width="w-[20rem]"
+                          />
+                        ) : (
+                          <p>
+                            <strong>{abbr}</strong> - {rekomendasi_name}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </Cell>
                   <Cell width="15%" className={`border-r ${customCell} `}>

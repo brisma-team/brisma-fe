@@ -49,13 +49,13 @@ const index = () => {
       const mappingDataInfo = [
         {
           label: "Judul Peluang",
-          value: responseInfo?.judul_kkpt || "N/A",
+          value: responseInfo?.judul_kkpt || "-",
           isArray: false,
         },
         {
           label: "P.I.C Auditor",
           value:
-            responseInfo?.auditor?.nama || responseInfo?.auditor?.name || "N/A",
+            responseInfo?.auditor?.nama || responseInfo?.auditor?.name || "-",
           isArray: false,
         },
         {
@@ -153,7 +153,7 @@ const index = () => {
                             ? v?.value.map((val, index) => {
                                 return <li key={index}>{val?.content}</li>;
                               })
-                            : "N/A"}
+                            : "-"}
                         </p>
                       </div>
                     </Card>

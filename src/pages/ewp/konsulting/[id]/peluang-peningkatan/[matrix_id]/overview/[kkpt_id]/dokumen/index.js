@@ -2,12 +2,10 @@ import { Breadcrumbs, Card, DivButton, PageTitle } from "@/components/atoms";
 import {
   PrevNextNavigation,
   ApprovalItems,
-  ModalComment,
   ModalWorkflow,
+  ListContentDocument,
+  ContentDocument,
 } from "@/components/molecules/commons";
-import { NavigationDocument } from "@/components/molecules/commons";
-import Image from "next/image";
-import { ImageChat } from "@/helpers/imagesUrl";
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
@@ -33,6 +31,7 @@ import {
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useWorkflowMatrix } from "@/data/ewp/konsulting/peluang-peningkatan/matrix";
+import { riskRekomendasiHtml } from "@/templates/ewp/konsulting/peluang-peningkatan";
 
 const routes = [
   {
@@ -63,15 +62,9 @@ const index = () => {
   const dispatch = useDispatch();
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
-  const [listContent, setListContent] = useState([
-    { idx: 1, total_comment: 0, title: "Kondisi" },
-    { idx: 2, total_comment: 0, title: "Penyebab" },
-    { idx: 3, total_comment: 0, title: "Tanggapan" },
-    { idx: 4, total_comment: 0, title: "Rekomendasi" },
-  ]);
+  const [listContent, setListContent] = useState([]);
   const [listComment, setListComment] = useState([]);
 
-  const ref = useRef(null);
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [openCardComment, setOpenCardComment] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
@@ -83,7 +76,6 @@ const index = () => {
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
   const [bab, setBab] = useState(1);
   const [selectedParentCommentId, setSelectedParentCommentId] = useState(0);
-  const [mappingCommentId, setMappingCommentId] = useState([]);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -178,10 +170,8 @@ const index = () => {
 
   useEffect(() => {
     const response = documentData?.data?.daftar_isi;
-    let accumulator = [];
     if (response) {
       const mapping = response?.map((bab) => {
-        accumulator.push(bab?.id);
         return {
           idx: bab?.key,
           total_comment: bab?.jumlah_comment?.filter((v) => !v.is_closed)
@@ -190,7 +180,8 @@ const index = () => {
         };
       });
       setListContent(mapping);
-      setMappingCommentId(accumulator);
+    } else {
+      setListContent([]);
     }
   }, [documentData]);
 
@@ -223,8 +214,8 @@ const index = () => {
       const isAtBottom =
         parentContainer.scrollTop + parentContainer.clientHeight ===
         parentContainer.scrollHeight;
-      if (isAtBottom && hitEndpointCount <= 10) {
-        setHitEndpointCount((prev) => Math.min(prev + 1, 10));
+      if (isAtBottom && hitEndpointCount <= 4) {
+        setHitEndpointCount((prev) => Math.min(prev + 1, 4));
       }
     }
   };
@@ -275,22 +266,28 @@ const index = () => {
   useEffect(() => {
     if (documentData?.data && listContent?.length) {
       const findBab = listContent?.find((value) => value?.idx === bab);
-      const isFilled = doc?.find((value) => value?.idx === bab) !== undefined;
-      if (!isFilled) {
-        setDoc((prev) => [
-          ...prev,
-          {
-            idx: findBab?.idx,
-            title: findBab?.title,
-            content: documentData?.data?.data,
-          },
-        ]);
-        if (bab <= listContent.length) {
-          setBab(bab + 1);
-        }
-      }
-
-      return;
+      // const isFilled = doc?.find((value) => value?.idx === bab) !== undefined;
+      // if (!isFilled) {
+      //   setDoc((prev) => [
+      //     ...prev,
+      //     {
+      //       idx: findBab?.idx,
+      //       title: findBab?.title,
+      //       content: documentData?.data?.data,
+      //     },
+      //   ]);
+      //   if (bab <= listContent.length) {
+      //     setBab(bab + 1);
+      //   }
+      // }
+      setDoc((prev) => [
+        ...prev,
+        {
+          idx: findBab?.idx,
+          title: findBab?.title,
+          content: documentData?.data?.data,
+        },
+      ]);
     }
   }, [documentData, listContent]);
 
@@ -359,6 +356,11 @@ const index = () => {
   };
 
   // [ START ] function untuk Modal Workflow
+  const handleCloseModalWorkflow = () => {
+    dispatch(resetWorkflowData());
+    workflowMatrixMutate();
+  };
+
   const handleAdd = (property) => {
     const newData = [...workflowData[property]];
     newData.push({
@@ -505,6 +507,22 @@ const index = () => {
   };
   // [ END ]
 
+  const handleActiveIndex = (index) => {
+    setActiveIndex(index);
+  };
+
+  const handleClickOpenCardComment = (value) => {
+    setOpenCardComment(value);
+  };
+
+  const renderContent = (index, content) => {
+    if (index === 4) {
+      return riskRekomendasiHtml(content?.rekomendasi);
+    } else {
+      return content;
+    }
+  };
+
   return (
     <LandingLayoutEWPConsulting>
       <Breadcrumbs data={breadcrumbs} />
@@ -519,82 +537,25 @@ const index = () => {
       </div>
       {/* Start Content */}
       <div className="flex w-full gap-6">
-        <div className="w-64">
-          <div>
-            <Card>
-              <div className="px-3 py-1 w-full">
-                <div className="text-xl">Daftar Isi</div>
-                <div className="pl-2 mt-0.5">
-                  {listContent.map((v, i) => {
-                    return (
-                      <NavigationDocument
-                        key={i}
-                        no={i + 1}
-                        title={v.title}
-                        handleClick={() => setActiveIndex(v.idx)}
-                        activeIndex={currentPosition}
-                        count={v.total_comment}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
+        <ListContentDocument
+          data={listContent}
+          currentPosition={currentPosition}
+          handleActiveIndex={handleActiveIndex}
+        />
         <div>
-          <Card>
-            <div className="overflow-y-scroll my-2 parent max-h-[40rem]">
-              <ModalComment
-                callbackRef={ref}
-                show={openCardComment}
-                handleClickOutside={() => setOpenCardComment(false)}
-                handleSubmitParent={handleSubmitCommentParent}
-                handleSubmitChild={handleSubmitCommentChild}
-                handleSelectedParentComment={handleSelectedParentComment}
-                data={listComment}
-              />
-              {doc.map((v, i) => {
-                return (
-                  <div
-                    key={i}
-                    className={`page-container-a4 shrink-0 ${
-                      i + 1 === activeIndex ? "active" : ""
-                    }`}
-                    tabIndex={i + 1 === activeIndex ? 0 : -1}
-                    ref={i + 1 === activeIndex ? activeDivRef : null}
-                  >
-                    {v.content && (
-                      <div className="px-4 h-full w-full relative page-content-a4">
-                        <div className="flex justify-between">
-                          <div className="font-bold text-xl">{v.title}</div>
-                          <div className="flex items-center" ref={ref}>
-                            <DivButton
-                              handleClick={() =>
-                                handleClickComment(mappingCommentId[i])
-                              }
-                            >
-                              <Image src={ImageChat} alt="chat" />
-                            </DivButton>
-                          </div>
-                        </div>
-                        {v.idx != 4 ? (
-                          <div
-                            className="mt-4"
-                            dangerouslySetInnerHTML={{ __html: v.content }}
-                          />
-                        ) : v?.content?.rekomendasi.length > 0 ? (
-                          "Data tersedia, namun tidak dapat menampilkan sesuai format."
-                        ) : (
-                          <i>Data tidak ditemukan</i>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
+          <ContentDocument
+            dataDoc={doc}
+            dataComment={listComment}
+            activeDivRef={activeDivRef}
+            activeIndex={activeIndex}
+            isOpenCardComment={openCardComment}
+            renderContent={renderContent}
+            handleClickComment={handleClickComment}
+            handleIsOpenCardComment={handleClickOpenCardComment}
+            handleSelectedParentComment={handleSelectedParentComment}
+            handleSubmitCommentParent={handleSubmitCommentParent}
+            handleSubmitCommentChild={handleSubmitCommentChild}
+          />
         </div>
         <div>
           <DivButton
@@ -636,7 +597,8 @@ const index = () => {
             handleAdd={handleAdd}
             handleChangeSelect={handleChangeSelect}
             handleChangeText={handleChangeText}
-            withSigner={true}
+            handleCloseModal={handleCloseModalWorkflow}
+            withSigner
           />
         </div>
       </div>

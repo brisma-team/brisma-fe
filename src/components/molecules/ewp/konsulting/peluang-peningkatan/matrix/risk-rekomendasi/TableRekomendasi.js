@@ -19,7 +19,6 @@ const TableRekomendasi = ({
   isDisabled,
   selectedRekomendasi,
   handleClickSave,
-  // handleClickSelectedAll,
   handleChangeCheckbox,
 }) => {
   return (
@@ -112,12 +111,12 @@ const TableRekomendasi = ({
                     </div>
                   </Cell>
                   <Cell width="40%" className={`border-r ${customCell} `}>
-                    <div className="cell-width-full-height-full relative">
+                    <div className="custom-table-position-center relative">
                       <p className="text-xs">{rekomendasi_name || "-"}</p>
                     </div>
                   </Cell>
                   <Cell width="40%" className={`border-r ${customCell} `}>
-                    <div className="cell-width-full-height-full">
+                    <div className="custom-table-position-center">
                       <p className="text-xs">
                         {control_abbr + " - " + control_name}
                       </p>

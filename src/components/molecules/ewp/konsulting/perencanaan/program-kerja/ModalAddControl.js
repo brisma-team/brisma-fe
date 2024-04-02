@@ -12,7 +12,6 @@ import {
   ModalFooter,
   RiskControlSelect,
 } from "@/components/molecules/commons";
-import { useEffect } from "react";
 
 const ModalAddControl = ({
   data,
@@ -27,9 +26,6 @@ const ModalAddControl = ({
   handleCloseModal,
   handleSubmit,
 }) => {
-  useEffect(() => {
-    console.log("data => ", data);
-  }, [data]);
   return (
     <ModalScroll
       showModal={showModal}

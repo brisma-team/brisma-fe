@@ -6,9 +6,11 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setObjData,
+  setObjDataPicControl,
   setObjPayload,
   setValidationErrors,
   resetObjData,
+  resetObjDataPicControl,
   resetObjPayload,
   resetValidationErrors,
 } from "@/slices/ewp/konsulting/peluang-peningkatan/overviewDetailPeluangSlice";
@@ -27,7 +29,9 @@ import {
   DataTables,
 } from "@/components/molecules/ewp/konsulting/peluang-peningkatan/matrix/overview";
 import { PrevNextNavigation } from "@/components/molecules/commons";
-import overviewDetailPeluangSchema from "@/helpers/schemas/ewp/konsulting/peluang-peningkatan/overviewDetailPeluangSchema";
+import { useTimTimeplan } from "@/data/ewp/konsulting/perencanaan/tim-timeplan";
+import matrixEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/peluang-peningkatan/matrixEWPKonsultingSchema";
+import useUser from "@/data/useUser";
 
 const routes = [
   {
@@ -52,6 +56,8 @@ const index = () => {
   const [isUpdateMatrix, setIsUpdateMatrix] = useState(false);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [selectedId, setSelectedId] = useState(0);
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
 
   const data = useSelector((state) => state.overviewDetailPeluang.objData);
   const payload = useSelector(
@@ -59,6 +65,9 @@ const index = () => {
   );
   const validation = useSelector(
     (state) => state.overviewDetailPeluang.validationErrors
+  );
+  const dataPIC = useSelector(
+    (state) => state.overviewDetailPeluang.objDataPicControl
   );
 
   const { projectDetail } = useProjectDetail({ id });
@@ -69,6 +78,10 @@ const index = () => {
   const { overviewPeluangDetail } = useOverviewDetailPeluang({
     id: selectedId,
   });
+  const { timTimeplan, timTimeplanError } = useTimTimeplan({
+    id,
+  });
+  const { user } = useUser();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -88,7 +101,16 @@ const index = () => {
         path: `${pathNameContent}/overview`,
       },
     ]);
-  }, [projectDetail]);
+
+    setIsCloseSubmodule(
+      Boolean(projectDetail?.data?.realisasi?.peluang_peningkatan_real_end)
+    );
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+  }, [projectDetail, user]);
 
   useEffect(() => {
     if (overviewPeluangList?.data?.length > 0) {
@@ -120,13 +142,48 @@ const index = () => {
   }, [overviewPeluangList]);
 
   useEffect(() => {
-    if (overviewPeluangDetail?.data) {
+    if (isUpdateMatrix && overviewPeluangDetail?.data) {
       const { judul_kkpt, auditor } = overviewPeluangDetail.data;
       dispatch(setObjPayload({ judul_kkpt, auditor }));
     } else {
       dispatch(resetObjPayload());
     }
-  }, [overviewPeluangDetail, showModalMatrix]);
+  }, [overviewPeluangDetail, showModalMatrix, isUpdateMatrix]);
+
+  useEffect(() => {
+    if (!timTimeplanError) {
+      const timAuditInfo = timTimeplan?.data?.tim_audit;
+      const mappingAuditor = timAuditInfo?.auditor?.length
+        ? timAuditInfo?.auditor?.map((v) => {
+            const { pn, nama } = v;
+            return {
+              pn,
+              nama,
+            };
+          })
+        : [];
+
+      const mappingATA = timAuditInfo?.ata?.length
+        ? timAuditInfo?.ata?.map((v) => {
+            const { pn, nama } = v;
+            return {
+              pn,
+              nama,
+            };
+          })
+        : [];
+
+      const mergeMapping = [...mappingAuditor, ...mappingATA];
+      const mapping = mergeMapping?.length
+        ? mergeMapping?.map((v) => {
+            return { label: v?.nama, value: { pn: v?.pn, name: v?.nama } };
+          })
+        : [];
+      dispatch(setObjDataPicControl(mapping));
+    } else {
+      dispatch(resetObjDataPicControl());
+    }
+  }, [timTimeplan]);
 
   // [ START ] handler for table matrix
   const handleClickAddMatrix = () => {
@@ -168,6 +225,7 @@ const index = () => {
     }
 
     setShowModalMatrix(false);
+    setIsUpdateMatrix(false);
     dispatch(resetObjPayload());
   };
 
@@ -178,7 +236,7 @@ const index = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const schemaMappings = {
-      schema: overviewDetailPeluangSchema,
+      schema: matrixEWPKonsultingSchema,
       resetErrors: resetValidationErrors,
       setErrors: setValidationErrors,
     };
@@ -226,10 +284,11 @@ const index = () => {
         />
       </div>
       {/* Start Content */}
-      <div className="w-[83rem]">
+      <div className="w-[83rem] bg-white">
         <DataTables
           selectedId={id}
           data={data}
+          withoutButton={!(isInitiator && !isCloseSubmodule)}
           handleClickAddMatrix={handleClickAddMatrix}
           handleClickEdit={handleClickEdit}
           handleClickDelete={handleClickDelete}
@@ -237,6 +296,7 @@ const index = () => {
       </div>
       <ModalMatrix
         data={payload}
+        dataPIC={dataPIC}
         validation={validation}
         showModal={showModalMatrix}
         handleChange={handleChangePayload}

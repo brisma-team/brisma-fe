@@ -19,6 +19,7 @@ const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 const DataTables = ({
   selectedId,
   data,
+  withoutButton,
   handleClickEdit,
   handleClickDelete,
   handleClickAddMatrix,
@@ -98,17 +99,21 @@ const DataTables = ({
           }) => (
             <Row>
               <Cell width="7%" className={`border-x ${customCell}`}>
-                <div className="custom-table-position-center justify-center gap-1.5">
-                  <ButtonIcon
-                    icon={<ButtonEdit />}
-                    handleClick={() => handleClickEdit(kkpt_id)}
-                    color={"yellow"}
-                  />
-                  <ButtonIcon
-                    icon={<ButtonDelete />}
-                    handleClick={() => handleClickDelete(kkpt_id)}
-                  />
-                </div>
+                {!withoutButton ? (
+                  <div className="custom-table-position-center justify-center gap-1.5">
+                    <ButtonIcon
+                      icon={<ButtonEdit />}
+                      handleClick={() => handleClickEdit(kkpt_id)}
+                      color={"yellow"}
+                    />
+                    <ButtonIcon
+                      icon={<ButtonDelete />}
+                      handleClick={() => handleClickDelete(kkpt_id)}
+                    />
+                  </div>
+                ) : (
+                  ""
+                )}
               </Cell>
               <Cell width="10%" className={`border-r ${customCell}`}>
                 <div className="custom-table-position-center justify-center">
@@ -177,23 +182,27 @@ const DataTables = ({
           )}
         />
       ) : (
-        <div className="w-full border-x border-b">
+        <div className="w-full border-x border-b pb-3">
           <DataNotFound />
         </div>
       )}
-      <div className="flex justify-end w-full border-x border-b rounded-es-xl rounded-ee-xl">
-        <div className="w-48 text-sm font-semibold p-2 my-1">
-          <ButtonField
-            iconAfter={
-              <div className="text-atlasian-purple">
-                <IconPlus size="medium" />
-              </div>
-            }
-            text={"Tambah Peluang"}
-            textColor={"purple"}
-            handler={handleClickAddMatrix}
-          />
-        </div>
+      <div className="flex justify-end w-full border-x border-b rounded-es-xl rounded-ee-xl min-h-[2.5rem]">
+        {!withoutButton ? (
+          <div className="w-48 text-sm font-semibold p-2 my-1">
+            <ButtonField
+              iconAfter={
+                <div className="text-atlasian-purple">
+                  <IconPlus size="medium" />
+                </div>
+              }
+              text={"Tambah Peluang"}
+              textColor={"purple"}
+              handler={handleClickAddMatrix}
+            />
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </TableTree>
   );
