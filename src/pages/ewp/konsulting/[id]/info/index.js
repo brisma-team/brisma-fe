@@ -142,7 +142,7 @@ const index = () => {
         start_date:
           projectDetail?.data?.realisasi?.pelaksanaan_audit_real_start,
         end_date: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
-        url: `/ewp/konsulting/${id}/analisa/lingkup`,
+        url: `/ewp/konsulting/${id}/analisa`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,

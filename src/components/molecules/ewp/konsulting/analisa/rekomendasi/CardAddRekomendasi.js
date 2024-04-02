@@ -2,7 +2,7 @@ import { Card, DatepickerField, TextAreaField } from "@/components/atoms";
 import { FormWithLabel } from "@/components/molecules/commons";
 import { dateNow } from "@/helpers";
 
-const CardAddRekomendasi = ({ data, validation, handleChange }) => {
+const CardAddRekomendasi = ({ data, validation, isDisabled, handleChange }) => {
   return (
     <Card>
       <div className="w-full px-4 flex flex-col">
@@ -16,6 +16,7 @@ const CardAddRekomendasi = ({ data, validation, handleChange }) => {
               handleChange={(value) => handleChange("deadline", value)}
               value={data?.deadline || ""}
               minDate={dateNow()}
+              isDisabled={isDisabled}
             />
           }
           errors={validation?.deadline}
@@ -28,6 +29,7 @@ const CardAddRekomendasi = ({ data, validation, handleChange }) => {
             <TextAreaField
               handleChange={(e) => handleChange("desc", e.target.value)}
               value={data?.desc || ""}
+              isDisabled={isDisabled}
             />
           }
           errors={validation?.desc}

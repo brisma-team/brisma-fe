@@ -30,10 +30,7 @@ import {
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useWorkflowDetailEWP } from "@/data/ewp";
-import {
-  useListDocument,
-  useComment,
-} from "@/data/ewp/konsulting/analisa/lingkup/dokumen";
+import { useComment } from "@/data/ewp/konsulting/analisa/lingkup/dokumen";
 
 const routes = [
   {
@@ -57,12 +54,7 @@ const index = () => {
   const pathNameLandingPage = `${pathNameSubModulAnalisa}/${kkpa_id}`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
-  const [listContent, setListContent] = useState([
-    { idx: 1, total_comment: 0, title: "Analisa Data" },
-    { idx: 2, total_comment: 0, title: "Resume" },
-    { idx: 3, total_comment: 0, title: "Hasil Analisa" },
-    { idx: 4, total_comment: 0, title: "Rekomendasi" },
-  ]);
+  const [listContent, setListContent] = useState([]);
   const [listComment, setListComment] = useState([]);
 
   const ref = useRef(null);
@@ -86,7 +78,6 @@ const index = () => {
   );
 
   const { projectDetail } = useProjectDetail({ id });
-  const { listDocument } = useListDocument({ id: kkpa_id });
   const { documentEWP } = useDocumentEWP("kkpa", bab, { id: kkpa_id });
   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
     "kkpa",
@@ -159,7 +150,7 @@ const index = () => {
   }, [comment]);
 
   useEffect(() => {
-    const response = listDocument?.data?.daftar_isi;
+    const response = documentEWP?.data?.daftar_isi;
     if (response?.length) {
       const mapping = response?.map((bab) => {
         return {
@@ -173,7 +164,7 @@ const index = () => {
     } else {
       setListContent([]);
     }
-  }, [listDocument]);
+  }, [documentEWP]);
 
   // [ START ] Function ini berfungsi agar setiap kali class page-container-a4 melewati class parent,
   // maka akan setter setCurrentPosition akan merubah data dan setter setHitEndpointCount
@@ -204,8 +195,8 @@ const index = () => {
       const isAtBottom =
         parentContainer.scrollTop + parentContainer.clientHeight ===
         parentContainer.scrollHeight;
-      if (isAtBottom && hitEndpointCount <= 10) {
-        setHitEndpointCount((prev) => Math.min(prev + 1, 10));
+      if (isAtBottom && hitEndpointCount <= 4) {
+        setHitEndpointCount((prev) => Math.min(prev + 1, 4));
       }
     }
   };
@@ -325,12 +316,8 @@ const index = () => {
     } else {
       dispatch(resetWorkflowData());
     }
-  }, [workflowDetailEWP]);
+  }, [workflowDetailEWP, showModalApproval]);
   // [ END ]
-
-  useEffect(() => {
-    console.log("workflowData => ", workflowData);
-  }, [workflowData]);
 
   const handleClickComment = (babIdx) => {
     setOpenCardComment(true);
@@ -338,6 +325,11 @@ const index = () => {
   };
 
   // [ START ] function untuk Modal Workflow
+  const handleCloseModalWorkflow = () => {
+    dispatch(resetWorkflowData());
+    workflowDetailEWPMutate();
+  };
+
   const handleAdd = (property) => {
     const newData = [...workflowData[property]];
     newData.push({
@@ -484,6 +476,10 @@ const index = () => {
   };
   // [ END ]
 
+  useEffect(() => {
+    console.log("doc => ", doc);
+  }, [doc]);
+
   return (
     <LandingLayoutEWPConsulting>
       <Breadcrumbs data={breadcrumbs} />
@@ -607,6 +603,7 @@ const index = () => {
             handleAdd={handleAdd}
             handleChangeSelect={handleChangeSelect}
             handleChangeText={handleChangeText}
+            handleCloseModal={handleCloseModalWorkflow}
             withSigner
           />
         </div>

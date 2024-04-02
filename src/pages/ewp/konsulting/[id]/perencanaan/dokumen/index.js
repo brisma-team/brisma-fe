@@ -65,12 +65,7 @@ const index = () => {
   const dispatch = useDispatch();
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
-  const [listContent, setListContent] = useState([
-    // { idx: 1, total_comment: 0, title: "Sumber Informasi" },
-    // { idx: 2, total_comment: 0, title: "Tim & Timeplan" },
-    // { idx: 3, total_comment: 0, title: "Anggaran" },
-    // { idx: 4, total_comment: 0, title: "Program Kerja" },
-  ]);
+  const [listContent, setListContent] = useState([]);
   const [listComment, setListComment] = useState([]);
 
   const ref = useRef(null);
@@ -269,10 +264,6 @@ const index = () => {
     }
   }, [documentEWP, listContent]);
 
-  useEffect(() => {
-    console.log("listContent => ", listContent);
-  }, [listContent]);
-
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
   useEffect(() => {
@@ -451,10 +442,6 @@ const index = () => {
     workflowDetailEWPMutate();
   };
   // [ END ]
-
-  useEffect(() => {
-    console.log("doc => ", doc);
-  }, [doc]);
 
   // [ START ] COMMENT
   const handleSubmitCommentParent = async (e, value) => {
