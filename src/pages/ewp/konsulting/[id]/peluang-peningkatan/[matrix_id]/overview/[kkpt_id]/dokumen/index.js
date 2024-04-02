@@ -347,7 +347,7 @@ const index = () => {
     } else {
       dispatch(resetWorkflowData());
     }
-  }, [workflowMatrixData]);
+  }, [workflowMatrixData, showModalApproval]);
   // [ END ]
 
   const handleClickComment = (id) => {
