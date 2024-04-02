@@ -519,7 +519,7 @@ const index = () => {
         </div>
         <div>
           <Card>
-            <div className="overflow-y-scroll my-2 parent max-h-[40rem]">
+            <div className="overflow-y-scroll my-2 parent max-h-[40rem] flex flex-col">
               <ModalComment
                 callbackRef={ref}
                 show={openCardComment}

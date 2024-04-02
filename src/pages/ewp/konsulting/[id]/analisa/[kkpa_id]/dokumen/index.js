@@ -31,6 +31,7 @@ import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useWorkflowDetailEWP } from "@/data/ewp";
 import { useComment } from "@/data/ewp/konsulting/analisa/lingkup/dokumen";
+import { rekomendasiHtml } from "@/templates/ewp/konsulting/analisa";
 
 const routes = [
   {
@@ -89,7 +90,6 @@ const index = () => {
   });
 
   useEffect(() => {
-    console.log("project_id => ", projectDetail);
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
@@ -104,7 +104,7 @@ const index = () => {
       },
       {
         name: `Kertas Kerja`,
-        path: `${pathNameLandingPage}`,
+        path: pathNameLandingPage,
       },
       {
         name: `Dokumen`,
@@ -255,8 +255,6 @@ const index = () => {
           content: documentEWP?.data?.data,
         },
       ]);
-    } else {
-      setDoc([]);
     }
   }, [documentEWP, listContent]);
 
@@ -519,7 +517,7 @@ const index = () => {
         </div>
         <div>
           <Card>
-            <div className="overflow-y-scroll my-2 parent max-h-[40rem]">
+            <div className="overflow-y-scroll my-2 parent max-h-[40rem] flex flex-col">
               <ModalComment
                 callbackRef={ref}
                 show={openCardComment}
@@ -553,7 +551,12 @@ const index = () => {
                         </div>
                         <div
                           className="mt-4"
-                          dangerouslySetInnerHTML={{ __html: v.content }}
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              v?.idx === 4
+                                ? rekomendasiHtml(v?.content?.rekomendasi)
+                                : v?.content,
+                          }}
                         />
                       </div>
                     )}
