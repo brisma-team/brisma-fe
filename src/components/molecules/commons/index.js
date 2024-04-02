@@ -83,6 +83,8 @@ import CardModuleDashboard from "./CardModuleDashboard";
 import CardTitleValue from "./CardTitleValue";
 import ModalDescription from "./ModalDescription";
 import ModalAttachment from "./ModalAttachment";
+import ListContentDocument from "./ListContentDocument";
+import ContentDocument from "./ContentDocument";
 
 export {
   BackButton,
@@ -170,4 +172,6 @@ export {
   CardTitleValue,
   ModalDescription,
   ModalAttachment,
+  ListContentDocument,
+  ContentDocument,
 };

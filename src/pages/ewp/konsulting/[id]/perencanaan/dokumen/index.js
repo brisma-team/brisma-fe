@@ -2,20 +2,13 @@ import { Breadcrumbs, Card, DivButton, PageTitle } from "@/components/atoms";
 import {
   PrevNextNavigation,
   ApprovalItems,
-  ModalComment,
   ModalWorkflow,
+  ListContentDocument,
+  ContentDocument,
 } from "@/components/molecules/commons";
-import { NavigationDocument } from "@/components/molecules/commons";
-import Image from "next/image";
-import { ImageChat } from "@/helpers/imagesUrl";
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
-// import {
-//   useAuditorEWP,
-//   useDocumentEWP,
-//   useWorkflowDetailEWP,
-// } from "@/data/ewp/konvensional";
 import {
   useCommentMapaEWP,
   useDocumentEWP,
@@ -68,7 +61,6 @@ const index = () => {
   const [listContent, setListContent] = useState([]);
   const [listComment, setListComment] = useState([]);
 
-  const ref = useRef(null);
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [openCardComment, setOpenCardComment] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
@@ -211,8 +203,8 @@ const index = () => {
   // [ START ] Hook ini berfungsi untuk merubah fokus dokumen berdasarkan current active index
   // yang diklik pada bagian Navigation Document
   useEffect(() => {
-    if (activeDivRef.current) {
-      activeDivRef.current.focus();
+    if (activeDivRef?.current) {
+      activeDivRef.current?.focus();
       const parentContainer = activeDivRef.current.closest(".parent");
       if (parentContainer) {
         const topOffset = activeDivRef.current.offsetTop - 220;
@@ -480,6 +472,26 @@ const index = () => {
   };
   // [ END ]
 
+  const handleActiveIndex = (index) => {
+    setActiveIndex(index);
+  };
+
+  const handleClickOpenCardComment = (value) => {
+    setOpenCardComment(value);
+  };
+
+  const renderContent = (index, content) => {
+    if (index === 1) {
+      return content;
+    } else if (index === 2) {
+      return timTimeplanHtml(content?.tim);
+    } else if (index === 3) {
+      return anggaranHtml(content?.anggaran);
+    } else if (index === 4) {
+      return programKerjaHtml(content?.lingkup);
+    }
+  };
+
   return (
     <LandingLayoutEWPConsulting>
       <Breadcrumbs data={breadcrumbs} />
@@ -494,113 +506,49 @@ const index = () => {
       </div>
       {/* Start Content */}
       <div className="flex w-full gap-6">
-        <div className="w-64">
-          <div>
-            <Card>
-              <div className="px-3 py-1 w-full">
-                <div className="text-xl">Daftar Isi</div>
-                <div className="pl-2 mt-0.5">
-                  {listContent.map((v, i) => {
-                    return (
-                      <NavigationDocument
-                        key={i}
-                        no={i + 1}
-                        title={v.title}
-                        handleClick={() => setActiveIndex(v.idx)}
-                        activeIndex={currentPosition}
-                        count={v.total_comment}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
+        <ListContentDocument
+          data={listContent}
+          currentPosition={currentPosition}
+          handleActiveIndex={handleActiveIndex}
+        />
         <div>
-          <Card>
-            <div className="overflow-y-scroll my-2 parent max-h-[40rem]">
-              <ModalComment
-                callbackRef={ref}
-                show={openCardComment}
-                handleClickOutside={() => setOpenCardComment(false)}
-                handleSubmitParent={handleSubmitCommentParent}
-                handleSubmitChild={handleSubmitCommentChild}
-                handleSelectedParentComment={handleSelectedParentComment}
-                data={listComment}
-              />
-              {doc.map((v, i) => {
-                return (
-                  <div
-                    key={i}
-                    className={`page-container-a4 shrink-0 ${
-                      i + 1 === activeIndex ? "active" : ""
-                    }`}
-                    tabIndex={i + 1 === activeIndex ? 0 : -1}
-                    ref={i + 1 === activeIndex ? activeDivRef : null}
-                  >
-                    {v.content && (
-                      <div className="px-4 h-full w-full relative page-content-a4">
-                        <div className="flex justify-between">
-                          <div className="font-bold text-xl">{v.title}</div>
-                          <div className="flex items-center" ref={ref}>
-                            <DivButton
-                              handleClick={() => handleClickComment(v.idx)}
-                            >
-                              <Image src={ImageChat} alt="chat" />
-                            </DivButton>
-                          </div>
-                        </div>
-                        <div
-                          className="mt-4"
-                          dangerouslySetInnerHTML={{
-                            __html:
-                              v?.idx === 1
-                                ? v.content
-                                : v?.idx === 2
-                                ? timTimeplanHtml(v?.content?.tim)
-                                : v?.idx === 3
-                                ? anggaranHtml(v?.content?.anggaran)
-                                : v?.idx === 4
-                                ? programKerjaHtml(v?.content?.lingkup)
-                                : "",
-                          }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
+          <ContentDocument
+            dataDoc={doc}
+            dataComment={listComment}
+            activeDivRef={activeDivRef}
+            activeIndex={activeIndex}
+            isOpenCardComment={openCardComment}
+            renderContent={renderContent}
+            handleClickComment={handleClickComment}
+            handleIsOpenCardComment={handleClickOpenCardComment}
+            handleSelectedParentComment={handleSelectedParentComment}
+            handleSubmitCommentParent={handleSubmitCommentParent}
+            handleSubmitCommentChild={handleSubmitCommentChild}
+          />
         </div>
         <div>
           <DivButton
             handleClick={() => setShowModalApproval(true)}
             className="no-underline hover:no-underline w-56"
           >
-            <div>
-              <Card>
-                <div className="w-full">
-                  <div className="px-3">
-                    <p className="text-brisma font-bold text-xl">Approval</p>
-                    <ApprovalItems
-                      title={"P.I.C Auditor"}
-                      text={workflowData?.maker?.nama}
-                    />
-                    <ApprovalItems
-                      title={"Approver"}
-                      text={workflowData?.ref_tim_audit_approver}
-                      data={workflowData}
-                    />
-                    <ApprovalItems
-                      title={"Signer"}
-                      text={workflowData?.ref_tim_audit_signer}
-                    />
-                  </div>
-                </div>
-              </Card>
-            </div>
+            <Card>
+              <div className="w-full px-3">
+                <p className="text-brisma font-bold text-xl">Approval</p>
+                <ApprovalItems
+                  title={"P.I.C Auditor"}
+                  text={workflowData?.maker?.nama}
+                />
+                <ApprovalItems
+                  title={"Approver"}
+                  text={workflowData?.ref_tim_audit_approver}
+                  data={workflowData}
+                />
+                <ApprovalItems
+                  title={"Signer"}
+                  text={workflowData?.ref_tim_audit_signer}
+                />
+              </div>
+            </Card>
           </DivButton>
           <ModalWorkflow
             workflowData={workflowData}

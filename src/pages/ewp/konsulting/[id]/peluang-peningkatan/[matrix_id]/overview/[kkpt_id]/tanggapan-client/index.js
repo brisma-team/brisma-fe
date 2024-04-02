@@ -11,6 +11,8 @@ import {
 } from "@/components/molecules/commons";
 import { fetchApi, loadingSwal, usePostFileData } from "@/helpers";
 import { useDetailTanggapanClient } from "@/data/ewp/konsulting/peluang-peningkatan/matrix";
+import { useLandingStatus } from "@/data/ewp/konsulting/peluang-peningkatan/matrix/detail";
+import useUser from "@/data/useUser";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -40,12 +42,17 @@ const index = () => {
   const [attachmentClipList, setAttachmentClipList] = useState([]);
   const [content, setContent] = useState("");
   const [typeUpload, setTypeUpload] = useState("");
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
+  const [isAuditor, setIsAuditor] = useState(false);
 
   const { projectDetail } = useProjectDetail({ id });
   const { tanggapanClientData, tanggapanClientDataMutate } =
     useDetailTanggapanClient({
       id: kkpt_id,
     });
+  const { landingStatus } = useLandingStatus(kkpt_id);
+  const { user } = useUser();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -73,11 +80,25 @@ const index = () => {
         path: `${pathNameContent}/tanggapan-client`,
       },
     ]);
-  }, [projectDetail]);
+    setIsCloseSubmodule(
+      Boolean(projectDetail?.data?.realisasi?.peluang_peningkatan_real_end)
+    );
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+  }, [projectDetail, user]);
 
   useEffect(() => {
     setContent(tanggapanClientData?.data?.tanggapan_manajemen || "");
   }, [tanggapanClientData]);
+
+  useEffect(() => {
+    setIsAuditor(
+      Boolean(landingStatus?.data?.info?.auditor?.pn == user?.data?.pn)
+    );
+  }, [landingStatus, user]);
 
   const handleClickUploadAttachment = () => {
     setTypeUpload("attachment");
@@ -148,11 +169,13 @@ const index = () => {
             data={imageClipList}
             handleChange={handleUploadFile}
             handleClick={handleClickUploadImage}
+            isHideButton={!((isInitiator || isAuditor) && !isCloseSubmodule)}
           />
           <AttachmentClipping
             data={attachmentClipList}
             handleChange={handleUploadFile}
             handleClick={handleClickUploadAttachment}
+            isHideButton={!((isInitiator || isAuditor) && !isCloseSubmodule)}
           />
         </div>
         <div>
@@ -164,11 +187,15 @@ const index = () => {
               onChange={(value) => setContent(value)}
             />
           </div>
-          <div className="mt-3 flex justify-end">
-            <div className="w-[7.75rem] bg-atlasian-green rounded">
-              <ButtonField text={"Simpan"} handler={handleSubmit} />
+          {(isInitiator || isAuditor) && !isCloseSubmodule ? (
+            <div className="mt-3 flex justify-end">
+              <div className="w-[7.75rem] bg-atlasian-green rounded">
+                <ButtonField text={"Simpan"} handler={handleSubmit} />
+              </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
       {/* End Content */}

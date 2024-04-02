@@ -158,11 +158,13 @@ const index = () => {
             data={imageClipList}
             handleChange={handleUploadFile}
             handleClick={handleClickUploadImage}
+            isHideButton={!((isInitiator || isAuditor) && !isCloseSubmodule)}
           />
           <AttachmentClipping
             data={attachmentClipList}
             handleChange={handleUploadFile}
             handleClick={handleClickUploadAttachment}
+            isHideButton={!((isInitiator || isAuditor) && !isCloseSubmodule)}
           />
         </div>
         <div>

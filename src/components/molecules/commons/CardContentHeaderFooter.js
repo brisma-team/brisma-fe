@@ -18,7 +18,7 @@ const CardContentHeaderFooter = ({
     <div
       className={`${width || `w-full`} ${
         height || `h-full`
-      } rounded flex flex-col items-center ${className}`}
+      } rounded flex flex-col items-center bg-white ${className}`}
       style={{
         color: token("color.text", N800),
         borderRadius: "10px",

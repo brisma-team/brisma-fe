@@ -89,7 +89,7 @@ const timTimeplanHtml = (data) => {
           <p style="font-size:12px">${v?.mandays}</p>
         </td>
         <td style="border: 1px solid #ccc;">
-          <p style="font-size:12px">${v?.deskripsi}</p>
+          <p style="font-size:12px">${v?.deskripsi || ""}</p>
         </td>
           </tr>`;
       })

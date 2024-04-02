@@ -8,7 +8,9 @@ import { useDispatch } from "react-redux";
 import {
   useKKPTRekomendasi,
   useKKPTRisk,
+  useLandingStatus,
 } from "@/data/ewp/konsulting/peluang-peningkatan/matrix/detail";
+import useUser from "@/data/useUser";
 import { useSelector } from "react-redux";
 import {
   resetDataTables,
@@ -49,8 +51,35 @@ const index = () => {
   const pathNameContent = `${baseUrl}/peluang-peningkatan/${matrix_id}/overview/${kkpt_id}`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [selectedRiskId, setSelectedRiskId] = useState(0);
+
+  const [isAddNewRow, setIsAddNewRow] = useState(false);
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
+  const [isAuditor, setIsAuditor] = useState(false);
+
+  const dataTables = useSelector((state) => state.riskRekomendasi.dataTables);
+  const payloadNewRisk = useSelector(
+    (state) => state.riskRekomendasi.payloadNewRisk
+  );
+  const payloadNewLingkup = useSelector(
+    (state) => state.riskRekomendasi.payloadNewLingkup
+  );
+  const payloadNewRekomendasi = useSelector(
+    (state) => state.riskRekomendasi.payloadNewRekomendasi
+  );
 
   const { projectDetail } = useProjectDetail({ id });
+  const { riskData, riskMutate } = useKKPTRisk({
+    id: kkpt_id,
+  });
+  const { rekomendasiData, rekomendasiMutate, rekomendasiError } =
+    useKKPTRekomendasi({
+      id: selectedRiskId,
+    });
+  const { landingStatus } = useLandingStatus(kkpt_id);
+  const { user } = useUser();
+
   useEffect(() => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
@@ -77,28 +106,22 @@ const index = () => {
         path: `${pathNameContent}/risk-rekomendasi`,
       },
     ]);
-  }, [projectDetail]);
+    setIsCloseSubmodule(
+      Boolean(projectDetail?.data?.realisasi?.peluang_peningkatan_real_end)
+    );
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+  }, [projectDetail, user]);
 
-  const [isAddNewRow, setIsAddNewRow] = useState(false);
+  useEffect(() => {
+    setIsAuditor(
+      Boolean(landingStatus?.data?.info?.auditor?.pn == user?.data?.pn)
+    );
+  }, [landingStatus, user]);
 
-  const [selectedRiskId, setSelectedRiskId] = useState(0);
-  const dataTables = useSelector((state) => state.riskRekomendasi.dataTables);
-  const payloadNewRisk = useSelector(
-    (state) => state.riskRekomendasi.payloadNewRisk
-  );
-  const payloadNewLingkup = useSelector(
-    (state) => state.riskRekomendasi.payloadNewLingkup
-  );
-  const payloadNewRekomendasi = useSelector(
-    (state) => state.riskRekomendasi.payloadNewRekomendasi
-  );
-  const { riskData, riskMutate } = useKKPTRisk({
-    id: kkpt_id,
-  });
-  const { rekomendasiData, rekomendasiMutate, rekomendasiError } =
-    useKKPTRekomendasi({
-      id: selectedRiskId,
-    });
   useEffect(() => {
     if (riskData?.data?.length) {
       const filterData = riskData.data.filter((v) => v.is_active);
@@ -115,7 +138,7 @@ const index = () => {
           index,
           kkpt_id,
           kkpt_risk_id: id,
-          lingkup_pemeriksaan: lingkup_pemeriksaan_name || "N/A",
+          lingkup_pemeriksaan: lingkup_pemeriksaan_name || "-",
           abbr: ref_risk_issue_abbr,
           rekomendasi_name: ref_risk_issue_name,
           rekomendasi_terpilih: jumlah_rekomendasi || 0,
@@ -195,8 +218,8 @@ const index = () => {
       dispatch(setDataTables({ ...dataTables, rekomendasiList: [] }));
       dispatch(resetPayloadNewRekomendasi());
     }
-    // dispatch(resetPayloadNewResponden());
   }, [rekomendasiData]);
+
   // [START] Handler for Risk Control
   const handleClickAddRow = () => {
     if (!isAddNewRow) {
@@ -236,11 +259,11 @@ const index = () => {
   };
 
   const handleClickSave = async () => {
-    loadingSwal();
-    if (!payloadNewRisk.risk_kode) {
-      await errorSwal("Silahkan pilih uker terlebih dahulu");
+    if (!payloadNewRisk?.risk_kode) {
+      await errorSwal("Silahkan pilih risk control terlebih dahulu");
       return;
     }
+    loadingSwal();
     await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/kkpt_risk`,
@@ -289,9 +312,9 @@ const index = () => {
     dispatch(resetPayloadNewLingkup());
     dispatch(setPayloadNewLingkup({ lingkup_pemeriksaan_id: id }));
   };
-  // [END] Handler for uker
+  // [END] Handler for Risk Control
 
-  // [START] Handler add responden by uker pn
+  // [START] Handler add rekomendasi
   const handleChangeChecboxRekomendasi = (isChecked, rekomendasi) => {
     const updatedData = [...payloadNewRekomendasi];
 
@@ -317,6 +340,11 @@ const index = () => {
   };
 
   const handleClickSaveRekomendasi = async () => {
+    if (!selectedRiskId) {
+      await errorSwal("Silahkan pilih risk control terlebih dahulu");
+      return;
+    }
+
     loadingSwal();
     const payload = payloadNewRekomendasi?.map((data) => {
       const { id, deadline, rekomendasi_name } = data;
@@ -336,6 +364,7 @@ const index = () => {
     rekomendasiMutate();
     loadingSwal("close");
   };
+  // [END] Handler add rekomendasi
 
   return (
     <LandingLayoutEWPConsulting>
@@ -362,7 +391,7 @@ const index = () => {
             selectedEWPId={id}
             selectedLingkupId={payloadNewLingkup?.lingkup_pemeriksaan_id}
             selectedRiskId={selectedRiskId}
-            isDisabled={false}
+            isDisabled={!((isInitiator || isAuditor) && !isCloseSubmodule)}
             handleChangeRisk={handleChangeValue}
             handleChangeLingkup={handleChangeValueLingkup}
             handleClickAddRow={handleClickAddRow}
@@ -374,9 +403,8 @@ const index = () => {
           <TableRekomendasi
             data={dataTables.rekomendasiList}
             selectedRekomendasi={payloadNewRekomendasi}
-            isDisabled={false}
+            isDisabled={!((isInitiator || isAuditor) && !isCloseSubmodule)}
             handleChangeCheckbox={handleChangeChecboxRekomendasi}
-            // handleClickSelectedAll={handleClickSelectedAllRespondenPn}
             handleClickSave={handleClickSaveRekomendasi}
           />
         </div>

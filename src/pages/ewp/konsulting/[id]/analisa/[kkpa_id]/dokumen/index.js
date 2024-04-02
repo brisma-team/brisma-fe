@@ -2,12 +2,10 @@ import { Breadcrumbs, Card, DivButton, PageTitle } from "@/components/atoms";
 import {
   PrevNextNavigation,
   ApprovalItems,
-  ModalComment,
   ModalWorkflow,
+  ListContentDocument,
+  ContentDocument,
 } from "@/components/molecules/commons";
-import { NavigationDocument } from "@/components/molecules/commons";
-import Image from "next/image";
-import { ImageChat } from "@/helpers/imagesUrl";
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
@@ -31,6 +29,7 @@ import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useWorkflowDetailEWP } from "@/data/ewp";
 import { useComment } from "@/data/ewp/konsulting/analisa/lingkup/dokumen";
+import { rekomendasiHtml } from "@/templates/ewp/konsulting/analisa";
 
 const routes = [
   {
@@ -57,7 +56,6 @@ const index = () => {
   const [listContent, setListContent] = useState([]);
   const [listComment, setListComment] = useState([]);
 
-  const ref = useRef(null);
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [openCardComment, setOpenCardComment] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
@@ -89,7 +87,6 @@ const index = () => {
   });
 
   useEffect(() => {
-    console.log("project_id => ", projectDetail);
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
@@ -104,7 +101,7 @@ const index = () => {
       },
       {
         name: `Kertas Kerja`,
-        path: `${pathNameLandingPage}`,
+        path: pathNameLandingPage,
       },
       {
         name: `Dokumen`,
@@ -255,8 +252,6 @@ const index = () => {
           content: documentEWP?.data?.data,
         },
       ]);
-    } else {
-      setDoc([]);
     }
   }, [documentEWP, listContent]);
 
@@ -476,9 +471,21 @@ const index = () => {
   };
   // [ END ]
 
-  useEffect(() => {
-    console.log("doc => ", doc);
-  }, [doc]);
+  const handleActiveIndex = (index) => {
+    setActiveIndex(index);
+  };
+
+  const handleClickOpenCardComment = (value) => {
+    setOpenCardComment(value);
+  };
+
+  const renderContent = (index, content) => {
+    if (index === 4) {
+      return rekomendasiHtml(content?.rekomendasi);
+    } else {
+      return content;
+    }
+  };
 
   return (
     <LandingLayoutEWPConsulting>
@@ -494,102 +501,49 @@ const index = () => {
       </div>
       {/* Start Content */}
       <div className="flex w-full gap-6">
-        <div className="w-64">
-          <div>
-            <Card>
-              <div className="px-3 py-1 w-full">
-                <div className="text-xl">Daftar Isi 2</div>
-                <div className="pl-2 mt-0.5">
-                  {listContent.map((v, i) => {
-                    return (
-                      <NavigationDocument
-                        key={i}
-                        no={i + 1}
-                        title={v.title}
-                        handleClick={() => setActiveIndex(v.idx)}
-                        activeIndex={currentPosition}
-                        count={v.total_comment}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
+        <ListContentDocument
+          data={listContent}
+          currentPosition={currentPosition}
+          handleActiveIndex={handleActiveIndex}
+        />
         <div>
-          <Card>
-            <div className="overflow-y-scroll my-2 parent max-h-[40rem]">
-              <ModalComment
-                callbackRef={ref}
-                show={openCardComment}
-                handleClickOutside={() => setOpenCardComment(false)}
-                handleSubmitParent={handleSubmitCommentParent}
-                handleSubmitChild={handleSubmitCommentChild}
-                handleSelectedParentComment={handleSelectedParentComment}
-                data={listComment}
-              />
-              {doc.map((v, i) => {
-                return (
-                  <div
-                    key={i}
-                    className={`page-container-a4 shrink-0 ${
-                      i + 1 === activeIndex ? "active" : ""
-                    }`}
-                    tabIndex={i + 1 === activeIndex ? 0 : -1}
-                    ref={i + 1 === activeIndex ? activeDivRef : null}
-                  >
-                    {v.content && (
-                      <div className="px-4 h-full w-full relative page-content-a4">
-                        <div className="flex justify-between">
-                          <div className="font-bold text-xl">{v.title}</div>
-                          <div className="flex items-center" ref={ref}>
-                            <DivButton
-                              handleClick={() => handleClickComment(v.idx)}
-                            >
-                              <Image src={ImageChat} alt="chat" />
-                            </DivButton>
-                          </div>
-                        </div>
-                        <div
-                          className="mt-4"
-                          dangerouslySetInnerHTML={{ __html: v.content }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
+          <ContentDocument
+            dataDoc={doc}
+            dataComment={listComment}
+            activeDivRef={activeDivRef}
+            activeIndex={activeIndex}
+            isOpenCardComment={openCardComment}
+            renderContent={renderContent}
+            handleClickComment={handleClickComment}
+            handleIsOpenCardComment={handleClickOpenCardComment}
+            handleSelectedParentComment={handleSelectedParentComment}
+            handleSubmitCommentParent={handleSubmitCommentParent}
+            handleSubmitCommentChild={handleSubmitCommentChild}
+          />
         </div>
         <div>
           <DivButton
             handleClick={() => setShowModalApproval(true)}
             className="no-underline hover:no-underline w-56"
           >
-            <div>
-              <Card>
-                <div className="w-full">
-                  <div className="px-3">
-                    <p className="text-brisma font-bold text-xl">Approval</p>
-                    <ApprovalItems
-                      title={"P.I.C Auditor"}
-                      text={workflowData?.maker?.name}
-                    />
-                    <ApprovalItems
-                      title={"Approver"}
-                      text={workflowData?.ref_tim_audit_approver}
-                      data={workflowData}
-                    />
-                    <ApprovalItems
-                      title={"Signer"}
-                      text={workflowData?.ref_tim_audit_signer}
-                    />
-                  </div>
-                </div>
-              </Card>
-            </div>
+            <Card>
+              <div className="w-full px-3">
+                <p className="text-brisma font-bold text-xl">Approval</p>
+                <ApprovalItems
+                  title={"P.I.C Auditor"}
+                  text={workflowData?.maker?.name}
+                />
+                <ApprovalItems
+                  title={"Approver"}
+                  text={workflowData?.ref_tim_audit_approver}
+                  data={workflowData}
+                />
+                <ApprovalItems
+                  title={"Signer"}
+                  text={workflowData?.ref_tim_audit_signer}
+                />
+              </div>
+            </Card>
           </DivButton>
           <ModalWorkflow
             workflowData={workflowData}

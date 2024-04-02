@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   objData: [],
+  objDataPicControl: [],
   objPayload: {
     judul_kkpt: "",
     auditor: {},
@@ -20,6 +21,9 @@ export const overviewDetailPeluangSlice = createSlice({
     setObjData: (state, action) => {
       state.objData = action.payload;
     },
+    setObjDataPicControl: (state, action) => {
+      state.objDataPicControl = action.payload;
+    },
     setObjPayload: (state, action) => {
       state.objPayload = action.payload;
     },
@@ -28,6 +32,9 @@ export const overviewDetailPeluangSlice = createSlice({
     },
     resetObjData: (state) => {
       state.objData = [];
+    },
+    resetObjDataPicControl: (state) => {
+      state.objDataPicControl = [];
     },
     resetObjPayload: (state) => {
       state.objPayload = { ...state.defaultObjPayload };
@@ -40,9 +47,11 @@ export const overviewDetailPeluangSlice = createSlice({
 
 export const {
   setObjData,
+  setObjDataPicControl,
   setObjPayload,
   setValidationErrors,
   resetObjData,
+  resetObjDataPicControl,
   resetObjPayload,
   resetValidationErrors,
 } = overviewDetailPeluangSlice.actions;
