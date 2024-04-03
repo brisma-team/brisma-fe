@@ -6,7 +6,6 @@ import {
   DatepickerStartEnd,
   ErrorValidation,
   Select,
-  TextAreaField,
   TextInput,
   UploadButton,
 } from "@/components/atoms";
@@ -285,20 +284,6 @@ const ModalBodyScheduleNonPAT = ({
                       />
                     }
                     label="Periode Kegiatan*"
-                    widthLabel={"w-3/12"}
-                    widthForm={"w-9/12"}
-                  />
-                  <FormWithLabel
-                    form={
-                      <TextAreaField
-                        handleChange={(e) =>
-                          handleChangeText("deskripsi", e.target.value)
-                        }
-                        placeholder={"Deskripsi Kegiatan"}
-                        value={data?.deskripsi}
-                      />
-                    }
-                    label="Deskripsi Kegiatan"
                     widthLabel={"w-3/12"}
                     widthForm={"w-9/12"}
                   />
