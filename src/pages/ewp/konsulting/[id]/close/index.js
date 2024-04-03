@@ -5,6 +5,7 @@ import {
   RealizationTable,
 } from "@/components/molecules/ewp/konsulting/close";
 import { useProjectDetail } from "@/data/ewp/konsulting";
+import useUser from "@/data/useUser";
 import { confirmationSwal, fetchApi, loadingSwal } from "@/helpers";
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
@@ -16,11 +17,14 @@ const index = () => {
   const pathNameSubModulClose = `${baseUrl}/close`;
 
   const [showModal, setShowModal] = useState(false);
-  const [isClosed, setIsClosed] = useState(false);
   const [closingStatement, setClosingStatement] = useState("");
   const [dataTables, setDataTables] = useState([]);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [isFinalProject, setIsFinalProject] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
+
   const { projectDetail, projectDetailMutate } = useProjectDetail({ id });
+  const { user } = useUser();
 
   useEffect(() => {
     const status_code =
@@ -87,9 +91,14 @@ const index = () => {
         path: pathNameSubModulClose,
       },
     ]);
-    setIsClosed(Boolean(status_code === 9)); // is final
+    setIsFinalProject(Boolean(status_code == 9));
     setClosingStatement(projectDetail?.data?.project_info?.closing_statement);
-  }, [projectDetail]);
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+  }, [projectDetail, user]);
 
   const handleClickCloseStatement = () => {
     setShowModal(true);
@@ -147,7 +156,7 @@ const index = () => {
                   <RealizationTable data={dataTables} />
                 </div>
               </Card>
-              {!isClosed ? (
+              {!isFinalProject && isInitiator ? (
                 <div className="w-full flex items-center justify-end gap-4">
                   <div className="w-40 text-sm font-semibold bg-atlasian-blue-light rounded">
                     <ButtonField

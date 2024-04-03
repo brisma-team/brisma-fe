@@ -14,7 +14,11 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import {
   confirmationSwal,
+  convertDate,
+  dateNow,
+  downloadFromUrl,
   fetchApi,
+  infoSwal,
   loadingSwal,
   setErrorValidation,
   usePostFileData,
@@ -32,6 +36,7 @@ import {
 import uploadDocumentEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/dokumen/uploadDocumentEWPKonsultingSchema";
 import { IconArrowDown } from "@/components/icons";
 import _ from "lodash";
+import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -45,6 +50,8 @@ const index = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [dataBulkDownload, setDataBulkDownload] = useState([]);
   const [filterBulkDownload, setFilterBulkDownload] = useState({});
+  const [isFinalProject, setIsFinalProject] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
 
   const data = useSelector((state) => state.documentEWPKonsulting.objData);
   const payload = useSelector(
@@ -60,6 +67,7 @@ const index = () => {
     ref_document_id: filterBulkDownload?.kode || "",
     id,
   });
+  const { user } = useUser();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -75,7 +83,15 @@ const index = () => {
         path: baseUrl + "/dokumen",
       },
     ]);
-  }, [projectDetail]);
+    setIsFinalProject(
+      Boolean(projectDetail?.data?.project_info?.status_kode === "9")
+    );
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+  }, [projectDetail, user]);
 
   useEffect(() => {
     if (bulkDownloadDocument?.findAllDoc?.length) {
@@ -102,6 +118,7 @@ const index = () => {
           deskripsi,
           ref_document_id,
           ref_document_name,
+          doc_name,
         } = v;
         return {
           index,
@@ -113,6 +130,7 @@ const index = () => {
           deskripsi,
           ref_document_id,
           ref_document_name,
+          doc_name,
         };
       });
 
@@ -126,8 +144,37 @@ const index = () => {
     setShowModal(true);
   };
 
-  const handleClickBulkDownload = () => {
-    setShowModalBulkDownload(true);
+  const handleClickBulkDownload = async () => {
+    if (dataBulkDownload?.length) {
+      loadingSwal();
+      const mappingUrl = dataBulkDownload.map((v) => {
+        return v?.file_url;
+      });
+      const response = await fetchApi(
+        "POST",
+        `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/cdn/bulk_download`,
+        {
+          url_list: mappingUrl,
+          file_name: `BulkDownloadDocument-${convertDate(dateNow(), "")}`,
+          modul: "ewp",
+        },
+        true
+      );
+
+      if (response?.url?.length) {
+        const url = response?.url[0];
+        const regex = /\/([^\/]+\.zip)$/;
+        const matches = url.match(regex);
+        let fileName = "";
+        if (matches && matches.length) {
+          fileName = matches[1];
+        }
+        downloadFromUrl(url, fileName);
+      }
+      loadingSwal("close");
+    } else {
+      await infoSwal("Tidak ada dokumen yang dapat didownload!");
+    }
   };
 
   // [ START ] handler for modal bulk download
@@ -142,6 +189,7 @@ const index = () => {
 
     setShowModalBulkDownload(false);
     setFilterBulkDownload({});
+    setDataBulkDownload([]);
   };
 
   const handleChangeFilterBulkDownload = (e) => {
@@ -150,6 +198,10 @@ const index = () => {
 
   const handleResetFilterBulkDonwload = () => {
     setFilterBulkDownload({});
+  };
+
+  const handleOpenModalBulkDownload = () => {
+    setShowModalBulkDownload(true);
   };
   // [ END ] handler for modal bulk download
 
@@ -303,22 +355,27 @@ const index = () => {
           <div className="flex flex-col gap-4 px-6 pt-2 pb-4 w-full">
             <DataTables
               data={data}
+              withoutAction={!(isInitiator && !isFinalProject)}
               handleClickDelete={handleClickDeleteTable}
               handleClickInfo={handleClickInfoTable}
             />
             <div className="w-full flex justify-end gap-3">
-              <div className="w-40 rounded border-2">
-                <ButtonField
-                  icon={
-                    <div className="text-brisma rotate-180">
-                      <IconArrowDown />
-                    </div>
-                  }
-                  text={`Upload`}
-                  textColor={"brisma"}
-                  handler={handleClickUpload}
-                />
-              </div>
+              {isInitiator && !isFinalProject ? (
+                <div className="w-40 rounded border-2">
+                  <ButtonField
+                    icon={
+                      <div className="text-brisma rotate-180">
+                        <IconArrowDown />
+                      </div>
+                    }
+                    text={`Upload`}
+                    textColor={"brisma"}
+                    handler={handleClickUpload}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
               <div className="w-40 rounded border-2">
                 <ButtonField
                   icon={
@@ -328,7 +385,7 @@ const index = () => {
                   }
                   text={`Bulk Download`}
                   textColor={"brisma"}
-                  handler={handleClickBulkDownload}
+                  handler={handleOpenModalBulkDownload}
                 />
               </div>
             </div>

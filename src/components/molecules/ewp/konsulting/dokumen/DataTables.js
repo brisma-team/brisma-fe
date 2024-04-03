@@ -10,7 +10,12 @@ import { ButtonIcon } from "@/components/atoms";
 import { ButtonDelete, ButtonDownload } from "@/components/molecules/commons";
 import { IconInfo } from "@/components/icons";
 
-const DataTables = ({ data, handleClickDelete, handleClickInfo }) => {
+const DataTables = ({
+  data,
+  withoutAction,
+  handleClickDelete,
+  handleClickInfo,
+}) => {
   return (
     <div className="dataTables-custom">
       <TableTree>
@@ -57,6 +62,7 @@ const DataTables = ({ data, handleClickDelete, handleClickInfo }) => {
             file_name,
             uploader,
             ref_document_name,
+            doc_name,
           }) => (
             <Row>
               <Cell className="!hidden" />
@@ -73,10 +79,14 @@ const DataTables = ({ data, handleClickDelete, handleClickInfo }) => {
                     downloadFilename={file_name}
                     downloadUrl={file_url}
                   />
-                  <ButtonIcon
-                    icon={<ButtonDelete />}
-                    handleClick={async () => await handleClickDelete(doc_id)}
-                  />
+                  {!withoutAction ? (
+                    <ButtonIcon
+                      icon={<ButtonDelete />}
+                      handleClick={async () => await handleClickDelete(doc_id)}
+                    />
+                  ) : (
+                    ""
+                  )}
                   <ButtonIcon
                     icon={
                       <div className="h-full flex items-center">
@@ -95,7 +105,7 @@ const DataTables = ({ data, handleClickDelete, handleClickInfo }) => {
                 {convertDate(upload_date, "/", "d")}
               </Cell>
               <Cell width="40%" className="border-r cell-custom-dataTables">
-                {file_name}
+                {doc_name}
               </Cell>
               <Cell width="20%" className="border-r cell-custom-dataTables">
                 {uploader}
