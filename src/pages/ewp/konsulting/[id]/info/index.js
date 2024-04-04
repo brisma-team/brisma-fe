@@ -10,6 +10,7 @@ import {
   RealizationTable,
   UkerAssessmentTable,
   InfoPAT,
+  ModalEditProject,
 } from "@/components/molecules/ewp/konsulting/info";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import {
@@ -18,8 +19,10 @@ import {
 } from "@/data/ewp/konsulting/info";
 import {
   confirmationSwal,
+  convertDate,
   errorSwalTimeout,
   fetchApi,
+  infoSwal,
   loadingSwal,
   setErrorValidation,
   usePostFileData,
@@ -30,18 +33,26 @@ import { useEffect, useState } from "react";
 import _ from "lodash";
 import {
   setObjDataInfoPAT,
+  setObjPayloadEditProject,
   setObjPayloadRelatedProject,
   setObjPayloadUkerAssessment,
+  setValidationErrorsEditProject,
   setValidationErrorsRelatedProject,
   resetObjDataInfoPAT,
+  resetObjPayloadEditProject,
   resetObjPayloadRelatedProject,
   resetObjPayloadUkerAssessment,
   resetValidationErrorsRelatedProject,
+  resetValidationErrorsEditProject,
 } from "@/slices/ewp/konsulting/info/infoEWPKonsultingSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useActivitySchedule } from "@/data/pat";
 import TableRelatedProject from "@/components/molecules/ewp/konsulting/overview/sub-modal/non-pat/TableRelatedProject";
 import { relatedProjectNonPATSchema } from "@/helpers/schemas/ewp/konsulting/overview/projectOverviewEWPKonsultingSchema";
+import {
+  PATSchema,
+  nonPATSchema,
+} from "@/helpers/schemas/ewp/konsulting/info/editProjectEWPKonsultingSchema";
 import useUser from "@/data/useUser";
 
 const index = () => {
@@ -54,7 +65,9 @@ const index = () => {
     { idx: 3, title: "UKER Assessment" },
     { idx: 4, title: "Info PAT" },
   ];
+  const [isPAT, setIsPAT] = useState(false);
   const [isInitiator, setIsInitiator] = useState(false);
+  const [isFinalProject, setIsFinalProject] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isAddNewRowUker, setIsAddNewRowUker] = useState(false);
   const [isAddNewRowRelatedProject, setIsAddNewRowRelatedProject] =
@@ -66,6 +79,7 @@ const index = () => {
   const [dataTables, setDataTables] = useState([]);
   const [dataRelatedProject, setDataRelatedProject] = useState([]);
   const [dataUkerAssessment, setDataUkerAssessment] = useState([]);
+  const [showModalEditProject, setShowModalEditProject] = useState(false);
   const [showModalDescription, setShowModalDescription] = useState(false);
   const [showModalAttachment, setShowModalAttachment] = useState(false);
 
@@ -87,11 +101,17 @@ const index = () => {
   const payloadRelatedProject = useSelector(
     (state) => state.infoEWPKonsulting.objPayloadRelatedProject
   );
+  const payloadEditProject = useSelector(
+    (state) => state.infoEWPKonsulting.objPayloadEditProject
+  );
   const payloadUkerAssessment = useSelector(
     (state) => state.infoEWPKonsulting.objPayloadUkerAssessment
   );
   const validationRelatedProject = useSelector(
     (state) => state.infoEWPKonsulting.validationErrorsRelatedProject
+  );
+  const validationEditProject = useSelector(
+    (state) => state.infoEWPKonsulting.validationErrorsEditProject
   );
 
   const breadcrumbs = [
@@ -170,12 +190,46 @@ const index = () => {
         url: `/ewp/konsulting/${id}/wrapup`,
       },
     ]);
+
     setIsInitiator(
       Boolean(
         projectDetail?.data?.project_info?.initiator?.pn == user?.data?.pn
       )
     );
+    setIsFinalProject(
+      Boolean(projectDetail?.data?.project_info?.status_kode === "9")
+    );
+    setIsPAT(Boolean(projectDetail?.data?.project_info?.is_pat));
   }, [projectDetail, user]);
+
+  useEffect(() => {
+    const projectInfo = projectDetail?.data?.project_info;
+    const pickPayload = _.pick(projectInfo, [
+      "ref_metode",
+      "ref_tipe",
+      "ref_jenis",
+      "ref_tema",
+      "project_name",
+      "no_surat",
+      "perihal",
+      "tanggal_surat",
+      "nama_file_surat",
+      "url_file_surat",
+    ]);
+    const objFixPayload = {
+      ...pickPayload,
+      info_periode_pelaksanaan_start: convertDate(
+        projectInfo?.info_periode_pelaksanaan_start,
+        "-"
+      ),
+      info_periode_pelaksanaan_end: convertDate(
+        projectInfo?.info_periode_pelaksanaan_end,
+        "-"
+      ),
+      tanggal_surat: convertDate(projectInfo?.tanggal_surat, "-"),
+    };
+    dispatch(setObjPayloadEditProject(objFixPayload));
+  }, [projectDetail, showModalEditProject]);
 
   useEffect(() => {
     if (projectDetailError) {
@@ -449,6 +503,12 @@ const index = () => {
 
   // [ START ] handler for modal related project
   const handleSubmitRelatedProject = async () => {
+    if (isAddNewRowRelatedProject) {
+      await infoSwal(
+        "Anda sedang menambahkan proyek terkait. Silahkan lengkapi terlebih dahulu"
+      );
+      return;
+    }
     loadingSwal();
     await fetchApi(
       "POST",
@@ -525,6 +585,97 @@ const index = () => {
   };
   // [ END ] handler for modal related project
 
+  // [ START ] handler for modal edit project
+  const handleOpenModalEditProject = () => {
+    setShowModalEditProject(true);
+  };
+
+  const handleCloseModalEditProject = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    setShowModalEditProject(false);
+  };
+
+  const handleChangePayloadEditProject = (property, value) => {
+    dispatch(
+      setObjPayloadEditProject({
+        ...payloadEditProject,
+        [property]: value,
+      })
+    );
+  };
+
+  const handleResetPayloadEditProject = (property) => {
+    dispatch(
+      setObjPayloadEditProject({
+        ...payloadEditProject,
+        [property]: "",
+      })
+    );
+  };
+
+  const handleUploadSurat = async (e) => {
+    loadingSwal();
+    const files = e?.target?.files;
+    if (files) {
+      const url = `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/cdn/upload`;
+
+      const response = await usePostFileData(
+        url,
+        {
+          file: files[0],
+          modul: "ewp",
+        },
+        true
+      );
+
+      dispatch(
+        setObjPayloadEditProject({
+          ...payloadEditProject,
+          url_file_surat: response.url[0],
+          nama_file_surat: files[0].name,
+        })
+      );
+    }
+    loadingSwal("close");
+  };
+
+  const handleSubmitEditProject = async () => {
+    const schemaMapping = {
+      schema: isPAT ? PATSchema : nonPATSchema,
+      resetErrors: resetValidationErrorsEditProject,
+      setErrors: setValidationErrorsEditProject,
+    };
+    const payload = isPAT
+      ? _.pick(payloadEditProject, [
+          "project_name",
+          "info_periode_pelaksanaan_start",
+          "info_periode_pelaksanaan_end",
+        ])
+      : payloadEditProject;
+
+    const validate = setErrorValidation(payload, dispatch, schemaMapping);
+    if (validate) {
+      loadingSwal();
+      await fetchApi(
+        "PATCH",
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/${id}/audit_info/update`,
+        payload
+      );
+      dispatch(resetObjPayloadEditProject());
+      dispatch(resetValidationErrorsEditProject());
+      projectDetailMutate();
+      setShowModalEditProject(false);
+      loadingSwal("close");
+    }
+  };
+  // [ END ] handler for modal edit project
+
   return (
     <LandingLayoutEWPConsulting>
       <div className="w-[71.5rem]">
@@ -558,12 +709,12 @@ const index = () => {
                   />
                 </div>
               </Card>
-              {isInitiator ? (
+              {isInitiator && !isFinalProject ? (
                 <div className="w-full flex items-center justify-end mt-4">
                   <div className="w-48 text-sm font-semibold my-1 bg-atlasian-red rounded">
                     <ButtonField
                       text={"Ubah Project Info"}
-                      handler={() => console.log("test")}
+                      handler={handleOpenModalEditProject}
                     />
                   </div>
                 </div>
@@ -652,6 +803,17 @@ const index = () => {
           showModal={showModalAttachment}
           handleCloseModal={handleCloseModalAttachment}
           handleUpload={handleUploadAttachment}
+        />
+        <ModalEditProject
+          showModal={showModalEditProject}
+          payload={payloadEditProject}
+          validation={validationEditProject}
+          isPAT={isPAT}
+          handleChange={handleChangePayloadEditProject}
+          handleReset={handleResetPayloadEditProject}
+          handleCloseModal={handleCloseModalEditProject}
+          handleSubmit={handleSubmitEditProject}
+          handleUploadSurat={handleUploadSurat}
         />
       </div>
     </LandingLayoutEWPConsulting>
