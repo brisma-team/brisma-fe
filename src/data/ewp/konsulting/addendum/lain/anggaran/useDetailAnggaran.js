@@ -4,7 +4,7 @@ import useSWR from "swr";
 const useDetailAnggaran = (params) => {
   const { id } = params;
 
-  const path = `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/anggaran/detail/${id}`;
+  const path = `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/anggaran/details/${id}`;
   const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);
 
   return {

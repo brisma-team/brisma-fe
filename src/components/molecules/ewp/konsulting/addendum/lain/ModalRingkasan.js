@@ -1,4 +1,10 @@
-import { Modal, TextAreaField, TextInput } from "@/components/atoms";
+import {
+  ButtonIcon,
+  Modal,
+  TextAreaField,
+  TextInput,
+} from "@/components/atoms";
+import { IconClose } from "@/components/icons";
 import {
   ModalHeader,
   ModalFooter,
@@ -15,7 +21,6 @@ const ModalRingkasan = ({
   handleSubmit,
   typeModal = "update",
 }) => {
-  console.log("data-modal:", data);
   return (
     <Modal
       showModal={showModal}
@@ -38,11 +43,15 @@ const ModalRingkasan = ({
             label={"Keterangan"}
             form={
               <TextInput
-                placeholder={"Masukkan keterangan..."}
-                handleChange={(e) =>
-                  handleChangeText("keterangan", e.target.value)
-                }
                 value={data?.keterangan || ""}
+                onChange={(e) => handleChangeText("keterangan", e.target.value)}
+                placeholder="Keterangan..."
+                icon={
+                  <ButtonIcon
+                    handleClick={() => handleChangeText("keterangan", "")}
+                    icon={<IconClose size="medium" />}
+                  />
+                }
               />
             }
             widthLabel={"w-2/5"}
@@ -52,11 +61,17 @@ const ModalRingkasan = ({
             label={"Sebelum"}
             form={
               <TextInput
-                placeholder={"Masukkan catatan sebelum..."}
-                handleChange={(e) =>
+                value={data?.note_sebelum || ""}
+                onChange={(e) =>
                   handleChangeText("note_sebelum", e.target.value)
                 }
-                value={data?.note_sebelum || ""}
+                placeholder="Catatan Sebelum..."
+                icon={
+                  <ButtonIcon
+                    handleClick={() => handleChangeText("note_sebelum", "")}
+                    icon={<IconClose size="medium" />}
+                  />
+                }
               />
             }
             widthLabel={"w-2/5"}
@@ -66,11 +81,17 @@ const ModalRingkasan = ({
             label={"Sesudah"}
             form={
               <TextInput
-                placeholder={"Masukkan catatan sesudah..."}
-                handleChange={(e) =>
+                value={data?.note_sesudah || ""}
+                onChange={(e) =>
                   handleChangeText("note_sesudah", e.target.value)
                 }
-                value={data?.note_sesudah || ""}
+                placeholder="Catatan Sesudah..."
+                icon={
+                  <ButtonIcon
+                    handleClick={() => handleChangeText("note_sesudah", "")}
+                    icon={<IconClose size="medium" />}
+                  />
+                }
               />
             }
             widthLabel={"w-2/5"}
@@ -91,7 +112,7 @@ const ModalRingkasan = ({
           />
         </CardBodyContent>
       ) : (
-        <div className="w-[64rem] flex justify-between gap-4">
+        <div className="w-[80rem] flex justify-between gap-4">
           <CardContentHeaderFooter
             header={
               <h4 className="p-4 text-atlasian-green">Sebelum Addendum</h4>
@@ -99,7 +120,7 @@ const ModalRingkasan = ({
           >
             {data?.part == "sumber_informasi" ? (
               <div
-                className="p-4"
+                className="p-4 h-[40rem] overflow-y-scroll"
                 dangerouslySetInnerHTML={{
                   __html: data?.sebelum?.sumber_informasi,
                 }}
@@ -111,7 +132,7 @@ const ModalRingkasan = ({
           >
             {data?.part == "sumber_informasi" ? (
               <div
-                className="p-4"
+                className="p-4 h-[40rem] overflow-y-scroll"
                 dangerouslySetInnerHTML={{
                   __html: data?.sesudah?.sumber_informasi,
                 }}

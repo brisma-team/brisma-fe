@@ -22,7 +22,9 @@ const ModalAddBudget = ({
   handleChangeText,
   handleCloseModal,
   handleSubmit,
+  typeModal,
 }) => {
+  console.log(data);
   return (
     <Modal
       showModal={showModal}
@@ -30,7 +32,7 @@ const ModalAddBudget = ({
         <ModalHeader
           showModal={showModal}
           handleCloseModal={handleCloseModal}
-          headerText={"Buat Anggaran"}
+          headerText={typeModal == "update" ? "Ubah Anggaran" : "Buat Anggaran"}
         />
       }
       footer={<ModalFooter handleSubmit={handleSubmit} />}

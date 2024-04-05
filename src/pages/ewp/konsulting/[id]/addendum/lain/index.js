@@ -206,6 +206,7 @@ const index = () => {
       return;
     }
     sumberInformasiMutate();
+    ringkasanMutate();
     loadingSwal("close");
   };
 
@@ -238,6 +239,7 @@ const index = () => {
           "id",
           "addendum_id",
           "part",
+          "keterangan",
           "alasan",
           "note_sebelum",
           "note_sesudah",
@@ -266,7 +268,7 @@ const index = () => {
     } else {
       dispatch(resetObjPayload());
     }
-  }, [detailAnggaran, typeModal, showModalAnggaran]);
+  }, [detailAnggaran, selectedId, showModalAnggaran]);
 
   useEffect(() => {
     if (detailRingkasan?.data) {
@@ -276,6 +278,7 @@ const index = () => {
             "id",
             "addendum_id",
             "part",
+            "keterangan",
             "alasan",
             "sebelum",
             "sesudah",
@@ -334,8 +337,8 @@ const index = () => {
       if (typeModal === "update") {
         await fetchApi(
           "PATCH",
-          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/anggaran/${params?.id}`,
-          { id: selectedId, ...objPayload }
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/anggaran/${selectedId}`,
+          { ...objPayload }
         );
       } else {
         await fetchApi(
@@ -346,12 +349,28 @@ const index = () => {
       }
 
       anggaranMutate();
+      ringkasanMutate();
       setShowModalAnggaran(false);
       setTypeModal("");
       setSelectedId("");
       dispatch(resetObjPayload());
       loadingSwal("close");
     }
+  };
+  const handleSaveAnggaran = async (e) => {
+    e.preventDefault();
+
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/anggaran/${params?.id}/save`,
+      {
+        alasan: "",
+      }
+    );
+    anggaranMutate();
+    ringkasanMutate();
+    loadingSwal("close");
   };
   // [ END ] handler for modal anggaran
 
@@ -378,6 +397,7 @@ const index = () => {
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/anggaran/${id}`
     );
     anggaranMutate();
+    ringkasanMutate();
     loadingSwal("close");
   };
   // [ END ] handler for table
@@ -409,39 +429,30 @@ const index = () => {
 
   const handleSubmitRingkasan = async (e) => {
     e.preventDefault();
-    const schemaMapping = {
-      schema: anggaranEWPKonsultingSchema,
-      resetErrors: resetValidationErrorsRingkasan,
-      setErrors: setValidationErrorsRingkasan,
-    };
-    const validate = setErrorValidation(
-      payloadRingkasan,
-      dispatch,
-      schemaMapping
-    );
 
-    const objPayload = {
-      amount: parseInt(payloadRingkasan?.amount?.replace(/\./g, "")),
-      ..._.omit(payloadRingkasan, ["amount"]),
-    };
-
-    if (validate) {
-      loadingSwal();
-      if (typeModalRingkasan === "update") {
-        await fetchApi(
-          "PATCH",
-          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/summary/update/${params?.id}`,
-          { id: selectedIdRingkasan, ...objPayload }
-        );
-      }
-
-      ringkasanMutate();
-      setShowModalRingkasan(false);
-      setTypeModalRingkasan("");
-      setSelectedIdRingkasan("");
-      dispatch(resetObjPayloadRingkasan());
-      loadingSwal("close");
+    loadingSwal();
+    if (typeModalRingkasan === "update") {
+      await fetchApi(
+        "PATCH",
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/summary/update/${selectedIdRingkasan}`,
+        {
+          ..._.omit(payloadRingkasan, [
+            "id",
+            "sebelum",
+            "sesudah",
+            "part",
+            "module",
+          ]),
+        }
+      );
     }
+
+    ringkasanMutate();
+    setShowModalRingkasan(false);
+    setTypeModalRingkasan("");
+    setSelectedIdRingkasan("");
+    dispatch(resetObjPayloadRingkasan());
+    loadingSwal("close");
   };
   // [ END ] handler for modal ringkasan
 
@@ -470,6 +481,8 @@ const index = () => {
       "DELETE",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/summary/delete/${id}`
     );
+    sumberInformasiMutate();
+    anggaranMutate();
     ringkasanMutate();
     loadingSwal("close");
   };
@@ -486,6 +499,9 @@ const index = () => {
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/summary/reset/${params?.id}?module=${module}`,
       {}
     );
+    sumberInformasiMutate();
+    anggaranMutate();
+    ringkasanMutate();
     loadingSwal("close");
   };
   const handleSaveRingkasan = async (e) => {
@@ -504,6 +520,20 @@ const index = () => {
   };
 
   // [ End ] handler for Reset and Save Ringkasan
+  const handleLoad = async (type) => {
+    loadingSwal();
+    const response = await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/load_from_mapa/${params?.id}?part=${type}`,
+      {}
+    );
+    if (type == "sumber_informasi") {
+      setContent(response?.data);
+    } else if (type == "anggaran") {
+      anggaranMutate();
+    }
+    loadingSwal("close");
+  };
 
   return (
     <LandingLayoutEWPConsulting>
@@ -547,7 +577,13 @@ const index = () => {
                   />
                 </div>
                 {/* {isInitiator && !isCloseSubmodule ? ( */}
-                <div className="mt-3 flex justify-end">
+                <div className="mt-3 flex justify-end gap-2">
+                  <div className="w-[8.75rem] bg-atlasian-yellow rounded">
+                    <ButtonField
+                      text={"Load from MAPA"}
+                      handler={() => handleLoad("sumber_informasi")}
+                    />
+                  </div>
                   <div className="w-[7.75rem] bg-atlasian-green rounded">
                     <ButtonField
                       text={"Simpan"}
@@ -577,6 +613,17 @@ const index = () => {
                 />
               </div>
             </Card>
+            <div className="mt-3 flex justify-end gap-2">
+              <div className="w-[8.75rem] bg-atlasian-yellow rounded">
+                <ButtonField
+                  text={"Load from MAPA"}
+                  handler={() => handleLoad("anggaran")}
+                />
+              </div>
+              <div className="w-[7.75rem] bg-atlasian-green rounded">
+                <ButtonField text={"Simpan"} handler={handleSaveAnggaran} />
+              </div>
+            </div>
             <ModalAddBudget
               data={payload}
               showModal={showModalAnggaran}
@@ -584,6 +631,7 @@ const index = () => {
               handleChangeText={handleChangeText}
               handleCloseModal={handleCloseModal}
               handleSubmit={handleSubmitAnggaran}
+              typeModal={typeModal}
             />
           </div>
         ) : (
