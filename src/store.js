@@ -127,13 +127,10 @@ export const store = configureStore({
     documentMatrixPeluangKonsulting: documentMatrixPeluangKonsultingReducer,
     documentDetailPeluangKonsulting: documentDetailPeluangKonsultingReducer,
     infoEWPKonsulting: infoEWPKonsultingReducer,
-<<<<<<< HEAD
     timTimeplanAddendumEWPKonsulting: timTimeplanAddendumEWPKonsultingReducer,
     programKerjaAddendumEWPKonsulting: programKerjaAddendumEWPKonsultingReducer,
-=======
     anggaranSBPAddendum: anggaranSBPAddendumReducer,
     ringkasanSBPAddendum: ringkasanSBPAddendumReducer,
->>>>>>> 817385b12256ecbe53611a6aa314db3a2c5c177a
 
     // REFERENCE
     createTemplateReference: createTemplateReferenceSlice,
