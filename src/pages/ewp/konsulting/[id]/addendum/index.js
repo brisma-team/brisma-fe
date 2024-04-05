@@ -1,6 +1,7 @@
 import { Breadcrumbs, CardLanding, PageTitle } from "@/components/atoms";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
+import LandingLayoutEWPSBPAddendum from "@/layouts/ewp/LandingLayoutEWPSBPAddendum";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
@@ -66,7 +67,7 @@ const index = () => {
   }, [params?.id]);
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutEWPSBPAddendum>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -93,7 +94,7 @@ const index = () => {
         </div>
       </div>
       {/* End Content */}
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutEWPSBPAddendum>
   );
 };
 
