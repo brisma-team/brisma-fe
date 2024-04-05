@@ -23,7 +23,7 @@ const RiskSelect = ({
       const mapping = risk?.data?.map((v) => {
         const { kode, abbr, nama } = v;
         return {
-          label: v.nama,
+          label: `${v?.kode} - ${v?.nama}`,
           value: { kode, abbr, nama },
         };
       });

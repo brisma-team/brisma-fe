@@ -36,4 +36,13 @@ const addControlSchema = yup
     return true;
   });
 
-export { addLingkupPemeriksaanSchema, addRiskSchema, addControlSchema };
+const editControlSchema = yup.object().shape({
+  pn_pic: yup.string().required("Wajib diisi"),
+});
+
+export {
+  addLingkupPemeriksaanSchema,
+  addRiskSchema,
+  addControlSchema,
+  editControlSchema,
+};
