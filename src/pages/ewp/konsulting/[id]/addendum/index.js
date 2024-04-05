@@ -1,9 +1,11 @@
 import { Breadcrumbs, CardLanding, PageTitle } from "@/components/atoms";
 import { useProjectDetail } from "@/data/ewp/konsulting";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import LandingLayoutEWPSBPAddendum from "@/layouts/ewp/LandingLayoutEWPSBPAddendum";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+
+import Button from "@atlaskit/button";
+import { confirmationSwal, fetchApi } from "@/helpers";
 
 const index = () => {
   const router = useRouter();
@@ -66,6 +68,23 @@ const index = () => {
     setDataCarding(mappingDataCarding);
   }, [params?.id]);
 
+  const handleClickCancelAddendum = async () => {
+    const confirm = await confirmationSwal(
+      "Aksi ini akan menghapus seluruh data Addendum yang berjalan saat ini. Apakah Anda yakin ingin membatalkan Addendum?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+    await fetchApi(
+      "DELETE",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/cancel/${params?.id}`,
+      {
+        note: "cancel addendum",
+      }
+    );
+    router.push(`/ewp/konsulting/${params?.id}/info`);
+  };
+
   return (
     <LandingLayoutEWPSBPAddendum>
       {/* Start Breadcrumbs */}
@@ -76,6 +95,15 @@ const index = () => {
           text="Addendum Perencanaan Kegiatan"
           className={"text-atlasian-red"}
         />
+        <div className="w-[10rem]">
+          <Button
+            appearance="danger"
+            onClick={handleClickCancelAddendum}
+            shouldFitContainer
+          >
+            Batal Addendum
+          </Button>
+        </div>
       </div>
       {/* Start Content */}
       <div className="flex flex-col gap-3">
