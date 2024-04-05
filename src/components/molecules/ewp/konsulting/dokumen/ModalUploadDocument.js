@@ -92,7 +92,7 @@ const ModalUploadDocument = ({
             <div className="w-8/12">
               <TextInput
                 value={data?.file_name || ""}
-                onChange={(e) => handleChangeText("file_name", e.target.value)}
+                isDisabled
                 placeholder="Nama File"
                 icon={
                   <ButtonIcon

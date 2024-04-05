@@ -2,6 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   objDataInfoPAT: {},
+  objPayloadEditProject: {
+    project_name: "",
+    info_periode_pelaksanaan_start: "",
+    info_periode_pelaksanaan_end: "",
+    no_surat: "",
+    perihal: "",
+    tanggal_surat: "",
+    url_file_surat: "",
+    nama_file_surat: "",
+  },
   objPayloadRelatedProject: {
     project_id: "",
     project_name: "",
@@ -13,6 +23,16 @@ const initialState = {
     tipe_uker: "",
     deskripsi: "",
     attachments: [""],
+  },
+  resetObjPayloadEditProject: {
+    project_name: "",
+    info_periode_pelaksanaan_start: "",
+    info_periode_pelaksanaan_end: "",
+    no_surat: "",
+    perihal: "",
+    tanggal_surat: "",
+    url_file_surat: "",
+    nama_file_surat: "",
   },
   resetObjPayloadUkerAssessment: {
     branch: "",
@@ -27,6 +47,7 @@ const initialState = {
     is_new: true,
   },
   validationErrorsRelatedProject: {},
+  validationErrorsEditProject: {},
 };
 
 export const infoEWPKonsultingSlice = createSlice({
@@ -35,6 +56,9 @@ export const infoEWPKonsultingSlice = createSlice({
   reducers: {
     setObjDataInfoPAT: (state, action) => {
       state.objDataInfoPAT = action.payload;
+    },
+    setObjPayloadEditProject: (state, action) => {
+      state.objPayloadEditProject = action.payload;
     },
     setObjPayloadRelatedProject: (state, action) => {
       state.objPayloadRelatedProject = action.payload;
@@ -45,8 +69,16 @@ export const infoEWPKonsultingSlice = createSlice({
     setValidationErrorsRelatedProject: (state, action) => {
       state.validationErrorsRelatedProject = action.payload;
     },
+    setValidationErrorsEditProject: (state, action) => {
+      state.validationErrorsEditProject = action.payload;
+    },
     resetObjDataInfoPAT: (state) => {
       state.objDataInfoPAT = {};
+    },
+    resetObjPayloadEditProject: (state) => {
+      state.objPayloadEditProject = {
+        ...state.resetObjPayloadEditProject,
+      };
     },
     resetObjPayloadRelatedProject: (state) => {
       state.objPayloadRelatedProject = {
@@ -61,18 +93,25 @@ export const infoEWPKonsultingSlice = createSlice({
     resetValidationErrorsRelatedProject: (state) => {
       state.validationErrorsRelatedProject = {};
     },
+    resetValidationErrorsEditProject: (state) => {
+      state.validationErrorsEditProject = {};
+    },
   },
 });
 
 export const {
   setObjDataInfoPAT,
+  setObjPayloadEditProject,
   setObjPayloadRelatedProject,
   setObjPayloadUkerAssessment,
   setValidationErrorsRelatedProject,
+  setValidationErrorsEditProject,
   resetObjDataInfoPAT,
+  resetObjPayloadEditProject,
   resetObjPayloadRelatedProject,
   resetObjPayloadUkerAssessment,
   resetValidationErrorsRelatedProject,
+  resetValidationErrorsEditProject,
 } = infoEWPKonsultingSlice.actions;
 
 export default infoEWPKonsultingSlice.reducer;

@@ -169,7 +169,7 @@ const index = () => {
     } else {
       dispatch(resetWorkflowData());
     }
-  }, [workflowMatrixData]);
+  }, [workflowMatrixData, showModalApproval]);
   // [ END ]
 
   useEffect(() => {
@@ -272,6 +272,11 @@ const index = () => {
   };
 
   // [ START ] function untuk Modal Workflow
+  const handleCloseModalWorkflow = () => {
+    dispatch(resetWorkflowData());
+    workflowMatrixMutate();
+  };
+
   const handleAdd = (property) => {
     const newData = [...workflowData[property]];
     newData.push({
@@ -478,7 +483,8 @@ const index = () => {
             handleAdd={handleAdd}
             handleChangeSelect={handleChangeSelect}
             handleChangeText={handleChangeText}
-            withSigner={true}
+            handleCloseModal={handleCloseModalWorkflow}
+            withSigner
           />
         </div>
       </div>
