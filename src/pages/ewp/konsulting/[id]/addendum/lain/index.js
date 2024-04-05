@@ -25,7 +25,7 @@ import {
 } from "@/data/ewp/konsulting/addendum/lain";
 
 //layout
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
+import LandingLayoutEWPSBPAddendum from "@/layouts/ewp/LandingLayoutEWPSBPAddendum";
 
 //molecules
 import {
@@ -535,7 +535,7 @@ const index = () => {
   };
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutEWPSBPAddendum>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -669,7 +669,7 @@ const index = () => {
         )}
       </div>
       {/* End Content */}
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutEWPSBPAddendum>
   );
 };
 
