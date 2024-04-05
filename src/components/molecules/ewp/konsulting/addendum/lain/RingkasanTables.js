@@ -7,14 +7,19 @@ import TableTree, {
 } from "@atlaskit/table-tree";
 import { ButtonIcon } from "@/components/atoms";
 import { ButtonEdit, ButtonDelete } from "@/components/molecules/commons";
+import { IconFile } from "@/components/icons";
 
-const DataTables = ({
+const RingkasanTables = ({
   data,
   handleClickDelete,
   handleClickUpdate,
-  //   handleClickView,
+  handleClickView,
   //   withoutButtonAction,
 }) => {
+  const section = {
+    sumber_informasi: "Sumber Informasi",
+    anggaran: "Anggaran",
+  };
   return (
     <div className="dataTables-custom">
       <TableTree>
@@ -59,7 +64,14 @@ const DataTables = ({
         </Headers>
         <Rows
           items={data}
-          render={({ id, section, keterangan, sebelum, sesudah, alasan }) => (
+          render={({
+            id,
+            part,
+            keterangan,
+            note_sebelum,
+            note_sesudah,
+            alasan,
+          }) => (
             <Row>
               <Cell className="!hidden" />
               <Cell
@@ -77,25 +89,33 @@ const DataTables = ({
                     icon={<ButtonDelete />}
                     handleClick={() => handleClickDelete(id)}
                   />
+                  <ButtonIcon
+                    icon={
+                      <div className="rounded-full border border-atlasian-dark w-5 h-5 flex items-center justify-center p-1 text-atlasian-dark">
+                        <IconFile size="small" />
+                      </div>
+                    }
+                    handleClick={() => handleClickView(id)}
+                  />
                 </div>
                 {/* ) : (
                   ""
                 )} */}
               </Cell>
               <Cell width="18%" className="border-r cell-custom-dataTables">
-                {section}
+                {section[part] || "-"}
               </Cell>
               <Cell width="18%" className="border-r cell-custom-dataTables">
-                {keterangan}
+                {keterangan || "-"}
               </Cell>
               <Cell width="18%" className="border-r cell-custom-dataTables">
-                {sebelum}
+                {note_sebelum || "-"}
               </Cell>
               <Cell width="18%" className="border-r cell-custom-dataTables">
-                {sesudah}
+                {note_sesudah || "-"}
               </Cell>
               <Cell width="18%" className="border-r cell-custom-dataTables">
-                {alasan}
+                {alasan || "-"}
               </Cell>
             </Row>
           )}
@@ -105,4 +125,4 @@ const DataTables = ({
   );
 };
 
-export default DataTables;
+export default RingkasanTables;
