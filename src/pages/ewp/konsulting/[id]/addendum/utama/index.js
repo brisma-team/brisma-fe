@@ -2,13 +2,15 @@ import { Breadcrumbs, PageTitle } from "@/components/atoms";
 import { NavigationTab } from "@/components/molecules/commons";
 import {
   ProgramKerja,
+  TableRingkasan,
   TimTimeplan,
 } from "@/components/molecules/ewp/konsulting/addendum/utama";
 import { useProjectDetail } from "@/data/ewp/konsulting";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import useUser from "@/data/useUser";
+import LandingLayoutEWPSBPAddendum from "@/layouts/ewp/LandingLayoutEWPSBPAddendum";
+import { fetchApi, loadingSwal } from "@/helpers";
 
 const index = () => {
   const router = useRouter();
@@ -68,8 +70,18 @@ const index = () => {
     setCurrentContentStage(index);
   };
 
+  const handleLoadFromMapa = async (type) => {
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/load_from_mapa/${params?.id}?part=${type}`,
+      {}
+    );
+    loadingSwal("close");
+  };
+
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutEWPSBPAddendum>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -91,6 +103,7 @@ const index = () => {
           isInitiator={isInitiator}
           isCloseSubmodule={false}
           dataProjectDetail={projectDetail?.data}
+          handleLoadFromMapa={handleLoadFromMapa}
         />
       ) : currentContentStage === 2 ? (
         <ProgramKerja
@@ -98,12 +111,15 @@ const index = () => {
           isInitiator={isInitiator}
           isCloseSubmodule={false}
           dataUser={user?.data}
+          handleLoadFromMapa={handleLoadFromMapa}
         />
+      ) : currentContentStage === 3 ? (
+        <TableRingkasan id={params?.id} />
       ) : (
         ""
       )}
       {/* End Content */}
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutEWPSBPAddendum>
   );
 };
 

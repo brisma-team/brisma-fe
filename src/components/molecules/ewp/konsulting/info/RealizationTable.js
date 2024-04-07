@@ -16,6 +16,7 @@ const RealizationTable = ({
   data,
   isHideButton,
   handleClickInitiate,
+  handleClickInitiateAddendum,
   handleClickLog,
 }) => {
   return (
@@ -83,6 +84,7 @@ const RealizationTable = ({
               is_onprogress,
               status_code,
               label,
+              is_addendum,
               start_date,
               end_date,
               url,
@@ -100,6 +102,15 @@ const RealizationTable = ({
                             }
                           >
                             Terminate
+                          </DivButton>
+                        </LozengeField>
+                      ) : is_close && is_addendum ? (
+                        <LozengeField appreance="moved" isBold>
+                          <DivButton
+                            className={"py-1 flex justify-center w-20"}
+                            handleClick={handleClickInitiateAddendum}
+                          >
+                            Addendum
                           </DivButton>
                         </LozengeField>
                       ) : is_close ? (

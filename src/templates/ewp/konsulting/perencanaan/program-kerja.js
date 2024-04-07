@@ -3,7 +3,7 @@ const programKerjaHtml = (data) => {
     ? data
         ?.map((v, i) => {
           return `
-    <table style="width: 100%; border-style: none !important; border: 0px solid #fff;" cellspacing="0" cellpadding="0">
+    <table style="width: 100%; border-style: none !important; border: 0px solid #fff; border-collapse: separate;" cellspacing="0" cellpadding="0">
     <tbody>
         <tr>
             <th width="3"><p style="font-size:14px; font-weight: 500">${
@@ -45,7 +45,6 @@ const programKerjaHtml = (data) => {
             <th width="80%">${v?.uraian || ""}</th>
         </tr>
     </tbody>
-    <tbody>
   </table>
     `;
         })

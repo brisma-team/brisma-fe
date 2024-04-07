@@ -44,10 +44,11 @@ import beritaAcaraMeetingEWPKonsultingReducer from "./slices/ewp/konsulting/meet
 import documentMatrixPeluangKonsultingReducer from "./slices/ewp/konsulting/peluang-peningkatan/documentMatrixPeluangKonsultingSlice";
 import documentDetailPeluangKonsultingReducer from "./slices/ewp/konsulting/peluang-peningkatan/documentDetailPeluangKonsultingSlice";
 import infoEWPKonsultingReducer from "./slices/ewp/konsulting/info/infoEWPKonsultingSlice";
-import timTimeplanAddendumEWPKonsultingReducer from "./slices/ewp/konsulting/addendum/timTimeplanAddendumEWPKonsultingSlice";
-import programKerjaAddendumEWPKonsultingReducer from "./slices/ewp/konsulting/addendum/programKerjaAddendumEWPKonsultingSlice";
+import timTimeplanAddendumEWPKonsultingReducer from "./slices/ewp/konsulting/addendum/utama/timTimeplanAddendumEWPKonsultingSlice";
+import programKerjaAddendumEWPKonsultingReducer from "./slices/ewp/konsulting/addendum/utama/programKerjaAddendumEWPKonsultingSlice";
 import anggaranSBPAddendumReducer from "./slices/ewp/konsulting/addendum/lain/anggaranSBPAddendumSlice";
 import ringkasanSBPAddendumReducer from "./slices/ewp/konsulting/addendum/lain/ringkasanSBPAddendumSlice";
+import ringkasanUtamaAddendumEWPKonsultingReducer from "./slices/ewp/konsulting/addendum/utama/ringkasanUtamaAddendumEWPKonsultingSlice";
 
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
@@ -131,6 +132,8 @@ export const store = configureStore({
     programKerjaAddendumEWPKonsulting: programKerjaAddendumEWPKonsultingReducer,
     anggaranSBPAddendum: anggaranSBPAddendumReducer,
     ringkasanSBPAddendum: ringkasanSBPAddendumReducer,
+    ringkasanUtamaAddendumEWPKonsulting:
+      ringkasanUtamaAddendumEWPKonsultingReducer,
 
     // REFERENCE
     createTemplateReference: createTemplateReferenceSlice,

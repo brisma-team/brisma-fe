@@ -18,7 +18,7 @@ import {
   resetValidationErrorsLingkupPemeriksaan,
   resetValidationErrorsRisk,
   resetValidationErrorsControl,
-} from "@/slices/ewp/konsulting/addendum/programKerjaAddendumEWPKonsultingSlice";
+} from "@/slices/ewp/konsulting/addendum/utama/programKerjaAddendumEWPKonsultingSlice";
 import {
   confirmationSwal,
   fetchApi,
@@ -49,7 +49,13 @@ import {
 } from "@/helpers/schemas/ewp/konsulting/perencanaan/programKerjaEWPKonsultingSchema";
 import _ from "lodash";
 
-const ProgramKerja = ({ id, dataUser, isInitiator, isCloseSubmodule }) => {
+const ProgramKerja = ({
+  id,
+  dataUser,
+  isInitiator,
+  isCloseSubmodule,
+  handleLoadFromMapa,
+}) => {
   const dispatch = useDispatch();
 
   const [showFilter, setShowFilter] = useState(false);
@@ -770,6 +776,11 @@ const ProgramKerja = ({ id, dataUser, isInitiator, isCloseSubmodule }) => {
   };
   // [ END ] handler for table pemeriksaan
 
+  const handleClickHandleFromMapa = async () => {
+    await handleLoadFromMapa("program-kerja");
+    programKerjaMutate();
+  };
+
   return (
     <div className="flex flex-col gap-5">
       <div className="w-36 rounded bg-atlasian-blue-light">
@@ -875,6 +886,14 @@ const ProgramKerja = ({ id, dataUser, isInitiator, isCloseSubmodule }) => {
         handleCloseModal={handleCloseModalEditUraianControl}
         handleSubmit={handleSubmitModalEditUraianControl}
       />
+      <div className="w-full flex justify-end gap-3 -my-1">
+        <div className="bg-atlasian-yellow rounded">
+          <ButtonField
+            text={"Load from MAPA"}
+            handler={handleClickHandleFromMapa}
+          />
+        </div>
+      </div>
     </div>
   );
 };

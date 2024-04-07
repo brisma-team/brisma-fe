@@ -65,6 +65,7 @@ const index = () => {
     { idx: 3, title: "UKER Assessment" },
     { idx: 4, title: "Info PAT" },
   ];
+  const [statusName, setStatusName] = useState("");
   const [isPAT, setIsPAT] = useState(false);
   const [isInitiator, setIsInitiator] = useState(false);
   const [isFinalProject, setIsFinalProject] = useState(false);
@@ -146,6 +147,10 @@ const index = () => {
           ? true
           : false,
         status_code: 2,
+        is_addendum: Boolean(
+          projectDetail?.data?.realisasi?.pelaksanaan_audit_real_start &&
+            !projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end
+        ),
         label: "Perencanaan",
         start_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_start,
         end_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
@@ -153,7 +158,7 @@ const index = () => {
       },
       {
         is_open: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
-        is_onprogress: status_code === 4,
+        is_onprogress: status_code === 4 || status_code === 12,
         is_close: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end
           ? true
           : false,
@@ -229,6 +234,8 @@ const index = () => {
       tanggal_surat: convertDate(projectInfo?.tanggal_surat, "-"),
     };
     dispatch(setObjPayloadEditProject(objFixPayload));
+
+    setStatusName(projectInfo?.status_name);
   }, [projectDetail, showModalEditProject]);
 
   useEffect(() => {
@@ -330,6 +337,23 @@ const index = () => {
       {}
     );
     projectDetailMutate();
+  };
+
+  const handleClickInitiateAddendum = async () => {
+    if (statusName !== "addendum") {
+      const confirm = await confirmationSwal(
+        "Addendum belum dilaksanakan, apakah Anda yakin ingin inisiasi Addendum?"
+      );
+      if (!confirm.value) {
+        return;
+      }
+      await fetchApi(
+        "POST",
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/initiate/addendum/initiate/${id}`,
+        {}
+      );
+    }
+    router.push(`/ewp/konsulting/${id}/addendum`);
   };
 
   if (isError) {
@@ -704,6 +728,7 @@ const index = () => {
                   <RealizationTable
                     data={dataTables}
                     handleClickInitiate={handleClickInitiate}
+                    handleClickInitiateAddendum={handleClickInitiateAddendum}
                     handleClickLog={handleClickLog}
                     isHideButton={!isInitiator}
                   />
