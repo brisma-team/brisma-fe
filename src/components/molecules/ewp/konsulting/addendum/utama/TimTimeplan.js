@@ -6,7 +6,7 @@ import {
   setValidationErrorsTimTimeplan,
   resetValidationErrorsTimTimeplan,
   resetObjPayloadTimTimeplan,
-} from "@/slices/ewp/konsulting/addendum/timTimeplanAddendumEWPKonsultingSlice";
+} from "@/slices/ewp/konsulting/addendum/utama/timTimeplanAddendumEWPKonsultingSlice";
 import timTimeplanEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/perencanaan/timTimeplanEWPKonsultingSchema";
 import {
   convertIntegerToDecimal,
@@ -23,6 +23,7 @@ const TimTimeplan = ({
   isInitiator,
   isCloseSubmodule,
   dataProjectDetail,
+  handleLoadFromMapa,
 }) => {
   const dispatch = useDispatch();
 
@@ -167,7 +168,13 @@ const TimTimeplan = ({
       loadingSwal("close");
     }
   };
+
+  const handleClickHandleFromMapa = async () => {
+    await handleLoadFromMapa("tim");
+    timTimeplanMutate();
+  };
   // [ END ] handler for time timeplan
+
   return (
     <div className="flex flex-col gap-4">
       <Card>
@@ -242,6 +249,12 @@ const TimTimeplan = ({
         </div>
       </Card>
       <div className="w-full flex justify-end gap-3 -my-1">
+        <div className="bg-atlasian-yellow rounded">
+          <ButtonField
+            text={"Load from MAPA"}
+            handler={handleClickHandleFromMapa}
+          />
+        </div>
         <div className="rounded w-28 bg-atlasian-green">
           <ButtonField text={"Simpan"} handler={handleSubmit} />
         </div>

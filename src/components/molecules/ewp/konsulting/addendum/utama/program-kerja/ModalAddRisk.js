@@ -36,7 +36,7 @@ const ModalAddRisk = ({
           <RiskSelect
             selectedValue={
               data?.kode
-                ? { label: `${data?.kode} - ${data?.nama}`, value: data }
+                ? { label: `${data?.abbr} - ${data?.nama}`, value: data }
                 : null
             }
             customIcon={

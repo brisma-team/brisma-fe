@@ -1,6 +1,5 @@
 import { Breadcrumbs, ButtonIconBack, PageTitle } from "@/components/atoms";
 import { useProjectDetail } from "@/data/ewp/konsulting";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -9,6 +8,7 @@ import {
   ImageClipping,
 } from "@/components/molecules/commons";
 import { useControlDetail } from "@/data/ewp/konsulting/addendum/utama";
+import LandingLayoutEWPSBPAddendum from "@/layouts/ewp/LandingLayoutEWPSBPAddendum";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -51,7 +51,7 @@ const index = () => {
   }, [controlDetail]);
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutEWPSBPAddendum>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -82,7 +82,7 @@ const index = () => {
         </div>
       </div>
       {/* End Content */}
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutEWPSBPAddendum>
   );
 };
 
