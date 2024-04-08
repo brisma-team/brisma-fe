@@ -62,12 +62,12 @@ const CardMemberTeam = ({
                         width={"w-full"}
                         isDisabled={isDisabled}
                       />
-                      {validation[`${property}[${i}.pn]`] ? (
+                      {validation[`${property}[${i}].pn`] ? (
                         <ErrorValidation
                           className={"mt-3"}
                           message={
                             validation[property] ||
-                            validation[`${property}[${i}.pn]`]
+                            validation[`${property}[${i}].pn`]
                           }
                         />
                       ) : (

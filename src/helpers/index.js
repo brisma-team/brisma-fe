@@ -35,6 +35,7 @@ import addDaysToDate from "./addDaysToDate";
 import previewDocumentNewTab from "./previewDocumentNewTab";
 import getFileDetails from "./getFileDetails";
 import downloadFromUrl from "./downloadFromUrl";
+import generateCaptcha from "./generateCaptcha";
 
 export {
   loadingSwal,
@@ -74,4 +75,5 @@ export {
   previewDocumentNewTab,
   getFileDetails,
   downloadFromUrl,
+  generateCaptcha,
 };

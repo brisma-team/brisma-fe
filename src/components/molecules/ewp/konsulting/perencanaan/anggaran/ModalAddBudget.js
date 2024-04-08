@@ -87,7 +87,6 @@ const ModalAddBudget = ({
               valueStart={data?.tanggal || ""}
               valueEnd={data?.tanggal_end || ""}
               format={"DD/MM/YYYY"}
-              minDateStart={dateNow()}
               maxDateStart={addDaysToDate(data?.tanggal_end, "-", 1) || null}
               minDateEnd={
                 addDaysToDate(data?.tanggal, "+", 1) ||

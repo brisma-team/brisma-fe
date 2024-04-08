@@ -777,7 +777,7 @@ const ProgramKerja = ({
   // [ END ] handler for table pemeriksaan
 
   const handleClickHandleFromMapa = async () => {
-    await handleLoadFromMapa("program-kerja");
+    await handleLoadFromMapa("program_kerja");
     programKerjaMutate();
   };
 
