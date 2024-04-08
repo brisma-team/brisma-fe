@@ -1,3 +1,5 @@
+import landingPageReducer from "./slices/landing/landingPageSlice";
+
 // PAT
 import userSKAIReducer from "./slices/userSKAISlice";
 import jadwalAuditReducer from "./slices/jadwalAuditSlice";
@@ -80,6 +82,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 export const store = configureStore({
   reducer: {
+    landingPage: landingPageReducer,
     userSKAI: userSKAIReducer,
     jadwalAudit: jadwalAuditReducer,
     projectOverview: projectOverviewReducer,
