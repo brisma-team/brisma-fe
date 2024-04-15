@@ -37,6 +37,10 @@ const index = () => {
       },
       {
         name: "Addendum Perencanaan Kegiatan",
+        path: `${baseUrl}/addendum`,
+      },
+      {
+        name: "Utama",
         path: pathName,
       },
       {

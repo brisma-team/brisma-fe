@@ -547,7 +547,10 @@ const ProgramKerja = ({
       await fetchApi(
         "PATCH",
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/program_kerja/lingkup/${id}`,
-        { payloadLingkupPemeriksaan, lingkup_id: selectedLingkupPemeriksaanId }
+        {
+          ...payloadLingkupPemeriksaan,
+          lingkup_id: selectedLingkupPemeriksaanId,
+        }
       );
 
       programKerjaMutate();
