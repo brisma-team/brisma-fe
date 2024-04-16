@@ -331,6 +331,15 @@ const index = () => {
     let path = pathMappings[statusCode] || "";
     path += `/${type === "close" ? "close" : "initiate"}`;
 
+    if (type === "close") {
+      const confirm = await confirmationSwal(
+        "Aksi ini akan mengakhiri progres saat ini, apakah Anda yakin ingin melanjutkan ke proses berikutnya?"
+      );
+      if (!confirm.value) {
+        return;
+      }
+    }
+
     await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/initiate/${path}/${id}`,
