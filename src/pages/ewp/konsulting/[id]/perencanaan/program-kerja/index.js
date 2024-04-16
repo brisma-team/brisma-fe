@@ -32,6 +32,7 @@ import { useSelector } from "react-redux";
 import {
   confirmationSwal,
   fetchApi,
+  infoSwal,
   loadingSwal,
   setErrorValidation,
 } from "@/helpers";
@@ -72,8 +73,11 @@ const routes = [
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const router = useRouter();
+  const [params, setParams] = useState({
+    id: 0,
+  });
+  const baseUrl = `/ewp/konsulting/${params?.id}`;
   const pathName = `${baseUrl}/perencanaan`;
   const navigationTabItems = [
     { idx: 1, title: "Pemeriksaan" },
@@ -98,13 +102,13 @@ const index = () => {
 
   const [filter, setFilter] = useState({
     judul_lingkup: "",
-    pn_pic: "",
+    pic: "",
     risk: "",
     control: "",
   });
-  const [params, setParams] = useState({
+  const [paramsFilter, setParamsFilter] = useState({
     judul_lingkup: "",
-    pn_pic: "",
+    pic: "",
     risk: "",
     control: "",
   });
@@ -139,13 +143,21 @@ const index = () => {
   );
 
   const { user } = useUser();
-  const { projectDetail } = useProjectDetail({ id });
+  const { projectDetail } = useProjectDetail({ id: params?.id });
   const { lingkupPemeriksaan, lingkupPemeriksaanMutate } =
-    useLingkupPemeriksaan({ id, ...params });
-  const { ringkasan } = useRingkasan({ id, ...params });
+    useLingkupPemeriksaan({ id: params?.id, ...paramsFilter });
+  const { ringkasan } = useRingkasan({ id: params?.id, ...paramsFilter });
   const { timTimeplan, timTimeplanError } = useTimTimeplan({
-    id,
+    id: params?.id,
   });
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      id,
+    });
+  }, [router.isReady]);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -281,8 +293,12 @@ const index = () => {
   }, [timTimeplan]);
 
   useEffect(() => {
+    console.log("paramsFilter => ", paramsFilter);
+  }, [paramsFilter]);
+
+  useEffect(() => {
     const handleSearch = () => {
-      setParams(filter);
+      setParamsFilter(filter);
     };
     const debouncedSearch = _.debounce(handleSearch, 800);
     debouncedSearch();
@@ -333,7 +349,7 @@ const index = () => {
   const handleChangeTab = (index) => {
     setFilter({
       judul_lingkup: "",
-      pn_pic: "",
+      pic: "",
       risk: "",
       control: "",
     });
@@ -383,7 +399,7 @@ const index = () => {
 
     await fetchApi(
       "PATCH",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/lingkup_pemeriksaan/review/${id}?type=${type}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/lingkup_pemeriksaan/review/${params?.id}?type=${type}`,
       {},
       true
     );
@@ -392,11 +408,7 @@ const index = () => {
   };
 
   // [ START ] handler for filter
-  const handleChangeTextFilter = (props, value) => {
-    setFilter({ ...filter, [props]: value });
-  };
-
-  const handleChangeSelectFilter = (props, value) => {
+  const handleChangeFilter = (props, value) => {
     setFilter({ ...filter, [props]: value });
   };
 
@@ -421,6 +433,11 @@ const index = () => {
 
   const handleSubmitLingkupPemeriksaan = async (e) => {
     e.preventDefault();
+    if (payloadLingkupPemeriksaan?.judul_lingkup_pemeriksaan?.length > 255) {
+      await infoSwal("Jumlah karakter melebihi batas!");
+      return;
+    }
+
     const schemaMappings = {
       schema: addLingkupPemeriksaanSchema,
       resetErrors: resetValidationErrorsLingkupPemeriksaan,
@@ -434,9 +451,10 @@ const index = () => {
     );
 
     if (validate) {
+      loadingSwal();
       await fetchApi(
         "POST",
-        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/lingkup_pemeriksaan/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/lingkup_pemeriksaan/${params?.id}`,
         payloadLingkupPemeriksaan
       );
 
@@ -444,6 +462,7 @@ const index = () => {
       setShowModalLingkupPemeriksaan(false);
       dispatch(resetObjPayloadLingkupPemeriksaan());
       dispatch(resetValidationErrorsLingkupPemeriksaan());
+      loadingSwal("close");
     }
   };
   // [ END ] handler for modal lingkup pemeriksaan
@@ -474,6 +493,7 @@ const index = () => {
     const validate = setErrorValidation(payload, dispatch, schemaMappings);
 
     if (validate) {
+      loadingSwal();
       await fetchApi(
         "POST",
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/lingkup_pemeriksaan/risk/${selectedId}`,
@@ -484,6 +504,7 @@ const index = () => {
       setShowModalRisk(false);
       dispatch(resetObjPayloadRisk());
       dispatch(resetValidationErrorsRisk());
+      loadingSwal("close");
     }
   };
   // [ END ] handler for modal risk
@@ -544,6 +565,7 @@ const index = () => {
     );
 
     if (validate) {
+      loadingSwal();
       const payload = payloadControl?.map((v) => {
         const { kode, pn_pic, nama_pic } = v;
         return { kode, pn_pic, nama_pic };
@@ -559,6 +581,7 @@ const index = () => {
       setShowModalControl(false);
       dispatch(resetObjPayloadControl());
       dispatch(resetValidationErrorsControl());
+      loadingSwal("close");
     }
   };
   // [ END ] handler for modal control
@@ -606,7 +629,7 @@ const index = () => {
     await fetchApi(
       "DELETE",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/lingkup_pemeriksaan/risk/delete/${risk_id}`,
-      { id }
+      { id: params?.id }
     );
 
     lingkupPemeriksaanMutate();
@@ -626,7 +649,7 @@ const index = () => {
     await fetchApi(
       "DELETE",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/lingkup_pemeriksaan/control/delete/${control_id}`,
-      { id }
+      { id: params?.id }
     );
 
     lingkupPemeriksaanMutate();
@@ -664,8 +687,7 @@ const index = () => {
       <CardFilterTable
         filter={filter}
         showFilter={showFilter}
-        handleChangeSelect={handleChangeSelectFilter}
-        handleChangeText={handleChangeTextFilter}
+        handleChange={handleChangeFilter}
         handleReset={handleResetFilter}
       />
       {/* Start Content */}
@@ -678,7 +700,7 @@ const index = () => {
                 user={user?.data}
                 isInitiator={isInitiator}
                 withoutButton={!(isInitiator && !isCloseSubmodule)}
-                pathName={`/ewp/konsulting/${id}/perencanaan/program-kerja`}
+                pathName={`/ewp/konsulting/${params?.id}/perencanaan/program-kerja`}
                 expansionMap={expansionMap}
                 handleSelectedLingkupPemeriksaan={
                   handleSelectedLingkupPemeriksaan
@@ -700,7 +722,7 @@ const index = () => {
         ) : (
           <TableRingkasan
             data={dataRingkasan}
-            pathName={`/ewp/konsulting/${id}/perencanaan/program-kerja`}
+            pathName={`/ewp/konsulting/${params?.id}/perencanaan/program-kerja`}
           />
         )}
       </div>

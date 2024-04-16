@@ -19,8 +19,13 @@ const UserSKAISelect = ({
   const [value, setValue] = useState("");
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState(false);
-  const { pekerja, pekerjaMutate } = usePekerja(keyword, "skai");
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { pekerja, pekerjaMutate, pekerjaIsLoading } = usePekerja(
+    keyword,
+    "skai"
+  );
 
   useEffect(() => {
     if (pekerja?.data?.length) {
@@ -53,6 +58,10 @@ const UserSKAISelect = ({
     }
   }, [value]);
 
+  useEffect(() => {
+    setIsLoading(pekerjaIsLoading);
+  }, [pekerjaIsLoading]);
+
   function handleInputChange(e) {
     if (e.length > 2) {
       setValue(e);
@@ -70,10 +79,12 @@ const UserSKAISelect = ({
   };
 
   const DropdownIndicator = (props) => {
-    return (
+    return !isLoading ? (
       <components.DropdownIndicator {...props}>
         {customIcon && customIcon}
       </components.DropdownIndicator>
+    ) : (
+      ""
     );
   };
 
@@ -93,6 +104,7 @@ const UserSKAISelect = ({
         onInputChange={handleInputChange}
         components={customIcon && { DropdownIndicator }}
         isDisabled={isDisabled}
+        isLoading={isLoading}
         className={className}
         onMenuOpen={positionAbsolute && handleOpen}
         onMenuClose={positionAbsolute && handleClose}

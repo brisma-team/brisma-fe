@@ -159,7 +159,7 @@ const TablePemeriksaan = ({
                   <div
                     className={`flex items-center w-full justify-between ml-2`}
                   >
-                    <div>{`${
+                    <p>{`${
                       lingkup_pemeriksaan
                         ? lingkup_pemeriksaan
                         : risk
@@ -167,7 +167,7 @@ const TablePemeriksaan = ({
                         : control
                         ? `${control?.abbr} - ${control?.nama}`
                         : ""
-                    }`}</div>
+                    }`}</p>
                     {role !== "child" ? (
                       !withoutButton ? (
                         <ButtonIcon
@@ -186,6 +186,7 @@ const TablePemeriksaan = ({
                               return;
                             }
                           }}
+                          className={"w-8 flex justify-end"}
                         />
                       ) : (
                         ""
@@ -200,7 +201,7 @@ const TablePemeriksaan = ({
                 width="20%"
                 className="border-r cell-custom-dataTables justify-center"
               >
-                {pic?.nama || ""}
+                {pic?.pn ? `${pic?.pn} - ${pic?.nama}` : ""}
               </Cell>
               <Cell
                 width="15%"
