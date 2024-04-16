@@ -10,10 +10,12 @@ const ModalComment = ({
   callbackRef,
   handleSubmitParent,
   handleSubmitChild,
+  handleCloseComment,
   handleSelectedParentComment,
 }) => {
   const ref = callbackRef;
   const [newComment, setNewComment] = useState(false);
+  const [isOpenDetailComment, setIsOpenDetailComment] = useState(false);
   const [commentTextParent, setCommentTextParent] = useState("");
   const [commentTextChild, setCommentTextChild] = useState("");
 
@@ -34,25 +36,33 @@ const ModalComment = ({
   }, [handleClickOutside]);
 
   const handleSubmitCommentParent = async (e) => {
-    setNewComment(false);
-
-    if (!commentTextParent) {
+    if (!commentTextParent?.length) {
       errorSwal("Silahkan masukkan komentar Anda.");
       return;
     }
 
     await handleSubmitParent(e, commentTextParent);
+    setNewComment(false);
+    setIsOpenDetailComment(false);
     setCommentTextParent("");
   };
 
-  const handleSubmitCommentChild = async (e) => {
-    setNewComment(false);
-    if (!commentTextChild) {
+  const handleOpenCommentDetail = (value) => {
+    setIsOpenDetailComment(value);
+  };
+
+  const handleSubmitCommentChild = async (e, value) => {
+    if (!commentTextChild?.length) {
       errorSwal("Silakan masukkan komentar atau tanggapan Anda.");
       return;
     }
 
-    await handleSubmitChild(e, commentTextChild);
+    await handleSubmitChild(e, {
+      parent_id: value?.parent_id,
+      desc: commentTextChild,
+    });
+    setNewComment(false);
+    setIsOpenDetailComment(false);
     setCommentTextChild("");
   };
 
@@ -69,7 +79,7 @@ const ModalComment = ({
           <Card>
             <div className="comment px-4 w-full pb-2">
               <p className="comment text-xl font-bold">Comments</p>
-              <div className="comment rounded bg-atlasian-purple text-white mt-2 w-36 h-10 flex justify-center items-center">
+              <div className="comment rounded bg-atlasian-purple text-white mt-2 w-36 flex justify-center items-center">
                 <ButtonField
                   text={"Tambah Comment"}
                   handler={(e) => {
@@ -79,7 +89,7 @@ const ModalComment = ({
                   style={"font-semibold"}
                 />
               </div>
-              {newComment && (
+              {newComment ? (
                 <div className="comment w-full flex flex-col justify-end mt-3">
                   <TextAreaField
                     handleChange={(e) => setCommentTextParent(e.target.value)}
@@ -91,7 +101,7 @@ const ModalComment = ({
                     resize="auto"
                   />
                   <div className="comment w-full flex justify-end mt-3">
-                    <div className="comment w-36 h-10 bg-atlasian-blue-light rounded flex items-center">
+                    <div className="comment w-36 bg-atlasian-blue-light rounded flex items-center">
                       <ButtonField
                         text={"Tautkan Comment"}
                         handler={handleSubmitCommentParent}
@@ -100,6 +110,8 @@ const ModalComment = ({
                     </div>
                   </div>
                 </div>
+              ) : (
+                ""
               )}
               <div className="w-full py-1">
                 {data?.length
@@ -107,7 +119,10 @@ const ModalComment = ({
                       return (
                         <div key={idx} className="py-2">
                           <CardCommentDetail
-                            handleSubmitChild={handleSubmitCommentChild}
+                            isOpenDetail={isOpenDetailComment}
+                            handleOpenCommentDetail={handleOpenCommentDetail}
+                            handleSubmitCommentChild={handleSubmitCommentChild}
+                            handleCloseComment={handleCloseComment}
                             data={parent}
                             handleSelectedParentComment={
                               handleSelectedParentComment

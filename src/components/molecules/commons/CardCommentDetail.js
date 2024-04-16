@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   DivButton,
   Card,
@@ -40,19 +39,20 @@ const CardComment = ({ type, data }) => {
 
 const CardCommentDetail = ({
   data,
+  isOpenDetail,
+  handleOpenCommentDetail,
   commentText,
-  handleSubmitChild,
+  handleSubmitCommentChild,
+  handleCloseComment,
   handleSelectedParentComment,
   handleChangeTextComment,
 }) => {
-  const [open, setOpen] = useState(false);
-
-  if (open) {
+  if (isOpenDetail) {
     return (
       <DivButton
         handleClick={(e) => {
           e.stopPropagation();
-          setOpen(false);
+          handleOpenCommentDetail(false);
           handleSelectedParentComment(data?.id);
         }}
       >
@@ -74,26 +74,33 @@ const CardCommentDetail = ({
                   handleClick={(e) => e.stopPropagation()}
                 />
                 <div className="w-full flex justify-end gap-3 mt-2">
-                  <div className="w-36 h-10 bg-atlasian-blue-light rounded flex items-center">
+                  <div
+                    className={`w-36 ${
+                      !commentText
+                        ? "bg-atlasian-gray-light"
+                        : "bg-atlasian-blue-light"
+                    } rounded flex items-center`}
+                  >
                     <ButtonField
+                      disabled={!commentText}
                       text={"Tanggapi Comment"}
                       style={"font-semibold"}
-                      handler={(e) =>
-                        handleSubmitChild(e, {
-                          parent_id: data[0]?.id,
-                          pat_id: data[0]?.pat_id,
-                        })
-                      }
+                      handler={(e) => {
+                        e.stopPropagation();
+                        handleSubmitCommentChild(e, {
+                          parent_id: data?.id,
+                        });
+                      }}
                       name="reply"
                     />
                   </div>
-                  <div className="w-36 h-10 bg-atlasian-green rounded flex items-center">
+                  <div className="w-36 bg-atlasian-green rounded flex items-center">
                     <ButtonField
                       text={"Selesai"}
                       style={"font-semibold"}
                       handler={(e) =>
-                        handleSubmitChild(e, {
-                          parent_id: data[0]?.id,
+                        handleCloseComment(e, {
+                          parent_id: data?.id,
                         })
                       }
                       name="done"
@@ -112,7 +119,7 @@ const CardCommentDetail = ({
         className="h-[3.375rem] px-3 bg-atlasian-green w-full rounded flex items-center"
         handleClick={(e) => {
           e.stopPropagation();
-          setOpen(!open);
+          handleOpenCommentDetail(true);
           handleSelectedParentComment(data?.id);
         }}
       >

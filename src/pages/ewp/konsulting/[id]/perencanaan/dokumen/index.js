@@ -24,6 +24,8 @@ import _ from "lodash";
 import {
   confirmationSwal,
   convertDate,
+  fetchApi,
+  loadingSwal,
   setErrorValidation,
   usePostData,
   useUpdateData,
@@ -52,10 +54,20 @@ const routes = [
 ];
 
 const index = () => {
-  const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const router = useRouter();
+  const [params, setParams] = useState({
+    id: 0,
+  });
+  const baseUrl = `/ewp/konsulting/${params?.id}`;
   const pathName = `${baseUrl}/perencanaan`;
   const dispatch = useDispatch();
+
+  const listBab = [
+    { idx: 1, title: "Sumber Informasi" },
+    { idx: 2, title: "Tim Audit" },
+    { idx: 3, title: "Anggaran" },
+    { idx: 4, title: "Lingkup Pemeriksaan" },
+  ];
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [listContent, setListContent] = useState([]);
@@ -64,9 +76,8 @@ const index = () => {
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [openCardComment, setOpenCardComment] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
-  const [activeIndexComment, setActiveIndexComment] = useState(1);
+  const [activeIdComment, setActiveIdComment] = useState(1);
   const activeDivRef = useRef(null);
-  const [hitEndpointCount, setHitEndpointCount] = useState(1);
   const [doc, setDoc] = useState([]);
   const [currentPosition, setCurrentPosition] = useState(1);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
@@ -80,16 +91,24 @@ const index = () => {
     (state) => state.documentMapaEWPKonsulting.validationErrorsWorkflow
   );
 
-  const { projectDetail } = useProjectDetail({ id });
-  const { documentEWP } = useDocumentEWP("mapa", bab, { id });
+  const { projectDetail } = useProjectDetail({ id: params?.id });
+  const { documentEWP } = useDocumentEWP("mapa", bab, { id: params?.id });
   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
     "mapa",
-    { id }
+    { id: params?.id }
   );
   const { commentMapaEWP, commentMapaEWPMutate } = useCommentMapaEWP({
-    id,
-    bab: activeIndexComment,
+    id: params?.id,
+    bab: activeIdComment,
   });
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      id,
+    });
+  }, [router.isReady]);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -144,8 +163,10 @@ const index = () => {
         };
       });
       setListComment(mapping);
+    } else {
+      setListComment([]);
     }
-  }, [commentMapaEWP]);
+  }, [commentMapaEWP, openCardComment]);
 
   useEffect(() => {
     const response = documentEWP?.data?.daftar_isi;
@@ -158,9 +179,17 @@ const index = () => {
           title: bab.title,
         };
       });
-      setListContent(mapping);
-    } else {
-      setListContent([]);
+
+      const filteredResult = mapping.filter((item) => {
+        return doc.some((docItem) => docItem.idx === item.idx);
+      });
+      setListContent(filteredResult);
+    }
+  }, [documentEWP, doc]);
+
+  useEffect(() => {
+    if (bab < listBab?.length && documentEWP?.data) {
+      setBab((prev) => parseInt(prev) + 1);
     }
   }, [documentEWP]);
 
@@ -190,12 +219,12 @@ const index = () => {
 
       setCurrentPosition(activeIndex + 1);
 
-      const isAtBottom =
-        parentContainer.scrollTop + parentContainer.clientHeight ===
-        parentContainer.scrollHeight;
-      if (isAtBottom && hitEndpointCount <= 4) {
-        setHitEndpointCount((prev) => Math.min(prev + 1, 4));
-      }
+      // const isAtBottom =
+      //   parentContainer.scrollTop + parentContainer.clientHeight ===
+      //   parentContainer.scrollHeight;
+      // if (isAtBottom && hitEndpointCount <= 4) {
+      //   setHitEndpointCount((prev) => Math.min(prev + 1, 4));
+      // }
     }
   };
   // [ END ]
@@ -212,10 +241,12 @@ const index = () => {
       }
     }
   }, [activeIndex]);
+
   // [ END ]
 
   // [ START ] Hook ini berfungsi agar ketika class page-container-a4 melewati class parent, maka
   // akan memanggil function handleScrollHitEndpoint
+
   useEffect(() => {
     const addScrollListener = () => {
       const parentContainer = document.querySelector(".parent");
@@ -232,29 +263,37 @@ const index = () => {
 
     const timeoutId = setTimeout(() => {
       addScrollListener();
-    }, 1500);
+    }, 500);
 
     return () => clearTimeout(timeoutId);
   }, []);
+
   // [ END ]
 
   useEffect(() => {
-    setBab(hitEndpointCount);
-  }, [hitEndpointCount]);
+    if (documentEWP?.data) {
+      const findBab = listBab?.find((value) => value?.idx === bab);
+      const findBabId = documentEWP?.data?.daftar_isi?.find(
+        (value) => value?.key === bab
+      );
+      const findDoc = doc?.find((value) => value?.idx === bab);
+      if (!findDoc) {
+        setDoc((prev) => [
+          ...prev,
+          {
+            idx: findBab?.idx,
+            bab_id: findBabId?.id,
+            title: findBab?.title,
+            content: documentEWP?.data?.data,
+          },
+        ]);
+      }
+    }
+  }, [documentEWP]);
 
   useEffect(() => {
-    if (documentEWP?.data && listContent?.length) {
-      const findBab = listContent?.find((value) => value?.idx === bab);
-      setDoc((prev) => [
-        ...prev,
-        {
-          idx: findBab?.idx,
-          title: findBab?.title,
-          content: documentEWP?.data?.data,
-        },
-      ]);
-    }
-  }, [documentEWP, listContent]);
+    console.log("doc => ", doc);
+  }, [doc]);
 
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
@@ -315,9 +354,9 @@ const index = () => {
   }, [workflowDetailEWP, showModalApproval]);
   // [ END ]
 
-  const handleClickComment = (babIdx) => {
+  const handleClickComment = (babId) => {
     setOpenCardComment(true);
-    setActiveIndexComment(babIdx);
+    setActiveIdComment(babId);
   };
 
   // [ START ] function untuk Modal Workflow
@@ -378,7 +417,7 @@ const index = () => {
       const actionType = e.target.offsetParent.name;
       const data = {
         sub_modul: "mapa",
-        sub_modul_id: id,
+        sub_modul_id: params?.id,
       };
 
       const signedCount = workflowData?.ref_tim_audit_approver?.filter(
@@ -436,35 +475,55 @@ const index = () => {
   // [ END ]
 
   // [ START ] COMMENT
+  const handleCloseComment = async (e, value) => {
+    e.stopPropagation();
+
+    loadingSwal();
+    await fetchApi(
+      "PATCH",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${value?.parent_id}`,
+      {}
+    );
+
+    commentMapaEWPMutate();
+    loadingSwal("close");
+  };
+
   const handleSubmitCommentParent = async (e, value) => {
     e.stopPropagation();
     const body = {
-      ref_bab_mapa_id: activeIndexComment.toString(),
+      ref_bab_mapa_id: activeIdComment.toString(),
       deskripsi: value,
     };
 
-    await usePostData(
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${id}?ref_bab_mapa_id=${activeIndexComment}`,
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${params?.id}?ref_bab_mapa_id=${activeIdComment}`,
       body
     );
 
     commentMapaEWPMutate();
+    loadingSwal("close");
   };
 
   const handleSubmitCommentChild = async (e, value) => {
     e.stopPropagation();
+
     const body = {
-      ref_bab_mapa_id: activeIndexComment.toString(),
+      ref_bab_mapa_id: activeIdComment.toString(),
       deskripsi: value,
       parent_comment_id: selectedParentCommentId,
     };
 
+    loadingSwal();
     await usePostData(
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${id}?ref_bab_mapa_id=${activeIndexComment}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${params?.id}?ref_bab_mapa_id=${activeIdComment}`,
       body
     );
 
     commentMapaEWPMutate();
+    loadingSwal("close");
   };
 
   const handleSelectedParentComment = (id) => {
@@ -524,6 +583,7 @@ const index = () => {
             handleSelectedParentComment={handleSelectedParentComment}
             handleSubmitCommentParent={handleSubmitCommentParent}
             handleSubmitCommentChild={handleSubmitCommentChild}
+            handleCloseComment={handleCloseComment}
           />
         </div>
         <div>
