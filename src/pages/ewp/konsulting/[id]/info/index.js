@@ -58,7 +58,10 @@ import useUser from "@/data/useUser";
 const index = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { id } = useRouter().query;
+  const [params, setParams] = useState({
+    id: 0,
+  });
+
   const navigationTabItems = [
     { idx: 1, title: "Project Details" },
     { idx: 2, title: "Proyek Terkait" },
@@ -85,12 +88,16 @@ const index = () => {
   const [showModalAttachment, setShowModalAttachment] = useState(false);
 
   const { user } = useUser();
-  const { projectDetail, projectDetailError, projectDetailMutate } =
-    useProjectDetail({ id });
+  const {
+    projectDetail,
+    projectDetailError,
+    projectDetailMutate,
+    projectDetailIsLoading,
+  } = useProjectDetail({ id: params?.id });
   const { relatedProjectInfo, relatedProjectInfoMutate } =
-    useRelatedProjectInfo({ id });
+    useRelatedProjectInfo({ id: params?.id });
   const { ukerAssessmentInfo, ukerAssessmentInfoMutate } =
-    useUkerAssessmentInfo({ id });
+    useUkerAssessmentInfo({ id: params?.id });
   const { activitySchedule } = useActivitySchedule("detail", {
     id: patId,
     jadwal_sbp_id: scheduleActivityId,
@@ -121,9 +128,17 @@ const index = () => {
     { name: "Overview", path: "/ewp/konsulting" },
     {
       name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Info`,
-      path: `/ewp/konsulting/${id}/info`,
+      path: `/ewp/konsulting/${params?.id}/info`,
     },
   ];
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      id,
+    });
+  }, [router.isReady]);
 
   useEffect(() => {
     const status_code =
@@ -154,7 +169,7 @@ const index = () => {
         label: "Perencanaan",
         start_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_start,
         end_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
-        url: `/ewp/konsulting/${id}/perencanaan`,
+        url: `/ewp/konsulting/${params?.id}/perencanaan`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
@@ -167,7 +182,7 @@ const index = () => {
         start_date:
           projectDetail?.data?.realisasi?.pelaksanaan_audit_real_start,
         end_date: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
-        url: `/ewp/konsulting/${id}/analisa`,
+        url: `/ewp/konsulting/${params?.id}/analisa`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
@@ -180,7 +195,7 @@ const index = () => {
         start_date:
           projectDetail?.data?.realisasi?.peluang_peningkatan_real_start,
         end_date: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end,
-        url: `/ewp/konsulting/${id}/peluang-peningkatan`,
+        url: `/ewp/konsulting/${params?.id}/peluang-peningkatan`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end,
@@ -192,7 +207,7 @@ const index = () => {
         label: "Wrap-Up",
         start_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_start,
         end_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end,
-        url: `/ewp/konsulting/${id}/wrapup`,
+        url: `/ewp/konsulting/${params?.id}/wrapup`,
       },
     ]);
 
@@ -239,22 +254,17 @@ const index = () => {
   }, [projectDetail, showModalEditProject]);
 
   useEffect(() => {
-    if (projectDetailError) {
-      setIsError(true);
+    if (!projectDetailIsLoading && params?.id) {
+      setIsError(Boolean(projectDetailError));
     }
-  }, [projectDetailError]);
+  }, [projectDetailError, projectDetailIsLoading, params]);
 
   useEffect(() => {
     if (relatedProjectInfo?.data?.length) {
       const mappingRelatedProject = relatedProjectInfo?.data?.map((v) => {
         return {
           id: v?.id,
-          ..._.pick(v?.ref_ewp, [
-            "project_name",
-            "project_id",
-            "ref_tipe",
-            "ref_jenis",
-          ]),
+          ..._.pick(v, ["project_name", "project_id"]),
         };
       });
       setDataRelatedProject(mappingRelatedProject);
@@ -331,9 +341,18 @@ const index = () => {
     let path = pathMappings[statusCode] || "";
     path += `/${type === "close" ? "close" : "initiate"}`;
 
+    if (type === "close") {
+      const confirm = await confirmationSwal(
+        "Aksi ini akan mengakhiri progres saat ini, apakah Anda yakin ingin melanjutkan ke proses berikutnya?"
+      );
+      if (!confirm.value) {
+        return;
+      }
+    }
+
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/initiate/${path}/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/initiate/${path}/${params?.id}`,
       {}
     );
     projectDetailMutate();
@@ -349,11 +368,11 @@ const index = () => {
       }
       await fetchApi(
         "POST",
-        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/initiate/addendum/initiate/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/initiate/addendum/initiate/${params?.id}`,
         {}
       );
     }
-    router.push(`/ewp/konsulting/${id}/addendum`);
+    router.push(`/ewp/konsulting/${params?.id}/addendum`);
   };
 
   if (isError) {
@@ -361,7 +380,7 @@ const index = () => {
   }
 
   const handleClickLog = () => {
-    router.push(`/ewp/konsulting/${id}/log`);
+    router.push(`/ewp/konsulting/${params?.id}/log`);
   };
 
   // [ START ] handler for modal description
@@ -441,6 +460,10 @@ const index = () => {
     );
   };
 
+  useEffect(() => {
+    console.log("dataUkerAssessment => ", dataUkerAssessment);
+  }, [dataUkerAssessment]);
+
   const handleClickEditUkerAssessment = (index) => {
     const objData = dataUkerAssessment[index];
     const newData = [...dataUkerAssessment];
@@ -501,7 +524,7 @@ const index = () => {
     const response = await fetchApi(
       isUpdate ? "PATCH" : "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/uker_info/${
-        isUpdate ? uker_id : id
+        isUpdate ? uker_id : { id: params?.id }
       }`,
       {
         ref_auditee_branch_kode: parseInt(
@@ -536,11 +559,14 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/project_terkait/${id}`,
-      _.map(dataRelatedProject, ({ project_id, project_name }) => ({
-        project_id,
-        project_name,
-      }))
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/project_terkait`,
+      {
+        ewp_id: params?.id,
+        project: _.map(dataRelatedProject, ({ project_id, project_name }) => ({
+          project_id,
+          project_name,
+        })),
+      }
     );
     loadingSwal("close");
   };
@@ -688,7 +714,7 @@ const index = () => {
       loadingSwal();
       await fetchApi(
         "PATCH",
-        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/${id}/audit_info/update`,
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/${params?.id}/audit_info/update`,
         payload
       );
       dispatch(resetObjPayloadEditProject());
@@ -800,8 +826,7 @@ const index = () => {
         </div>
         <ModalDescription
           data={
-            dataUkerAssessment[selectedIndex]?.is_new ||
-            dataUkerAssessment[selectedIndex]?.is_edit
+            dataUkerAssessment[selectedIndex]?.is_new
               ? payloadUkerAssessment?.description
               : dataUkerAssessment[selectedIndex]?.description
           }
@@ -815,16 +840,14 @@ const index = () => {
         />
         <ModalAttachment
           data={
+            dataUkerAssessment[selectedIndex]?.is_new
+              ? payloadUkerAssessment?.attachments[0]
+              : dataUkerAssessment[selectedIndex]?.attachments[0]
+          }
+          isEdit={
             dataUkerAssessment[selectedIndex]?.is_new ||
             dataUkerAssessment[selectedIndex]?.is_edit
-              ? payloadUkerAssessment?.attachments[0]
-              : dataUkerAssessment[selectedIndex]?.attachments
           }
-          isEdit
-          // isEdit={
-          //   dataUkerAssessment[selectedIndex]?.is_new ||
-          //   dataUkerAssessment[selectedIndex]?.is_edit
-          // }
           showModal={showModalAttachment}
           handleCloseModal={handleCloseModalAttachment}
           handleUpload={handleUploadAttachment}

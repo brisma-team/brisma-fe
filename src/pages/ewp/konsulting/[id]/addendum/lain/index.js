@@ -144,6 +144,10 @@ const index = () => {
         name: "Addendum Perencanaan Kegiatan",
         path: `/ewp/konsulting/${params?.id}/addendum`,
       },
+      {
+        name: "Lain",
+        path: `/ewp/konsulting/${params?.id}/addendum/lain`,
+      },
     ]);
   }, [projectDetail]);
 

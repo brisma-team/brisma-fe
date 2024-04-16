@@ -9,7 +9,7 @@ import TableTree, {
 
 const TableRingkasan = ({ data, pathName }) => {
   return (
-    <div className="dataTables-custom">
+    <div className="dataTables-custom bg-white">
       <TableTree>
         <Headers>
           <Header className="!hidden" />

@@ -74,7 +74,18 @@ const ContentControl = ({ data }) => {
           <th width="1%">
             <p style={{ fontSize: "14px", fontWeight: 500 }}>:</p>
           </th>
-          <th width="81%">{data?.uraian || ""}</th>
+          <th width="81%">
+            {data?.uraian ? (
+              <div
+                className="mt-4"
+                dangerouslySetInnerHTML={{
+                  __html: data?.uraian,
+                }}
+              />
+            ) : (
+              ""
+            )}
+          </th>
         </tr>
       </tbody>
     </table>

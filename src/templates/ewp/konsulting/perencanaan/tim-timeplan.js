@@ -1,6 +1,6 @@
 const timTimeplanHtml = (data) => {
   return `<p style="font-weight: 600">1. P.I.C Auditor</p>
-  <table style="width: 100%;">
+  <table style="width: 100%; border-style: none !important; border: 0px solid #fff; border-collapse: separate;" cellspacing="0" cellpadding="0">
   <thead>
       <tr>
           <th width="8%" style="background-color: #3C64B1; color: white; border: 1px solid #fff;"><p style="font-size:14px; text-align:center">No</p></th>
@@ -30,7 +30,7 @@ const timTimeplanHtml = (data) => {
   </tbody>
 </table>
       <p style="font-weight: 600">2. P.I.C Auditee</p>
-      <table style="width: 100%;">
+      <table style="width: 100%; border-style: none !important; border: 0px solid #fff; border-collapse: separate;" cellspacing="0" cellpadding="0">
   <thead>
       <tr>
           <th width="8%" style="background-color: #3C64B1; color: white; border: 1px solid #fff;"><p style="font-size:14px; text-align:center">No</p></th>
@@ -60,7 +60,7 @@ const timTimeplanHtml = (data) => {
   </tbody>
 </table>
       <p style="font-weight: 600">3. Anggota Tim Audit</p>
-      <table style="width: 100%;">
+      <table style="width: 100%; border-style: none !important; border: 0px solid #fff; border-collapse: separate;" cellspacing="0" cellpadding="0">
   <thead>
       <tr>
           <th width="8%" style="background-color: #3C64B1; color: white; border: 1px solid #fff;"><p style="font-size:14px; text-align:center">No</p></th>

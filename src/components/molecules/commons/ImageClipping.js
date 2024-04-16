@@ -42,7 +42,6 @@ const ImageClipping = ({ data, handleChange, handleClick, isHideButton }) => {
                 className={"text-atlasian-purple text-sm"}
                 handleChange={handleChange}
                 handleClick={handleClick}
-                type={"image"}
               />
             </div>
           ) : (

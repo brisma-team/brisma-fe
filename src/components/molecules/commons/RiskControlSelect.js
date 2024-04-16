@@ -16,10 +16,12 @@ const RiskControlSelect = ({
   const [value, setValue] = useState("");
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { riskControl, riskControlMutate } = useRiskControl("all", {
-    search: keyword,
-  });
+  const { riskControl, riskControlMutate, riskControlIsLoading } =
+    useRiskControl("all", {
+      search: keyword,
+    });
 
   useEffect(() => {
     if (riskControl?.data?.length) {
@@ -36,6 +38,10 @@ const RiskControlSelect = ({
     }
     setSearch(false);
   }, [riskControl, search]);
+
+  useEffect(() => {
+    setIsLoading(riskControlIsLoading);
+  }, [riskControlIsLoading]);
 
   useEffect(() => {
     if (value.length > 1) {
@@ -63,10 +69,12 @@ const RiskControlSelect = ({
   }
 
   const DropdownIndicator = (props) => {
-    return (
+    return !isLoading ? (
       <components.DropdownIndicator {...props}>
         {customIcon && customIcon}
       </components.DropdownIndicator>
+    ) : (
+      ""
     );
   };
   return (
@@ -79,6 +87,7 @@ const RiskControlSelect = ({
       isSearchable={isSearchable}
       value={selectedValue}
       components={customIcon && { DropdownIndicator }}
+      isLoading={isLoading}
       isDisabled={isDisabled}
     />
   );

@@ -52,6 +52,10 @@ const index = () => {
         name: "Addendum Perencanaan Kegiatan",
         path: `/ewp/konsulting/${params?.id}/addendum`,
       },
+      {
+        name: "Utama",
+        path: `/ewp/konsulting/${params?.id}/addendum/utama`,
+      },
     ]);
     setIsInitiator(
       Boolean(

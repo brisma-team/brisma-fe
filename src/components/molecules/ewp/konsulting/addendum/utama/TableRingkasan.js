@@ -130,10 +130,11 @@ const TableRingkasan = ({ id }) => {
 
     loadingSwal();
     await fetchApi(
-      "PATCH",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/summary/update/${selectedId}`,
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/summary`,
       {
-        ..._.omit(payload, ["id", "sebelum", "sesudah", "part", "module"]),
+        id: id,
+        type: "core",
       }
     );
 

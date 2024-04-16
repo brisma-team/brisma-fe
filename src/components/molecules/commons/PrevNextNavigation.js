@@ -24,7 +24,7 @@ const PrevNextNavigation = ({
         <div
           className={`${
             !prevUrl && `opacity-25`
-          } rounded-full overflow-hidden border-4 border-atlasian-blue-light w-7 h-7 flex justify-center items-center`}
+          } rounded-full overflow-hidden border-4 border-atlasian-blue-light w-7 h-7 flex justify-center items-center bg-white`}
         >
           <LinkIcon
             isDisabled={!prevUrl}
@@ -39,7 +39,7 @@ const PrevNextNavigation = ({
         <div
           className={`${
             !routes?.length && "opacity-25 cursor-not-allowed"
-          } rounded-full border-4 border-atlasian-blue-light w-7 h-7 ${
+          } rounded-full border-4 border-atlasian-blue-light w-7 h-7 bg-white ${
             !routes && `opacity-30 cursor-not-allowed`
           }`}
           ref={ref}
@@ -73,7 +73,7 @@ const PrevNextNavigation = ({
         <div
           className={`${
             !nextUrl && `opacity-25`
-          } rounded-full overflow-hidden border-4 border-atlasian-blue-light w-7 h-7 flex justify-center items-center`}
+          } rounded-full overflow-hidden border-4 border-atlasian-blue-light w-7 h-7 flex justify-center items-center bg-white`}
         >
           <LinkIcon
             isDisabled={!nextUrl}

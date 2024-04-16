@@ -219,7 +219,7 @@ const UkerAssessmentTable = ({
                     <ButtonIcon
                       color={"blue"}
                       icon={<IconAttachment />}
-                      handleClick={() => handleClickAttachment(uker_id)}
+                      handleClick={() => handleClickAttachment(index)}
                     />
                   </div>
                 </Cell>

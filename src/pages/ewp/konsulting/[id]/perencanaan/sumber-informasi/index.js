@@ -1,5 +1,6 @@
 import { Breadcrumbs, ButtonField, PageTitle } from "@/components/atoms";
 import { useProjectDetail } from "@/data/ewp/konsulting";
+import { useWorkflowDetailEWP } from "@/data/ewp";
 import { useSumberInformasi } from "@/data/ewp/konsulting/perencanaan/sumber-informasi";
 import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
@@ -10,8 +11,14 @@ import {
   ImageClipping,
   PrevNextNavigation,
 } from "@/components/molecules/commons";
-import { fetchApi, loadingSwal, usePostFileData } from "@/helpers";
+import {
+  errorSwalTimeout,
+  fetchApi,
+  loadingSwal,
+  usePostFileData,
+} from "@/helpers";
 import useUser from "@/data/useUser";
+import { useTimTimeplan } from "@/data/ewp/konsulting/perencanaan/tim-timeplan";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -31,9 +38,11 @@ const routes = [
 ];
 
 const index = () => {
-  const { id } = useRouter().query;
   const router = useRouter();
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const [params, setParams] = useState({
+    id: 0,
+  });
+  const baseUrl = `/ewp/konsulting/${params?.id}`;
   const pathName = `${baseUrl}/perencanaan`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -41,12 +50,38 @@ const index = () => {
   const [attachmentClipList, setAttachmentClipList] = useState([]);
   const [typeUpload, setTypeUpload] = useState("");
   const [content, setContent] = useState("");
+
+  const [isError, setIsError] = useState(false);
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
   const [isInitiator, setIsInitiator] = useState(false);
+  const [isAuditor, setIsAuditor] = useState(false);
 
   const { user } = useUser();
-  const { projectDetail } = useProjectDetail({ id });
-  const { sumberInformasi, sumberInformasiMutate } = useSumberInformasi({ id });
+  const { projectDetail, projectDetailError, projectDetailIsLoading } =
+    useProjectDetail({ id: params?.id });
+  const { sumberInformasi, sumberInformasiMutate } = useSumberInformasi({
+    id: params?.id,
+  });
+  const { timTimeplan } = useTimTimeplan({
+    id: params?.id,
+  });
+  const { workflowDetailEWP } = useWorkflowDetailEWP("mapa", {
+    id: params?.id,
+  });
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      id,
+    });
+  }, [router.isReady]);
+
+  useEffect(() => {
+    if (!projectDetailIsLoading && params?.id) {
+      setIsError(Boolean(projectDetailError));
+    }
+  }, [projectDetailError, projectDetailIsLoading, params]);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -67,15 +102,30 @@ const index = () => {
       },
     ]);
 
-    setIsCloseSubmodule(
-      Boolean(projectDetail?.data?.realisasi?.penyusunan_mapa_real_end)
-    );
     setIsInitiator(
       Boolean(
         projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
       )
     );
   }, [projectDetail, user]);
+
+  useEffect(() => {
+    const auditor = timTimeplan?.data?.tim_audit?.auditor;
+    if (auditor?.length) {
+      const foundAuditor = auditor?.find((v) => v?.pn === user?.data?.pn);
+      setIsAuditor(Boolean(foundAuditor));
+    } else {
+      setIsAuditor(false);
+    }
+  }, [timTimeplan, user]);
+
+  useEffect(() => {
+    setIsCloseSubmodule(
+      Boolean(
+        workflowDetailEWP?.data?.info?.status_persetujuan_name === "Final"
+      )
+    );
+  }, [workflowDetailEWP]);
 
   useEffect(() => {
     setContent(sumberInformasi?.data || "");
@@ -122,7 +172,7 @@ const index = () => {
     const upload = await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/si`,
-      { sumber_informasi: content, id }
+      { sumber_informasi: content, id: params?.id }
     );
     if (upload.isConfirmed) {
       router.push(pathName);
@@ -131,6 +181,10 @@ const index = () => {
     sumberInformasiMutate();
     loadingSwal("close");
   };
+
+  if (isError) {
+    errorSwalTimeout(projectDetailError, "/ewp/konsulting");
+  }
 
   return (
     <LandingLayoutEWPConsulting>
@@ -150,18 +204,28 @@ const index = () => {
       <div className="my-4 flex justify-between">
         <div className="flex gap-6">
           <div className="w-64 flex flex-col gap-4">
-            <ImageClipping
-              data={imageClipList}
-              handleChange={handleUploadFile}
-              handleClick={handleClickUploadImage}
-              isHideButton={!(isInitiator && !isCloseSubmodule)}
-            />
-            <AttachmentClipping
-              data={attachmentClipList}
-              handleChange={handleUploadFile}
-              handleClick={handleClickUploadAttachment}
-              isHideButton={!(isInitiator && !isCloseSubmodule)}
-            />
+            {isAuditor || isInitiator ? (
+              <>
+                <ImageClipping
+                  data={imageClipList}
+                  handleChange={handleUploadFile}
+                  handleClick={handleClickUploadImage}
+                  isHideButton={
+                    !((isInitiator || isAuditor) && !isCloseSubmodule)
+                  }
+                />
+                <AttachmentClipping
+                  data={attachmentClipList}
+                  handleChange={handleUploadFile}
+                  handleClick={handleClickUploadAttachment}
+                  isHideButton={
+                    !((isInitiator || isAuditor) && !isCloseSubmodule)
+                  }
+                />
+              </>
+            ) : (
+              ""
+            )}
           </div>
           <div>
             <div className="ckeditor-latar-belakang-mapa-ewp">
@@ -171,7 +235,7 @@ const index = () => {
                 onChange={(value) => setContent(value)}
               />
             </div>
-            {isInitiator && !isCloseSubmodule ? (
+            {(isInitiator || isAuditor) && !isCloseSubmodule ? (
               <div className="mt-3 flex justify-end">
                 <div className="w-[7.75rem] bg-atlasian-green rounded">
                   <ButtonField text={"Simpan"} handler={handleSubmit} />

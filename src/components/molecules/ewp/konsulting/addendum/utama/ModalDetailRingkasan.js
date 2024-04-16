@@ -82,6 +82,12 @@ const Control = ({ data }) => {
           <ContentControl data={data?.method?.data} />
         </div>
       );
+    case "remove":
+      return (
+        <div className="w-[31rem]">
+          <ContentControl data={data?.method?.data} />
+        </div>
+      );
   }
 };
 

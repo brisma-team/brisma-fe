@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ModalScroll, CloseModal, UploadButton } from "@/components/atoms";
-import { useEffect } from "react";
 
 const ModalAttachment = ({
   data,
@@ -9,10 +8,6 @@ const ModalAttachment = ({
   handleCloseModal,
   handleUpload,
 }) => {
-  useEffect(() => {
-    console.log("isEdit => ", isEdit);
-  }, [isEdit]);
-
   return (
     <ModalScroll showModal={showModal} positionCenter>
       <div className="w-[37.5rem] relative">

@@ -6,6 +6,7 @@ import _ from "lodash";
 const RiskSelect = ({
   handleChange,
   isSearchable,
+  isDisabled,
   placeholder,
   selectedValue,
   fieldsProps,
@@ -15,8 +16,9 @@ const RiskSelect = ({
   const [value, setValue] = useState("");
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { risk, riskMutate } = useRisk("all", { keyword });
+  const { risk, riskMutate, riskIsLoading } = useRisk("all", { keyword });
 
   useEffect(() => {
     if (risk?.data?.length) {
@@ -51,6 +53,10 @@ const RiskSelect = ({
     }
   }, [value]);
 
+  useEffect(() => {
+    setIsLoading(riskIsLoading);
+  }, [riskIsLoading]);
+
   function handleInputChange(e) {
     if (e.length > 2) {
       setValue(e);
@@ -60,10 +66,12 @@ const RiskSelect = ({
   }
 
   const DropdownIndicator = (props) => {
-    return (
+    return !isLoading ? (
       <components.DropdownIndicator {...props}>
         {customIcon && customIcon}
       </components.DropdownIndicator>
+    ) : (
+      ""
     );
   };
   return (
@@ -74,6 +82,8 @@ const RiskSelect = ({
       onInputChange={handleInputChange}
       onChange={handleChange}
       isSearchable={isSearchable}
+      isDisabled={isDisabled}
+      isLoading={isLoading}
       value={selectedValue}
       components={customIcon && { DropdownIndicator }}
     />
