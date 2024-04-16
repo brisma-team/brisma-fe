@@ -260,7 +260,8 @@ const index = () => {
             isUserSKAI
             data={payload}
             validation={validation}
-            withoutButton={!isInitiator && !isCloseSubmodule}
+            withoutButton={isCloseSubmodule ? true : !isInitiator}
+            isDisabled={isCloseSubmodule ? true : !isInitiator}
             property={"auditor"}
             title={"P.I.C Auditor"}
             textColorTitle={"text-atlasian-blue-light"}
@@ -271,7 +272,8 @@ const index = () => {
           <CardTeam
             data={payload}
             validation={validation}
-            withoutButton={!isInitiator && !isCloseSubmodule}
+            withoutButton={isCloseSubmodule ? true : !isInitiator}
+            isDisabled={isCloseSubmodule ? true : !isInitiator}
             property={"auditee"}
             title={"P.I.C Auditee"}
             textColorTitle={"text-atlasian-red"}
@@ -307,7 +309,8 @@ const index = () => {
                 property={"ata"}
                 data={payload}
                 validation={validation}
-                withoutButton={!isInitiator && !isCloseSubmodule}
+                withoutButton={isCloseSubmodule ? true : !isInitiator}
+                isDisabled={isCloseSubmodule ? true : !isInitiator}
                 handleDelete={handleDeleteObjectInsideArray}
                 handleChangeSelect={handleChangeSelectValueObjectInsideArray}
                 handleChangeText={handleChangeTextValueObjectInsideArray}
