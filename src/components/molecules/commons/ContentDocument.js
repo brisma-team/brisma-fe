@@ -14,8 +14,10 @@ const ContentDocument = ({
   handleIsOpenCardComment,
   handleSubmitCommentParent,
   handleSubmitCommentChild,
+  handleCloseComment,
   handleSelectedParentComment,
   handleClickComment,
+  isHideButton = false,
 }) => {
   const ref = useRef(null);
 
@@ -28,8 +30,10 @@ const ContentDocument = ({
           handleClickOutside={() => handleIsOpenCardComment(false)}
           handleSubmitParent={handleSubmitCommentParent}
           handleSubmitChild={handleSubmitCommentChild}
+          handleCloseComment={handleCloseComment}
           handleSelectedParentComment={handleSelectedParentComment}
           data={dataComment}
+          isHideButton={isHideButton}
         />
         {dataDoc.map((v, i) => {
           return (
@@ -46,7 +50,9 @@ const ContentDocument = ({
                   <div className="flex justify-between">
                     <div className="font-bold text-xl">{v.title}</div>
                     <div className="flex items-center" ref={ref}>
-                      <DivButton handleClick={() => handleClickComment(v.idx)}>
+                      <DivButton
+                        handleClick={() => handleClickComment(v?.bab_id)}
+                      >
                         <Image src={ImageChat} alt="chat" />
                       </DivButton>
                     </div>
