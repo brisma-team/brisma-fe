@@ -73,6 +73,8 @@ const index = () => {
   const [bab, setBab] = useState(1);
   const [selectedParentCommentId, setSelectedParentCommentId] = useState(0);
 
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+
   const workflowData = useSelector(
     (state) => state.documentMapaEWPKonsulting.workflowData
   );
@@ -109,6 +111,9 @@ const index = () => {
         path: `${pathName}/dokumen`,
       },
     ]);
+    setIsCloseSubmodule(
+      Boolean(projectDetail?.data?.realisasi?.penyusunan_mapa_real_end)
+    );
   }, [projectDetail]);
 
   useEffect(() => {
@@ -524,6 +529,7 @@ const index = () => {
             handleSelectedParentComment={handleSelectedParentComment}
             handleSubmitCommentParent={handleSubmitCommentParent}
             handleSubmitCommentChild={handleSubmitCommentChild}
+            isHideButton={isCloseSubmodule}
           />
         </div>
         <div>
@@ -536,7 +542,9 @@ const index = () => {
                 <p className="text-brisma font-bold text-xl">Approval</p>
                 <ApprovalItems
                   title={"P.I.C Auditor"}
-                  text={workflowData?.maker?.nama}
+                  text={
+                    workflowData?.maker?.pn + " - " + workflowData?.maker?.nama
+                  }
                 />
                 <ApprovalItems
                   title={"Approver"}

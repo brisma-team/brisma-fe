@@ -11,6 +11,7 @@ const ModalComment = ({
   handleSubmitParent,
   handleSubmitChild,
   handleSelectedParentComment,
+  isHideButton = false,
 }) => {
   const ref = callbackRef;
   const [newComment, setNewComment] = useState(false);
@@ -69,16 +70,18 @@ const ModalComment = ({
           <Card>
             <div className="comment px-4 w-full pb-2">
               <p className="comment text-xl font-bold">Comments</p>
-              <div className="comment rounded bg-atlasian-purple text-white mt-2 w-36 h-10 flex justify-center items-center">
-                <ButtonField
-                  text={"Tambah Comment"}
-                  handler={(e) => {
-                    e.stopPropagation();
-                    setNewComment(!newComment);
-                  }}
-                  style={"font-semibold"}
-                />
-              </div>
+              {!isHideButton && (
+                <div className="comment rounded bg-atlasian-purple text-white mt-2 w-36 h-10 flex justify-center items-center">
+                  <ButtonField
+                    text={"Tambah Comment"}
+                    handler={(e) => {
+                      e.stopPropagation();
+                      setNewComment(!newComment);
+                    }}
+                    style={"font-semibold"}
+                  />
+                </div>
+              )}
               {newComment && (
                 <div className="comment w-full flex flex-col justify-end mt-3">
                   <TextAreaField
@@ -114,6 +117,7 @@ const ModalComment = ({
                             }
                             commentText={commentTextChild}
                             handleChangeTextComment={handleChangeTextComment}
+                            isHideButton={isHideButton}
                           />
                         </div>
                       );

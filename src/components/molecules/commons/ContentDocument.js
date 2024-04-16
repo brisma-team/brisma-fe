@@ -16,6 +16,7 @@ const ContentDocument = ({
   handleSubmitCommentChild,
   handleSelectedParentComment,
   handleClickComment,
+  isHideButton = false,
 }) => {
   const ref = useRef(null);
 
@@ -30,6 +31,7 @@ const ContentDocument = ({
           handleSubmitChild={handleSubmitCommentChild}
           handleSelectedParentComment={handleSelectedParentComment}
           data={dataComment}
+          isHideButton={isHideButton}
         />
         {dataDoc.map((v, i) => {
           return (
