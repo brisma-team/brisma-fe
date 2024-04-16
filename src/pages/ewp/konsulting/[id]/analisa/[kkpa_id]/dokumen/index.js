@@ -56,6 +56,8 @@ const index = () => {
   const [listContent, setListContent] = useState([]);
   const [listComment, setListComment] = useState([]);
 
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [openCardComment, setOpenCardComment] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
@@ -108,6 +110,10 @@ const index = () => {
         path: `${pathNameLandingPage}/dokumen`,
       },
     ]);
+
+    setIsCloseSubmodule(
+      Boolean(projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end)
+    );
   }, [projectDetail]);
 
   useEffect(() => {
@@ -519,6 +525,7 @@ const index = () => {
             handleSelectedParentComment={handleSelectedParentComment}
             handleSubmitCommentParent={handleSubmitCommentParent}
             handleSubmitCommentChild={handleSubmitCommentChild}
+            isHideButton={isCloseSubmodule}
           />
         </div>
         <div>
@@ -531,7 +538,9 @@ const index = () => {
                 <p className="text-brisma font-bold text-xl">Approval</p>
                 <ApprovalItems
                   title={"P.I.C Auditor"}
-                  text={workflowData?.maker?.name}
+                  text={
+                    workflowData?.maker?.pn + " - " + workflowData?.maker?.name
+                  }
                 />
                 <ApprovalItems
                   title={"Approver"}
