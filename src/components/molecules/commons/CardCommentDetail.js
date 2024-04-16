@@ -46,6 +46,7 @@ const CardCommentDetail = ({
   handleCloseComment,
   handleSelectedParentComment,
   handleChangeTextComment,
+  isHideButton = false,
 }) => {
   if (isOpenDetail) {
     return (
@@ -64,7 +65,7 @@ const CardCommentDetail = ({
                   return <CardComment key={idx} type={"child"} data={child} />;
                 })
               : ""}
-            {!data?.is_closed && (
+            {!data?.is_closed && !isHideButton && (
               <div className="pl-12 mt-4">
                 <TextAreaField
                   value={commentText}

@@ -40,7 +40,9 @@ const ApprovalItems = ({ title, text, data }) => {
               key={i}
               className="font-brisma text-base my-0.5 flex justify-between"
             >
-              <div className="text-base text-brisma w-full">{v.nama}</div>
+              <div className="text-base text-brisma w-full">
+                {v.pn + " - " + v.nama}
+              </div>
               {findApproval !== -1 && i === findApproval && (
                 <div className="ml-2 flex items-center">
                   <Image alt="" src={ImageKliping} />
