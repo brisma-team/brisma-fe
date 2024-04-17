@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import {
   AttachmentClipping,
+  ContentView,
   ImageClipping,
   PrevNextNavigation,
 } from "@/components/molecules/commons";
@@ -53,6 +54,7 @@ const index = () => {
 
   const [isError, setIsError] = useState(false);
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
   const [isInitiator, setIsInitiator] = useState(false);
   const [isAuditor, setIsAuditor] = useState(false);
 
@@ -105,6 +107,12 @@ const index = () => {
     setIsInitiator(
       Boolean(
         projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+    setIsOnProgress(
+      Boolean(
+        projectDetail?.data?.project_info?.status_persetujuan_name ==
+          "On Progress"
       )
     );
   }, [projectDetail, user]);
@@ -201,50 +209,46 @@ const index = () => {
         />
       </div>
       {/* Start Content */}
-      <div className="my-4 flex justify-between">
-        <div className="flex gap-6">
+      <div className="my-4 flex gap-6">
+        {(isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress && (
           <div className="w-64 flex flex-col gap-4">
-            {isAuditor || isInitiator ? (
-              <>
-                <ImageClipping
-                  data={imageClipList}
-                  handleChange={handleUploadFile}
-                  handleClick={handleClickUploadImage}
-                  isHideButton={
-                    !((isInitiator || isAuditor) && !isCloseSubmodule)
-                  }
-                />
-                <AttachmentClipping
-                  data={attachmentClipList}
-                  handleChange={handleUploadFile}
-                  handleClick={handleClickUploadAttachment}
-                  isHideButton={
-                    !((isInitiator || isAuditor) && !isCloseSubmodule)
-                  }
-                />
-              </>
-            ) : (
-              ""
-            )}
+            <ImageClipping
+              data={imageClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadImage}
+              isHideButton={!((isInitiator || isAuditor) && !isCloseSubmodule)}
+            />
+            <AttachmentClipping
+              data={attachmentClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadAttachment}
+              isHideButton={!((isInitiator || isAuditor) && !isCloseSubmodule)}
+            />
           </div>
-          <div>
+        )}
+
+        <div>
+          {(isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress ? (
             <div className="ckeditor-latar-belakang-mapa-ewp">
               <Editor
                 contentData={content}
-                ready
+                ready={true}
                 onChange={(value) => setContent(value)}
               />
             </div>
-            {(isInitiator || isAuditor) && !isCloseSubmodule ? (
-              <div className="mt-3 flex justify-end">
-                <div className="w-[7.75rem] bg-atlasian-green rounded">
-                  <ButtonField text={"Simpan"} handler={handleSubmit} />
-                </div>
+          ) : (
+            <ContentView dataDoc={content} />
+          )}
+
+          {(isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress ? (
+            <div className="mt-3 flex justify-end">
+              <div className="w-[7.75rem] bg-atlasian-green rounded">
+                <ButtonField text={"Simpan"} handler={handleSubmit} />
               </div>
-            ) : (
-              ""
-            )}
-          </div>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
       {/* End Content */}

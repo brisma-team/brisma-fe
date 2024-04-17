@@ -85,6 +85,7 @@ const index = () => {
   const [bab, setBab] = useState(1);
 
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
 
   const workflowData = useSelector(
     (state) => state.documentMapaEWPKonsulting.workflowData
@@ -315,6 +316,10 @@ const index = () => {
         status_approver: workflowInfo?.status_persetujuan_name,
         on_approver: workflowInfo?.status_approver,
       };
+
+      setIsOnProgress(
+        Boolean(workflowInfo.status_persetujuan == "On Progress")
+      );
 
       newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.nama}`;
       newWorkflowData.maker = maker;
@@ -590,7 +595,7 @@ const index = () => {
             handleSubmitCommentParent={handleSubmitCommentParent}
             handleSubmitCommentChild={handleSubmitCommentChild}
             handleCloseComment={handleCloseComment}
-            isHideButton={isCloseSubmodule}
+            isHideButton={isCloseSubmodule || !isOnProgress}
           />
         </div>
         <div>

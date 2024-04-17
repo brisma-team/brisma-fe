@@ -56,6 +56,7 @@ const index = () => {
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
   const [isInitiator, setIsInitiator] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
 
   const payload = useSelector(
     (state) => state.timTimePlanEWPKonsulting.objData
@@ -90,6 +91,12 @@ const index = () => {
     ]);
     setIsCloseSubmodule(
       Boolean(projectDetail?.data?.realisasi?.penyusunan_mapa_real_end)
+    );
+    setIsOnProgress(
+      Boolean(
+        projectDetail?.data?.project_info?.status_persetujuan_name ==
+          "On Progress"
+      )
     );
   }, [projectDetail]);
 
@@ -260,8 +267,10 @@ const index = () => {
             isUserSKAI
             data={payload}
             validation={validation}
-            withoutButton={isCloseSubmodule ? true : !isInitiator}
-            isDisabled={isCloseSubmodule ? true : !isInitiator}
+            withoutButton={
+              isCloseSubmodule ? true : !isInitiator && !isOnProgress
+            }
+            isDisabled={isCloseSubmodule ? true : !isInitiator && !isOnProgress}
             property={"auditor"}
             title={"P.I.C Auditor"}
             textColorTitle={"text-atlasian-blue-light"}
@@ -272,8 +281,10 @@ const index = () => {
           <CardTeam
             data={payload}
             validation={validation}
-            withoutButton={isCloseSubmodule ? true : !isInitiator}
-            isDisabled={isCloseSubmodule ? true : !isInitiator}
+            withoutButton={
+              isCloseSubmodule ? true : !isInitiator && !isOnProgress
+            }
+            isDisabled={isCloseSubmodule ? true : !isInitiator && !isOnProgress}
             property={"auditee"}
             title={"P.I.C Auditee"}
             textColorTitle={"text-atlasian-red"}
@@ -285,7 +296,7 @@ const index = () => {
         <div className="p-5 w-full">
           <Card>
             <div className="px-4 py-2 flex flex-col gap-4 w-full">
-              {isInitiator && !isCloseSubmodule ? (
+              {isInitiator && !isCloseSubmodule && isOnProgress ? (
                 <div className="bg-atlasian-purple rounded w-fit">
                   <ButtonField
                     text={"Tambah Anggota Tim"}
@@ -309,8 +320,12 @@ const index = () => {
                 property={"ata"}
                 data={payload}
                 validation={validation}
-                withoutButton={isCloseSubmodule ? true : !isInitiator}
-                isDisabled={isCloseSubmodule ? true : !isInitiator}
+                withoutButton={
+                  isCloseSubmodule ? true : !isInitiator && !isOnProgress
+                }
+                isDisabled={
+                  isCloseSubmodule ? true : !isInitiator && !isOnProgress
+                }
                 handleDelete={handleDeleteObjectInsideArray}
                 handleChangeSelect={handleChangeSelectValueObjectInsideArray}
                 handleChangeText={handleChangeTextValueObjectInsideArray}
@@ -319,7 +334,7 @@ const index = () => {
           </Card>
         </div>
       </Card>
-      {isInitiator && !isCloseSubmodule ? (
+      {isInitiator && !isCloseSubmodule && isOnProgress ? (
         <div className="mt-3 flex justify-end">
           <div className="w-36 bg-atlasian-green rounded">
             <ButtonField text={"Simpan"} handler={handleSubmit} />
