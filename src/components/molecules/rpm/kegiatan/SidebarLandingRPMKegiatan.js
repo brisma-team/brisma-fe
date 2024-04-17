@@ -28,7 +28,8 @@ const SidebarLandingRPMKegiatan = () => {
       projectName: projectInfo?.nama_project,
       statusName: projectInfo?.status_persetujuan,
       createdAt: convertDate(projectInfo?.createdAt, "/", "d"),
-      initiatorName: projectInfo?.create_by?.nama,
+      initiatorName:
+        projectInfo?.create_by?.pn + " - " + projectInfo?.create_by?.nama,
     });
 
     setMenu([
