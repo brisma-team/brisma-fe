@@ -57,6 +57,7 @@ const index = () => {
   const [listComment, setListComment] = useState([]);
 
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
 
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [openCardComment, setOpenCardComment] = useState(false);
@@ -275,6 +276,10 @@ const index = () => {
         status_approver: workflowInfo?.status_persetujuan,
         on_approver: workflowInfo?.status_approver,
       };
+
+      setIsOnProgress(
+        Boolean(workflowInfo.status_persetujuan == "On Progress")
+      );
 
       newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.name}`;
       newWorkflowData.maker = maker;
@@ -525,7 +530,7 @@ const index = () => {
             handleSelectedParentComment={handleSelectedParentComment}
             handleSubmitCommentParent={handleSubmitCommentParent}
             handleSubmitCommentChild={handleSubmitCommentChild}
-            isHideButton={isCloseSubmodule}
+            isHideButton={isCloseSubmodule || !isOnProgress}
           />
         </div>
         <div>

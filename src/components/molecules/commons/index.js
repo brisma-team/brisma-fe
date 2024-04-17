@@ -85,6 +85,7 @@ import ModalDescription from "./ModalDescription";
 import ModalAttachment from "./ModalAttachment";
 import ListContentDocument from "./ListContentDocument";
 import ContentDocument from "./ContentDocument";
+import ContentView from "./ContentView";
 
 export {
   BackButton,
@@ -174,4 +175,5 @@ export {
   ModalAttachment,
   ListContentDocument,
   ContentDocument,
+  ContentView,
 };
