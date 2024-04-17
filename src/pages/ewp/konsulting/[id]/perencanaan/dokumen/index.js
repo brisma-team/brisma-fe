@@ -76,13 +76,13 @@ const index = () => {
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [openCardComment, setOpenCardComment] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndexComment, setActiveIndexComment] = useState(1);
   const [activeIdComment, setActiveIdComment] = useState(1);
   const activeDivRef = useRef(null);
   const [doc, setDoc] = useState([]);
   const [currentPosition, setCurrentPosition] = useState(1);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
   const [bab, setBab] = useState(1);
-  const [selectedParentCommentId, setSelectedParentCommentId] = useState(0);
 
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
 
@@ -99,10 +99,11 @@ const index = () => {
     "mapa",
     { id: params?.id }
   );
-  const { commentMapaEWP, commentMapaEWPMutate } = useCommentMapaEWP({
-    id: params?.id,
-    bab: activeIdComment,
-  });
+  const { commentMapaEWP, commentMapaEWPMutate, commentMapaEWPIsLoading } =
+    useCommentMapaEWP({
+      id: params?.id,
+      bab: activeIdComment,
+    });
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -359,9 +360,12 @@ const index = () => {
   }, [workflowDetailEWP, showModalApproval]);
   // [ END ]
 
-  const handleClickComment = (babId) => {
+  const handleClickComment = (id, index) => {
+    console.log("id => ", id);
+    console.log("index => ", index);
     setOpenCardComment(true);
-    setActiveIdComment(babId);
+    setActiveIdComment(id);
+    setActiveIndexComment(index);
   };
 
   // [ START ] function untuk Modal Workflow
@@ -485,8 +489,8 @@ const index = () => {
 
     loadingSwal();
     await fetchApi(
-      "PATCH",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${value?.parent_id}`,
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/comment/close/${value?.parent_id}`,
       {}
     );
 
@@ -517,22 +521,18 @@ const index = () => {
 
     const body = {
       ref_bab_mapa_id: activeIdComment.toString(),
-      deskripsi: value,
-      parent_comment_id: selectedParentCommentId,
+      deskripsi: value?.desc,
+      parent_comment_id: value?.parent_id,
     };
 
     loadingSwal();
     await usePostData(
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${params?.id}?ref_bab_mapa_id=${activeIdComment}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/comment/${params?.id}?ref_bab_mapa_id=${activeIdComment}`,
       body
     );
 
     commentMapaEWPMutate();
     loadingSwal("close");
-  };
-
-  const handleSelectedParentComment = (id) => {
-    setSelectedParentCommentId(id);
   };
   // [ END ]
 
@@ -581,11 +581,12 @@ const index = () => {
             dataComment={listComment}
             activeDivRef={activeDivRef}
             activeIndex={activeIndex}
+            activeIndexComment={activeIndexComment}
             isOpenCardComment={openCardComment}
+            isLoadingComment={commentMapaEWPIsLoading}
             renderContent={renderContent}
             handleClickComment={handleClickComment}
             handleIsOpenCardComment={handleClickOpenCardComment}
-            handleSelectedParentComment={handleSelectedParentComment}
             handleSubmitCommentParent={handleSubmitCommentParent}
             handleSubmitCommentChild={handleSubmitCommentChild}
             handleCloseComment={handleCloseComment}

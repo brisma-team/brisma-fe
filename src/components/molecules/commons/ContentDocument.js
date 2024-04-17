@@ -8,14 +8,15 @@ const ContentDocument = ({
   dataDoc,
   dataComment,
   activeIndex,
+  activeIndexComment,
   activeDivRef,
   isOpenCardComment,
+  isLoadingComment,
   renderContent,
   handleIsOpenCardComment,
   handleSubmitCommentParent,
   handleSubmitCommentChild,
   handleCloseComment,
-  handleSelectedParentComment,
   handleClickComment,
   isHideButton = false,
 }) => {
@@ -26,12 +27,13 @@ const ContentDocument = ({
       <div className="overflow-y-scroll my-2 parent max-h-[40rem] flex flex-col">
         <ModalComment
           callbackRef={ref}
+          isLoading={isLoadingComment}
           show={isOpenCardComment}
+          activeIndexComment={activeIndexComment}
           handleClickOutside={() => handleIsOpenCardComment(false)}
           handleSubmitParent={handleSubmitCommentParent}
           handleSubmitChild={handleSubmitCommentChild}
           handleCloseComment={handleCloseComment}
-          handleSelectedParentComment={handleSelectedParentComment}
           data={dataComment}
           isHideButton={isHideButton}
         />
@@ -51,7 +53,9 @@ const ContentDocument = ({
                     <div className="font-bold text-xl">{v.title}</div>
                     <div className="flex items-center" ref={ref}>
                       <DivButton
-                        handleClick={() => handleClickComment(v?.bab_id)}
+                        handleClick={() =>
+                          handleClickComment(v?.bab_id, v?.idx)
+                        }
                       >
                         <Image src={ImageChat} alt="chat" />
                       </DivButton>

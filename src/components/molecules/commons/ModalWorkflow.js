@@ -40,7 +40,6 @@ const ModalWorkflow = ({
   let isApproval, isInitiator, statusApprover;
   isInitiator = user?.data?.pn == workflowData?.maker?.pn;
   isApproval = user?.data?.pn == workflowData?.on_approver?.pn;
-  // isAdmin = checkRoleIsAdmin(user?.data?.role_kode);
   statusApprover = workflowData?.status_approver;
 
   const statusColors = {
