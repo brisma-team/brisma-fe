@@ -79,6 +79,7 @@ const CardMemberTeam = ({
                         <TextInputDecimal
                           placeholder={"Mandays"}
                           value={v?.mandays}
+                          isDisabled={withoutButton}
                           onChange={(value) =>
                             handleChangeText(
                               property,
@@ -106,6 +107,7 @@ const CardMemberTeam = ({
                     <TextAreaField
                       placeholder={"Deskripsi"}
                       value={v?.deskripsi || ""}
+                      isDisabled={withoutButton}
                       handleChange={(e) =>
                         handleChangeText(
                           property,

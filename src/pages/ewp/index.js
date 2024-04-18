@@ -38,12 +38,11 @@ const index = () => {
         isDisabled: true,
       },
       {
-        subtitle: "E.W.P Non-Audit",
+        subtitle: "E.W.P",
         title: "Approval Monitoring",
         description:
           "Monitoring proses approval pada aktivitas EWP Audit dan Non-Audit per masing-masing user.",
-        url: "#",
-        isDisabled: true,
+        url: "/ewp/approval`",
       },
     ],
   };

@@ -49,6 +49,7 @@ const index = () => {
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
   const [isInitiator, setIsInitiator] = useState(false);
   const [isAuditor, setIsAuditor] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
 
   const data = useSelector((state) => state.rekomendasiEWPKonsulting.objData);
   const payload = useSelector(
@@ -108,6 +109,9 @@ const index = () => {
 
   useEffect(() => {
     setIsAuditor(landingStatus?.data?.info?.auditor?.pn == user?.data?.pn);
+    setIsOnProgress(
+      Boolean(landingStatus?.data?.info?.status_persetujuan == "On Progress")
+    );
   }, [landingStatus, user]);
 
   const handleClickDelete = async (rekomendasi_id) => {
@@ -175,7 +179,11 @@ const index = () => {
               <DataTables
                 data={data}
                 withoutButton={
-                  !((isInitiator || isAuditor) && !isCloseSubmodule)
+                  !(
+                    (isInitiator || isAuditor) &&
+                    !isCloseSubmodule &&
+                    isOnProgress
+                  )
                 }
                 handleClickDelete={handleClickDelete}
               />
@@ -185,10 +193,10 @@ const index = () => {
         <CardAddRekomendasi
           data={payload}
           validation={validation}
-          isDisabled={isCloseSubmodule}
+          isDisabled={isCloseSubmodule || !isOnProgress}
           handleChange={handleChangePayload}
         />
-        {(isInitiator || isAuditor) && !isCloseSubmodule ? (
+        {(isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress ? (
           <div className="w-full flex justify-end">
             <div className="w-48 rounded bg-atlasian-green">
               <ButtonField text={"Tambah Rekomendasi"} handler={handleSubmit} />

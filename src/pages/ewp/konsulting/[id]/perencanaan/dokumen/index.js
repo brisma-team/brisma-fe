@@ -57,6 +57,7 @@ const index = () => {
   const router = useRouter();
   const [params, setParams] = useState({
     id: 0,
+    is_approval: false,
   });
   const baseUrl = `/ewp/konsulting/${params?.id}`;
   const pathName = `${baseUrl}/perencanaan`;
@@ -76,15 +77,16 @@ const index = () => {
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [openCardComment, setOpenCardComment] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndexComment, setActiveIndexComment] = useState(1);
   const [activeIdComment, setActiveIdComment] = useState(1);
   const activeDivRef = useRef(null);
   const [doc, setDoc] = useState([]);
   const [currentPosition, setCurrentPosition] = useState(1);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
   const [bab, setBab] = useState(1);
-  const [selectedParentCommentId, setSelectedParentCommentId] = useState(0);
 
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
 
   const workflowData = useSelector(
     (state) => state.documentMapaEWPKonsulting.workflowData
@@ -99,16 +101,22 @@ const index = () => {
     "mapa",
     { id: params?.id }
   );
-  const { commentMapaEWP, commentMapaEWPMutate } = useCommentMapaEWP({
-    id: params?.id,
-    bab: activeIdComment,
-  });
+  const { commentMapaEWP, commentMapaEWPMutate, commentMapaEWPIsLoading } =
+    useCommentMapaEWP({
+      id: params?.id,
+      bab: activeIdComment,
+    });
+
+  useEffect(() => {
+    setShowModalApproval(params?.is_approval);
+  }, [params?.is_approval]);
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { id } = router.query;
+    const { id, is_approval } = router.query;
     setParams({
       id,
+      is_approval,
     });
   }, [router.isReady]);
 
@@ -246,7 +254,6 @@ const index = () => {
       }
     }
   }, [activeIndex]);
-
   // [ END ]
 
   // [ START ] Hook ini berfungsi agar ketika class page-container-a4 melewati class parent, maka
@@ -296,10 +303,6 @@ const index = () => {
     }
   }, [documentEWP]);
 
-  useEffect(() => {
-    console.log("doc => ", doc);
-  }, [doc]);
-
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
   useEffect(() => {
@@ -314,6 +317,10 @@ const index = () => {
         status_approver: workflowInfo?.status_persetujuan_name,
         on_approver: workflowInfo?.status_approver,
       };
+
+      setIsOnProgress(
+        Boolean(workflowInfo.status_persetujuan == "On Progress")
+      );
 
       newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.nama}`;
       newWorkflowData.maker = maker;
@@ -359,9 +366,10 @@ const index = () => {
   }, [workflowDetailEWP, showModalApproval]);
   // [ END ]
 
-  const handleClickComment = (babId) => {
+  const handleClickComment = (id, index) => {
     setOpenCardComment(true);
-    setActiveIdComment(babId);
+    setActiveIdComment(id);
+    setActiveIndexComment(index);
   };
 
   // [ START ] function untuk Modal Workflow
@@ -485,8 +493,8 @@ const index = () => {
 
     loadingSwal();
     await fetchApi(
-      "PATCH",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${value?.parent_id}`,
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/comment/close/${value?.parent_id}`,
       {}
     );
 
@@ -517,22 +525,18 @@ const index = () => {
 
     const body = {
       ref_bab_mapa_id: activeIdComment.toString(),
-      deskripsi: value,
-      parent_comment_id: selectedParentCommentId,
+      deskripsi: value?.desc,
+      parent_comment_id: value?.parent_id,
     };
 
     loadingSwal();
     await usePostData(
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${params?.id}?ref_bab_mapa_id=${activeIdComment}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/comment/${params?.id}?ref_bab_mapa_id=${activeIdComment}`,
       body
     );
 
     commentMapaEWPMutate();
     loadingSwal("close");
-  };
-
-  const handleSelectedParentComment = (id) => {
-    setSelectedParentCommentId(id);
   };
   // [ END ]
 
@@ -581,15 +585,16 @@ const index = () => {
             dataComment={listComment}
             activeDivRef={activeDivRef}
             activeIndex={activeIndex}
+            activeIndexComment={activeIndexComment}
             isOpenCardComment={openCardComment}
+            isLoadingComment={commentMapaEWPIsLoading}
+            isHideButton={isCloseSubmodule || !isOnProgress}
             renderContent={renderContent}
             handleClickComment={handleClickComment}
             handleIsOpenCardComment={handleClickOpenCardComment}
-            handleSelectedParentComment={handleSelectedParentComment}
             handleSubmitCommentParent={handleSubmitCommentParent}
             handleSubmitCommentChild={handleSubmitCommentChild}
             handleCloseComment={handleCloseComment}
-            isHideButton={isCloseSubmodule}
           />
         </div>
         <div>

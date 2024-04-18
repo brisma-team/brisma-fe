@@ -55,6 +55,7 @@ const index = () => {
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
   const [isInitiator, setIsInitiator] = useState(false);
   const [typeModal, setTypeModal] = useState("");
   const [selectedId, setSelectedId] = useState("");
@@ -96,6 +97,12 @@ const index = () => {
     setIsInitiator(
       Boolean(
         projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+    setIsOnProgress(
+      Boolean(
+        projectDetail?.data?.project_info?.status_persetujuan_name ==
+          "On Progress"
       )
     );
   }, [projectDetail]);
@@ -256,7 +263,9 @@ const index = () => {
               handleClickAdd={handleClickAddTable}
               handleClickUpdate={handleClickUpdateTable}
               handleClickDelete={handleClickDeleteTable}
-              withoutButtonAction={!(isInitiator && !isCloseSubmodule)}
+              withoutButtonAction={
+                !(isInitiator && !isCloseSubmodule && isOnProgress)
+              }
             />
           </div>
         </Card>

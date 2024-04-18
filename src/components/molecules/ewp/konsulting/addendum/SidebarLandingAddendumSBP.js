@@ -45,7 +45,8 @@ const SidebarLandingAddendumSBP = () => {
         "/",
         "d"
       ),
-      initiatorName: projectInfo?.initiator?.nama,
+      initiatorName:
+        projectInfo?.initiator?.pn + " - " + projectInfo?.initiator?.nama,
     });
 
     setMenu([

@@ -21,9 +21,9 @@ import _ from "lodash";
 import {
   confirmationSwal,
   convertDate,
+  fetchApi,
+  loadingSwal,
   setErrorValidation,
-  usePostData,
-  useUpdateData,
 } from "@/helpers";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useProjectDetail } from "@/data/ewp/konsulting";
@@ -45,25 +45,38 @@ const routes = [
   { name: "Dokumen", slug: "dokumen" },
 ];
 
+const listBab = [
+  { idx: 1, title: "Analisa Data" },
+  { idx: 2, title: "Resume" },
+  { idx: 3, title: "Hasil Analisa" },
+  { idx: 4, title: "Rekomendasi" },
+];
+
 const index = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
-  const { id, kkpa_id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const [params, setParams] = useState({
+    id: 0,
+    kkpa_id: 0,
+    is_approval: false,
+  });
+  const baseUrl = `/ewp/konsulting/${params?.id}`;
   const pathNameSubModulAnalisa = `${baseUrl}/analisa`;
-  const pathNameLandingPage = `${pathNameSubModulAnalisa}/${kkpa_id}`;
+  const pathNameLandingPage = `${pathNameSubModulAnalisa}/${params?.kkpa_id}`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [listContent, setListContent] = useState([]);
   const [listComment, setListComment] = useState([]);
 
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
 
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [openCardComment, setOpenCardComment] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
   const [activeIndexComment, setActiveIndexComment] = useState(1);
+  const [activeIdComment, setActiveIdComment] = useState(1);
   const activeDivRef = useRef(null);
-  const [hitEndpointCount, setHitEndpointCount] = useState(1);
   const [doc, setDoc] = useState([]);
   const [currentPosition, setCurrentPosition] = useState(1);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
@@ -77,16 +90,30 @@ const index = () => {
     (state) => state.documentKkpaEWPKonsulting.validationErrorsWorkflow
   );
 
-  const { projectDetail } = useProjectDetail({ id });
-  const { documentEWP } = useDocumentEWP("kkpa", bab, { id: kkpa_id });
+  const { projectDetail } = useProjectDetail({ id: params?.id });
+  const { documentEWP } = useDocumentEWP("kkpa", bab, { id: params?.kkpa_id });
   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
     "kkpa",
-    { id: kkpa_id }
+    { id: params?.kkpa_id }
   );
-  const { comment, commentMutate } = useComment({
-    id: kkpa_id,
-    bab: activeIndexComment,
+  const { comment, commentMutate, commentIsLoading } = useComment({
+    id: params?.kkpa_id,
+    bab: activeIdComment,
   });
+
+  useEffect(() => {
+    setShowModalApproval(params?.is_approval);
+  }, [params?.is_approval]);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id, kkpa_id, is_approval } = router.query;
+    setParams({
+      id,
+      kkpa_id,
+      is_approval,
+    });
+  }, [router.isReady]);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -149,23 +176,33 @@ const index = () => {
         };
       });
       setListComment(mapping);
+    } else {
+      setListComment([]);
     }
-  }, [comment]);
+  }, [comment, openCardComment]);
 
   useEffect(() => {
     const response = documentEWP?.data?.daftar_isi;
-    if (response?.length) {
+    if (response) {
       const mapping = response?.map((bab) => {
         return {
-          idx: bab.key,
+          idx: bab?.key,
           total_comment: bab?.jumlah_comment?.filter((v) => !v.is_closed)
             .length,
-          title: bab.title,
+          title: bab?.title,
         };
       });
-      setListContent(mapping);
-    } else {
-      setListContent([]);
+
+      const filteredResult = mapping.filter((item) => {
+        return doc.some((docItem) => docItem.idx === item.idx);
+      });
+      setListContent(filteredResult);
+    }
+  }, [documentEWP, doc]);
+
+  useEffect(() => {
+    if (bab < listBab?.length && documentEWP?.data) {
+      setBab((prev) => parseInt(prev) + 1);
     }
   }, [documentEWP]);
 
@@ -194,13 +231,6 @@ const index = () => {
       });
 
       setCurrentPosition(activeIndex + 1);
-
-      const isAtBottom =
-        parentContainer.scrollTop + parentContainer.clientHeight ===
-        parentContainer.scrollHeight;
-      if (isAtBottom && hitEndpointCount <= 4) {
-        setHitEndpointCount((prev) => Math.min(prev + 1, 4));
-      }
     }
   };
   // [ END ]
@@ -244,22 +274,22 @@ const index = () => {
   // [ END ]
 
   useEffect(() => {
-    setBab(hitEndpointCount);
-  }, [hitEndpointCount]);
-
-  useEffect(() => {
-    if (documentEWP?.data && listContent?.length) {
-      const findBab = listContent?.find((value) => value?.idx === bab);
+    if (documentEWP?.data) {
+      const findBab = listBab?.find((value) => value?.idx === bab);
+      const findBabId = documentEWP?.data?.daftar_isi?.find(
+        (value) => value?.key === bab
+      );
       setDoc((prev) => [
         ...prev,
         {
           idx: findBab?.idx,
+          bab_id: findBabId?.id,
           title: findBab?.title,
           content: documentEWP?.data?.data,
         },
       ]);
     }
-  }, [documentEWP, listContent]);
+  }, [documentEWP]);
 
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
@@ -275,6 +305,10 @@ const index = () => {
         status_approver: workflowInfo?.status_persetujuan,
         on_approver: workflowInfo?.status_approver,
       };
+
+      setIsOnProgress(
+        Boolean(workflowInfo.status_persetujuan == "On Progress")
+      );
 
       newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.name}`;
       newWorkflowData.maker = maker;
@@ -320,9 +354,10 @@ const index = () => {
   }, [workflowDetailEWP, showModalApproval]);
   // [ END ]
 
-  const handleClickComment = (babIdx) => {
+  const handleClickComment = (id, index) => {
     setOpenCardComment(true);
-    setActiveIndexComment(babIdx);
+    setActiveIdComment(id);
+    setActiveIndexComment(index);
   };
 
   // [ START ] function untuk Modal Workflow
@@ -383,7 +418,7 @@ const index = () => {
       const actionType = e.target.offsetParent.name;
       const data = {
         sub_modul: "kkpa",
-        sub_modul_id: kkpa_id,
+        sub_modul_id: params?.kkpa_id,
       };
 
       const signedCount = workflowData?.ref_tim_audit_approver?.filter(
@@ -420,13 +455,15 @@ const index = () => {
       }
 
       if (actionType === "change") {
-        const response = await useUpdateData(
+        const response = await fetchApi(
+          "PATCH",
           `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/change`,
           data
         );
         if (!response.isDismissed) return;
       } else {
-        await usePostData(
+        await fetchApi(
+          "POST",
           `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/${actionType}`,
           data
         );
@@ -441,35 +478,54 @@ const index = () => {
   // [ END ]
 
   // [ START ] COMMENT
+  const handleCloseComment = async (e, value) => {
+    e.stopPropagation();
+
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/comment/close/${value?.parent_id}`,
+      {}
+    );
+
+    commentMutate();
+    loadingSwal("close");
+  };
+
   const handleSubmitCommentParent = async (e, value) => {
     e.stopPropagation();
     const body = {
-      ref_bab_kkpa_id: activeIndexComment.toString(),
+      ref_bab_kkpa_id: activeIdComment.toString(),
       deskripsi: value,
     };
 
-    await usePostData(
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpa/comment/${kkpa_id}?ref_bab_kkpa_id=${activeIndexComment}`,
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpa/comment/${params?.kkpa_id}?ref_bab_kkpa_id=${activeIdComment}`,
       body
     );
 
     commentMutate();
+    loadingSwal("close");
   };
 
   const handleSubmitCommentChild = async (e, value) => {
     e.stopPropagation();
     const body = {
-      ref_bab_kkpa_id: activeIndexComment.toString(),
+      ref_bab_kkpa_id: activeIdComment.toString(),
       deskripsi: value,
       parent_comment_id: selectedParentCommentId,
     };
 
-    await usePostData(
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpa/comment/${kkpa_id}?ref_bab_kkpa_id=${activeIndexComment}`,
+    loadingSwal();
+    await fetchApi(
+      "POST,"`${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpa/comment/${params?.kkpa_id}?ref_bab_kkpa_id=${activeIdComment}`,
       body
     );
 
     commentMutate();
+    loadingSwal("close");
   };
 
   const handleSelectedParentComment = (id) => {
@@ -518,14 +574,17 @@ const index = () => {
             dataComment={listComment}
             activeDivRef={activeDivRef}
             activeIndex={activeIndex}
+            activeIndexComment={activeIndexComment}
             isOpenCardComment={openCardComment}
+            isLoadingComment={commentIsLoading}
+            isHideButton={isCloseSubmodule || !isOnProgress}
             renderContent={renderContent}
             handleClickComment={handleClickComment}
             handleIsOpenCardComment={handleClickOpenCardComment}
             handleSelectedParentComment={handleSelectedParentComment}
             handleSubmitCommentParent={handleSubmitCommentParent}
             handleSubmitCommentChild={handleSubmitCommentChild}
-            isHideButton={isCloseSubmodule}
+            handleCloseComment={handleCloseComment}
           />
         </div>
         <div>

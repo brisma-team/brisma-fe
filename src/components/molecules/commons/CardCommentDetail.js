@@ -7,6 +7,7 @@ import {
 import { convertDate } from "@/helpers";
 import Image from "next/image";
 import { ImageAvatar } from "@/helpers/imagesUrl";
+import { useState } from "react";
 
 const CardComment = ({ type, data }) => {
   return (
@@ -39,22 +40,28 @@ const CardComment = ({ type, data }) => {
 
 const CardCommentDetail = ({
   data,
-  isOpenDetail,
-  handleOpenCommentDetail,
-  commentText,
   handleSubmitCommentChild,
   handleCloseComment,
-  handleSelectedParentComment,
-  handleChangeTextComment,
   isHideButton = false,
 }) => {
-  if (isOpenDetail) {
+  const [open, setOpen] = useState(false);
+  const [commentTextChild, setCommentTextChild] = useState("");
+
+  const handleSubmit = async (e, parent_id) => {
+    await handleSubmitCommentChild(
+      e,
+      { parent_id, desc: commentTextChild },
+      commentTextChild
+    );
+    setCommentTextChild("");
+  };
+
+  if (open) {
     return (
       <DivButton
         handleClick={(e) => {
           e.stopPropagation();
-          handleOpenCommentDetail(false);
-          handleSelectedParentComment(data?.id);
+          setOpen(false);
         }}
       >
         <Card>
@@ -68,29 +75,26 @@ const CardCommentDetail = ({
             {!data?.is_closed && !isHideButton && (
               <div className="pl-12 mt-4">
                 <TextAreaField
-                  value={commentText}
+                  value={commentTextChild}
                   placeholder="Tanggapi komentar.."
-                  resize="auto"
-                  handleChange={handleChangeTextComment}
+                  handleChange={(e) => setCommentTextChild(e.target.value)}
                   handleClick={(e) => e.stopPropagation()}
                 />
                 <div className="w-full flex justify-end gap-3 mt-2">
                   <div
                     className={`w-36 ${
-                      !commentText
+                      !commentTextChild
                         ? "bg-atlasian-gray-light"
                         : "bg-atlasian-blue-light"
                     } rounded flex items-center`}
                   >
                     <ButtonField
-                      disabled={!commentText}
+                      disabled={!commentTextChild}
                       text={"Tanggapi Comment"}
                       style={"font-semibold"}
                       handler={(e) => {
                         e.stopPropagation();
-                        handleSubmitCommentChild(e, {
-                          parent_id: data?.id,
-                        });
+                        handleSubmit(e, data?.id);
                       }}
                       name="reply"
                     />
@@ -120,8 +124,7 @@ const CardCommentDetail = ({
         className="h-[3.375rem] px-3 bg-atlasian-green w-full rounded flex items-center"
         handleClick={(e) => {
           e.stopPropagation();
-          handleOpenCommentDetail(true);
-          handleSelectedParentComment(data?.id);
+          setOpen(true);
         }}
       >
         <div>
