@@ -57,6 +57,7 @@ const index = () => {
   const router = useRouter();
   const [params, setParams] = useState({
     id: 0,
+    is_approval: false,
   });
   const baseUrl = `/ewp/konsulting/${params?.id}`;
   const pathName = `${baseUrl}/perencanaan`;
@@ -107,10 +108,15 @@ const index = () => {
     });
 
   useEffect(() => {
+    setShowModalApproval(params?.is_approval);
+  }, [params?.is_approval]);
+
+  useEffect(() => {
     if (!router.isReady) return;
-    const { id } = router.query;
+    const { id, is_approval } = router.query;
     setParams({
       id,
+      is_approval,
     });
   }, [router.isReady]);
 
@@ -248,7 +254,6 @@ const index = () => {
       }
     }
   }, [activeIndex]);
-
   // [ END ]
 
   // [ START ] Hook ini berfungsi agar ketika class page-container-a4 melewati class parent, maka
@@ -297,10 +302,6 @@ const index = () => {
       }
     }
   }, [documentEWP]);
-
-  useEffect(() => {
-    console.log("doc => ", doc);
-  }, [doc]);
 
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
@@ -366,8 +367,6 @@ const index = () => {
   // [ END ]
 
   const handleClickComment = (id, index) => {
-    console.log("id => ", id);
-    console.log("index => ", index);
     setOpenCardComment(true);
     setActiveIdComment(id);
     setActiveIndexComment(index);
@@ -589,13 +588,13 @@ const index = () => {
             activeIndexComment={activeIndexComment}
             isOpenCardComment={openCardComment}
             isLoadingComment={commentMapaEWPIsLoading}
+            isHideButton={isCloseSubmodule || !isOnProgress}
             renderContent={renderContent}
             handleClickComment={handleClickComment}
             handleIsOpenCardComment={handleClickOpenCardComment}
             handleSubmitCommentParent={handleSubmitCommentParent}
             handleSubmitCommentChild={handleSubmitCommentChild}
             handleCloseComment={handleCloseComment}
-            isHideButton={isCloseSubmodule || !isOnProgress}
           />
         </div>
         <div>

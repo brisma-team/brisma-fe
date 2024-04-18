@@ -152,7 +152,7 @@ const index = () => {
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
-      <div className="flexitems-center mb-6">
+      <div className="flex items-center mb-6">
         <PageTitle text={"Project Overview"} />
       </div>
       <div className="flex justify-between items-end">

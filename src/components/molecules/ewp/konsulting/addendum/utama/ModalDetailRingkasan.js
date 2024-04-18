@@ -3,7 +3,34 @@ import {
   ModalHeader,
   CardContentHeaderFooter,
 } from "@/components/molecules/commons";
-import { ContentControl, ContentRisk, ContentLingkup } from "./ringkasan";
+import {
+  ContentControl,
+  ContentRisk,
+  ContentLingkup,
+  ContentTim,
+} from "./ringkasan";
+
+const TimTimeplan = ({ data }) => {
+  return (
+    <div className="w-[100rem] flex gap-4">
+      <CardContentHeaderFooter
+        header={<h4 className="p-4 text-atlasian-green">Sebelum Addendum</h4>}
+      >
+        <div className="p-4">
+          <ContentTim data={data?.sebelum?.tim_audit} />
+        </div>
+      </CardContentHeaderFooter>
+      <CardContentHeaderFooter
+        header={<h4 className="p-4 text-atlasian-red">Sesudah Addendum</h4>}
+        headerHeight={"h-fit"}
+      >
+        <div className="p-4">
+          <ContentTim data={data?.sesudah?.tim_audit} />
+        </div>
+      </CardContentHeaderFooter>
+    </div>
+  );
+};
 
 const Lingkup = ({ data }) => {
   switch (data?.method?.type) {
@@ -109,6 +136,8 @@ const ModalDetailRingkasan = ({ data, showModal, handleCloseModal }) => {
         <Risk data={data?.method?.data} />
       ) : data?.part === "lingkup" ? (
         <Lingkup data={data} />
+      ) : data?.part === "tim" ? (
+        <TimTimeplan data={data} />
       ) : (
         ""
       )}
