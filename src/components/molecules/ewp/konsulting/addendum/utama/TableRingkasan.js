@@ -125,7 +125,26 @@ const TableRingkasan = ({ id }) => {
     dispatch(setObjPayloadRingkasan(updatedData));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmitEditRingkasan = async (e) => {
+    e.preventDefault();
+
+    loadingSwal();
+    await fetchApi(
+      "PATCH",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/summary/update/${selectedId}`,
+      {
+        ..._.omit(payload, ["id", "sebelum", "sesudah", "part", "module"]),
+      }
+    );
+
+    ringkasanMutate();
+    setShowModalEdit(false);
+    setSelectedId(0);
+    dispatch(resetObjPayloadRingkasan());
+    loadingSwal("close");
+  };
+
+  const handleSubmitSaveRingkasan = async (e) => {
     e.preventDefault();
 
     loadingSwal();
@@ -293,14 +312,14 @@ const TableRingkasan = ({ id }) => {
         showModal={showModalEdit}
         handleCloseModal={handleCloseModal}
         handleChangeText={handleChangeText}
-        handleSubmit={handleSubmit}
+        handleSubmit={handleSubmitEditRingkasan}
       />
       <div className="w-full flex justify-end gap-3 -my-1">
         <div className="w-[7.75rem] bg-atlasian-red rounded">
           <ButtonField text={"Reset"} handler={handleReset} />
         </div>
         <div className="rounded w-28 bg-atlasian-green">
-          <ButtonField text={"Simpan"} handler={handleSubmit} />
+          <ButtonField text={"Simpan"} handler={handleSubmitSaveRingkasan} />
         </div>
       </div>
     </div>
