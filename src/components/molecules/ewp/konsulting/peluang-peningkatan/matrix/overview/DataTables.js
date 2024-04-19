@@ -142,7 +142,9 @@ const DataTables = ({
               </Cell>
               <Cell width="20%" className={`border-r ${customCell}`}>
                 <div className="custom-table-position-center px-1">
-                  {auditor?.nama || auditor?.name || "-"}
+                  {auditor?.pn +
+                    " - " +
+                    (auditor?.nama || auditor?.name || "-")}
                 </div>
               </Cell>
               <Cell width="17%" className={`border-r ${customCell}`}>
