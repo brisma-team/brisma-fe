@@ -12,6 +12,7 @@ import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import {
   useComment,
   useDocument,
+  useLandingStatus,
 } from "@/data/ewp/konsulting/peluang-peningkatan/matrix/detail";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -32,6 +33,7 @@ import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useWorkflowMatrix } from "@/data/ewp/konsulting/peluang-peningkatan/matrix";
 import { riskRekomendasiHtml } from "@/templates/ewp/konsulting/peluang-peningkatan";
+import useUser from "@/data/useUser";
 
 const routes = [
   {
@@ -85,12 +87,20 @@ const index = () => {
   const [bab, setBab] = useState(1);
   const [selectedParentCommentId, setSelectedParentCommentId] = useState(0);
 
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
+  const [isAuditor, setIsAuditor] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
+
   const workflowData = useSelector(
     (state) => state.documentDetailPeluangKonsulting.workflowData
   );
   const validationErrorsWorkflow = useSelector(
     (state) => state.documentDetailPeluangKonsulting.validationErrorsWorkflow
   );
+
+  const { landingStatus } = useLandingStatus(params?.kkpt_id);
+  const { user } = useUser();
 
   const { projectDetail } = useProjectDetail({ id: params?.id });
   const { documentData } = useDocument(params?.kkpt_id, bab);
@@ -144,7 +154,25 @@ const index = () => {
         path: `${pathNameContent}/dokumen`,
       },
     ]);
+
+    setIsCloseSubmodule(
+      Boolean(projectDetail?.data?.realisasi?.peluang_peningkatan_real_end)
+    );
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
   }, [projectDetail]);
+
+  useEffect(() => {
+    setIsAuditor(
+      Boolean(landingStatus?.data?.info?.auditor?.pn == user?.data?.pn)
+    );
+    setIsOnProgress(
+      Boolean(landingStatus?.data?.info?.status_persetujuan == "On Progress")
+    );
+  }, [landingStatus, user]);
 
   useEffect(() => {
     if (commentData?.data?.length) {
@@ -308,6 +336,10 @@ const index = () => {
         status_approver: workflowInfo?.status_persetujuan,
         on_approver: workflowInfo?.status_approver,
       };
+
+      setIsOnProgress(
+        Boolean(workflowInfo?.status_persetujuan == "On Progress")
+      );
 
       newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.name}`;
       newWorkflowData.maker = maker;
@@ -577,6 +609,9 @@ const index = () => {
             activeIndexComment={activeIndexComment}
             isOpenCardComment={openCardComment}
             isLoadingComment={commentDataIsLoading}
+            isHideButton={
+              isCloseSubmodule || !isOnProgress || !isInitiator || !isAuditor
+            }
             renderContent={renderContent}
             handleClickComment={handleClickComment}
             handleIsOpenCardComment={handleClickOpenCardComment}

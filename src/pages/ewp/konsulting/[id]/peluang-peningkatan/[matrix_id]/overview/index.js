@@ -111,41 +111,43 @@ const index = () => {
         projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
       )
     );
-    setIsOnProgress(
-      Boolean(
-        projectDetail?.data?.project_info?.status_persetujuan_name ==
-          "On Progress"
-      )
-    );
   }, [projectDetail, user]);
 
   useEffect(() => {
-    if (overviewPeluangList?.data?.length > 0) {
-      const mappingOverview = overviewPeluangList?.data?.map((v) => {
-        const {
-          judul_kkpt,
-          status_persetujuan,
-          auditor,
-          risk_issue,
-          lingkup,
-          control,
-        } = v;
-        return {
-          matrix_id,
-          kkpt_id: v?.id,
-          status_persetujuan,
-          judul_kkpt,
-          auditor,
-          risk_issue,
-          lingkup,
-          control,
-        };
-      });
+    if (overviewPeluangList?.data?.detail_peluang?.length > 0) {
+      const mappingOverview = overviewPeluangList?.data?.detail_peluang?.map(
+        (v) => {
+          const {
+            judul_kkpt,
+            status_persetujuan,
+            auditor,
+            risk_issue,
+            lingkup,
+            control,
+          } = v;
+          return {
+            matrix_id,
+            kkpt_id: v?.id,
+            status_persetujuan,
+            judul_kkpt,
+            auditor,
+            risk_issue,
+            lingkup,
+            control,
+          };
+        }
+      );
 
       dispatch(setObjData(mappingOverview));
     } else {
       dispatch(resetObjData());
     }
+    setIsOnProgress(
+      Boolean(
+        overviewPeluangList?.data?.matrix_info?.status_persetujuan ==
+          "On Progress"
+      )
+    );
   }, [overviewPeluangList]);
 
   useEffect(() => {

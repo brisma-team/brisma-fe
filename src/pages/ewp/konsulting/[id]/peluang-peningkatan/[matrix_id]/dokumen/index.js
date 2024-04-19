@@ -14,6 +14,7 @@ import {
   ApprovalItems,
   AttachmentClipping,
   CardHistory,
+  ContentView,
   ImageClipping,
   ModalWorkflow,
   PrevNextNavigation,
@@ -42,6 +43,7 @@ import {
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import _ from "lodash";
+import useUser from "@/data/useUser";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -72,6 +74,9 @@ const index = () => {
   const [typeUpload, setTypeUpload] = useState("");
   const [isReset, setIsReset] = useState(false);
   const [documentLog, setDocumentLog] = useState([]);
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
 
   //workflow
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
@@ -93,6 +98,8 @@ const index = () => {
     id: matrix_id,
   });
 
+  const { user } = useUser();
+
   useEffect(() => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
@@ -111,7 +118,15 @@ const index = () => {
         path: `${pathNameContent}`,
       },
     ]);
-  }, [projectDetail]);
+    setIsCloseSubmodule(
+      Boolean(projectDetail?.data?.realisasi?.peluang_peningkatan_real_end)
+    );
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+  }, [projectDetail, user]);
 
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
@@ -127,6 +142,10 @@ const index = () => {
         status_approver: workflowInfo?.status_persetujuan,
         on_approver: workflowInfo?.status_approver,
       };
+
+      setIsOnProgress(
+        Boolean(workflowInfo?.status_persetujuan == "On Progress")
+      );
 
       newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.nama}`;
       newWorkflowData.maker = maker;
@@ -402,43 +421,54 @@ const index = () => {
       </div>
       {/* Start Content */}
       <div className="my-4 flex gap-6">
-        <div className="w-64 flex flex-col gap-4">
-          <ImageClipping
-            data={imageClipList}
-            handleChange={handleUploadFile}
-            handleClick={handleClickUploadImage}
-          />
-          <AttachmentClipping
-            data={attachmentClipList}
-            handleChange={handleUploadFile}
-            handleClick={handleClickUploadAttachment}
-          />
-        </div>
-        <div>
-          <div className="ckeditor-latar-belakang-mapa-ewp">
-            <Editor
-              contentData={content}
-              disabled={false}
-              ready={true}
-              onChange={(value) => setContent(value)}
+        {isInitiator && !isCloseSubmodule && isOnProgress && (
+          <div className="w-64 flex flex-col gap-4">
+            <ImageClipping
+              data={imageClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadImage}
+              isHideButton={!(isInitiator && !isCloseSubmodule)}
+            />
+            <AttachmentClipping
+              data={attachmentClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadAttachment}
+              isHideButton={!(isInitiator && !isCloseSubmodule)}
             />
           </div>
-          <div className="mt-3 flex justify-end gap-2">
-            <div
-              className={`w-[7.75rem] ${
-                isReset == true ? "bg-atlasian-gray-dark" : "bg-atlasian-yellow"
-              } rounded`}
-            >
-              <ButtonField
-                text={"Reset"}
-                disabled={isReset}
-                handler={handleAsync}
+        )}
+        <div>
+          {isInitiator && !isCloseSubmodule && isOnProgress ? (
+            <div className="ckeditor-latar-belakang-mapa-ewp">
+              <Editor
+                contentData={content}
+                ready={true}
+                onChange={(value) => setContent(value)}
               />
             </div>
-            <div className="w-[7.75rem] bg-atlasian-green rounded">
-              <ButtonField text={"Simpan"} handler={handleSubmit} />
+          ) : (
+            <ContentView dataDoc={content} />
+          )}
+          {isInitiator && !isCloseSubmodule && isOnProgress && (
+            <div className="mt-3 flex justify-end gap-2">
+              <div
+                className={`w-[7.75rem] ${
+                  isReset == true
+                    ? "bg-atlasian-gray-dark"
+                    : "bg-atlasian-yellow"
+                } rounded`}
+              >
+                <ButtonField
+                  text={"Async"}
+                  disabled={isReset}
+                  handler={handleAsync}
+                />
+              </div>
+              <div className="w-[7.75rem] bg-atlasian-green rounded">
+                <ButtonField text={"Simpan"} handler={handleSubmit} />
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div>
           <DivButton

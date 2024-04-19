@@ -99,7 +99,7 @@ const DataTables = ({
           }) => (
             <Row>
               <Cell width="7%" className={`border-x ${customCell}`}>
-                {!withoutButton ? (
+                {!withoutButton && status_persetujuan == "On Progress" ? (
                   <div className="custom-table-position-center justify-center gap-1.5">
                     <ButtonIcon
                       icon={<ButtonEdit />}

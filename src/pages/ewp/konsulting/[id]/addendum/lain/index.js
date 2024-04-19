@@ -61,6 +61,10 @@ import {
 } from "@/slices/ewp/konsulting/addendum/lain/ringkasanSBPAddendumSlice";
 import anggaranEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/perencanaan/anggaranEWPKonsultingSchema";
 
+const Editor = dynamic(() => import("@/components/atoms/Editor"), {
+  ssr: false,
+});
+
 const index = () => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -212,10 +216,6 @@ const index = () => {
     ringkasanMutate();
     loadingSwal("close");
   };
-
-  const Editor = dynamic(() => import("@/components/atoms/Editor"), {
-    ssr: false,
-  });
 
   useEffect(() => {
     if (params?.id !== 0 && anggaran?.data?.anggaran?.length) {
