@@ -22,6 +22,7 @@ const index = () => {
   });
   const [currentContentStage, setCurrentContentStage] = useState(1);
   const [isInitiator, setIsInitiator] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -38,6 +39,7 @@ const index = () => {
 
   const { projectDetail } = useProjectDetail({ id: params?.id });
   const { user } = useUser();
+  const pathName = `/ewp/konsulting/${params?.id}/addendum/utama`;
 
   useEffect(() => {
     setBreadcrumbs([
@@ -62,6 +64,12 @@ const index = () => {
         projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
       )
     );
+    setIsOnProgress(
+      Boolean(
+        projectDetail?.data?.project_info?.status_persetujuan_name ==
+          "On Progress"
+      )
+    );
   }, [projectDetail, user]);
 
   const navigationTabItems = [
@@ -72,6 +80,10 @@ const index = () => {
 
   const handleChangeTab = (index) => {
     setCurrentContentStage(index);
+    router.push({
+      pathname: pathName,
+      query: { stage: index },
+    });
   };
 
   const handleLoadFromMapa = async (type) => {
@@ -105,7 +117,7 @@ const index = () => {
         <TimTimeplan
           id={params?.id}
           isInitiator={isInitiator}
-          isCloseSubmodule={false}
+          isCloseSubmodule={!isOnProgress}
           dataProjectDetail={projectDetail?.data}
           handleLoadFromMapa={handleLoadFromMapa}
         />
@@ -113,7 +125,7 @@ const index = () => {
         <ProgramKerja
           id={params?.id}
           isInitiator={isInitiator}
-          isCloseSubmodule={false}
+          isCloseSubmodule={!isOnProgress}
           dataUser={user?.data}
           handleLoadFromMapa={handleLoadFromMapa}
         />
