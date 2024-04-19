@@ -78,12 +78,6 @@ const index = () => {
         projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
       )
     );
-    setIsOnProgress(
-      Boolean(
-        projectDetail?.data?.project_info?.status_persetujuan_name ==
-          "On Progress"
-      )
-    );
   }, [projectDetail, user]);
 
   useEffect(() => {
@@ -97,6 +91,9 @@ const index = () => {
           description: "Mengubah Document",
         };
       }
+    );
+    setIsOnProgress(
+      Boolean(headerMatrixData?.data?.status_persetujuan == "On Progress")
     );
     setDocumentLog(logs);
   }, [headerMatrixData]);

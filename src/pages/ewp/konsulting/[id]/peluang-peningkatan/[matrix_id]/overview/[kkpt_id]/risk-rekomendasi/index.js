@@ -57,6 +57,7 @@ const index = () => {
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
   const [isInitiator, setIsInitiator] = useState(false);
   const [isAuditor, setIsAuditor] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
 
   const dataTables = useSelector((state) => state.riskRekomendasi.dataTables);
   const payloadNewRisk = useSelector(
@@ -119,6 +120,9 @@ const index = () => {
   useEffect(() => {
     setIsAuditor(
       Boolean(landingStatus?.data?.info?.auditor?.pn == user?.data?.pn)
+    );
+    setIsOnProgress(
+      Boolean(landingStatus?.data?.info?.status_persetujuan == "On Progress")
     );
   }, [landingStatus, user]);
 
@@ -391,7 +395,9 @@ const index = () => {
             selectedEWPId={id}
             selectedLingkupId={payloadNewLingkup?.lingkup_pemeriksaan_id}
             selectedRiskId={selectedRiskId}
-            isDisabled={!((isInitiator || isAuditor) && !isCloseSubmodule)}
+            isDisabled={
+              !((isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress)
+            }
             handleChangeRisk={handleChangeValue}
             handleChangeLingkup={handleChangeValueLingkup}
             handleClickAddRow={handleClickAddRow}
@@ -403,7 +409,9 @@ const index = () => {
           <TableRekomendasi
             data={dataTables.rekomendasiList}
             selectedRekomendasi={payloadNewRekomendasi}
-            isDisabled={!((isInitiator || isAuditor) && !isCloseSubmodule)}
+            isDisabled={
+              !((isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress)
+            }
             handleChangeCheckbox={handleChangeChecboxRekomendasi}
             handleClickSave={handleClickSaveRekomendasi}
           />
