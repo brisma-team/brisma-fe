@@ -524,7 +524,7 @@ const index = () => {
     const response = await fetchApi(
       isUpdate ? "PATCH" : "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/uker_info/${
-        isUpdate ? uker_id : { id: params?.id }
+        isUpdate ? uker_id : params?.id
       }`,
       {
         ref_auditee_branch_kode: parseInt(
