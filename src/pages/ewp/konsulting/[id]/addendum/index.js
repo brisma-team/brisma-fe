@@ -12,6 +12,7 @@ const index = () => {
 
   const [dataCarding, setDataCarding] = useState([]);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [params, setParams] = useState({
     id: 1,
   });
@@ -40,6 +41,10 @@ const index = () => {
         path: `/ewp/konsulting/${params?.id}/addendum`,
       },
     ]);
+
+    setIsDisabled(
+      Boolean(projectDetail?.data?.project_info?.status_name !== "addendum")
+    );
   }, [projectDetail]);
 
   useEffect(() => {
@@ -95,15 +100,19 @@ const index = () => {
           text="Addendum Perencanaan Kegiatan"
           className={"text-atlasian-red"}
         />
-        <div className="w-[10rem]">
-          <Button
-            appearance="danger"
-            onClick={handleClickCancelAddendum}
-            shouldFitContainer
-          >
-            Batal Addendum
-          </Button>
-        </div>
+        {!isDisabled ? (
+          <div className="w-[10rem]">
+            <Button
+              appearance="danger"
+              onClick={handleClickCancelAddendum}
+              shouldFitContainer
+            >
+              Batal Addendum
+            </Button>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
       {/* Start Content */}
       <div className="flex flex-col gap-3">

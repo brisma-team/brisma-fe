@@ -46,7 +46,7 @@ const index = () => {
       { name: "Overview", path: "/ewp/konsulting" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
-        path: `/ewp/konsulting/${params?.id}`,
+        path: `/ewp/konsulting/${params?.id}/info`,
       },
       {
         name: "Addendum Perencanaan Kegiatan",

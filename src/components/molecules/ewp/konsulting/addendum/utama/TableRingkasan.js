@@ -166,6 +166,14 @@ const TableRingkasan = ({ id }) => {
 
   const handleReset = async (e) => {
     e.preventDefault();
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin ingin melakukan reset perubahan data?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
     loadingSwal();
     await fetchApi(
       "PATCH",

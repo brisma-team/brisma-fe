@@ -51,8 +51,12 @@ const CardOverview = ({
   withoutHover,
   handleClickCarding,
   handleClickUrl,
+  handleClickDelete,
 }) => {
-  const listDropdown = [{ label: "Approval", action: "#" }];
+  const listDropdown = [
+    { label: "Hapus", action: async () => handleClickDelete(data?.id) },
+  ];
+
   const colorLabel = {
     online: "bg-cardColor-blue-dark",
     onsite: "bg-cardColor-green",
