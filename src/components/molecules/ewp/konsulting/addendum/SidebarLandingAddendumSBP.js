@@ -16,7 +16,6 @@ const SidebarLandingAddendumSBP = () => {
   const { id } = useRouter().query;
   const baseUrl = `/ewp/konsulting/${id}/addendum`;
   const [data, setData] = useState();
-  const [currentPage, setCurrentPage] = useState(0);
   const { projectDetail } = useProjectDetail({ id });
   const [menu, setMenu] = useState([]);
 
@@ -48,30 +47,34 @@ const SidebarLandingAddendumSBP = () => {
       initiatorName:
         projectInfo?.initiator?.pn + " - " + projectInfo?.initiator?.nama,
     });
-
-    setMenu([
-      {
-        name: "Landing",
-        href: `/`,
-        isActive: true,
-      },
-      {
-        name: "Addendum Utama",
-        href: `/utama`,
-        isActive: true,
-      },
-      {
-        name: "Addendum Lain",
-        href: `/lain`,
-        isActive: true,
-      },
-      {
-        name: "Dokumen Addendum",
-        href: `/dokumen`,
-        isActive: true,
-      },
-    ]);
   }, [projectDetail]);
+
+  const menuList = [
+    {
+      name: "Landing",
+      href: `/`,
+      isActive: true,
+      pattern: /^\/ewp\/konsulting\/\d+\/addendum$/,
+    },
+    {
+      name: "Addendum Utama",
+      href: `/utama`,
+      isActive: true,
+      pattern: /^\/ewp\/konsulting\/\d+\/addendum\/utama\/?$/,
+    },
+    {
+      name: "Addendum Lain",
+      href: `/lain`,
+      isActive: true,
+      pattern: /^\/ewp\/konsulting\/\d+\/addendum\/lain\/?$/,
+    },
+    {
+      name: "Dokumen Addendum",
+      href: `/dokumen`,
+      isActive: true,
+      pattern: /^\/ewp\/konsulting\/\d+\/addendum\/dokumen\/?$/,
+    },
+  ];
 
   const subMenu = [
     { name: "Log", href: `/log` },
@@ -80,14 +83,23 @@ const SidebarLandingAddendumSBP = () => {
   ];
 
   useEffect(() => {
-    const url = window.location.href;
-    const regex = /\/konsulting\/\d+\/([^\/]+)/;
-    const match = url.match(regex);
+    const url = window.location.pathname; // Using pathname instead of href to get the path part of the URL
 
-    if (match && match[1]) {
-      setCurrentPage(match[1]);
-    }
-  }, []);
+    // Iterate through the menu items
+    const updatedMenu = menuList.map((item) => {
+      // If the URL matches the pattern for the current menu item
+      if (url.match(item.pattern)) {
+        // Set isActive to true for the matched menu item
+        return { ...item, isSelected: true };
+      } else {
+        // Set isActive to false for non-matched menu items
+        return { ...item, isSelected: false };
+      }
+    });
+
+    // Set the updated menu state
+    setMenu(updatedMenu);
+  }, [window.location.pathname]);
 
   return (
     <div className="fixed h-screen w-64 pt-8- shadow z-10">
@@ -141,8 +153,7 @@ const SidebarLandingAddendumSBP = () => {
                       key={i}
                       href={baseUrl + v?.href}
                       className={`flex ${
-                        currentPage ===
-                        v?.href?.split("/")?.filter((item) => item !== "")[0]
+                        v?.isSelected
                           ? `text-atlasian-blue-light`
                           : `text-black`
                       } gap-2 items-center hover:no-underline no-underline py-2 px-7 ${
@@ -179,8 +190,7 @@ const SidebarLandingAddendumSBP = () => {
                       key={i}
                       href={baseUrl + v?.href}
                       className={`flex gap-2 items-center ${
-                        currentPage ===
-                        v?.href?.split("/")?.filter((item) => item !== "")[0]
+                        v?.isSelected
                           ? `text-atlasian-blue-light`
                           : `text-black`
                       } hover:no-underline no-underline py-2 px-7`}

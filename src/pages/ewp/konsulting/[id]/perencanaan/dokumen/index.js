@@ -27,8 +27,6 @@ import {
   fetchApi,
   loadingSwal,
   setErrorValidation,
-  usePostData,
-  useUpdateData,
 } from "@/helpers";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useProjectDetail } from "@/data/ewp/konsulting";
@@ -96,7 +94,9 @@ const index = () => {
   );
 
   const { projectDetail } = useProjectDetail({ id: params?.id });
-  const { documentEWP } = useDocumentEWP("mapa", bab, { id: params?.id });
+  const { documentEWP, documentEWPMutate } = useDocumentEWP("mapa", bab, {
+    id: params?.id,
+  });
   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
     "mapa",
     { id: params?.id }
@@ -319,7 +319,7 @@ const index = () => {
       };
 
       setIsOnProgress(
-        Boolean(workflowInfo.status_persetujuan == "On Progress")
+        Boolean(workflowInfo.status_persetujuan_name == "On Progress")
       );
 
       newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.nama}`;
@@ -467,13 +467,15 @@ const index = () => {
       }
 
       if (actionType === "change") {
-        const response = await useUpdateData(
+        const response = await fetchApi(
+          "PATCH",
           `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/change`,
           data
         );
         if (!response.isDismissed) return;
       } else {
-        await usePostData(
+        await fetchApi(
+          "POST",
           `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/${actionType}`,
           data
         );
@@ -499,6 +501,7 @@ const index = () => {
     );
 
     commentMapaEWPMutate();
+    documentEWPMutate();
     loadingSwal("close");
   };
 
@@ -517,6 +520,7 @@ const index = () => {
     );
 
     commentMapaEWPMutate();
+    documentEWPMutate();
     loadingSwal("close");
   };
 
@@ -530,7 +534,8 @@ const index = () => {
     };
 
     loadingSwal();
-    await usePostData(
+    await fetchApi(
+      "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/comment/${params?.id}?ref_bab_mapa_id=${activeIdComment}`,
       body
     );

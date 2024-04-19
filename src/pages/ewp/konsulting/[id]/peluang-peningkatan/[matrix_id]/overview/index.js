@@ -58,6 +58,7 @@ const index = () => {
   const [selectedId, setSelectedId] = useState(0);
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
   const [isInitiator, setIsInitiator] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
 
   const data = useSelector((state) => state.overviewDetailPeluang.objData);
   const payload = useSelector(
@@ -108,6 +109,12 @@ const index = () => {
     setIsInitiator(
       Boolean(
         projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+    setIsOnProgress(
+      Boolean(
+        projectDetail?.data?.project_info?.status_persetujuan_name ==
+          "On Progress"
       )
     );
   }, [projectDetail, user]);
@@ -288,7 +295,7 @@ const index = () => {
         <DataTables
           selectedId={id}
           data={data}
-          withoutButton={!(isInitiator && !isCloseSubmodule)}
+          withoutButton={!(isInitiator && !isCloseSubmodule && isOnProgress)}
           handleClickAddMatrix={handleClickAddMatrix}
           handleClickEdit={handleClickEdit}
           handleClickDelete={handleClickDelete}

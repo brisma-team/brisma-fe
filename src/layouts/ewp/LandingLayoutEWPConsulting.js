@@ -5,14 +5,37 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { NavbarField } from "@/components/molecules/commons";
 import { SidebarLandingEWPConsulting } from "@/components/molecules/ewp";
+import { useProjectDetail } from "@/data/ewp/konsulting";
+import { errorSwalTimeout } from "@/helpers";
 
 const LandingLayoutEWPConsulting = ({ children }) => {
   const router = useRouter();
+  const [params, setParams] = useState({
+    id: 0,
+  });
 
   const { user, userError } = useUser();
+  const { projectDetailError, projectDetailIsLoading } = useProjectDetail({
+    id: params?.id,
+  });
 
   const [isShown, setIsShown] = useState(false);
-  useState(false);
+  const [isError, setIsError] = useState(false);
+  ``;
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      id,
+    });
+  }, [router.isReady]);
+
+  useEffect(() => {
+    if (!projectDetailIsLoading && params?.id) {
+      setIsError(Boolean(projectDetailError));
+    }
+  }, [projectDetailError, projectDetailIsLoading, params]);
 
   useEffect(() => {
     if (userError) {
@@ -25,6 +48,10 @@ const LandingLayoutEWPConsulting = ({ children }) => {
       setIsShown(true);
     }
   }, [user, userError]);
+
+  if (isError) {
+    errorSwalTimeout(projectDetailError, "/ewp/konsulting");
+  }
 
   if (!isShown) {
     return (
