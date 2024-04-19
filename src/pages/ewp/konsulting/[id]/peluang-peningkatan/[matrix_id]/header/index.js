@@ -9,6 +9,7 @@ import {
   ImageClipping,
   PrevNextNavigation,
   CardHistory,
+  ContentView,
 } from "@/components/molecules/commons";
 import { convertDate, fetchApi, loadingSwal, usePostFileData } from "@/helpers";
 import { useHeaderMatrixData } from "@/data/ewp/konsulting/peluang-peningkatan/matrix";
@@ -43,6 +44,7 @@ const index = () => {
   const [documentLog, setDocumentLog] = useState([]);
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
   const [isInitiator, setIsInitiator] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
 
   const { projectDetail } = useProjectDetail({ id });
   const { headerMatrixData, headerMatrixDataMutate } = useHeaderMatrixData({
@@ -74,6 +76,12 @@ const index = () => {
     setIsInitiator(
       Boolean(
         projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+    setIsOnProgress(
+      Boolean(
+        projectDetail?.data?.project_info?.status_persetujuan_name ==
+          "On Progress"
       )
     );
   }, [projectDetail, user]);
@@ -156,30 +164,37 @@ const index = () => {
       </div>
       {/* Start Content */}
       <div className="my-4 flex gap-6">
-        <div className="w-64 flex flex-col gap-4">
-          <ImageClipping
-            data={imageClipList}
-            handleChange={handleUploadFile}
-            handleClick={handleClickUploadImage}
-            isHideButton={!(isInitiator && !isCloseSubmodule)}
-          />
-          <AttachmentClipping
-            data={attachmentClipList}
-            handleChange={handleUploadFile}
-            handleClick={handleClickUploadAttachment}
-            isHideButton={!(isInitiator && !isCloseSubmodule)}
-          />
-        </div>
-        <div>
-          <div className="ckeditor-latar-belakang-mapa-ewp">
-            <Editor
-              contentData={content}
-              disabled={false}
-              ready={true}
-              onChange={(value) => setContent(value)}
+        {isInitiator && !isCloseSubmodule && isOnProgress && (
+          <div className="w-64 flex flex-col gap-4">
+            <ImageClipping
+              data={imageClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadImage}
+              isHideButton={!(isInitiator && !isCloseSubmodule)}
+            />
+            <AttachmentClipping
+              data={attachmentClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadAttachment}
+              isHideButton={!(isInitiator && !isCloseSubmodule)}
             />
           </div>
-          {isInitiator && !isCloseSubmodule ? (
+        )}
+
+        <div>
+          {isInitiator && !isCloseSubmodule && isOnProgress ? (
+            <div className="ckeditor-latar-belakang-mapa-ewp">
+              <Editor
+                contentData={content}
+                ready={true}
+                onChange={(value) => setContent(value)}
+              />
+            </div>
+          ) : (
+            <ContentView dataDoc={content} />
+          )}
+
+          {isInitiator && !isCloseSubmodule && isOnProgress ? (
             <div className="mt-3 flex justify-end">
               <div className="w-[7.75rem] bg-atlasian-green rounded">
                 <ButtonField text={"Simpan"} handler={handleSubmit} />
