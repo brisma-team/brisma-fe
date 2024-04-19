@@ -459,7 +459,7 @@ const index = () => {
                 } rounded`}
               >
                 <ButtonField
-                  text={"Reset"}
+                  text={"Async"}
                   disabled={isReset}
                   handler={handleAsync}
                 />
