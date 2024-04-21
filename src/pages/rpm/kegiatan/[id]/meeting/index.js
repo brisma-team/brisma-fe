@@ -33,6 +33,7 @@ import { useRouter } from "next/router";
 import createMeetingEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/meeting/createMeetingEWPKonsultingSchema";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { LandingLayoutRPMKegiatan } from "@/layouts/rpm";
+import { useLandingStatus } from "@/data/rpm/kegiatan";
 
 const index = () => {
   const router = useRouter();
@@ -70,6 +71,7 @@ const index = () => {
     page: 1,
   });
   const [params, setParams] = useState({
+    ewpId: "",
     judul: "",
     metode: "",
     maker: "",
@@ -82,14 +84,18 @@ const index = () => {
     page: 1,
   });
 
-  const { projectDetail } = useProjectDetail({ id });
-  const { overview, overviewMutate } = useOverview({ id, ...params });
+  const { projectDetail } = useProjectDetail({ id: params?.ewpId });
+  const { overview, overviewMutate } = useOverview({
+    id: params?.ewpId,
+    ...params,
+  });
+  const { landingStatus } = useLandingStatus(id);
 
   useEffect(() => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "RPM", path: "/rpm" },
-      { name: "Overview", path: "/rpm/kegiatan" },
+      { name: "Kegiatan Overview", path: "/rpm/kegiatan" },
       {
         name: `Meeting`,
         path: pathNameSubModulMeeting,
@@ -158,6 +164,13 @@ const index = () => {
     }
   }, [overview]);
 
+  useEffect(() => {
+    const projectInfo = landingStatus?.data?.project;
+    setParams({
+      ewpId: projectInfo?.ewp_id,
+    });
+  }, [landingStatus]);
+
   // [ START ] handler for card filter
   const handleChangeFilter = (props, value) => {
     setFilter({ ...filter, [props]: value });
@@ -175,7 +188,7 @@ const index = () => {
 
   const handleClickCarding = (e, meeting_id) => {
     e.stopPropagation();
-    router.push(`/ewp/konsulting/${id}/meeting/${meeting_id}`);
+    router.push(`/ewp/konsulting/${params?.ewpId}/meeting/${meeting_id}`);
   };
 
   // [ START ] handler for modal add meeting
@@ -259,7 +272,7 @@ const index = () => {
       await fetchApi(
         "POST",
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/meeting/create`,
-        { ewp_id: id, ...payload }
+        { ewp_id: params?.ewpId, ...payload }
       );
 
       overviewMutate();

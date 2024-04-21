@@ -37,6 +37,7 @@ import { IconArrowDown } from "@/components/icons";
 import _ from "lodash";
 import useUser from "@/data/useUser";
 import { LandingLayoutRPMKegiatan } from "@/layouts/rpm";
+import { useLandingStatus } from "@/data/rpm/kegiatan";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -53,6 +54,10 @@ const index = () => {
   const [isFinalProject, setIsFinalProject] = useState(false);
   const [isInitiator, setIsInitiator] = useState(false);
 
+  const [params, setParams] = useState({
+    ewpId: "",
+  });
+
   const data = useSelector((state) => state.documentEWPKonsulting.objData);
   const payload = useSelector(
     (state) => state.documentEWPKonsulting.objPayload
@@ -61,19 +66,22 @@ const index = () => {
     (state) => state.documentEWPKonsulting.validationErrors
   );
 
-  const { projectDetail } = useProjectDetail({ id });
-  const { listDocument, listDocumentMutate } = useListDocument({ id });
+  const { projectDetail } = useProjectDetail({ id: params?.ewpId });
+  const { listDocument, listDocumentMutate } = useListDocument({
+    id: params?.ewpId,
+  });
   const { bulkDownloadDocument } = useBulkDownloadDocument({
     ref_document_id: filterBulkDownload?.kode || "",
-    id,
+    id: params?.ewpId,
   });
   const { user } = useUser();
+  const { landingStatus } = useLandingStatus(id);
 
   useEffect(() => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "RPM", path: "/rpm" },
-      { name: "Overview", path: "/rpm/kegiatan" },
+      { name: "Kegiatan Overview", path: "/rpm/kegiatan" },
       {
         name: `Berkas Dokumen`,
         path: baseUrl + "/dokumen",
@@ -135,6 +143,13 @@ const index = () => {
       dispatch(resetObjData());
     }
   }, [listDocument]);
+
+  useEffect(() => {
+    const projectInfo = landingStatus?.data?.project;
+    setParams({
+      ewpId: projectInfo?.ewp_id,
+    });
+  }, [landingStatus]);
 
   const handleClickUpload = () => {
     setShowModal(true);
@@ -273,7 +288,7 @@ const index = () => {
     if (validate) {
       loadingSwal();
       const objPayload = {
-        ewp_id: id,
+        ewp_id: params?.ewpId,
         doc_name: payload.document_name,
         deskripsi: payload.desc,
         by_system: false,
@@ -317,7 +332,7 @@ const index = () => {
     setShowModalDesc(true);
   };
 
-  const handleClickDeleteTable = async (id) => {
+  const handleClickDeleteTable = async (doc_id) => {
     const confirm = await confirmationSwal(
       "Apakah anda yakin ingin menghapus dokumen ini?"
     );
@@ -329,8 +344,8 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "DELETE",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/wrapup/delete/${id}`,
-      { id }
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/wrapup/delete/${doc_id}`,
+      { id: doc_id }
     );
     listDocumentMutate();
     loadingSwal("close");
