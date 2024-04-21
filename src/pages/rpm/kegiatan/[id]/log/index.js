@@ -2,37 +2,46 @@ import { Breadcrumbs, Card, PageTitle } from "@/components/atoms";
 import { LogTable } from "@/components/molecules/ewp/konsulting/log";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useLogSBP } from "@/data/ewp/konsulting/log";
+import { useLandingStatus } from "@/data/rpm/kegiatan";
 import { capitalizeEveryWord, convertDate } from "@/helpers";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
+import { LandingLayoutRPMKegiatan } from "@/layouts/rpm";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const index = () => {
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const baseUrl = `/rpm/kegiatan/${id}`;
   const pathNameLog = `${baseUrl}/log`;
 
   const [dataTables, setDataTables] = useState([]);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
 
+  const [params, setParams] = useState({
+    ewpId: "",
+  });
+
   const { projectDetail } = useProjectDetail({ id });
-  const { logSBP } = useLogSBP({ id });
+  const { logSBP } = useLogSBP({ id: params?.ewpId });
+  const { landingStatus } = useLandingStatus(id);
 
   useEffect(() => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
-      { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting" },
-      {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
-        path: `${baseUrl}/info`,
-      },
+      { name: "RPM", path: "/rpm" },
+      { name: "Kegiatan Overview", path: "/rpm/kegiatan" },
       {
         name: `Log`,
         path: pathNameLog,
       },
     ]);
   }, [projectDetail]);
+
+  useEffect(() => {
+    const projectInfo = landingStatus?.data?.project;
+    setParams({
+      ewpId: projectInfo?.ewp_id,
+    });
+  }, [landingStatus]);
 
   useEffect(() => {
     if (logSBP?.data?.length) {
@@ -66,7 +75,7 @@ const index = () => {
   }, [logSBP]);
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutRPMKegiatan>
       <div className="w-[71.5rem]">
         {/* Start Breadcrumbs */}
         <Breadcrumbs data={breadcrumbs} />
@@ -80,7 +89,7 @@ const index = () => {
           </Card>
         </div>
       </div>
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutRPMKegiatan>
   );
 };
 

@@ -1,6 +1,5 @@
 import { Breadcrumbs, ButtonField, Card, PageTitle } from "@/components/atoms";
 import { useProjectDetail } from "@/data/ewp/konsulting";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import {
@@ -37,11 +36,12 @@ import uploadDocumentEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/
 import { IconArrowDown } from "@/components/icons";
 import _ from "lodash";
 import useUser from "@/data/useUser";
+import { LandingLayoutRPMKegiatan } from "@/layouts/rpm";
 
 const index = () => {
   const dispatch = useDispatch();
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const baseUrl = `/rpm/kegiatan/${id}`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -72,12 +72,8 @@ const index = () => {
   useEffect(() => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
-      { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting" },
-      {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Berkas Dokumen`,
-        path: baseUrl + "/info",
-      },
+      { name: "RPM", path: "/rpm" },
+      { name: "Overview", path: "/rpm/kegiatan" },
       {
         name: `Berkas Dokumen`,
         path: baseUrl + "/dokumen",
@@ -342,7 +338,7 @@ const index = () => {
   // [ END ] handler for table
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutRPMKegiatan>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -418,7 +414,7 @@ const index = () => {
         handleCloseModal={handleCloseModalDescription}
       />
       {/* End Content */}
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutRPMKegiatan>
   );
 };
 

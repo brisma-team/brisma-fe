@@ -30,6 +30,7 @@ const SidebarLandingRPMKegiatan = () => {
       createdAt: convertDate(projectInfo?.createdAt, "/", "d"),
       initiatorName:
         projectInfo?.create_by?.pn + " - " + projectInfo?.create_by?.nama,
+      ewpId: projectInfo?.ewp_id,
     });
 
     setMenu([
@@ -43,7 +44,7 @@ const SidebarLandingRPMKegiatan = () => {
 
   const subMenu = [
     { name: "Log", href: `/log` },
-    { name: "Dokumen", href: `/dokumen` },
+    { name: "Dokumen", href: `/pustaka-dokumen` },
     { name: "Meeting", href: `/meeting` },
   ];
 
