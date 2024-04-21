@@ -21,7 +21,7 @@ const ProjectInfo = ({ type = "pat", id, source = 2, year = 2023 }) => {
       <Card>
         <div className="w-full h-full px-6 p-5">
           <h4 className="mb-3">
-            {type.toUpperCase()} Information - BRISMA {source}
+            {type.toUpperCase()} Information - AMSBRI {source}
           </h4>
           <hr className="mb-3 border-b border-neutral-500"></hr>
           <div className="grid grid-cols-5">

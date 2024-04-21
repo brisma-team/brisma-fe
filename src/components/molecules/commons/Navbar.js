@@ -128,11 +128,12 @@ const DefaultProfile = ({ user }) => (
 );
 
 const CustomHome = () => (
-  <div className="w-64 p-5">
+  <div className="w-52 pb-2 pl-2">
     <Link href="/dashboard">
       <Image
-        src="/images/BRISMA-2.0.2.png"
-        width={1000}
+        // src="/images/BRISMA-2.0.2.png"
+        src={"/images/amsbri-horizontal.png"}
+        width={400}
         height={0}
         alt="test"
       ></Image>

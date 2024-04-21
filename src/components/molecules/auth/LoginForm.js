@@ -12,7 +12,10 @@ import { useRouter } from "next/router";
 import { Section } from "@atlaskit/menu";
 import { setCookie, hasCookie, getCookie, deleteCookie } from "cookies-next";
 import Image from "next/image";
-import { ImageBrismaVertical } from "@/helpers/imagesUrl";
+import {
+  // ImageBrismaVertical,
+  ImageAMSBRIVertical,
+} from "@/helpers/imagesUrl";
 import {
   Header,
   NavigationHeader,
@@ -152,7 +155,7 @@ const LoginForm = () => {
           <div className="flex-col mb-10">
             <div className="w-full justify-center flex">
               <div className="w-64">
-                <Image src={ImageBrismaVertical} />
+                <Image src={ImageAMSBRIVertical} />
               </div>
             </div>
             <div className="text-center">

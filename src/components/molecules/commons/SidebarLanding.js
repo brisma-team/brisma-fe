@@ -44,7 +44,7 @@ const SidebarLanding = () => {
                             alt="chat"
                           />
                           <p className="text-center mb-3">
-                            “Program BRISMA 2.0.2 adalah sebuah komitmen untuk
+                            “Program AMSBRI adalah sebuah komitmen untuk
                             meningkatkan kualitas kerja audit secara menyeluruh”
                           </p>
                           {/* <p className="text-center font-bold">

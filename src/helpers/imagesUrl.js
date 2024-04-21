@@ -1,5 +1,7 @@
 import ImageBrismaVertical from "../../public/images/BRISMA-vertical.png";
 import ImageBrismaHorizontal from "../../public/images/BRISMA-horizontal.png";
+import ImageAMSBRIVertical from "../../public/images/amsbri-vertical.png";
+import ImageAMSBRIHorizontal from "../../public/images/amsbri-horizontal.png";
 import ImageChat from "../../public/images/chat.png";
 import ImageAvatar from "../../public/images/avatar.png";
 import ImageCheck from "../../public/images/icon-check.png";
@@ -25,6 +27,8 @@ import ImageCircleCheckGreen from "../../public/images/icon-circle-check-green.p
 export {
   ImageBrismaVertical,
   ImageBrismaHorizontal,
+  ImageAMSBRIVertical,
+  ImageAMSBRIHorizontal,
   ImageChat,
   ImageAvatar,
   ImageCheck,
