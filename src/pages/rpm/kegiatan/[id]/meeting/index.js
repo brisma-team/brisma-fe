@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import {
   Breadcrumbs,
   ButtonField,
@@ -33,12 +32,13 @@ import {
 import { useRouter } from "next/router";
 import createMeetingEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/meeting/createMeetingEWPKonsultingSchema";
 import { useProjectDetail } from "@/data/ewp/konsulting";
+import { LandingLayoutRPMKegiatan } from "@/layouts/rpm";
 
 const index = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const baseUrl = `/rpm/kegiatan/${id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
 
   const [showFilter, setShowFilter] = useState(false);
@@ -88,12 +88,8 @@ const index = () => {
   useEffect(() => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
-      { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting" },
-      {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
-        path: `${baseUrl}/info`,
-      },
+      { name: "RPM", path: "/rpm" },
+      { name: "Overview", path: "/rpm/kegiatan" },
       {
         name: `Meeting`,
         path: pathNameSubModulMeeting,
@@ -275,7 +271,7 @@ const index = () => {
   // [ END ] handler for modal add meeting
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutRPMKegiatan>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -353,7 +349,7 @@ const index = () => {
         handleClickDeletePIC={handleDeletePIC}
         handleClickDeletePembicara={handleDeletePembicara}
       />
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutRPMKegiatan>
   );
 };
 
