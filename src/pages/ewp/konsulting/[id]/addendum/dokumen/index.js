@@ -354,31 +354,31 @@ const index = () => {
                               <Cell className="!hidden" />
                               <Cell
                                 width="28%"
-                                className="border-r border-l cell-custom-dataTables text-sm"
+                                className="border-r border-l cell-custom-dataTables text-sm overflow-hidden text-ellipsis break-words"
                               >
                                 {section[part] || "-"}
                               </Cell>
                               <Cell
                                 width="18%"
-                                className="border-r cell-custom-dataTables text-xs"
+                                className="border-r cell-custom-dataTables text-xs overflow-hidden text-ellipsis break-words"
                               >
                                 {keterangan || "-"}
                               </Cell>
                               <Cell
                                 width="18%"
-                                className="border-r cell-custom-dataTables text-xs"
+                                className="border-r cell-custom-dataTables text-xs overflow-hidden text-ellipsis break-words"
                               >
                                 {note_sebelum || "-"}
                               </Cell>
                               <Cell
                                 width="18%"
-                                className="border-r cell-custom-dataTables text-xs"
+                                className="border-r cell-custom-dataTables text-xs overflow-hidden text-ellipsis break-words"
                               >
                                 {note_sesudah || "-"}
                               </Cell>
                               <Cell
                                 width="18%"
-                                className="border-r cell-custom-dataTables text-xs"
+                                className="border-r cell-custom-dataTables text-xs overflow-hidden text-ellipsis break-words"
                               >
                                 {alasan || "-"}
                               </Cell>

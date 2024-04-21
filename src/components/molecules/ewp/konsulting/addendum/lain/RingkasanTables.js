@@ -103,19 +103,34 @@ const RingkasanTables = ({
                   ""
                 )} */}
                 </Cell>
-                <Cell width="18%" className="border-r cell-custom-dataTables">
+                <Cell
+                  width="18%"
+                  className="border-r cell-custom-dataTables overflow-hidden text-ellipsis break-words"
+                >
                   {section[part] || "-"}
                 </Cell>
-                <Cell width="18%" className="border-r cell-custom-dataTables">
+                <Cell
+                  width="18%"
+                  className="border-r cell-custom-dataTables overflow-hidden text-ellipsis break-words"
+                >
                   {keterangan || "-"}
                 </Cell>
-                <Cell width="18%" className="border-r cell-custom-dataTables">
+                <Cell
+                  width="18%"
+                  className="border-r cell-custom-dataTables overflow-hidden text-ellipsis break-words"
+                >
                   {note_sebelum || "-"}
                 </Cell>
-                <Cell width="18%" className="border-r cell-custom-dataTables">
+                <Cell
+                  width="18%"
+                  className="border-r cell-custom-dataTables overflow-hidden text-ellipsis break-words"
+                >
                   {note_sesudah || "-"}
                 </Cell>
-                <Cell width="18%" className="border-r cell-custom-dataTables">
+                <Cell
+                  width="18%"
+                  className="border-r cell-custom-dataTables overflow-hidden text-ellipsis break-words"
+                >
                   {alasan || "-"}
                 </Cell>
               </Row>

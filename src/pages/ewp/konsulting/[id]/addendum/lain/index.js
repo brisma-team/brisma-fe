@@ -110,10 +110,11 @@ const index = () => {
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { id } = router.query;
+    const { id, stage } = router.query;
     setParams({
       id,
     });
+    setCurrentContentStage(parseInt(stage) || 1);
   }, [router.isReady]);
 
   const { projectDetail } = useProjectDetail({ id: params?.id });
@@ -129,7 +130,7 @@ const index = () => {
     addendum_id: selectedIdRingkasan,
   });
 
-  const pathName = `/ewp/konsulting/${params?.id}/perencanaan`;
+  const pathName = `/ewp/konsulting/${params?.id}/addendum/lain`;
 
   useEffect(() => {
     setContent(sumberInformasi?.data || "");
@@ -163,6 +164,10 @@ const index = () => {
 
   const handleChangeTab = (index) => {
     setCurrentContentStage(index);
+    router.push({
+      pathname: pathName,
+      query: { stage: index },
+    });
   };
 
   const handleUploadFile = async (e) => {
@@ -551,10 +556,10 @@ const index = () => {
         <NavigationTab
           items={navigationTabItems}
           currentStage={currentContentStage}
-          width={"w-[30rem]"}
+          width={"w-[22rem]"}
           handleChange={handleChangeTab}
         />
-        {currentContentStage === 1 ? (
+        {currentContentStage === 1 || currentContentStage === "1" ? (
           <div className="my-4 flex justify-between">
             <div className="flex gap-6">
               <div className="w-64 flex flex-col gap-4">
@@ -600,7 +605,7 @@ const index = () => {
               </div>
             </div>
           </div>
-        ) : currentContentStage === 2 ? (
+        ) : currentContentStage === 2 || currentContentStage === "2" ? (
           <div className="w-full">
             <Card>
               <div className="px-6 pt-2 pb-4 w-full">

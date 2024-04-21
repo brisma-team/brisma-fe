@@ -15,6 +15,7 @@ import { capitalizeEveryWord, convertDate } from "@/helpers";
 const SidebarLandingAddendumSBP = () => {
   const { id } = useRouter().query;
   const baseUrl = `/ewp/konsulting/${id}/addendum`;
+  const subModuleBaseUrl = `/ewp/konsulting/${id}`;
   const [data, setData] = useState();
   const { projectDetail } = useProjectDetail({ id });
   const [menu, setMenu] = useState([]);
@@ -188,7 +189,7 @@ const SidebarLandingAddendumSBP = () => {
                   return (
                     <Link
                       key={i}
-                      href={baseUrl + v?.href}
+                      href={subModuleBaseUrl + v?.href}
                       className={`flex gap-2 items-center ${
                         v?.isSelected
                           ? `text-atlasian-blue-light`
