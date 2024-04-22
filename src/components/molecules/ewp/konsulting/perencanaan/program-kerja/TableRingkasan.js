@@ -7,7 +7,7 @@ import TableTree, {
   Rows,
 } from "@atlaskit/table-tree";
 
-const TableRingkasan = ({ data, pathName }) => {
+const TableRingkasan = ({ data, user, isInitiator, pathName }) => {
   return (
     <div className="dataTables-custom bg-white">
       <TableTree>
@@ -57,7 +57,7 @@ const TableRingkasan = ({ data, pathName }) => {
             <Row>
               <Cell className="!hidden" />
               <Cell width="25%" className="border-x cell-custom-dataTables">
-                {auditor}
+                {`${auditor?.pn} - ${auditor?.nama}`}
               </Cell>
               <Cell width="21%" className="border-r cell-custom-dataTables">
                 {lingkup_pemeriksaan}
@@ -72,16 +72,20 @@ const TableRingkasan = ({ data, pathName }) => {
                 width="12%"
                 className="border-r cell-custom-dataTables justify-center"
               >
-                <div className={uraian ? "" : "opacity-30"}>
-                  <LinkIcon
-                    icon={
-                      <LozengeField appreance="inprogress" isBold>
-                        URAIAN
-                      </LozengeField>
-                    }
-                    href={`${pathName}/${id}`}
-                  />
-                </div>
+                {isInitiator || user?.pn === auditor?.pn ? (
+                  <div className={uraian ? "" : "opacity-30"}>
+                    <LinkIcon
+                      icon={
+                        <LozengeField appreance="inprogress" isBold>
+                          URAIAN
+                        </LozengeField>
+                      }
+                      href={`${pathName}/${id}`}
+                    />
+                  </div>
+                ) : (
+                  ""
+                )}
               </Cell>
             </Row>
           )}

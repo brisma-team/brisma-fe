@@ -36,6 +36,7 @@ import {
   programKerjaHtml,
   timTimeplanHtml,
 } from "@/templates/ewp/konsulting/perencanaan";
+import { perencanaanDocs } from "@/templates/ewp/konsulting";
 
 const routes = [
   {
@@ -450,8 +451,12 @@ const index = () => {
           data.note = workflowData.note;
           break;
         case "approve":
-          if (signedCount < 2) {
-            data.data = "<p>pirli test</p>";
+          if (
+            signedCount ===
+            workflowData?.ref_tim_audit_approver?.length - 1
+          ) {
+            data.doc_name = `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}-MAPA`;
+            data.data = perencanaanDocs(doc);
           }
           data.note = workflowData.note;
           break;

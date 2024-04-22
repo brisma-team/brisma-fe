@@ -60,7 +60,7 @@ const TableRelatedProject = ({
                   <div className="custom-table-position-center justify-center">
                     {!withoutButton ? (
                       <div className="flex justify-between items-center gap-1.5">
-                        {is_new ? (
+                        {is_new && !withoutButton ? (
                           <ButtonIcon
                             icon={
                               <Image
@@ -88,7 +88,7 @@ const TableRelatedProject = ({
                 </Cell>
                 <Cell width="45%" className={`border-r ${customCell} `}>
                   <div className="custom-table-position-center relative">
-                    {is_new ? (
+                    {is_new && !withoutButton ? (
                       <div className="w-full">
                         <TextInput
                           value={payload?.project_id}
@@ -112,7 +112,7 @@ const TableRelatedProject = ({
                 </Cell>
                 <Cell width="45%" className={`border-r ${customCell} `}>
                   <div className="custom-table-position-center">
-                    {is_new ? (
+                    {is_new && !withoutButton ? (
                       <div className="w-full">
                         <TextInput
                           value={payload?.project_name}

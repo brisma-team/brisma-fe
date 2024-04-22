@@ -95,7 +95,7 @@ const index = () => {
 
   useEffect(() => {
     if (bulkDownloadDocument?.findAllDoc?.length) {
-      const mapping = listDocument?.findAllDoc?.map((v) => {
+      const mapping = bulkDownloadDocument?.findAllDoc?.map((v) => {
         const { file_url, file_name } = v;
         return {
           upload_date: v?.created_at,
@@ -107,7 +107,7 @@ const index = () => {
     } else {
       setDataBulkDownload([]);
     }
-  }, [bulkDownloadDocument]);
+  }, [bulkDownloadDocument, showModalBulkDownload]);
 
   useEffect(() => {
     if (listDocument?.findAllDoc?.length) {

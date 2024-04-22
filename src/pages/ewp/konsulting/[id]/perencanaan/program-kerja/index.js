@@ -240,7 +240,7 @@ const index = () => {
       const mapping = ringkasan?.data?.map((v) => {
         return {
           id: v?.id,
-          auditor: v?.nama_pic,
+          auditor: { pn: v?.pn_pic, nama: v?.nama_pic },
           lingkup_pemeriksaan:
             v?.mapa_uker_mcr?.lingkup_pemeriksaan?.judul_lingkup_pemeriksaan,
           risk: {
@@ -291,10 +291,6 @@ const index = () => {
       dispatch(resetObjDataPicControl());
     }
   }, [timTimeplan]);
-
-  useEffect(() => {
-    console.log("paramsFilter => ", paramsFilter);
-  }, [paramsFilter]);
 
   useEffect(() => {
     const handleSearch = () => {
@@ -399,7 +395,7 @@ const index = () => {
 
     await fetchApi(
       "PATCH",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/lingkup_pemeriksaan/review/${params?.id}?type=${type}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/lingkup_pemeriksaan/review/${id}?type=${type}`,
       {},
       true
     );
@@ -722,6 +718,8 @@ const index = () => {
         ) : (
           <TableRingkasan
             data={dataRingkasan}
+            user={user?.data}
+            isInitiator={isInitiator}
             pathName={`/ewp/konsulting/${params?.id}/perencanaan/program-kerja`}
           />
         )}

@@ -38,6 +38,8 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
   const [isFormDisabled, setIsFormDisabled] = useState(false);
   const [differentPIC, setDifferentPIC] = useState(true);
 
+  useEffect(() => console.log("projectOverview => ", projectOverviewData));
+
   const projectOverviewData = useSelector(
     (state) => state.projectOverviewEWPKonsulting.projectOverviewData
   );

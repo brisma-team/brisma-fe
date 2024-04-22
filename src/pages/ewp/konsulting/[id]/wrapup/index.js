@@ -55,7 +55,14 @@ const index = () => {
 
   useEffect(() => {
     const projectRealisasi = projectDetail?.data?.realisasi;
-    setIsDisabled(Boolean(projectRealisasi?.Wrapup_Meeting_real_end));
+    setIsDisabled(
+      Boolean(
+        !(
+          projectRealisasi?.Wrapup_Meeting_real_start &&
+          !projectRealisasi?.Wrapup_Meeting_real_end
+        )
+      )
+    );
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
@@ -81,7 +88,7 @@ const index = () => {
           upload_date: v?.created_at,
           file_url,
           file_name,
-          uploader: v?.uploader?.nama,
+          uploader: `${v?.uploader?.pn} - ${v?.uploader?.nama}`,
         };
       });
 
