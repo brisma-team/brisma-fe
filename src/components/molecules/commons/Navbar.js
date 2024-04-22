@@ -128,7 +128,7 @@ const DefaultProfile = ({ user }) => (
 );
 
 const CustomHome = () => (
-  <div className="w-52 pb-2 pl-2">
+  <div className="w-52 pb-2 pl-2 mr-12">
     <Link href="/dashboard">
       <Image
         // src="/images/BRISMA-2.0.2.png"

@@ -1,123 +1,57 @@
 import React from "react";
-import { MainLayout } from "@/layouts";
-import { CardDashboard } from "@/components/molecules/commons";
+import { CardModuleDashboard } from "@/components/molecules/commons";
+import { LayoutReferenceGeneral } from "@/layouts/reference";
 
 const index = () => {
   const data = {
-    title: "Reference Menu",
+    title: "References",
     content: [
       {
-        subtitle: "Manajemen Pengguna",
-        subcontent: [
-          {
-            title: "USER S.K.A.I",
-            description: "Pengaturan user pengguna aplikasi.",
-            url: "/reference/users/skai",
-          },
-          // {
-          //   title: "Pengganti Sementara (PgS)",
-          //   description: "Pengaturan user pengganti sementara.",
-          //   url: "#",
-          // },
-        ],
-      },
-      // {
-      //   subtitle: "Manajemen Unit Kerja Audit",
-      //   subcontent: [
-      //     {
-      //       title: "Data Master U.K.A",
-      //       description: "Pengaturan data master unit kerja audit.",
-      //       url: "#",
-      //     },
-      //   ],
-      // },
-      // {
-      //   subtitle: "Manajemen Pusat Data Elektronik",
-      //   subcontent: [
-      //     {
-      //       title: "P.D.E",
-      //       description: "Pengaturan data P.D.E.",
-      //       url: "#",
-      //     },
-      //     {
-      //       title: "P.D.E Connection",
-      //       description: "Pengaturan koneksi data P.D.E.",
-      //       url: "#",
-      //     },
-      //   ],
-      // },
-      // {
-      //   subtitle: "Manajemen Master Data",
-      //   subcontent: [
-      //     {
-      //       title: "Master Data",
-      //       description: "Pengaturan master data.",
-      //       url: "#",
-      //     },
-      //     {
-      //       title: "Upload dan Download Master Data",
-      //       description: "Pengaturan lanjutan master data.",
-      //       url: "#",
-      //     },
-      //     {
-      //       title: "Approval Master Data",
-      //       description: "Pengaturan persetujuan master data.",
-      //       url: "#",
-      //     },
-      //   ],
-      // },
-      // {
-      //   subtitle: "Manajemen Perencanaan Audit",
-      //   subcontent: [
-      //     {
-      //       title: "Create P.A.T Project",
-      //       description: "Pengaturan pembuatan project PAT pertahun.",
-      //       url: "#",
-      //     },
-      //   ],
-      // },
-      {
-        subtitle: "Manajemen Dashboard",
-        subcontent: [
-          {
-            title: "Kelola Dashboard",
-            description: "Pengaturan untuk Mengelola Dashboard.",
-            url: "/reference/manage-dashboard",
-            isBlank: true,
-          },
-          {
-            title: "Aktivasi Dashboard Visual",
-            description: "Pengaturan untuk Aktivasi Dashboard Visual.",
-            url: "/reference/active-dashboard-visual",
-          },
-          {
-            title: "Aktivasi Dashboard Reporting",
-            description: "Pengaturan untuk Aktivasi Dashboard Reporting.",
-            url: "/reference/active-dashboard-report",
-          },
-        ],
+        // subtitle: "E.W.P Audit",
+        title: "Metodologi",
+        description: "Pengaturan terkait Metodologi Aplikasi.",
+        url: "#",
+        isDisabled: true,
       },
       {
-        subtitle: "Admin Survei",
-        subcontent: [
-          {
-            title: "Template Survei",
-            description: "Pengaturan template Survei.",
-            url: "/reference/survey/overview",
-          },
-          {
-            title: "Approval",
-            description: "Melihat riwayat approval.",
-            url: "/reference/survey/approval",
-          },
-        ],
+        // subtitle: "E.W.P Audit",
+        title: "Modul",
+        description: "Pengaturan terkait modul-modul dalam Aplikasi.",
+        url: "/reference/modul",
+        isDisabled: false,
+      },
+      {
+        // subtitle: "E.W.P Non-Audit",
+        title: "Organisasi",
+        description: "Pengaturan terkait Unit Kerja dan Pengguna.",
+        url: "/reference/organisasi",
+        isDisabled: false,
+      },
+      {
+        // subtitle: "E.W.P Non-Audit",
+        title: "Data",
+        description: "Pengaturan terkait Manajemen dan Koneksivitas Data.",
+        url: "#",
+        isDisabled: true,
       },
     ],
   };
   return (
-    <MainLayout>
-      <CardDashboard data={data} />
-    </MainLayout>
+    <LayoutReferenceGeneral>
+      <div className="p-5">
+        <div className="mb-8">
+          <p className="text-3xl font-bold">{data?.title}</p>
+        </div>
+        <div className="grid xl:grid-cols-4 lg:grid-cols-1 gap-5 w-fit mt-12">
+          <CardModuleDashboard
+            data={data?.content}
+            color="text-atlasian-brown"
+            defaultWidth="w-[18rem]"
+            contentPercent="w-5/5"
+          />
+        </div>
+      </div>
+    </LayoutReferenceGeneral>
   );
 };
 
