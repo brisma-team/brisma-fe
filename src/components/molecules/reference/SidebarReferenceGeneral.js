@@ -11,7 +11,6 @@ import { useRouter } from "next/router";
 
 const SidebarReferenceGeneral = () => {
   const router = useRouter();
-  const [selectedItem, setSelectedItem] = useState(null);
   const [listMenu, setListMenu] = useState([]);
 
   const { user } = useUser();
@@ -73,7 +72,6 @@ const SidebarReferenceGeneral = () => {
   };
 
   const handleItemClick = (e, path) => {
-    setSelectedItem(path);
     handleSidebarItemClick(e, path);
   };
 
