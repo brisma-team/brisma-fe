@@ -30,10 +30,6 @@ const DocumentTypeSelect = ({
     }
   }, [documentType]);
 
-  useEffect(() => {
-    console.log("optionValue => ", optionValue);
-  }, [optionValue]);
-
   const DropdownIndicator = (props) => {
     return (
       <components.DropdownIndicator {...props}>

@@ -36,17 +36,19 @@ const TableRelatedProject = ({
             width="10%"
             className="border-x border-t rounded-ss-xl cell-custom-dataTables"
           >
-            <div className="custom-table-header justify-center">Aksi</div>
+            <div className="custom-table-header text-sm justify-center">
+              Aksi
+            </div>
           </Header>
           <Header
             width="45%"
-            className="border-t border-r cell-custom-dataTables"
+            className="border-t border-r text-sm cell-custom-dataTables"
           >
             <div className={`custom-table-header`}>PROJECT ID</div>
           </Header>
           <Header
             width="45%"
-            className="border-t border-r rounded-se-xl cell-custom-dataTables"
+            className="border-t border-r text-sm rounded-se-xl cell-custom-dataTables"
           >
             <div className={`custom-table-header`}>PROJECT NAME</div>
           </Header>
@@ -60,7 +62,7 @@ const TableRelatedProject = ({
                   <div className="custom-table-position-center justify-center">
                     {!withoutButton ? (
                       <div className="flex justify-between items-center gap-1.5">
-                        {is_new ? (
+                        {is_new && !withoutButton ? (
                           <ButtonIcon
                             icon={
                               <Image
@@ -88,7 +90,7 @@ const TableRelatedProject = ({
                 </Cell>
                 <Cell width="45%" className={`border-r ${customCell} `}>
                   <div className="custom-table-position-center relative">
-                    {is_new ? (
+                    {is_new && !withoutButton ? (
                       <div className="w-full">
                         <TextInput
                           value={payload?.project_id}
@@ -106,13 +108,13 @@ const TableRelatedProject = ({
                         )}
                       </div>
                     ) : (
-                      <p className="text-xs">{project_id}</p>
+                      <p className="text-sm">{project_id}</p>
                     )}
                   </div>
                 </Cell>
                 <Cell width="45%" className={`border-r ${customCell} `}>
                   <div className="custom-table-position-center">
-                    {is_new ? (
+                    {is_new && !withoutButton ? (
                       <div className="w-full">
                         <TextInput
                           value={payload?.project_name}
@@ -130,7 +132,7 @@ const TableRelatedProject = ({
                         )}
                       </div>
                     ) : (
-                      <p className="text-xs">{project_name}</p>
+                      <p className="text-sm">{project_name}</p>
                     )}
                   </div>
                 </Cell>

@@ -7,7 +7,7 @@ const useWrapup = (params) => {
     process.env.NEXT_PUBLIC_API_URL_EWP
   }/ewp/sbp/wrapup/all/${id}?start_date=${start_date || ""}&end_date=${
     end_date || ""
-  }&uploader=${uploader?.pn || ""}&doc_name=${doc_name}`;
+  }&pn_uploader=${uploader?.pn || ""}&doc_name=${doc_name}`;
   const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);
 
   return {

@@ -3,7 +3,7 @@ import useSWR from "swr";
 
 const useBulkDownloadDocument = (params) => {
   const { ref_document_id, id } = params;
-  const path = `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/wrapup/all/${id}?ref_document_id=${ref_document_id}`;
+  const path = `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/wrapup/all/${id}?ref_document_id=${ref_document_id}&by_system=false`;
   const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);
 
   return {

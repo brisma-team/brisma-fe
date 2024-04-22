@@ -37,7 +37,7 @@ const RiskSelect = ({
   }, [risk, search]);
 
   useEffect(() => {
-    if (value.length > 2) {
+    if (value.length > 1) {
       const handleSearch = () => {
         setKeyword(value);
         setSearch(true);
@@ -58,7 +58,7 @@ const RiskSelect = ({
   }, [riskIsLoading]);
 
   function handleInputChange(e) {
-    if (e.length > 2) {
+    if (e.length > 1) {
       setValue(e);
     } else {
       setOptions([]);

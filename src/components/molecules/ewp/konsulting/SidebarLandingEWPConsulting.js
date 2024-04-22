@@ -70,7 +70,7 @@ const SidebarLandingEWPConsulting = () => {
       {
         name: "Wrap up",
         href: `/wrapup`,
-        isActive: projectRealisasi?.Wrapup_Meeting_real_start,
+        isActive: true,
       },
       {
         name: "Close",

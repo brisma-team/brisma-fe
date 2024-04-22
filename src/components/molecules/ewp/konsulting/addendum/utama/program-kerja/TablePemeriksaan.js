@@ -219,6 +219,7 @@ const TablePemeriksaan = ({
                               return;
                             }
                           }}
+                          className={"w-8 flex justify-end"}
                         />
                       ) : (
                         ""

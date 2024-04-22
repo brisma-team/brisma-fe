@@ -29,10 +29,6 @@ const ModalDescription = ({
     setEditValue(data || "");
   }, [data]);
 
-  useEffect(() => {
-    console.log("isEdit => ", isEdit);
-  }, [isEdit]);
-
   return (
     <ModalScroll
       showModal={showModal}

@@ -21,7 +21,6 @@ const LandingLayoutEWPConsulting = ({ children }) => {
 
   const [isShown, setIsShown] = useState(false);
   const [isError, setIsError] = useState(false);
-  ``;
 
   useEffect(() => {
     if (!router.isReady) return;

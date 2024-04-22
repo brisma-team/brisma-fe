@@ -101,12 +101,7 @@ const TablePemeriksaan = ({
                 width="8%"
                 className="border-x cell-custom-dataTables justify-center"
               >
-                {isInitiator ? (
-                  <CustomCheckbox
-                    handleChange={(e) => handleClickReview(e, id, role)}
-                    value={is_review}
-                  />
-                ) : user?.pn === pic?.pn && role === "child" ? (
+                {isInitiator || (user?.pn === pic?.pn && role === "child") ? (
                   <CustomCheckbox
                     handleChange={(e) => handleClickReview(e, id, role)}
                     value={is_review}
@@ -207,7 +202,7 @@ const TablePemeriksaan = ({
                 width="15%"
                 className="border-r cell-custom-dataTables justify-center"
               >
-                {role === "child" ? (
+                {role === "child" && (isInitiator || user?.pn === pic?.pn) ? (
                   <div className={uraian ? "" : "opacity-30"}>
                     <LinkIcon
                       icon={

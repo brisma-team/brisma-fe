@@ -366,11 +366,16 @@ const index = () => {
       if (!confirm.value) {
         return;
       }
+
+      loadingSwal();
       await fetchApi(
         "POST",
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/initiate/addendum/initiate/${params?.id}`,
         {}
       );
+
+      projectDetailMutate();
+      loadingSwal("close");
     }
     router.push(`/ewp/konsulting/${params?.id}/addendum`);
   };
@@ -460,10 +465,6 @@ const index = () => {
     );
   };
 
-  useEffect(() => {
-    console.log("dataUkerAssessment => ", dataUkerAssessment);
-  }, [dataUkerAssessment]);
-
   const handleClickEditUkerAssessment = (index) => {
     const objData = dataUkerAssessment[index];
     const newData = [...dataUkerAssessment];
@@ -499,11 +500,19 @@ const index = () => {
     }
   };
 
-  const handleClickDeleteUkerAssessment = async (uker_id) => {
+  const handleClickDeleteUkerAssessment = async (uker_id, index) => {
     const confirm = await confirmationSwal(
       "Apakah Anda yakin ingin menghapus data ini?"
     );
     if (!confirm.value) {
+      return;
+    }
+
+    if (isAddNewRowUker) {
+      const newData = [...dataUkerAssessment];
+      setIsAddNewRowUker(false);
+      newData.splice(index, 1);
+      setDataUkerAssessment(newData);
       return;
     }
 
