@@ -18,7 +18,7 @@ import {
   setValidationErrorsWorkflow,
   setWorkflowData,
   resetWorkflowData,
-} from "@/slices/ewp/konsulting/peluang-peningkatan/documentDetailPeluangKonsultingSlice";
+} from "@/slices/rpm/kegiatan/documentRPMKegiatanSlice";
 import _ from "lodash";
 import {
   confirmationSwal,
@@ -73,10 +73,10 @@ const index = () => {
     });
   }, [router.isReady]);
   const workflowData = useSelector(
-    (state) => state.documentDetailPeluangKonsulting.workflowData
+    (state) => state.documentRPMKegiatan.workflowData
   );
   const validationErrorsWorkflow = useSelector(
-    (state) => state.documentDetailPeluangKonsulting.validationErrorsWorkflow
+    (state) => state.documentRPMKegiatan.validationErrorsWorkflow
   );
 
   const { documentData } = useDocument(params?.id, bab);

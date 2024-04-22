@@ -132,7 +132,9 @@ const DataTables = ({ data }) => {
               </Cell>
               <Cell width="10%" className={`border-r ${customCell}`}>
                 <div className="custom-table-position-center text-xs">
-                  {auditor?.nama || auditor?.name || "-"}
+                  {auditor?.pn +
+                    " - " +
+                    (auditor?.nama || auditor?.name || "-")}
                 </div>
               </Cell>
               <Cell width="16%" className={`border-r ${customCell}`}>
@@ -167,7 +169,7 @@ const DataTables = ({ data }) => {
               </Cell>
               <Cell width="11%" className={`border-r ${customCell}`}>
                 <div
-                  className={`custom-table-position-center ${
+                  className={`custom-table-position-center overflow-x-auto ${
                     !rpm_action_plan?.length > 0 ? "justify-center" : ""
                   }`}
                 >
@@ -201,7 +203,7 @@ const DataTables = ({ data }) => {
               </Cell>
               <Cell width="10%" className={`border-r ${customCell}`}>
                 <div
-                  className={`custom-table-position-center ${
+                  className={`custom-table-position-center overflow-x-auto ${
                     !rpm_action_plan?.length > 0 ? "justify-center" : ""
                   }`}
                 >

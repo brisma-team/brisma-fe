@@ -1,7 +1,12 @@
 import { Card } from "@/components/atoms";
 import Link from "next/link";
 
-const CardModuleDashboard = ({ data, color = "text-atlasian-green" }) => {
+const CardModuleDashboard = ({
+  data,
+  color = "text-atlasian-green",
+  defaultWidth = "w-[28rem]",
+  contentPercent = "w-3/5",
+}) => {
   let borderColor = "green";
   switch (color) {
     case "text-atlasian-green":
@@ -13,6 +18,12 @@ const CardModuleDashboard = ({ data, color = "text-atlasian-green" }) => {
     case "text-atlasian-yellow":
       borderColor = "yellow";
       break;
+    case "text-atlasian-blue":
+      borderColor = "blue";
+      break;
+    case "text-atlasian-brown":
+      borderColor = "brown";
+      break;
   }
   return data?.length
     ? data?.map((v, i) => {
@@ -21,14 +32,14 @@ const CardModuleDashboard = ({ data, color = "text-atlasian-green" }) => {
             key={i}
             href={v?.url}
             target={`${v?.isBlank ? "_blank" : ""}`}
-            className={`no-underline w-[28rem] ${
+            className={`no-underline ${defaultWidth} ${
               v?.isDisabled ? "opacity-40 cursor-not-allowed" : ""
             }`}
             style={{ textDecoration: "none" }}
           >
             <Card hoverBorderColor={borderColor}>
               <div className="px-4 py-2 flex justify-end">
-                <div className="w-3/5">
+                <div className={contentPercent}>
                   <p className={`font-semibold no-underline ${color} text-lg`}>
                     {v?.subtitle}
                   </p>

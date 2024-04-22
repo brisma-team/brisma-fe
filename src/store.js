@@ -56,6 +56,9 @@ import ringkasanUtamaAddendumEWPKonsultingReducer from "./slices/ewp/konsulting/
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
 import beritaAcaraEntranceEWPReducer from "./slices/ewp/konvensional/entrance/beritaAcaraEntranceEWPSlice";
 
+//RPM
+import documentRPMKegiatanReducer from "./slices/rpm/kegiatan/documentRPMKegiatanSlice";
+
 // CATALOG
 import catalogEWPReducer from "./slices/catalog/ewp/catalogEWPSlice";
 import catalogPATReducer from "./slices/catalog/pat/catalogPATSlice";
@@ -137,6 +140,9 @@ export const store = configureStore({
     ringkasanSBPAddendum: ringkasanSBPAddendumReducer,
     ringkasanUtamaAddendumEWPKonsulting:
       ringkasanUtamaAddendumEWPKonsultingReducer,
+
+    //RPM
+    documentRPMKegiatan: documentRPMKegiatanReducer,
 
     // REFERENCE
     createTemplateReference: createTemplateReferenceSlice,

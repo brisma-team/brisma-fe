@@ -323,7 +323,7 @@ const index = () => {
                 <QRGenerator value={valueQR} size={150} />
               </div>
               <div className="text-center pt-1 font-semibold text-base">
-                BRISMA 2.0.2
+                AMSBRI
               </div>
               <div className="mt-2 w-[200px] py-3 px-2 bg-slate-300 rounded text-xs text-center overflow-auto max-w-[200px]">
                 <Link

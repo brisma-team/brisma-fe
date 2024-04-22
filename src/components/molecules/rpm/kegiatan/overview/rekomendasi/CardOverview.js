@@ -72,9 +72,21 @@ const CardOverview = ({ data, withoutHover }) => {
                 title={"Deadline"}
                 value={convertDate(data?.deadline, "/", "d")}
               />
-              <CardBody title={"Lingkup"} value={data?.lingkup || "-"} />
-              <CardBody title={"Risk Issue"} value={data?.risk || "-"} />
-              <CardBody title={"Control"} value={data?.control || "-"} />
+              <CardBody
+                title={"Lingkup"}
+                value={data?.lingkup || "-"}
+                className={"overflow-x-auto font-medium"}
+              />
+              <CardBody
+                title={"Risk Issue"}
+                value={data?.risk || "-"}
+                className={"overflow-x-auto font-medium"}
+              />
+              <CardBody
+                title={"Control"}
+                value={data?.control || "-"}
+                className={"overflow-x-auto font-medium"}
+              />
             </div>
           </div>
         </div>

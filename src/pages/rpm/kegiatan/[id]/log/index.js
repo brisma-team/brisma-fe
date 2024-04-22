@@ -20,7 +20,7 @@ const index = () => {
     ewpId: "",
   });
 
-  const { projectDetail } = useProjectDetail({ id });
+  const { projectDetail } = useProjectDetail({ id: params?.ewpId });
   const { logSBP } = useLogSBP({ id: params?.ewpId });
   const { landingStatus } = useLandingStatus(id);
 
