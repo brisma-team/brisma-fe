@@ -35,7 +35,7 @@ const SidebarReferenceGeneral = () => {
           is_hide: false,
           subMenu: [
             { path: "/reference/modul/dashboard", name: "Dashboard" },
-            { path: "/reference/modul/survei", name: "Survei" },
+            { path: "/reference/modul/survey", name: "Survei" },
           ],
         },
         {
@@ -44,7 +44,7 @@ const SidebarReferenceGeneral = () => {
           isDisabled: false,
           is_hide: false,
           subMenu: [
-            { path: "/reference/organisasi/uka", name: "Unit Kantor Aduit" },
+            { path: "/reference/organisasi/uka", name: "Unit Kantor Audit" },
             { path: "/reference/organisasi/users/skai", name: "User S.K.A.I" },
           ],
         },

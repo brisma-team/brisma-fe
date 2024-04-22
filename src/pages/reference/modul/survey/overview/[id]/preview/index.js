@@ -34,10 +34,10 @@ const index = () => {
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "Reference", path: "/reference" },
-    { name: "Form Survei", path: "/reference/survey/overview" },
+    { name: "Form Survei", path: "/reference/modul/survey/overview" },
     {
       name: "Kuesioner / Preview",
-      path: `/reference/survey/overview/${id}/preview`,
+      path: `/reference/modul/survey/overview/${id}/preview`,
     },
   ];
 
@@ -185,7 +185,7 @@ const index = () => {
           <div className="flex justify-between items-center mb-4">
             <div className="flex gap-3 items-center">
               <LinkIcon
-                href={`/reference/survey/overview/${id}`}
+                href={`/reference/modul/survey/overview/${id}`}
                 icon={
                   <div className="rounded-full border-2 border-atlasian-blue-light text-atlasian-blue-light w-6 h-6 flex items-center justify-center">
                     <IconArrowLeft size="medium" />

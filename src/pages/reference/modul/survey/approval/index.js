@@ -17,7 +17,7 @@ import { LayoutSurveyReference } from "@/layouts/reference";
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
   { name: "Reference", path: "/reference" },
-  { name: "Survey / Approval", path: "/reference/survey/approval" },
+  { name: "Survey / Approval", path: "/reference/modul/survey/approval" },
 ];
 
 const index = () => {
