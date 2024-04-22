@@ -19,7 +19,7 @@ import { confirmationSwal, fetchApi, loadingSwal } from "@/helpers";
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
   { name: "Reference", path: "/reference" },
-  { name: "Form Survei", path: "/reference/survey/overview" },
+  { name: "Form Survei", path: "/reference/modul/survey/overview" },
 ];
 
 const index = () => {

@@ -228,10 +228,10 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "Reference", path: "/reference" },
-      { name: "Form Survei", path: "/reference/survey/overview" },
+      { name: "Form Survei", path: "/reference/modul/survey/overview" },
       {
         name: templateName,
-        path: `/reference/survey/overview/${id}`,
+        path: `/reference/modul/survey/overview/${id}`,
       },
     ]);
   }, [currentContentStage]);
