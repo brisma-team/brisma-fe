@@ -17,7 +17,7 @@ const index = () => {
         // subtitle: "Reference Modul",
         title: "Survei",
         description: "Pengaturan lanjut terkait Modul Survei.",
-        url: "/reference/modul/survei",
+        url: "/reference/modul/survey",
         isDisabled: false,
       },
       {
