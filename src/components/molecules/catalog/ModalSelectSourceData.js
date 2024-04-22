@@ -201,7 +201,10 @@ const ModalSelectSourceData = ({ showModal, setShowModal, sourceType }) => {
     <Modal
       showModal={showModal}
       positionCenter={true}
-      onClickOutside={() => setShowModal(false)}
+      onClickOutside={() => {
+        setMenu(0);
+        setShowModal(false);
+      }}
     >
       {menu == 0 && (
         <div
