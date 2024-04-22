@@ -21,15 +21,17 @@ import _ from "lodash";
 import {
   confirmationSwal,
   convertDate,
+  fetchApi,
+  loadingSwal,
   setErrorValidation,
-  usePostData,
-  useUpdateData,
 } from "@/helpers";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { ModalWorkflowRPMKegiatan } from "@/components/molecules/rpm/kegiatan";
 import LandingLayoutEWPSBPAddendum from "@/layouts/ewp/LandingLayoutEWPSBPAddendum";
 import { useRingkasan } from "@/data/ewp/konsulting/addendum/lain";
 import { useAddendumStatus, useWorkflow } from "@/data/ewp/konsulting/addendum";
+import { addendumDocs } from "@/templates/ewp/konsulting";
+import { useProjectDetail } from "@/data/ewp/konsulting";
 
 const section = {
   sumber_informasi: "Sumber Informasi",
@@ -44,8 +46,9 @@ const index = () => {
   const router = useRouter();
   const [content, setContent] = useState([]);
   const [params, setParams] = useState({
-    id: 1,
+    id: 0,
     addendum_id: 0,
+    is_approval: false,
   });
 
   const baseUrl = `/ewp/konsulting/${params?.id}/addendum`;
@@ -57,10 +60,15 @@ const index = () => {
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
 
   useEffect(() => {
+    setShowModalApproval(params?.is_approval);
+  }, [params?.is_approval]);
+
+  useEffect(() => {
     if (!router.isReady) return;
-    const { id } = router.query;
+    const { id, is_approval } = router.query;
     setParams({
       id,
+      is_approval,
     });
   }, [router.isReady]);
 
@@ -79,6 +87,7 @@ const index = () => {
     type: "adendum",
     id: params?.addendum_id,
   });
+  const { projectDetail } = useProjectDetail({ id: params?.id });
 
   useEffect(() => {
     if (status !== undefined) {
@@ -245,8 +254,14 @@ const index = () => {
           data.note = workflowData.note;
           break;
         case "approve":
-          if (signedCount < 2) {
-            data.data = "<p>pirli test</p>";
+          if (
+            signedCount ===
+            workflowData?.ref_tim_audit_approver?.length - 1
+          ) {
+            data.doc_name = `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}-Addendum_Ke-${
+              projectDetail?.data?.project_info?.number_adendum + 1 || 0
+            }`;
+            data.data = addendumDocs(content);
           }
           data.note = workflowData.note;
           break;
@@ -261,14 +276,17 @@ const index = () => {
         }
       }
 
+      loadingSwal();
       if (actionType === "change") {
-        const response = await useUpdateData(
+        const response = await fetchApi(
+          "PATCH",
           `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/change`,
           data
         );
         if (!response.isDismissed) return;
       } else {
-        await usePostData(
+        await fetchApi(
+          "POST",
           `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/${actionType}`,
           data
         );
@@ -280,6 +298,7 @@ const index = () => {
       workflowAddendumMutate();
       dispatch(resetWorkflowData());
       setShowModalApproval(false);
+      loadingSwal("close");
     }
     workflowAddendumMutate();
   };
@@ -301,10 +320,6 @@ const index = () => {
                   <div className="flex justify-between">
                     <div className="font-bold text-xl">{"Detail Addendum"}</div>
                   </div>
-                  {/* <div
-                    className="mt-4"
-                    dangerouslySetInnerHTML={{ __html: `<p>test</p>` }}
-                  /> */}
                   <div className="mt-4">
                     <div className="dataTables-custom">
                       <TableTree>

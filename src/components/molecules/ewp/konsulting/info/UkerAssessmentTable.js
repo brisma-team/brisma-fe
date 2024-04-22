@@ -102,10 +102,20 @@ const UkerAssessmentTable = ({
                   <div className="custom-table-position-center justify-center gap-1">
                     {!withoutButton ? (
                       is_new ? (
-                        <ButtonIcon
-                          icon={<ButtonSave />}
-                          handleClick={async () => await handleClickSave(false)}
-                        />
+                        <>
+                          <ButtonIcon
+                            icon={<ButtonSave />}
+                            handleClick={async () =>
+                              await handleClickSave(false)
+                            }
+                          />
+                          <ButtonIcon
+                            icon={<ButtonDelete />}
+                            handleClick={() =>
+                              handleClickDelete(uker_id, index)
+                            }
+                          />
+                        </>
                       ) : is_edit ? (
                         <>
                           <ButtonIcon
@@ -209,13 +219,6 @@ const UkerAssessmentTable = ({
                       icon={<IconQuestions />}
                       handleClick={() => handleClickDescription(index)}
                     />
-                    {/* <ButtonIcon
-                    icon={<IconInfo />}
-                    color={"blue"}
-                    handleClick={() =>
-                      handleClickAssessmentInformation(uker_id)
-                    }
-                  /> */}
                     <ButtonIcon
                       color={"blue"}
                       icon={<IconAttachment />}

@@ -119,6 +119,8 @@ const index = () => {
           faseApproval = "Peluang Peningkatan";
         } else if (sub_modul === "matrix_peluang_peningkatan") {
           faseApproval = "Matrix Peluang Peningkatan";
+        } else if (sub_modul === "adendum") {
+          faseApproval = "Addendum";
         }
         break;
       case "Monitoring Offsite":
@@ -153,8 +155,10 @@ const index = () => {
           query = `konsulting/${ewp_id}/peluang-peningkatan/${data?.matrix_id}/overview/${sub_modul_id}`;
         } else if (sub_modul === "matrix_peluang_peningkatan") {
           query = "Matrix Peluang Peningkatan";
+        } else if (sub_modul === "adendum") {
+          query = `konsulting/${ewp_id}/addendum`;
+          break;
         }
-        break;
     }
     router.push(`${query}/dokumen?is_approval=true`);
   };
