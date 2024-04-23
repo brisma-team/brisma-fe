@@ -46,6 +46,7 @@ import {
 } from "@/components/molecules/ewp/konsulting/perencanaan/program-kerja";
 import {
   useLingkupPemeriksaan,
+  useListControl,
   useRingkasan,
 } from "@/data/ewp/konsulting/perencanaan/program-kerja";
 import {
@@ -98,6 +99,7 @@ const index = () => {
   const [selectedId, setSelectedId] = useState("");
   const [selectedLingkupPemeriksaan, setSelectedLingkupPemeriksaan] =
     useState("");
+  const [selectedRiskId, setSelectedRiskId] = useState("");
   const [selectedRisk, setSelectedRisk] = useState("");
 
   const [filter, setFilter] = useState({
@@ -150,6 +152,7 @@ const index = () => {
   const { timTimeplan, timTimeplanError } = useTimTimeplan({
     id: params?.id,
   });
+  const { listControl } = useListControl({ id: selectedRiskId });
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -304,43 +307,23 @@ const index = () => {
   }, [filter]);
 
   useEffect(() => {
-    const findChildrenById = (parentId, currentData) => {
-      for (const item of currentData) {
-        if (item.id === parentId) {
-          if (item.children && item.children.length > 0) {
-            const mapping = item.children.map((v) => {
-              const { control, pic } = v;
-              return {
-                kode: control?.kode,
-                abbr: control?.abbr,
-                nama: control?.nama,
-                pn_pic: pic?.pn,
-                nama_pic: pic?.nama,
-                is_default: true,
-              };
-            });
-
-            return mapping;
-          } else {
-            return [];
-          }
-        } else if (item.children && item.children.length > 0) {
-          const result = findChildrenById(parentId, item.children);
-          if (result.length > 0) {
-            return result;
-          }
-        }
-      }
-      return [];
-    };
-
-    if (showModalControl && selectedId && dataPemeriksaan) {
-      const mappingControl = findChildrenById(selectedId, dataPemeriksaan);
+    if (showModalControl && listControl?.data?.length) {
+      const mappingControl = listControl?.data?.map((control) => {
+        const { mtd_control, pn_pic, nama_pic } = control;
+        return {
+          kode: mtd_control?.kode,
+          abbr: mtd_control?.abbr,
+          nama: mtd_control?.nama,
+          pn_pic,
+          nama_pic,
+          is_default: true,
+        };
+      });
       dispatch(setObjPayloadControl(mappingControl));
     } else {
       dispatch(resetObjPayloadControl());
     }
-  }, [showModalControl, selectedId, dataPemeriksaan]);
+  }, [showModalControl, listControl]);
 
   const handleChangeTab = (index) => {
     setFilter({
@@ -508,7 +491,7 @@ const index = () => {
   // [ START ] handler for modal control
   const handleAddControl = (id) => {
     setShowModalControl(true);
-    setSelectedId(id);
+    setSelectedRiskId(id);
   };
 
   const handleAddSelectControl = () => {
