@@ -465,6 +465,7 @@ const index = () => {
           break;
       }
 
+      loadingSwal();
       if (actionType === "reset") {
         const confirm = await confirmationSwal(
           "Terkait dengan workflow ini, apakah Anda yakin ingin melakukan pengaturan ulang?"
@@ -492,6 +493,7 @@ const index = () => {
       workflowDetailEWPMutate();
       dispatch(resetWorkflowData());
       setShowModalApproval(false);
+      loadingSwal("close");
     }
     workflowDetailEWPMutate();
   };

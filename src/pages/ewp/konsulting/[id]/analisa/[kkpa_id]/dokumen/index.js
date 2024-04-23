@@ -30,6 +30,8 @@ import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useWorkflowDetailEWP } from "@/data/ewp";
 import { useComment } from "@/data/ewp/konsulting/analisa/lingkup/dokumen";
 import { rekomendasiHtml } from "@/templates/ewp/konsulting/analisa";
+import { analisaDocs } from "@/templates/ewp/konsulting";
+import { useLandingStatus } from "@/data/ewp/konsulting/landing";
 
 const routes = [
   {
@@ -81,7 +83,6 @@ const index = () => {
   const [currentPosition, setCurrentPosition] = useState(1);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
   const [bab, setBab] = useState(1);
-  const [selectedParentCommentId, setSelectedParentCommentId] = useState(0);
 
   const workflowData = useSelector(
     (state) => state.documentKkpaEWPKonsulting.workflowData
@@ -91,7 +92,13 @@ const index = () => {
   );
 
   const { projectDetail } = useProjectDetail({ id: params?.id });
-  const { documentEWP } = useDocumentEWP("kkpa", bab, { id: params?.kkpa_id });
+  const { landingStatus } = useLandingStatus({
+    type: "kkpa",
+    id: params?.kkpa_id,
+  });
+  const { documentEWP, documentEWPMutate } = useDocumentEWP("kkpa", bab, {
+    id: params?.kkpa_id,
+  });
   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
     "kkpa",
     { id: params?.kkpa_id }
@@ -149,7 +156,7 @@ const index = () => {
         const {
           id,
           create_by,
-          createdAt,
+          created_at,
           is_closed,
           deskripsi,
           child_comment,
@@ -157,17 +164,17 @@ const index = () => {
         return {
           id,
           created_by: create_by,
-          created_at: createdAt,
+          created_at,
           is_closed,
           deskripsi,
           child_comment: child_comment?.length
             ? child_comment?.map((child) => {
-                const { id, create_by, createdAt, is_closed, deskripsi } =
+                const { id, create_by, created_at, is_closed, deskripsi } =
                   child;
                 return {
                   id,
                   created_by: create_by,
-                  created_at: createdAt,
+                  created_at,
                   is_closed,
                   deskripsi,
                 };
@@ -438,8 +445,15 @@ const index = () => {
           data.note = workflowData.note;
           break;
         case "approve":
-          if (signedCount < 2) {
-            data.data = "<p>pirli test</p>";
+          if (
+            signedCount ===
+            workflowData?.ref_tim_audit_approver?.length - 1
+          ) {
+            data.doc_name = `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}-Analisa-${
+              landingStatus?.data?.info?.mapa_uker_mcr_control?.mtd_control
+                ?.abbr
+            }`;
+            data.data = analisaDocs(doc);
           }
           data.note = workflowData.note;
           break;
@@ -454,6 +468,7 @@ const index = () => {
         }
       }
 
+      loadingSwal();
       if (actionType === "change") {
         const response = await fetchApi(
           "PATCH",
@@ -472,6 +487,7 @@ const index = () => {
       workflowDetailEWPMutate();
       dispatch(resetWorkflowData());
       setShowModalApproval(false);
+      loadingSwal("close");
     }
     workflowDetailEWPMutate();
   };
@@ -484,10 +500,11 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/comment/close/${value?.parent_id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpa/comment/close/${value?.parent_id}`,
       {}
     );
 
+    documentEWPMutate();
     commentMutate();
     loadingSwal("close");
   };
@@ -506,6 +523,7 @@ const index = () => {
       body
     );
 
+    documentEWPMutate();
     commentMutate();
     loadingSwal("close");
   };
@@ -514,22 +532,19 @@ const index = () => {
     e.stopPropagation();
     const body = {
       ref_bab_kkpa_id: activeIdComment.toString(),
-      deskripsi: value,
-      parent_comment_id: selectedParentCommentId,
+      deskripsi: value?.desc,
+      parent_comment_id: value?.parent_id,
     };
 
     loadingSwal();
     await fetchApi(
-      "POST,"`${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpa/comment/${params?.kkpa_id}?ref_bab_kkpa_id=${activeIdComment}`,
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpa/comment/${params?.kkpa_id}?ref_bab_kkpa_id=${activeIdComment}`,
       body
     );
 
     commentMutate();
     loadingSwal("close");
-  };
-
-  const handleSelectedParentComment = (id) => {
-    setSelectedParentCommentId(id);
   };
   // [ END ]
 
@@ -581,7 +596,6 @@ const index = () => {
             renderContent={renderContent}
             handleClickComment={handleClickComment}
             handleIsOpenCardComment={handleClickOpenCardComment}
-            handleSelectedParentComment={handleSelectedParentComment}
             handleSubmitCommentParent={handleSubmitCommentParent}
             handleSubmitCommentChild={handleSubmitCommentChild}
             handleCloseComment={handleCloseComment}
