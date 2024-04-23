@@ -365,6 +365,7 @@ const index = () => {
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/kkpt_rekomendasi/${selectedRiskId}`,
       payload
     );
+    riskMutate();
     rekomendasiMutate();
     loadingSwal("close");
   };
