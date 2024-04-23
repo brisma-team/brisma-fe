@@ -24,7 +24,7 @@ const ContentDocument = ({
 
   return (
     <Card>
-      <div className="overflow-y-scroll my-2 parent max-h-[40rem] flex flex-col">
+      <div className="overflow-y-scroll overflow-x-hidden my-2 parent max-h-[40rem] flex flex-col">
         <ModalComment
           callbackRef={ref}
           isLoading={isLoadingComment}
