@@ -80,6 +80,7 @@ const index = () => {
   const [activeIdComment, setActiveIdComment] = useState(1);
   const activeDivRef = useRef(null);
   const [doc, setDoc] = useState([]);
+  const [uka, setUka] = useState({ kode: "", name: "" });
   const [currentPosition, setCurrentPosition] = useState(1);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
   const [bab, setBab] = useState(1);
@@ -122,6 +123,7 @@ const index = () => {
   }, [router.isReady]);
 
   useEffect(() => {
+    const projectInfo = projectDetail?.data?.project_info;
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
@@ -139,6 +141,7 @@ const index = () => {
         path: `${pathName}/dokumen`,
       },
     ]);
+    setUka({ kode: projectInfo?.uka_kode, name: projectInfo?.uka_name });
     setIsCloseSubmodule(
       Boolean(projectDetail?.data?.realisasi?.penyusunan_mapa_real_end)
     );
@@ -456,7 +459,7 @@ const index = () => {
             workflowData?.ref_tim_audit_approver?.length - 1
           ) {
             data.doc_name = `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}-MAPA`;
-            data.data = perencanaanDocs(doc);
+            data.data = perencanaanDocs(uka, doc);
           }
           data.note = workflowData.note;
           break;
