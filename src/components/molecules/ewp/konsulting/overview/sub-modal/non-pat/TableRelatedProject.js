@@ -36,17 +36,19 @@ const TableRelatedProject = ({
             width="10%"
             className="border-x border-t rounded-ss-xl cell-custom-dataTables"
           >
-            <div className="custom-table-header justify-center">Aksi</div>
+            <div className="custom-table-header text-sm justify-center">
+              Aksi
+            </div>
           </Header>
           <Header
             width="45%"
-            className="border-t border-r cell-custom-dataTables"
+            className="border-t border-r text-sm cell-custom-dataTables"
           >
             <div className={`custom-table-header`}>PROJECT ID</div>
           </Header>
           <Header
             width="45%"
-            className="border-t border-r rounded-se-xl cell-custom-dataTables"
+            className="border-t border-r text-sm rounded-se-xl cell-custom-dataTables"
           >
             <div className={`custom-table-header`}>PROJECT NAME</div>
           </Header>
@@ -106,7 +108,7 @@ const TableRelatedProject = ({
                         )}
                       </div>
                     ) : (
-                      <p className="text-xs">{project_id}</p>
+                      <p className="text-sm">{project_id}</p>
                     )}
                   </div>
                 </Cell>
@@ -130,7 +132,7 @@ const TableRelatedProject = ({
                         )}
                       </div>
                     ) : (
-                      <p className="text-xs">{project_name}</p>
+                      <p className="text-sm">{project_name}</p>
                     )}
                   </div>
                 </Cell>

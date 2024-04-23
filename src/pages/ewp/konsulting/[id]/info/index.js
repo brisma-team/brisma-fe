@@ -500,11 +500,19 @@ const index = () => {
     }
   };
 
-  const handleClickDeleteUkerAssessment = async (uker_id) => {
+  const handleClickDeleteUkerAssessment = async (uker_id, index) => {
     const confirm = await confirmationSwal(
       "Apakah Anda yakin ingin menghapus data ini?"
     );
     if (!confirm.value) {
+      return;
+    }
+
+    if (isAddNewRowUker) {
+      const newData = [...dataUkerAssessment];
+      setIsAddNewRowUker(false);
+      newData.splice(index, 1);
+      setDataUkerAssessment(newData);
       return;
     }
 
