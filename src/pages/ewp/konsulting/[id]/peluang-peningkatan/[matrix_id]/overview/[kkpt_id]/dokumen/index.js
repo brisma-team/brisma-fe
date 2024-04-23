@@ -12,7 +12,7 @@ import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import {
   useComment,
   useDocument,
-  useLandingStatus,
+  // useLandingStatus,
 } from "@/data/ewp/konsulting/peluang-peningkatan/matrix/detail";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -33,7 +33,7 @@ import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useWorkflowMatrix } from "@/data/ewp/konsulting/peluang-peningkatan/matrix";
 import { riskRekomendasiHtml } from "@/templates/ewp/konsulting/peluang-peningkatan";
-import useUser from "@/data/useUser";
+// import useUser from "@/data/useUser";
 
 const routes = [
   {
@@ -88,8 +88,8 @@ const index = () => {
   const [selectedParentCommentId, setSelectedParentCommentId] = useState(0);
 
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
-  const [isInitiator, setIsInitiator] = useState(false);
-  const [isAuditor, setIsAuditor] = useState(false);
+  // const [isInitiator, setIsInitiator] = useState(false);
+  // const [isAuditor, setIsAuditor] = useState(false);
   const [isOnProgress, setIsOnProgress] = useState(false);
 
   const workflowData = useSelector(
@@ -99,8 +99,8 @@ const index = () => {
     (state) => state.documentDetailPeluangKonsulting.validationErrorsWorkflow
   );
 
-  const { landingStatus } = useLandingStatus(params?.kkpt_id);
-  const { user } = useUser();
+  // const { landingStatus } = useLandingStatus(params?.kkpt_id);
+  // const { user } = useUser();
 
   const { projectDetail } = useProjectDetail({ id: params?.id });
   const { documentData } = useDocument(params?.kkpt_id, bab);
@@ -158,18 +158,18 @@ const index = () => {
     setIsCloseSubmodule(
       Boolean(projectDetail?.data?.realisasi?.peluang_peningkatan_real_end)
     );
-    setIsInitiator(
-      Boolean(
-        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
-      )
-    );
+    // setIsInitiator(
+    //   Boolean(
+    //     projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+    //   )
+    // );
   }, [projectDetail]);
 
-  useEffect(() => {
-    setIsAuditor(
-      Boolean(landingStatus?.data?.info?.auditor?.pn == user?.data?.pn)
-    );
-  }, [landingStatus, user]);
+  // useEffect(() => {
+  //   setIsAuditor(
+  //     Boolean(landingStatus?.data?.info?.auditor?.pn == user?.data?.pn)
+  //   );
+  // }, [landingStatus, user]);
 
   useEffect(() => {
     if (commentData?.data?.length) {
@@ -515,7 +515,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/comment/close/${value?.parent_id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/comment/close/${value?.parent_id}`,
       {}
     );
 
@@ -526,14 +526,14 @@ const index = () => {
   const handleSubmitCommentParent = async (e, value) => {
     e.stopPropagation();
     const body = {
-      ref_bab_mapa_id: activeIdComment.toString(),
+      ref_bab_kkpt_id: activeIdComment.toString(),
       deskripsi: value,
     };
 
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${params?.id}?ref_bab_mapa_id=${activeIdComment}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/comment/${params?.kkpt_id}?ref_bab_kkpt_id=${activeIdComment}`,
       body
     );
 
@@ -544,7 +544,7 @@ const index = () => {
   const handleSubmitCommentChild = async (e, value) => {
     e.stopPropagation();
     const body = {
-      ref_bab_mapa_id: activeIdComment.toString(),
+      ref_bab_kkpt_id: activeIdComment.toString(),
       deskripsi: value,
       parent_comment_id: selectedParentCommentId,
     };
@@ -552,7 +552,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${params?.id}?ref_bab_mapa_id=${activeIdComment}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/comment/${params?.kkpt_id}?ref_bab_kkpt_id=${activeIdComment}`,
       body
     );
 
@@ -609,9 +609,7 @@ const index = () => {
             activeIndexComment={activeIndexComment}
             isOpenCardComment={openCardComment}
             isLoadingComment={commentDataIsLoading}
-            isHideButton={
-              isCloseSubmodule || !isOnProgress || (!isInitiator && !isAuditor)
-            }
+            isHideButton={isCloseSubmodule || !isOnProgress}
             renderContent={renderContent}
             handleClickComment={handleClickComment}
             handleIsOpenCardComment={handleClickOpenCardComment}
