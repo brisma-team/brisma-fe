@@ -6,7 +6,6 @@ import {
   PageTitle,
 } from "@/components/atoms";
 import { useProjectDetail } from "@/data/ewp/konsulting";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -41,6 +40,7 @@ import {
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useWorkflowDetailEWP } from "@/data/ewp";
 import _ from "lodash";
+import { LandingLayoutRPMKegiatan } from "@/layouts/rpm";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -62,7 +62,7 @@ const routes = [
 const index = () => {
   const dispatch = useDispatch();
   const { id, meeting_id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const baseUrl = `/rpm/kegiatan/${id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
   const pathNameLanding = `${baseUrl}/meeting/${meeting_id}`;
 
@@ -101,12 +101,8 @@ const index = () => {
   useEffect(() => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
-      { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting" },
-      {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
-        path: `${baseUrl}/info`,
-      },
+      { name: "RPM", path: "/rpm" },
+      { name: "Kegiatan Overview", path: "/rpm/kegiatan" },
       {
         name: `Meeting`,
         path: pathNameSubModulMeeting,
@@ -344,7 +340,7 @@ const index = () => {
   // [ END ] handler for modal workflow
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutRPMKegiatan>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -429,7 +425,7 @@ const index = () => {
         isProposer
       />
       {/* End Content */}
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutRPMKegiatan>
   );
 };
 

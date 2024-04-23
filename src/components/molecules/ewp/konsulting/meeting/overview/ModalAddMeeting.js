@@ -46,13 +46,14 @@ const ModalAddMeeting = ({
   handleClickDeletePIC,
   handleClickDeletePembicara,
   handleCloseModal,
+  title = `EWP Kegiatan Konsulting`,
 }) => {
   return (
     <ModalScroll
       showModal={showModal}
       header={
         <ModalHeader
-          headerText={"Buat Meeting EWP Kegiatan Konsulting"}
+          headerText={"Buat Meeting" + (title ? ` ${title}` : "")}
           showModal={showModal}
           width={"w-[58rem]"}
           handleCloseModal={handleCloseModal}
