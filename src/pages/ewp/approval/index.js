@@ -81,7 +81,6 @@ const index = () => {
       }
 
       if (approvalEWP?.data?.body?.history?.length) {
-        console.log("history => ", approvalEWP?.data?.body?.history);
         const mapping = approvalEWP?.data?.body?.history?.map((history) => {
           const { is_signed, sub_modul, ref_tipe } = history;
           return {
@@ -119,7 +118,7 @@ const index = () => {
           faseApproval = "Peluang Peningkatan";
         } else if (sub_modul === "matrix_peluang_peningkatan") {
           faseApproval = "Matrix Peluang Peningkatan";
-        } else if (sub_modul === "adendum") {
+        } else if (sub_modul === "adendum" || sub_modul === "addendum") {
           faseApproval = "Addendum";
         }
         break;

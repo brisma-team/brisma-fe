@@ -152,7 +152,9 @@ const index = () => {
   const { timTimeplan, timTimeplanError } = useTimTimeplan({
     id: params?.id,
   });
-  const { listControl } = useListControl({ id: selectedRiskId });
+  const { listControl, listControlMutate } = useListControl({
+    id: selectedRiskId,
+  });
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -557,6 +559,7 @@ const index = () => {
       );
 
       lingkupPemeriksaanMutate();
+      listControlMutate();
       setShowModalControl(false);
       dispatch(resetObjPayloadControl());
       dispatch(resetValidationErrorsControl());
@@ -632,6 +635,7 @@ const index = () => {
     );
 
     lingkupPemeriksaanMutate();
+    listControlMutate();
     loadingSwal("close");
   };
   // [ END ] handler for table pemeriksaan
