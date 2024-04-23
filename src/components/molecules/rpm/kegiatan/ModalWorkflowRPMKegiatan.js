@@ -12,11 +12,9 @@ import { useState } from "react";
 import { IconChevronDown, IconChevronRight } from "@/components/icons";
 import {
   DataNotFound,
-  // ModalWorkflowHeader,
-  // ModalWorkflowFooter,
+  ModalWorkflowHeader,
+  ModalWorkflowFooter,
 } from "@/components/molecules/commons";
-import ModalWorkflowHeader from "../../commons/ModalWorkflowHeader";
-import ModalWorkflowFooter from "../../commons/ModalWorkflowFooter";
 const customHeader = `w-full h-full flex items-center text-brisma font-bold`;
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 const positionCenter = `w-full h-full flex items-center`;

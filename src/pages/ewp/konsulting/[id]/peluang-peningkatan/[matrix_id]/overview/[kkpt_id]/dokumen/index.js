@@ -33,8 +33,8 @@ import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useWorkflowMatrix } from "@/data/ewp/konsulting/peluang-peningkatan/matrix";
 import { riskRekomendasiHtml } from "@/templates/ewp/konsulting/peluang-peningkatan";
-import useUser from "@/data/useUser";
 import { peluangPeningkatanDocs } from "@/templates/ewp/konsulting";
+// import useUser from "@/data/useUser";
 
 const routes = [
   {
@@ -88,8 +88,8 @@ const index = () => {
   const [bab, setBab] = useState(1);
 
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
-  const [isInitiator, setIsInitiator] = useState(false);
-  const [isAuditor, setIsAuditor] = useState(false);
+  // const [isInitiator, setIsInitiator] = useState(false);
+  // const [isAuditor, setIsAuditor] = useState(false);
   const [isOnProgress, setIsOnProgress] = useState(false);
 
   const workflowData = useSelector(
@@ -100,7 +100,7 @@ const index = () => {
   );
 
   const { landingStatus } = useLandingStatus(params?.kkpt_id);
-  const { user } = useUser();
+  // const { user } = useUser();
 
   const { projectDetail } = useProjectDetail({ id: params?.id });
   const { documentData, documentDataMutate } = useDocument(
@@ -161,21 +161,18 @@ const index = () => {
     setIsCloseSubmodule(
       Boolean(projectDetail?.data?.realisasi?.peluang_peningkatan_real_end)
     );
-    setIsInitiator(
-      Boolean(
-        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
-      )
-    );
+    // setIsInitiator(
+    //   Boolean(
+    //     projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+    //   )
+    // );
   }, [projectDetail]);
 
-  useEffect(() => {
-    setIsAuditor(
-      Boolean(landingStatus?.data?.info?.auditor?.pn == user?.data?.pn)
-    );
-    setIsOnProgress(
-      Boolean(landingStatus?.data?.info?.status_persetujuan == "On Progress")
-    );
-  }, [landingStatus, user]);
+  // useEffect(() => {
+  //   setIsAuditor(
+  //     Boolean(landingStatus?.data?.info?.auditor?.pn == user?.data?.pn)
+  //   );
+  // }, [landingStatus, user]);
 
   useEffect(() => {
     if (commentData?.data?.length) {
@@ -341,7 +338,10 @@ const index = () => {
       };
 
       setIsOnProgress(
-        Boolean(workflowInfo?.status_persetujuan == "On Progress")
+        Boolean(
+          workflowInfo?.status_persetujuan == "On Progress" ||
+            workflowInfo?.status_persetujuan == "On Approver"
+        )
       );
 
       newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.name}`;

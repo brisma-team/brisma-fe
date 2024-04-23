@@ -54,7 +54,7 @@ const index = () => {
         }
         return {
           tanggal: convertDate(v?.createdAt, "/", "d"),
-          pnNama: v?.create_by?.nama,
+          pnNama: v?.create_by?.pn + " - " + v?.create_by?.nama,
           subModul: capitalizeEveryWord(_subModule),
           aktifitas: v?.perihal,
         };
