@@ -1,4 +1,9 @@
-import { Breadcrumbs, Card, PageTitle } from "@/components/atoms";
+import {
+  Breadcrumbs,
+  Card,
+  CustomPagination,
+  PageTitle,
+} from "@/components/atoms";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
@@ -40,6 +45,12 @@ const index = () => {
   const [typeModal, setTypeModal] = useState("");
   const [selectedPn, setSelectedPn] = useState("");
 
+  const [params, setParams] = useState({
+    limit: 5,
+    offset: 1,
+    total_data: 5,
+  });
+
   const payload = useSelector(
     (state) => state.anggaranEWPKonsulting.objPayload
   );
@@ -48,7 +59,7 @@ const index = () => {
   );
 
   // const { user } = useUser();
-  const { userSKAI, userSKAIMutate } = useUserSKAI();
+  const { userSKAI, userSKAIMutate } = useUserSKAI(params, "pagination");
   const { userSKAIDetail } = useUserSKAIDetail(selectedPn);
 
   useEffect(() => {
@@ -83,6 +94,7 @@ const index = () => {
         return _.pick(v, ["id", "pn", "name", "kode_uka", "name_uka", "role"]);
       });
       dispatch(setObjData(mappingUsers));
+      setParams({ ...params, total_data: userSKAI?.data?.total_data });
     } else {
       dispatch(resetObjData());
     }
@@ -219,6 +231,19 @@ const index = () => {
               handleClickAdd={handleClickAddTable}
               handleClickUpdate={handleClickUpdateTable}
               handleClickDelete={handleClickDeleteTable}
+            />
+            <CustomPagination
+              defaultCurrentPage={1}
+              perPage={5}
+              totalData={params?.total_data}
+              handleSetPagination={async (start, end, pageNow) =>
+                setParams((prev) => {
+                  return {
+                    ...prev,
+                    offset: pageNow,
+                  };
+                })
+              }
             />
           </div>
         </Card>
