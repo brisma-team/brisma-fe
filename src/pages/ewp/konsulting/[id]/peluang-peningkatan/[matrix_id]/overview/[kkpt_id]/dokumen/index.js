@@ -169,12 +169,6 @@ const index = () => {
     setIsAuditor(
       Boolean(landingStatus?.data?.info?.auditor?.pn == user?.data?.pn)
     );
-    setIsOnProgress(
-      Boolean(
-        landingStatus?.data?.info?.status_persetujuan == "On Progress" ||
-          landingStatus?.data?.info?.status_persetujuan == "On Approver"
-      )
-    );
   }, [landingStatus, user]);
 
   useEffect(() => {
@@ -341,7 +335,10 @@ const index = () => {
       };
 
       setIsOnProgress(
-        Boolean(workflowInfo?.status_persetujuan == "On Progress")
+        Boolean(
+          workflowInfo?.status_persetujuan == "On Progress" ||
+            workflowInfo?.status_persetujuan == "On Approver"
+        )
       );
 
       newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.name}`;
@@ -613,7 +610,7 @@ const index = () => {
             isOpenCardComment={openCardComment}
             isLoadingComment={commentDataIsLoading}
             isHideButton={
-              isCloseSubmodule || !isOnProgress || !isInitiator || !isAuditor
+              isCloseSubmodule || !isOnProgress || (!isInitiator && !isAuditor)
             }
             renderContent={renderContent}
             handleClickComment={handleClickComment}
