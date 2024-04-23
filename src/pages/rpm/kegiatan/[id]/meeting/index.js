@@ -361,6 +361,7 @@ const index = () => {
         handleClickAddPembicara={handleAddPembicara}
         handleClickDeletePIC={handleDeletePIC}
         handleClickDeletePembicara={handleDeletePembicara}
+        title="RPM Kegiatan Konsulting"
       />
     </LandingLayoutRPMKegiatan>
   );
