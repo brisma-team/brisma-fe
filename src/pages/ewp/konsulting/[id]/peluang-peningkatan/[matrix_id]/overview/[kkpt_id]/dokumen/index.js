@@ -170,7 +170,10 @@ const index = () => {
       Boolean(landingStatus?.data?.info?.auditor?.pn == user?.data?.pn)
     );
     setIsOnProgress(
-      Boolean(landingStatus?.data?.info?.status_persetujuan == "On Progress")
+      Boolean(
+        landingStatus?.data?.info?.status_persetujuan == "On Progress" ||
+          landingStatus?.data?.info?.status_persetujuan == "On Approver"
+      )
     );
   }, [landingStatus, user]);
 

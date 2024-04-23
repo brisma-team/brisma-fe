@@ -323,7 +323,10 @@ const index = () => {
       };
 
       setIsOnProgress(
-        Boolean(workflowInfo.status_persetujuan_name == "On Progress")
+        Boolean(
+          workflowInfo.status_persetujuan_name == "On Progress" ||
+            workflowInfo.status_persetujuan_name == "On Approver"
+        )
       );
 
       newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.nama}`;
