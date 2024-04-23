@@ -3,9 +3,11 @@ import useSWR from "swr";
 
 const useRekomendasiList = (parameters) => {
   const { rpm_id, kkpt_id, params } = parameters;
-  console.log(parameters);
-
-  let withParameters = `?kkpt_id=${kkpt_id}&project_rpm_id=${rpm_id}&page=${params?.page}&limit=${params?.limit}&sort=createdAt ${params?.sort_by}`;
+  let withParameters = `?kkpt_id=${kkpt_id || ""}&project_rpm_id=${
+    rpm_id | ""
+  }&page=${params?.page}&limit=${params?.limit}&sort=createdAt ${
+    params?.sort_by
+  }`;
   if (params) {
     if (params?.judul_lingkup != "") {
       withParameters += `&judul_lingkup=${params?.judul_lingkup}`;

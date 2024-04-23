@@ -24,7 +24,9 @@ const useMonitoringPeluangList = (parameters) => {
       withParameters += `&judul_lingkup=${params?.judul_lingkup}`;
     }
   }
-  const path = `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/sbp/projects/peluang/list/${id}${withParameters}`;
+  const path = `${
+    process.env.NEXT_PUBLIC_API_URL_RPM
+  }/rpm/sbp/projects/peluang/list/${id || 0}${withParameters}`;
   const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);
   console.log(path);
   return {
