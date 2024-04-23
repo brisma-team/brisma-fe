@@ -42,7 +42,7 @@ const index = () => {
         title: "Approval Monitoring",
         description:
           "Monitoring proses approval pada aktivitas EWP Audit dan Non-Audit per masing-masing user.",
-        url: "/ewp/approval`",
+        url: "/ewp/approval",
       },
     ],
   };
