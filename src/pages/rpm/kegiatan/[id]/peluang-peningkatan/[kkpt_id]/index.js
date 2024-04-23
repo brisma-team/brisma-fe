@@ -13,7 +13,7 @@ import {
 } from "@/components/molecules/rpm/kegiatan/overview/rekomendasi";
 import { useRekomendasiList } from "@/data/rpm/kegiatan";
 import { LandingLayoutRPMKegiatan } from "@/layouts/rpm";
-import { IconFile } from "@/components/icons";
+// import { IconFile } from "@/components/icons";
 import { useRouter } from "next/router";
 
 const index = () => {
@@ -135,12 +135,12 @@ const index = () => {
             />
           </div>
         </div>
-        <div className="w-24 rounded bg-atlasian-blue-light">
+        {/* <div className="w-24 rounded bg-atlasian-blue-light">
           <ButtonField
             icon={<IconFile primaryColor="white" />}
             text={`Arsip`}
           />
-        </div>
+        </div> */}
       </div>
       <div>
         <CardFilterOverview

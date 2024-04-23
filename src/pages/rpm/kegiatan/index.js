@@ -11,7 +11,7 @@ import _ from "lodash";
 import { CardOverview } from "@/components/molecules/rpm/kegiatan";
 import { CardFilterOverview } from "@/components/molecules/rpm/kegiatan/overview";
 import { useApprovalRPM, useOverviewRPMKonsulting } from "@/data/rpm/kegiatan";
-import { IconFile } from "@/components/icons";
+// import { IconFile } from "@/components/icons";
 import { OverviewLayoutEWP } from "@/layouts/ewp";
 
 const breadcrumbs = [
@@ -146,13 +146,13 @@ const index = () => {
             />
           </div>
         </div>
-        <div className="w-24 rounded bg-atlasian-blue-light">
+        {/* <div className="w-24 rounded bg-atlasian-blue-light">
           <ButtonField
             icon={<IconFile primaryColor="white" />}
             isCentered={false}
             text={`Arsip`}
           />
-        </div>
+        </div> */}
       </div>
       <div className="">
         <CardFilterOverview
