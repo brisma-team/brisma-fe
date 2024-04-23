@@ -12,7 +12,7 @@ import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import {
   useComment,
   useDocument,
-  // useLandingStatus,
+  useLandingStatus,
 } from "@/data/ewp/konsulting/peluang-peningkatan/matrix/detail";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -33,6 +33,7 @@ import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useWorkflowMatrix } from "@/data/ewp/konsulting/peluang-peningkatan/matrix";
 import { riskRekomendasiHtml } from "@/templates/ewp/konsulting/peluang-peningkatan";
+import { peluangPeningkatanDocs } from "@/templates/ewp/konsulting";
 // import useUser from "@/data/useUser";
 
 const routes = [
@@ -59,9 +60,9 @@ const listBab = [
 const index = () => {
   const router = useRouter();
   const [params, setParams] = useState({
-    id: 1,
-    matrix_id: 1,
-    kkpt_id: 1,
+    id: 0,
+    matrix_id: 0,
+    kkpt_id: 0,
     is_approval: false,
   });
 
@@ -85,7 +86,6 @@ const index = () => {
   const [currentPosition, setCurrentPosition] = useState(1);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
   const [bab, setBab] = useState(1);
-  const [selectedParentCommentId, setSelectedParentCommentId] = useState(0);
 
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
   // const [isInitiator, setIsInitiator] = useState(false);
@@ -99,11 +99,14 @@ const index = () => {
     (state) => state.documentDetailPeluangKonsulting.validationErrorsWorkflow
   );
 
-  // const { landingStatus } = useLandingStatus(params?.kkpt_id);
+  const { landingStatus } = useLandingStatus(params?.kkpt_id);
   // const { user } = useUser();
 
   const { projectDetail } = useProjectDetail({ id: params?.id });
-  const { documentData } = useDocument(params?.kkpt_id, bab);
+  const { documentData, documentDataMutate } = useDocument(
+    params?.kkpt_id,
+    bab
+  );
   const { workflowMatrixData, workflowMatrixMutate } = useWorkflowMatrix({
     type: "kkpt",
     id: params?.kkpt_id,
@@ -177,7 +180,7 @@ const index = () => {
         const {
           id,
           create_by,
-          createdAt,
+          created_at,
           is_closed,
           deskripsi,
           child_comment,
@@ -185,17 +188,17 @@ const index = () => {
         return {
           id,
           created_by: create_by,
-          created_at: createdAt,
+          created_at,
           is_closed,
           deskripsi,
           child_comment: child_comment?.length
             ? child_comment?.map((child) => {
-                const { id, create_by, createdAt, is_closed, deskripsi } =
+                const { id, create_by, created_at, is_closed, deskripsi } =
                   child;
                 return {
                   id,
                   created_by: create_by,
-                  created_at: createdAt,
+                  created_at,
                   is_closed,
                   deskripsi,
                 };
@@ -469,8 +472,15 @@ const index = () => {
           data.note = workflowData.note;
           break;
         case "approve":
-          if (signedCount < 2) {
-            data.data = "<p>pirli test</p>";
+          if (
+            signedCount ===
+            workflowData?.ref_tim_audit_approver?.length - 1
+          ) {
+            data.doc_name = `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}-Peluang_Peningkatan-${landingStatus?.data?.info?.judul_kkpt?.replace(
+              /\s+/g,
+              "_"
+            )}`;
+            data.data = peluangPeningkatanDocs(doc);
           }
           data.note = workflowData.note;
           break;
@@ -485,6 +495,7 @@ const index = () => {
         }
       }
 
+      loadingSwal();
       if (actionType === "change") {
         const response = await fetchApi(
           "PATCH",
@@ -503,6 +514,7 @@ const index = () => {
       workflowMatrixMutate();
       dispatch(resetWorkflowData());
       setShowModalApproval(false);
+      loadingSwal("close");
     }
     workflowMatrixMutate();
   };
@@ -520,6 +532,7 @@ const index = () => {
     );
 
     commentDataMutate();
+    documentDataMutate();
     loadingSwal("close");
   };
 
@@ -538,6 +551,7 @@ const index = () => {
     );
 
     commentDataMutate();
+    documentDataMutate();
     loadingSwal("close");
   };
 
@@ -545,8 +559,8 @@ const index = () => {
     e.stopPropagation();
     const body = {
       ref_bab_kkpt_id: activeIdComment.toString(),
-      deskripsi: value,
-      parent_comment_id: selectedParentCommentId,
+      deskripsi: value?.desc,
+      parent_comment_id: value?.parent_id,
     };
 
     loadingSwal();
@@ -558,10 +572,6 @@ const index = () => {
 
     commentDataMutate();
     loadingSwal("close");
-  };
-
-  const handleSelectedParentComment = (id) => {
-    setSelectedParentCommentId(id);
   };
   // [ END ]
 
@@ -613,7 +623,6 @@ const index = () => {
             renderContent={renderContent}
             handleClickComment={handleClickComment}
             handleIsOpenCardComment={handleClickOpenCardComment}
-            handleSelectedParentComment={handleSelectedParentComment}
             handleSubmitCommentParent={handleSubmitCommentParent}
             handleSubmitCommentChild={handleSubmitCommentChild}
             handleCloseComment={handleCloseComment}

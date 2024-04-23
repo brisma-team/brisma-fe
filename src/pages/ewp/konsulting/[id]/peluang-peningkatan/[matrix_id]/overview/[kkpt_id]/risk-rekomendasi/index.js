@@ -44,11 +44,17 @@ const routes = [
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id, matrix_id, kkpt_id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const router = useRouter();
+  const [params, setParams] = useState({
+    id: 0,
+    matrix: 0,
+    kkpt_id: 0,
+  });
+
+  const baseUrl = `/ewp/konsulting/${params?.id}`;
   const pathNameBase = `${baseUrl}/peluang-peningkatan`;
-  const pathNameOverview = `${baseUrl}/peluang-peningkatan/${matrix_id}/overview`;
-  const pathNameContent = `${baseUrl}/peluang-peningkatan/${matrix_id}/overview/${kkpt_id}`;
+  const pathNameOverview = `${baseUrl}/peluang-peningkatan/${params?.matrix_id}/overview`;
+  const pathNameContent = `${baseUrl}/peluang-peningkatan/${params?.matrix_id}/overview/${params?.kkpt_id}`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [selectedRiskId, setSelectedRiskId] = useState(0);
@@ -70,16 +76,26 @@ const index = () => {
     (state) => state.riskRekomendasi.payloadNewRekomendasi
   );
 
-  const { projectDetail } = useProjectDetail({ id });
+  const { projectDetail } = useProjectDetail({ id: params?.id });
   const { riskData, riskMutate } = useKKPTRisk({
-    id: kkpt_id,
+    id: params?.kkpt_id,
   });
   const { rekomendasiData, rekomendasiMutate, rekomendasiError } =
     useKKPTRekomendasi({
       id: selectedRiskId,
     });
-  const { landingStatus } = useLandingStatus(kkpt_id);
+  const { landingStatus } = useLandingStatus(params?.kkpt_id);
   const { user } = useUser();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id, matrix_id, kkpt_id } = router.query;
+    setParams({
+      id,
+      matrix_id,
+      kkpt_id,
+    });
+  }, [router.isReady]);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -241,7 +257,7 @@ const index = () => {
     }
   };
 
-  const handleClickDelete = async (id) => {
+  const handleClickDelete = async (id, index) => {
     const confirm = await confirmationSwal(
       "Apakah anda yakin ingin menghapus data ini?"
     );
@@ -249,6 +265,15 @@ const index = () => {
     if (!confirm.value) {
       return;
     }
+
+    if (isAddNewRow) {
+      const newData = JSON.parse(JSON.stringify(dataTables.riskList));
+      newData.splice(index, 1);
+      dispatch(setDataTables({ ...dataTables, riskList: newData }));
+      setIsAddNewRow(false);
+      return;
+    }
+
     loadingSwal();
     await fetchApi(
       "DELETE",
@@ -256,6 +281,7 @@ const index = () => {
       {}
     );
 
+    riskMutate();
     rekomendasiMutate();
     setSelectedRiskId(0);
     dispatch(resetDataTables());
@@ -267,12 +293,13 @@ const index = () => {
       await errorSwal("Silahkan pilih risk control terlebih dahulu");
       return;
     }
+
     loadingSwal();
     await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/kkpt_risk`,
       {
-        kkpt_id,
+        kkpt_id: params?.kkpt_id,
         risk_kode: payloadNewRisk.risk_kode,
         risk_abbr: payloadNewRisk.risk_abbr,
         risk_name: payloadNewRisk.risk_name,
@@ -280,6 +307,7 @@ const index = () => {
         lingkup_pemeriksaan_name: payloadNewLingkup.lingkup_pemeriksaan_name,
       }
     );
+
     riskMutate();
     dispatch(resetPayloadNewRisk());
     dispatch(resetPayloadNewRisk());
@@ -354,7 +382,7 @@ const index = () => {
       const { id, deadline, rekomendasi_name } = data;
       return {
         kkpa_rekomendasi_id: id,
-        kkpt_id,
+        kkpt_id: params?.kkpt_id,
         kkpt_risk_id: selectedRiskId,
         deadline,
         desc: rekomendasi_name,
@@ -365,6 +393,7 @@ const index = () => {
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/kkpt_rekomendasi/${selectedRiskId}`,
       payload
     );
+
     riskMutate();
     rekomendasiMutate();
     loadingSwal("close");
@@ -393,7 +422,7 @@ const index = () => {
             data={dataTables.riskList}
             newLingkup={payloadNewLingkup}
             newRisk={payloadNewRisk}
-            selectedEWPId={id}
+            selectedEWPId={params?.id}
             selectedLingkupId={payloadNewLingkup?.lingkup_pemeriksaan_id}
             selectedRiskId={selectedRiskId}
             isDisabled={

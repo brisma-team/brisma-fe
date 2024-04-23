@@ -113,17 +113,26 @@ const TableRiskIssue = ({
                   <Cell width="8%" className={`border-x ${customCell}`}>
                     <div className="custom-table-position-center justify-center">
                       {is_new ? (
-                        <ButtonIcon
-                          icon={
-                            <Image
-                              src={ImageCircleCheckGreen}
-                              alt=""
-                              width={22}
-                              height={22}
-                            />
-                          }
-                          handleClick={handleClickSave}
-                        />
+                        <div className="flex justify-between items-center gap-1.5">
+                          <ButtonIcon
+                            icon={
+                              <Image
+                                src={ImageCircleCheckGreen}
+                                alt=""
+                                width={22}
+                                height={22}
+                              />
+                            }
+                            handleClick={handleClickSave}
+                          />
+                          <ButtonIcon
+                            icon={<ButtonDelete />}
+                            handleClick={() =>
+                              handleClickDelete(kkpt_risk_id, index)
+                            }
+                            color={"red"}
+                          />
+                        </div>
                       ) : (
                         <div className="flex justify-between items-center gap-1.5">
                           <RadioField

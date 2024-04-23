@@ -37,6 +37,7 @@ import {
 } from "@/components/molecules/ewp/konsulting/addendum/utama/program-kerja";
 import {
   useControlDetail,
+  useControlList,
   useLingkupDetail,
   useProgramKerja,
   useTimTimeplan,
@@ -78,6 +79,7 @@ const ProgramKerja = ({
   const [selectedControlId, setSelectedControlId] = useState("");
   const [selectedLingkupPemeriksaan, setSelectedLingkupPemeriksaan] =
     useState("");
+  const [selectedRiskId, setSelectedRiskId] = useState(0);
   const [selectedRisk, setSelectedRisk] = useState("");
 
   const [filter, setFilter] = useState({
@@ -131,6 +133,9 @@ const ProgramKerja = ({
     id: selectedLingkupPemeriksaanId,
   });
   const { controlDetail } = useControlDetail({ id: selectedControlId });
+  const { controlList, controlListMutate } = useControlList({
+    id: selectedRiskId,
+  });
 
   useEffect(() => {
     const handleSearch = () => {
@@ -235,43 +240,23 @@ const ProgramKerja = ({
   }, [timTimeplan]);
 
   useEffect(() => {
-    const findChildrenById = (parentId, currentData) => {
-      for (const item of currentData) {
-        if (item.id === parentId) {
-          if (item.children && item.children.length > 0) {
-            const mapping = item.children.map((v) => {
-              const { control, pic } = v;
-              return {
-                kode: control?.kode,
-                abbr: control?.abbr,
-                nama: control?.nama,
-                pn_pic: pic?.pn,
-                nama_pic: pic?.nama,
-                is_default: true,
-              };
-            });
-
-            return mapping;
-          } else {
-            return [];
-          }
-        } else if (item.children && item.children.length > 0) {
-          const result = findChildrenById(parentId, item.children);
-          if (result.length > 0) {
-            return result;
-          }
-        }
-      }
-      return [];
-    };
-
-    if (showModalControl && selectedId && dataPemeriksaan) {
-      const mappingControl = findChildrenById(selectedId, dataPemeriksaan);
+    if (showModalControl && controlList?.data?.length) {
+      const mappingControl = controlList?.data?.map((control) => {
+        const { mtd_control, pn_pic, nama_pic } = control;
+        return {
+          kode: mtd_control?.kode,
+          abbr: mtd_control?.abbr,
+          nama: mtd_control?.nama,
+          pn_pic,
+          nama_pic,
+          is_default: true,
+        };
+      });
       dispatch(setObjPayloadControl(mappingControl));
     } else {
       dispatch(resetObjPayloadControl());
     }
-  }, [showModalControl, selectedId, dataPemeriksaan]);
+  }, [showModalControl, controlList]);
 
   useEffect(() => {
     if (lingkupDetail?.data) {
@@ -435,7 +420,7 @@ const ProgramKerja = ({
   // [ START ] handler for modal control
   const handleAddControl = (id) => {
     setShowModalControl(true);
-    setSelectedId(id);
+    setSelectedRiskId(id);
   };
 
   const handleAddSelectControl = () => {
@@ -500,6 +485,7 @@ const ProgramKerja = ({
       );
 
       programKerjaMutate();
+      controlListMutate();
       setShowModalControl(false);
       dispatch(resetObjPayloadControl());
       dispatch(resetValidationErrorsControl());
@@ -727,6 +713,7 @@ const ProgramKerja = ({
     );
 
     programKerjaMutate();
+    controlListMutate();
     loadingSwal("close");
   };
 
