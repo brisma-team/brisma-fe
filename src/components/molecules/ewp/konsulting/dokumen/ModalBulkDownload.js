@@ -76,7 +76,7 @@ const ModalBulkDownload = ({
               {data?.length ? (
                 <Rows
                   items={data}
-                  render={({ upload_date, file_url, file_name }) => (
+                  render={({ upload_date, doc_name }) => (
                     <Row>
                       <Cell className="!hidden" />
                       <Cell
@@ -89,7 +89,7 @@ const ModalBulkDownload = ({
                         width="75%"
                         className="border-r cell-custom-dataTables"
                       >
-                        {file_name}
+                        {doc_name}
                       </Cell>
                     </Row>
                   )}

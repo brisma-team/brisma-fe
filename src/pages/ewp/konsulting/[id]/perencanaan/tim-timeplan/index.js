@@ -32,6 +32,7 @@ import {
 import _ from "lodash";
 import timTimeplanEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/perencanaan/timTimeplanEWPKonsultingSchema";
 import useUser from "@/data/useUser";
+import { useLandingStatus } from "@/data/ewp/konsulting/landing";
 
 const routes = [
   {
@@ -67,6 +68,7 @@ const index = () => {
 
   const { user } = useUser();
   const { projectDetail } = useProjectDetail({ id });
+  const { landingStatus } = useLandingStatus({ type: "mapa", id });
   const { timTimeplan, timTimeplanMutate, timTimeplanError } = useTimTimeplan({
     id,
   });
@@ -92,13 +94,15 @@ const index = () => {
     setIsCloseSubmodule(
       Boolean(projectDetail?.data?.realisasi?.penyusunan_mapa_real_end)
     );
-    setIsOnProgress(
-      Boolean(
-        projectDetail?.data?.project_info?.status_persetujuan_name ==
-          "On Progress"
-      )
-    );
   }, [projectDetail]);
+
+  useEffect(() => {
+    if (landingStatus?.data) {
+      setIsOnProgress(
+        Boolean(landingStatus?.data?.status_persetujuan_name == "On Progress")
+      );
+    }
+  }, [landingStatus]);
 
   useEffect(() => {
     if (!timTimeplanError) {
@@ -268,9 +272,11 @@ const index = () => {
             data={payload}
             validation={validation}
             withoutButton={
-              isCloseSubmodule ? true : !isInitiator && !isOnProgress
+              isCloseSubmodule ? true : !isOnProgress ? true : !isInitiator
             }
-            isDisabled={isCloseSubmodule ? true : !isInitiator && !isOnProgress}
+            isDisabled={
+              isCloseSubmodule ? true : !isOnProgress ? true : !isInitiator
+            }
             property={"auditor"}
             title={"P.I.C Auditor"}
             textColorTitle={"text-atlasian-blue-light"}
@@ -282,9 +288,11 @@ const index = () => {
             data={payload}
             validation={validation}
             withoutButton={
-              isCloseSubmodule ? true : !isInitiator && !isOnProgress
+              isCloseSubmodule ? true : !isOnProgress ? true : !isInitiator
             }
-            isDisabled={isCloseSubmodule ? true : !isInitiator && !isOnProgress}
+            isDisabled={
+              isCloseSubmodule ? true : !isOnProgress ? true : !isInitiator
+            }
             property={"auditee"}
             title={"P.I.C Auditee"}
             textColorTitle={"text-atlasian-red"}

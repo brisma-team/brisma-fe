@@ -20,6 +20,7 @@ import {
 } from "@/helpers";
 import useUser from "@/data/useUser";
 import { useTimTimeplan } from "@/data/ewp/konsulting/perencanaan/tim-timeplan";
+import { useLandingStatus } from "@/data/ewp/konsulting/landing";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -61,6 +62,7 @@ const index = () => {
   const { user } = useUser();
   const { projectDetail, projectDetailError, projectDetailIsLoading } =
     useProjectDetail({ id: params?.id });
+  const { landingStatus } = useLandingStatus({ type: "mapa", id: params?.id });
   const { sumberInformasi, sumberInformasiMutate } = useSumberInformasi({
     id: params?.id,
   });
@@ -109,13 +111,15 @@ const index = () => {
         projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
       )
     );
-    setIsOnProgress(
-      Boolean(
-        projectDetail?.data?.project_info?.status_persetujuan_name ==
-          "On Progress"
-      )
-    );
   }, [projectDetail, user]);
+
+  useEffect(() => {
+    if (landingStatus?.data) {
+      setIsOnProgress(
+        Boolean(landingStatus?.data?.status_persetujuan_name == "On Progress")
+      );
+    }
+  }, [landingStatus]);
 
   useEffect(() => {
     const auditor = timTimeplan?.data?.tim_audit?.auditor;
