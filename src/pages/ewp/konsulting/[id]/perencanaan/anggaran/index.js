@@ -31,6 +31,7 @@ import {
 } from "@/data/ewp/konsulting/perencanaan/anggaran";
 import anggaranEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/perencanaan/anggaranEWPKonsultingSchema";
 import useUser from "@/data/useUser";
+import { useLandingStatus } from "@/data/ewp/konsulting/landing";
 
 const routes = [
   {
@@ -72,6 +73,7 @@ const index = () => {
   const { projectDetail } = useProjectDetail({ id });
   const { anggaran, anggaranMutate } = useAnggaran({ id });
   const { detailAnggaran } = useDetailAnggaran({ id: selectedId });
+  const { landingStatus } = useLandingStatus({ type: "mapa", id });
 
   useEffect(() => {
     setBreadcrumbs([
@@ -99,13 +101,15 @@ const index = () => {
         projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
       )
     );
-    setIsOnProgress(
-      Boolean(
-        projectDetail?.data?.project_info?.status_persetujuan_name ==
-          "On Progress"
-      )
-    );
   }, [projectDetail]);
+
+  useEffect(() => {
+    if (landingStatus?.data) {
+      setIsOnProgress(
+        Boolean(landingStatus?.data?.status_persetujuan_name == "On Progress")
+      );
+    }
+  }, [landingStatus]);
 
   useEffect(() => {
     if (anggaran?.data?.length) {

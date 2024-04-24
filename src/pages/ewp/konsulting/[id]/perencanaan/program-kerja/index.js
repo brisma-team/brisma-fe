@@ -57,6 +57,7 @@ import {
 import _ from "lodash";
 import useUser from "@/data/useUser";
 import { useTimTimeplan } from "@/data/ewp/konsulting/perencanaan/tim-timeplan";
+import { useLandingStatus } from "@/data/ewp/konsulting/landing";
 
 const routes = [
   {
@@ -95,6 +96,7 @@ const index = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
   const [isInitiator, setIsInitiator] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
 
   const [selectedId, setSelectedId] = useState("");
   const [selectedLingkupPemeriksaan, setSelectedLingkupPemeriksaan] =
@@ -146,6 +148,7 @@ const index = () => {
 
   const { user } = useUser();
   const { projectDetail } = useProjectDetail({ id: params?.id });
+  const { landingStatus } = useLandingStatus({ type: "mapa", id: params?.id });
   const { lingkupPemeriksaan, lingkupPemeriksaanMutate } =
     useLingkupPemeriksaan({ id: params?.id, ...paramsFilter });
   const { ringkasan } = useRingkasan({ id: params?.id, ...paramsFilter });
@@ -191,6 +194,14 @@ const index = () => {
       )
     );
   }, [projectDetail, user]);
+
+  useEffect(() => {
+    if (landingStatus?.data) {
+      setIsOnProgress(
+        Boolean(landingStatus?.data?.status_persetujuan_name == "On Progress")
+      );
+    }
+  }, [landingStatus]);
 
   useEffect(() => {
     if (lingkupPemeriksaan?.data?.length) {
@@ -682,7 +693,9 @@ const index = () => {
                 data={dataPemeriksaan}
                 user={user?.data}
                 isInitiator={isInitiator}
-                withoutButton={!(isInitiator && !isCloseSubmodule)}
+                withoutButton={
+                  !(isInitiator && !isCloseSubmodule && isOnProgress)
+                }
                 pathName={`/ewp/konsulting/${params?.id}/perencanaan/program-kerja`}
                 expansionMap={expansionMap}
                 handleSelectedLingkupPemeriksaan={
