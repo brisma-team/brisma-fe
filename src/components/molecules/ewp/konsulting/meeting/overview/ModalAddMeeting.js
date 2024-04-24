@@ -46,7 +46,7 @@ const ModalAddMeeting = ({
   handleClickDeletePIC,
   handleClickDeletePembicara,
   handleCloseModal,
-  title = `EWP Kegiatan Konsulting`,
+  title = `EWP Kegiatan`,
 }) => {
   return (
     <ModalScroll

@@ -64,7 +64,7 @@ const CardOverview = ({
 
   return (
     <DivButton
-      className={`${
+      className={`bg-white ${
         !withoutHover &&
         `hover:bg-gray-100 hover:rounded-[10px] hover:no-underline`
       }`}

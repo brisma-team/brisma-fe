@@ -37,6 +37,7 @@ import {
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import {
   useMatrixDocument,
+  useOverviewPeluangList,
   useWorkflowMatrix,
 } from "@/data/ewp/konsulting/peluang-peningkatan/matrix";
 import { useSelector } from "react-redux";
@@ -90,6 +91,10 @@ const index = () => {
   const { matrixDocument, matrixDocumentMutate } = useMatrixDocument({
     id: params?.matrix_id,
   });
+  const { overviewPeluangList } = useOverviewPeluangList({
+    id: params?.matrix_id,
+  });
+
   const workflowData = useSelector(
     (state) => state.documentMatrixPeluangKonsulting.workflowData
   );
@@ -319,6 +324,23 @@ const index = () => {
     workflowMatrixMutate();
   };
 
+  const handleOpenModalWorkflow = async () => {
+    if (
+      !overviewPeluangList?.data?.detail_peluang?.length &&
+      workflowMatrixData?.data?.info?.status_persetujuan == "On Progress"
+    ) {
+      const confirm = await confirmationSwal(
+        "Apakah anda yakin ingin melakukan workflow tanpa mengisi data peluang peningkatan?"
+      );
+
+      if (!confirm.value) {
+        return;
+      }
+    }
+
+    setShowModalApproval(true);
+  };
+
   const handleAdd = (property) => {
     const newData = [...workflowData[property]];
     newData.push({
@@ -503,7 +525,7 @@ const index = () => {
         </div>
         <div>
           <DivButton
-            handleClick={() => setShowModalApproval(true)}
+            handleClick={handleOpenModalWorkflow}
             className="no-underline hover:no-underline w-56 mb-5"
           >
             <div>
