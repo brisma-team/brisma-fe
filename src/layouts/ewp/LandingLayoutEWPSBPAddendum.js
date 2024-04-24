@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { NavbarField } from "@/components/molecules/commons";
 import SidebarLandingAddendumSBP from "@/components/molecules/ewp/konsulting/addendum/SidebarLandingAddendumSBP";
-import { errorSwalTimeout, loadingSwal } from "@/helpers";
+import { errorSwalTimeout } from "@/helpers";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 const LandingLayoutEWPSBPAddendum = ({ children }) => {
   const router = useRouter();
@@ -41,7 +41,6 @@ const LandingLayoutEWPSBPAddendum = ({ children }) => {
   }, [user, userError]);
 
   useEffect(() => {
-    loadingSwal();
     setTimeout(() => {
       if (!projectDetailIsLoading && params?.id) {
         setIsError(
@@ -51,9 +50,8 @@ const LandingLayoutEWPSBPAddendum = ({ children }) => {
           )
         );
       }
-    }, 1000);
-    loadingSwal("close");
-  }, [projectDetail, projectDetailIsLoading, projectDetailError, params]);
+    }, 800);
+  }, [projectDetail, projectDetailIsLoading, projectDetailError]);
 
   if (!isShown) {
     return (

@@ -29,11 +29,10 @@ import {
   confirmationSwal,
   convertDate,
   setErrorValidation,
-  usePostData,
-  useUpdateData,
   fetchApi,
   loadingSwal,
   usePostFileData,
+  checkRoleApprovalLog,
 } from "@/helpers";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import {
@@ -61,11 +60,16 @@ const routes = [
 ];
 
 const index = () => {
+  const router = useRouter();
+  const [params, setParams] = useState({
+    id: 0,
+    matrix_id: 0,
+    is_approval: false,
+  });
   const dispatch = useDispatch();
-  const { id, matrix_id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const baseUrl = `/ewp/konsulting/${params?.id}`;
   const pathNameBase = `${baseUrl}/peluang-peningkatan/`;
-  const pathNameContent = `${baseUrl}/peluang-peningkatan/${matrix_id}`;
+  const pathNameContent = `${baseUrl}/peluang-peningkatan/${params?.matrix_id}`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [imageClipList, setImageClipList] = useState([]);
@@ -82,9 +86,9 @@ const index = () => {
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
   const [showModalApproval, setShowModalApproval] = useState(false);
 
-  const { projectDetail } = useProjectDetail({ id });
+  const { projectDetail } = useProjectDetail({ id: params?.id });
   const { matrixDocument, matrixDocumentMutate } = useMatrixDocument({
-    id: matrix_id,
+    id: params?.matrix_id,
   });
   const workflowData = useSelector(
     (state) => state.documentMatrixPeluangKonsulting.workflowData
@@ -95,10 +99,24 @@ const index = () => {
 
   const { workflowMatrixData, workflowMatrixMutate } = useWorkflowMatrix({
     type: "matrix_peluang_peningkatan",
-    id: matrix_id,
+    id: params?.matrix_id,
   });
 
   const { user } = useUser();
+
+  useEffect(() => {
+    setShowModalApproval(params?.is_approval);
+  }, [params?.is_approval]);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id, matrix_id, is_approval } = router.query;
+    setParams({
+      id,
+      matrix_id,
+      is_approval,
+    });
+  }, [router.isReady]);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -174,6 +192,7 @@ const index = () => {
         const mapping = workflowMatrixData?.data?.log?.map((v) => {
           return {
             "P.I.C": v?.from?.pn + " - " + v?.from?.nama,
+            Role: checkRoleApprovalLog(v?.note, v?.is_signed),
             Alasan: v?.note,
             Status:
               v?.is_signed === true
@@ -256,10 +275,11 @@ const index = () => {
     if (!confirm.value) {
       return;
     }
+
     await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/matrix/doc`,
-      { matrix_id, doc: content }
+      { matrix_id: params?.matrix_id, doc: content }
     );
     setIsReset(false);
     matrixDocumentMutate();
@@ -278,7 +298,7 @@ const index = () => {
     setIsReset(true);
     const { data } = await fetchApi(
       "GET",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/matrix/doc/async/${matrix_id}`
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/matrix/doc/async/${params?.matrix_id}`
     );
     setContent(renderDocument(data));
     loadingSwal("close");
@@ -351,7 +371,7 @@ const index = () => {
       const actionType = e.target.offsetParent.name;
       const data = {
         sub_modul: "matrix_peluang_peningkatan",
-        sub_modul_id: matrix_id,
+        sub_modul_id: params?.matrix_id,
       };
 
       const signedCount = workflowData?.ref_tim_audit_approver?.filter(
@@ -371,8 +391,12 @@ const index = () => {
           data.note = workflowData.note;
           break;
         case "approve":
-          if (signedCount < 2) {
-            data.data = "<p>pirli test</p>";
+          if (
+            signedCount ===
+            workflowData?.ref_tim_audit_approver?.length - 1
+          ) {
+            data.doc_name = `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}-Peluang_Peningkatan-Matrix`;
+            data.data = content;
           }
           data.note = workflowData.note;
           break;
@@ -387,14 +411,17 @@ const index = () => {
         }
       }
 
+      loadingSwal();
       if (actionType === "change") {
-        const response = await useUpdateData(
+        const response = await fetchApi(
+          "PATCH",
           `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/change`,
           data
         );
         if (!response.isDismissed) return;
       } else {
-        await usePostData(
+        await fetchApi(
+          "POST",
           `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/${actionType}`,
           data
         );
@@ -403,6 +430,7 @@ const index = () => {
       workflowMatrixMutate();
       dispatch(resetWorkflowData());
       setShowModalApproval(false);
+      loadingSwal("close");
     }
     workflowMatrixMutate();
   };

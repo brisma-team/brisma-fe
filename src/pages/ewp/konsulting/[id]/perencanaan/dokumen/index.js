@@ -22,6 +22,7 @@ import {
 } from "@/slices/ewp/konsulting/perencanaan/documentMapaEWPKonsultingSlice";
 import _ from "lodash";
 import {
+  checkRoleApprovalLog,
   confirmationSwal,
   convertDate,
   fetchApi,
@@ -353,6 +354,7 @@ const index = () => {
         const mapping = workflowDetailEWP?.data?.log?.map((v) => {
           return {
             "P.I.C": v?.pn_from + " - " + v?.name_from,
+            Role: checkRoleApprovalLog(v?.note, v?.is_signed),
             Alasan: v?.note,
             Status:
               v?.is_signed === true
