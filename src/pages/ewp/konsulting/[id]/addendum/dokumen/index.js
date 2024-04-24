@@ -6,7 +6,7 @@ import TableTree, {
   Row,
   Rows,
 } from "@atlaskit/table-tree";
-import { ApprovalItems } from "@/components/molecules/commons";
+import { ApprovalItems, ModalWorkflow } from "@/components/molecules/commons";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
@@ -19,6 +19,7 @@ import {
 } from "@/slices/ewp/konsulting/peluang-peningkatan/documentDetailPeluangKonsultingSlice";
 import _ from "lodash";
 import {
+  checkRoleApprovalLog,
   confirmationSwal,
   convertDate,
   fetchApi,
@@ -26,7 +27,6 @@ import {
   setErrorValidation,
 } from "@/helpers";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
-import { ModalWorkflowRPMKegiatan } from "@/components/molecules/rpm/kegiatan";
 import LandingLayoutEWPSBPAddendum from "@/layouts/ewp/LandingLayoutEWPSBPAddendum";
 import { useRingkasan } from "@/data/ewp/konsulting/addendum/lain";
 import { useAddendumStatus, useWorkflow } from "@/data/ewp/konsulting/addendum";
@@ -159,6 +159,7 @@ const index = () => {
         const mapping = workflowAddendumData?.data?.log?.map((v) => {
           return {
             "P.I.C": v?.from?.pn + " - " + v?.from?.nama,
+            Role: checkRoleApprovalLog(v?.note, v?.is_signed),
             Alasan: v?.note,
             Status:
               v?.is_signed === true
@@ -176,10 +177,15 @@ const index = () => {
     } else {
       dispatch(resetWorkflowData());
     }
-  }, [workflowAddendumData, params?.addendum_id]);
+  }, [workflowAddendumData, showModalApproval]);
   // [ END ]
 
   // [ START ] function untuk Modal Workflow
+  const handleCloseModalWorkflow = () => {
+    dispatch(resetWorkflowData());
+    workflowAddendumMutate();
+  };
+
   const handleAdd = (property) => {
     const newData = [...workflowData[property]];
     newData.push({
@@ -420,7 +426,11 @@ const index = () => {
                     <p className="text-brisma font-bold text-xl">Approval</p>
                     <ApprovalItems
                       title={"P.I.C Auditor"}
-                      text={workflowData?.maker?.nama}
+                      text={
+                        workflowData?.maker?.pn +
+                        " - " +
+                        workflowData?.maker?.nama
+                      }
                     />
                     <ApprovalItems
                       title={"Approver"}
@@ -436,7 +446,7 @@ const index = () => {
               </Card>
             </div>
           </DivButton>
-          <ModalWorkflowRPMKegiatan
+          <ModalWorkflow
             workflowData={workflowData}
             historyWorkflow={historyWorkflow}
             validationErrors={validationErrorsWorkflow}
@@ -448,7 +458,8 @@ const index = () => {
             handleAdd={handleAdd}
             handleChangeSelect={handleChangeSelect}
             handleChangeText={handleChangeText}
-            withSigner={true}
+            handleCloseModal={handleCloseModalWorkflow}
+            withSigner
           />
         </div>
       </div>

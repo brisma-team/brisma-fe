@@ -127,11 +127,11 @@ const ModalWorkflow = ({
             <TableTree>
               <Headers>
                 <Header className="!hidden" />
-                <Header width="30%">
+                <Header width="25%">
                   <div className={`${customHeader}`}>P.I.C</div>
                 </Header>
-                <Header width="35%" className="cell-custom-dataTables">
-                  <div className={customHeader}>Alasan</div>
+                <Header width="15%">
+                  <div className={`${customHeader}`}>Role</div>
                 </Header>
                 <Header width="15%">
                   <div className={`${customHeader} justify-center text-center`}>
@@ -143,6 +143,9 @@ const ModalWorkflow = ({
                     Status
                   </div>
                 </Header>
+                <Header width="25%" className="cell-custom-dataTables">
+                  <div className={customHeader}>Alasan</div>
+                </Header>
               </Headers>
               {historyWorkflow?.length ? (
                 <Rows
@@ -151,6 +154,7 @@ const ModalWorkflow = ({
                     id,
                     role,
                     pic,
+                    role_pic,
                     alasan,
                     status,
                     tanggal,
@@ -163,7 +167,7 @@ const ModalWorkflow = ({
                       isExpanded={Boolean(expansionMap[`${id}-${role}`])}
                     >
                       <Cell className="!hidden" />
-                      <Cell width="30%" className={`${customCell}`}>
+                      <Cell width="25%" className={`${customCell}`}>
                         <div
                           className={`${positionCenter} justify-center gap-0.5`}
                         >
@@ -188,9 +192,11 @@ const ModalWorkflow = ({
                           </div>
                         </div>
                       </Cell>
-                      <Cell width="35%" className={`${customCell}`}>
-                        <div className={`${positionCenter} text-xs`}>
-                          {alasan}
+                      <Cell width="15%" className={`${customCell}`}>
+                        <div
+                          className={`${positionCenter} justify-center text-xs`}
+                        >
+                          {role_pic}
                         </div>
                       </Cell>
                       <Cell width="15%" className={`${customCell}`}>
@@ -202,15 +208,14 @@ const ModalWorkflow = ({
                       </Cell>
                       <Cell width="20%" className={`${customCell}`}>
                         <div
-                          className={`${positionCenter} justify-center text-xs ${
-                            status === "Approved"
-                              ? `text-atlasian-green`
-                              : status === "Rejected"
-                              ? `text-atlasian-red`
-                              : ``
-                          }`}
+                          className={`${positionCenter} justify-center text-xs`}
                         >
                           {status}
+                        </div>
+                      </Cell>
+                      <Cell width="25%" className={`${customCell}`}>
+                        <div className={`${positionCenter} text-xs`}>
+                          {alasan}
                         </div>
                       </Cell>
                     </Row>
@@ -224,8 +229,8 @@ const ModalWorkflow = ({
             </TableTree>
           ) : (
             <TableField
-              headers={["P.I.C", "Alasan", "Status", "Tanggal"]}
-              columnWidths={["35%", "35%", "15%", "15%"]}
+              headers={["P.I.C", "Role", "Tanggal", "Status", "Alasan"]}
+              columnWidths={["25%", "15%", "15%", "20%", "25%"]}
               items={historyWorkflow}
               customStyle={statusColors}
               customField={"Status"}

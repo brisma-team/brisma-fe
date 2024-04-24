@@ -36,6 +36,7 @@ import previewDocumentNewTab from "./previewDocumentNewTab";
 import getFileDetails from "./getFileDetails";
 import downloadFromUrl from "./downloadFromUrl";
 import generateCaptcha from "./generateCaptcha";
+import checkRoleApprovalLog from "./checkRoleApprovalLog";
 
 export {
   loadingSwal,
@@ -76,4 +77,5 @@ export {
   getFileDetails,
   downloadFromUrl,
   generateCaptcha,
+  checkRoleApprovalLog,
 };

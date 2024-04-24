@@ -286,7 +286,7 @@ const index = () => {
       );
 
       overviewMutate();
-      resetObjPayload();
+      dispatch(resetObjPayload());
       setShowModal(false);
       loadingSwal("close");
     }
