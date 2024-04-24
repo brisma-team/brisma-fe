@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 
-export default function errorSwal(error) {
+export default function errorSwal(error, html) {
   let message;
 
   if (error?.response?.data?.message) {
@@ -12,9 +12,10 @@ export default function errorSwal(error) {
   }
 
   return Swal.fire({
-    title: "Error!",
+    title: html ? message : "Error!",
     text: message,
     icon: "error",
+    html: html || null,
     confirmButtonColor: "rgb(30,66,159)",
   });
 }

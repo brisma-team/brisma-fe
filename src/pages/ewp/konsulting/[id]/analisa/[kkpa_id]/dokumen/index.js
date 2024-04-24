@@ -62,6 +62,10 @@ const index = () => {
     kkpa_id: 0,
     is_approval: false,
   });
+  const [uka, setUka] = useState({
+    kode: "",
+    name: "",
+  });
   const baseUrl = `/ewp/konsulting/${params?.id}`;
   const pathNameSubModulAnalisa = `${baseUrl}/analisa`;
   const pathNameLandingPage = `${pathNameSubModulAnalisa}/${params?.kkpa_id}`;
@@ -144,7 +148,8 @@ const index = () => {
         path: `${pathNameLandingPage}/dokumen`,
       },
     ]);
-
+    const projectInfo = projectDetail?.data?.project_info;
+    setUka({ kode: projectInfo?.uka_kode, name: projectInfo?.uka_name });
     setIsCloseSubmodule(
       Boolean(projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end)
     );
@@ -456,7 +461,7 @@ const index = () => {
               landingStatus?.data?.info?.mapa_uker_mcr_control?.mtd_control
                 ?.abbr
             }`;
-            data.data = analisaDocs(doc);
+            data.data = analisaDocs(uka, doc);
           }
           data.note = workflowData.note;
           break;
