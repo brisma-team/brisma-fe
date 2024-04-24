@@ -16,6 +16,7 @@ import {
 import { fetchApi, loadingSwal, usePostFileData } from "@/helpers";
 import { useDetailControl } from "@/data/ewp/konsulting/perencanaan/program-kerja";
 import useUser from "@/data/useUser";
+import { useLandingStatus } from "@/data/ewp/konsulting/landing";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -34,6 +35,7 @@ const index = () => {
 
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
   const [isInitiator, setIsInitiator] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
   const [isPIC, setIsPIC] = useState(false);
 
   const { projectDetail } = useProjectDetail({ id });
@@ -41,6 +43,7 @@ const index = () => {
     id: control_id,
   });
   const { user } = useUser();
+  const { landingStatus } = useLandingStatus({ type: "mapa", id });
 
   useEffect(() => {
     setBreadcrumbs([
@@ -74,6 +77,14 @@ const index = () => {
       )
     );
   }, [projectDetail, user]);
+
+  useEffect(() => {
+    if (landingStatus?.data) {
+      setIsOnProgress(
+        Boolean(landingStatus?.data?.status_persetujuan_name == "On Progress")
+      );
+    }
+  }, [landingStatus]);
 
   useEffect(() => {
     setContent(detailControl?.data?.uraian || "");
@@ -149,13 +160,17 @@ const index = () => {
             data={imageClipList}
             handleChange={handleUploadFile}
             handleClick={handleClickUploadImage}
-            isHideButton={!((isInitiator || isPIC) && !isCloseSubmodule)}
+            isHideButton={
+              !((isInitiator || isPIC) && !isCloseSubmodule && isOnProgress)
+            }
           />
           <AttachmentClipping
             data={attachmentClipList}
             handleChange={handleUploadFile}
             handleClick={handleClickUploadAttachment}
-            isHideButton={!((isInitiator || isPIC) && !isCloseSubmodule)}
+            isHideButton={
+              !((isInitiator || isPIC) && !isCloseSubmodule && isOnProgress)
+            }
           />
         </div>
         <div>
@@ -167,7 +182,7 @@ const index = () => {
               onChange={(value) => setContent(value)}
             />
           </div>
-          {(isInitiator || isPIC) && !isCloseSubmodule ? (
+          {(isInitiator || isPIC) && !isCloseSubmodule && isOnProgress ? (
             <div className="mt-3 flex justify-end">
               <div className="w-[7.75rem] bg-atlasian-green rounded">
                 <ButtonField text={"Simpan"} handler={handleSubmit} />
