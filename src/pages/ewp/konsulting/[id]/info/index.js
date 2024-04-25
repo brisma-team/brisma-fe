@@ -377,7 +377,9 @@ const index = () => {
       projectDetailMutate();
       loadingSwal("close");
     }
-    router.push(`/ewp/konsulting/${params?.id}/addendum`);
+    setTimeout(() => {
+      router.push(`/ewp/konsulting/${params?.id}/addendum`);
+    }, 1000);
   };
 
   if (isError) {

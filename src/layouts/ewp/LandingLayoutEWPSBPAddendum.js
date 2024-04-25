@@ -44,14 +44,11 @@ const LandingLayoutEWPSBPAddendum = ({ children }) => {
     setTimeout(() => {
       if (!projectDetailIsLoading && params?.id) {
         setIsError(
-          Boolean(
-            projectDetail?.data?.project_info?.status_name !== "addendum" ||
-              projectDetailError
-          )
+          Boolean(projectDetail?.data?.project_info?.status_name !== "addendum")
         );
       }
     }, 800);
-  }, [projectDetail, projectDetailIsLoading, projectDetailError]);
+  }, [projectDetail, projectDetailIsLoading]);
 
   if (!isShown) {
     return (
