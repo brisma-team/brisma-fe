@@ -11,9 +11,9 @@ import { deleteCookie } from "cookies-next";
 import {
   calculateTimeDifference,
   confirmationSwal,
+  fetchApi,
   loadingSwal,
   successSwal,
-  useUpdateData,
 } from "@/helpers";
 import Avatar from "@atlaskit/avatar";
 import useUser from "@/data/useUser";
@@ -63,15 +63,15 @@ const Notification = ({ data, handleMarkReadAll, handleClick }) => {
                     return (
                       <DivButton
                         key={i}
-                        className={`h-10 px-3 w-full flex justify-between items-center ${
+                        className={`px-3 py-1 w-full flex justify-between hover:bg-blue-100 border-b border-white ${
                           !v.is_read && `bg-blue-200`
                         }`}
                         handleClick={() =>
-                          handleClick(v.id, v.is_read, v.url_path)
+                          handleClick(v.id, v.is_read, v?.module)
                         }
                       >
-                        <div className="h-6 font-medium">{v.perihal}</div>
-                        <div className="h-6 font-medium">
+                        <div className="font-medium">{v.perihal}</div>
+                        <div className="font-medium">
                           {calculateTimeDifference(v.created_at)}
                         </div>
                       </DivButton>
@@ -169,7 +169,7 @@ const NavbarField = () => {
   };
 
   const handleMarkReadAll = async () => {
-    await useUpdateData(
+    await fetchApi(
       `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/notifikasi/all`,
       {},
       true
@@ -179,7 +179,8 @@ const NavbarField = () => {
 
   const handleClickNotification = async (id, is_read, url_path) => {
     if (!is_read) {
-      await useUpdateData(
+      await fetchApi(
+        "PATCH",
         `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/notifikasi?id=${id}`,
         {},
         true
@@ -268,7 +269,7 @@ const NavbarField = () => {
         ]
       : [];
   return (
-    <div className="fixed top-0 left-0 right-0 z-10">
+    <div className="fixed top-0 left-0 right-0 z-20">
       <AtlassianNavigation
         label="site"
         renderProductHome={CustomHome}

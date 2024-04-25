@@ -455,6 +455,7 @@ const index = () => {
       const data = {
         sub_modul: "kkpt",
         sub_modul_id: params?.kkpt_id,
+        url_path: `${pathNameContent}/dokumen`,
       };
 
       const signedCount = workflowData?.ref_tim_audit_approver?.filter(

@@ -377,6 +377,7 @@ const index = () => {
       const data = {
         sub_modul: "project_rpm",
         sub_modul_id: params?.id,
+        url_path: `${baseUrl}/dokumen`,
       };
 
       const signedCount = workflowData?.ref_tim_audit_approver?.filter(

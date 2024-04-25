@@ -440,6 +440,7 @@ const index = () => {
       const data = {
         sub_modul: "mapa",
         sub_modul_id: params?.id,
+        url_path: `${pathName}/dokumen`,
       };
 
       const signedCount = workflowData?.ref_tim_audit_approver?.filter(

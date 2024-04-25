@@ -239,6 +239,7 @@ const index = () => {
       const data = {
         sub_modul: "adendum",
         sub_modul_id: params?.addendum_id,
+        url_path: `${baseUrl}/dokumen`,
       };
 
       const signedCount = workflowData?.ref_tim_audit_approver?.filter(
