@@ -37,13 +37,7 @@ const DataTables = ({ data, handleClickDownload }) => {
         {data?.length ? (
           <Rows
             items={data}
-            render={({
-              upload_date,
-              file_url,
-              file_name,
-              doc_name,
-              uploader,
-            }) => (
+            render={({ upload_date, file_url, doc_name, uploader }) => (
               <Row>
                 <Cell className="!hidden" />
                 <Cell
@@ -54,7 +48,7 @@ const DataTables = ({ data, handleClickDownload }) => {
                 </Cell>
                 <Cell width="45%" className="border-r cell-custom-dataTables">
                   <DivButton
-                    handleClick={() => handleClickDownload(file_url, file_name)}
+                    handleClick={() => handleClickDownload(file_url, doc_name)}
                     className={
                       "text-atlasian-blue-light underline hover:text-hover-blue"
                     }
