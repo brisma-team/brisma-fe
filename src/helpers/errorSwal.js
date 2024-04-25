@@ -12,8 +12,7 @@ export default function errorSwal(error, html) {
   }
 
   return Swal.fire({
-    title: html ? message : "Error!",
-    text: message,
+    title: message,
     icon: "error",
     html: html || null,
     confirmButtonColor: "rgb(30,66,159)",

@@ -38,7 +38,11 @@ const CardBody = ({ title, value, textColor, className }) => {
 
 const CardOverview = ({ data, withoutButton, withoutHover }) => {
   const router = useRouter();
-  const listDropdown = [{ label: "Approval", action: "#" }];
+  const listDropdown = [
+    { label: "Change Initiator", action: "#" },
+    { label: "Delete Project", action: "#" },
+    { label: "Link Project", action: "#" },
+  ];
   const colorLabel = {
     consulting: "bg-cardColor-turquoise",
   };

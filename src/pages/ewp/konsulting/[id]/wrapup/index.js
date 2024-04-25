@@ -81,13 +81,14 @@ const index = () => {
   useEffect(() => {
     if (wrapup?.findAllDoc?.length) {
       const mapping = wrapup?.findAllDoc?.map((v, index) => {
-        const { file_url, file_name } = v;
+        const { file_url, file_name, doc_name } = v;
         return {
           index,
           doc_id: v?.id,
           upload_date: v?.created_at,
           file_url,
           file_name,
+          doc_name,
           uploader: `${v?.uploader?.pn} - ${v?.uploader?.nama}`,
         };
       });
