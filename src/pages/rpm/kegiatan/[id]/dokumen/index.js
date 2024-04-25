@@ -1,6 +1,7 @@
 import { Breadcrumbs, Card, DivButton, PageTitle } from "@/components/atoms";
 import {
   ApprovalItems,
+  ModalWorkflow,
   // ModalComment
 } from "@/components/molecules/commons";
 import { NavigationDocument } from "@/components/molecules/commons";
@@ -29,7 +30,6 @@ import {
 } from "@/helpers";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { LandingLayoutRPMKegiatan } from "@/layouts/rpm";
-import { ModalWorkflowRPMKegiatan } from "@/components/molecules/rpm/kegiatan";
 
 const index = () => {
   const router = useRouter();
@@ -583,7 +583,7 @@ const index = () => {
               </Card>
             </div>
           </DivButton>
-          <ModalWorkflowRPMKegiatan
+          <ModalWorkflow
             workflowData={workflowData}
             historyWorkflow={historyWorkflow}
             validationErrors={validationErrorsWorkflow}
