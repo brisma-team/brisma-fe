@@ -15,10 +15,10 @@ const anggaranHtml = (data) => {
   <tbody>
   
   ${
-    data?.length > 0 &&
-    data
-      ?.map((v, index) => {
-        return `<tr>
+    data?.length > 0
+      ? data
+          ?.map((v, index) => {
+            return `<tr>
           <td style="text-align:center; border: 1px solid #ccc;">
             <p style="font-size:12px">${index + 1}</p>
           </td>
@@ -31,8 +31,8 @@ const anggaranHtml = (data) => {
               "-",
               "d"
             )} s/d ${
-          v?.tanggal_end ? convertDate(v?.tanggal_end, "-", "d") : "-"
-        }</p>
+              v?.tanggal_end ? convertDate(v?.tanggal_end, "-", "d") : "-"
+            }</p>
           </td>
           <td style="border: 1px solid #ccc;">
             <p style="font-size:12px">${v?.deskripsi || "-"}</p>
@@ -41,11 +41,15 @@ const anggaranHtml = (data) => {
             <p style="font-size:12px">Rp. ${convertToRupiah(v?.amount)}</p>
           </td>
         </tr>`;
-      })
-      .join("")
+          })
+          .join("")
+      : `<tr><td colspan="5" style="text-align:center; border: 1px solid #ccc;">
+      <p style="font-size:12px">No Data Available</p>
+    </td></tr>`
   }
-      
-<tr>
+  ${
+    data?.length > 0
+      ? `<tr>
   <td colspan="4" style="border: 1px solid #ccc; padding-left: 8px; padding-right: 8px;"><p style="font-size:16px; font-weight: 600;">Total</p></td>
   <td style="border: 1px solid #ccc;"><p style="font-size:12px">Rp. ${convertToRupiah(
     data?.reduce((accumulator, currentValue) => {
@@ -56,7 +60,9 @@ const anggaranHtml = (data) => {
       return accumulator;
     }, 0)
   )}</p></td>
-</tr>
+</tr>`
+      : ``
+  }
   </tbody>
 </table>
   `;

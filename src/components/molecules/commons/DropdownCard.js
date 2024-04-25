@@ -3,8 +3,9 @@ import DropdownMenu, {
   DropdownItem,
   DropdownItemGroup,
 } from "@atlaskit/dropdown-menu";
-import Image from "next/image";
-import { ImageMore } from "@/helpers/imagesUrl";
+// import Image from "next/image";
+// import { ImageMore } from "@/helpers/imagesUrl";
+import { IconList } from "@/components/icons";
 
 const DropdownCard = ({ actions }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,9 +22,10 @@ const DropdownCard = ({ actions }) => {
           {...props}
           role="button"
           tabIndex={0}
-          className="h-full flex items-center"
+          className="h-full flex text-atlasian-blue-dark hover:text-atlasian-blue-light items-center hover:border-atlasian-blue-light hover:border-2 hover:rounded-[40px] border-2 rounded-[40px] border-atlasian-blue-dark"
         >
-          <Image src={ImageMore} alt="" height={22} width={22} />
+          <IconList size="medium" />
+          {/* <Image src={ImageMore} alt="" height={22} width={22} /> */}
         </div>
       )}
       isOpen={isOpen}

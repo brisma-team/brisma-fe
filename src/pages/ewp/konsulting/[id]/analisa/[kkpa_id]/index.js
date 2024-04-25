@@ -44,7 +44,8 @@ const index = () => {
       const mappingDataInfo = [
         {
           label: "P.I.C Auditor",
-          value: responseInfo?.auditor?.name,
+          value:
+            responseInfo?.auditor?.pn + " - " + responseInfo?.auditor?.name,
         },
         {
           label: "Status",

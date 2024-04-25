@@ -7,7 +7,13 @@ import {
   PageTitle,
 } from "@/components/atoms";
 import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
-import { convertDate } from "@/helpers";
+import {
+  confirmationSwal,
+  convertDate,
+  fetchApi,
+  loadingSwal,
+  successSwal,
+} from "@/helpers";
 import _ from "lodash";
 import {
   CardOverview,
@@ -147,6 +153,29 @@ const index = () => {
     setFilter({ ...filter, [props]: value });
   };
 
+  const handleCloseProject = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin ingin menutup project ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "PATCH",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}//ewp/sbp/disable/${params?.id}`,
+      {}
+    );
+    loadingSwal("close");
+  };
+
+  const handleCopyProject = async (id) => {
+    successSwal("Link project berhasil disalin ke clipboard.");
+    return navigator.clipboard.writeText(window.location.href + `/${id}/info`);
+  };
+
   return (
     <OverviewLayoutEWP data={approvalEWP?.data?.header}>
       {/* Start Breadcrumbs */}
@@ -197,7 +226,14 @@ const index = () => {
       {data?.length ? (
         <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-3 my-4">
           {data.map((v, i) => {
-            return <CardOverview key={i} data={v} />;
+            return (
+              <CardOverview
+                key={i}
+                data={v}
+                handleCloseProject={handleCloseProject}
+                handleCopyProject={() => handleCopyProject(v?.id)}
+              />
+            );
           })}
         </div>
       ) : (

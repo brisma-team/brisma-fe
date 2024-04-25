@@ -499,6 +499,14 @@ const index = () => {
   // [ Start ] handler for Reset and Save Ringkasan
   const handleResetRingkasan = async (e) => {
     e.preventDefault();
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin ingin melakukan reset perubahan data?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
     const module = "others";
 
     loadingSwal();

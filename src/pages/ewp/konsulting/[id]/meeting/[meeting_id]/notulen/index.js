@@ -16,6 +16,7 @@ import {
   PrevNextNavigation,
   ModalWorkflow,
   ApprovalItems,
+  ContentView,
 } from "@/components/molecules/commons";
 import {
   confirmationSwal,
@@ -38,6 +39,7 @@ import {
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useWorkflowDetailEWP } from "@/data/ewp";
 import _ from "lodash";
+import useUser from "@/data/useUser";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -71,6 +73,9 @@ const index = () => {
   const [content, setContent] = useState("");
   const [typeUpload, setTypeUpload] = useState("");
 
+  const [isOnProgress, setIsOnProgress] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
+
   const workflowData = useSelector(
     (state) => state.notulenMeetingEWPKonsulting.objWorkflowData
   );
@@ -88,6 +93,8 @@ const index = () => {
     "entrance_notulen",
     { id: selectedNotulenId }
   );
+
+  const { user } = useUser();
 
   useEffect(() => {
     setSelectedNotulenId(meetingDetail?.data?.notulen?.id || 0);
@@ -115,7 +122,12 @@ const index = () => {
         path: `${pathNameLanding}/notulen`,
       },
     ]);
-  }, [projectDetail]);
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+  }, [projectDetail, user]);
 
   useEffect(() => {
     setContent(notulen?.data?.notulen_info?.content || "");
@@ -133,6 +145,10 @@ const index = () => {
         status_approver: workflowInfo?.status_persetujuan,
         on_approver: workflowInfo?.status_approver,
       };
+
+      setIsOnProgress(
+        Boolean(workflowInfo?.status_persetujuan == "On Progress")
+      );
 
       newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.nama}`;
       newWorkflowData.maker = maker;
@@ -355,31 +371,45 @@ const index = () => {
       </div>
       {/* Start Content */}
       <div className="my-4 flex gap-6">
-        <div className="w-64 flex flex-col gap-4">
-          <ImageClipping
-            data={imageClipList}
-            handleChange={handleUploadFile}
-            handleClick={handleClickUploadImage}
-          />
-          <AttachmentClipping
-            data={attachmentClipList}
-            handleChange={handleUploadFile}
-            handleClick={handleClickUploadAttachment}
-          />
-        </div>
-        <div>
-          <div className="ckeditor-latar-belakang-mapa-ewp">
-            <Editor
-              contentData={content}
-              onChange={(value) => setContent(value)}
-              ready
+        {isInitiator && isOnProgress && (
+          <div className="w-64 flex flex-col gap-4">
+            <ImageClipping
+              data={imageClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadImage}
+              isHideButton={!isInitiator}
+            />
+            <AttachmentClipping
+              data={attachmentClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadAttachment}
+              isHideButton={!isInitiator}
             />
           </div>
-          <div className="mt-3 flex justify-end">
-            <div className="w-[7.75rem] bg-atlasian-green rounded">
-              <ButtonField text={"Simpan"} handler={handleSubmitContent} />
+        )}
+
+        <div>
+          {isInitiator && isOnProgress ? (
+            <div className="ckeditor-latar-belakang-mapa-ewp">
+              <Editor
+                contentData={content}
+                ready={true}
+                onChange={(value) => setContent(value)}
+              />
             </div>
-          </div>
+          ) : (
+            <ContentView dataDoc={content} />
+          )}
+
+          {isInitiator && isOnProgress ? (
+            <div className="mt-3 flex justify-end">
+              <div className="w-[7.75rem] bg-atlasian-green rounded">
+                <ButtonField text={"Simpan"} handler={handleSubmitContent} />
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
         <DivButton
           handleClick={() => setShowModalApproval(true)}
@@ -409,6 +439,7 @@ const index = () => {
           </div>
         </DivButton>
       </div>
+
       <ModalWorkflow
         workflowData={workflowData}
         historyWorkflow={historyWorkflowData}

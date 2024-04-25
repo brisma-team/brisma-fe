@@ -147,7 +147,10 @@ const DataTables = ({
                     (auditor?.nama || auditor?.name || "-")}
                 </div>
               </Cell>
-              <Cell width="17%" className={`border-r ${customCell}`}>
+              <Cell
+                width="17%"
+                className={`border-r ${customCell} overflow-auto`}
+              >
                 <div className="custom-table-position-center px-1">
                   <p className="px-2">
                     {lingkup?.length
@@ -158,7 +161,10 @@ const DataTables = ({
                   </p>
                 </div>
               </Cell>
-              <Cell width="15%" className={`border-r ${customCell}`}>
+              <Cell
+                width="15%"
+                className={`border-r ${customCell} overflow-auto`}
+              >
                 <div className="custom-table-position-center px-1">
                   <p className="px-2">
                     {risk_issue?.length
@@ -169,7 +175,10 @@ const DataTables = ({
                   </p>
                 </div>
               </Cell>
-              <Cell width="13%" className={`border-r ${customCell}`}>
+              <Cell
+                width="13%"
+                className={`border-r ${customCell} overflow-auto`}
+              >
                 <div className="custom-table-position-center px-1">
                   <p className="px-2">
                     {control?.length
