@@ -21,7 +21,7 @@ const ContentTim = ({ data }) => {
         <td style={{ ...tableCellStyle }}>
           <p style={{ ...tableFontSize }}>{item?.nama || "-"}</p>
         </td>
-        {item?.mandays && (
+        {item?.mandays != undefined && (
           <td style={{ ...tableCellStyle }}>
             <p style={{ ...tableFontSize }}>{item?.mandays}</p>
           </td>
@@ -72,7 +72,17 @@ const ContentTim = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {data?.auditee?.length > 0 && renderTableRows(data.auditee)}
+          {data?.auditee?.length > 0 ? (
+            renderTableRows(data.auditee)
+          ) : (
+            <tr>
+              <td colSpan={3} style={{ ...tableCellStyle }}>
+                <p style={{ ...tableFontSize, textAlign: "center" }}>
+                  {"No Data Available"}
+                </p>
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
 
@@ -97,7 +107,19 @@ const ContentTim = ({ data }) => {
             </th>
           </tr>
         </thead>
-        <tbody>{data?.ata?.length > 0 && renderTableRows(data.ata)}</tbody>
+        <tbody>
+          {data?.ata?.length > 0 ? (
+            renderTableRows(data.ata)
+          ) : (
+            <tr>
+              <td colSpan={5} style={{ ...tableCellStyle }}>
+                <p style={{ ...tableFontSize, textAlign: "center" }}>
+                  {"No Data Available"}
+                </p>
+              </td>
+            </tr>
+          )}
+        </tbody>
       </table>
     </>
   );

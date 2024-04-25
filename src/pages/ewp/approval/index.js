@@ -153,7 +153,7 @@ const index = () => {
         } else if (sub_modul === "kkpt") {
           query = `konsulting/${ewp_id}/peluang-peningkatan/${data?.matrix_id}/overview/${sub_modul_id}`;
         } else if (sub_modul === "matrix_peluang_peningkatan") {
-          query = "Matrix Peluang Peningkatan";
+          query = `konsulting/${ewp_id}/peluang-peningkatan/${sub_modul_id}`;
         } else if (sub_modul === "adendum") {
           query = `konsulting/${ewp_id}/addendum`;
           break;

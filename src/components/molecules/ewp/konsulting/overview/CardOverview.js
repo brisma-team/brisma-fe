@@ -6,6 +6,7 @@ import { N800 } from "@atlaskit/theme/colors";
 import { token } from "@atlaskit/tokens";
 import { useRouter } from "next/router";
 
+import { IconPerson, IconTrash, IconLink } from "@/components/icons";
 const CardTeam = ({ title, value, titleColor }) => {
   return (
     <div className="flex flex-col gap-2.5">
@@ -36,12 +37,42 @@ const CardBody = ({ title, value, textColor, className }) => {
   );
 };
 
-const CardOverview = ({ data, withoutButton, withoutHover }) => {
+const CardOverview = ({
+  data,
+  withoutButton,
+  withoutHover,
+  handleCloseProject,
+  handleCopyProject,
+}) => {
   const router = useRouter();
   const listDropdown = [
-    { label: "Change Initiator", action: "#" },
-    { label: "Delete Project", action: "#" },
-    { label: "Link Project", action: "#" },
+    {
+      label: (
+        <div className="flex gap-1">
+          <IconPerson size="medium" />
+          <p className="my-auto">Change Initiator</p>
+        </div>
+      ),
+      action: "/ewp",
+    },
+    {
+      label: (
+        <div className="flex gap-1">
+          <IconTrash size="medium" />
+          <p className="my-auto">Delete Project</p>
+        </div>
+      ),
+      action: handleCloseProject,
+    },
+    {
+      label: (
+        <div className="flex gap-1">
+          <IconLink size="medium" />
+          <p className="my-auto">Link Project</p>
+        </div>
+      ),
+      action: handleCopyProject,
+    },
   ];
   const colorLabel = {
     consulting: "bg-cardColor-turquoise",

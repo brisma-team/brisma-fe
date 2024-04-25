@@ -103,17 +103,26 @@ const DataTables = ({
                   )}
                 </div>
               </Cell>
-              <Cell width="17%" className={`border-r ${customCell}`}>
+              <Cell
+                width="17%"
+                className={`border-r ${customCell} overflow-auto`}
+              >
                 <div className="custom-table-position-center">
                   {lingkup?.nama}
                 </div>
               </Cell>
-              <Cell width="17%" className={`border-r ${customCell}`}>
+              <Cell
+                width="17%"
+                className={`border-r ${customCell} overflow-auto`}
+              >
                 <div className="custom-table-position-center">
                   {risk ? `${risk?.kode} - ${risk?.nama}` : ""}
                 </div>
               </Cell>
-              <Cell width="17%" className={`border-r ${customCell}`}>
+              <Cell
+                width="17%"
+                className={`border-r ${customCell} overflow-auto`}
+              >
                 <div className="custom-table-position-center">
                   {control ? `${control?.kode} - ${control?.nama}` : ""}
                 </div>

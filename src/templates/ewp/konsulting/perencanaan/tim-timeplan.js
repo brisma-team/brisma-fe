@@ -40,10 +40,10 @@ const timTimeplanHtml = (data) => {
   </thead>
   <tbody>
   ${
-    data?.auditee?.length > 0 &&
-    data?.auditee
-      ?.map((v, index) => {
-        return `<tr >
+    data?.auditee?.length > 0
+      ? data?.auditee
+          ?.map((v, index) => {
+            return `<tr >
           <td style="text-align:center; border: 1px solid #ccc;">
             <p style="font-size:12px">${index + 1}</p>
           </td>
@@ -54,8 +54,13 @@ const timTimeplanHtml = (data) => {
             <p style="font-size:12px">${v?.nama || "-"}</p>
           </td>
         </tr>`;
-      })
-      .join("")
+          })
+          .join("")
+      : `<tr >
+      <td colspan="3" style="text-align:center; border: 1px solid #ccc;">
+        <p style="font-size:12px">No Data Available</p>
+      </td>
+    </tr>`
   }
   </tbody>
 </table>
@@ -72,10 +77,10 @@ const timTimeplanHtml = (data) => {
   </thead>
   <tbody>
   ${
-    data?.ata?.length > 0 &&
-    data?.ata
-      ?.map((v, index) => {
-        return `<tr >
+    data?.ata?.length > 0
+      ? data?.ata
+          ?.map((v, index) => {
+            return `<tr >
           <td style="text-align:center; border: 1px solid #ccc;">
             <p style="font-size:12px">${index + 1}</p>
           </td>
@@ -92,8 +97,11 @@ const timTimeplanHtml = (data) => {
           <p style="font-size:12px">${v?.deskripsi || ""}</p>
         </td>
           </tr>`;
-      })
-      .join("")
+          })
+          .join("")
+      : `<tr><td colspan="5" style="text-align:center; border: 1px solid #ccc;">
+      <p style="font-size:12px">No Data Available</p>
+    </td><tr>`
   }
   </tbody>
 </table>

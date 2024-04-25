@@ -41,11 +41,7 @@ const SidebarLandingEWPConsulting = () => {
       projectName: projectInfo?.project_name,
       documentName: subModule,
       statusName: projectInfo?.status_persetujuan_name,
-      createdAt: convertDate(
-        projectInfo?.info_periode_pelaksanaan_start,
-        "/",
-        "d"
-      ),
+      createdAt: convertDate(projectInfo?.createdAt, "/", "d"),
       initiatorName:
         projectInfo?.initiator?.pn + " - " + projectInfo?.initiator?.nama,
     });

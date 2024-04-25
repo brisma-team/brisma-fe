@@ -67,7 +67,7 @@ const Notification = ({ data, handleMarkReadAll, handleClick }) => {
                           !v.is_read && `bg-blue-200`
                         }`}
                         handleClick={() =>
-                          handleClick(v.id, v.is_read, v?.module)
+                          handleClick(v.id, v.is_read, v?.url_path)
                         }
                       >
                         <div className="font-medium">{v.perihal}</div>
@@ -178,6 +178,7 @@ const NavbarField = () => {
   };
 
   const handleClickNotification = async (id, is_read, url_path) => {
+    console.log("url_path", url_path);
     if (!is_read) {
       await fetchApi(
         "PATCH",
