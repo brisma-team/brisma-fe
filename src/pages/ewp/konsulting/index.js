@@ -130,6 +130,7 @@ const index = () => {
           project_id,
           project_name,
           initiator,
+          change_initiator,
         } = v;
         return {
           id: v?.id,
@@ -154,6 +155,7 @@ const index = () => {
           href: `/ewp/projects/konsulting/${v?.id}/info`,
           created_at: createdAt,
           maker: `${initiator?.pn} - ${initiator?.nama}`,
+          change_initiator,
         };
       });
       setData(mapping);
@@ -192,7 +194,7 @@ const index = () => {
   };
 
   const handleChangeInitiator = async (status, ewpid) => {
-    if (!status) {
+    if (status == false) {
       const confirm = await confirmationSwal(
         "Apakah anda yakin ingin melakukan perubahan Inisiator?"
       );
@@ -202,8 +204,10 @@ const index = () => {
       }
       await usePostData(
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/change_initiator/create`,
-        { ewp_id: ewpid, note: "" }
+        { ewp_id: ewpid, note: "change initiator" }
       );
+      overviewEWPKonsultingMutate();
+      setShowModalApprovalExtension(true);
     } else {
       setShowModalApprovalExtension(!showModalApprovalExtension);
     }
