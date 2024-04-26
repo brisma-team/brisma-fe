@@ -19,6 +19,7 @@ const positionCenter = `w-full h-full flex items-center`;
 
 const ModalWorkflowRequestExtensionAndTermination = ({
   isExtensionRequest,
+  isChangeInitiator = false,
   workflowData,
   historyWorkflow,
   showModal,
@@ -67,6 +68,7 @@ const ModalWorkflowRequestExtensionAndTermination = ({
       header={
         <ModalWorkflowHeader
           isExtensionRequest={isExtensionRequest}
+          isChangeInitiator={isChangeInitiator}
           user={user?.data}
           data={workflowData}
           validationErrors={validationErrors}
