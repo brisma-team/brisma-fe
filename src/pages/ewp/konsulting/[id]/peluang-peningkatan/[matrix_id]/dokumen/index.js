@@ -138,7 +138,7 @@ const index = () => {
       },
       {
         name: `Document Matrix`,
-        path: `${pathNameContent}`,
+        path: `${pathNameContent}/dokumen`,
       },
     ]);
     setIsCloseSubmodule(
@@ -391,6 +391,7 @@ const index = () => {
       const data = {
         sub_modul: "matrix_peluang_peningkatan",
         sub_modul_id: params?.matrix_id,
+        url_path: `${pathNameContent}/dokumen`,
       };
 
       const signedCount = workflowData?.ref_tim_audit_approver?.filter(
