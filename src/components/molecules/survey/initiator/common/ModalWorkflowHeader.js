@@ -2,8 +2,10 @@ import {
   CardContentHeaderFooter,
   CardFormInput,
   FormLabel,
+  PekerjaSelect,
 } from "@/components/molecules/commons";
 import {
+  ButtonIcon,
   CloseModal,
   DatepickerField,
   ErrorValidation,
@@ -14,9 +16,11 @@ import { CardFormInputTeam } from "@/components/molecules/pat";
 import Image from "next/image";
 import { ImageCheck, ImageGroup } from "@/helpers/imagesUrl";
 import { addDaysToDate, checkRoleIsAdmin, dateNow } from "@/helpers";
+import { IconClose } from "@/components/icons";
 
 const ModalWorkflowHeader = ({
   isExtensionRequest,
+  isChangeInitiator = false,
   user,
   data,
   validationErrors,
@@ -160,13 +164,93 @@ const ModalWorkflowHeader = ({
               </div>
             </CardContentHeaderFooter>
           </div>
-        ) : (
+        ) : !isChangeInitiator ? (
           <div className="p-1">
             <CardContentHeaderFooter className={"px-5 py-2"}>
               <p className="text-sm font-semibold text-atlasian-red">
                 Pemberhentian
               </p>
               <div className="-mx-1 mt-2 mb-1">
+                <FormLabel
+                  title={"Alasan"}
+                  form={<TextAreaField isDisabled value={data?.reason} />}
+                />
+              </div>
+            </CardContentHeaderFooter>
+          </div>
+        ) : null}
+
+        {isChangeInitiator && (
+          <div className="p-1">
+            <CardContentHeaderFooter className={"px-5 py-2"}>
+              <p className="text-sm font-semibold text-atlasian-red">
+                Sesuaikan Initiator
+              </p>
+              <div className="-mx-1 mt-4 flex gap-4">
+                <FormLabel
+                  title={"Initator Awal"}
+                  form={
+                    <PekerjaSelect
+                      // handleChange={(e) => handleChangeSelect("anggota_tim_audit", e)}
+                      // selectedValue={
+                      //   filter?.anggota_tim_audit?.pn
+                      //     ? {
+                      //         label: filter?.anggota_tim_audit?.name,
+                      //         value: filter?.anggota_tim_audit,
+                      //       }
+                      //     : null
+                      // }
+                      customIcon={
+                        <ButtonIcon
+                          // handleClick={() => handleReset("anggota_tim_audit")}
+                          icon={<IconClose />}
+                        />
+                      }
+                      placeholder={"Inisiator Awal"}
+                    />
+                  }
+                  // validationError={
+                  //   validationErrors?.pelaksanaan_start && (
+                  //     <ErrorValidation
+                  //       message={validationErrors?.pelaksanaan_start}
+                  //       className={"ml-1.5"}
+                  //     />
+                  //   )
+                  // }
+                />
+                <FormLabel
+                  title={"Inisiator Pengganti"}
+                  form={
+                    <PekerjaSelect
+                      // handleChange={(e) => handleChangeSelect("anggota_tim_audit", e)}
+                      // selectedValue={
+                      //   filter?.anggota_tim_audit?.pn
+                      //     ? {
+                      //         label: filter?.anggota_tim_audit?.name,
+                      //         value: filter?.anggota_tim_audit,
+                      //       }
+                      //     : null
+                      // }
+                      customIcon={
+                        <ButtonIcon
+                          // handleClick={() => handleReset("anggota_tim_audit")}
+                          icon={<IconClose />}
+                        />
+                      }
+                      placeholder={"Inisiator Pengganti"}
+                    />
+                  }
+                  // validationError={
+                  //   validationErrors?.pelaksanaan_start && (
+                  //     <ErrorValidation
+                  //       message={validationErrors?.pelaksanaan_start}
+                  //       className={"ml-1.5"}
+                  //     />
+                  //   )
+                  // }
+                />
+              </div>
+              <div className="-mx-1 mt-4 mb-1">
                 <FormLabel
                   title={"Alasan"}
                   form={<TextAreaField isDisabled value={data?.reason} />}

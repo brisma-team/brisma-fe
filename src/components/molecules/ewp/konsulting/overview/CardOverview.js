@@ -43,17 +43,23 @@ const CardOverview = ({
   withoutHover,
   handleCloseProject,
   handleCopyProject,
+  // handleChangeInitiator,
 }) => {
   const router = useRouter();
   const listDropdown = [
     {
       label: (
-        <div className="flex gap-1">
+        <div className="flex gap-1 text-atlasian-gray-dark">
           <IconPerson size="medium" />
           <p className="my-auto">Change Initiator</p>
         </div>
       ),
-      action: "/ewp",
+      action: () => console.log("#"),
+      // action: () =>
+      //   handleChangeInitiator(
+      //     Boolean(data?.change_initiator?.length > 0),
+      //     data?.id
+      //   ),
     },
     {
       label: (

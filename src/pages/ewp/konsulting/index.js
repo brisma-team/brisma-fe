@@ -13,6 +13,7 @@ import {
   fetchApi,
   loadingSwal,
   successSwal,
+  // usePostData,
 } from "@/helpers";
 import _ from "lodash";
 import {
@@ -22,6 +23,8 @@ import {
 } from "@/components/molecules/ewp/konsulting/overview";
 import { useApprovalEWP } from "@/data/ewp";
 import { useOverviewEWPKonsulting } from "@/data/ewp/konsulting/overview";
+import { ModalWorkflowRequestExtensionAndTermination } from "@/components/molecules/survey/initiator/common";
+import { useSelector } from "react-redux";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -61,6 +64,8 @@ const index = () => {
   const [totalData, setTotalData] = useState(1);
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showModalApprovalExtension, setShowModalApprovalExtension] =
+    useState(false);
   const [filter, setFilter] = useState({
     project_code: "",
     project_name: "",
@@ -91,6 +96,16 @@ const index = () => {
 
   const { approvalEWP } = useApprovalEWP("ewp");
 
+  const workflowExtensionRequest = useSelector(
+    (state) => state.createSurvey.workflowExtensionRequest
+  );
+  const historyWorkflowExtensionRequest = useSelector(
+    (state) => state.createSurvey.historyWorkflowExtensionRequest
+  );
+  const validationErrorsWorkflowExtensionRequest = useSelector(
+    (state) => state.createSurvey.validationErrorsWorkflowExtensionRequest
+  );
+
   useEffect(() => {
     const handleSearch = () => {
       setParams(filter);
@@ -115,6 +130,7 @@ const index = () => {
           project_id,
           project_name,
           initiator,
+          change_initiator,
         } = v;
         return {
           id: v?.id,
@@ -139,6 +155,7 @@ const index = () => {
           href: `/ewp/projects/konsulting/${v?.id}/info`,
           created_at: createdAt,
           maker: `${initiator?.pn} - ${initiator?.nama}`,
+          change_initiator,
         };
       });
       setData(mapping);
@@ -176,6 +193,25 @@ const index = () => {
     return navigator.clipboard.writeText(window.location.href + `/${id}/info`);
   };
 
+  // const handleChangeInitiator = async (status, ewpid) => {
+  //   if (status == false) {
+  //     const confirm = await confirmationSwal(
+  //       "Apakah anda yakin ingin melakukan perubahan Inisiator?"
+  //     );
+
+  //     if (!confirm.value) {
+  //       return;
+  //     }
+  //     await usePostData(
+  //       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/change_initiator/create`,
+  //       { ewp_id: ewpid, note: "change initiator" }
+  //     );
+  //     overviewEWPKonsultingMutate();
+  //     setShowModalApprovalExtension(true);
+  //   } else {
+  //     setShowModalApprovalExtension(!showModalApprovalExtension);
+  //   }
+  // };
   return (
     <OverviewLayoutEWP data={approvalEWP?.data?.header}>
       {/* Start Breadcrumbs */}
@@ -232,6 +268,7 @@ const index = () => {
                 data={v}
                 handleCloseProject={handleCloseProject}
                 handleCopyProject={() => handleCopyProject(v?.id)}
+                // handleChangeInitiator={handleChangeInitiator}
               />
             );
           })}
@@ -246,6 +283,23 @@ const index = () => {
           handleChangeFilter("page", pageNow)
         }
         totalData={totalData}
+      />
+
+      <ModalWorkflowRequestExtensionAndTermination
+        isExtensionRequest={false}
+        isChangeInitiator={true}
+        workflowData={workflowExtensionRequest}
+        historyWorkflow={historyWorkflowExtensionRequest}
+        validationErrors={validationErrorsWorkflowExtensionRequest}
+        setShowModal={setShowModalApprovalExtension}
+        showModal={showModalApprovalExtension}
+        headerTitle={"Pergantian Inisiator"}
+        // handleChange={handleChangeTextModalExtensionRequest}
+        // handleChangeSelect={handleChangeSelectModalExtensionRequest}
+        // handleDelete={handleDeleteApproverModalExtensionRequest}
+        // handleAdd={handleAddApproverModalExtensionRequest}
+        // handleSubmit={handleSubmitModalExtensionRequest}
+        // handleCloseModal={handleCloseModalApprovalExtensionRequest}
       />
       {/* End Content */}
     </OverviewLayoutEWP>
