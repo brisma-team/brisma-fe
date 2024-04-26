@@ -293,7 +293,7 @@ const index = () => {
         validationErrors={validationErrorsWorkflowExtensionRequest}
         setShowModal={setShowModalApprovalExtension}
         showModal={showModalApprovalExtension}
-        headerTitle={"Approval Perpanjangan"}
+        headerTitle={"Pergantian Inisiator"}
         // handleChange={handleChangeTextModalExtensionRequest}
         // handleChangeSelect={handleChangeSelectModalExtensionRequest}
         // handleDelete={handleDeleteApproverModalExtensionRequest}
