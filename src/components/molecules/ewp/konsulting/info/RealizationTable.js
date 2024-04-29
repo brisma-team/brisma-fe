@@ -72,7 +72,9 @@ const RealizationTable = ({
             width="28%"
             className="border-t border-r cell-custom-dataTables"
           >
-            <div className="custom-table-header text-sm font-semibold">Log</div>
+            <div className="custom-table-header justify-center text-sm font-semibold">
+              Log
+            </div>
           </Header>
         </Headers>
         <div className="max-h-[18rem] overflow-y-scroll">
