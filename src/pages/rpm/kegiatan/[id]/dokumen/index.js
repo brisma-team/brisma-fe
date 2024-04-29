@@ -1,17 +1,12 @@
 import { Breadcrumbs, Card, DivButton, PageTitle } from "@/components/atoms";
 import {
   ApprovalItems,
+  ContentDocument,
+  ListContentDocument,
   ModalWorkflow,
-  // ModalComment
 } from "@/components/molecules/commons";
-import { NavigationDocument } from "@/components/molecules/commons";
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-// import {
-//   // useComment,
-//   useDocument,
-// } from "@/data/ewp/konsulting/peluang-peningkatan/matrix/detail";
-
 import { useDocument, useWorkflow } from "@/data/rpm/kegiatan";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -20,16 +15,20 @@ import {
   setWorkflowData,
   resetWorkflowData,
 } from "@/slices/rpm/kegiatan/documentRPMKegiatanSlice";
-import _ from "lodash";
 import {
+  checkRoleApprovalLog,
   confirmationSwal,
   convertDate,
+  fetchApi,
+  loadingSwal,
   setErrorValidation,
-  usePostData,
-  useUpdateData,
 } from "@/helpers";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { LandingLayoutRPMKegiatan } from "@/layouts/rpm";
+import { dokumenRPMDoc } from "@/templates/rpm/konsulting";
+import _ from "lodash";
+
+const listBab = [{ idx: 1, title: "Monitoring" }];
 
 const index = () => {
   const router = useRouter();
@@ -43,25 +42,13 @@ const index = () => {
   const dispatch = useDispatch();
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
-  const [
-    listContent,
-    // setListContent
-  ] = useState([{ idx: 1, total_comment: 0, title: "Monitoring" }]);
-  // const [listComment, setListComment] = useState([]);
 
-  // const ref = useRef(null);
   const [showModalApproval, setShowModalApproval] = useState(false);
-  // const [openCardComment, setOpenCardComment] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
-  // const [activeIndexComment, setActiveIndexComment] = useState(1);
   const activeDivRef = useRef(null);
-  const [hitEndpointCount, setHitEndpointCount] = useState(1);
   const [doc, setDoc] = useState([]);
   const [currentPosition, setCurrentPosition] = useState(1);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
-  const [bab, setBab] = useState(1);
-  // const [selectedParentCommentId, setSelectedParentCommentId] = useState(0);
-  // const [mappingCommentId, setMappingCommentId] = useState([]);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -79,15 +66,11 @@ const index = () => {
     (state) => state.documentRPMKegiatan.validationErrorsWorkflow
   );
 
-  const { documentData } = useDocument(params?.id, bab);
+  const { documentData } = useDocument(params?.id, 1);
   const { workflowRPMData, workflowRPMMutate } = useWorkflow({
     type: "project_rpm",
     id: params?.id,
   });
-  // const { commentData, commentDataMutate } = useComment(
-  //   params?.kkpt_id,
-  //   activeIndexComment
-  // );
 
   useEffect(() => {
     setBreadcrumbs([
@@ -104,60 +87,6 @@ const index = () => {
       },
     ]);
   }, [params?.id]);
-
-  // useEffect(() => {
-  //   if (commentData?.data?.length) {
-  //     const mapping = commentData?.data?.map((parent) => {
-  //       const {
-  //         id,
-  //         create_by,
-  //         createdAt,
-  //         is_closed,
-  //         deskripsi,
-  //         child_comment,
-  //       } = parent;
-  //       return {
-  //         id,
-  //         created_by: create_by,
-  //         created_at: createdAt,
-  //         is_closed,
-  //         deskripsi,
-  //         child_comment: child_comment?.length
-  //           ? child_comment?.map((child) => {
-  //               const { id, create_by, createdAt, is_closed, deskripsi } =
-  //                 child;
-  //               return {
-  //                 id,
-  //                 created_by: create_by,
-  //                 created_at: createdAt,
-  //                 is_closed,
-  //                 deskripsi,
-  //               };
-  //             })
-  //           : [],
-  //       };
-  //     });
-  //     setListComment(mapping);
-  //   }
-  // }, [commentData]);
-
-  // useEffect(() => {
-  //   const response = documentData?.data?.daftar_isi;
-  //   let accumulator = [];
-  //   if (response) {
-  //     const mapping = response?.map((bab) => {
-  //       accumulator.push(bab?.id);
-  //       return {
-  //         idx: bab?.key,
-  //         total_comment: bab?.jumlah_comment?.filter((v) => !v.is_closed)
-  //           .length,
-  //         title: bab.title,
-  //       };
-  //     });
-  //     // setListContent(mapping);
-  //     setMappingCommentId(accumulator);
-  //   }
-  // }, [documentData]);
 
   // [ START ] Function ini berfungsi agar setiap kali class page-container-a4 melewati class parent,
   // maka akan setter setCurrentPosition akan merubah data dan setter setHitEndpointCount
@@ -184,13 +113,6 @@ const index = () => {
       });
 
       setCurrentPosition(activeIndex + 1);
-
-      const isAtBottom =
-        parentContainer.scrollTop + parentContainer.clientHeight ===
-        parentContainer.scrollHeight;
-      if (isAtBottom && hitEndpointCount <= 10) {
-        setHitEndpointCount((prev) => Math.min(prev + 1, 10));
-      }
     }
   };
   // [ END ]
@@ -234,30 +156,45 @@ const index = () => {
   // [ END ]
 
   useEffect(() => {
-    setBab(hitEndpointCount);
-  }, [hitEndpointCount]);
+    if (documentData?.data) {
+      const mappingData = documentData?.data?.kkpts?.map((v) => {
+        const rekomendasi = v?.rpm_action_plan?.length
+          ? v?.rpm_action_plan?.map((rekomendasi) => {
+              return {
+                deadline: rekomendasi?.batas_waktu,
+                desc: rekomendasi?.rekomendasi_kkpt?.description,
+                lampiran: rekomendasi?.lampiran?.length
+                  ? rekomendasi?.lampiran?.map((lampiran) => {
+                      return _.pick(lampiran, ["file_url", "file_name"]);
+                    })
+                  : [],
+                status: rekomendasi?.status_complete,
+                tanggapan: rekomendasi?.desc_tanggapan,
+              };
+            })
+          : [];
+        return {
+          ..._.pick(v?.kkpt_ewp?.kkpt, [
+            "kondisi",
+            "sebab",
+            "tanggapan_manajemen",
+          ]),
+          judul: v?.nama_kkpt,
+          rekomendasi,
+        };
+      });
 
-  useEffect(() => {
-    if (documentData?.data && listContent?.length) {
-      const findBab = listContent?.find((value) => value?.idx === bab);
-      const isFilled = doc?.find((value) => value?.idx === bab) !== undefined;
-      if (!isFilled) {
-        setDoc((prev) => [
-          ...prev,
-          {
-            idx: findBab?.idx,
-            title: findBab?.title,
-            content: documentData?.data?.data,
-          },
-        ]);
-        if (bab <= listContent.length) {
-          setBab(bab + 1);
-        }
-      }
-
-      return;
+      setDoc((prev) => [
+        ...prev,
+        {
+          idx: 1,
+          bab_id: 1,
+          title: "Monitoring",
+          content: mappingData,
+        },
+      ]);
     }
-  }, [documentData, listContent]);
+  }, [documentData]);
 
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
@@ -298,6 +235,7 @@ const index = () => {
         const mapping = workflowRPMData?.data?.log?.map((v) => {
           return {
             "P.I.C": v?.from?.pn + " - " + v?.from?.nama,
+            Role: checkRoleApprovalLog(v?.note, v?.is_signed),
             Alasan: v?.note,
             Status:
               v?.is_signed === true
@@ -318,12 +256,12 @@ const index = () => {
   }, [workflowRPMData]);
   // [ END ]
 
-  // const handleClickComment = (id) => {
-  //   setOpenCardComment(true);
-  //   setActiveIndexComment(id);
-  // };
-
   // [ START ] function untuk Modal Workflow
+  const handleCloseModalWorkflow = () => {
+    dispatch(resetWorkflowData());
+    workflowRPMMutate();
+  };
+
   const handleAdd = (property) => {
     const newData = [...workflowData[property]];
     newData.push({
@@ -413,14 +351,17 @@ const index = () => {
         }
       }
 
+      loadingSwal();
       if (actionType === "change") {
-        const response = await useUpdateData(
+        const response = await fetchApi(
+          "PATCH",
           `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/workflow/change`,
           data
         );
         if (!response.isDismissed) return;
       } else {
-        await usePostData(
+        await fetchApi(
+          "POST",
           `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/workflow/${actionType}`,
           data
         );
@@ -429,47 +370,25 @@ const index = () => {
       workflowRPMMutate();
       dispatch(resetWorkflowData());
       setShowModalApproval(false);
+      loadingSwal("close");
     }
     workflowRPMMutate();
   };
   // [ END ]
 
-  // [ START ] COMMENT
-  // const handleSubmitCommentParent = async (e, value) => {
-  //   e.stopPropagation();
-  //   const body = {
-  //     ref_bab_mapa_id: activeIndexComment.toString(),
-  //     deskripsi: value,
-  //   };
+  const handleActiveIndex = (index) => {
+    setActiveIndex(index);
+  };
 
-  //   await usePostData(
-  //     `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${params?.id}?ref_bab_mapa_id=${activeIndexComment}`,
-  //     body
-  //   );
-
-  //   commentDataMutate();
-  // };
-
-  // const handleSubmitCommentChild = async (e, value) => {
-  //   e.stopPropagation();
-  //   const body = {
-  //     ref_bab_mapa_id: activeIndexComment.toString(),
-  //     deskripsi: value,
-  //     parent_comment_id: selectedParentCommentId,
-  //   };
-
-  //   await usePostData(
-  //     `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${params?.id}?ref_bab_mapa_id=${activeIndexComment}`,
-  //     body
-  //   );
-
-  //   commentDataMutate();
-  // };
-
-  // const handleSelectedParentComment = (id) => {
-  //   setSelectedParentCommentId(id);
-  // };
-  // [ END ]
+  const renderContent = (index, content) => {
+    return content?.length
+      ? content
+          .map((data, index_data) => {
+            return dokumenRPMDoc(data, index_data);
+          })
+          .join("")
+      : "";
+  };
 
   return (
     <LandingLayoutRPMKegiatan>
@@ -479,110 +398,46 @@ const index = () => {
       </div>
       {/* Start Content */}
       <div className="flex w-full gap-6">
-        <div className="w-64">
-          <div>
-            <Card>
-              <div className="px-3 py-1 w-full">
-                <div className="text-xl">Daftar Isi</div>
-                <div className="pl-2 mt-0.5">
-                  {listContent.map((v, i) => {
-                    return (
-                      <NavigationDocument
-                        key={i}
-                        no={i + 1}
-                        title={v.title}
-                        handleClick={() => setActiveIndex(v.idx)}
-                        activeIndex={currentPosition}
-                        count={v.total_comment}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
+        <ListContentDocument
+          data={listBab}
+          currentPosition={currentPosition}
+          handleActiveIndex={handleActiveIndex}
+        />
         <div>
-          <Card>
-            <div className="overflow-y-scroll my-2 parent max-h-[40rem]">
-              {/* <ModalComment
-                callbackRef={ref}
-                show={openCardComment}
-                handleClickOutside={() => setOpenCardComment(false)}
-                handleSubmitParent={handleSubmitCommentParent}
-                handleSubmitChild={handleSubmitCommentChild}
-                handleSelectedParentComment={handleSelectedParentComment}
-                data={listComment}
-              /> */}
-              {doc.map((v, i) => {
-                return (
-                  <div
-                    key={i}
-                    className={`page-container-a4 shrink-0 ${
-                      i + 1 === activeIndex ? "active" : ""
-                    }`}
-                    tabIndex={i + 1 === activeIndex ? 0 : -1}
-                    ref={i + 1 === activeIndex ? activeDivRef : null}
-                  >
-                    {v.content && (
-                      <div className="px-4 h-full w-full relative page-content-a4">
-                        <div className="flex justify-between">
-                          <div className="font-bold text-xl">{v.title}</div>
-                          {/* <div className="flex items-center" ref={ref}>
-                            <DivButton
-                              handleClick={() =>
-                                handleClickComment(mappingCommentId[i])
-                              }
-                            >
-                              <Image src={ImageChat} alt="chat" />
-                            </DivButton>
-                          </div> */}
-                        </div>
-                        {/* {v.idx != 1 ? ( */}
-                        <div
-                          className="mt-4"
-                          dangerouslySetInnerHTML={{ __html: v.content }}
-                        />
-                        {/* ) : v?.content?.rekomendasi.length > 0 ? (
-                          "Data tersedia, namun tidak dapat menampilkan sesuai format."
-                        ) : (
-                          <i>Data tidak ditemukan</i>
-                        )} */}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
+          <ContentDocument
+            dataDoc={doc}
+            activeDivRef={activeDivRef}
+            activeIndex={activeIndex}
+            renderContent={renderContent}
+            withoutComment
+            overflowScrollX
+          />
         </div>
         <div>
           <DivButton
             handleClick={() => setShowModalApproval(true)}
-            className="no-underline hover:no-underline w-56 mb-5"
+            className="no-underline hover:no-underline w-56"
           >
-            <div>
-              <Card>
-                <div className="w-full">
-                  <div className="px-3">
-                    <p className="text-brisma font-bold text-xl">Approval</p>
-                    <ApprovalItems
-                      title={"P.I.C Auditor"}
-                      text={workflowData?.maker?.nama}
-                    />
-                    <ApprovalItems
-                      title={"Approver"}
-                      text={workflowData?.ref_tim_audit_approver}
-                      data={workflowData}
-                    />
-                    <ApprovalItems
-                      title={"Signer"}
-                      text={workflowData?.ref_tim_audit_signer}
-                    />
-                  </div>
-                </div>
-              </Card>
-            </div>
+            <Card>
+              <div className="w-full px-3">
+                <p className="text-brisma font-bold text-xl">Approval</p>
+                <ApprovalItems
+                  title={"P.I.C Auditor"}
+                  text={
+                    workflowData?.maker?.pn + " - " + workflowData?.maker?.nama
+                  }
+                />
+                <ApprovalItems
+                  title={"Approver"}
+                  text={workflowData?.ref_tim_audit_approver}
+                  data={workflowData}
+                />
+                <ApprovalItems
+                  title={"Signer"}
+                  text={workflowData?.ref_tim_audit_signer}
+                />
+              </div>
+            </Card>
           </DivButton>
           <ModalWorkflow
             workflowData={workflowData}
@@ -596,7 +451,8 @@ const index = () => {
             handleAdd={handleAdd}
             handleChangeSelect={handleChangeSelect}
             handleChangeText={handleChangeText}
-            withSigner={true}
+            handleCloseModal={handleCloseModalWorkflow}
+            withSigner
           />
         </div>
       </div>

@@ -127,7 +127,6 @@ const index = () => {
 
   useEffect(() => {
     if (monitoringPeluangList?.data?.kkpt?.length > 0) {
-      console.log(monitoringPeluangList);
       let total_acc_rekomendasi = 0;
       let total_acc_incomplete = 0;
       let total_acc_onprogress = 0;

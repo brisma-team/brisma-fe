@@ -19,12 +19,21 @@ const ContentDocument = ({
   handleCloseComment,
   handleClickComment,
   isHideButton = false,
+  withoutComment,
+  overflowScrollX,
+  width,
 }) => {
   const ref = useRef(null);
 
   return (
     <Card>
-      <div className="overflow-y-scroll overflow-x-hidden my-2 parent max-h-[40rem] flex flex-col">
+      <div
+        className={`overflow-y-scroll ${
+          overflowScrollX
+            ? `overflow-x-scroll ${width || "w-full"}`
+            : "overflow-x-hidden"
+        } my-2 parent max-h-[40rem] flex flex-col`}
+      >
         <ModalComment
           callbackRef={ref}
           isLoading={isLoadingComment}
@@ -51,15 +60,19 @@ const ContentDocument = ({
                 <div className="px-4 h-full w-full relative page-content-a4">
                   <div className="flex justify-between">
                     <div className="font-bold text-xl">{v.title}</div>
-                    <div className="flex items-center" ref={ref}>
-                      <DivButton
-                        handleClick={() =>
-                          handleClickComment(v?.bab_id, v?.idx)
-                        }
-                      >
-                        <Image src={ImageChat} alt="chat" />
-                      </DivButton>
-                    </div>
+                    {!withoutComment ? (
+                      <div className="flex items-center" ref={ref}>
+                        <DivButton
+                          handleClick={() =>
+                            handleClickComment(v?.bab_id, v?.idx)
+                          }
+                        >
+                          <Image src={ImageChat} alt="chat" />
+                        </DivButton>
+                      </div>
+                    ) : (
+                      ""
+                    )}
                   </div>
                   <div
                     className="mt-4"
