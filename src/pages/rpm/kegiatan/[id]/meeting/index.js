@@ -59,6 +59,7 @@ const index = () => {
   );
 
   const [filter, setFilter] = useState({
+    ewpId: "",
     judul: "",
     metode: "",
     maker: "",
@@ -83,13 +84,12 @@ const index = () => {
     limit: 4,
     page: 1,
   });
-
+  const { landingStatus } = useLandingStatus(id);
   const { projectDetail } = useProjectDetail({ id: params?.ewpId });
   const { overview, overviewMutate } = useOverview({
-    id: params?.ewpId,
     ...params,
+    id: params?.ewpId,
   });
-  const { landingStatus } = useLandingStatus(id);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -166,10 +166,21 @@ const index = () => {
 
   useEffect(() => {
     const projectInfo = landingStatus?.data?.project;
-    setParams({
-      ewpId: projectInfo?.ewp_id,
-    });
+    if (projectInfo !== undefined) {
+      setParams({
+        ...params,
+        ewpId: projectInfo?.ewp_id,
+      });
+      setFilter({
+        ...filter,
+        ewpId: projectInfo?.ewp_id,
+      });
+    }
   }, [landingStatus]);
+
+  useEffect(() => {
+    console.log(params);
+  }, [params]);
 
   // [ START ] handler for card filter
   const handleChangeFilter = (props, value) => {
@@ -188,7 +199,7 @@ const index = () => {
 
   const handleClickCarding = (e, meeting_id) => {
     e.stopPropagation();
-    router.push(`/ewp/konsulting/${params?.ewpId}/meeting/${meeting_id}`);
+    router.push(`/rpm/kegiatan/${id}/meeting/${meeting_id}`);
   };
 
   // [ START ] handler for modal add meeting

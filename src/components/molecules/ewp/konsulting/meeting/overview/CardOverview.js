@@ -144,7 +144,7 @@ const CardOverview = ({
               <p className="text-sm font-semibold -mb-1">Deskripsi Meeting</p>
               <p>{data?.desc}</p>
             </div>
-            <div className="border-x border-t">
+            <div className="border-x border-t overflow-auto">
               <CardBody
                 title={"Link Meeting"}
                 value={
