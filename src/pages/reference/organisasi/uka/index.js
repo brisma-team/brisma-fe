@@ -214,7 +214,7 @@ const index = () => {
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
       <div className="flex justify-between items-center mb-6">
-        <PageTitle text="User S.K.A.I" />
+        <PageTitle text="Unit Kantor Audit" />
       </div>
       {/* Start Content */}
       <div className="w-full">

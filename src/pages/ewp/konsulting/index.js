@@ -13,7 +13,7 @@ import {
   fetchApi,
   loadingSwal,
   successSwal,
-  usePostData,
+  // usePostData,
 } from "@/helpers";
 import _ from "lodash";
 import {
@@ -193,25 +193,25 @@ const index = () => {
     return navigator.clipboard.writeText(window.location.href + `/${id}/info`);
   };
 
-  const handleChangeInitiator = async (status, ewpid) => {
-    if (status == false) {
-      const confirm = await confirmationSwal(
-        "Apakah anda yakin ingin melakukan perubahan Inisiator?"
-      );
+  // const handleChangeInitiator = async (status, ewpid) => {
+  //   if (status == false) {
+  //     const confirm = await confirmationSwal(
+  //       "Apakah anda yakin ingin melakukan perubahan Inisiator?"
+  //     );
 
-      if (!confirm.value) {
-        return;
-      }
-      await usePostData(
-        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/change_initiator/create`,
-        { ewp_id: ewpid, note: "change initiator" }
-      );
-      overviewEWPKonsultingMutate();
-      setShowModalApprovalExtension(true);
-    } else {
-      setShowModalApprovalExtension(!showModalApprovalExtension);
-    }
-  };
+  //     if (!confirm.value) {
+  //       return;
+  //     }
+  //     await usePostData(
+  //       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/change_initiator/create`,
+  //       { ewp_id: ewpid, note: "change initiator" }
+  //     );
+  //     overviewEWPKonsultingMutate();
+  //     setShowModalApprovalExtension(true);
+  //   } else {
+  //     setShowModalApprovalExtension(!showModalApprovalExtension);
+  //   }
+  // };
   return (
     <OverviewLayoutEWP data={approvalEWP?.data?.header}>
       {/* Start Breadcrumbs */}
@@ -268,7 +268,7 @@ const index = () => {
                 data={v}
                 handleCloseProject={handleCloseProject}
                 handleCopyProject={() => handleCopyProject(v?.id)}
-                handleChangeInitiator={handleChangeInitiator}
+                // handleChangeInitiator={handleChangeInitiator}
               />
             );
           })}
