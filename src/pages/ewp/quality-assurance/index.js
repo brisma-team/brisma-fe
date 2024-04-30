@@ -39,7 +39,7 @@ import {
   schedulePATSchema,
   summaryPATSchema,
   scheduleNonPATSchema,
-} from "@/helpers/schemas/ewp/konsulting/overview/projectOverviewEWPKonsultingSchema";
+} from "@/helpers/schemas/ewp/common/overviewEWPSchema";
 import { ModalAddProjectEWP } from "@/components/molecules/ewp/common/overview";
 
 const breadcrumbs = [

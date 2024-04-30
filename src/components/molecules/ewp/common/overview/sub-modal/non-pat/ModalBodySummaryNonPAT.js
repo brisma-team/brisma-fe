@@ -5,7 +5,7 @@ import CardContent from "../../CardContent";
 import Link from "next/link";
 import TableRelatedProject from "./TableRelatedProject";
 
-const ModalBodySummaryNonPAT = ({ data, setCurrentModalStage }) => {
+const ModalBodySummaryNonPAT = ({ module, data, setCurrentModalStage }) => {
   useEffect(() => {
     setCurrentModalStage(4);
   }, []);
@@ -27,7 +27,7 @@ const ModalBodySummaryNonPAT = ({ data, setCurrentModalStage }) => {
                         <p>{data?.ref_metode?.nama}</p>
                       </CardContent>
                     }
-                    label="Metode Audit"
+                    label="Metode Audit*"
                     widthLabel={"w-3/12"}
                     widthForm={"w-9/12"}
                   />
@@ -37,7 +37,7 @@ const ModalBodySummaryNonPAT = ({ data, setCurrentModalStage }) => {
                         <p>{data?.ref_tipe?.nama}</p>
                       </CardContent>
                     }
-                    label="Tipe Audit"
+                    label="Tipe Audit*"
                     widthLabel={"w-3/12"}
                     widthForm={"w-9/12"}
                   />
@@ -47,14 +47,14 @@ const ModalBodySummaryNonPAT = ({ data, setCurrentModalStage }) => {
                         <p>{data?.ref_jenis?.nama}</p>
                       </CardContent>
                     }
-                    label="Jenis Audit"
+                    label={`Jenis Audit${module !== "qa" ? "*" : ""}`}
                     widthLabel={"w-3/12"}
                     widthForm={"w-9/12"}
                   />
                   <FormWithLabel
                     form={
                       <CardContent>
-                        <div className="min-h-[1.3rem]">
+                        <div className="min-h-[1.1rem]">
                           <p>{data?.ref_tema?.nama}</p>
                         </div>
                       </CardContent>
@@ -87,14 +87,14 @@ const ModalBodySummaryNonPAT = ({ data, setCurrentModalStage }) => {
                         </CardContent>
                       </div>
                     }
-                    label="Periode Kegiatan"
+                    label="Periode Kegiatan*"
                     widthLabel={"w-3/12"}
                     widthForm={"w-9/12"}
                   />
                   <FormWithLabel
                     form={
                       <CardContent>
-                        <div className="min-h-[1.3rem]">
+                        <div className="min-h-[1.1rem]">
                           <p>{data?.deskripsi || "-"}</p>
                         </div>
                       </CardContent>
@@ -122,7 +122,9 @@ const ModalBodySummaryNonPAT = ({ data, setCurrentModalStage }) => {
                   <FormWithLabel
                     form={
                       <CardContent>
-                        <p>{data?.perihal}</p>
+                        <div className="min-h-[1.1rem]">
+                          <p>{data?.perihal}</p>
+                        </div>
                       </CardContent>
                     }
                     label="Perihal"

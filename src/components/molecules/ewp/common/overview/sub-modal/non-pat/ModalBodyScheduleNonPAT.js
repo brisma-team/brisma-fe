@@ -22,6 +22,7 @@ import CardContent from "../../CardContent";
 import Link from "next/link";
 
 const ModalBodyScheduleNonPAT = ({
+  module,
   data,
   validationErrors,
   setCurrentModalStage,
@@ -213,7 +214,7 @@ const ModalBodyScheduleNonPAT = ({
                         placeholder="Jenis Audit"
                       />
                     }
-                    label="Jenis Audit*"
+                    label={`Jenis Audit${module !== "qa" ? "*" : ""}`}
                     widthLabel={"w-3/12"}
                     widthForm={"w-9/12"}
                     errors={

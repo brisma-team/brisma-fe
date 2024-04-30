@@ -131,6 +131,7 @@ const ModalAddProjectEWP = ({
           // Start Submodal sumber audit Non-PAT
           currentModalStage === 2 ? (
             <ModalBodyScheduleNonPAT
+              module={module}
               data={payload}
               validationErrors={validationErrorsScheduleNonPAT}
               setCurrentModalStage={setCurrentModalStage}
@@ -146,6 +147,7 @@ const ModalAddProjectEWP = ({
           ) : (
             currentModalStage === 4 && (
               <ModalBodySummaryNonPAT
+                module={module}
                 data={payload}
                 isPat={isPat}
                 setCurrentModalStage={setCurrentModalStage}
