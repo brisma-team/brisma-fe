@@ -52,6 +52,9 @@ import anggaranSBPAddendumReducer from "./slices/ewp/konsulting/addendum/lain/an
 import ringkasanSBPAddendumReducer from "./slices/ewp/konsulting/addendum/lain/ringkasanSBPAddendumSlice";
 import ringkasanUtamaAddendumEWPKonsultingReducer from "./slices/ewp/konsulting/addendum/utama/ringkasanUtamaAddendumEWPKonsultingSlice";
 
+// EWP Quality Assurance
+import overviewEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/overview/overviewEWPQualityAssuranceSlice";
+
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
 import beritaAcaraEntranceEWPReducer from "./slices/ewp/konvensional/entrance/beritaAcaraEntranceEWPSlice";
@@ -140,6 +143,9 @@ export const store = configureStore({
     ringkasanSBPAddendum: ringkasanSBPAddendumReducer,
     ringkasanUtamaAddendumEWPKonsulting:
       ringkasanUtamaAddendumEWPKonsultingReducer,
+
+    // EWP Quality Assurance
+    overviewEWPQualityAssurance: overviewEWPQualityAssuranceReducer,
 
     //RPM
     documentRPMKegiatan: documentRPMKegiatanReducer,

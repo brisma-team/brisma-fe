@@ -34,8 +34,7 @@ const index = () => {
         title: "Quality Assurance",
         description:
           "Modul pengerjaan Electronic Working Paper Audit untuk Kegiatan Non-Audit Review Quality Assurance.",
-        url: "#",
-        isDisabled: true,
+        url: "/ewp/quality-assurance",
       },
       {
         subtitle: "E.W.P",
