@@ -183,14 +183,15 @@ const index = () => {
     await fetchApi(
       "DELETE",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/disable/${id}`,
-      {}
+      { id }
     );
+    overviewEWPKonsultingMutate();
     loadingSwal("close");
   };
 
   const handleCopyProject = async (id) => {
-    successSwal("Link project berhasil disalin ke clipboard.");
-    return navigator.clipboard.writeText(window.location.href + `/${id}/info`);
+    navigator.clipboard.writeText(window.location.href + `/${id}/info`);
+    return successSwal("Link project berhasil disalin ke clipboard.");
   };
 
   // const handleChangeInitiator = async (status, ewpid) => {
@@ -266,8 +267,8 @@ const index = () => {
               <CardOverview
                 key={i}
                 data={v}
-                handleCloseProject={() => handleCloseProject(v?.id)}
-                handleCopyProject={() => handleCopyProject(v?.id)}
+                handleCloseProject={async () => await handleCloseProject(v?.id)}
+                handleCopyProject={async () => await handleCopyProject(v?.id)}
                 // handleChangeInitiator={handleChangeInitiator}
               />
             );
