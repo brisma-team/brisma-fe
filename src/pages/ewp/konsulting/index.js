@@ -170,7 +170,7 @@ const index = () => {
     setFilter({ ...filter, [props]: value });
   };
 
-  const handleCloseProject = async () => {
+  const handleCloseProject = async (id) => {
     const confirm = await confirmationSwal(
       "Apakah anda yakin ingin menutup project ini?"
     );
@@ -181,8 +181,8 @@ const index = () => {
 
     loadingSwal();
     await fetchApi(
-      "PATCH",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}//ewp/sbp/disable/${params?.id}`,
+      "DELETE",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/disable/${id}`,
       {}
     );
     loadingSwal("close");
@@ -266,7 +266,7 @@ const index = () => {
               <CardOverview
                 key={i}
                 data={v}
-                handleCloseProject={handleCloseProject}
+                handleCloseProject={() => handleCloseProject(v?.id)}
                 handleCopyProject={() => handleCopyProject(v?.id)}
                 // handleChangeInitiator={handleChangeInitiator}
               />

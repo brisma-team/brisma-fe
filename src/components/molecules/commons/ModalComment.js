@@ -66,7 +66,7 @@ const ModalComment = ({
         <div className="comment ml-1.5" style={{ padding: "0.07rem" }}>
           <Card>
             <div className="comment px-4 w-full pb-2">
-              <p className="comment text-xl font-bold">Comments</p>
+              <p className="comment text-xl font-bold">Komentar</p>
               {isLoading ? (
                 <div className="my-2 flex justify-center overflow-hidden">
                   <Spinner size="large" />;
@@ -76,7 +76,7 @@ const ModalComment = ({
                   {!isHideButton ? (
                     <div className="comment rounded bg-atlasian-purple text-white mt-2 w-36 flex justify-center items-center">
                       <ButtonField
-                        text={"Tambah Comment"}
+                        text={"Tambah Komentar"}
                         handler={(e) => {
                           e.stopPropagation();
                           setNewComment(!newComment);
@@ -114,22 +114,24 @@ const ModalComment = ({
                     ""
                   )}
                   <div className="w-full py-1">
-                    {data?.length
-                      ? data?.map((parent, idx) => {
-                          return (
-                            <div key={idx} className="py-2">
-                              <CardCommentDetail
-                                data={parent}
-                                handleSubmitCommentChild={
-                                  handleSubmitCommentChild
-                                }
-                                handleCloseComment={handleCloseComment}
-                                isHideButton={isHideButton}
-                              />
-                            </div>
-                          );
-                        })
-                      : ""}
+                    {data?.length ? (
+                      data?.map((parent, idx) => {
+                        return (
+                          <div key={idx} className="py-2">
+                            <CardCommentDetail
+                              data={parent}
+                              handleSubmitCommentChild={
+                                handleSubmitCommentChild
+                              }
+                              handleCloseComment={handleCloseComment}
+                              isHideButton={isHideButton}
+                            />
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <p>Tidak ada komentar.</p>
+                    )}
                   </div>
                 </>
               )}
