@@ -644,7 +644,7 @@ const index = () => {
           ) : currentContentStage === 3 ? (
             <TemplateSurvey
               data={payloadTemplateSurvey}
-              baseUrl={`${baseUrl}/preview/${payloadTemplateSurvey?.id}`}
+              baseUrl={`${baseUrl}/info/preview?template_id=${payloadTemplateSurvey?.id}`}
               handleChange={handleChangePayloadTemplateSurvey}
               handleReset={handleResetPayloadTemplateSurvey}
               handleClickSave={handleSubmitEditTemplate}

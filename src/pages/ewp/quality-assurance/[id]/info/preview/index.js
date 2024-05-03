@@ -75,7 +75,7 @@ const index = () => {
         },
         {
           name: `Preview Template Survey`,
-          path: `/ewp/quality-assurance/${params?.id}/preview/${params?.template_id}`,
+          path: `/ewp/quality-assurance/${params?.id}/info/preview?template_id=${params?.template_id}`,
         },
       ]);
     } else {
