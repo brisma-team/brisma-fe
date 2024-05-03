@@ -57,6 +57,7 @@ import overviewEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/o
 import infoEWPQualityAssuranceSliceReducer from "./slices/ewp/quality-assurance/info/infoEWPQualityAssuranceSlice";
 import previewTemplateSurveyEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/info/previewTemplateSurveyEWPQualityAssuranceSlice";
 import timEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/tim/timEWPQualityAssuranceSlice";
+import ukerAssessmentEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/uker-assessment/ukerAssessmentEWPQualityAssuranceSlice";
 
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
@@ -153,6 +154,7 @@ export const store = configureStore({
     previewTemplateSurveyEWPQualityAssurance:
       previewTemplateSurveyEWPQualityAssuranceReducer,
     timEWPQualityAssurance: timEWPQualityAssuranceReducer,
+    ukerAssessmentEWPQualityAssurance: ukerAssessmentEWPQualityAssuranceReducer,
 
     //RPM
     documentRPMKegiatan: documentRPMKegiatanReducer,
