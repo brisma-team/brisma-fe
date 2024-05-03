@@ -264,9 +264,9 @@ const index = () => {
         <PrevNextNavigation
           baseUrl={pathName}
           routes={routes}
-          prevUrl={"/tim-timeplan"}
-          nextUrl={"/program-kerja"}
-          marginLeft={"-60px"}
+          prevUrl={"/jadwal"}
+          nextUrl={"/dokumen"}
+          marginLeft={"-67px"}
         />
       </div>
       {/* Start Content */}
