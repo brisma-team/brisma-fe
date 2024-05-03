@@ -1,6 +1,6 @@
 import { DivButton } from "@/components/atoms";
 import { DropdownCard } from "@/components/molecules/commons";
-import { capitalizeEveryWord, convertDate } from "@/helpers";
+import { capitalizeEveryWord, checkRoleIsAdmin, convertDate } from "@/helpers";
 import ProgressBar from "@atlaskit/progress-bar";
 import { N800 } from "@atlaskit/theme/colors";
 import { token } from "@atlaskit/tokens";
@@ -44,6 +44,7 @@ const CardOverview = ({
   handleCloseProject,
   handleCopyProject,
   handleChangeInitiator,
+  user,
 }) => {
   const router = useRouter();
   const listDropdown = [
@@ -55,6 +56,7 @@ const CardOverview = ({
         </div>
       ),
       action: handleChangeInitiator,
+      isShown: checkRoleIsAdmin(user?.role_kode),
     },
     {
       label: (
@@ -64,6 +66,10 @@ const CardOverview = ({
         </div>
       ),
       action: handleCloseProject,
+      isShown: Boolean(
+        user?.pn ==
+          data?.auditor?.filter((item) => item.is_initiator === true)[0]?.pn
+      ),
     },
     {
       label: (
@@ -73,6 +79,7 @@ const CardOverview = ({
         </div>
       ),
       action: handleCopyProject,
+      isShown: true,
     },
   ];
   const colorLabel = {

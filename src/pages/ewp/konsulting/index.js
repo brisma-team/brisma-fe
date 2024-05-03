@@ -31,6 +31,7 @@ import { useOverviewEWPKonsulting } from "@/data/ewp/konsulting/overview";
 import { ModalWorkflowRequestChangeInitiator } from "@/components/molecules/ewp/konsulting/common";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import useUser from "@/data/useUser";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -99,6 +100,7 @@ const index = () => {
     limit: 4,
     page: 1,
   });
+  const { user } = useUser();
 
   const { overviewEWPKonsulting, overviewEWPKonsultingMutate } =
     useOverviewEWPKonsulting(params);
@@ -513,6 +515,7 @@ const index = () => {
                     v?.change_initiator[0]?.id
                   )
                 }
+                user={user?.data}
               />
             );
           })}
