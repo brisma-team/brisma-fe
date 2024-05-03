@@ -8,7 +8,7 @@ import {
   setPayloadKuesioner,
   setPayloadInformasi,
   resetPayloadKuesioner,
-} from "@/slices/ewp/quality-assurance/preview/previewTemplateSurveyEWPQualityAssuranceSlice";
+} from "@/slices/ewp/quality-assurance/info/previewTemplateSurveyEWPQualityAssuranceSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
   useInformation,

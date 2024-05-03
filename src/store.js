@@ -55,7 +55,7 @@ import ringkasanUtamaAddendumEWPKonsultingReducer from "./slices/ewp/konsulting/
 // EWP Quality Assurance
 import overviewEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/overview/overviewEWPQualityAssuranceSlice";
 import infoEWPQualityAssuranceSliceReducer from "./slices/ewp/quality-assurance/info/infoEWPQualityAssuranceSlice";
-import previewTemplateSurveyEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/preview/previewTemplateSurveyEWPQualityAssuranceSlice";
+import previewTemplateSurveyEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/info/previewTemplateSurveyEWPQualityAssuranceSlice";
 
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
