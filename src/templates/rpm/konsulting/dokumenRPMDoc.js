@@ -1,6 +1,6 @@
 import { convertDate } from "@/helpers";
 
-const peluangPeningkatanDocs = (data, index) => {
+const dokumenRPMDoc = (data, index) => {
   return `
     <p style="font-size: 18px; font-weight: bold;">${index + 1}. ${
     data?.judul
@@ -14,7 +14,7 @@ const peluangPeningkatanDocs = (data, index) => {
         <th width="1%">
           <p style="font-size: 14px; font-weight: 500;">:</p>
         </th>
-        <th width="86%">${data?.kondisi || ""}
+        <th width="86%">${data?.kondisi || "-"}
         </th>
       </tr>
       <tr>
@@ -25,7 +25,7 @@ const peluangPeningkatanDocs = (data, index) => {
           <p style="font-size: 14px; font-weight: 500;">:</p>
         </th>
         <th width="86%">
-        ${data?.sebab || ""}
+        ${data?.sebab || "-"}
         </th>
       </tr>
       <tr>
@@ -36,7 +36,7 @@ const peluangPeningkatanDocs = (data, index) => {
           <p style="font-size: 14px; font-weight: 500;">:</p>
         </th>
         <th width="86%">
-        ${data?.tanggapan_manajemen || ""}
+        ${data?.tanggapan_manajemen || "-"}
         </th>
       </tr>
       <table>
@@ -90,7 +90,11 @@ const peluangPeningkatanDocs = (data, index) => {
                     `;
                   })
                   .join("")
-              : ""
+              : `<tr>
+              <td colspan="5" style="text-align:center; border: 1px solid #ccc;">
+                <p style="font-size:12px">No Data Available</p>
+              </td>
+            </tr>`
           }
         </tbody>
       </table>
@@ -100,4 +104,4 @@ const peluangPeningkatanDocs = (data, index) => {
       `;
 };
 
-export default peluangPeningkatanDocs;
+export default dokumenRPMDoc;
