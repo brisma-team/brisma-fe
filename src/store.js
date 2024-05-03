@@ -54,6 +54,8 @@ import ringkasanUtamaAddendumEWPKonsultingReducer from "./slices/ewp/konsulting/
 
 // EWP Quality Assurance
 import overviewEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/overview/overviewEWPQualityAssuranceSlice";
+import infoEWPQualityAssuranceSliceReducer from "./slices/ewp/quality-assurance/info/infoEWPQualityAssuranceSlice";
+import previewTemplateSurveyEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/preview/previewTemplateSurveyEWPQualityAssuranceSlice";
 
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
@@ -146,6 +148,9 @@ export const store = configureStore({
 
     // EWP Quality Assurance
     overviewEWPQualityAssurance: overviewEWPQualityAssuranceReducer,
+    infoEWPQualityAssurance: infoEWPQualityAssuranceSliceReducer,
+    previewTemplateSurveyEWPQualityAssurance:
+      previewTemplateSurveyEWPQualityAssuranceReducer,
 
     //RPM
     documentRPMKegiatan: documentRPMKegiatanReducer,
