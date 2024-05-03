@@ -1,24 +1,28 @@
 import { Breadcrumbs, CardLanding, PageTitle } from "@/components/atoms";
-import { useProjectDetail } from "@/data/ewp/konsulting";
-import { useLandingStatus } from "@/data/ewp/konsulting/landing";
+import { useAuditInfo } from "@/data/ewp/common/info";
+import { useLandingStatus } from "@/data/ewp/common";
 import { LandingLayoutEWPQualityAssurance } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
 const index = () => {
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const baseUrl = `/ewp/quality-assurance/${id}`;
   const [data, setData] = useState([]);
 
-  const { projectDetail } = useProjectDetail({ id });
-  const { landingStatus } = useLandingStatus({ type: "mapa", id });
+  const { auditInfo } = useAuditInfo({ module: "qa", id });
+  const { landingStatus } = useLandingStatus({
+    module: "qa",
+    submodule: "mapa",
+    id,
+  });
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
-    { name: "Overview", path: "/ewp/konsulting" },
+    { name: "Overview", path: "/ewp/quality-assurance" },
     {
-      name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
+      name: `${auditInfo?.data?.project_info?.project_id?.toUpperCase()}`,
       path: baseUrl + "/info",
     },
     { name: "Perencanaan Kegiatan", path: baseUrl + "/perencanaan" },
@@ -32,7 +36,7 @@ const index = () => {
           description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
           status: landingStatus?.data?.latar_belakang ? "success" : "failed",
-          url: `${baseUrl}/perencanaan/sumber-informasi`,
+          url: `${baseUrl}/perencanaan/latar-belakang`,
         },
         {
           title: "Tujuan",
@@ -60,7 +64,7 @@ const index = () => {
           description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
           status: landingStatus?.data?.uker_assesment ? "success" : "failed",
-          url: `${baseUrl}/perencanaan/uker_assessment`,
+          url: `${baseUrl}/perencanaan/uker-assessment`,
         },
         {
           title: "Analisis Perencanaan",
@@ -69,7 +73,7 @@ const index = () => {
           status: landingStatus?.data?.analisis_perencanaan
             ? "success"
             : "failed",
-          url: `${baseUrl}/perencanaan/analisis_perencanaan`,
+          url: `${baseUrl}/perencanaan/analisis-perencanaan`,
         },
         {
           title: "Penugasan",
