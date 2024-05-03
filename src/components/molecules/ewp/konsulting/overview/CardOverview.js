@@ -43,23 +43,18 @@ const CardOverview = ({
   withoutHover,
   handleCloseProject,
   handleCopyProject,
-  // handleChangeInitiator,
+  handleChangeInitiator,
 }) => {
   const router = useRouter();
   const listDropdown = [
     {
       label: (
-        <div className="flex gap-1 text-atlasian-gray-dark">
+        <div className="flex gap-">
           <IconPerson size="medium" />
           <p className="my-auto">Change Initiator</p>
         </div>
       ),
-      action: () => console.log("#"),
-      // action: () =>
-      //   handleChangeInitiator(
-      //     Boolean(data?.change_initiator?.length > 0),
-      //     data?.id
-      //   ),
+      action: handleChangeInitiator,
     },
     {
       label: (
