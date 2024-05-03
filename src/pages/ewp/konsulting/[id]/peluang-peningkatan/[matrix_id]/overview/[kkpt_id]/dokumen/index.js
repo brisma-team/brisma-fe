@@ -87,6 +87,10 @@ const index = () => {
   const [currentPosition, setCurrentPosition] = useState(1);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
   const [bab, setBab] = useState(1);
+  const [uka, setUka] = useState({
+    kode: "",
+    name: "",
+  });
 
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
   // const [isInitiator, setIsInitiator] = useState(false);
@@ -158,7 +162,8 @@ const index = () => {
         path: `${pathNameContent}/dokumen`,
       },
     ]);
-
+    const projectInfo = projectDetail?.data?.project_info;
+    setUka({ kode: projectInfo?.uka_kode, name: projectInfo?.uka_name });
     setIsCloseSubmodule(
       Boolean(projectDetail?.data?.realisasi?.peluang_peningkatan_real_end)
     );
@@ -483,7 +488,7 @@ const index = () => {
               /\s+/g,
               "_"
             )}`;
-            data.data = peluangPeningkatanDocs(doc);
+            data.data = peluangPeningkatanDocs(uka, doc);
           }
           data.note = workflowData.note;
           break;

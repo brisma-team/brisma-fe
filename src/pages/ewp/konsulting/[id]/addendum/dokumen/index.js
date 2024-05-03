@@ -58,6 +58,10 @@ const index = () => {
 
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
+  const [uka, setUka] = useState({
+    kode: "",
+    name: "",
+  });
 
   useEffect(() => {
     setShowModalApproval(params?.is_approval);
@@ -119,6 +123,11 @@ const index = () => {
       },
     ]);
   }, [params?.id]);
+
+  useEffect(() => {
+    const projectInfo = projectDetail?.data?.project_info;
+    setUka({ kode: projectInfo?.uka_kode, name: projectInfo?.uka_name });
+  }, [projectDetail]);
 
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
@@ -268,7 +277,7 @@ const index = () => {
             data.doc_name = `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}-Addendum_Ke-${
               projectDetail?.data?.project_info?.number_adendum + 1 || 0
             }`;
-            data.data = addendumDocs(content);
+            data.data = addendumDocs(uka, content);
           }
           data.note = workflowData.note;
           break;
