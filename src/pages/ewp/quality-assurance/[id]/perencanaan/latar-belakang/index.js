@@ -172,15 +172,11 @@ const index = () => {
 
   const handleSubmit = async () => {
     loadingSwal();
-    const upload = await fetchApi(
+    await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/mapa/lb`,
       { latar_belakang: content, id: params?.id }
     );
-    if (upload.isConfirmed) {
-      router.push(pathName);
-      return;
-    }
     latarBelakangMutate();
     loadingSwal("close");
   };
