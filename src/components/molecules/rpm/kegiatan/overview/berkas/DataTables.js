@@ -18,6 +18,7 @@ const DataTables = ({
   data,
   handleUploadDocument,
   handleClickDelete,
+  isEditable,
   // handleClickInfo,
 }) => {
   return (
@@ -61,27 +62,22 @@ const DataTables = ({
                   className="border-x cell-custom-dataTables flex justify-center"
                 >
                   <div className="flex justify-center items-center gap-1.5">
-                    <ButtonIcon
-                      icon={<ButtonDownload />}
-                      handleClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                      downloadFilename={file_name}
-                      downloadUrl={file_url}
-                    />
-                    <ButtonIcon
-                      icon={<ButtonDelete />}
-                      handleClick={async () => await handleClickDelete(id)}
-                    />
-                    {/* <ButtonIcon
-                      icon={
-                        <div className="h-full flex items-center">
-                          <IconInfo size="medium" />
-                        </div>
-                      }
-                      handleClick={() => handleClickInfo(index)}
-                      color={"yellow"}
-                    /> */}
+                    {isEditable && (
+                      <>
+                        <ButtonIcon
+                          icon={<ButtonDownload />}
+                          handleClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                          downloadFilename={file_name}
+                          downloadUrl={file_url}
+                        />
+                        <ButtonIcon
+                          icon={<ButtonDelete />}
+                          handleClick={async () => await handleClickDelete(id)}
+                        />
+                      </>
+                    )}
                   </div>
                 </Cell>
                 <Cell
@@ -106,26 +102,16 @@ const DataTables = ({
         )}
       </TableTree>
       <div className="w-full flex justify-end gap-3 mt-2">
-        {/* <div className="w-36 rounded border-2"> */}
-        {/* <ButtonField
-            icon={
-              <div className="text-brisma rotate-180">
-                <IconArrowDown />
-              </div>
+        {isEditable && (
+          <UploadButton
+            className={`border-[1px] rounded border-gray-300 hover:bg-gray-100 p-2`}
+            text={
+              <div className="text-sm font-semibold px-4">&#8593; Upload</div>
             }
-            text={`Upload`}
-            textColor={"brisma"}
-            handler={handleUploadDocument}
-          /> */}
-        <UploadButton
-          className={`border-[1px] rounded border-gray-300 hover:bg-gray-100 p-2`}
-          text={
-            <div className="text-sm font-semibold px-4">&#8593; Upload</div>
-          }
-          fileAccept={"*/*"}
-          handleUpload={handleUploadDocument}
-        />
-        {/* </div> */}
+            fileAccept={"*/*"}
+            handleUpload={handleUploadDocument}
+          />
+        )}
       </div>
     </div>
   );
