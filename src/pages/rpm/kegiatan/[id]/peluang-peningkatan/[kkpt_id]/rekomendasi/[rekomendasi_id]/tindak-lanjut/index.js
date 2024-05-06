@@ -14,7 +14,7 @@ import { LandingLayoutRPMKegiatan } from "@/layouts/rpm";
 import { DataTables } from "@/components/molecules/rpm/kegiatan/overview/berkas";
 
 import { CardContentHeaderFooter } from "@/components/molecules/commons";
-import { useTindakLanjutRekomendasi } from "@/data/rpm/kegiatan";
+import { useTindakLanjutRekomendasi, useWorkflow } from "@/data/rpm/kegiatan";
 import { useRouter } from "next/router";
 import {
   confirmationSwal,
@@ -24,7 +24,12 @@ import {
 } from "@/helpers";
 import { ModalTanggapanRekomendasi } from "@/components/molecules/rpm/kegiatan/overview/tindak-lanjut";
 
-const CardStatus = ({ selectedData, setSelectedData, handleSubmit }) => {
+const CardStatus = ({
+  selectedData,
+  setSelectedData,
+  handleSubmit,
+  isEditable,
+}) => {
   return (
     <div>
       <div className="no-underline hover:no-underline w-56">
@@ -41,6 +46,7 @@ const CardStatus = ({ selectedData, setSelectedData, handleSubmit }) => {
                 onChange={(e) =>
                   setSelectedData({ label: e.label, value: e.value })
                 }
+                isDisabled={!isEditable}
                 optionValue={[
                   { label: "Incomplete", value: "Incomplete" },
                   { label: "On Progress", value: "On Progress" },
@@ -49,11 +55,13 @@ const CardStatus = ({ selectedData, setSelectedData, handleSubmit }) => {
                 ]}
               />
             </div>
-            <div className="mt-2">
-              <div className="bg-atlasian-green rounded-md">
-                <ButtonField text={"Simpan"} handler={handleSubmit} />
+            {isEditable && (
+              <div className="mt-2">
+                <div className="bg-atlasian-green rounded-md">
+                  <ButtonField text={"Simpan"} handler={handleSubmit} />
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </Card>
       </div>
@@ -77,8 +85,24 @@ const index = () => {
     status: "",
     berkas: [],
   });
+  const [isEditable, setIsEditable] = useState(false);
   const { detailRekomendasi, detailRekomendasiMutate } =
     useTindakLanjutRekomendasi(rekomendasi_id);
+
+  const { workflowRPMData } = useWorkflow({
+    type: "project_rpm",
+    id,
+  });
+
+  useEffect(() => {
+    if (workflowRPMData?.data) {
+      const workflowInfo = workflowRPMData?.data?.info;
+      setIsEditable(
+        Boolean(workflowInfo?.status_persetujuan === "On Progress")
+      );
+    }
+  }, [workflowRPMData]);
+
   useEffect(() => {
     if (data?.status !== undefined && data?.status !== "") {
       setStatusRpm({
@@ -275,6 +299,7 @@ const index = () => {
                     data={data?.berkas}
                     handleUploadDocument={handleUploadDocument}
                     handleClickDelete={handleClickDelete}
+                    isEditable={isEditable}
                   />
                   <div className="w-full flex justify-end gap-3"></div>
                 </div>
@@ -287,6 +312,7 @@ const index = () => {
             selectedData={statusRpm}
             setSelectedData={setStatusRpm}
             handleSubmit={handleSubmit}
+            isEditable={isEditable}
           />
         </div>
       </div>
@@ -297,6 +323,7 @@ const index = () => {
         handleUpdateTanggapan={handleUpdateTanggapan}
         selectedValue={tanggapan}
         setSelectedValue={setTanggapan}
+        isEditable={isEditable}
       />
       {/* End Content */}
     </LandingLayoutRPMKegiatan>
