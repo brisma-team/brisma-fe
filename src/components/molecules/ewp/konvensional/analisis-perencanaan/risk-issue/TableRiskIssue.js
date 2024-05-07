@@ -55,11 +55,7 @@ const TableRiskIssue = ({
 
         if (item.children && item.children.length > 0) {
           const childLevel = parentLevel + 1;
-          const childResult = generateLevel(
-            item.children,
-            childLevel,
-            item.kode
-          );
+          const childResult = generateLevel(item.children, childLevel);
 
           Object.keys(childResult).forEach((key) => {
             result[key] = childResult[key];

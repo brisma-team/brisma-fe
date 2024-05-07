@@ -77,7 +77,8 @@ const LoginForm = () => {
     }
   }, [user, userError]);
 
-  const handleSubmitLogin = async () => {
+  const handleSubmitLogin = async (e) => {
+    e.preventDefault();
     const schemaMappings = {
       schema: loginSchema,
       resetErrors: resetValidationErrorsLogin,

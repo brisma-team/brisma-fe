@@ -18,7 +18,8 @@ const CheckInAttendance = ({ handleSubmit }) => {
 
   const { auditorDetailEWP } = useAuditorDetailEWP({ id });
 
-  const handleSubmitLogin = async () => {
+  const handleSubmitLogin = async (e) => {
+    e.preventDefault();
     const response = await usePostData(
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/entrance/attendance/login`,
       userLogin

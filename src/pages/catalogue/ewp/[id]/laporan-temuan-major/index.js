@@ -162,7 +162,7 @@ const index = () => {
                       documentHtml={rtaHtml(data)}
                       withNoHeader={true}
                     />
-                    <hr></hr>
+                    <hr />
                   </div>
                 );
               })}

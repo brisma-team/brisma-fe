@@ -40,7 +40,7 @@ const UkerTypeSelect = ({
   const DropdownIndicator = (props) => {
     return (
       <components.DropdownIndicator {...props}>
-        {customIcon && customIcon}
+        {customIcon ? customIcon : null}
       </components.DropdownIndicator>
     );
   };
@@ -48,7 +48,7 @@ const UkerTypeSelect = ({
   return (
     <div
       className={`${positionAbsolute && open ? `z-50 absolute` : ``} ${
-        width && width
+        width ? width : ""
       }`}
     >
       <Select

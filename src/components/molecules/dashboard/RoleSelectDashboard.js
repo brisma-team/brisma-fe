@@ -14,7 +14,7 @@ const RoleSelectDashboard = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [optionValue, setOptionValue] = useState([]);
-  
+
   const { role } = useRoleList();
   useEffect(() => {
     const mapping = role?.userRole?.map((v) => {
@@ -37,12 +37,12 @@ const RoleSelectDashboard = ({
   const DropdownIndicator = (props) => {
     return (
       <components.DropdownIndicator {...props}>
-        {customIcon && customIcon}
+        {customIcon ? customIcon : null}
       </components.DropdownIndicator>
     );
   };
   return (
-    <div className={`${open ? "z-50 absolute" : ""} ${width && width}`}>
+    <div className={`${open ? "z-50 absolute" : ""} ${width ? width : ""}`}>
       <Select
         {...fieldsProps}
         placeholder={placeholder}

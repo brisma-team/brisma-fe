@@ -66,7 +66,7 @@ const TextInputDecimal = ({
       style={style}
       isDisabled={isDisabled}
       type="text"
-      maxLength={maxLength && maxLength}
+      maxLength={maxLength}
     />
   );
 };

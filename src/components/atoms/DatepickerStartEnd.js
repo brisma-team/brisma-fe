@@ -26,8 +26,8 @@ const DatepickerStartEnd = ({
           value={valueStart}
           format={format}
           isDisabled={isDisabled}
-          minDate={minDateStart && minDateStart}
-          maxDate={maxDateStart && maxDateStart}
+          minDate={minDateStart}
+          maxDate={maxDateStart}
         />
         {validationStart ? (
           <ErrorValidation message={validationStart} className={"ml-1 mt-4"} />
@@ -45,8 +45,8 @@ const DatepickerStartEnd = ({
           value={valueEnd}
           format={format}
           isDisabled={isDisabled}
-          minDate={minDateEnd && minDateEnd}
-          maxDate={maxDateEnd && maxDateEnd}
+          minDate={minDateEnd}
+          maxDate={maxDateEnd}
         />
         {validationEnd ? (
           <ErrorValidation message={validationEnd} className={"ml-1 mt-4"} />

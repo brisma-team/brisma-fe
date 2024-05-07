@@ -36,12 +36,12 @@ const UkaSelectDashboard = ({
   const DropdownIndicator = (props) => {
     return (
       <components.DropdownIndicator {...props}>
-        {customIcon && customIcon}
+        {customIcon ? customIcon : null}
       </components.DropdownIndicator>
     );
   };
   return (
-    <div className={`${open ? "z-50 absolute" : ""} ${width && width}`}>
+    <div className={`${open ? "z-50 absolute" : ""} ${width ? width : ""}`}>
       <Select
         {...fieldsProps}
         placeholder={placeholder}
