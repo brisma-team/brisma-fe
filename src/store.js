@@ -60,6 +60,7 @@ import timEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perenc
 import ukerAssessmentEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/uker-assessment/ukerAssessmentEWPQualityAssuranceSlice";
 import anggaranEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/anggaranEWPQualityAssuranceSlice";
 import analisisPerencanaanEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/analisisPerencanaanEWPQualityAssuranceSlice";
+import penugasanEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/penugasanEWPQualityAssuranceSlice";
 
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
@@ -160,6 +161,7 @@ export const store = configureStore({
     anggaranEWPQualityAssurance: anggaranEWPQualityAssuranceReducer,
     analisisPerencanaanEWPQualityAssurance:
       analisisPerencanaanEWPQualityAssuranceReducer,
+    penugasanEWPQualityAssurance: penugasanEWPQualityAssuranceReducer,
 
     //RPM
     documentRPMKegiatan: documentRPMKegiatanReducer,

@@ -81,7 +81,7 @@ const UserSKAISelect = ({
   const DropdownIndicator = (props) => {
     return !isLoading ? (
       <components.DropdownIndicator {...props}>
-        {customIcon && selectedValue && customIcon}
+        {customIcon && customIcon}
       </components.DropdownIndicator>
     ) : (
       ""
