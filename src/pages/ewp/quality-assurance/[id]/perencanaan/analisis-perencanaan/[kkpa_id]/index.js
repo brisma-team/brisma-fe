@@ -163,7 +163,7 @@ const index = () => {
         <ButtonIconBack
           backUrl={`/ewp/quality-assurance/${params?.id}/perencanaan/analisis-perencanaan`}
         />
-        <PageTitle text="Uraian Lingkup Pemeriksaan" />
+        <PageTitle text="Kertas Kerja Analisa" />
       </div>
       {/* Start Content */}
       <div className="my-4 flex gap-6">
