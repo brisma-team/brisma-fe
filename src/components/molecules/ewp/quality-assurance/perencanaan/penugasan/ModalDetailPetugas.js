@@ -1,5 +1,5 @@
 import { CloseModal, ModalScroll } from "@/components/atoms";
-import { CardContent, ModalFooter } from "@/components/molecules/commons";
+import { CardContent } from "@/components/molecules/commons";
 
 const ModalDetailPetugas = ({ payload, showModal, handleCloseModal }) => {
   return (
