@@ -37,6 +37,7 @@ import getFileDetails from "./getFileDetails";
 import downloadFromUrl from "./downloadFromUrl";
 import generateCaptcha from "./generateCaptcha";
 import checkRoleApprovalLog from "./checkRoleApprovalLog";
+import getYearsList from "./getYearList";
 
 export {
   loadingSwal,
@@ -78,4 +79,5 @@ export {
   downloadFromUrl,
   generateCaptcha,
   checkRoleApprovalLog,
+  getYearsList,
 };
