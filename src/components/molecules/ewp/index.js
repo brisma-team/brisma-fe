@@ -5,10 +5,14 @@ import SelectAuditTeamEWP from "./SelectAuditTeamEWP";
 //konsulting
 import { SidebarLandingEWPConsulting } from "./konsulting";
 
+//monitoring-offsite
+import { SidebarLandingEWPMonOff } from "./monitoring-offsite";
+
 export {
   ModalHeaderEWP,
   ModalFooterEWP,
   SidebarLandingEWP,
   SelectAuditTeamEWP,
   SidebarLandingEWPConsulting,
+  SidebarLandingEWPMonOff
 };

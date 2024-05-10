@@ -51,6 +51,7 @@ import programKerjaAddendumEWPKonsultingReducer from "./slices/ewp/konsulting/ad
 import anggaranSBPAddendumReducer from "./slices/ewp/konsulting/addendum/lain/anggaranSBPAddendumSlice";
 import ringkasanSBPAddendumReducer from "./slices/ewp/konsulting/addendum/lain/ringkasanSBPAddendumSlice";
 import ringkasanUtamaAddendumEWPKonsultingReducer from "./slices/ewp/konsulting/addendum/utama/ringkasanUtamaAddendumEWPKonsultingSlice";
+import changeInitiatorReducer from "./slices/ewp/konsulting/changeInitiatorSlice";
 
 // EWP Quality Assurance
 import overviewEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/overview/overviewEWPQualityAssuranceSlice";
@@ -63,6 +64,18 @@ import analisisPerencanaanEWPQualityAssuranceReducer from "./slices/ewp/quality-
 import penugasanEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/penugasanEWPQualityAssuranceSlice";
 import jadwalEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/jadwalEWPQualityAssuranceSlice";
 import dokumenPerencanaanEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/dokumenPerencanaanEWPQualityAssuranceSlice";
+
+//EWP MONOFF
+import projectOverviewEWPMonoffReducer from "./slices/ewp/monitoring-offsite/projectOverviewEWPMonoffSlice";
+import timEWPMonoffReducer from "./slices/ewp/monitoring-offsite/perencanaan/timEWPMonoffSlice";
+import documentEWPMonoffReducer from "./slices/ewp/monitoring-offsite/dokumen/documentEWPMonoffSlice";
+import attendanceMeetingEWPMonoffReducer from "./slices/ewp/monitoring-offsite/meeting/attendanceMeetingEWPMonoffSlice";
+import beritaAcaraMeetingEWPMonoffReducer from "./slices/ewp/monitoring-offsite/meeting/beritaAcaraMeetingEWPMonoffSlice";
+import notulenMeetingEWPMonoffReducer from "./slices/ewp/monitoring-offsite/meeting/notulenMeetingEWPMonoffSlice";
+import overviewMeetingEWPMonoffReducer from "./slices/ewp/monitoring-offsite/meeting/overviewMeetingEWPMonoffSlice";
+import documentMapaEWPMonoffReducer from "./slices/ewp/monitoring-offsite/reporting/documentMapaEWPMonoffSlice";
+import tindakLanjutEWPMonoffReducer from "./slices/ewp/monitoring-offsite/tindak-lanjut/tindakLanjutEWPMonoffSlice";
+import ukerAssessmentEWPMonoffReducer from "./slices/ewp/monitoring-offsite/perencanaan/ukerAssessmentEWPMonoffSlice";
 
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
@@ -152,6 +165,7 @@ export const store = configureStore({
     ringkasanSBPAddendum: ringkasanSBPAddendumReducer,
     ringkasanUtamaAddendumEWPKonsulting:
       ringkasanUtamaAddendumEWPKonsultingReducer,
+    changeInitiator: changeInitiatorReducer,
 
     // EWP Quality Assurance
     overviewEWPQualityAssurance: overviewEWPQualityAssuranceReducer,
@@ -170,6 +184,18 @@ export const store = configureStore({
 
     //RPM
     documentRPMKegiatan: documentRPMKegiatanReducer,
+
+    //EWP Monoff
+    projectOverviewEWPMonoff: projectOverviewEWPMonoffReducer,
+    timEWPMonoff: timEWPMonoffReducer,
+    dokumenEWPMonoff: documentEWPMonoffReducer,
+    attendanceMeetingEWPMonoff: attendanceMeetingEWPMonoffReducer,
+    beritaAcaraMeetingEWPMonoff: beritaAcaraMeetingEWPMonoffReducer,
+    notulenMeetingEWPMonoff: notulenMeetingEWPMonoffReducer,
+    overviewMeetingEWPMonoff: overviewMeetingEWPMonoffReducer,    
+    documentMapaEWPMonoff: documentMapaEWPMonoffReducer,
+    tindakLanjutEWPMonoff: tindakLanjutEWPMonoffReducer,
+    ukerAssessmentEWPMonoff: ukerAssessmentEWPMonoffReducer,
 
     // REFERENCE
     createTemplateReference: createTemplateReferenceSlice,

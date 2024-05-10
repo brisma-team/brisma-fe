@@ -119,8 +119,11 @@ const DataTables = ({
               <Cell width="15%" className="border-r cell-custom-dataTables">
                 {"Rp. " + convertToRupiah(amount)}
               </Cell>
-              <Cell width="30%" className="border-r cell-custom-dataTables">
-                {deskripsi}
+              <Cell
+                width="30%"
+                className="border-r cell-custom-dataTables text-justify tracking-normal"
+              >
+                {deskripsi || "-"}
               </Cell>
             </Row>
           )}

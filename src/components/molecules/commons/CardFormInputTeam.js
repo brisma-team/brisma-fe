@@ -259,7 +259,7 @@ const CardFormInputTeam = ({
                     customIcon={<ButtonIcon icon={<IconChevronDown />} />}
                   />
                 </div>
-              ) : (
+              ) : data?.length > 0 ? (
                 data?.map((v, i) => {
                   return (
                     <div className="flex" key={i}>
@@ -372,6 +372,14 @@ const CardFormInputTeam = ({
                     </div>
                   );
                 })
+              ) : (
+                <div className="flex w-full items-center">
+                  <div className="bg-none h-12 mt-3">
+                    <div className="px-2 py-2 font-semibold text-sm italic">
+                      Belum ada {type} yang dipilih
+                    </div>
+                  </div>
+                </div>
               )}
               {validationErrors?.[property] && (
                 <div className="pl-2">

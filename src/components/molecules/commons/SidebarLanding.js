@@ -38,7 +38,7 @@ const SidebarLanding = () => {
                           </h5>
                           <Image
                             className="rounded-lg"
-                            src={"/images/banner_brilink.png"}
+                            src={"/images/landing-page/sapa-tim-audit.png"}
                             width={322}
                             height={257}
                             alt="chat"
@@ -83,13 +83,13 @@ const SidebarLanding = () => {
                         <div className="max-w-xs h-full px-5 py-3">
                           <Image
                             className="rounded-lg"
-                            src={"/images/banner_brilink.png"}
+                            src={"/images/landing-page/frame-a1.png"}
                             width={322}
                             height={257}
                             alt="chat"
                           />
-                          <h5 className="text-lg font-semibold text-brisma">
-                            Semarak Hadiah BriLink
+                          <h5 className="text-sm font-semibold text-brisma">
+                            Audit Internal & Penerapan Good Corporate
                           </h5>
                           <p>20 Agustus 2023 - 20 September 2023</p>
                         </div>
@@ -100,13 +100,13 @@ const SidebarLanding = () => {
                         <div className="max-w-xs h-full px-5 py-3">
                           <Image
                             className="rounded-lg"
-                            src={"/images/banner_brilink.png"}
+                            src={"/images/landing-page/frame-b1.png"}
                             width={322}
                             height={200}
                             alt="chat"
                           />
-                          <h5 className="text-lg font-semibold text-brisma">
-                            Semarak Hadiah BriLink
+                          <h5 className="text-sm font-semibold text-brisma">
+                            Faktor-Faktor Yang Mempengaruhi Audit Delay
                           </h5>
                           <p>20 Agustus 2023 - 20 September 2023</p>
                         </div>
@@ -119,13 +119,13 @@ const SidebarLanding = () => {
                         <div className="max-w-xs h-full px-5 py-3">
                           <Image
                             className="rounded-lg"
-                            src={"/images/banner_brilink.png"}
+                            src={"/images/landing-page/frame-a2.png"}
                             width={322}
                             height={257}
                             alt="chat"
                           />
-                          <h5 className="text-lg font-semibold text-brisma">
-                            Semarak Hadiah BriLink
+                          <h5 className="text-sm font-semibold text-brisma">
+                            Pengaruh Fraud Di Dalam Keuangan
                           </h5>
                           <p>20 Agustus 2023 - 20 September 2023</p>
                         </div>
@@ -136,13 +136,14 @@ const SidebarLanding = () => {
                         <div className="max-w-xs h-full px-5 py-3">
                           <Image
                             className="rounded-lg"
-                            src={"/images/banner_brilink.png"}
+                            src={"/images/landing-page/frame-b2.png"}
                             width={322}
                             height={200}
                             alt="chat"
                           />
-                          <h5 className="text-lg font-semibold text-brisma">
-                            Semarak Hadiah BriLink
+                          <h5 className="text-sm font-semibold text-brisma">
+                            Faktor yang mempengaruhi Audit Delay pada Perusahaan
+                            Perbankan di Indonesia
                           </h5>
                           <p>20 Agustus 2023 - 20 September 2023</p>
                         </div>
@@ -155,13 +156,14 @@ const SidebarLanding = () => {
                         <div className="max-w-xs h-full px-5 py-3">
                           <Image
                             className="rounded-lg"
-                            src={"/images/banner_brilink.png"}
+                            src={"/images/landing-page/frame-a3.png"}
                             width={322}
                             height={257}
                             alt="chat"
                           />
-                          <h5 className="text-lg font-semibold text-brisma">
-                            Semarak Hadiah BriLink
+                          <h5 className="text-sm font-semibold text-brisma">
+                            Pengaruh Audit Internal Terhadap Kinerja Perusahaan
+                            Perbankan
                           </h5>
                           <p>20 Agustus 2023 - 20 September 2023</p>
                         </div>
@@ -172,13 +174,14 @@ const SidebarLanding = () => {
                         <div className="max-w-xs h-full px-5 py-3">
                           <Image
                             className="rounded-lg"
-                            src={"/images/banner_brilink.png"}
+                            src={"/images/landing-page/frame-b3.png"}
                             width={322}
                             height={200}
                             alt="chat"
                           />
-                          <h5 className="text-lg font-semibold text-brisma">
-                            Semarak Hadiah BriLink
+                          <h5 className="text-sm font-semibold text-brisma">
+                            Pengaruh Manajemen Laba Dan Kualitas Audit Terhadap
+                            Biaya Modal Perusahaan
                           </h5>
                           <p>20 Agustus 2023 - 20 September 2023</p>
                         </div>

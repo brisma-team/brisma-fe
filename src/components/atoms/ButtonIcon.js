@@ -72,7 +72,7 @@ const ButtonIcon = ({
   return (
     <div
       {...props}
-      ref={ref && ref}
+      ref={ref ? ref : null}
       role="button"
       tabIndex={0}
       className={`${className} ${iconColor} ${
@@ -84,8 +84,8 @@ const ButtonIcon = ({
           return;
         }
       }}
-      onMouseEnter={handleMouseEnter && handleMouseEnter}
-      onMouseLeave={handleMouseLeave && handleMouseLeave}
+      onMouseEnter={handleMouseEnter ? handleMouseEnter : null}
+      onMouseLeave={handleMouseLeave ? handleMouseLeave : null}
     >
       {icon}
     </div>

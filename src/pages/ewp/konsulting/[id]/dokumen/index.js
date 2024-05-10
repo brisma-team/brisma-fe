@@ -387,6 +387,7 @@ const index = () => {
                   text={`Bulk Download`}
                   textColor={"brisma"}
                   handler={handleOpenModalBulkDownload}
+                  disabled={Boolean(data?.length > 0 ? false : true)}
                 />
               </div>
             </div>

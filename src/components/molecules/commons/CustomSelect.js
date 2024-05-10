@@ -14,7 +14,7 @@ const CustomSelect = ({
   const DropdownIndicator = (props) => {
     return (
       <components.DropdownIndicator {...props}>
-        {customIcon && selectedValue && customIcon}
+        {customIcon && selectedValue ? customIcon : null}
       </components.DropdownIndicator>
     );
   };

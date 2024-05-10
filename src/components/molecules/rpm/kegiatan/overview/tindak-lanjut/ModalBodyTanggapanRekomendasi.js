@@ -1,6 +1,6 @@
 import { CardContentHeaderFooter } from "@/components/molecules/commons";
 
-const TextAreaTanggapan = ({ selectedValue, onChange }) => {
+const TextAreaTanggapan = ({ selectedValue, onChange, isEditable }) => {
   return (
     <textarea
       className="w-full border-2 border-gray-200 text-sm rounded-md"
@@ -8,11 +8,16 @@ const TextAreaTanggapan = ({ selectedValue, onChange }) => {
       placeholder="Berikan tanggapan disini..."
       rows={5}
       onChange={onChange}
+      disabled={!isEditable}
     ></textarea>
   );
 };
 
-const ModalBodyTanggapanRekomendasi = ({ selectedValue, setSelectedValue }) => {
+const ModalBodyTanggapanRekomendasi = ({
+  selectedValue,
+  setSelectedValue,
+  isEditable,
+}) => {
   return (
     <div className="w-[63rem]">
       <div className="w-full p-4 -mt-2">
@@ -27,6 +32,7 @@ const ModalBodyTanggapanRekomendasi = ({ selectedValue, setSelectedValue }) => {
             <TextAreaTanggapan
               selectedValue={selectedValue}
               onChange={(e) => setSelectedValue(e.target.value)}
+              isEditable={isEditable}
             />
           </div>
         </CardContentHeaderFooter>
