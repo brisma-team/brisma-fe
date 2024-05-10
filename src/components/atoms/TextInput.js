@@ -19,7 +19,7 @@ const TextInput = ({
       placeholder={placeholder}
       onChange={onChange}
       elemAfterInput={
-        icon && <ButtonIcon handleClick={handleClick} icon={icon} />
+        icon && value && <ButtonIcon handleClick={handleClick} icon={icon} />
       }
       onKeyDown={onKeyDown}
       value={value}

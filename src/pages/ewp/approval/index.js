@@ -56,6 +56,7 @@ const index = () => {
       ]);
 
       if (approvalEWP?.data?.body?.antrian?.length) {
+        console.log("antrian => ", approvalEWP?.data?.body?.antrian);
         const mapping = approvalEWP?.data?.body?.antrian?.map((queue) => {
           const { sub_modul, ref_tipe } = queue;
 
@@ -133,6 +134,13 @@ const index = () => {
           faseApproval = "Tindak Lanjut";
         }
         break;
+      case "Quality Assurance":
+        if (sub_modul === "mapa") {
+          faseApproval = "Perencanaan (MAR)";
+        } else if (sub_modul === "pelaksanaan") {
+          faseApproval = "Pelaksanaan";
+        }
+        break;
       default:
         faseApproval = "-";
         break;
@@ -156,8 +164,15 @@ const index = () => {
           query = `konsulting/${ewp_id}/peluang-peningkatan/${sub_modul_id}`;
         } else if (sub_modul === "adendum") {
           query = `konsulting/${ewp_id}/addendum`;
-          break;
         }
+        break;
+      case "Quality Assurance":
+        if (sub_modul === "mapa") {
+          query = `quality-assurance/${ewp_id}/perencanaan`;
+        } else if (sub_modul === "pelaksanaan") {
+          query = `quality-assurance/${ewp_id}/pelaksanaan`;
+        }
+        break;
     }
     router.push(`${query}/dokumen?is_approval=true`);
   };

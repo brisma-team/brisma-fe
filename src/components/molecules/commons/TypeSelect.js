@@ -23,7 +23,7 @@ const TypeSelect = ({
   const DropdownIndicator = (props) => {
     return (
       <components.DropdownIndicator {...props}>
-        {customIcon ? customIcon : null}
+        {customIcon && selectedValue ? customIcon : null}
       </components.DropdownIndicator>
     );
   };

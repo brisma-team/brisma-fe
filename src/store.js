@@ -55,6 +55,15 @@ import changeInitiatorReducer from "./slices/ewp/konsulting/changeInitiatorSlice
 
 // EWP Quality Assurance
 import overviewEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/overview/overviewEWPQualityAssuranceSlice";
+import infoEWPQualityAssuranceSliceReducer from "./slices/ewp/quality-assurance/info/infoEWPQualityAssuranceSlice";
+import previewTemplateSurveyEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/info/previewTemplateSurveyEWPQualityAssuranceSlice";
+import timEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/tim/timEWPQualityAssuranceSlice";
+import ukerAssessmentEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/uker-assessment/ukerAssessmentEWPQualityAssuranceSlice";
+import anggaranEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/anggaranEWPQualityAssuranceSlice";
+import analisisPerencanaanEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/analisisPerencanaanEWPQualityAssuranceSlice";
+import penugasanEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/penugasanEWPQualityAssuranceSlice";
+import jadwalEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/jadwalEWPQualityAssuranceSlice";
+import dokumenPerencanaanEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/dokumenPerencanaanEWPQualityAssuranceSlice";
 
 //EWP MONOFF
 import projectOverviewEWPMonoffReducer from "./slices/ewp/monitoring-offsite/projectOverviewEWPMonoffSlice";
@@ -160,6 +169,18 @@ export const store = configureStore({
 
     // EWP Quality Assurance
     overviewEWPQualityAssurance: overviewEWPQualityAssuranceReducer,
+    infoEWPQualityAssurance: infoEWPQualityAssuranceSliceReducer,
+    previewTemplateSurveyEWPQualityAssurance:
+      previewTemplateSurveyEWPQualityAssuranceReducer,
+    timEWPQualityAssurance: timEWPQualityAssuranceReducer,
+    ukerAssessmentEWPQualityAssurance: ukerAssessmentEWPQualityAssuranceReducer,
+    anggaranEWPQualityAssurance: anggaranEWPQualityAssuranceReducer,
+    analisisPerencanaanEWPQualityAssurance:
+      analisisPerencanaanEWPQualityAssuranceReducer,
+    penugasanEWPQualityAssurance: penugasanEWPQualityAssuranceReducer,
+    jadwalEWPQualityAssurance: jadwalEWPQualityAssuranceReducer,
+    dokumenPerencanaanEWPQualityAssurance:
+      dokumenPerencanaanEWPQualityAssuranceReducer,
 
     //RPM
     documentRPMKegiatan: documentRPMKegiatanReducer,

@@ -86,6 +86,8 @@ import ModalAttachment from "./ModalAttachment";
 import ListContentDocument from "./ListContentDocument";
 import ContentDocument from "./ContentDocument";
 import ContentView from "./ContentView";
+import CardContent from "./CardContent";
+import UkerAssessmentTable from "./UkerAssessmentTable";
 
 export {
   BackButton,
@@ -176,4 +178,6 @@ export {
   ListContentDocument,
   ContentDocument,
   ContentView,
+  CardContent,
+  UkerAssessmentTable,
 };
