@@ -51,6 +51,7 @@ import programKerjaAddendumEWPKonsultingReducer from "./slices/ewp/konsulting/ad
 import anggaranSBPAddendumReducer from "./slices/ewp/konsulting/addendum/lain/anggaranSBPAddendumSlice";
 import ringkasanSBPAddendumReducer from "./slices/ewp/konsulting/addendum/lain/ringkasanSBPAddendumSlice";
 import ringkasanUtamaAddendumEWPKonsultingReducer from "./slices/ewp/konsulting/addendum/utama/ringkasanUtamaAddendumEWPKonsultingSlice";
+import changeInitiatorReducer from "./slices/ewp/konsulting/changeInitiatorSlice";
 
 // EWP Quality Assurance
 import overviewEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/overview/overviewEWPQualityAssuranceSlice";
@@ -143,6 +144,7 @@ export const store = configureStore({
     ringkasanSBPAddendum: ringkasanSBPAddendumReducer,
     ringkasanUtamaAddendumEWPKonsulting:
       ringkasanUtamaAddendumEWPKonsultingReducer,
+    changeInitiator: changeInitiatorReducer,
 
     // EWP Quality Assurance
     overviewEWPQualityAssurance: overviewEWPQualityAssuranceReducer,

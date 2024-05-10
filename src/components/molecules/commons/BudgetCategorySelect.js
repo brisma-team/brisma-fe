@@ -1,6 +1,6 @@
-import useBranch from "@/data/useBranch";
-import React, { useEffect, useState } from "react";
-import _ from "lodash";
+// import useBranch from "@/data/useBranch";
+import React, { useState } from "react";
+// import _ from "lodash";
 import Select, { components } from "@atlaskit/select";
 
 const BudgetCategorySelect = ({
@@ -12,13 +12,14 @@ const BudgetCategorySelect = ({
   customIcon,
   isDisabled,
 }) => {
-  const [options, setOptions] = useState([
-    { label: `Test`, value: { kode: "1", nama: "Test" } },
-  ]);
-  const [value, setValue] = useState("");
-  const [keyword, setKeyword] = useState("");
-  const [search, setSearch] = useState(false);
-  const { branch, branchMutate } = useBranch(keyword);
+  const [
+    options,
+    // setOptions
+  ] = useState([{ label: `Test`, value: { kode: "1", nama: "Test" } }]);
+  // const [value, setValue] = useState("");
+  // const [keyword, setKeyword] = useState("");
+  // const [search, setSearch] = useState(false);
+  // const { branch, branchMutate } = useBranch(keyword);
 
   //   useEffect(() => {
   //     if (search) {
@@ -61,7 +62,7 @@ const BudgetCategorySelect = ({
   const DropdownIndicator = (props) => {
     return (
       <components.DropdownIndicator {...props}>
-        {customIcon && customIcon}
+        {customIcon ? customIcon : null}
       </components.DropdownIndicator>
     );
   };

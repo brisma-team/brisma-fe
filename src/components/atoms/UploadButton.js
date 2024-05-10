@@ -14,7 +14,7 @@ const UploadButton = ({ text, fileAccept, handleUpload, className }) => {
       <input
         id={`fileInput${text}`}
         type="file"
-        accept={fileAccept && fileAccept}
+        accept={fileAccept}
         className="hidden"
         onChange={handleUpload}
       />

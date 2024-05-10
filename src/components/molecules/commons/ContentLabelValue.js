@@ -8,7 +8,7 @@ const ContentLabelValue = ({
   return (
     <div className={classNameDivParent || "leading-3 text-sm"}>
       <p className={classNameLabel || "font-semibold"}>{label}</p>
-      <p className={classNameValue && classNameValue}>{value}</p>
+      <p className={classNameValue ? classNameValue : ""}>{value}</p>
     </div>
   );
 };

@@ -12,10 +12,10 @@ const rekomendasiHtml = (data) => {
   </thead>
   <tbody>
   ${
-    data?.length > 0 &&
-    data
-      ?.map((v, index) => {
-        return `<tr >
+    data?.length > 0
+      ? data
+          ?.map((v, index) => {
+            return `<tr >
           <td width="10%" style="text-align:center">
             <p style="font-size:12px">${index + 1}</p>
           </td>
@@ -26,8 +26,13 @@ const rekomendasiHtml = (data) => {
             <p style="font-size:12px">${v?.desc}</p>
           </td>
         </tr>`;
-      })
-      .join("")
+          })
+          .join("")
+      : `<tr>
+      <td colspan="3" style="text-align:center; border: 1px solid #ccc;">
+        <p style="font-size:12px">No Data Available</p>
+      </td>
+    </tr>`
   }
   </tbody>
 </table>

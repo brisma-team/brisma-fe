@@ -10,21 +10,28 @@ import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
 import {
   confirmationSwal,
   convertDate,
+  errorSwal,
   fetchApi,
   loadingSwal,
   successSwal,
-  // usePostData,
+  usePostData,
 } from "@/helpers";
+import {
+  setWorkflowData,
+  resetWorkflowData,
+} from "@/slices/ewp/konsulting/changeInitiatorSlice";
 import _ from "lodash";
 import {
   CardOverview,
   CardFilterOverview,
   ModalAddProjectEWP,
 } from "@/components/molecules/ewp/konsulting/overview";
-import { useApprovalEWP } from "@/data/ewp";
+import { useApprovalEWP, useWorkflowDetailEWP } from "@/data/ewp";
 import { useOverviewEWPKonsulting } from "@/data/ewp/konsulting/overview";
-import { ModalWorkflowRequestExtensionAndTermination } from "@/components/molecules/survey/initiator/common";
+import { ModalWorkflowRequestChangeInitiator } from "@/components/molecules/ewp/konsulting/common";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import useUser from "@/data/useUser";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -60,12 +67,15 @@ const convertProgressAndPercent = (status) => {
 };
 
 const index = () => {
+  const dispatch = useDispatch();
   const [showFilter, setShowFilter] = useState(false);
   const [totalData, setTotalData] = useState(1);
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showModalApprovalExtension, setShowModalApprovalExtension] =
     useState(false);
+  const [historyWorkflow, setHistoryWorkflow] = useState([]);
+  const [changeInitiatorId, setChangeInitiatorId] = useState("");
   const [filter, setFilter] = useState({
     project_code: "",
     project_name: "",
@@ -90,21 +100,102 @@ const index = () => {
     limit: 4,
     page: 1,
   });
+  const { user } = useUser();
 
   const { overviewEWPKonsulting, overviewEWPKonsultingMutate } =
     useOverviewEWPKonsulting(params);
 
   const { approvalEWP } = useApprovalEWP("ewp");
 
-  const workflowExtensionRequest = useSelector(
-    (state) => state.createSurvey.workflowExtensionRequest
+  const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
+    "change_initiator",
+    { id: changeInitiatorId }
   );
-  const historyWorkflowExtensionRequest = useSelector(
-    (state) => state.createSurvey.historyWorkflowExtensionRequest
+
+  const workflowData = useSelector(
+    (state) => state.changeInitiator.workflowData
   );
-  const validationErrorsWorkflowExtensionRequest = useSelector(
-    (state) => state.createSurvey.validationErrorsWorkflowExtensionRequest
+  const validationErrorsWorkflow = useSelector(
+    (state) => state.changeInitiator.validationErrorsWorkflow
   );
+
+  useEffect(() => {
+    if (workflowDetailEWP?.data) {
+      const workflowInfo = workflowDetailEWP?.data?.info;
+      const maker = workflowDetailEWP?.data?.initiator;
+      const approvers = workflowDetailEWP?.data?.approver;
+      const signers = workflowDetailEWP?.data?.signer;
+
+      const newWorkflowData = {
+        ...workflowData,
+        status_approver: workflowInfo?.status_persetujuan,
+        on_approver: workflowInfo?.status_approver,
+        initiator_from: {
+          pn: workflowInfo?.pn_from,
+          name: workflowInfo?.name_from,
+        },
+        initiator_to: {
+          pn: workflowInfo?.pn_to,
+          name: workflowInfo?.name_to,
+        },
+      };
+
+      newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.name}`;
+      newWorkflowData.maker = {
+        pn: workflowInfo?.initiator?.pn,
+        nama: workflowInfo?.initiator?.nama,
+      };
+
+      if (approvers?.length) {
+        const mappingApprovers = _.map(
+          approvers,
+          ({ pn, nama, is_signed }) => ({
+            pn,
+            nama,
+            is_signed,
+          })
+        );
+        newWorkflowData.ref_tim_audit_approver = mappingApprovers;
+      }
+
+      if (signers?.length) {
+        const mappingSigners = _.map(signers, ({ nama, pn }) => ({ nama, pn }));
+        newWorkflowData.ref_tim_audit_signer = mappingSigners;
+      }
+
+      if (workflowDetailEWP?.data?.log?.length) {
+        const mapping = workflowDetailEWP?.data?.log?.map((v) => {
+          return {
+            children: v?.children?.length
+              ? v?.children?.map((child) => ({
+                  role: "child",
+                  pic: child?.from?.pn + " - " + child?.from?.nama,
+                  alasan: child?.note,
+                  status:
+                    child?.is_signed === true
+                      ? "Approved"
+                      : child?.is_signed === false
+                      ? "Rejected"
+                      : child?.note || "",
+                  tanggal: convertDate(v?.createdAt, "-", "d"),
+                }))
+              : [],
+            id: v?.id,
+            role: "parent",
+            pic: v?.create_by?.pn + " - " + v?.create_by?.fullName,
+            alasan: v?.note,
+            status: "",
+            tanggal: convertDate(v?.createdAt, "-", "d"),
+          };
+        });
+        setHistoryWorkflow(mapping);
+      }
+
+      dispatch(setWorkflowData(newWorkflowData));
+    } else {
+      dispatch(resetWorkflowData());
+    }
+  }, [workflowDetailEWP, showModalApprovalExtension, changeInitiatorId]);
 
   useEffect(() => {
     const handleSearch = () => {
@@ -132,6 +223,7 @@ const index = () => {
           initiator,
           change_initiator,
         } = v;
+        setChangeInitiatorId(change_initiator[0]?.id);
         return {
           id: v?.id,
           tipe: v?.ref_tipe?.nama,
@@ -170,7 +262,7 @@ const index = () => {
     setFilter({ ...filter, [props]: value });
   };
 
-  const handleCloseProject = async () => {
+  const handleCloseProject = async (id) => {
     const confirm = await confirmationSwal(
       "Apakah anda yakin ingin menutup project ini?"
     );
@@ -181,37 +273,185 @@ const index = () => {
 
     loadingSwal();
     await fetchApi(
-      "PATCH",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}//ewp/sbp/disable/${params?.id}`,
-      {}
+      "DELETE",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/disable/${id}`,
+      { id }
     );
+    overviewEWPKonsultingMutate();
     loadingSwal("close");
   };
 
   const handleCopyProject = async (id) => {
-    successSwal("Link project berhasil disalin ke clipboard.");
-    return navigator.clipboard.writeText(window.location.href + `/${id}/info`);
+    navigator.clipboard.writeText(window.location.href + `/${id}/info`);
+    return successSwal("Link project berhasil disalin ke clipboard.");
   };
 
-  // const handleChangeInitiator = async (status, ewpid) => {
-  //   if (status == false) {
-  //     const confirm = await confirmationSwal(
-  //       "Apakah anda yakin ingin melakukan perubahan Inisiator?"
-  //     );
+  const handleChangeInitiator = async (status, ewpid, cId) => {
+    if (status == false) {
+      const confirm = await confirmationSwal(
+        "Apakah anda yakin ingin melakukan perubahan Inisiator?"
+      );
 
-  //     if (!confirm.value) {
-  //       return;
-  //     }
-  //     await usePostData(
-  //       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/change_initiator/create`,
-  //       { ewp_id: ewpid, note: "change initiator" }
-  //     );
-  //     overviewEWPKonsultingMutate();
-  //     setShowModalApprovalExtension(true);
-  //   } else {
-  //     setShowModalApprovalExtension(!showModalApprovalExtension);
-  //   }
-  // };
+      if (!confirm.value) {
+        return;
+      }
+      await usePostData(
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/change_initiator/create`,
+        { ewp_id: ewpid, note: "change initiator" }
+      );
+      overviewEWPKonsultingMutate();
+      setShowModalApprovalExtension(true);
+    } else {
+      setChangeInitiatorId(cId);
+      setShowModalApprovalExtension(!showModalApprovalExtension);
+    }
+  };
+  //modal
+
+  const handleChangeSelect = (property, index, e) => {
+    const newData = [...workflowData[property]];
+    const updated = { ...newData[index] };
+    updated["pn"] = e?.value?.pn;
+    updated["nama"] = e?.value?.name;
+    newData[index] = updated;
+    dispatch(
+      setWorkflowData({
+        ...workflowData,
+        [property]: newData,
+      })
+    );
+  };
+
+  const handleChangeSelectInitiator = (property, e) => {
+    const newData = {
+      pn: e?.value?.pn,
+      name: e?.value?.name,
+    };
+    dispatch(
+      setWorkflowData({
+        ...workflowData,
+        [property]: newData,
+      })
+    );
+  };
+  const handleSubmitRequestChangeInitiator = async (e) => {
+    e.preventDefault();
+    // const schemaMapping = {
+    //   schema: workflowSchema,
+    //   resetErrors: resetValidationErrorsWorkflow,
+    //   setErrors: setValidationErrorsWorkflow,
+    // };
+    // const validate = setErrorValidation(workflowData, dispatch, schemaMapping);
+    const validate = true;
+    if (validate) {
+      const actionType = e.target.offsetParent.name;
+      const data = {
+        sub_modul: "change_initiator",
+        sub_modul_id: changeInitiatorId,
+      };
+
+      data.pn_to = workflowData?.initiator_to?.pn;
+      data.name_to = workflowData?.initiator_to?.name;
+
+      const signedCount = workflowData?.ref_tim_audit_approver?.filter(
+        (item) => item.is_signed
+      ).length;
+
+      switch (actionType) {
+        case "change":
+          data.approvers = workflowData.ref_tim_audit_approver;
+          data.signers = [];
+          break;
+        case "create":
+          data.approvers = workflowData.ref_tim_audit_approver;
+          data.signers = [];
+          break;
+        case "reject":
+          if (!workflowData.note) {
+            await errorSwal("Silahkan berikan alasan!");
+            return;
+          }
+          data.note = workflowData.note;
+          break;
+        case "approve":
+          if (signedCount >= workflowData?.ref_tim_audit_approver?.length) {
+            data.data = "<p>pirli test</p>";
+          }
+          data.note = workflowData.note;
+          break;
+      }
+
+      if (actionType === "reset") {
+        const confirm = await confirmationSwal(
+          "Terkait dengan workflow ini, apakah Anda yakin ingin melakukan pengaturan ulang?"
+        );
+        if (!confirm.value) {
+          return;
+        }
+      }
+
+      if (actionType === "change") {
+        await fetchApi(
+          "PATCH",
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/change`,
+          data
+        );
+      } else {
+        await fetchApi(
+          "POST",
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/${actionType}`,
+          data
+        );
+      }
+      overviewEWPKonsultingMutate();
+      workflowDetailEWPMutate();
+      dispatch(resetWorkflowData());
+      setShowModalApprovalExtension(false);
+    }
+    overviewEWPKonsultingMutate();
+    workflowDetailEWPMutate();
+  };
+
+  const handleCloseModalRequestChangeInitiator = () => {
+    // dispatch(resetHistoryWorkflowExtensionRequest());
+    dispatch(resetWorkflowData());
+  };
+
+  const handleChangeTextRequestChangeInitiator = (property, value) => {
+    dispatch(
+      setWorkflowData({
+        ...workflowData,
+        [property]: value,
+      })
+    );
+  };
+
+  const handleAddApproverRequestChangeInitiator = (property) => {
+    const newData = [...workflowData[property]];
+    newData.push({
+      pn: "",
+      nama: "",
+      is_signed: false,
+    });
+    dispatch(
+      setWorkflowData({
+        ...workflowData,
+        [property]: newData,
+      })
+    );
+  };
+
+  const handleDeleteApproverRequestChangeInitiator = (property, idx) => {
+    const newData = [...workflowData[property]];
+    newData.splice(idx, 1);
+    dispatch(
+      setWorkflowData({
+        ...workflowData,
+        [property]: newData,
+      })
+    );
+  };
+
   return (
     <OverviewLayoutEWP data={approvalEWP?.data?.header}>
       {/* Start Breadcrumbs */}
@@ -266,9 +506,16 @@ const index = () => {
               <CardOverview
                 key={i}
                 data={v}
-                handleCloseProject={handleCloseProject}
-                handleCopyProject={() => handleCopyProject(v?.id)}
-                // handleChangeInitiator={handleChangeInitiator}
+                handleCloseProject={async () => await handleCloseProject(v?.id)}
+                handleCopyProject={async () => await handleCopyProject(v?.id)}
+                handleChangeInitiator={async () =>
+                  await handleChangeInitiator(
+                    Boolean(v?.change_initiator?.length > 0),
+                    v?.id,
+                    v?.change_initiator[0]?.id
+                  )
+                }
+                user={user?.data}
               />
             );
           })}
@@ -285,21 +532,22 @@ const index = () => {
         totalData={totalData}
       />
 
-      <ModalWorkflowRequestExtensionAndTermination
+      <ModalWorkflowRequestChangeInitiator
         isExtensionRequest={false}
         isChangeInitiator={true}
-        workflowData={workflowExtensionRequest}
-        historyWorkflow={historyWorkflowExtensionRequest}
-        validationErrors={validationErrorsWorkflowExtensionRequest}
+        workflowData={workflowData}
+        historyWorkflow={historyWorkflow}
+        validationErrors={validationErrorsWorkflow}
         setShowModal={setShowModalApprovalExtension}
         showModal={showModalApprovalExtension}
         headerTitle={"Pergantian Inisiator"}
-        // handleChange={handleChangeTextModalExtensionRequest}
-        // handleChangeSelect={handleChangeSelectModalExtensionRequest}
-        // handleDelete={handleDeleteApproverModalExtensionRequest}
-        // handleAdd={handleAddApproverModalExtensionRequest}
-        // handleSubmit={handleSubmitModalExtensionRequest}
-        // handleCloseModal={handleCloseModalApprovalExtensionRequest}
+        handleChange={handleChangeTextRequestChangeInitiator}
+        handleChangeSelect={handleChangeSelect}
+        handleChangeSelectInitiator={handleChangeSelectInitiator}
+        handleDelete={handleDeleteApproverRequestChangeInitiator}
+        handleAdd={handleAddApproverRequestChangeInitiator}
+        handleSubmit={handleSubmitRequestChangeInitiator}
+        handleCloseModal={handleCloseModalRequestChangeInitiator}
       />
       {/* End Content */}
     </OverviewLayoutEWP>

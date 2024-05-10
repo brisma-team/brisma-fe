@@ -81,7 +81,7 @@ const UserSKAISelect = ({
   const DropdownIndicator = (props) => {
     return !isLoading ? (
       <components.DropdownIndicator {...props}>
-        {customIcon && customIcon}
+        {customIcon ? customIcon : null}
       </components.DropdownIndicator>
     ) : (
       ""
@@ -91,7 +91,7 @@ const UserSKAISelect = ({
   return (
     <div
       className={`${positionAbsolute && open ? `z-50 absolute` : ``} ${
-        width && width
+        width ? width : ""
       }`}
     >
       <Select

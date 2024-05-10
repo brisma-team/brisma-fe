@@ -68,7 +68,7 @@ const RiskSelect = ({
   const DropdownIndicator = (props) => {
     return !isLoading ? (
       <components.DropdownIndicator {...props}>
-        {customIcon && customIcon}
+        {customIcon ? customIcon : null}
       </components.DropdownIndicator>
     ) : (
       ""

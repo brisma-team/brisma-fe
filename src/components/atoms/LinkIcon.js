@@ -31,7 +31,7 @@ const LinkIcon = ({ href, color, handler, icon, isDisabled, isBlank }) => {
     <Link
       target={isBlank && "_blank"}
       href={!href ? "#" : href}
-      onClick={handler && handler}
+      onClick={handler}
       className={`no-underline hover:no-underline ${iconColor} hover:${iconColor}`}
     >
       {icon}

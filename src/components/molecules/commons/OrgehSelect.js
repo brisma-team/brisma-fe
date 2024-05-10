@@ -41,7 +41,7 @@ const OrgehSelect = ({
       const handleSearch = () => {
         setSearch(true);
         setKeyword(value);
-        orgehMutate;
+        orgehMutate();
       };
       const debouncedSearch = _.debounce(handleSearch, 400);
       debouncedSearch();
@@ -74,7 +74,7 @@ const OrgehSelect = ({
   const DropdownIndicator = (props) => {
     return (
       <components.DropdownIndicator {...props}>
-        {customIcon && customIcon}
+        {customIcon ? customIcon : null}
       </components.DropdownIndicator>
     );
   };
@@ -82,7 +82,7 @@ const OrgehSelect = ({
   return (
     <div
       className={`${positionAbsolute && open ? `z-50 absolute` : ``} ${
-        width && width
+        width ? width : ""
       }`}
     >
       <Select

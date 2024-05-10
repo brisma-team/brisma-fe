@@ -28,7 +28,7 @@ const UploadButtonAttachment = ({
       <input
         id="fileInput"
         type="file"
-        accept={fileAccept && fileAccept}
+        accept={fileAccept}
         className="hidden"
         onChange={handleChange}
       />

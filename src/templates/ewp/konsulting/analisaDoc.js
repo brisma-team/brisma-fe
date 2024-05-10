@@ -3,7 +3,7 @@ import rekomendasiHtml from "./analisa/rekomendasi";
 const analisaDocs = (uka, data) => {
   const renderContent = (bab, content) => {
     if (bab === "Rekomendasi") {
-      return `<div><h4>II.  Tim Audit</h4><div style="padding:5px">${rekomendasiHtml(
+      return `<div><h4>II.  Rekomendasi</h4><div style="padding:5px">${rekomendasiHtml(
         content?.rekomendasi
       )}</div></div>`;
     } else {

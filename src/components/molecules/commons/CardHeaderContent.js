@@ -10,7 +10,7 @@ const CardHeaderContent = ({
   return (
     <div
       className={`rounded-xl overflow-hidden border-[#00000033] shadow flex-rows justify-center ${
-        width && width
+        width ? width : ""
       }`}
     >
       <div className="bg-gray-100 py-3 text-center">

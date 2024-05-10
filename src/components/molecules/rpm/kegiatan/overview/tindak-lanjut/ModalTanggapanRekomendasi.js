@@ -10,6 +10,7 @@ const ModalTanggapanRekomendasi = ({
   handleUpdateTanggapan,
   selectedValue,
   setSelectedValue,
+  isEditable,
 }) => {
   const handleCloseModal = async () => {
     const confirm = await confirmationSwal(
@@ -38,16 +39,19 @@ const ModalTanggapanRekomendasi = ({
         </div>
       }
       footer={
-        <div className="w-[10rem]">
-          <div className="bg-atlasian-green rounded-md">
-            <ButtonField text={"Simpan"} handler={handleUpdateTanggapan} />
+        isEditable && (
+          <div className="w-[10rem]">
+            <div className="bg-atlasian-green rounded-md">
+              <ButtonField text={"Simpan"} handler={handleUpdateTanggapan} />
+            </div>
           </div>
-        </div>
+        )
       }
     >
       <ModalBodyTanggapanRekomendasi
         selectedValue={selectedValue}
         setSelectedValue={setSelectedValue}
+        isEditable={isEditable}
       />
     </Modal>
   );
