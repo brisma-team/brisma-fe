@@ -62,6 +62,7 @@ import anggaranEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/p
 import analisisPerencanaanEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/analisisPerencanaanEWPQualityAssuranceSlice";
 import penugasanEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/penugasanEWPQualityAssuranceSlice";
 import jadwalEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/jadwalEWPQualityAssuranceSlice";
+import dokumenPerencanaanEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/dokumenPerencanaanEWPQualityAssuranceSlice";
 
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
@@ -164,6 +165,8 @@ export const store = configureStore({
       analisisPerencanaanEWPQualityAssuranceReducer,
     penugasanEWPQualityAssurance: penugasanEWPQualityAssuranceReducer,
     jadwalEWPQualityAssurance: jadwalEWPQualityAssuranceReducer,
+    dokumenPerencanaanEWPQualityAssurance:
+      dokumenPerencanaanEWPQualityAssuranceReducer,
 
     //RPM
     documentRPMKegiatan: documentRPMKegiatanReducer,

@@ -34,15 +34,20 @@ import { useAuditInfo } from "@/data/ewp/common/info";
 
 const routes = [
   {
-    name: "Sumber Informasi",
-    slug: "sumber-informasi",
+    name: "Latar Belakang",
+    slug: "latar-belakang",
   },
   {
-    name: "Tim & Timeplan",
-    slug: "tim-timeplan",
+    name: "Tujuan",
+    slug: "tujuan",
   },
+  { name: "Analisa", slug: "analisa" },
+  { name: "Tim", slug: "tim" },
+  { name: "UKER Assessment", slug: "uker-assessment" },
+  { name: "Analisis Perencanaan", slug: "analisis-perencanaan" },
+  { name: "Penugasan", slug: "penugasan" },
+  { name: "Jadwal", slug: "jadwal" },
   { name: "Anggaran", slug: "anggaran" },
-  { name: "Program Kerja", slug: "program-kerja" },
   { name: "Dokumen", slug: "dokumen" },
 ];
 
