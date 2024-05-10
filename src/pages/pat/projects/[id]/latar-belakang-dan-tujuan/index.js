@@ -188,7 +188,7 @@ const index = () => {
             handleClick={handleClickUploadAttachment}
           />
         </div>
-        <div className="ckeditor-latar-belakang-pat overflow-x-hidden">
+        <div className="ckeditor-tujuan-mapa-ewp overflow-x-hidden">
           <Editor
             contentData={data.latar_belakang}
             disabled={false}

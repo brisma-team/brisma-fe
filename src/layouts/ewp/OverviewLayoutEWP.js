@@ -41,7 +41,7 @@ const OverviewLayoutEWP = ({ children, withContent = true, data }) => {
         {withContent && (
           <div>
             <div className="text-center text-base font-bold mt-4">
-              Approval Information
+              Riwayat Approval
             </div>
             <div className="px-10 mt-5">
               <CardApprovalList data={data} />
