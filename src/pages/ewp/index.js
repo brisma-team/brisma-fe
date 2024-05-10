@@ -56,8 +56,7 @@ const index = () => {
           {
             title: "MONITORING OFFSITE",
             description: "Pengerjaan EWP Monitoring Offsite.",
-            url: "#",
-            isDisabled: true,
+            url: "/ewp/monitoring-offsite/overview",
           },
           {
             title: "APPROVAL",
