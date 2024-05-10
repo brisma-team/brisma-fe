@@ -2,7 +2,7 @@ const CardTypeCount = ({ title, total, percent, width, style }) => {
   return (
     <div
       className={`rounded-xl border-2 border-atlasian-gray-light flex items-center p-1 ${
-        style && style
+        style ? style : ""
       } ${width ? width : `w-48`}`}
     >
       <div className="w-full flex justify-between px-2 text-sm">

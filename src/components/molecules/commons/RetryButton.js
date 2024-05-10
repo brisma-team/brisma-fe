@@ -4,7 +4,7 @@ const RetryButton = ({ size, className }) => {
   return (
     <div
       className={`rounded-full w-5 h-5 flex items-center justify-center p-1 ${
-        className && className
+        className ? className : ""
       }`}
     >
       <IconRetry size={size || "medium"} />

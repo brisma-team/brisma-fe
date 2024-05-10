@@ -91,10 +91,10 @@ const CardFilterActivitySchedule = ({ showFilter, params, setParams }) => {
                     handleClick={() => handleResetSelected("metode")}
                   />
                 }
-                handleChange={(e) => (
-                  handleChangeParams("metode", e.value),
-                  handleChangeSelected("metode", e)
-                )}
+                handleChange={(e) => {
+                  handleChangeParams("metode", e.value);
+                  handleChangeSelected("metode", e);
+                }}
                 selectedValue={selectedValue.metode}
               />
             </div>
@@ -107,10 +107,10 @@ const CardFilterActivitySchedule = ({ showFilter, params, setParams }) => {
                     handleClick={() => handleResetSelected("tipe")}
                   />
                 }
-                handleChange={(e) => (
-                  handleChangeParams("tipe", e.value),
-                  handleChangeSelected("tipe", e)
-                )}
+                handleChange={(e) => {
+                  handleChangeParams("tipe", e.value);
+                  handleChangeSelected("tipe", e);
+                }}
                 selectedValue={selectedValue.tipe}
               />
             </div>
@@ -125,10 +125,10 @@ const CardFilterActivitySchedule = ({ showFilter, params, setParams }) => {
                     handleClick={() => handleResetSelected("jenis")}
                   />
                 }
-                handleChange={(e) => (
-                  handleChangeParams("jenis", e.value),
-                  handleChangeSelected("jenis", e)
-                )}
+                handleChange={(e) => {
+                  handleChangeParams("jenis", e.value);
+                  handleChangeSelected("jenis", e);
+                }}
                 selectedValue={selectedValue.jenis}
               />
             </div>
@@ -141,10 +141,10 @@ const CardFilterActivitySchedule = ({ showFilter, params, setParams }) => {
                     handleClick={() => handleResetSelected("tema")}
                   />
                 }
-                handleChange={(e) => (
-                  handleChangeParams("tema", e.value),
-                  handleChangeSelected("tema", e)
-                )}
+                handleChange={(e) => {
+                  handleChangeParams("tema", e.value);
+                  handleChangeSelected("tema", e);
+                }}
                 selectedValue={selectedValue.tema}
               />
             </div>
@@ -159,10 +159,10 @@ const CardFilterActivitySchedule = ({ showFilter, params, setParams }) => {
                     handleClick={() => handleResetSelected("pic")}
                   />
                 }
-                handleChange={(e) => (
-                  handleChangeParams("pic", e.value.pn),
-                  handleChangeSelected("pic", e)
-                )}
+                handleChange={(e) => {
+                  handleChangeParams("pic", e.value.pn);
+                  handleChangeSelected("pic", e);
+                }}
                 selectedValue={selectedValue.pic}
               />
             </div>

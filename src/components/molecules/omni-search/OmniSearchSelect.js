@@ -36,13 +36,6 @@ const OmniSearchSelect = ({
     return <Skeleton />;
   }
 
-  //   const DropdownIndicator = (props) => {
-  //     return (
-  //       <components.DropdownIndicator {...props}>
-  //         {customIcon && customIcon}
-  //       </components.DropdownIndicator>
-  //     );
-  //   };
   return (
     <Select
       {...fieldsProps}

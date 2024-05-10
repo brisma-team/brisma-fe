@@ -53,6 +53,21 @@ import ringkasanSBPAddendumReducer from "./slices/ewp/konsulting/addendum/lain/r
 import ringkasanUtamaAddendumEWPKonsultingReducer from "./slices/ewp/konsulting/addendum/utama/ringkasanUtamaAddendumEWPKonsultingSlice";
 import changeInitiatorReducer from "./slices/ewp/konsulting/changeInitiatorSlice";
 
+// EWP Quality Assurance
+import overviewEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/overview/overviewEWPQualityAssuranceSlice";
+
+//EWP MONOFF
+import projectOverviewEWPMonoffReducer from "./slices/ewp/monitoring-offsite/projectOverviewEWPMonoffSlice";
+import timEWPMonoffReducer from "./slices/ewp/monitoring-offsite/perencanaan/timEWPMonoffSlice";
+import documentEWPMonoffReducer from "./slices/ewp/monitoring-offsite/dokumen/documentEWPMonoffSlice";
+import attendanceMeetingEWPMonoffReducer from "./slices/ewp/monitoring-offsite/meeting/attendanceMeetingEWPMonoffSlice";
+import beritaAcaraMeetingEWPMonoffReducer from "./slices/ewp/monitoring-offsite/meeting/beritaAcaraMeetingEWPMonoffSlice";
+import notulenMeetingEWPMonoffReducer from "./slices/ewp/monitoring-offsite/meeting/notulenMeetingEWPMonoffSlice";
+import overviewMeetingEWPMonoffReducer from "./slices/ewp/monitoring-offsite/meeting/overviewMeetingEWPMonoffSlice";
+import documentMapaEWPMonoffReducer from "./slices/ewp/monitoring-offsite/reporting/documentMapaEWPMonoffSlice";
+import tindakLanjutEWPMonoffReducer from "./slices/ewp/monitoring-offsite/tindak-lanjut/tindakLanjutEWPMonoffSlice";
+import ukerAssessmentEWPMonoffReducer from "./slices/ewp/monitoring-offsite/perencanaan/ukerAssessmentEWPMonoffSlice";
+
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
 import beritaAcaraEntranceEWPReducer from "./slices/ewp/konvensional/entrance/beritaAcaraEntranceEWPSlice";
@@ -143,8 +158,23 @@ export const store = configureStore({
       ringkasanUtamaAddendumEWPKonsultingReducer,
     changeInitiator: changeInitiatorReducer,
 
+    // EWP Quality Assurance
+    overviewEWPQualityAssurance: overviewEWPQualityAssuranceReducer,
+
     //RPM
     documentRPMKegiatan: documentRPMKegiatanReducer,
+
+    //EWP Monoff
+    projectOverviewEWPMonoff: projectOverviewEWPMonoffReducer,
+    timEWPMonoff: timEWPMonoffReducer,
+    dokumenEWPMonoff: documentEWPMonoffReducer,
+    attendanceMeetingEWPMonoff: attendanceMeetingEWPMonoffReducer,
+    beritaAcaraMeetingEWPMonoff: beritaAcaraMeetingEWPMonoffReducer,
+    notulenMeetingEWPMonoff: notulenMeetingEWPMonoffReducer,
+    overviewMeetingEWPMonoff: overviewMeetingEWPMonoffReducer,    
+    documentMapaEWPMonoff: documentMapaEWPMonoffReducer,
+    tindakLanjutEWPMonoff: tindakLanjutEWPMonoffReducer,
+    ukerAssessmentEWPMonoff: ukerAssessmentEWPMonoffReducer,
 
     // REFERENCE
     createTemplateReference: createTemplateReferenceSlice,

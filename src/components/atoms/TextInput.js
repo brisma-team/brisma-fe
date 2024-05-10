@@ -27,7 +27,7 @@ const TextInput = ({
       style={style}
       isDisabled={isDisabled}
       type={isNumber ? "number" : "text"}
-      maxLength={maxLength && maxLength}
+      maxLength={maxLength}
     />
   );
 };

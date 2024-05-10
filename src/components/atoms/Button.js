@@ -36,21 +36,21 @@ const ButtonField = ({
   return (
     <Button
       className={className}
-      href={url && url}
+      href={url ? url : "#"}
       iconBefore={icon}
       iconAfter={iconAfter}
       shouldFitContainer
       onClick={handler}
       isDisabled={disabled}
       type={type}
-      name={name && name}
+      name={name ? name : ""}
     >
       <p
         className={`${textColor ? txtColor : `text-white`} flex items-center ${
           isCentered ? "justify-center" : ""
-        } font-semibold ${style && style}`}
+        } font-semibold ${style ? style : ""}`}
       >
-        {text && text}
+        {text ? text : ""}
       </p>
     </Button>
   );

@@ -73,7 +73,7 @@ const rteHtml = (data, actionPlan) => {
                 </div>
             </p>
         </article>  
-        <hr>
+        <hr/>
         <article style="margin-top:10px">
         ${actionPlan
           .map((val, index) => {

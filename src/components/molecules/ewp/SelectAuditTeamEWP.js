@@ -39,7 +39,7 @@ const SelectAuditTeamEWP = ({
   };
 
   return (
-    <div className={`${open ? "z-50 absolute" : ""} ${width && width}`}>
+    <div className={`${open ? "z-50 absolute" : ""} ${width ? width : ""}`}>
       <Select
         options={options}
         value={selectedValue}
