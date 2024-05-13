@@ -43,7 +43,8 @@ const CardCategory = ({
               <ButtonIcon
                 icon={<Image src={ImageTrash} alt="" />}
                 handleClick={async () => {
-                  await handleDeleteCategory(data.id), handleMutateData();
+                  await handleDeleteCategory(data.id);
+                  await handleMutateData();
                 }}
               />
             </div>

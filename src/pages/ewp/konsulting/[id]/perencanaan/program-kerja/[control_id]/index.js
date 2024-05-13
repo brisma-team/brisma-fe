@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import {
   AttachmentClipping,
+  ContentView,
   ImageClipping,
 } from "@/components/molecules/commons";
 import { fetchApi, loadingSwal, usePostFileData } from "@/helpers";
@@ -155,33 +156,35 @@ const index = () => {
       </div>
       {/* Start Content */}
       <div className="my-4 flex gap-6">
-        <div className="w-64 flex flex-col gap-4">
-          <ImageClipping
-            data={imageClipList}
-            handleChange={handleUploadFile}
-            handleClick={handleClickUploadImage}
-            isHideButton={
-              !((isInitiator || isPIC) && !isCloseSubmodule && isOnProgress)
-            }
-          />
-          <AttachmentClipping
-            data={attachmentClipList}
-            handleChange={handleUploadFile}
-            handleClick={handleClickUploadAttachment}
-            isHideButton={
-              !((isInitiator || isPIC) && !isCloseSubmodule && isOnProgress)
-            }
-          />
-        </div>
-        <div>
-          <div className="ckeditor-latar-belakang-mapa-ewp">
-            <Editor
-              contentData={content}
-              disabled={false}
-              ready={true}
-              onChange={(value) => setContent(value)}
+        {(isInitiator || isPIC) && !isCloseSubmodule && isOnProgress && (
+          <div className="w-64 flex flex-col gap-4">
+            <ImageClipping
+              data={imageClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadImage}
+              isHideButton={!((isInitiator || isPIC) && !isCloseSubmodule)}
+            />
+            <AttachmentClipping
+              data={attachmentClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadAttachment}
+              isHideButton={!((isInitiator || isPIC) && !isCloseSubmodule)}
             />
           </div>
+        )}
+        <div>
+          {(isInitiator || isPIC) && !isCloseSubmodule && isOnProgress ? (
+            <div className="ckeditor-latar-belakang-mapa-ewp">
+              <Editor
+                contentData={content}
+                ready={true}
+                onChange={(value) => setContent(value)}
+              />
+            </div>
+          ) : (
+            <ContentView dataDoc={content} />
+          )}
+
           {(isInitiator || isPIC) && !isCloseSubmodule && isOnProgress ? (
             <div className="mt-3 flex justify-end">
               <div className="w-[7.75rem] bg-atlasian-green rounded">

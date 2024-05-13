@@ -130,7 +130,7 @@ const ModalBodyInfoKegiatan = ({
       tim_audit_id: e.value,
     };
     dispatch(setAuditScheduleData(updatedData));
-    auditTeamMutate;
+    auditTeamMutate();
   };
 
   const handleChange = (props, value) => {

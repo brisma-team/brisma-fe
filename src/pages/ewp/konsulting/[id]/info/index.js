@@ -746,9 +746,17 @@ const index = () => {
         <PageTitle text="Project Info" />
         <div className="mt-7">
           <NavigationTab
-            items={navigationTabItems}
+            items={
+              projectDetail?.data?.project_info?.is_pat
+                ? navigationTabItems
+                : navigationTabItems.filter((v) => v.idx !== 4)
+            }
             currentStage={currentContentStage}
-            width={"w-[30rem]"}
+            width={
+              projectDetail?.data?.project_info?.is_pat
+                ? "w-[30rem]"
+                : "w-[25rem]"
+            }
             handleChange={handleChangeTab}
           />
           {currentContentStage === 1 ? (
@@ -794,9 +802,9 @@ const index = () => {
                 handleClickSave={handleClickSaveRelatedProject}
                 payload={payloadRelatedProject}
                 validation={validationRelatedProject}
-                withoutButton={!isInitiator}
+                withoutButton={!isInitiator || isFinalProject}
               />
-              {isInitiator ? (
+              {isInitiator && !isFinalProject ? (
                 <div className="w-full flex items-center justify-end mt-4">
                   <div
                     className={`w-fit text-sm font-semibold my-1 ${
@@ -820,7 +828,7 @@ const index = () => {
             <UkerAssessmentTable
               data={dataUkerAssessment}
               payload={payloadUkerAssessment}
-              withoutButton={!isInitiator}
+              withoutButton={!isInitiator || isFinalProject}
               handleChange={handleChangePayloadUkerAssessment}
               handleClickAddUkerAssessment={handleClickAddRowUkerAssessment}
               handleClickSave={handleSaveUkerAssessment}

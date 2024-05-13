@@ -8,20 +8,20 @@ import useGetGuestToken from "@/data/dashboard/useGetGuestToken";
 const updateIntervalList = [
   {
     label: "10 Detik",
-    value: 10
+    value: 10,
   },
   {
     label: "30 Detik",
-    value: 30
+    value: 30,
   },
   {
     label: "1 Menit",
-    value: 60
+    value: 60,
   },
   {
     label: "5 Menit",
-    value: 300
-  }
+    value: 300,
+  },
 ];
 
 export default function index() {
@@ -34,7 +34,7 @@ export default function index() {
   const { guestData } = useGetGuestToken(id, interval);
 
   useEffect(() => {
-    if (data && data) {
+    if (data !== undefined) {
       if (id) {
         // Cari label dari data yang sesuai dengan id yang dipilih
         const selectedDashboard = data.list.find(
@@ -60,27 +60,28 @@ export default function index() {
 
   const handleSelectIntervalChange = (selectedOption) => {
     setInterval(selectedOption.value * 1000);
-  }
+  };
 
   return (
     <div className="p-5">
       <div className="flex items-center mb-6">
         <div className="text-3xl font-bold pl-5">{tagName}</div>
         <div className="w-[12rem] ml-2 pt-1">
-            <Select
-              optionValue={updateIntervalList}
-              placeholder="Pilih Interval Refresh"
-              onChange={(e) => handleSelectIntervalChange(e)}
-              isSearchable={false}
-            />
+          <Select
+            optionValue={updateIntervalList}
+            placeholder="Pilih Interval Refresh"
+            onChange={(e) => handleSelectIntervalChange(e)}
+            isSearchable={false}
+          />
         </div>
       </div>
-      { noGuestToken ? (
+      {noGuestToken ? (
         <div className="text-xl text-center justify-center">
           Tidak dapat memuat <i>dashboard</i>!
         </div>
-      ) : id && ctoken && <SupersetDashboard token={ctoken} id={id} />
-      }
+      ) : (
+        id && ctoken && <SupersetDashboard token={ctoken} id={id} />
+      )}
     </div>
   );
 }

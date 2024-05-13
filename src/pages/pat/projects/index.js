@@ -88,7 +88,7 @@ const index = () => {
   useEffect(() => {
     const handleSearch = () => {
       setParams(filter);
-      projectOverviewMutate;
+      projectOverviewMutate();
     };
     const debouncedSearch = _.debounce(handleSearch, 800);
     debouncedSearch();
@@ -139,7 +139,10 @@ const index = () => {
   };
 
   return (
-    <PatOverviewLayout title={"Approval Information"} data={approvalPat?.data?.header}>
+    <PatOverviewLayout
+      title={"Approval Information"}
+      data={approvalPat?.data?.header}
+    >
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -168,9 +171,7 @@ const index = () => {
           setFilter={setFilter}
         />
         <div className="w-full flex justify-end items-end p-2">
-          <SelectSortFilter
-            change={handleChangeFilter}
-          />
+          <SelectSortFilter change={handleChangeFilter} />
         </div>
       </div>
       {/* End Filter */}
