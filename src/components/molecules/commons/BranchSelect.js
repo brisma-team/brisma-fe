@@ -37,7 +37,7 @@ const BranchSelect = ({
       const handleSearch = () => {
         setSearch(true);
         setKeyword(value);
-        branchMutate;
+        branchMutate();
       };
       const debouncedSearch = _.debounce(handleSearch, 400);
       debouncedSearch();

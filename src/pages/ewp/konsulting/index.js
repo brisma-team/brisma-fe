@@ -286,7 +286,7 @@ const index = () => {
     return successSwal("Link project berhasil disalin ke clipboard.");
   };
 
-  const handleChangeInitiator = async (status, ewpid, cId) => {
+  const handleChangeInitiator = async (status, ewp_id, change_initiator_id) => {
     if (status == false) {
       const confirm = await confirmationSwal(
         "Apakah anda yakin ingin melakukan perubahan Inisiator?"
@@ -297,16 +297,15 @@ const index = () => {
       }
       await usePostData(
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/change_initiator/create`,
-        { ewp_id: ewpid, note: "change initiator" }
+        { ewp_id, note: "change initiator" }
       );
       overviewEWPKonsultingMutate();
       setShowModalApprovalExtension(true);
     } else {
-      setChangeInitiatorId(cId);
+      setChangeInitiatorId(change_initiator_id);
       setShowModalApprovalExtension(!showModalApprovalExtension);
     }
   };
-  //modal
 
   const handleChangeSelect = (property, index, e) => {
     const newData = [...workflowData[property]];
@@ -480,7 +479,9 @@ const index = () => {
             />
           </div>
         </div>
-        {/* <div className="w-24 rounded bg-atlasian-blue-light">
+        {/* Arsip function (don't delete this)
+        ----------------------------------------
+        <div className="w-24 rounded bg-atlasian-blue-light">
           <ButtonField handler={() => console.log("test")} text={`Arsip`} />
         </div> */}
       </div>

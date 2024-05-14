@@ -8,8 +8,9 @@ const fetchApi = async (method, url, body, withoutSwal, messageSuccess) => {
     const options = {
       method,
       headers: {
-        Authorization: headers.Authorization,
+        ...headers,
         "Content-Type": "application/json",
+        "Strict-Transport-Security": "max-age=86400; preload",
       },
       body: JSON.stringify(body),
     };

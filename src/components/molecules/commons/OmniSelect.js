@@ -54,7 +54,7 @@ const OmniSelect = ({
       const handleSearch = () => {
         setSearch(true);
         setKeyword(value);
-        omniMutate;
+        omniMutate();
       };
       const debouncedSearch = _.debounce(handleSearch, 500);
       debouncedSearch();

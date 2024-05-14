@@ -62,7 +62,10 @@ const ContentExistingSampleCSV = ({
       const fetchData = async () => {
         const response = await fetch(directory, {
           method: "GET",
-          headers,
+          headers: {
+            ...headers,
+            "Strict-Transport-Security": "max-age=86400; preload",
+          },
         });
 
         const csvFile = await response.text();
