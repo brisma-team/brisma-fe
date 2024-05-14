@@ -57,8 +57,8 @@ import changeInitiatorReducer from "./slices/ewp/konsulting/changeInitiatorSlice
 import overviewEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/overview/overviewEWPQualityAssuranceSlice";
 import infoEWPQualityAssuranceSliceReducer from "./slices/ewp/quality-assurance/info/infoEWPQualityAssuranceSlice";
 import previewTemplateSurveyEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/info/previewTemplateSurveyEWPQualityAssuranceSlice";
-import timEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/tim/timEWPQualityAssuranceSlice";
-import ukerAssessmentEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/uker-assessment/ukerAssessmentEWPQualityAssuranceSlice";
+import timEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/timEWPQualityAssuranceSlice";
+import ukerAssessmentEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/ukerAssessmentEWPQualityAssuranceSlice";
 import anggaranEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/anggaranEWPQualityAssuranceSlice";
 import analisisPerencanaanEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/analisisPerencanaanEWPQualityAssuranceSlice";
 import penugasanEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/perencanaan/penugasanEWPQualityAssuranceSlice";

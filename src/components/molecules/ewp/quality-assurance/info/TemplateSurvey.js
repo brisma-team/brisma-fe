@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 
 const TemplateSurvey = ({
   data,
+  statusProject,
   baseUrl,
   handleChange,
   handleReset,
@@ -98,12 +99,14 @@ const TemplateSurvey = ({
       <div className="flex justify-end">
         <div
           className={`rounded ${
-            !data?.id ? `bg-atlasian-gray-light` : `bg-atlasian-green`
+            !(data?.id && statusProject === "init project")
+              ? `bg-atlasian-gray-light`
+              : `bg-atlasian-green`
           } w-fit`}
         >
           <ButtonField
             text="Simpan"
-            disabled={!data?.id}
+            disabled={!(data?.id && statusProject === "init project")}
             handler={handleClickSave}
           />
         </div>

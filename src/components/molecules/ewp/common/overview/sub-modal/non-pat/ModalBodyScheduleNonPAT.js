@@ -1,11 +1,10 @@
 import { useEffect } from "react";
-import { FormWithLabel } from "@/components/molecules/commons";
+import { CustomSelect, FormWithLabel } from "@/components/molecules/commons";
 import {
   ButtonIcon,
   DatepickerField,
   DatepickerStartEnd,
   ErrorValidation,
-  Select,
   TextInput,
   UploadButton,
 } from "@/components/atoms";
@@ -148,11 +147,23 @@ const ModalBodyScheduleNonPAT = ({
                 <div className="px-2">
                   <FormWithLabel
                     form={
-                      <Select
-                        optionValue={optionMetode}
-                        isSearchable={false}
-                        onChange={(e) => handleChangeRef("ref_metode", e.value)}
-                        value={
+                      <CustomSelect
+                        customIcon={
+                          <ButtonIcon
+                            color="red"
+                            icon={<IconClose />}
+                            handleClick={() =>
+                              handleChangeRef("ref_metode", {
+                                kode: "",
+                                nama: "",
+                              })
+                            }
+                          />
+                        }
+                        handleChange={(e) =>
+                          handleChangeRef("ref_metode", e.value)
+                        }
+                        selectedValue={
                           data?.ref_metode?.nama
                             ? {
                                 label: data?.ref_metode?.nama,
@@ -160,8 +171,8 @@ const ModalBodyScheduleNonPAT = ({
                               }
                             : null
                         }
-                        isDisabled={isDisabled}
-                        placeholder="Metode Audit"
+                        optionValue={optionMetode}
+                        placeholder={"Metode Audit"}
                       />
                     }
                     label="Metode Audit*"
@@ -173,11 +184,23 @@ const ModalBodyScheduleNonPAT = ({
                   />
                   <FormWithLabel
                     form={
-                      <Select
-                        optionValue={optionTipe}
-                        isSearchable={false}
-                        onChange={(e) => handleChangeRef("ref_tipe", e.value)}
-                        value={
+                      <CustomSelect
+                        customIcon={
+                          <ButtonIcon
+                            color="red"
+                            icon={<IconClose />}
+                            handleClick={() =>
+                              handleChangeRef("ref_tipe", {
+                                kode: "",
+                                nama: "",
+                              })
+                            }
+                          />
+                        }
+                        handleChange={(e) =>
+                          handleChangeRef("ref_tipe", e.value)
+                        }
+                        selectedValue={
                           data?.ref_tipe?.nama
                             ? {
                                 label: data?.ref_tipe?.nama,
@@ -185,8 +208,8 @@ const ModalBodyScheduleNonPAT = ({
                               }
                             : null
                         }
-                        isDisabled={isDisabled}
-                        placeholder="Tipe Audit"
+                        optionValue={optionTipe}
+                        placeholder={"Tipe Audit"}
                       />
                     }
                     label="Tipe Audit*"
@@ -198,20 +221,32 @@ const ModalBodyScheduleNonPAT = ({
                   />
                   <FormWithLabel
                     form={
-                      <Select
-                        optionValue={optionJenis}
-                        isSearchable={false}
-                        onChange={(e) => handleChangeRef("ref_jenis", e.value)}
-                        value={
-                          data.ref_jenis?.nama
-                            ? {
-                                label: data.ref_jenis?.nama,
-                                value: data.ref_jenis?.kode,
-                              }
-                            : ""
+                      <CustomSelect
+                        customIcon={
+                          <ButtonIcon
+                            color="red"
+                            icon={<IconClose />}
+                            handleClick={() =>
+                              handleChangeRef("ref_jenis", {
+                                kode: "",
+                                nama: "",
+                              })
+                            }
+                          />
                         }
-                        isDisabled={isDisabled}
-                        placeholder="Jenis Audit"
+                        handleChange={(e) =>
+                          handleChangeRef("ref_jenis", e.value)
+                        }
+                        selectedValue={
+                          data?.ref_jenis?.nama
+                            ? {
+                                label: data?.ref_jenis?.nama,
+                                value: data?.ref_jenis?.kode,
+                              }
+                            : null
+                        }
+                        optionValue={optionJenis}
+                        placeholder={"Jenis Audit"}
                       />
                     }
                     label={`Jenis Audit${module !== "qa" ? "*" : ""}`}
@@ -223,20 +258,32 @@ const ModalBodyScheduleNonPAT = ({
                   />
                   <FormWithLabel
                     form={
-                      <Select
-                        optionValue={optionTema}
-                        isSearchable={false}
-                        onChange={(e) => handleChangeRef("ref_tema", e.value)}
-                        value={
-                          data.ref_tema?.nama
-                            ? {
-                                label: data.ref_tema?.nama,
-                                value: data.ref_tema?.kode,
-                              }
-                            : ""
+                      <CustomSelect
+                        customIcon={
+                          <ButtonIcon
+                            color="red"
+                            icon={<IconClose />}
+                            handleClick={() =>
+                              handleChangeRef("ref_tema", {
+                                kode: "",
+                                nama: "",
+                              })
+                            }
+                          />
                         }
-                        isDisabled={isDisabled}
-                        placeholder="Tema Audit"
+                        handleChange={(e) =>
+                          handleChangeRef("ref_tema", e.value)
+                        }
+                        selectedValue={
+                          data?.ref_tema?.nama
+                            ? {
+                                label: data?.ref_tema?.nama,
+                                value: data?.ref_tema?.kode,
+                              }
+                            : null
+                        }
+                        optionValue={optionTema}
+                        placeholder={"Tema Audit"}
                       />
                     }
                     label="Tema Audit"

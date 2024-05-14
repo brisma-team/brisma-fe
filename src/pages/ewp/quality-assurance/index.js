@@ -11,6 +11,7 @@ import {
   confirmationSwal,
   convertDate,
   fetchApi,
+  infoSwal,
   loadingSwal,
   setErrorValidation,
 } from "@/helpers";
@@ -26,19 +27,24 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setObjData,
   setObjPayload,
+  setObjPayloadRelatedProject,
   setValidationErrorsSchedulePAT,
   setValidationErrorsSummaryPAT,
   setValidationErrorsScheduleNonPAT,
+  setValidationErrorsRelatedProjectNonPAT,
   resetObjData,
   resetObjPayload,
+  resetObjPayloadRelatedProject,
   resetValidationErrorsSchedulePAT,
   resetValidationErrorsSummaryPAT,
   resetValidationErrorsScheduleNonPAT,
+  resetValidationErrorsRelatedProjectNonPAT,
 } from "@/slices/ewp/quality-assurance/overview/overviewEWPQualityAssuranceSlice";
 import {
   schedulePATSchema,
   summaryPATSchema,
   scheduleNonPATSchema,
+  relatedProjectNonPATSchema,
 } from "@/helpers/schemas/ewp/common/overviewEWPSchema";
 import { ModalAddProjectEWP } from "@/components/molecules/ewp/common/overview";
 
@@ -88,6 +94,7 @@ const index = () => {
   const [showModal, setShowModal] = useState(false);
   const [currentModalStage, setCurrentModalStage] = useState(1);
   const [isPat, setIsPat] = useState(false);
+  const [isAddNewRowProject, setIsAddNewRowProject] = useState(false);
   const [maxStage, setMaxStage] = useState(null);
   const [differentPIC, setDifferentPIC] = useState(true);
   // [ END ] state for modal add project
@@ -98,6 +105,9 @@ const index = () => {
   const payload = useSelector(
     (state) => state.overviewEWPQualityAssurance.objPayload
   );
+  const payloadRelatedProject = useSelector(
+    (state) => state.overviewEWPQualityAssurance.objPayloadRelatedProject
+  );
   const validationErrorsSchedulePAT = useSelector(
     (state) => state.overviewEWPQualityAssurance.validationErrorsSchedulePAT
   );
@@ -106,6 +116,10 @@ const index = () => {
   );
   const validationErrorsScheduleNonPAT = useSelector(
     (state) => state.overviewEWPQualityAssurance.validationErrorsScheduleNonPAT
+  );
+  const validationErrorsRelatedProjectNonPAT = useSelector(
+    (state) =>
+      state.overviewEWPQualityAssurance.validationErrorsRelatedProjectNonPAT
   );
 
   const [filter, setFilter] = useState({
@@ -196,8 +210,8 @@ const index = () => {
           )} s/d ${convertDate(v?.info_periode_pelaksanaan_end, "-", "d")}`,
           progress: convertProgressAndPercent(v?.status_name).progress,
           percent: convertProgressAndPercent(v?.status_name).percent,
-          auditor: v?.info_team_audit?.auditor || [],
-          auditee: v?.info_team_audit?.auditee || [],
+          ma: v?.info_team_audit?.ma || [],
+          kta: v?.info_team_audit?.kta || [],
           ata: v?.info_team_audit?.ata || [],
           document_status: status_name,
           approval_status: status_persetujuan_name,
@@ -312,6 +326,15 @@ const index = () => {
       is_pat: isPat,
     };
 
+    if (currentModalStage === 3 && !isPat) {
+      if (payload?.project_terkait?.some((project) => project.is_new)) {
+        await infoSwal(
+          "Anda sedang menambahkan data proyek terkait, silahkan dicek kembali!"
+        );
+        return;
+      }
+    }
+
     const validate = setErrorValidation(
       data,
       dispatch,
@@ -386,6 +409,73 @@ const index = () => {
   };
   // [ END ] Handler for change data on sub modal ModalBodyDocument Non-PAT
 
+  // [ START ] handler for modal add project
+  const handleChangePayloadProject = (props, value) => {
+    const newPayload = {
+      ...payloadRelatedProject,
+      [props]: value,
+    };
+    dispatch(setObjPayloadRelatedProject(newPayload));
+  };
+
+  const handleClickAddProject = () => {
+    if (!isAddNewRowProject) {
+      const newDataTables = JSON.parse(JSON.stringify(payload));
+      newDataTables?.project_terkait?.push(payloadRelatedProject);
+      dispatch(setObjPayload(newDataTables));
+      setIsAddNewRowProject(true);
+    }
+  };
+
+  const handleClickSaveProject = (project_id) => {
+    const newData = JSON.parse(JSON.stringify(payload));
+    const newDataTables = [...newData.project_terkait];
+    const findIndex = newDataTables.findIndex(
+      (v) => v.project_id === project_id
+    );
+    if (findIndex !== -1) {
+      const schemaMapping = {
+        schema: relatedProjectNonPATSchema,
+        resetErrors: resetValidationErrorsRelatedProjectNonPAT,
+        setErrors: setValidationErrorsRelatedProjectNonPAT,
+      };
+      const validate = setErrorValidation(
+        payloadRelatedProject,
+        dispatch,
+        schemaMapping
+      );
+
+      if (validate) {
+        newDataTables[findIndex] = { ...payloadRelatedProject, is_new: false };
+        newData.project_terkait = newDataTables;
+        dispatch(setObjPayload(newData));
+        dispatch(resetObjPayloadRelatedProject());
+        dispatch(resetValidationErrorsRelatedProjectNonPAT());
+        setIsAddNewRowProject(false);
+      }
+    }
+  };
+
+  const handleClickDeleteProject = async (project_id) => {
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin ingin menghapus data ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
+    const newDataTables = JSON.parse(
+      JSON.stringify(payload.project_terkait || [])
+    );
+    const findAnswerIndex = newDataTables?.findIndex(
+      (v) => v.project_id == project_id
+    );
+    newDataTables.splice(findAnswerIndex, 1);
+    dispatch(setObjPayload({ ...payload, project_terkait: newDataTables }));
+    dispatch(resetValidationErrorsRelatedProjectNonPAT());
+    setIsAddNewRowProject(false);
+  };
   // [ END ] handler for modal add project
 
   const handleChangeFilter = (props, value) => {
@@ -451,6 +541,7 @@ const index = () => {
         module={"qa"}
         showModal={showModal}
         payload={payload}
+        payloadRelatedProject={payloadRelatedProject}
         user={user?.data}
         currentModalStage={currentModalStage}
         setCurrentModalStage={setCurrentModalStage}
@@ -460,6 +551,9 @@ const index = () => {
         validationErrorsSchedulePAT={validationErrorsSchedulePAT}
         validationErrorsSummaryPAT={validationErrorsSummaryPAT}
         validationErrorsScheduleNonPAT={validationErrorsScheduleNonPAT}
+        validationErrorsRelatedProjectNonPAT={
+          validationErrorsRelatedProjectNonPAT
+        }
         handleChangePayload={handleChangePayload}
         handleChangePICPayload={handleChangePICPayload}
         handleIsPAT={handleIsPAT}
@@ -469,6 +563,10 @@ const index = () => {
         handleCloseModal={handleCloseModal}
         handleClickRowTableSchedulePAT={handleClickRowTableSchedulePAT}
         handleUploadSurat={handleUploadSurat}
+        handleChangePayloadProject={handleChangePayloadProject}
+        handleClickAddProject={handleClickAddProject}
+        handleClickDeleteProject={handleClickDeleteProject}
+        handleClickSaveProject={handleClickSaveProject}
       />
       {/* End Content */}
     </OverviewLayoutEWP>

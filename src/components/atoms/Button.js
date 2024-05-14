@@ -36,7 +36,7 @@ const ButtonField = ({
   return (
     <Button
       className={className}
-      href={url ? url : "#"}
+      href={url ? url : ""}
       iconBefore={icon}
       iconAfter={iconAfter}
       shouldFitContainer

@@ -44,7 +44,9 @@ const ModalBodySummaryNonPAT = ({ module, data, setCurrentModalStage }) => {
                   <FormWithLabel
                     form={
                       <CardContent>
-                        <p>{data?.ref_jenis?.nama}</p>
+                        <div className="min-h-[1.1rem]">
+                          <p>{data?.ref_jenis?.nama || "-"}</p>
+                        </div>
                       </CardContent>
                     }
                     label={`Jenis Audit${module !== "qa" ? "*" : ""}`}
@@ -55,7 +57,7 @@ const ModalBodySummaryNonPAT = ({ module, data, setCurrentModalStage }) => {
                     form={
                       <CardContent>
                         <div className="min-h-[1.1rem]">
-                          <p>{data?.ref_tema?.nama}</p>
+                          <p>{data?.ref_tema?.nama || "-"}</p>
                         </div>
                       </CardContent>
                     }

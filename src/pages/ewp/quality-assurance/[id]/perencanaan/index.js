@@ -86,7 +86,7 @@ const index = () => {
           title: "Jadwal",
           description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
-          status: landingStatus?.data?.jadwal ? "success" : "failed",
+          status: landingStatus?.data?.jadwal_audit ? "success" : "failed",
           url: `${baseUrl}/perencanaan/jadwal`,
         },
         {

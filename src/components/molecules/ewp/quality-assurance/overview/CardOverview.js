@@ -120,14 +120,14 @@ const CardOverview = ({ data, withoutButton, withoutHover }) => {
                 <div className="w-1/2">
                   <CardTeam
                     title={"MANAJER REVIEW"}
-                    value={data?.auditor}
+                    value={data?.ma}
                     titleColor={"text-atlasian-blue-light"}
                   />
                 </div>
                 <div className="w-1/2">
                   <CardTeam
                     title={"KETUA TIM REVIEW"}
-                    value={data?.auditee}
+                    value={data?.kta}
                     titleColor={"text-atlasian-red"}
                   />
                 </div>
