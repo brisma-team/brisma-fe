@@ -8,9 +8,10 @@ const useUpdateData = async (url, body, withoutSwal) => {
     const options = {
       method: "PATCH",
       headers: {
+        ...headers,
         "Access-Control-Allow-Origin": "*",
-        Authorization: headers.Authorization,
         "Content-Type": "application/json",
+        "Strict-Transport-Security": "max-age=86400; preload",
       },
       body: JSON.stringify(body),
     };

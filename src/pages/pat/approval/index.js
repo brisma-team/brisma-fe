@@ -91,7 +91,7 @@ const index = () => {
   useEffect(() => {
     const handleSearch = () => {
       setParams(filter);
-      projectOverviewMutate;
+      projectOverviewMutate();
     };
     const debouncedSearch = _.debounce(handleSearch, 800);
     debouncedSearch();

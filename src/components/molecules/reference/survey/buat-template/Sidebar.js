@@ -75,7 +75,8 @@ const Sidebar = ({
               <ButtonIcon
                 icon={<Image src={ImageGroup} alt="" />}
                 handleClick={async (e) => {
-                  await handleAddCategory(e), handleMutateData();
+                  await handleAddCategory(e);
+                  await handleMutateData();
                 }}
               />
               <ButtonIcon
@@ -92,7 +93,8 @@ const Sidebar = ({
             <ButtonIcon
               icon={<Image src={ImageAddCategory} alt="" />}
               handleClick={async (e) => {
-                await handleAddCategory(e), handleMutateData();
+                await handleAddCategory(e);
+                await handleMutateData();
               }}
             />
           ))}

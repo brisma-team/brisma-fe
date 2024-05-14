@@ -31,15 +31,20 @@ import TableTree, {
 
 const routes = [
   {
-    name: "Sumber Informasi",
-    slug: "sumber-informasi",
+    name: "Latar Belakang",
+    slug: "latar-belakang",
   },
   {
-    name: "Tim & Timeplan",
-    slug: "tim-timeplan",
+    name: "Tujuan",
+    slug: "tujuan",
   },
+  { name: "Analisa", slug: "analisa" },
+  { name: "Tim", slug: "tim" },
+  { name: "UKER Assessment", slug: "uker-assessment" },
+  { name: "Analisis Perencanaan", slug: "analisis-perencanaan" },
+  { name: "Penugasan", slug: "penugasan" },
+  { name: "Jadwal", slug: "jadwal" },
   { name: "Anggaran", slug: "anggaran" },
-  { name: "Program Kerja", slug: "program-kerja" },
   { name: "Dokumen", slug: "dokumen" },
 ];
 
@@ -186,13 +191,13 @@ const index = () => {
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
       <div className="flex justify-between items-center mb-6">
-        <PageTitle text="Anggaran" />
+        <PageTitle text="Jadwal" />
         <PrevNextNavigation
           baseUrl={pathName}
           routes={routes}
-          prevUrl={"/jadwal"}
-          nextUrl={"/dokumen"}
-          marginLeft={"-67px"}
+          prevUrl={"/penugasan"}
+          nextUrl={"/anggaran"}
+          marginLeft={"-70px"}
         />
       </div>
       {/* Start Content */}

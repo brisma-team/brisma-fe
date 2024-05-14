@@ -16,7 +16,7 @@ import {
   setValidationErrors,
   resetObjData,
   resetValidationErrors,
-} from "@/slices/ewp/quality-assurance/perencanaan/tim/timEWPQualityAssuranceSlice";
+} from "@/slices/ewp/quality-assurance/perencanaan/timEWPQualityAssuranceSlice";
 import { useSelector } from "react-redux";
 import { useTim } from "@/data/ewp/quality-assurance/perencanaan/tim";
 import {
@@ -265,7 +265,7 @@ const index = () => {
           routes={routes}
           prevUrl={"/analisa"}
           nextUrl={"/uker-assessment"}
-          marginLeft={"-67px"}
+          marginLeft={"-70px"}
         />
       </div>
       {/* Start Content */}

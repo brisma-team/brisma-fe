@@ -55,7 +55,7 @@ const ModalBodySummaryNonPAT = ({ data, setCurrentModalStage }) => {
                     form={
                       <CardContent>
                         <div className="min-h-[1.3rem]">
-                          <p>{data?.ref_tema?.nama}</p>
+                          <p>{data?.ref_tema?.nama || "-"}</p>
                         </div>
                       </CardContent>
                     }
@@ -91,7 +91,7 @@ const ModalBodySummaryNonPAT = ({ data, setCurrentModalStage }) => {
                     widthLabel={"w-3/12"}
                     widthForm={"w-9/12"}
                   />
-                  <FormWithLabel
+                  {/* <FormWithLabel
                     form={
                       <CardContent>
                         <div className="min-h-[1.3rem]">
@@ -102,7 +102,7 @@ const ModalBodySummaryNonPAT = ({ data, setCurrentModalStage }) => {
                     label="Deskripsi Kegiatan"
                     widthLabel={"w-3/12"}
                     widthForm={"w-9/12"}
-                  />
+                  /> */}
                 </div>
               </CardContent>
             </div>
@@ -122,7 +122,7 @@ const ModalBodySummaryNonPAT = ({ data, setCurrentModalStage }) => {
                   <FormWithLabel
                     form={
                       <CardContent>
-                        <p>{data?.perihal}</p>
+                        <p>{data?.perihal || "-"}</p>
                       </CardContent>
                     }
                     label="Perihal"

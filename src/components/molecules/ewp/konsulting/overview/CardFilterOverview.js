@@ -63,12 +63,16 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
               <CustomSelect
                 optionValue={[
                   {
-                    label: "Mapa",
-                    value: { kode: 2, name: "Mapa" },
+                    label: "Init Project",
+                    value: { kode: 1, name: "Init Project" },
+                  },
+                  {
+                    label: "Perencanaan",
+                    value: { kode: 2, name: "Perencanaan" },
                   },
                   {
                     label: "Pelaksanaan",
-                    value: { kode: 4, name: "Pelaksaan" },
+                    value: { kode: 4, name: "Pelaksanaan" },
                   },
                   {
                     label: "Peluang Peningkatan",
@@ -90,7 +94,7 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
                 customIcon={
                   <ButtonIcon
                     handleClick={() => handleReset("status_document")}
-                    icon={<IconClose size="large" />}
+                    icon={<IconClose />}
                   />
                 }
                 selectedValue={

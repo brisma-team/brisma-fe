@@ -56,7 +56,10 @@ const ContentSampleCSV = ({ data }) => {
     try {
       const response = await fetch(directory, {
         method: "GET",
-        headers,
+        headers: {
+          ...headers,
+          "Strict-Transport-Security": "max-age=86400; preload",
+        },
       });
 
       if (!response.ok) {

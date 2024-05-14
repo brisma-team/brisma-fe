@@ -132,7 +132,7 @@ const index = () => {
   useEffect(() => {
     const handleSearch = () => {
       setParams(filter);
-      auditTeamMutate;
+      auditTeamMutate();
     };
     const debouncedSearch = _.debounce(handleSearch, 800);
     debouncedSearch();

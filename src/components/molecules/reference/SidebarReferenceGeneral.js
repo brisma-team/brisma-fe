@@ -66,7 +66,8 @@ const SidebarReferenceGeneral = () => {
     }
   }, [user]);
 
-  const handleSidebarItemClick = (path) => {
+  const handleSidebarItemClick = (e, path) => {
+    e.preventDefault();
     // Redirect to the clicked path using router.push
     router.push(path);
   };

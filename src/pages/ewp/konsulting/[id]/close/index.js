@@ -185,7 +185,7 @@ const index = () => {
             >
               <div className="p-4 min-h-[14rem]">
                 <p className="text-[#A5ADBA] text-justify">
-                  {closingStatement || ""}
+                  {closingStatement || "-"}
                 </p>
               </div>
             </CardContentHeaderFooter>

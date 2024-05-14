@@ -39,7 +39,7 @@ const PrevNextNavigation = ({
         <div
           className={`${
             !routes?.length && "opacity-25 cursor-not-allowed"
-          } rounded-full border-4 border-atlasian-blue-light w-7 h-7 bg-white ${
+          } rounded-full  overflow-hidden border-4 border-atlasian-blue-light w-7 h-7 bg-white ${
             !routes && `opacity-30 cursor-not-allowed`
           }`}
           ref={ref}

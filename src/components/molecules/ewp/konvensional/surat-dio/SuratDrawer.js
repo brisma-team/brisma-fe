@@ -111,8 +111,6 @@ const SuratDrawer = ({
     setTemplateDetail({});
   };
 
-  console.log("HOVER", isHovered, templateDetail);
-
   return (
     <div
       ref={ref}
@@ -158,7 +156,7 @@ const SuratDrawer = ({
                   handleClick={() => handleClickCard(template)}
                   className="p-3 hover:bg-gray-200 hover:rounded-[10px] hover:no-underline "
                   onMouseEnter={() => handleMouseEnter(template)}
-                  onMouseLeave={() => handleMouseLeave(template)}
+                  onMouseLeave={() => handleMouseLeave()}
                 >
                   <div className="mb-2">
                     <p className="text-xl text-atlasian-blue-light -mb-2">

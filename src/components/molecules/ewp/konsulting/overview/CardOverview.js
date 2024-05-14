@@ -7,6 +7,27 @@ import { token } from "@atlaskit/tokens";
 import { useRouter } from "next/router";
 
 import { IconPerson, IconTrash, IconLink } from "@/components/icons";
+
+const helpMeFindTitle = (text) => {
+  switch (text.toLowerCase()) {
+    case "init project":
+      return "init project";
+    case "mapa":
+      return "perencanaan";
+    case "pelaksanaan":
+      return "pelaksanaan";
+    case "peluang peningkatan":
+      return "peluang peningkatan";
+    case "wrapup":
+      return "wrapup";
+    case "addendum":
+      return "addendum";
+    case "final":
+      return "final";
+    default:
+      return text;
+  }
+};
 const CardTeam = ({ title, value, titleColor }) => {
   return (
     <div className="flex flex-col gap-2.5">
@@ -15,7 +36,7 @@ const CardTeam = ({ title, value, titleColor }) => {
         ? value?.map((v, i) => (
             <div key={i} className="text-xs">{`${v?.pn} - ${v?.nama}`}</div>
           ))
-        : ""}
+        : "-"}
     </div>
   );
 };
@@ -23,15 +44,15 @@ const CardTeam = ({ title, value, titleColor }) => {
 const CardBody = ({ title, value, textColor, className }) => {
   return (
     <div className={`text-base flex w-full border-b`}>
-      <div className="w-1/2 font-semibold border-r px-2 text-xs py-1 h-full flex items-center">
-        {title}
+      <div className="w-1/2 font-semibold px-2 text-xs py-1 h-full flex items-center">
+        {title || "-"}
       </div>
       <div
-        className={`w-1/2 ${
+        className={`w-1/2 border-l ${
           className || "font-medium"
         } text-xs px-2 py-1 ${textColor}`}
       >
-        {value}
+        {value || "-"}
       </div>
     </div>
   );
@@ -134,13 +155,13 @@ const CardOverview = ({
           <div className="text-lg font-bold text-atlasian-blue-dark">
             {data?.project_code?.toUpperCase()}
           </div>
-          <div className="text-base font-bold text-atlasian-blue-dark">
-            {data?.project_name}
+          <div className="text-base font-bold text-atlasian-blue-dark min-h-[3rem]">
+            {data?.project_name || "-"}
           </div>
           <div className="flex flex-row justify-between leading-3 mt-2 items-center">
             <ProgressBar appearance="success" value={data?.progress} />
             <div className="flex justify-end font-medium text-sm ml-3">
-              {data?.percent}
+              {data?.percent || "0%"}
             </div>
           </div>
           <div className="flex flex-col gap-3 mt-2">
@@ -197,7 +218,9 @@ const CardOverview = ({
               />
               <CardBody
                 title={"Document Status"}
-                value={capitalizeEveryWord(data?.document_status)}
+                value={capitalizeEveryWord(
+                  helpMeFindTitle(data?.document_status)
+                )}
                 textColor={"text-atlasian-yellow"}
               />
               <CardBody

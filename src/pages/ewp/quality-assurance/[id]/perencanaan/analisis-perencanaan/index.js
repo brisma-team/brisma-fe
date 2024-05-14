@@ -52,15 +52,20 @@ import {
 
 const routes = [
   {
-    name: "Sumber Informasi",
-    slug: "sumber-informasi",
+    name: "Latar Belakang",
+    slug: "latar-belakang",
   },
   {
-    name: "Tim & Timeplan",
-    slug: "tim-timeplan",
+    name: "Tujuan",
+    slug: "tujuan",
   },
+  { name: "Analisa", slug: "analisa" },
+  { name: "Tim", slug: "tim" },
+  { name: "UKER Assessment", slug: "uker-assessment" },
+  { name: "Analisis Perencanaan", slug: "analisis-perencanaan" },
+  { name: "Penugasan", slug: "penugasan" },
+  { name: "Jadwal", slug: "jadwal" },
   { name: "Anggaran", slug: "anggaran" },
-  { name: "Program Kerja", slug: "program-kerja" },
   { name: "Dokumen", slug: "dokumen" },
 ];
 
@@ -133,11 +138,13 @@ const index = () => {
     useAnalisisPerencanaanInternal({ id: params?.id });
   const { analisisPerencanaanEksternal, analisisPerencanaanEksternalMutate } =
     useAnalisisPerencanaanEksternal({ id: params?.id });
-  const { analisisPerencanaanProyek } = useAnalisisPerencanaanProyek({
-    ...dataFilterModalInternal,
-    orgeh_kode: selectedDataInternal?.orgeh_kode,
-    branch_kode: selectedDataInternal?.branch_kode,
-  });
+  const { analisisPerencanaanProyek, analisisPerencanaanProyekMutate } =
+    useAnalisisPerencanaanProyek({
+      ...dataFilterModalInternal,
+      uker_id: selectedDataInternal?.id,
+      orgeh_kode: selectedDataInternal?.orgeh_kode,
+      branch_kode: selectedDataInternal?.branch_kode,
+    });
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -371,6 +378,7 @@ const index = () => {
       );
 
       analisisPerencanaanEksternalMutate();
+      analisisPerencanaanProyekMutate();
       dispatch(resetObjPayloadEksternal());
       setShowModalEksternal(false);
       loadingSwal("close");
@@ -503,7 +511,7 @@ const index = () => {
           routes={routes}
           prevUrl={"/uker-assessment"}
           nextUrl={"/penugasan"}
-          marginLeft={"-67px"}
+          marginLeft={"-70px"}
         />
       </div>
       <NavigationTab

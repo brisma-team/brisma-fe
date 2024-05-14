@@ -12,7 +12,7 @@ import {
   setObjPayload,
   resetObjData,
   resetObjPayload,
-} from "@/slices/ewp/quality-assurance/perencanaan/uker-assessment/ukerAssessmentEWPQualityAssuranceSlice";
+} from "@/slices/ewp/quality-assurance/perencanaan/ukerAssessmentEWPQualityAssuranceSlice";
 import { useSelector, useDispatch } from "react-redux";
 import {
   confirmationSwal,
@@ -327,7 +327,7 @@ const index = () => {
           routes={routes}
           prevUrl={"/tim"}
           nextUrl={"/analisis-perencanaan"}
-          marginLeft={"-67px"}
+          marginLeft={"-70px"}
         />
       </div>
       {/* Start Content */}
