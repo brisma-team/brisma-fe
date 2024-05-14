@@ -13,7 +13,10 @@ const TableSampleCSV = ({ title, sourceUrl, selectedValue }) => {
       const fetchData = async () => {
         const response = await fetch(sourceUrl, {
           method: "GET",
-          headers,
+          headers: {
+            ...headers,
+            "Strict-Transport-Security": "max-age=86400; preload",
+          },
         });
 
         const csvFile = await response.text();

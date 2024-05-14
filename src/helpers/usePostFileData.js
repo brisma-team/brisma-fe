@@ -8,7 +8,8 @@ const usePostFileData = async (url, content) => {
     const options = {
       method: "POST",
       headers: {
-        Authorization: headers.Authorization,
+        ...headers,
+        "Strict-Transport-Security": "max-age=86400; preload",
       },
       body: formData,
     };

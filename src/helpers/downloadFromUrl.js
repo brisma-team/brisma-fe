@@ -2,7 +2,12 @@ import withTokenConfig from "./withTokenConfig";
 
 const downloadFromUrl = (downloadUrl, downloadFilename) => {
   const { headers } = withTokenConfig();
-  return fetch(downloadUrl, { headers })
+  return fetch(downloadUrl, {
+    headers: {
+      ...headers,
+      "Strict-Transport-Security": "max-age=86400; preload",
+    },
+  })
     .then((response) => response.blob())
     .then((blob) => {
       const url = window.URL.createObjectURL(blob);

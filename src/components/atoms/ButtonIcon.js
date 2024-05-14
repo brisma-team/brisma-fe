@@ -40,7 +40,12 @@ const ButtonIcon = ({
   const onClick = (e) => {
     if (downloadUrl) {
       const { headers } = withTokenConfig();
-      fetch(downloadUrl, { headers })
+      fetch(downloadUrl, {
+        headers: {
+          ...headers,
+          "Strict-Transport-Security": "max-age=86400; preload",
+        },
+      })
         .then((response) => response.blob())
         .then((blob) => {
           const url = window.URL.createObjectURL(blob);
