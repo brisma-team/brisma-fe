@@ -32,18 +32,18 @@ const index = () => {
     if (landingStatus?.data) {
       setData([
         {
-          title: "Dokumen Reporting",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
-          status: landingStatus?.data?.dokumen_reporting ? "success" : "failed",
-          url: `${baseUrl}/reporting/dokumen-reporting`,
-        },
-        {
           title: "List Survei QA",
           description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
           status: landingStatus?.data?.list_survey_qa ? "success" : "failed",
           url: `${baseUrl}/reporting/list`,
+        },
+        {
+          title: "Dokumen Reporting",
+          description:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          status: landingStatus?.data?.dokumen_reporting ? "success" : "failed",
+          url: `${baseUrl}/reporting/dokumen-reporting`,
         },
       ]);
     } else {
