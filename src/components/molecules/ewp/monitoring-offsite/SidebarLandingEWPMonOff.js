@@ -14,7 +14,7 @@ import { convertDate } from "@/helpers";
 
 const SidebarLandingEWPMonOff = () => {
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/monitoring-offsite/overview/${id}`;
+  const baseUrl = `/ewp/monitoring-offsite/${id}`;
   const [data, setData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const { projectDetail } = useProjectDetail({ id });
@@ -74,7 +74,7 @@ const SidebarLandingEWPMonOff = () => {
 
   useEffect(() => {
     const url = window.location.href;
-    const regex = /\/overview\/\d+\/([^\/]+)/;
+    const regex = /\/\d+\/([^\/]+)/;
     const match = url.match(regex);
 
     if (match && match[1]) {
@@ -97,7 +97,9 @@ const SidebarLandingEWPMonOff = () => {
               </div>
             </div>
             <div className="mb-2">
-              <div className="text-sm text-brisma font-bold">Created Date</div>
+              <div className="text-sm text-brisma font-bold">
+                Tanggal Inisiasi
+              </div>
               <div className="text-sm text-brisma">
                 {data?.createdAt || "-"}
               </div>
@@ -119,12 +121,6 @@ const SidebarLandingEWPMonOff = () => {
                   ? "Final"
                   : data?.documentName || "-"}
               </div>
-            </div>
-            <div className="mb-2">
-              <div className="text-sm text-brisma font-bold">
-                Addendum Status
-              </div>
-              <div className="text-sm text-brisma">-</div>
             </div>
           </div>
         </NavigationHeader>

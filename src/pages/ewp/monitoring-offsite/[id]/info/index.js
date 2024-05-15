@@ -4,7 +4,7 @@ import {
   ProjectDetail,
   RealizationTable,
   RelatedProjectTable,
-  CardPATInfo,
+  // CardPATInfo,
 } from "@/components/molecules/ewp/monitoring-offsite/info";
 import { useProjectDetail } from "@/data/ewp/monitoring-offsite";
 import { useRelatedProject } from "@/data/ewp/monitoring-offsite/info";
@@ -15,11 +15,12 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const index = () => {
-  const { id } = useRouter().query;
+  const router = useRouter();
+  const { id } = router.query;
   const navigationTabItems = [
     { idx: 1, title: "Project Details" },
     { idx: 2, title: "Proyek Terkait" },
-    { idx: 3, title: "Info P.A.T" },
+    // { idx: 3, title: "Info P.A.T" },
   ];
   const [isError, setIsError] = useState(false);
   const [currentContentStage, setCurrentContentStage] = useState(1);
@@ -31,10 +32,10 @@ const index = () => {
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
-    { name: "EWP", path: "/ewp" },
+    { name: "EWP - Monitoring Offsite", path: "/ewp" },
     {
       name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Info`,
-      path: `/ewp/monitoring-offsite/overview/${id}/info`,
+      path: `/ewp/monitoring-offsite/${id}/info`,
     },
   ];
 
@@ -53,8 +54,7 @@ const index = () => {
         label: "Perencanaan",
         start_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_start,
         end_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
-        url: `/ewp/monitoring-offsite/overview/${id}/perencanaan`,
-        log: "Menambahkan Sesuatu...",
+        url: `/ewp/monitoring-offsite/${id}/perencanaan`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
@@ -67,8 +67,7 @@ const index = () => {
         start_date:
           projectDetail?.data?.realisasi?.pelaksanaan_audit_real_start,
         end_date: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
-        url: `/ewp/monitoring-offsite/overview/${id}/pelaksanaan`,
-        log: "Menambahkan Sesuatu...",
+        url: `/ewp/monitoring-offsite/${id}/pelaksanaan`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
@@ -80,8 +79,7 @@ const index = () => {
         label: "Reporting",
         start_date: projectDetail?.data?.realisasi?.reporting_audit_real_start,
         end_date: projectDetail?.data?.realisasi?.reporting_audit_real_end,
-        url: `/ewp/monitoring-offsite/overview/${id}/reporting`,
-        log: "Menambahkan Sesuatu...",
+        url: `/ewp/monitoring-offsite/${id}/reporting`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.reporting_audit_real_end,
@@ -93,8 +91,7 @@ const index = () => {
         label: "Tindak Lanjut",
         start_date: projectDetail?.data?.realisasi?.tindak_lanjut_real_start,
         end_date: projectDetail?.data?.realisasi?.tindak_lanjut_real_end,
-        url: `/ewp/monitoring-offsite/overview/${id}/tindak-lanjut`,
-        log: "Menambahkan Sesuatu...",
+        url: `/ewp/monitoring-offsite/${id}/tindak-lanjut`,
       },
     ]);
   }, [projectDetail]);
@@ -113,6 +110,10 @@ const index = () => {
 
   const handleChangeTab = (index) => {
     setCurrentContentStage(index);
+  };
+
+  const handleClickLog = () => {
+    router.push(`/ewp/monitoring-offsite/${id}/log`);
   };
 
   const handleClickInitiate = async (statusCode, type) => {
@@ -136,7 +137,7 @@ const index = () => {
   };
 
   if (isError) {
-    errorSwalTimeout(projectDetailError, "/ewp/monitoring-offsite/overview");
+    errorSwalTimeout(projectDetailError, "/ewp/monitoring-offsite");
   }
 
   return (
@@ -150,7 +151,7 @@ const index = () => {
           <NavigationTab
             items={navigationTabItems}
             currentStage={currentContentStage}
-            width={"w-80"}
+            width={"w-60"}
             handleChange={handleChangeTab}
           />
           {currentContentStage === 1 ? (
@@ -164,6 +165,7 @@ const index = () => {
                   <RealizationTable
                     data={dataTables}
                     handleClickInitiate={handleClickInitiate}
+                    handleClickLog={handleClickLog}
                   />
                 </div>
               </Card>
@@ -171,9 +173,10 @@ const index = () => {
           ) : currentContentStage === 2 ? (
             <RelatedProjectTable data={dataRelatedTables} />
           ) : (
-            <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-3 my-4">
-              <CardPATInfo data={[]} />
-            </div>
+            ""
+            // <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-3 my-4">
+            //   <CardPATInfo data={[]} />
+            // </div>
           )}
         </div>
       </div>

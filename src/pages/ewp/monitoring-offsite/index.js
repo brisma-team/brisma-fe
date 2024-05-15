@@ -21,10 +21,10 @@ import { useOverviewEWPMonoff } from "@/data/ewp/monitoring-offsite/overview";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
-  { name: "EWP", path: "/ewp" },
+  { name: "EWP - Monitoring Offsite", path: "/ewp" },
   {
-    name: "Monitoring Offsite / Overview",
-    path: "/ewp/monitoring-offsite/overview",
+    name: "Overview",
+    path: "/ewp/monitoring-offsite",
   },
 ];
 
@@ -181,9 +181,9 @@ const index = () => {
             />
           </div>
         </div>
-        <div className="w-24 rounded bg-atlasian-blue-light">
+        {/* <div className="w-24 rounded bg-atlasian-blue-light">
           <ButtonField handler={() => console.log("test")} text={`Arsip`} />
-        </div>
+        </div> */}
       </div>
       <div className="">
         <CardFilterOverview

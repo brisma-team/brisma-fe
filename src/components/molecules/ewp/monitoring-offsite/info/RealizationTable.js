@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DivButton, LozengeField } from "@/components/atoms";
+import { ButtonIcon, DivButton, LozengeField } from "@/components/atoms";
 import { convertDate } from "@/helpers";
 import TableTree, {
   Cell,
@@ -9,10 +9,16 @@ import TableTree, {
   Rows,
 } from "@atlaskit/table-tree";
 import PopupProject from "./PopupProject";
+import { IconArrowRight } from "@/components/icons";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
-const RealizationTable = ({ data, handleClickInitiate }) => {
+const RealizationTable = ({
+  data,
+  // isHideButton,
+  handleClickInitiate,
+  handleClickLog,
+}) => {
   return (
     <>
       <div className="flex gap-3">
@@ -69,7 +75,9 @@ const RealizationTable = ({ data, handleClickInitiate }) => {
             width="28%"
             className="border-t border-r cell-custom-dataTables"
           >
-            <div className="custom-table-header text-sm font-semibold">Log</div>
+            <div className="custom-table-header justify-center text-sm font-semibold">
+              Log
+            </div>
           </Header>
         </Headers>
         <div className="max-h-[18rem] overflow-y-auto">
@@ -84,7 +92,6 @@ const RealizationTable = ({ data, handleClickInitiate }) => {
               start_date,
               end_date,
               url,
-              log,
             }) => (
               <Row>
                 <Cell width="15%" className={`border-x ${customCell}`}>
@@ -169,8 +176,15 @@ const RealizationTable = ({ data, handleClickInitiate }) => {
                   </div>
                 </Cell>
                 <Cell width="28%" className={`border-r ${customCell}`}>
-                  <div className="custom-table-position-center text-blue-600 underline">
-                    {log}
+                  <div className="custom-table-position-center justify-center">
+                    <ButtonIcon
+                      handleClick={handleClickLog}
+                      icon={
+                        <div className="w-6 h-6 p-0.5 flex items-center justify-center rounded-full border border-atlasian-blue-light text-atlasian-blue-light">
+                          <IconArrowRight size="medium" />
+                        </div>
+                      }
+                    />
                   </div>
                 </Cell>
               </Row>

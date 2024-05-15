@@ -41,7 +41,7 @@ const index = () => {
         title: "Monitoring Offsite",
         description:
           "Modul pengerjaan Electronic Working Paper Audit untuk Kegiatan Non-Audit Monitoring Offsite.",
-        url: "/ewp/monitoring-offsite/overview",
+        url: "/ewp/monitoring-offsite",
       },
       {
         subtitle: "E.W.P",
