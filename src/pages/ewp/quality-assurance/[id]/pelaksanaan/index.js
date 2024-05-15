@@ -94,10 +94,6 @@ const index = () => {
     }
   }, [pelaksanaan]);
 
-  useEffect(() => {
-    console.log("data => ", data);
-  }, [data]);
-
   return (
     <LandingLayoutEWPQualityAssurance>
       {/* Start Breadcrumbs */}
