@@ -72,11 +72,11 @@ const index = () => {
       },
       {
         is_open: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
-        is_onprogress: status_code === 6,
+        is_onprogress: status_code === 10,
         is_close: projectDetail?.data?.realisasi?.reporting_audit_real_end
           ? true
           : false,
-        status_code: 6,
+        status_code: 10,
         label: "Reporting",
         start_date: projectDetail?.data?.realisasi?.reporting_audit_real_start,
         end_date: projectDetail?.data?.realisasi?.reporting_audit_real_end,
@@ -85,11 +85,11 @@ const index = () => {
       },
       {
         is_open: projectDetail?.data?.realisasi?.reporting_audit_real_end,
-        is_onprogress: status_code === 8,
+        is_onprogress: status_code === 11,
         is_close: projectDetail?.data?.realisasi?.tindak_lanjut_real_end
           ? true
           : false,
-        status_code: 8,
+        status_code: 11,
         label: "Tindak Lanjut",
         start_date: projectDetail?.data?.realisasi?.tindak_lanjut_real_start,
         end_date: projectDetail?.data?.realisasi?.tindak_lanjut_real_end,
@@ -97,8 +97,6 @@ const index = () => {
         log: "Menambahkan Sesuatu...",
       },
     ]);
-
-    console.log(projectDetail);
   }, [projectDetail]);
 
   useEffect(() => {
@@ -121,8 +119,8 @@ const index = () => {
     const pathMappings = {
       2: "mapa",
       4: "pelaksanaan",
-      6: "reporting",
-      8: "tindak_lanjut",
+      10: "reporting",
+      11: "tindak-lanjut",
       9: "final",
     };
 

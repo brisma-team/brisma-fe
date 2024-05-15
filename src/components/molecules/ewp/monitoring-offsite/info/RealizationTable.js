@@ -13,7 +13,6 @@ import PopupProject from "./PopupProject";
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
 const RealizationTable = ({ data, handleClickInitiate }) => {
-  console.log(data)
   return (
     <>
       <div className="flex gap-3">

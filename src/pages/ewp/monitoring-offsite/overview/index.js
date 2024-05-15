@@ -39,11 +39,11 @@ const convertProgressAndPercent = (status) => {
       progress = 0.4;
       percent = "40%";
       break;
-    case "peluang peningkatan":
+    case "Reporting":
       progress = 0.6;
       percent = "60%";
       break;
-    case "wrapup":
+    case "tindak lanjut":
       progress = 0.85;
       percent = "80%";
       break;
