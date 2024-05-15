@@ -14,6 +14,7 @@ const ModalAddProjectEWP = ({
   module,
   showModal,
   payload,
+  payloadRelatedProject,
   user,
   currentModalStage,
   setCurrentModalStage,
@@ -23,6 +24,7 @@ const ModalAddProjectEWP = ({
   validationErrorsSchedulePAT,
   validationErrorsSummaryPAT,
   validationErrorsScheduleNonPAT,
+  validationErrorsRelatedProjectNonPAT,
   handleChangePayload,
   handleChangePICPayload,
   handleIsPAT,
@@ -32,6 +34,10 @@ const ModalAddProjectEWP = ({
   handleCloseModal,
   handleClickRowTableSchedulePAT,
   handleUploadSurat,
+  handleChangePayloadProject,
+  handleClickAddProject,
+  handleClickDeleteProject,
+  handleClickSaveProject,
 }) => {
   const generateProgressItems = () => {
     if (isPat) {
@@ -141,8 +147,13 @@ const ModalAddProjectEWP = ({
           ) : currentModalStage === 3 ? (
             <ModalBodyRelatedProjectNonPAT
               data={payload}
-              // validationErrors={validationErrorsDocumentNonPAT}
+              payload={payloadRelatedProject}
               setCurrentModalStage={setCurrentModalStage}
+              validation={validationErrorsRelatedProjectNonPAT}
+              handleChangePayload={handleChangePayloadProject}
+              handleClickAdd={handleClickAddProject}
+              handleClickDelete={handleClickDeleteProject}
+              handleClickSave={handleClickSaveProject}
             />
           ) : (
             currentModalStage === 4 && (

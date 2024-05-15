@@ -53,9 +53,10 @@ const index = () => {
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { id } = router.query;
+    const { id, kkpa_id } = router.query;
     setParams({
       id,
+      kkpa_id,
     });
   }, [router.isReady]);
 
@@ -141,15 +142,11 @@ const index = () => {
 
   const handleSubmit = async () => {
     loadingSwal();
-    const upload = await fetchApi(
+    await fetchApi(
       "PATCH",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/mapa/analisis_perencanaan/project/${params?.kkpa_id}`,
-      { uraian: content }
+      { analisa: content }
     );
-    if (upload.isConfirmed) {
-      router.push(pathName);
-      return;
-    }
     kertasKerjaAnalisaMutate();
     loadingSwal("close");
   };

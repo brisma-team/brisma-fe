@@ -124,6 +124,10 @@ const index = () => {
   ];
 
   useEffect(() => {
+    console.log("statusName => ", statusName);
+  }, [statusName]);
+
+  useEffect(() => {
     if (!router.isReady) return;
     const { id } = router.query;
     setParams({
@@ -644,6 +648,7 @@ const index = () => {
           ) : currentContentStage === 3 ? (
             <TemplateSurvey
               data={payloadTemplateSurvey}
+              statusProject={statusName}
               baseUrl={`${baseUrl}/info/preview?template_id=${payloadTemplateSurvey?.id}`}
               handleChange={handleChangePayloadTemplateSurvey}
               handleReset={handleResetPayloadTemplateSurvey}

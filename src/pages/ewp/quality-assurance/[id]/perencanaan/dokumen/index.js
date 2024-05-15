@@ -620,7 +620,7 @@ const index = () => {
           baseUrl={pathName}
           routes={routes}
           prevUrl={"/anggaran"}
-          marginLeft={"-67px"}
+          marginLeft={"-70px"}
         />
       </div>
       {/* Start Content */}

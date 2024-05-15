@@ -192,7 +192,7 @@ const index = () => {
           routes={routes}
           prevUrl={"/tujuan"}
           nextUrl={"/tim"}
-          marginLeft={"-67px"}
+          marginLeft={"-70px"}
         />
       </div>
       {/* Start Content */}

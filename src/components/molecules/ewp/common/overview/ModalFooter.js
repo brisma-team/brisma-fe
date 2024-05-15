@@ -43,7 +43,6 @@ const ModalFooter = ({
           <div className="rounded w-28 bg-atlasian-blue-light flex items-center">
             <ButtonField
               text={"Kembali"}
-              disabled={isDisabled}
               handler={handlePrevStage}
               name={"prevButton"}
             />
@@ -70,8 +69,13 @@ const ModalFooter = ({
           )
         ) : (
           currentModalStage > 1 && (
-            <div className="rounded w-28 bg-atlasian-green flex items-center">
+            <div
+              className={`rounded w-28 ${
+                isDisabled ? "bg-atlasian-gray-light" : "bg-atlasian-green"
+              } flex items-center`}
+            >
               <ButtonField
+                disabled={isDisabled}
                 text={"Lanjut"}
                 handler={handleNextStage}
                 name={"nextButton"}
