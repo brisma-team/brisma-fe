@@ -30,20 +30,21 @@ const index = () => {
 
   useEffect(() => {
     if (landingStatus?.data) {
+      const matrix_id = landingStatus?.data?.id;
       setData([
         {
           title: "List Survei QA",
           description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
           status: landingStatus?.data?.list_survey_qa ? "success" : "failed",
-          url: `${baseUrl}/reporting/list`,
+          url: `${baseUrl}/reporting/${matrix_id}/list`,
         },
         {
           title: "Dokumen Reporting",
           description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
           status: landingStatus?.data?.dokumen_reporting ? "success" : "failed",
-          url: `${baseUrl}/reporting/dokumen-reporting`,
+          url: `${baseUrl}/reporting/${matrix_id}/dokumen-reporting`,
         },
       ]);
     } else {

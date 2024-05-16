@@ -58,7 +58,7 @@ const index = () => {
     id: 0,
   });
   const baseUrl = `/ewp/quality-assurance/${params?.id}`;
-  const pathName = `${baseUrl}/reporting`;
+  const pathName = `${baseUrl}/reporting/${params?.matrix_id}/dokumen-reporting`;
 
   const [currentContentStage, setCurrentContentStage] = useState(1);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -101,14 +101,14 @@ const index = () => {
         name: `${auditInfo?.data?.project_info?.project_id?.toUpperCase()}`,
         path: baseUrl + "/info",
       },
-      { name: "Reporting", path: pathName },
+      { name: "Reporting", path: `${baseUrl}/reporting` },
       {
         name: "Dokumen Reporting",
-        path: `${pathName}/dokumen-reporting`,
+        path: pathName,
       },
       {
         name: "Rencana Perbaikan",
-        path: `${pathName}/dokumen-reporting/rencana-perbaikan`,
+        path: `${pathName}/rencana-perbaikan`,
       },
     ]);
   }, [auditInfo]);
