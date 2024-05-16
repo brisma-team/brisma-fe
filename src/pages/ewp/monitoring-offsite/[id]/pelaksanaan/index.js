@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 import {
   AttachmentClipping,
   ImageClipping,
-  PrevNextNavigation,
+  // PrevNextNavigation,
 } from "@/components/molecules/commons";
 import { fetchApi, loadingSwal, usePostFileData } from "@/helpers";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
@@ -18,7 +18,7 @@ const Editor = dynamic(() => import("@/components/atoms/Editor"), {
 const index = () => {
   const { id } = useRouter().query;
   const router = useRouter();
-  const baseUrl = `/ewp/monitoring-offsite/overview/${id}`;
+  const baseUrl = `/ewp/monitoring-offsite/${id}`;
   const pathName = `${baseUrl}/pelaksanaan`;
 
   const [imageClipList, setImageClipList] = useState([]);
@@ -32,7 +32,7 @@ const index = () => {
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
-    { name: "Overview", path: "/ewp/monitoring-offsite/overview" },
+    { name: "Monitoring Offsite / Overview", path: "/ewp/monitoring-offsite" },
     {
       name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Pelaksanaan`,
       path: baseUrl,
@@ -41,7 +41,7 @@ const index = () => {
 
   useEffect(() => {
     setContent(analisa?.data?.analisa_data || "");
-    console.log(analisa)
+    console.log(analisa);
   }, [analisa]);
 
   const handleUpload = async (e) => {
@@ -77,7 +77,7 @@ const index = () => {
     const upload = await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/monoff/kkpa/analisa`,
-      { analisa_data: content, id: id }
+      { analisa_data: content, id }
     );
     if (upload.isConfirmed) {
       router.push(pathName);
@@ -101,8 +101,8 @@ const index = () => {
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
       <div className="flex justify-between items-center mb-7 w-[1076px]">
-        <PageTitle text="Pelaksanaan" />
-        <PrevNextNavigation baseUrl={pathName} marginLeft={"-60px"} />
+        <PageTitle text="Analisa" />
+        {/* <PrevNextNavigation baseUrl={pathName} marginLeft={"-60px"} /> */}
       </div>
       {/* Start Content */}
       <div className="my-4 flex justify-between">

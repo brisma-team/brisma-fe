@@ -9,11 +9,16 @@ import {
 import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
 import { convertDate } from "@/helpers";
 import _ from "lodash";
+// import {
+//   CardOverview,
+//   CardFilterOverview,
+//   ModalAddProjectEWP,
+// } from "@/components/molecules/ewp/monitoring-offsite/overview";
 import {
   CardOverview,
   CardFilterOverview,
   ModalAddProjectEWP,
-} from "@/components/molecules/ewp/monitoring-offsite/overview";
+} from "@/components/molecules/ewp/konsulting/overview";
 import { useApprovalEWP } from "@/data/ewp";
 
 //data from monitoring-offsite
@@ -21,10 +26,10 @@ import { useOverviewEWPMonoff } from "@/data/ewp/monitoring-offsite/overview";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
-  { name: "EWP", path: "/ewp" },
+  { name: "EWP - Monitoring Offsite", path: "/ewp" },
   {
-    name: "Monitoring Offsite / Overview",
-    path: "/ewp/monitoring-offsite/overview",
+    name: "Overview",
+    path: "/ewp/monitoring-offsite",
   },
 ];
 
@@ -39,11 +44,11 @@ const convertProgressAndPercent = (status) => {
       progress = 0.4;
       percent = "40%";
       break;
-    case "peluang peningkatan":
+    case "Reporting":
       progress = 0.6;
       percent = "60%";
       break;
-    case "wrapup":
+    case "tindak lanjut":
       progress = 0.85;
       percent = "80%";
       break;
@@ -181,9 +186,9 @@ const index = () => {
             />
           </div>
         </div>
-        <div className="w-24 rounded bg-atlasian-blue-light">
+        {/* <div className="w-24 rounded bg-atlasian-blue-light">
           <ButtonField handler={() => console.log("test")} text={`Arsip`} />
-        </div>
+        </div> */}
       </div>
       <div className="">
         <CardFilterOverview
