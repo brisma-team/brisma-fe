@@ -145,7 +145,7 @@ const index = () => {
         <PrevNextNavigation
           baseUrl={pathName}
           routes={routes}
-          prevUrl={"latar-belakang"}
+          prevUrl={"/latar-belakang"}
           nextUrl={"/standar-review"}
           marginLeft={"-100px"}
           widthDropdown={"w-[15rem]"}
