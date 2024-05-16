@@ -50,7 +50,7 @@ const CardOverview = ({ data, withoutButton, withoutHover }) => {
         `hover:bg-gray-100 hover:rounded-[10px] hover:no-underline`
       }`}
       handleClick={(e) => (
-        e.stopPropagation(), router.push(`konsulting/${data?.id}/info`)
+        e.stopPropagation(), router.push(`monitoring-offsite/${data?.id}/info`)
       )}
     >
       <div
