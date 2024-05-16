@@ -53,7 +53,7 @@ const index = () => {
       { name: "EWP", path: "/ewp" },
       { name: "Monitoring / Overview", path: "/ewp/monitoring-offsite" },
       {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / tindak-lanjut`,
+        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Tindak Lanjut`,
         path: `/ewp/monitoring-offsite/${id}/tindak-lanjut`,
       },
     ]);

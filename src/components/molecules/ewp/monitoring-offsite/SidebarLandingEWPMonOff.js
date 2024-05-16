@@ -9,10 +9,10 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useProjectDetail } from "@/data/ewp/monitoring-offsite";
-import { convertDate } from "@/helpers";
+import { useProjectDetail } from "@/data/ewp/konsulting";
+import { capitalizeEveryWord, convertDate } from "@/helpers";
 
-const SidebarLandingEWPMonOff = () => {
+const SidebarLandingEWPConsulting = () => {
   const { id } = useRouter().query;
   const baseUrl = `/ewp/monitoring-offsite/${id}`;
   const [data, setData] = useState();
@@ -21,19 +21,29 @@ const SidebarLandingEWPMonOff = () => {
   const [menu, setMenu] = useState([]);
 
   useEffect(() => {
+    let subModule;
     const projectInfo = projectDetail?.data?.project_info;
     const projectRealisasi = projectDetail?.data?.realisasi;
+    switch (projectInfo?.status_name) {
+      case "mapa":
+        subModule = "Perencanaan";
+        break;
+      case "pelaksanaan":
+        subModule = "Analisa";
+        break;
+      default:
+        subModule = projectInfo?.status_name;
+        break;
+    }
+
     setData({
       projectId: projectInfo?.project_id,
       projectName: projectInfo?.project_name,
-      documentName: projectInfo?.status_name,
+      documentName: subModule,
       statusName: projectInfo?.status_persetujuan_name,
-      createdAt: convertDate(
-        projectInfo?.info_periode_pelaksanaan_start,
-        "/",
-        "d"
-      ),
-      initiatorName: projectInfo?.initiator?.nama,
+      createdAt: convertDate(projectInfo?.createdAt, "/", "d"),
+      initiatorName:
+        projectInfo?.initiator?.pn + " - " + projectInfo?.initiator?.nama,
     });
 
     setMenu([
@@ -74,7 +84,7 @@ const SidebarLandingEWPMonOff = () => {
 
   useEffect(() => {
     const url = window.location.href;
-    const regex = /\/\d+\/([^\/]+)/;
+    const regex = /\/monitoring-offsite\/\d+\/([^\/]+)/;
     const match = url.match(regex);
 
     if (match && match[1]) {
@@ -91,7 +101,7 @@ const SidebarLandingEWPMonOff = () => {
               <p>{data?.projectName?.toUpperCase()}</p>
             </div>
             <div className="mb-2">
-              <div className="text-sm text-brisma font-bold">Inisiator</div>
+              <div className="text-sm text-brisma font-bold">P.I.C</div>
               <div className="text-sm text-brisma">
                 {data?.initiatorName || "-"}
               </div>
@@ -119,7 +129,7 @@ const SidebarLandingEWPMonOff = () => {
               <div className="text-sm text-brisma">
                 {data?.documentName?.toLowerCase() == "final"
                   ? "Final"
-                  : data?.documentName || "-"}
+                  : capitalizeEveryWord(data?.documentName) || "-"}
               </div>
             </div>
           </div>
@@ -134,7 +144,8 @@ const SidebarLandingEWPMonOff = () => {
                       key={i}
                       href={baseUrl + v?.href}
                       className={`flex ${
-                        currentPage === v?.href?.replace(/\//g, "")
+                        currentPage ===
+                        v?.href?.split("/")?.filter((item) => item !== "")[0]
                           ? `text-atlasian-blue-light`
                           : `text-black`
                       } gap-2 items-center hover:no-underline no-underline py-2 px-7 ${
@@ -171,7 +182,8 @@ const SidebarLandingEWPMonOff = () => {
                       key={i}
                       href={baseUrl + v?.href}
                       className={`flex gap-2 items-center ${
-                        currentPage === v?.href?.replace(/\//g, "")
+                        currentPage ===
+                        v?.href?.split("/")?.filter((item) => item !== "")[0]
                           ? `text-atlasian-blue-light`
                           : `text-black`
                       } hover:no-underline no-underline py-2 px-7`}
@@ -191,4 +203,4 @@ const SidebarLandingEWPMonOff = () => {
     </div>
   );
 };
-export default SidebarLandingEWPMonOff;
+export default SidebarLandingEWPConsulting;

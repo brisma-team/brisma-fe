@@ -85,9 +85,10 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
+      { name: "Monitoring / Overview", path: "/ewp/monitoring-offsite" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Reporting`,
-        path: `/ewp/monitoring-offsite/overview/${id}/reporting`,
+        path: `/ewp/monitoring-offsite/${id}/reporting`,
       },
     ]);
   }, [projectDetail]);
