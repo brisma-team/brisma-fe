@@ -152,7 +152,7 @@ const index = () => {
     await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/reporting/dokumen_reporting/hasil_review_kualitas`,
-      { ruang_lingkup: content, id: params?.matrix_id }
+      { hasil_review_kualitas: content, id: params?.matrix_id }
     );
     dokumenReportingMutate();
     loadingSwal("close");
