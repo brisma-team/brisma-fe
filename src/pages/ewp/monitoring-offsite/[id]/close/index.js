@@ -3,24 +3,28 @@ import { CardContentHeaderFooter } from "@/components/molecules/commons";
 import {
   ModalCloseStatement,
   RealizationTable,
-} from "@/components/molecules/ewp/monitoring-offsite/close";
-import { useProjectDetail } from "@/data/ewp/monitoring-offsite";
+} from "@/components/molecules/ewp/konsulting/close";
+import { useProjectDetail } from "@/data/ewp/konsulting";
+import useUser from "@/data/useUser";
 import { confirmationSwal, fetchApi, loadingSwal } from "@/helpers";
-import { LandingLayoutEWPMonOff } from "@/layouts/ewp";
+import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const index = () => {
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/monitoring-offsite/overview/${id}`;
-  const pathNameSubModulClose = `${baseUrl}/meeting`;
+  const baseUrl = `/ewp/konsulting/${id}`;
+  const pathNameSubModulClose = `${baseUrl}/close`;
 
   const [showModal, setShowModal] = useState(false);
-  const [isClosed, setIsClosed] = useState(false);
   const [closingStatement, setClosingStatement] = useState("");
   const [dataTables, setDataTables] = useState([]);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [isFinalProject, setIsFinalProject] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
+
   const { projectDetail, projectDetailMutate } = useProjectDetail({ id });
+  const { user } = useUser();
 
   useEffect(() => {
     const status_code =
@@ -32,10 +36,11 @@ const index = () => {
         is_close: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end
           ? true
           : false,
+        status_code: 2,
         label: "Perencanaan",
         start_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_start,
         end_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
-        url: `/ewp/monitoring-offsite/overview/${id}/perencanaan`,
+        url: `/ewp/monitoring-offsite/${id}/perencanaan`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
@@ -43,40 +48,46 @@ const index = () => {
         is_close: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end
           ? true
           : false,
+        status_code: 4,
         label: "Pelaksanaan",
         start_date:
           projectDetail?.data?.realisasi?.pelaksanaan_audit_real_start,
         end_date: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
-        url: `/ewp/monitoring-offsite/overview/${id}/pelaksanaan`,
+        url: `/ewp/monitoring-offsite/${id}/pelaksanaan`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
-        is_onprogress: status_code === 6,
+        is_onprogress: status_code === 10,
         is_close: projectDetail?.data?.realisasi?.reporting_audit_real_end
           ? true
           : false,
+        status_code: 10,
         label: "Reporting",
         start_date: projectDetail?.data?.realisasi?.reporting_audit_real_start,
         end_date: projectDetail?.data?.realisasi?.reporting_audit_real_end,
-        url: `/ewp/monitoring-offsite/overview/${id}/reporting`,
+        url: `/ewp/monitoring-offsite/${id}/reporting`,
       },
       {
         is_open: projectDetail?.data?.realisasi?.reporting_audit_real_end,
-        is_onprogress: status_code === 8,
+        is_onprogress: status_code === 11,
         is_close: projectDetail?.data?.realisasi?.tindak_lanjut_real_end
           ? true
           : false,
+        status_code: 11,
         label: "Tindak Lanjut",
         start_date: projectDetail?.data?.realisasi?.tindak_lanjut_real_start,
         end_date: projectDetail?.data?.realisasi?.tindak_lanjut_real_end,
-        url: `/ewp/monitoring-offsite/overview/${id}/tindak-lanjut`,
+        url: `/ewp/monitoring-offsite/${id}/tindak-lanjut`,
       },
     ]);
 
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/monitoring-offsite/overview" },
+      {
+        name: "Monitoring Offsite / Overview",
+        path: "/ewp/monitoring-offsite",
+      },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
@@ -86,17 +97,14 @@ const index = () => {
         path: pathNameSubModulClose,
       },
     ]);
-    const closingStatement =
-      projectDetail?.data?.project_info?.closing_statement;
-    if (
-      closingStatement !== null ||
-      closingStatement !== "" ||
-      closingStatement !== undefined
-    ) {
-      setIsClosed(true);
-      setClosingStatement(projectDetail?.data?.project_info?.closing_statement);
-    }
-  }, [projectDetail]);
+    setIsFinalProject(Boolean(status_code == 10));
+    setClosingStatement(projectDetail?.data?.project_info?.closing_statement);
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+  }, [projectDetail, user]);
 
   const handleClickCloseStatement = () => {
     setShowModal(true);
@@ -140,7 +148,7 @@ const index = () => {
   };
 
   return (
-    <LandingLayoutEWPMonOff>
+    <LandingLayoutEWPConsulting>
       <div className="w-[90rem]">
         {/* Start Breadcrumbs */}
         <Breadcrumbs data={breadcrumbs} />
@@ -154,7 +162,7 @@ const index = () => {
                   <RealizationTable data={dataTables} />
                 </div>
               </Card>
-              {!isClosed && (
+              {!isFinalProject && isInitiator ? (
                 <div className="w-full flex items-center justify-end gap-4">
                   <div className="w-40 text-sm font-semibold bg-atlasian-blue-light rounded">
                     <ButtonField
@@ -169,6 +177,8 @@ const index = () => {
                     />
                   </div>
                 </div>
+              ) : (
+                ""
               )}
             </div>
             <CardContentHeaderFooter
@@ -181,7 +191,7 @@ const index = () => {
             >
               <div className="p-4 min-h-[14rem]">
                 <p className="text-[#A5ADBA] text-justify">
-                  {closingStatement || ""}
+                  {closingStatement || "-"}
                 </p>
               </div>
             </CardContentHeaderFooter>
@@ -195,7 +205,7 @@ const index = () => {
         handleCloseModal={handleCloseModal}
         handleSubmit={handleSubmitModal}
       />
-    </LandingLayoutEWPMonOff>
+    </LandingLayoutEWPConsulting>
   );
 };
 
