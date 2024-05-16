@@ -146,7 +146,7 @@ const index = () => {
           baseUrl={pathName}
           routes={routes}
           prevUrl={"/standar-review"}
-          nextUrl={"/metode-penelitian"}
+          nextUrl={"/metode-penilaian"}
           marginLeft={"-100px"}
           widthDropdown={"w-[15rem]"}
         />
