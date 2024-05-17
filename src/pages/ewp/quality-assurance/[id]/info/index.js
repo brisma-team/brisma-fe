@@ -311,7 +311,7 @@ const index = () => {
     const pathMappings = {
       2: "mapa",
       4: "pelaksanaan",
-      6: "monitoring",
+      6: "reporting",
       8: "wrapup_meeting",
     };
 
