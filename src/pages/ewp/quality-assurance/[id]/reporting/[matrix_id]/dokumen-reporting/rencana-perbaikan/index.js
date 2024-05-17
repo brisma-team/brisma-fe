@@ -19,13 +19,19 @@ import {
 import {
   ModalRekomendasi,
   TableRencanaPerbaikan,
+  UraianRencanaPerbaikan,
 } from "@/components/molecules/ewp/quality-assurance/reporting/dokumen-reporting";
-import { useDokumenReporting } from "@/data/ewp/quality-assurance/reporting";
+import {
+  useDokumenReporting,
+  useDokumenReportingDetail,
+  useRekomendasiRencanaPerbaikan,
+} from "@/data/ewp/quality-assurance/reporting";
 import {
   confirmationSwal,
   fetchApi,
   loadingSwal,
   setErrorValidation,
+  usePostFileData,
 } from "@/helpers";
 import { addRekomendasiSchema } from "@/helpers/schemas/ewp/quality-assurance/quality-assurance/rencanaPerbaikanEWPQualityAssuranceSchema";
 
@@ -56,6 +62,7 @@ const index = () => {
   const dispatch = useDispatch();
   const [params, setParams] = useState({
     id: 0,
+    matrix_id: 0,
   });
   const baseUrl = `/ewp/quality-assurance/${params?.id}`;
   const pathName = `${baseUrl}/reporting/${params?.matrix_id}/dokumen-reporting`;
@@ -63,10 +70,16 @@ const index = () => {
   const [currentContentStage, setCurrentContentStage] = useState(1);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
 
+  const [imageClipList, setImageClipList] = useState([]);
+  const [attachmentClipList, setAttachmentClipList] = useState([]);
+  const [typeUpload, setTypeUpload] = useState("");
+  const [content, setContent] = useState("");
+
   const [isEditRekomendasi, setIsEditRekomendasi] = useState(false);
   const [expansionMap, setExpansionMap] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState(0);
+  const [selectedRekomendasiId, setSelectedRekomendasiId] = useState(0);
 
   const data = useSelector(
     (state) => state.rencanaPerbaikanEWPQualityAssurance.objData
@@ -80,16 +93,26 @@ const index = () => {
 
   const { auditInfo } = useAuditInfo({ module: "qa", id: params?.id });
   const { dokumenReporting, dokumenReportingMutate } = useDokumenReporting({
-    id: params?.id,
+    id: params?.matrix_id,
+    page_type: "uraian_rencana_perbaikan",
+  });
+  const { dokumenReportingDetail } = useDokumenReportingDetail({
+    id: selectedRekomendasiId,
     page_type: "rekomendasi",
   });
+  const { rekomendasiRencanaPerbaikan, rekomendasiRencanaPerbaikanMutate } =
+    useRekomendasiRencanaPerbaikan({ id: params?.id });
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { id } = router.query;
+    const { id, matrix_id, stage } = router.query;
     setParams({
       id,
+      matrix_id,
     });
+    if (stage === "2") {
+      setCurrentContentStage(2);
+    }
   }, [router.isReady]);
 
   useEffect(() => {
@@ -114,8 +137,8 @@ const index = () => {
   }, [auditInfo]);
 
   useEffect(() => {
-    if (dokumenReporting?.data?.length) {
-      const mapping = dokumenReporting?.data?.map((project) => {
+    if (rekomendasiRencanaPerbaikan?.data?.length) {
+      const mapping = rekomendasiRencanaPerbaikan?.data?.map((project) => {
         return {
           id: project?.id,
           project: project?.judul_kkpt,
@@ -129,7 +152,7 @@ const index = () => {
                     kode: rekomendasi?.tipe_rekomendasi_kode,
                     name: rekomendasi?.tipe_rekomendasi_name,
                   },
-                  jumlah_action_plan: 0,
+                  jumlah_action_plan: rekomendasi?.action_plans?.length || 0,
                   role: "child",
                 };
               })
@@ -144,11 +167,83 @@ const index = () => {
     } else {
       dispatch(resetObjData());
     }
+  }, [rekomendasiRencanaPerbaikan]);
+
+  useEffect(() => {
+    if (dokumenReportingDetail?.data) {
+      const { tipe_rekomendasi_kode, tipe_rekomendasi_name, desc } =
+        dokumenReportingDetail.data;
+      dispatch(
+        setObjPayload({
+          desc,
+          tipe_rekomendasi: {
+            kode: tipe_rekomendasi_kode,
+            nama: tipe_rekomendasi_name,
+          },
+        })
+      );
+    }
+  }, [dokumenReportingDetail, showModal]);
+
+  useEffect(() => {
+    setContent(dokumenReporting?.data || "");
   }, [dokumenReporting]);
 
   const handleChangeTab = (index) => {
     setCurrentContentStage(index);
   };
+
+  // [ START ] handler for uraian rencana perbaikan
+  const handleChangeUraian = (value) => {
+    setContent(value);
+  };
+  const handleClickUploadAttachment = () => {
+    setTypeUpload("attachment");
+  };
+
+  const handleClickUploadImage = () => {
+    setTypeUpload("image");
+  };
+
+  const handleUploadFile = async (e) => {
+    loadingSwal();
+    if (e.target.files) {
+      const url = `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/cdn/upload`;
+      const response = await usePostFileData(url, {
+        file: e.target.files[0],
+        modul: "ewp",
+      });
+
+      switch (typeUpload) {
+        case "attachment":
+          setAttachmentClipList((prev) => [
+            ...prev,
+            { url: response.url[0], name: e.target.files[0].name },
+          ]);
+          break;
+        case "image":
+          setImageClipList((prev) => [
+            ...prev,
+            { url: response.url[0], name: e.target.files[0].name },
+          ]);
+          break;
+      }
+    }
+    setTypeUpload("");
+    loadingSwal("close");
+  };
+
+  const handleSubmit = async () => {
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/reporting/dokumen_reporting/uraian_rencana_perbaikan`,
+      { uraian_rencana_perbaikan: content, id: params?.matrix_id }
+    );
+    dokumenReportingMutate();
+    loadingSwal("close");
+  };
+  // [ END ] handler for uraian rencana perbaikan
 
   // [ START ] handler for table rencana perbaikan
   const handleCloseModal = async () => {
@@ -161,6 +256,8 @@ const index = () => {
     }
 
     setShowModal(false);
+    setSelectedProjectId(0);
+    setSelectedRekomendasiId(0);
     dispatch(resetObjPayload());
     dispatch(resetValidationErrors());
   };
@@ -180,7 +277,7 @@ const index = () => {
   const handleEditRekomendasi = (id) => {
     setShowModal(true);
     setIsEditRekomendasi(true);
-    setSelectedProjectId(id);
+    setSelectedRekomendasiId(id);
   };
 
   const handleDeleteRekomendasi = async (id) => {
@@ -199,7 +296,7 @@ const index = () => {
       {}
     );
 
-    dokumenReportingMutate();
+    rekomendasiRencanaPerbaikanMutate();
     loadingSwal("close");
   };
 
@@ -220,22 +317,33 @@ const index = () => {
     const validate = setErrorValidation(payload, dispatch, schemaMappings);
 
     if (validate) {
+      const objPayload = {
+        desc: payload?.desc,
+        tipe_rekomendasi_kode: payload?.tipe_rekomendasi?.kode,
+        tipe_rekomendasi_name: payload?.tipe_rekomendasi?.nama,
+        ...(isEditRekomendasi
+          ? { id: selectedRekomendasiId }
+          : { kkpt_id: selectedProjectId }),
+      };
+
       loadingSwal();
       await fetchApi(
-        "POST",
-        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/reporting/dokumen_reporting/rekomendasi`,
-        {
-          kkpt_id: selectedProjectId,
-          desc: payload?.desc,
-          tipe_rekomendasi_kode: payload?.tipe_rekomendasi?.kode,
-          tipe_rekomendasi_name: payload?.tipe_rekomendasi?.name,
-        }
+        isEditRekomendasi ? "PATCH" : "POST",
+        `${
+          process.env.NEXT_PUBLIC_API_URL_EWP
+        }/ewp/qa/reporting/dokumen_reporting/rekomendasi${
+          isEditRekomendasi ? "/update" : ""
+        }`,
+        objPayload
       );
+
+      setSelectedProjectId(0);
+      setSelectedRekomendasiId(0);
       setShowModal(false);
       setIsEditRekomendasi(false);
       dispatch(resetObjPayload());
       dispatch(resetValidationErrors());
-      dokumenReportingMutate();
+      rekomendasiRencanaPerbaikanMutate();
       loadingSwal("close");
     }
   };
@@ -265,17 +373,26 @@ const index = () => {
       />
       {/* Start Content */}
       {currentContentStage === 1 ? (
+        <UraianRencanaPerbaikan
+          content={content}
+          dataImageClipList={imageClipList}
+          dataAttachmentClipList={attachmentClipList}
+          handleChangeContent={handleChangeUraian}
+          handleUploadFile={handleUploadFile}
+          handleClickUploadImage={handleClickUploadImage}
+          handleClickUploadAttachment={handleClickUploadAttachment}
+          handleSubmit={handleSubmit}
+        />
+      ) : (
         <TableRencanaPerbaikan
           data={data}
           expansionMap={expansionMap}
-          pathName={`/ewp/quality-assurance/${params?.id}`}
+          pathName={`/ewp/quality-assurance/${params?.id}/reporting/${params?.matrix_id}/dokumen-reporting/rencana-perbaikan`}
           handleToggleExpansion={handleToggleExpansion}
           handleAddRekomendasi={handleAddRekomendasi}
           handleEditRekomendasi={handleEditRekomendasi}
           handleDeleteRekomendasi={handleDeleteRekomendasi}
         />
-      ) : (
-        ""
       )}
       <ModalRekomendasi
         showModal={showModal}

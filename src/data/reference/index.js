@@ -15,6 +15,7 @@ import useQuestionType from "./useQuestionType";
 import useSurveyType from "./useSurveyType";
 import useTemplateSurvey from "./useTemplateSurvey";
 import useRisk from "./useRisk";
+import useRecommendationType from "./useRecommendationType";
 
 export {
   useMetode,
@@ -34,4 +35,5 @@ export {
   useSurveyType,
   useTemplateSurvey,
   useRisk,
+  useRecommendationType,
 };

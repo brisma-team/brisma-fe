@@ -169,7 +169,7 @@ const TableRencanaPerbaikan = ({
                             Action Plan
                           </LozengeField>
                         }
-                        href={`${pathName}/reporting/dokumen-reporting/rencana-perbaikan/${id}`}
+                        href={`${pathName}/${id}`}
                       />
                     </div>
                   ) : (
