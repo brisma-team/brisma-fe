@@ -88,6 +88,7 @@ import ContentDocument from "./ContentDocument";
 import ContentView from "./ContentView";
 import CardContent from "./CardContent";
 import UkerAssessmentTable from "./UkerAssessmentTable";
+import RecommendationTypeSelect from "./RecommendationTypeSelect";
 
 export {
   BackButton,
@@ -180,4 +181,5 @@ export {
   ContentView,
   CardContent,
   UkerAssessmentTable,
+  RecommendationTypeSelect,
 };

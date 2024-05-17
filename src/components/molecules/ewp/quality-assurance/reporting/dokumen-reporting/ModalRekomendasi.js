@@ -6,7 +6,8 @@ import {
   TextInput,
 } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
-import { CustomSelect, ModalFooter } from "@/components/molecules/commons";
+import { ModalFooter } from "@/components/molecules/commons";
+import RecommendationTypeSelect from "@/components/molecules/commons/RecommendationTypeSelect";
 
 const ModalRekomendasi = ({
   payload,
@@ -54,14 +55,8 @@ const ModalRekomendasi = ({
             )}
           </div>
           <div>
-            <CustomSelect
-              optionValue={[
-                {
-                  label: "Corrective",
-                  value: { kode: "1", name: "corrective" },
-                },
-              ]}
-              placeholder="Tipe Rekomendasi"
+            <RecommendationTypeSelect
+              placeholder={"Tipe Rekomendasi"}
               customIcon={
                 <ButtonIcon
                   icon={<IconClose />}
@@ -74,7 +69,7 @@ const ModalRekomendasi = ({
               selectedValue={
                 payload?.tipe_rekomendasi?.kode
                   ? {
-                      label: payload?.tipe_rekomendasi?.name?.toUpperCase(),
+                      label: payload?.tipe_rekomendasi?.nama?.toUpperCase(),
                       value: payload?.tipe_rekomendasi,
                     }
                   : null

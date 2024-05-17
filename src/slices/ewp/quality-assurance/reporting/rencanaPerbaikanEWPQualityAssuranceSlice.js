@@ -26,7 +26,7 @@ export const rencanaPerbaikanEWPQualityAssuranceSlice = createSlice({
       state.objPayload = {};
     },
     resetValidationErrors: (state) => {
-      state.resetValidationErrors = {};
+      state.validationErrors = {};
     },
   },
 });
