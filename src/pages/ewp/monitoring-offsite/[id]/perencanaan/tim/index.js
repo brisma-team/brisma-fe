@@ -20,7 +20,7 @@ import timEWPMonoffSchema from "@/helpers/schemas/ewp/monitoring-offsite/perenca
 
 const routes = [
   {
-    name: "Tim",
+    name: "Tim Audit",
     slug: "tim",
   },
   {
@@ -32,7 +32,7 @@ const routes = [
 const index = () => {
   const dispatch = useDispatch();
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/monitoring-offsite/overview/${id}`;
+  const baseUrl = `/ewp/monitoring-offsite/${id}`;
   const pathName = `${baseUrl}/perencanaan`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -51,13 +51,16 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/monitoring-offsite/overview" },
+      {
+        name: "Monitoring Offsite / Overview",
+        path: "/ewp/monitoring-offsite",
+      },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Perencanaan Kegiatan`,
         path: baseUrl,
       },
       {
-        name: `Tim`,
+        name: `Tim Audit`,
         path: `${baseUrl}/perencanaan/tim`,
       },
     ]);
@@ -189,10 +192,11 @@ const index = () => {
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
       <div className="flex justify-between items-center mb-7">
-        <PageTitle text="Tim" />
+        <PageTitle text="Tim Audit" />
         <PrevNextNavigation
           baseUrl={pathName}
           routes={routes}
+          nextUrl={"/uker-assessment"}
           marginLeft={"-60px"}
         />
       </div>

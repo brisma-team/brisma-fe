@@ -3,22 +3,18 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   objData: [],
   objPayload: {
-    ref_auditee_branch_kode: 0,
-    ref_auditee_branch_name: "",
-    ref_auditee_orgeh_kode: 0,
-    ref_auditee_orgeh_name: "",
+    branch: "",
+    orgeh: "",
     tipe_uker: "",
-    description: "",
-    gross_profit: 0
+    deskripsi: "",
+    attachments: [""],
   },
   defaultObjPayload: {
-    ref_auditee_branch_kode: 0,
-    ref_auditee_branch_name: "",
-    ref_auditee_orgeh_kode: 0,
-    ref_auditee_orgeh_name: "",
+    branch: "",
+    orgeh: "",
     tipe_uker: "",
-    description: "",
-    gross_profit: 0
+    deskripsi: "",
+    attachments: [""],
   },
   validationErrors: {},
 };

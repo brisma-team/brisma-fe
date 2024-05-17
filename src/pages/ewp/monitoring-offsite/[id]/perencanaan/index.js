@@ -7,16 +7,16 @@ import { useState, useEffect } from "react";
 
 const index = () => {
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/monitoring-offsite/overview/${id}`;
+  const baseUrl = `/ewp/monitoring-offsite/${id}`;
   const [data, setData] = useState([]);
 
   const { projectDetail } = useProjectDetail({ id });
   const { perencanaaanStatus } = usePerencanaaanStatus({ type: "mapa", id });
 
-  const breadcrumbs = [ 
+  const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
-    { name: "EWP", path: "/ewp" },
-    { name: "Overview", path: "/ewp/monitoring-offsite/overview" },
+    { name: "EWP / Monitoring Offsite", path: "/ewp" },
+    { name: "Overview", path: "/ewp/monitoring-offsite" },
     {
       name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Perencanaan Kegiatan`,
       path: baseUrl,

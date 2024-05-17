@@ -71,9 +71,9 @@ const index = () => {
   );
 
   const { projectDetail } = useProjectDetail({ id });
-  const { documentEWP } = useDocumentEWP("mapa", bab, { id });
+  const { documentEWP } = useDocumentEWP("reporting", bab, { id });
   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
-    "mapa",
+    "reporting",
     { id }
   );
   const { commentMapaEWP, commentMapaEWPMutate } = useCommentMapaEWP({
@@ -85,9 +85,10 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
+      { name: "Monitoring / Overview", path: "/ewp/monitoring-offsite" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Reporting`,
-        path: `/ewp/monitoring-offsite/overview/${id}/reporting`,
+        path: `/ewp/monitoring-offsite/${id}/reporting`,
       },
     ]);
   }, [projectDetail]);
@@ -419,7 +420,7 @@ const index = () => {
     };
 
     await usePostData(
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${id}?ref_bab_mapa_id=${activeIndexComment}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/reporting/comment/${id}?ref_bab_reporting_id=${activeIndexComment}`,
       body
     );
 
@@ -435,7 +436,7 @@ const index = () => {
     };
 
     await usePostData(
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${id}?ref_bab_mapa_id=${activeIndexComment}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/reporting/comment/${id}?ref_bab_reporting_id=${activeIndexComment}`,
       body
     );
 
