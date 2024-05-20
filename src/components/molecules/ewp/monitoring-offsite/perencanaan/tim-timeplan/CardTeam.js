@@ -7,7 +7,7 @@ import {
   ErrorValidation,
 } from "@/components/atoms";
 import { IconClose, IconPlus } from "@/components/icons";
-import { PekerjaSelect } from "@/components/molecules/commons";
+import { PekerjaSelect, UserSKAISelect } from "@/components/molecules/commons";
 import { ImageCheck } from "@/helpers/imagesUrl";
 import Image from "next/image";
 
@@ -23,6 +23,7 @@ const CardTeam = ({
   handleChangeText,
   textColorTitle,
   withoutButton,
+  isUserSKAI,
   withMandays,
   withDescription,
 }) => {
@@ -44,41 +45,69 @@ const CardTeam = ({
                     return (
                       <div key={i} className="flex gap-3 items-center">
                         <div className="w-full">
-                          <PekerjaSelect
-                            selectedValue={
-                              v?.pn
-                                ? {
-                                    label: `${v?.pn} - ${v?.nama}`,
-                                    value: { pn: v?.pn, nama: v?.nama },
-                                  }
-                                : null
-                            }
-                            customIcon={
-                              !withoutButton ? (
-                                <ButtonIcon
-                                  icon={<IconClose />}
-                                  handleClick={() => handleDelete(i, property)}
-                                  isDisabled={isDisabled}
-                                />
-                              ) : (
-                                ""
-                              )
-                            }
-                            handleChange={(e) =>
-                              handleChangeSelect(property, i, e.value)
-                            }
-                            width={"w-full"}
-                            isDisabled={isDisabled}
-                          />
-                          {validation &&
-                          (validation[property] ||
-                            validation[`${property}[${i}.pn]`]) ? (
+                          {isUserSKAI ? (
+                            <UserSKAISelect
+                              selectedValue={
+                                v?.pn
+                                  ? {
+                                      label: `${v?.pn} - ${v?.nama}`,
+                                      value: { pn: v?.pn, nama: v?.nama },
+                                    }
+                                  : null
+                              }
+                              customIcon={
+                                !withoutButton ? (
+                                  <ButtonIcon
+                                    icon={<IconClose />}
+                                    handleClick={() =>
+                                      handleDelete(i, property)
+                                    }
+                                    isDisabled={isDisabled || v?.is_initiator}
+                                  />
+                                ) : (
+                                  ""
+                                )
+                              }
+                              handleChange={(e) =>
+                                handleChangeSelect(property, i, e.value)
+                              }
+                              width={"w-full"}
+                              isDisabled={isDisabled || v?.is_initiator}
+                            />
+                          ) : (
+                            <PekerjaSelect
+                              selectedValue={
+                                v?.pn
+                                  ? {
+                                      label: `${v?.pn} - ${v?.nama}`,
+                                      value: { pn: v?.pn, nama: v?.nama },
+                                    }
+                                  : null
+                              }
+                              customIcon={
+                                !withoutButton ? (
+                                  <ButtonIcon
+                                    icon={<IconClose />}
+                                    handleClick={() =>
+                                      handleDelete(i, property)
+                                    }
+                                    isDisabled={isDisabled}
+                                  />
+                                ) : (
+                                  ""
+                                )
+                              }
+                              handleChange={(e) =>
+                                handleChangeSelect(property, i, e.value)
+                              }
+                              width={"w-full"}
+                              isDisabled={isDisabled}
+                            />
+                          )}
+                          {validation[`${property}[${i}.pn]`] ? (
                             <ErrorValidation
                               className={"mt-3"}
-                              message={
-                                validation[property] ||
-                                validation[`${property}[${i}.pn]`]
-                              }
+                              message={validation[`${property}[${i}.pn]`]}
                             />
                           ) : (
                             ""
@@ -111,7 +140,7 @@ const CardTeam = ({
                           ""
                         )}
                         {withDescription ? (
-                          <div className="flex gap-3 items-center w-[163rem]">
+                          <div className="flex gap-3 items-center w-[141rem]">
                             <TextInput
                               placeholder={"Deskripsi"}
                               value={v?.deskripsi || ""}
@@ -148,8 +177,16 @@ const CardTeam = ({
                 : ""
               : ""
             : ""}
+          {validation[property] ? (
+            <ErrorValidation
+              className={"mt-3"}
+              message={validation[property]}
+            />
+          ) : (
+            ""
+          )}
           {!withoutButton ? (
-            <div className="w-fit mt-3">
+            <div className="bg-none w-fit mt-3">
               <ButtonField
                 iconAfter={
                   <div className="text-brisma">

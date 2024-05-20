@@ -1,22 +1,15 @@
 import { Breadcrumbs, Card, DivButton, PageTitle } from "@/components/atoms";
 import {
   ApprovalItems,
-  ModalComment,
+  ContentDocument,
+  ListContentDocument,
   ModalWorkflow,
 } from "@/components/molecules/commons";
-import { NavigationDocument } from "@/components/molecules/commons";
-import Image from "next/image";
-import { ImageChat } from "@/helpers/imagesUrl";
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { LandingLayoutEWPMonOff } from "@/layouts/ewp";
-// import {
-//   useAuditorEWP,
-//   useDocumentEWP,
-//   useWorkflowDetailEWP,
-// } from "@/data/ewp/konvensional";
 import {
-  useCommentMapaEWP,
+  useCommentReportingEWP,
   useDocumentEWP,
 } from "@/data/ewp/monitoring-offsite/reporting";
 import { useSelector, useDispatch } from "react-redux";
@@ -28,8 +21,11 @@ import {
 } from "@/slices/ewp/monitoring-offsite/reporting/documentMapaEWPMonoffSlice";
 import _ from "lodash";
 import {
+  checkRoleApprovalLog,
   confirmationSwal,
   convertDate,
+  fetchApi,
+  loadingSwal,
   setErrorValidation,
   usePostData,
   useUpdateData,
@@ -37,20 +33,27 @@ import {
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useProjectDetail } from "@/data/ewp/monitoring-offsite";
 import { useWorkflowDetailEWP } from "@/data/ewp";
+import { timTimeplanHtml } from "@/templates/ewp/konsulting/perencanaan";
+import { ukerAssessmentHtml } from "@/templates/ewp/monitoring-offsite/reporting";
+import useUser from "@/data/useUser";
 
 const index = () => {
   const { id } = useRouter().query;
   const dispatch = useDispatch();
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
-  const [listContent, setListContent] = useState([
-    { idx: 1, total_comment: 0, title: "Tim" },
-    { idx: 2, total_comment: 0, title: "Unit Kerja" },
-    { idx: 3, total_comment: 0, title: "Informasi" },
-  ]);
+  const [isCloseProject, setIsCloseProject] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
+  const [listContent, setListContent] = useState([]);
   const [listComment, setListComment] = useState([]);
 
-  const ref = useRef(null);
+  const listBab = [
+    { idx: 1, title: "Tim Audit" },
+    { idx: 2, title: "Uker Assessment" },
+    { idx: 3, title: "Analisa" },
+  ];
+
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [openCardComment, setOpenCardComment] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
@@ -61,7 +64,11 @@ const index = () => {
   const [currentPosition, setCurrentPosition] = useState(1);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
   const [bab, setBab] = useState(1);
-  const [selectedParentCommentId, setSelectedParentCommentId] = useState(0);
+  const [activeIdComment, setActiveIdComment] = useState(1);
+
+  const [params, setParams] = useState({
+    kkpa_id: "",
+  });
 
   const workflowData = useSelector(
     (state) => state.documentMapaEWPMonoff.workflowData
@@ -71,17 +78,25 @@ const index = () => {
   );
 
   const { projectDetail } = useProjectDetail({ id });
-  const { documentEWP } = useDocumentEWP("reporting", bab, { id });
+  const { documentEWP, documentEWPMutate } = useDocumentEWP("reporting", bab, {
+    id,
+  });
   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
-    "reporting",
+    "kkpa",
     { id }
   );
-  const { commentMapaEWP, commentMapaEWPMutate } = useCommentMapaEWP({
-    id,
+  const {
+    commentReportingEWP,
+    commentReportingEWPIsLoading,
+    commentReportingEWPMutate,
+  } = useCommentReportingEWP({
+    id: params?.kkpa_id,
     bab: activeIndexComment,
   });
+  const { user } = useUser();
 
   useEffect(() => {
+    const projectInfo = projectDetail?.data?.project_info;
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
@@ -91,11 +106,23 @@ const index = () => {
         path: `/ewp/monitoring-offsite/${id}/reporting`,
       },
     ]);
+
+    setIsCloseProject(
+      Boolean(
+        projectInfo?.status_kode == "9" && projectInfo?.status_name == "final"
+      )
+    );
+
+    setIsInitiator(Boolean(projectInfo?.initiator?.pn === user?.data?.pn));
+
+    setIsOnProgress(
+      Boolean(projectInfo?.status_persetujuan_name == "On Progress")
+    );
   }, [projectDetail]);
 
   useEffect(() => {
-    if (commentMapaEWP?.data?.length) {
-      const mapping = commentMapaEWP?.data?.map((parent) => {
+    if (commentReportingEWP?.data?.length) {
+      const mapping = commentReportingEWP?.data?.map((parent) => {
         const {
           id,
           create_by,
@@ -127,7 +154,7 @@ const index = () => {
       });
       setListComment(mapping);
     }
-  }, [commentMapaEWP]);
+  }, [commentReportingEWP]);
 
   useEffect(() => {
     const response = documentEWP?.data?.daftar_isi;
@@ -140,9 +167,24 @@ const index = () => {
           title: bab.title,
         };
       });
-      setListContent(mapping);
+
+      const filteredResult = mapping.filter((item) => {
+        return doc.some((docItem) => docItem.idx === item.idx);
+      });
+      setListContent(filteredResult);
+    }
+  }, [documentEWP, doc]);
+
+  useEffect(() => {
+    if (bab < listBab?.length && documentEWP?.data) {
+      setBab((prev) => parseInt(prev) + 1);
     }
   }, [documentEWP]);
+
+  const handleCloseModalWorkflow = () => {
+    dispatch(resetWorkflowData());
+    workflowDetailEWPMutate();
+  };
 
   // [ START ] Function ini berfungsi agar setiap kali class page-container-a4 melewati class parent,
   // maka akan setter setCurrentPosition akan merubah data dan setter setHitEndpointCount
@@ -223,19 +265,25 @@ const index = () => {
   }, [hitEndpointCount]);
 
   useEffect(() => {
-    if (documentEWP?.data && listContent?.length) {
-      const findBab = listContent?.find((value) => value?.idx === bab);
-      console.log(findBab);
-      setDoc((prev) => [
-        ...prev,
-        {
-          idx: findBab?.idx,
-          title: findBab?.title,
-          content: documentEWP?.data?.data,
-        },
-      ]);
+    if (documentEWP?.data) {
+      const findBab = listBab?.find((value) => value?.idx === bab);
+      const findBabId = documentEWP?.data?.daftar_isi?.find(
+        (value) => value?.key === bab
+      );
+      const findDoc = doc?.find((value) => value?.idx === bab);
+      if (!findDoc) {
+        setDoc((prev) => [
+          ...prev,
+          {
+            idx: findBab?.idx,
+            bab_id: findBabId?.id,
+            title: findBab?.title,
+            content: documentEWP?.data?.data,
+          },
+        ]);
+      }
     }
-  }, [documentEWP, listContent]);
+  }, [documentEWP]);
 
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
@@ -248,11 +296,11 @@ const index = () => {
 
       const newWorkflowData = {
         ...workflowData,
-        status_approver: workflowInfo?.status_persetujuan_name,
+        status_approver: workflowInfo?.status_persetujuan,
         on_approver: workflowInfo?.status_approver,
       };
 
-      newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.nama}`;
+      newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.name}`;
       newWorkflowData.maker = maker;
 
       if (approvers?.length) {
@@ -275,7 +323,8 @@ const index = () => {
       if (workflowDetailEWP?.data?.log?.length) {
         const mapping = workflowDetailEWP?.data?.log?.map((v) => {
           return {
-            "P.I.C": v?.pn_from + " - " + v?.name_from,
+            "P.I.C": v?.from?.pn + " - " + v?.from?.nama,
+            Role: checkRoleApprovalLog(v?.note, v?.is_signed),
             Alasan: v?.note,
             Status:
               v?.is_signed === true
@@ -283,11 +332,16 @@ const index = () => {
                 : v?.is_signed === false
                 ? "Rejected"
                 : "",
-            Tanggal: convertDate(v?.createdAt, "-", "d"),
+            Tanggal: convertDate(v?.created_at, "-", "d"),
           };
         });
         setHistoryWorkflow(mapping);
       }
+
+      setParams({
+        ...params,
+        kkpa_id: workflowInfo?.id,
+      });
 
       dispatch(setWorkflowData(newWorkflowData));
     } else {
@@ -296,9 +350,10 @@ const index = () => {
   }, [workflowDetailEWP]);
   // [ END ]
 
-  const handleClickComment = (babIdx) => {
+  const handleClickComment = (id, index) => {
     setOpenCardComment(true);
-    setActiveIndexComment(babIdx);
+    setActiveIdComment(id);
+    setActiveIndexComment(index);
   };
 
   // [ START ] function untuk Modal Workflow
@@ -353,8 +408,8 @@ const index = () => {
     if (validate) {
       const actionType = e.target.offsetParent.name;
       const data = {
-        sub_modul: "mapa",
-        sub_modul_id: id,
+        sub_modul: "kkpa",
+        sub_modul_id: params?.kkpa_id,
       };
 
       const signedCount = workflowData?.ref_tim_audit_approver?.filter(
@@ -412,41 +467,78 @@ const index = () => {
   // [ END ]
 
   // [ START ] COMMENT
+  const handleCloseComment = async (e, value) => {
+    e.stopPropagation();
+
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/mapa/comment/close/${value?.parent_id}`,
+      {}
+    );
+
+    commentReportingEWPMutate();
+    documentEWPMutate();
+    loadingSwal("close");
+  };
+
   const handleSubmitCommentParent = async (e, value) => {
     e.stopPropagation();
     const body = {
-      ref_bab_mapa_id: activeIndexComment.toString(),
+      ref_bab_mapa_id: activeIdComment.toString(),
       deskripsi: value,
     };
 
-    await usePostData(
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/reporting/comment/${id}?ref_bab_reporting_id=${activeIndexComment}`,
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/mapa/comment/${params?.id}?ref_bab_mapa_id=${activeIdComment}`,
       body
     );
 
-    commentMapaEWPMutate();
+    commentReportingEWPMutate();
+    documentEWPMutate();
+    loadingSwal("close");
   };
 
   const handleSubmitCommentChild = async (e, value) => {
     e.stopPropagation();
+
     const body = {
-      ref_bab_mapa_id: activeIndexComment.toString(),
-      deskripsi: value,
-      parent_comment_id: selectedParentCommentId,
+      ref_bab_mapa_id: activeIdComment.toString(),
+      deskripsi: value?.desc,
+      parent_comment_id: value?.parent_id,
     };
 
-    await usePostData(
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/reporting/comment/${id}?ref_bab_reporting_id=${activeIndexComment}`,
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/monoff/reporting/comment/${params?.id}?ref_bab_reporting_id=${activeIdComment}`,
       body
     );
 
-    commentMapaEWPMutate();
-  };
-
-  const handleSelectedParentComment = (id) => {
-    setSelectedParentCommentId(id);
+    commentReportingEWPMutate();
+    loadingSwal("close");
   };
   // [ END ]
+
+  const handleActiveIndex = (index) => {
+    setActiveIndex(index);
+  };
+
+  const handleClickOpenCardComment = (value) => {
+    setOpenCardComment(value);
+  };
+
+  const renderContent = (index, content) => {
+    if (index === 1) {
+      return timTimeplanHtml(content?.tim);
+    } else if (index === 2) {
+      return ukerAssessmentHtml(content);
+    } else if (index === 3) {
+      return content;
+    }
+  };
 
   return (
     <LandingLayoutEWPMonOff>
@@ -456,102 +548,54 @@ const index = () => {
       </div>
       {/* Start Content */}
       <div className="flex w-full gap-6">
-        <div className="w-64">
-          <div>
-            <Card>
-              <div className="px-3 py-1 w-full">
-                <div className="text-xl">Daftar Isi</div>
-                <div className="pl-2 mt-3">
-                  {listContent.map((v, i) => {
-                    return (
-                      <NavigationDocument
-                        key={i}
-                        no={i + 1}
-                        title={v.title}
-                        handleClick={() => setActiveIndex(v.idx)}
-                        activeIndex={activeIndex}
-                        count={v.total_comment}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
+        <ListContentDocument
+          data={listContent}
+          currentPosition={currentPosition}
+          handleActiveIndex={handleActiveIndex}
+        />
         <div>
-          <Card>
-            <div className="overflow-y-scroll my-2 parent max-h-[40rem]">
-              <ModalComment
-                callbackRef={ref}
-                show={openCardComment}
-                handleClickOutside={() => setOpenCardComment(false)}
-                handleSubmitParent={handleSubmitCommentParent}
-                handleSubmitChild={handleSubmitCommentChild}
-                handleSelectedParentComment={handleSelectedParentComment}
-                data={listComment}
-              />
-              {doc.map((v, i) => {
-                return (
-                  <div
-                    key={i}
-                    className={`page-container-a4 shrink-0 ${
-                      i + 1 === activeIndex ? "active" : ""
-                    }`}
-                    tabIndex={i + 1 === activeIndex ? 0 : -1}
-                    ref={i + 1 === activeIndex ? activeDivRef : null}
-                  >
-                    {v.content && (
-                      <div className="px-4 h-full w-full relative page-content-a4">
-                        <div className="flex justify-between">
-                          <div className="font-bold text-xl">{v.title}</div>
-                          <div className="flex items-center" ref={ref}>
-                            <DivButton
-                              handleClick={() => handleClickComment(v.idx)}
-                            >
-                              <Image src={ImageChat} alt="chat" />
-                            </DivButton>
-                          </div>
-                        </div>
-                        <div
-                          className="mt-4"
-                          dangerouslySetInnerHTML={{ __html: v.content }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
+          <ContentDocument
+            dataDoc={doc}
+            dataComment={listComment}
+            activeDivRef={activeDivRef}
+            activeIndex={activeIndex}
+            activeIndexComment={activeIndexComment}
+            isOpenCardComment={openCardComment}
+            isLoadingComment={commentReportingEWPIsLoading}
+            isHideButton={isCloseProject || !isInitiator || !isOnProgress}
+            renderContent={renderContent}
+            handleClickComment={handleClickComment}
+            handleIsOpenCardComment={handleClickOpenCardComment}
+            handleSubmitCommentParent={handleSubmitCommentParent}
+            handleSubmitCommentChild={handleSubmitCommentChild}
+            handleCloseComment={handleCloseComment}
+          />
         </div>
         <div>
           <DivButton
             handleClick={() => setShowModalApproval(true)}
             className="no-underline hover:no-underline w-56"
           >
-            <div>
-              <Card>
-                <div className="w-full">
-                  <div className="px-3">
-                    <p className="text-brisma font-bold text-xl">Approval</p>
-                    <ApprovalItems
-                      title={"P.I.C Auditor"}
-                      text={workflowData?.maker?.nama}
-                    />
-                    <ApprovalItems
-                      title={"Approver"}
-                      text={workflowData?.ref_tim_audit_approver}
-                      data={workflowData}
-                    />
-                    <ApprovalItems
-                      title={"Signer"}
-                      text={workflowData?.ref_tim_audit_signer}
-                    />
-                  </div>
-                </div>
-              </Card>
-            </div>
+            <Card>
+              <div className="w-full px-3">
+                <p className="text-brisma font-bold text-xl">Approval</p>
+                <ApprovalItems
+                  title={"P.I.C Auditor"}
+                  text={
+                    workflowData?.maker?.pn + " - " + workflowData?.maker?.name
+                  }
+                />
+                <ApprovalItems
+                  title={"Approver"}
+                  text={workflowData?.ref_tim_audit_approver}
+                  data={workflowData}
+                />
+                <ApprovalItems
+                  title={"Signer"}
+                  text={workflowData?.ref_tim_audit_signer}
+                />
+              </div>
+            </Card>
           </DivButton>
           <ModalWorkflow
             workflowData={workflowData}
@@ -565,6 +609,7 @@ const index = () => {
             handleAdd={handleAdd}
             handleChangeSelect={handleChangeSelect}
             handleChangeText={handleChangeText}
+            handleCloseModal={handleCloseModalWorkflow}
             withSigner
           />
         </div>

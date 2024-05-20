@@ -22,6 +22,7 @@ import {
 } from "@/helpers";
 import { useUkerAssessment } from "@/data/ewp/monitoring-offsite/perencanaan/uker-assessment";
 import UkerAssessmentTable from "@/components/molecules/ewp/monitoring-offsite/perencanaan/uker-assessment/UkerAssessmentTable";
+import useUser from "@/data/useUser";
 
 const routes = [
   {
@@ -41,6 +42,9 @@ const index = () => {
   const pathName = `${baseUrl}/perencanaan`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [isCloseProject, setIsCloseProject] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
 
   //Uker Assessment
   const [dataUkerAssessment, setDataUkerAssessment] = useState([]);
@@ -49,18 +53,15 @@ const index = () => {
   const [showModalAttachment, setShowModalAttachment] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  //   const data = useSelector((state) => state.ukerAssessmentEWPMonoff.objData);
   const payload = useSelector(
     (state) => state.ukerAssessmentEWPMonoff.objPayload
   );
-  //   const validation = useSelector(
-  //     (state) => state.ukerAssessmentEWPMonoff.validationErrors
-  //   );
 
   const { projectDetail } = useProjectDetail({ id });
   const { userAssessment, userAssessmentMutate } = useUkerAssessment({ id });
-
+  const { user } = useUser();
   useEffect(() => {
+    const projectInfo = projectDetail?.data?.project_info;
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
@@ -77,6 +78,18 @@ const index = () => {
         path: `${baseUrl}/perencanaan/uker-assessment`,
       },
     ]);
+
+    setIsCloseProject(
+      Boolean(
+        projectInfo?.status_kode == "9" && projectInfo?.status_name == "final"
+      )
+    );
+
+    setIsInitiator(Boolean(projectInfo?.initiator?.pn === user?.data?.pn));
+
+    setIsOnProgress(
+      Boolean(projectInfo?.status_persetujuan_name == "On Progress")
+    );
   }, [projectDetail]);
 
   useEffect(() => {
@@ -293,7 +306,7 @@ const index = () => {
             <UkerAssessmentTable
               data={dataUkerAssessment}
               payload={payload}
-              //   withoutButton={!isInitiator || isFinalProject}
+              withoutButton={!isInitiator || isCloseProject || !isOnProgress}
               handleChange={handleChangepayload}
               handleClickAddUkerAssessment={handleClickAddRowUkerAssessment}
               handleClickSave={handleSaveUkerAssessment}

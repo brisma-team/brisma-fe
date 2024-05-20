@@ -71,7 +71,11 @@ const timTimeplanHtml = (data) => {
           <th width="8%" style="background-color: #3C64B1; color: white; border: 1px solid #fff;"><p style="font-size:14px; text-align:center">No</p></th>
           <th style="background-color: #3C64B1; color: white; border: 1px solid #fff;"><p style="font-size:14px">PN</p></th>
           <th style="background-color: #3C64B1; color: white; border: 1px solid #fff;"><p style="font-size:14px">Nama</p></th>
-          <th style="background-color: #3C64B1; color: white; border: 1px solid #fff;"><p style="font-size:14px">Mandays</p></th>
+          ${
+            data?.ata[0]?.mandays !== undefined
+              ? `<th style="background-color: #3C64B1; color: white; border: 1px solid #fff;"><p style="font-size:14px">Mandays</p></th>`
+              : ``
+          }
           <th style="background-color: #3C64B1; color: white; border: 1px solid #fff;"><p style="font-size:14px">Deskripsi</p></th>
       </tr>
   </thead>
@@ -90,12 +94,16 @@ const timTimeplanHtml = (data) => {
           <td style="border: 1px solid #ccc;">
             <p style="font-size:12px">${v?.nama}</p>
           </td>
-          <td style="border: 1px solid #ccc;">
+          ${
+            v?.mandays !== undefined
+              ? `<td style="border: 1px solid #ccc;">
           <p style="font-size:12px">${v?.mandays}</p>
-        </td>
-        <td style="border: 1px solid #ccc;">
-          <p style="font-size:12px">${v?.deskripsi || ""}</p>
-        </td>
+          </td>`
+              : ``
+          }
+          <td style="border: 1px solid #ccc;">
+            <p style="font-size:12px">${v?.deskripsi || ""}</p>
+          </td>
           </tr>`;
           })
           .join("")
