@@ -42,7 +42,7 @@ const TablePenugasan = ({
             width="8%"
             className="border-t border-r cell-custom-dataTables justify-center"
           >
-            PETUGASA
+            PETUGAS
           </Header>
           <Header
             width="8%"
