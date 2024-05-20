@@ -1,3 +1,4 @@
 import CardTeam from "./CardTeam";
+import CardMemberTeam from "./CardMemberTeam";
 
-export { CardTeam };
+export { CardTeam, CardMemberTeam };
