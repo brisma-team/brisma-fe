@@ -1,4 +1,10 @@
-import { Breadcrumbs, ButtonField, Card, PageTitle } from "@/components/atoms";
+import {
+  Breadcrumbs,
+  ButtonField,
+  Card,
+  ErrorValidation,
+  PageTitle,
+} from "@/components/atoms";
 import { useProjectDetail } from "@/data/ewp/monitoring-offsite";
 import { LandingLayoutEWPMonOff } from "@/layouts/ewp";
 import { useRouter } from "next/router";
@@ -17,6 +23,8 @@ import { CardTeam } from "@/components/molecules/ewp/monitoring-offsite/perencan
 import { fetchApi, loadingSwal, setErrorValidation } from "@/helpers";
 import _ from "lodash";
 import timEWPMonoffSchema from "@/helpers/schemas/ewp/monitoring-offsite/perencanaan/timEWPMonoffSchema";
+import { CardMemberTeam } from "@/components/molecules/ewp/monitoring-offsite/perencanaan/tim-timeplan";
+import useUser from "@/data/useUser";
 
 const routes = [
   {
@@ -36,6 +44,9 @@ const index = () => {
   const pathName = `${baseUrl}/perencanaan`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [isCloseProject, setIsCloseProject] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
 
   const payload = useSelector((state) => state.timEWPMonoff.objData);
   const validation = useSelector(
@@ -46,8 +57,10 @@ const index = () => {
   const { tim, timMutate, timError } = useTim({
     id,
   });
+  const { user } = useUser();
 
   useEffect(() => {
+    const projectInfo = projectDetail?.data?.project_info;
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
@@ -64,7 +77,19 @@ const index = () => {
         path: `${baseUrl}/perencanaan/tim`,
       },
     ]);
-  }, [projectDetail]);
+
+    setIsCloseProject(
+      Boolean(
+        projectInfo?.status_kode == "9" && projectInfo?.status_name == "final"
+      )
+    );
+
+    setIsInitiator(Boolean(projectInfo?.initiator?.pn === user?.data?.pn));
+
+    setIsOnProgress(
+      Boolean(projectInfo?.status_persetujuan_name == "On Progress")
+    );
+  }, [projectDetail, user]);
 
   useEffect(() => {
     if (!timError) {
@@ -200,7 +225,6 @@ const index = () => {
           marginLeft={"-60px"}
         />
       </div>
-      {/* Start Content */}
       <Card>
         <div className="p-5 grid grid-cols-3 gap-3 w-full h-full">
           <CardTeam
@@ -209,15 +233,19 @@ const index = () => {
             property={"initiator"}
             title={"Initiator"}
             textColorTitle={"text-atlasian-yellow"}
-            handleAdd={handleAddObjectInsideArray}
-            handleDelete={handleDeleteObjectInsideArray}
-            handleChangeSelect={handleChangeSelectValueObjectInsideArray}
             withoutButton
             isDisabled
           />
           <CardTeam
+            isUserSKAI
             data={payload}
             validation={validation}
+            withoutButton={
+              isCloseProject ? true : !isOnProgress ? true : !isInitiator
+            }
+            isDisabled={
+              isCloseProject ? true : !isOnProgress ? true : !isInitiator
+            }
             property={"auditor"}
             title={"P.I.C Auditor"}
             textColorTitle={"text-atlasian-blue-light"}
@@ -228,6 +256,12 @@ const index = () => {
           <CardTeam
             data={payload}
             validation={validation}
+            withoutButton={
+              isCloseProject ? true : !isOnProgress ? true : !isInitiator
+            }
+            isDisabled={
+              isCloseProject ? true : !isOnProgress ? true : !isInitiator
+            }
             property={"auditee"}
             title={"P.I.C Auditee"}
             textColorTitle={"text-atlasian-red"}
@@ -236,25 +270,55 @@ const index = () => {
             handleChangeSelect={handleChangeSelectValueObjectInsideArray}
           />
         </div>
-        <div className="px-5 pb-5 w-full">
-          <CardTeam
-            data={payload}
-            validation={validation}
-            property={"ata"}
-            title={"Anggota"}
-            textColorTitle={"text-atlasian-green"}
-            handleAdd={handleAddObjectInsideArray}
-            handleDelete={handleDeleteObjectInsideArray}
-            handleChangeSelect={handleChangeSelectValueObjectInsideArray}
-            handleChangeText={handleChangeTextValueObjectInsideArray}
-            withDescription
-          />
+        <div className="p-5 w-full">
+          <Card>
+            <div className="px-4 py-2 flex flex-col gap-4 w-full">
+              {isInitiator && !isCloseProject && isOnProgress ? (
+                <div className="bg-atlasian-purple rounded w-fit">
+                  <ButtonField
+                    text={"Tambah Anggota Tim"}
+                    handler={() => handleAddObjectInsideArray("ata")}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
+              {validation["ata"] ? (
+                <ErrorValidation
+                  className={"mt-3"}
+                  message={validation["ata"]}
+                />
+              ) : (
+                ""
+              )}
+              <CardMemberTeam
+                title={"Anggota Tim Audit"}
+                textColorTitle={"text-atlasian-green"}
+                property={"ata"}
+                data={payload}
+                validation={validation}
+                withoutButton={
+                  isCloseProject ? true : !isInitiator && !isOnProgress
+                }
+                isDisabled={
+                  isCloseProject ? true : !isInitiator && !isOnProgress
+                }
+                handleDelete={handleDeleteObjectInsideArray}
+                handleChangeSelect={handleChangeSelectValueObjectInsideArray}
+                handleChangeText={handleChangeTextValueObjectInsideArray}
+              />
+            </div>
+          </Card>
         </div>
       </Card>
       <div className="mt-3 flex justify-end">
-        <div className="w-36 bg-atlasian-green rounded">
-          <ButtonField text={"Simpan"} handler={handleSubmit} />
-        </div>
+        {isInitiator && !isCloseProject && isOnProgress ? (
+          <div className="w-36 bg-atlasian-green rounded">
+            <ButtonField text={"Simpan"} handler={handleSubmit} />
+          </div>
+        ) : (
+          ""
+        )}
       </div>
       {/* End Content */}
     </LandingLayoutEWPMonOff>

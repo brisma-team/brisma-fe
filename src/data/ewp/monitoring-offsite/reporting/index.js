@@ -1,4 +1,4 @@
-import useCommentMapaEWP from "./useCommentMapaEWP";
+import useCommentReportingEWP from "./useCommentReportingEWP";
 import useDocumentEWP from "./useDocumentEWP";
 
-export { useCommentMapaEWP, useDocumentEWP };
+export { useCommentReportingEWP, useDocumentEWP };

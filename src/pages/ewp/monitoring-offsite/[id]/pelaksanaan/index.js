@@ -7,10 +7,12 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import {
   AttachmentClipping,
+  ContentView,
   ImageClipping,
   // PrevNextNavigation,
 } from "@/components/molecules/commons";
 import { fetchApi, loadingSwal, usePostFileData } from "@/helpers";
+import useUser from "@/data/useUser";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -21,6 +23,11 @@ const index = () => {
   const baseUrl = `/ewp/monitoring-offsite/${id}`;
   const pathName = `${baseUrl}/pelaksanaan`;
 
+  const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [isCloseProject, setIsCloseProject] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
+  const [isOnProgress, setIsOnProgress] = useState(false);
+
   const [imageClipList, setImageClipList] = useState([]);
   const [attachmentClipList, setAttachmentClipList] = useState([]);
   const [content, setContent] = useState("");
@@ -28,20 +35,38 @@ const index = () => {
 
   const { projectDetail } = useProjectDetail({ id });
   const { analisa, analisaMutate } = useAnalisa({ id });
+  const { user } = useUser();
 
-  const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
-    { name: "EWP", path: "/ewp" },
-    { name: "Monitoring Offsite / Overview", path: "/ewp/monitoring-offsite" },
-    {
-      name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Pelaksanaan`,
-      path: baseUrl,
-    },
-  ];
+  useEffect(() => {
+    const projectInfo = projectDetail?.data?.project_info;
+    setBreadcrumbs([
+      { name: "Menu", path: "/dashboard" },
+      { name: "EWP", path: "/ewp" },
+      {
+        name: "Monitoring Offsite / Overview",
+        path: "/ewp/monitoring-offsite",
+      },
+      {
+        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Pelaksanaan`,
+        path: baseUrl,
+      },
+    ]);
+
+    setIsCloseProject(
+      Boolean(
+        projectInfo?.status_kode == "9" && projectInfo?.status_name == "final"
+      )
+    );
+
+    setIsInitiator(Boolean(projectInfo?.initiator?.pn === user?.data?.pn));
+
+    setIsOnProgress(
+      Boolean(projectInfo?.status_persetujuan_name == "On Progress")
+    );
+  }, [projectDetail]);
 
   useEffect(() => {
     setContent(analisa?.data?.analisa_data || "");
-    console.log(analisa);
   }, [analisa]);
 
   const handleUpload = async (e) => {
@@ -105,35 +130,46 @@ const index = () => {
         {/* <PrevNextNavigation baseUrl={pathName} marginLeft={"-60px"} /> */}
       </div>
       {/* Start Content */}
-      <div className="my-4 flex justify-between">
-        <div className="flex gap-6">
+      <div className="my-4 flex gap-6">
+        {isInitiator && !isCloseProject && isOnProgress && (
           <div className="w-64 flex flex-col gap-4">
             <ImageClipping
               data={imageClipList}
               handleChange={handleUpload}
               handleClick={handleClickUploadImage}
+              isHideButton={!(isInitiator && !isCloseProject)}
             />
             <AttachmentClipping
               data={attachmentClipList}
               handleChange={handleUpload}
               handleClick={handleClickUploadAttachment}
+              isHideButton={!(isInitiator && !isCloseProject)}
             />
           </div>
-          <div>
+        )}
+
+        <div>
+          {isInitiator && !isCloseProject && isOnProgress ? (
             <div className="ckeditor-latar-belakang-mapa-ewp">
               <Editor
                 contentData={content}
-                disabled={false}
                 ready={true}
                 onChange={(value) => setContent(value)}
               />
             </div>
+          ) : (
+            <ContentView dataDoc={content} />
+          )}
+
+          {isInitiator && !isCloseProject && isOnProgress ? (
             <div className="mt-3 flex justify-end">
               <div className="w-[7.75rem] bg-atlasian-green rounded">
                 <ButtonField text={"Simpan"} handler={handleSubmit} />
               </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
       {/* End Content */}
