@@ -36,7 +36,7 @@ const DropdownCard = ({ actions }) => {
           return (
             <DropdownItem
               onClick={() => (closeDropdown(), v?.action())}
-              isDisabled={!v?.isShown}
+              isDisabled={v?.isDisabled}
               key={i}
             >
               <p
