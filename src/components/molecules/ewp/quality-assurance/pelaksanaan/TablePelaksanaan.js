@@ -1,4 +1,4 @@
-import { LinkIcon, TooltipField } from "@/components/atoms";
+import { CustomTooltip, DivButton, LinkIcon } from "@/components/atoms";
 import { DataNotFound } from "@/components/molecules/commons";
 import TableTree, {
   Cell,
@@ -37,7 +37,7 @@ const generateUrl = (mtd_tipe, ewp_id) => {
   return `/ewp/${type}/${ewp_id}/info`;
 };
 
-const TablePelaksanaan = ({ data, pathName }) => {
+const TablePelaksanaan = ({ data, pathName, handleClickDetailObjectAudit }) => {
   return (
     <div className="dataTables-custom bg-white">
       <TableTree>
@@ -113,6 +113,7 @@ const TablePelaksanaan = ({ data, pathName }) => {
               mtd_tipe,
               mtd_jenis,
               analisa,
+              is_close,
             }) => (
               <Row>
                 <Cell className="!hidden" />
@@ -120,59 +121,98 @@ const TablePelaksanaan = ({ data, pathName }) => {
                   width="6%"
                   className="border-x cell-custom-dataTables flex justify-center"
                 >
-                  {tahun}
+                  <p className={is_close ? `text-atlasian-red` : ""}>{tahun}</p>
                 </Cell>
                 <Cell width="12%" className="border-r cell-custom-dataTables">
-                  {project_id?.toUpperCase()}
+                  {/* {is_close ? (
+                    <p className="text-atlasian-red">
+                      {project_id?.toUpperCase()}
+                    </p>
+                  ) : (
+                    <DivButton
+                      className="text-atlasian-blue-light hover:text-hover-blue underline"
+                      handleClick={() => handleClickDetailObjectAudit(id)}
+                    >
+                      {project_id?.toUpperCase()}
+                    </DivButton>
+                  )} */}
+                  <DivButton
+                    className={`${
+                      is_close
+                        ? "text-atlasian-red hover:text-atlasian-red"
+                        : "text-atlasian-blue-light hover:text-hover-blue"
+                    } underline `}
+                    handleClick={() => handleClickDetailObjectAudit(id)}
+                  >
+                    {project_id?.toUpperCase()}
+                  </DivButton>
                 </Cell>
                 <Cell width="20%" className="border-r cell-custom-dataTables">
                   <Link
                     href={generateUrl(mtd_tipe?.nama, ewp_id)}
                     target="_blank"
+                    className={`${
+                      is_close ? "text-atlasian-red hover:text-red-500" : ""
+                    } underline`}
                   >
                     {judul}
                   </Link>
                 </Cell>
                 <Cell width="12%" className="border-r cell-custom-dataTables">
-                  {project_survei_id?.toUpperCase()}
+                  <p className={is_close ? `text-atlasian-red` : ""}>
+                    {project_survei_id?.toUpperCase()}
+                  </p>
                 </Cell>
                 <Cell
                   width="10%"
                   className="border-r cell-custom-dataTables justify-center"
                 >
                   {petugas?.length ? (
-                    <TooltipField
-                      textButton={`${petugas?.length} ATR`}
-                      content={templateTooltip(petugas)}
-                    />
+                    <CustomTooltip content={templateTooltip(petugas)}>
+                      <p
+                        className={`${
+                          is_close ? "text-atlasian-red" : ""
+                        } underline cursor-pointer`}
+                      >{`${petugas?.length} ATR`}</p>
+                    </CustomTooltip>
                   ) : (
                     ""
                   )}
                 </Cell>
                 <Cell width="10%" className="border-r cell-custom-dataTables">
-                  {status_survei}
+                  <p className={is_close ? "text-atlasian-red" : ""}>
+                    {status_survei}
+                  </p>
                 </Cell>
                 <Cell width="10%" className="border-r cell-custom-dataTables">
-                  {mtd_tipe?.nama}
+                  <p className={is_close ? "text-atlasian-red" : ""}>
+                    {mtd_tipe?.nama}
+                  </p>
                 </Cell>
                 <Cell width="10%" className="border-r cell-custom-dataTables">
-                  {mtd_jenis?.nama}
+                  <p className={is_close ? "text-atlasian-red" : ""}>
+                    {mtd_jenis?.nama}
+                  </p>
                 </Cell>
                 <Cell
                   width="10%"
                   className="border-r cell-custom-dataTables justify-center"
                 >
-                  <div className={`${analisa ? "" : "opacity-30"}`}>
-                    <LinkIcon
-                      icon={
-                        <div className="rounded bg-atlasian-blue-light hover:bg-hover-blue text-white flex text-center !py-1.5 !px-1 text-xs font-bold">
-                          Kertas Kerja Analisa
-                        </div>
-                      }
-                      href={`${pathName}/perencanaan/analisis-perencanaan/${id}`}
-                      isBlank
-                    />
-                  </div>
+                  {!is_close ? (
+                    <div className={`${analisa ? "" : "opacity-30"}`}>
+                      <LinkIcon
+                        icon={
+                          <div className="rounded bg-atlasian-blue-light hover:bg-hover-blue text-white flex text-center !py-1.5 !px-1 !my-1 text-xs font-bold">
+                            Kertas Kerja Analisa
+                          </div>
+                        }
+                        href={`${pathName}/perencanaan/analisis-perencanaan/${id}`}
+                        isBlank
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </Cell>
               </Row>
             )}

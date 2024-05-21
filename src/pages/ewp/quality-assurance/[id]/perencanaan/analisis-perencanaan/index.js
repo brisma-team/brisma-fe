@@ -28,6 +28,7 @@ import {
   setObjDataTableEksternal,
   setObjDataTableObjekAudit,
   setObjDataFilterModalInternal,
+  setObjDataPicAnalisator,
   setObjPayloadInternal,
   setObjPayloadEksternal,
   setValidationErrorsInternal,
@@ -35,6 +36,7 @@ import {
   resetObjDataTableInternal,
   resetObjDataTableEksternal,
   resetObjDataTableObjekAudit,
+  resetObjDataPicAnalisator,
   resetObjPayloadInternal,
   resetObjPayloadEksternal,
   resetValidationErrorsInternal,
@@ -49,6 +51,7 @@ import {
   addProjectEksternalSchema,
   addProjectInternalSchema,
 } from "@/helpers/schemas/ewp/quality-assurance/perencanaan/analisisPerencananaanEWPQualityAssuranceSchema";
+import { useTim } from "@/data/ewp/quality-assurance/perencanaan/tim";
 
 const routes = [
   {
@@ -112,6 +115,9 @@ const index = () => {
     (state) =>
       state.analisisPerencanaanEWPQualityAssurance.objDataFilterModalInternal
   );
+  const dataPicAnalisator = useSelector(
+    (state) => state.analisisPerencanaanEWPQualityAssurance.objDataPicAnalisator
+  );
   const payloadInternal = useSelector(
     (state) => state.analisisPerencanaanEWPQualityAssurance.objPayloadInternal
   );
@@ -145,6 +151,10 @@ const index = () => {
       orgeh_kode: selectedDataInternal?.orgeh_kode,
       branch_kode: selectedDataInternal?.branch_kode,
     });
+
+  const { tim, timError } = useTim({
+    id: params?.id,
+  });
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -293,6 +303,41 @@ const index = () => {
       setTotalDataProyekList(1);
     }
   }, [analisisPerencanaanProyek, showModalInternal]);
+
+  useEffect(() => {
+    if (!timError) {
+      const timAuditInfo = tim?.data?.tim_audit;
+      const mappingKTA = timAuditInfo?.kta?.length
+        ? timAuditInfo?.kta?.map((v) => {
+            const { pn, nama } = v;
+            return {
+              pn,
+              nama,
+            };
+          })
+        : [];
+
+      const mappingATA = timAuditInfo?.ata?.length
+        ? timAuditInfo?.ata?.map((v) => {
+            const { pn, nama } = v;
+            return {
+              pn,
+              nama,
+            };
+          })
+        : [];
+
+      const mergeMapping = [...mappingKTA, ...mappingATA];
+      const mapping = mergeMapping?.length
+        ? mergeMapping?.map((v) => {
+            return { label: v?.nama, value: { pn: v?.pn, name: v?.nama } };
+          })
+        : [];
+      dispatch(setObjDataPicAnalisator(mapping));
+    } else {
+      dispatch(resetObjDataPicAnalisator());
+    }
+  }, [tim]);
 
   const handleChangeTab = (index) => {
     setCurrentContentStage(index);
@@ -554,6 +599,7 @@ const index = () => {
         selectedData={selectedDataInternal}
         selectedProject={payloadInternal}
         data={dataTableObjekAudit}
+        dataPic={dataPicAnalisator}
         totalData={totalDataProyekList}
         filter={dataFilterModalInternal}
         isDisabled={!payloadInternal?.length}

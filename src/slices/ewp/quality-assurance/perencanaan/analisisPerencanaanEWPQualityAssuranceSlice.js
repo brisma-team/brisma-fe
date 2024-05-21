@@ -5,6 +5,7 @@ const initialState = {
   objDataTableEksternal: [],
   objDataTableObjekAudit: [],
   objDataFilterModalInternal: {},
+  objDataPicAnalisator: [],
   objPayloadInternal: [],
   objPayloadEksternal: {},
   validationErrorsInternal: {},
@@ -26,6 +27,9 @@ export const analisisPerencanaanEWPQualityAssuranceSlice = createSlice({
     },
     setObjDataFilterModalInternal: (state, action) => {
       state.objDataFilterModalInternal = action.payload;
+    },
+    setObjDataPicAnalisator: (state, action) => {
+      state.objDataPicAnalisator = action.payload;
     },
     setObjPayloadInternal: (state, action) => {
       state.objPayloadInternal = action.payload;
@@ -51,6 +55,9 @@ export const analisisPerencanaanEWPQualityAssuranceSlice = createSlice({
     resetObjDataFilterModalInternal: (state) => {
       state.objDataFilterModalInternal = [];
     },
+    resetObjDataPicAnalisator: (state) => {
+      state.objDataPicAnalisator = [];
+    },
     resetObjPayloadInternal: (state) => {
       state.objPayloadInternal = [];
     },
@@ -71,6 +78,7 @@ export const {
   setObjDataTableEksternal,
   setObjDataTableObjekAudit,
   setObjDataFilterModalInternal,
+  setObjDataPicAnalisator,
   setObjPayloadInternal,
   setObjPayloadEksternal,
   setValidationErrorsInternal,
@@ -79,6 +87,7 @@ export const {
   resetObjDataTableEksternal,
   resetObjDataTableObjekAudit,
   resetObjDataFilterModalInternal,
+  resetObjDataPicAnalisator,
   resetObjPayloadInternal,
   resetObjPayloadEksternal,
   resetValidationErrorsInternal,
