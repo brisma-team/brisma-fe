@@ -21,6 +21,7 @@ const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
 const ModalAddProjectInternal = ({
   data,
+  dataPic,
   selectedData,
   selectedProject,
   showModal,
@@ -40,6 +41,7 @@ const ModalAddProjectInternal = ({
       showModal={showModal}
       footer={
         <ModalFooter
+          dataPic={dataPic}
           selectedData={selectedData}
           handleChange={handleChangePIC}
           handleReset={handleResetPIC}

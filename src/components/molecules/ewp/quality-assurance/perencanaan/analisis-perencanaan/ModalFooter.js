@@ -1,7 +1,8 @@
 import { ButtonField, ButtonIcon, ErrorValidation } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
-import { UserSKAISelect } from "@/components/molecules/commons";
+import { CustomSelect, UserSKAISelect } from "@/components/molecules/commons";
 const ModalFooter = ({
+  dataPic,
   selectedData,
   isDisabled,
   validation,
@@ -14,7 +15,25 @@ const ModalFooter = ({
       <div className="w-full flex items-center gap-3">
         <div className="text-base font-semibold">PIC Analisator</div>
         <div className="w-80">
-          <UserSKAISelect
+          {/* <UserSKAISelect
+            selectedValue={
+              selectedData?.pic?.pn
+                ? {
+                    label: `${selectedData?.pic?.pn} - ${selectedData?.pic?.name}`,
+                    value: {
+                      pn: selectedData?.pic?.pn,
+                      name: selectedData?.pic?.name,
+                    },
+                  }
+                : null
+            }
+            customIcon={
+              <ButtonIcon icon={<IconClose />} handleClick={handleReset} />
+            }
+            handleChange={(e) => handleChange(e.value)}
+          /> */}
+          <CustomSelect
+            optionValue={dataPic}
             selectedValue={
               selectedData?.pic?.pn
                 ? {
