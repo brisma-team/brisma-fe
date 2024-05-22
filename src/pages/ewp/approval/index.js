@@ -139,6 +139,8 @@ const index = () => {
           faseApproval = "Perencanaan (MAR)";
         } else if (sub_modul === "pelaksanaan") {
           faseApproval = "Pelaksanaan";
+        } else if (sub_modul === "lha") {
+          faseApproval = "Reporting";
         }
         break;
       default:
@@ -171,6 +173,8 @@ const index = () => {
           query = `quality-assurance/${ewp_id}/perencanaan`;
         } else if (sub_modul === "pelaksanaan") {
           query = `quality-assurance/${ewp_id}/pelaksanaan`;
+        } else if (sub_modul === "lha") {
+          query = `quality-assurance/${ewp_id}/reporting/${sub_modul_id}/dokumen-reporting`;
         }
         break;
     }

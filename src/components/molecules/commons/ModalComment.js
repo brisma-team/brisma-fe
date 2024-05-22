@@ -18,6 +18,10 @@ const ModalComment = ({
   const [newComment, setNewComment] = useState(false);
   const [commentTextParent, setCommentTextParent] = useState("");
 
+  if (!show) {
+    return;
+  }
+
   useEffect(() => {
     const clickOutside = (event) => {
       if (ref.current && !ref.current.contains(event.target)) {

@@ -3,15 +3,25 @@ import { LandingLayoutEWPQualityAssurance } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useAuditInfo } from "@/data/ewp/common/info";
-import { usePelaksanaan } from "@/data/ewp/quality-assurance/pelaksanaan";
-import { TablePelaksanaan } from "@/components/molecules/ewp/quality-assurance/pelaksanaan";
+import {
+  usePelaksanaan,
+  usePelaksanaanDetail,
+} from "@/data/ewp/quality-assurance/pelaksanaan";
+import {
+  ModalDetailPelaksanaan,
+  ModalEditJadwal,
+  TablePelaksanaan,
+} from "@/components/molecules/ewp/quality-assurance/pelaksanaan";
 import _ from "lodash";
 import {
   setObjData,
+  setObjPayload,
   resetObjData,
+  resetObjPayload,
 } from "@/slices/ewp/quality-assurance/pelaksanaan/pelaksanaanEWPQualityAssuranceSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { CardContentHeaderFooter } from "@/components/molecules/commons";
+import { confirmationSwal, fetchApi, infoSwal, loadingSwal } from "@/helpers";
 
 const index = () => {
   const router = useRouter();
@@ -22,7 +32,11 @@ const index = () => {
   const baseUrl = `/ewp/quality-assurance/${params?.id}`;
   const pathName = `${baseUrl}/pelaksanaan`;
 
+  const [selectedId, setSelectedId] = useState(0);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [showModalDetailPelaksanaan, setShowModalDetailPelaksanaan] =
+    useState(false);
+  const [showModalEditSchedule, setShowModalEditSchedule] = useState(false);
 
   // const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
   // const [isOnProgress, setIsOnProgress] = useState(true);
@@ -31,10 +45,16 @@ const index = () => {
   const data = useSelector(
     (state) => state.pelaksanaanEWPQualityAssurance.objData
   );
+  const payload = useSelector(
+    (state) => state.pelaksanaanEWPQualityAssurance.objPayload
+  );
 
   const { auditInfo } = useAuditInfo({ module: "qa", id: params?.id });
-  const { pelaksanaan } = usePelaksanaan({
+  const { pelaksanaan, pelaksanaanMutate } = usePelaksanaan({
     id: params?.id,
+  });
+  const { pelaksanaanDetail, pelaksanaanDetailMutate } = usePelaksanaanDetail({
+    id: selectedId,
   });
 
   useEffect(() => {
@@ -86,6 +106,7 @@ const index = () => {
           mtd_tipe: project?.mapa_project_audit?.mtd_tipe,
           mtd_jenis: project?.mapa_project_audit?.mtd_jenis,
           analisa: project?.mapa_project_audit?.analisa,
+          is_close: project?.is_na,
         };
       });
       dispatch(setObjData(mapping));
@@ -93,6 +114,133 @@ const index = () => {
       dispatch(resetObjData());
     }
   }, [pelaksanaan]);
+
+  useEffect(() => {
+    if (pelaksanaanDetail?.data) {
+      const response = pelaksanaanDetail?.data;
+      dispatch(
+        setObjPayload({
+          id: response?.id,
+          project_id: response?.mapa_project_audit?.project_id,
+          project_name: response?.mapa_project_audit?.project_name,
+          survey_id: response?.project_survey?.project_survey_id,
+          survey_name: response?.project_survey?.nama_survey,
+          start_date: response?.project_survey?.pelaksanaan_start,
+          end_date: response?.project_survey?.pelaksanaan_end,
+          is_close: response?.is_na,
+        })
+      );
+    } else {
+      dispatch(resetObjPayload());
+    }
+  }, [pelaksanaanDetail, showModalDetailPelaksanaan]);
+
+  // [ START ] handler for modal detail pelaksanaan
+  const handleCloseModalDetailPelaksanaan = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    setShowModalDetailPelaksanaan(false);
+    dispatch(resetObjPayload());
+  };
+
+  const handleClickDetailObjectAudit = (id) => {
+    setSelectedId(id);
+    setShowModalDetailPelaksanaan(true);
+  };
+
+  const handleClickEditSchedule = async () => {
+    setShowModalEditSchedule(true);
+  };
+
+  const handleClickCloseSurvey = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin ingin menutup survey ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "PATCH",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/kkpa/disable/${payload?.id}`,
+      {}
+    );
+    pelaksanaanMutate();
+    pelaksanaanDetailMutate();
+    loadingSwal("close");
+  };
+
+  const handleClickReplicateSurvey = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin ingin mereplikasi survey ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "PATCH",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/kkpa/duplicate/${payload?.id}`,
+      {}
+    );
+    pelaksanaanMutate();
+    pelaksanaanDetailMutate();
+    setShowModalDetailPelaksanaan(false);
+    loadingSwal("close");
+  };
+  // [ END ] handler for modal detail pelaksanaan
+
+  // [ START ] handler for modal edit jadwal
+  const handleCloseModalEditJadwal = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    setShowModalEditSchedule(false);
+  };
+
+  const handleChangePayloadJadwal = (property, value) => {
+    dispatch(setObjPayload({ ...payload, [property]: value }));
+  };
+
+  const handleSubmitFormJadwal = async () => {
+    if (!payload?.end_date) {
+      await infoSwal("Mohon isi tanggal berakhir");
+      return;
+    }
+
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin ingin merubah tanggal berakhir survey ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "PATCH",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/kkpa/update/${params?.id}`,
+      { kkpa_id: payload?.id, end_date: payload?.end_date }
+    );
+    setShowModalEditSchedule(false);
+    pelaksanaanDetailMutate();
+    loadingSwal("close");
+  };
+  // [ END ] handler for modal edit jadwal
+
+  useEffect(() => {
+    console.log("payload => ", payload);
+  }, [payload]);
 
   return (
     <LandingLayoutEWPQualityAssurance>
@@ -110,14 +258,31 @@ const index = () => {
           </div>
         }
         footer={<div className="min-h-[3rem]" />}
+        width={"w-[95rem]"}
       >
         <div className="p-4">
           <TablePelaksanaan
             data={data}
             pathName={`/ewp/quality-assurance/${params?.id}`}
+            handleClickDetailObjectAudit={handleClickDetailObjectAudit}
           />
         </div>
       </CardContentHeaderFooter>
+      <ModalDetailPelaksanaan
+        payload={payload}
+        showModal={showModalDetailPelaksanaan}
+        handleClickEdit={handleClickEditSchedule}
+        handleCloseModal={handleCloseModalDetailPelaksanaan}
+        handleClickClose={handleClickCloseSurvey}
+        handleClickReplicate={handleClickReplicateSurvey}
+      />
+      <ModalEditJadwal
+        payload={payload}
+        showModal={showModalEditSchedule}
+        handleChange={handleChangePayloadJadwal}
+        handleCloseModal={handleCloseModalEditJadwal}
+        handleSubmit={handleSubmitFormJadwal}
+      />
       {/* End Content */}
     </LandingLayoutEWPQualityAssurance>
   );
