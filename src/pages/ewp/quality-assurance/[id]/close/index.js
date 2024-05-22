@@ -7,7 +7,7 @@ import {
 import { useAuditInfo } from "@/data/ewp/common/info";
 import useUser from "@/data/useUser";
 import { confirmationSwal, fetchApi, loadingSwal } from "@/helpers";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
+import { LandingLayoutEWPQualityAssurance } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -160,7 +160,7 @@ const index = () => {
   };
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutEWPQualityAssurance>
       <div className="w-[90rem]">
         {/* Start Breadcrumbs */}
         <Breadcrumbs data={breadcrumbs} />
@@ -217,7 +217,7 @@ const index = () => {
         handleCloseModal={handleCloseModal}
         handleSubmit={handleSubmitModal}
       />
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutEWPQualityAssurance>
   );
 };
 

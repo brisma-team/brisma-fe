@@ -3,7 +3,7 @@ import { LogTable } from "@/components/molecules/ewp/konsulting/log";
 import { useAuditInfo } from "@/data/ewp/common/info";
 import { useLog } from "@/data/ewp/common/log";
 import { capitalizeEveryWord, convertDate } from "@/helpers";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
+import { LandingLayoutEWPQualityAssurance } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -77,7 +77,7 @@ const index = () => {
   }, [log]);
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutEWPQualityAssurance>
       <div className="w-[71.5rem]">
         {/* Start Breadcrumbs */}
         <Breadcrumbs data={breadcrumbs} />
@@ -91,7 +91,7 @@ const index = () => {
           </Card>
         </div>
       </div>
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutEWPQualityAssurance>
   );
 };
 
