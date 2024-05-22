@@ -28,9 +28,6 @@ const SidebarLandingEWPQualityAssurance = () => {
       case "mapa":
         subModule = "Perencanaan (MAR)";
         break;
-      // case "pelaksanaan":
-      //   subModule = "Analisa";
-      //   break;
       default:
         subModule = projectInfo?.status_name;
         break;
@@ -91,10 +88,6 @@ const SidebarLandingEWPQualityAssurance = () => {
       setCurrentPage(match[1]);
     }
   }, []);
-
-  useEffect(() => {
-    console.log("currentPage => ", currentPage);
-  }, [currentPage]);
 
   return (
     <div className="fixed h-screen w-64 pt-8- shadow z-10">
