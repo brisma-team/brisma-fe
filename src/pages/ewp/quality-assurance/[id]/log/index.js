@@ -8,15 +8,26 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const index = () => {
-  const { id } = useRouter().query;
-  const baseUrl = `/ewp/quality-assurance/${id}`;
+  const router = useRouter();
+  const [params, setParams] = useState({
+    id: 0,
+  });
+  const baseUrl = `/ewp/quality-assurance/${params?.id}`;
   const pathNameLog = `${baseUrl}/log`;
 
   const [dataTables, setDataTables] = useState([]);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
 
-  const { auditInfo } = useAuditInfo({ module: "qa", id });
-  const { log } = useLog({ id });
+  const { auditInfo } = useAuditInfo({ module: "qa", id: params?.id });
+  const { log } = useLog({ id: params?.id });
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      id,
+    });
+  }, [router.isReady]);
 
   useEffect(() => {
     setBreadcrumbs([

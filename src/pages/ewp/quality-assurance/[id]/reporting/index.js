@@ -6,27 +6,44 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
 const index = () => {
-  const { id } = useRouter().query;
-  const baseUrl = `/ewp/quality-assurance/${id}`;
+  const router = useRouter();
+  const [params, setParams] = useState({
+    id: 0,
+  });
+  const baseUrl = `/ewp/quality-assurance/${params?.id}`;
   const [data, setData] = useState([]);
+  const [breadcrumbs, setBreadcrumbs] = useState([]);
 
-  const { auditInfo } = useAuditInfo({ module: "qa", id });
+  const { auditInfo } = useAuditInfo({ module: "qa", id: params?.id });
   const { landingStatus } = useLandingStatus({
     module: "qa",
     submodule: "reporting",
-    id,
+    id: params?.id,
   });
 
-  const breadcrumbs = [
-    { name: "Menu", path: "/dashboard" },
-    { name: "EWP", path: "/ewp" },
-    { name: "Overview", path: "/ewp/quality-assurance" },
-    {
-      name: `${auditInfo?.data?.project_info?.project_id?.toUpperCase()}`,
-      path: baseUrl + "/info",
-    },
-    { name: "Reporting", path: baseUrl + "/reporting" },
-  ];
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      id,
+    });
+  }, [router.isReady]);
+
+  useEffect(() => {
+    setBreadcrumbs([
+      { name: "Menu", path: "/dashboard" },
+      { name: "EWP", path: "/ewp" },
+      { name: "Overview", path: "/ewp/quality-assurance" },
+      {
+        name: `${auditInfo?.data?.project_info?.project_id?.toUpperCase()}`,
+        path: baseUrl + "/info",
+      },
+      {
+        name: "Reporting",
+        path: baseUrl + "/reporting",
+      },
+    ]);
+  }, [auditInfo]);
 
   useEffect(() => {
     if (landingStatus?.data) {

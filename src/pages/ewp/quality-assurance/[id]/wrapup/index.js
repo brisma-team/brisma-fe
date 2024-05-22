@@ -17,21 +17,24 @@ import _ from "lodash";
 import { useAuditInfo } from "@/data/ewp/common/info";
 
 const index = () => {
-  const { id } = useRouter().query;
   const router = useRouter();
-  const baseUrl = `/ewp/quality-assurance/${id}`;
+  const [params, setParams] = useState({
+    id: 0,
+  });
+  const baseUrl = `/ewp/quality-assurance/${params?.id}`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [data, setData] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
+
   const [filter, setFilter] = useState({
     start_date: "",
     date_date: "",
     doc_name: "",
     uploader: "",
   });
-  const [params, setParams] = useState({
+  const [paramsFilter, setParamsFilter] = useState({
     start_date: "",
     date_date: "",
     doc_name: "",
@@ -39,8 +42,16 @@ const index = () => {
   });
 
   useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      id,
+    });
+  }, [router.isReady]);
+
+  useEffect(() => {
     const handleSearch = () => {
-      setParams(filter);
+      setParamsFilter(filter);
     };
     const debouncedSearch = _.debounce(handleSearch, 800);
     debouncedSearch();
@@ -49,9 +60,16 @@ const index = () => {
     };
   }, [filter]);
 
-  const { auditInfo, auditInfoMutate } = useAuditInfo({ module: "qa", id });
+  const { auditInfo, auditInfoMutate } = useAuditInfo({
+    module: "qa",
+    id: params?.id,
+  });
 
-  const { wrapup } = useWrapup({ id, module: "qa", ...params });
+  const { wrapup } = useWrapup({
+    id: params?.id,
+    module: "qa",
+    ...paramsFilter,
+  });
 
   useEffect(() => {
     const projectRealisasi = auditInfo?.data?.realisasi;
@@ -116,7 +134,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/initiate/wrapup_meeting/close/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/initiate/wrapup_meeting/close/${params?.id}`,
       {}
     );
     auditInfoMutate();
