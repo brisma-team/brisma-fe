@@ -8,9 +8,9 @@ const activityInfoSchema = yup.object().shape({
   ref_tipe: yup.object().shape({
     kode: yup.string().required("Wajib diisi"),
   }),
-  ref_jenis: yup.object().shape({
-    kode: yup.string().required("Wajib diisi"),
-  }),
+  // ref_jenis: yup.object().shape({
+  //   kode: yup.string().required("Wajib diisi"),
+  // }),
   pelaksanaan_start: yup.string().required("Wajib diisi"),
   pelaksanaan_end: yup.string().required("Wajib diisi"),
   penanggung_jawab: yup
