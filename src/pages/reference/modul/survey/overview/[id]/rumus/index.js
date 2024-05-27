@@ -56,7 +56,7 @@ const index = () => {
   }, [information]);
 
   useEffect(() => {
-    if (formulaTemplate?.data?.length) {
+    if (formulaTemplate !== undefined && formulaTemplate?.data?.length) {
       let hasil = "";
       formulaTemplate?.data?.forEach((item, index) => {
         hasil += `${item.judul}: ${item.formula}`;
@@ -219,6 +219,7 @@ const index = () => {
 
   const handleEditorDidMount = (editor) => {
     editorRef.current = editor;
+    console.log(editor);
   };
   // [ END ] Handler for form formula
 
