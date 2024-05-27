@@ -91,8 +91,11 @@ import ukerAssessmentEWPMonoffReducer from "./slices/ewp/monitoring-offsite/pere
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
 import beritaAcaraEntranceEWPReducer from "./slices/ewp/konvensional/entrance/beritaAcaraEntranceEWPSlice";
 
-//RPM
+// RPM Konsulting
 import documentRPMKegiatanReducer from "./slices/rpm/kegiatan/documentRPMKegiatanSlice";
+
+// RPM Quality Assurance
+import overviewRPMQualityAssuranceReducer from "./slices/rpm/quality-assurance/overviewRPMQualityAssuranceSlice";
 
 // CATALOG
 import catalogEWPReducer from "./slices/catalog/ewp/catalogEWPSlice";
@@ -207,8 +210,11 @@ export const store = configureStore({
     beritaAcaraMeetingEWPQualityAssurance:
       beritaAcaraMeetingEWPQualityAssuranceReducer,
 
-    //RPM
+    // RPM Konsulting
     documentRPMKegiatan: documentRPMKegiatanReducer,
+
+    // RPM QualityAssurance
+    overviewRPMQualityAssurance: overviewRPMQualityAssuranceReducer,
 
     //EWP Monoff
     projectOverviewEWPMonoff: projectOverviewEWPMonoffReducer,
