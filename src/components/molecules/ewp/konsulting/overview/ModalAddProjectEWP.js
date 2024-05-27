@@ -26,7 +26,12 @@ import {
   summaryPATSchema,
   scheduleNonPATSchema,
 } from "@/helpers/schemas/ewp/konsulting/overview/projectOverviewEWPKonsultingSchema";
-import { confirmationSwal, fetchApi, setErrorValidation } from "@/helpers";
+import {
+  confirmationSwal,
+  fetchApi,
+  infoSwal,
+  setErrorValidation,
+} from "@/helpers";
 import useUser from "@/data/useUser";
 import _ from "lodash";
 
@@ -174,6 +179,15 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
       ...projectOverviewData,
       is_pat: isPat,
     };
+
+    if (currentModalStage === 3 && !isPat) {
+      if (data?.project_terkait?.some((project) => project.is_new)) {
+        await infoSwal(
+          "Anda sedang menambahkan data proyek terkait, silahkan dicek kembali!"
+        );
+        return;
+      }
+    }
 
     const validate = setErrorValidation(
       data,

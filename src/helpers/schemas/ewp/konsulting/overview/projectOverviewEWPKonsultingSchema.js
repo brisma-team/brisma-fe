@@ -29,9 +29,9 @@ const scheduleNonPATSchema = yup.object().shape({
   ref_tipe: yup.object().shape({
     kode: yup.string().required("Wajib diisi"),
   }),
-  ref_jenis: yup.object().shape({
-    kode: yup.string().required("Wajib diisi"),
-  }),
+  // ref_jenis: yup.object().shape({
+  //   kode: yup.string().required("Wajib diisi"),
+  // }),
   info_periode_pelaksanaan_start: yup.string().required("Wajib diisi"),
   info_periode_pelaksanaan_end: yup.string().required("Wajib diisi"),
   no_surat: yup.string().required("Wajib diisi"),
