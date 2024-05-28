@@ -3,7 +3,7 @@ import { CloseModal, TextInput } from "@/components/atoms";
 import { CardFormInputTeam } from "@/components/molecules/commons";
 import Image from "next/image";
 import { ImageCheck, ImageGroup } from "@/helpers/imagesUrl";
-import { checkRoleIsAdmin } from "@/helpers";
+// import { checkRoleIsAdmin } from "@/helpers";
 import { useEffect, useState } from "react";
 
 const ModalWorkflowHeader = ({
@@ -22,10 +22,12 @@ const ModalWorkflowHeader = ({
   isProposer,
 }) => {
   const [optionSigners, setOptionSigners] = useState([]);
-  let isInitiator, isAdmin, isApprover;
+  let isInitiator;
+  // isAdmin, isApprover, statusApprover;
   isInitiator = user?.pn == data?.maker?.pn;
-  isAdmin = checkRoleIsAdmin(user?.role_kode);
-  isApprover = user?.pn == data?.on_approver?.pn;
+  // statusApprover = data?.status_approver;
+  // isAdmin = checkRoleIsAdmin(user?.role_kode);
+  // isApprover = user?.pn == data?.on_approver?.pn;
 
   useEffect(() => {
     if (
@@ -83,16 +85,12 @@ const ModalWorkflowHeader = ({
               childProperty={"is_signed"}
               validationErrors={validationErrors}
               withoutButtonAdd={
-                (data?.status_approver === "On Progress" ||
-                  data?.status_approver === "On Approver") &&
-                isInitiator
+                data?.status_approver === "On Progress" && isInitiator
                   ? false
                   : true
               }
               isDisabled={
-                (data?.status_approver === "On Progress" ||
-                  data?.status_approver === "On Approver") &&
-                isInitiator
+                data?.status_approver === "On Progress" && isInitiator
                   ? false
                   : true
               }
@@ -115,16 +113,12 @@ const ModalWorkflowHeader = ({
                 optionValue={optionSigners}
                 validationErrors={validationErrors}
                 withoutButtonAdd={
-                  (data?.status_approver === "On Progress" ||
-                    data?.status_approver === "On Approver") &&
-                  isInitiator
+                  data?.status_approver === "On Progress" && isInitiator
                     ? false
                     : true
                 }
                 isDisabled={
-                  (data?.status_approver === "On Progress" ||
-                    data?.status_approver === "On Approver") &&
-                  isInitiator
+                  data?.status_approver === "On Progress" && isInitiator
                     ? false
                     : true
                 }
