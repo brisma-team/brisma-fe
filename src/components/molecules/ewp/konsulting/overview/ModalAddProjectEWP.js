@@ -81,6 +81,10 @@ const ModalAddProjectEWP = ({ showModal, setShowModal, mutate }) => {
   const { user } = useUser();
 
   useEffect(() => {
+    setIsFormDisabled(false);
+  }, []);
+
+  useEffect(() => {
     if (isPat) {
       setMaxStage(3);
     } else {

@@ -10,10 +10,10 @@ import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
 import {
   confirmationSwal,
   convertDate,
+  copyToClipboard,
   errorSwal,
   fetchApi,
   loadingSwal,
-  successSwal,
   usePostData,
 } from "@/helpers";
 import {
@@ -281,9 +281,17 @@ const index = () => {
     loadingSwal("close");
   };
 
-  const handleCopyProject = async (id) => {
-    navigator.clipboard.writeText(window.location.href + `/${id}/info`);
-    return successSwal("Link project berhasil disalin ke clipboard.");
+  const handleCopyProject = (id) => {
+    const linkProject = window.location.href + `/${id}/info`;
+    try {
+      copyToClipboard(
+        linkProject,
+        "Link project berhasil disalin ke clipboard."
+      );
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+      errorSwal("Link project gagal disalin ke clipboard.");
+    }
   };
 
   const handleChangeInitiator = async (status, ewp_id, change_initiator_id) => {
@@ -508,7 +516,7 @@ const index = () => {
                 key={i}
                 data={v}
                 handleCloseProject={async () => await handleCloseProject(v?.id)}
-                handleCopyProject={async () => await handleCopyProject(v?.id)}
+                handleCopyProject={() => handleCopyProject(v?.id)}
                 handleChangeInitiator={async () =>
                   await handleChangeInitiator(
                     Boolean(v?.change_initiator?.length > 0),
