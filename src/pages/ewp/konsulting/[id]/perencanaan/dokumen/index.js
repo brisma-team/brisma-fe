@@ -100,7 +100,6 @@ const index = () => {
   const { documentEWP, documentEWPMutate } = useDocumentEWP("mapa", bab, {
     id: params?.id,
   });
-  console.log(documentEWP);
   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
     "mapa",
     { id: params?.id }

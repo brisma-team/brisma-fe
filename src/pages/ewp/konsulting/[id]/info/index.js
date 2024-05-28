@@ -442,7 +442,7 @@ const index = () => {
 
       const response = await usePostFileData(url, {
         file: e.target.files[0],
-        modul: "pat",
+        modul: "ewp",
       });
 
       dispatch(
