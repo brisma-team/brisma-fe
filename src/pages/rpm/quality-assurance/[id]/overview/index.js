@@ -50,7 +50,7 @@ const index = () => {
   }, [projectDetailRPM]);
 
   useEffect(() => {
-    if (objectOverview?.data?.kkpt) {
+    if (objectOverview?.data?.kkpt?.length) {
       const mapping = objectOverview?.data?.kkpt?.map((data) => {
         return {
           ..._.pick(data, [
@@ -90,7 +90,7 @@ const index = () => {
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
-      <div className="flexitems-center mb-6">
+      <div className="mb-6">
         <PageTitle text={"Object Overview"} />
       </div>
       <TableObjectOverview

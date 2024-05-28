@@ -96,6 +96,7 @@ import documentRPMKegiatanReducer from "./slices/rpm/kegiatan/documentRPMKegiata
 
 // RPM Quality Assurance
 import overviewRPMQualityAssuranceReducer from "./slices/rpm/quality-assurance/overviewRPMQualityAssuranceSlice";
+import timOverviewRPMQualityAssuranceReducer from "./slices/rpm/quality-assurance/timOverviewRPMQualityAssuranceSlice";
 
 // CATALOG
 import catalogEWPReducer from "./slices/catalog/ewp/catalogEWPSlice";
@@ -215,6 +216,7 @@ export const store = configureStore({
 
     // RPM QualityAssurance
     overviewRPMQualityAssurance: overviewRPMQualityAssuranceReducer,
+    timOverviewRPMQualityAssurance: timOverviewRPMQualityAssuranceReducer,
 
     //EWP Monoff
     projectOverviewEWPMonoff: projectOverviewEWPMonoffReducer,

@@ -1,3 +1,4 @@
 import useObjectOverview from "./useObjectOverview";
+import useTimOverview from "./useTimOverview";
 
-export { useObjectOverview };
+export { useObjectOverview, useTimOverview };
