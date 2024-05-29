@@ -4,9 +4,18 @@ import { Loader, MainLayout } from "@/components/atoms";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { NavbarField } from "@/components/molecules/commons";
-import { SidebarObjectOverviewRPM } from "@/components/molecules/rpm/common";
+import {
+  SidebarObjectLandingRPM,
+  SidebarObjectOverviewRPM,
+} from "@/components/molecules/rpm/common";
 
-const LandingLayoutRPM = ({ module_page, module_data, children }) => {
+const LandingLayoutRPM = ({
+  module_page,
+  module_data,
+  withObjectAuditInfo,
+  withMenu,
+  children,
+}) => {
   const router = useRouter();
 
   const { user, userError } = useUser();
@@ -37,10 +46,19 @@ const LandingLayoutRPM = ({ module_page, module_data, children }) => {
   return (
     <div>
       <NavbarField />
-      <SidebarObjectOverviewRPM
-        module_page={module_page}
-        module_data={module_data}
-      />
+      {withObjectAuditInfo ? (
+        <SidebarObjectLandingRPM
+          module_page={module_page}
+          module_data={module_data}
+          withMenu={withMenu}
+        />
+      ) : (
+        <SidebarObjectOverviewRPM
+          module_page={module_page}
+          module_data={module_data}
+        />
+      )}
+
       <MainLayout>{children}</MainLayout>
     </div>
   );

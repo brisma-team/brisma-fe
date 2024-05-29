@@ -129,7 +129,7 @@ const index = () => {
         `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/qa/projects/tim/${params?.id}`,
         {
           ..._.pick(data, ["pic_auditee", "pic_auditor", "pic_nego"]),
-          tim: {
+          tim_audit: {
             submitter: payload?.submitter?.length
               ? payload?.submitter?.map((submitter) => {
                   return {

@@ -1,3 +1,4 @@
 import SidebarObjectOverviewRPM from "./SidebarObjectOverviewRPM";
+import SidebarObjectLandingRPM from "./SidebarObjectLandingRPM";
 
-export { SidebarObjectOverviewRPM };
+export { SidebarObjectOverviewRPM, SidebarObjectLandingRPM };
