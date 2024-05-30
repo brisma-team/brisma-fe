@@ -887,6 +887,10 @@ const index = () => {
         }
       }
 
+      if (actionType === "" || actionType === undefined) {
+        return;
+      }
+
       if (actionType === "change") {
         await fetchApi(
           "PATCH",

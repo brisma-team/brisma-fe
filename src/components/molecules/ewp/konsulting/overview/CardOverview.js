@@ -77,7 +77,7 @@ const CardOverview = ({
         </div>
       ),
       action: handleChangeInitiator,
-      isShown: checkRoleIsAdmin(user?.role_kode),
+      isDisabled: checkRoleIsAdmin(user?.role_kode),
     },
     {
       label: (
@@ -87,20 +87,22 @@ const CardOverview = ({
         </div>
       ),
       action: handleCloseProject,
-      isShown: Boolean(
+      isDisabled: Boolean(
         user?.pn ==
           data?.auditor?.filter((item) => item.is_initiator === true)[0]?.pn
       ),
     },
     {
       label: (
-        <div className="flex gap-1">
-          <IconLink size="medium" />
-          <p className="my-auto">Link Project</p>
-        </div>
+        <DivButton handleClick={(e) => handleCopyProject(e, data?.id)}>
+          <div className="flex gap-1">
+            <IconLink size="medium" />
+            <p className="my-auto">Link Project</p>
+          </div>
+        </DivButton>
       ),
-      action: handleCopyProject,
-      isShown: true,
+      action: "",
+      isDisabled: true,
     },
   ];
   const colorLabel = {
