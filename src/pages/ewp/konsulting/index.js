@@ -281,17 +281,12 @@ const index = () => {
     loadingSwal("close");
   };
 
-  const handleCopyProject = (id) => {
-    const linkProject = window.location.href + `/${id}/info`;
-    try {
-      copyToClipboard(
-        linkProject,
-        "Link project berhasil disalin ke clipboard."
-      );
-    } catch (err) {
-      console.error("Failed to copy: ", err);
-      errorSwal("Link project gagal disalin ke clipboard.");
-    }
+  const handleCopyProject = (e, id) => {
+    e.stopPropagation();
+    copyToClipboard(
+      window.location.href + `/${id}/info`,
+      "Link meeting berhasil disalin ke clipboard."
+    );
   };
 
   const handleChangeInitiator = async (status, ewp_id, change_initiator_id) => {
@@ -516,7 +511,7 @@ const index = () => {
                 key={i}
                 data={v}
                 handleCloseProject={async () => await handleCloseProject(v?.id)}
-                handleCopyProject={() => handleCopyProject(v?.id)}
+                handleCopyProject={handleCopyProject}
                 handleChangeInitiator={async () =>
                   await handleChangeInitiator(
                     Boolean(v?.change_initiator?.length > 0),
