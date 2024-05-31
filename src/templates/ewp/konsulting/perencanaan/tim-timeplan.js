@@ -72,7 +72,7 @@ const timTimeplanHtml = (data) => {
           <th style="background-color: #3C64B1; color: white; border: 1px solid #fff;"><p style="font-size:14px">PN</p></th>
           <th style="background-color: #3C64B1; color: white; border: 1px solid #fff;"><p style="font-size:14px">Nama</p></th>
           ${
-            data?.ata[0]?.mandays !== undefined
+            data?.ata?.length > 0 && data?.ata[0]?.mandays !== undefined
               ? `<th style="background-color: #3C64B1; color: white; border: 1px solid #fff;"><p style="font-size:14px">Mandays</p></th>`
               : ``
           }

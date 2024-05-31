@@ -10,10 +10,10 @@ import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
 import {
   confirmationSwal,
   convertDate,
+  copyToClipboard,
   errorSwal,
   fetchApi,
   loadingSwal,
-  successSwal,
   usePostData,
 } from "@/helpers";
 import {
@@ -281,9 +281,12 @@ const index = () => {
     loadingSwal("close");
   };
 
-  const handleCopyProject = async (id) => {
-    navigator.clipboard.writeText(window.location.href + `/${id}/info`);
-    return successSwal("Link project berhasil disalin ke clipboard.");
+  const handleCopyProject = (e, id) => {
+    e.stopPropagation();
+    copyToClipboard(
+      window.location.href + `/${id}/info`,
+      "Link meeting berhasil disalin ke clipboard."
+    );
   };
 
   const handleChangeInitiator = async (status, ewp_id, change_initiator_id) => {
@@ -355,6 +358,10 @@ const index = () => {
       const signedCount = workflowData?.ref_tim_audit_approver?.filter(
         (item) => item.is_signed
       ).length;
+
+      if (actionType === "" || actionType === undefined) {
+        return;
+      }
 
       switch (actionType) {
         case "change":
@@ -508,7 +515,7 @@ const index = () => {
                 key={i}
                 data={v}
                 handleCloseProject={async () => await handleCloseProject(v?.id)}
-                handleCopyProject={async () => await handleCopyProject(v?.id)}
+                handleCopyProject={handleCopyProject}
                 handleChangeInitiator={async () =>
                   await handleChangeInitiator(
                     Boolean(v?.change_initiator?.length > 0),

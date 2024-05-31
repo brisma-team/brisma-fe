@@ -18,9 +18,9 @@ const ModalComment = ({
   const [newComment, setNewComment] = useState(false);
   const [commentTextParent, setCommentTextParent] = useState("");
 
-  if (!show) {
-    return;
-  }
+  // if (!show) {
+  //   return;
+  // }
 
   useEffect(() => {
     const clickOutside = (event) => {

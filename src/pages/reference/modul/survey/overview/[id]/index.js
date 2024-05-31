@@ -856,6 +856,10 @@ const index = () => {
         (item) => item.is_signed
       ).length;
 
+      if (actionType === "" || actionType === undefined) {
+        return;
+      }
+
       switch (actionType) {
         case "change":
           data.approvers = workflowData.ref_tim_audit_approver;
@@ -885,6 +889,10 @@ const index = () => {
         if (!confirm.value) {
           return;
         }
+      }
+
+      if (actionType === "" || actionType === undefined) {
+        return;
       }
 
       if (actionType === "change") {

@@ -255,6 +255,10 @@ const index = () => {
         (item) => item.is_signed
       ).length;
 
+      if (actionType === "" || actionType === undefined) {
+        return;
+      }
+
       const totalSigner = workflowData?.ref_tim_audit_approver?.length;
 
       switch (actionType) {

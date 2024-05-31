@@ -127,6 +127,7 @@ const TabInformation = ({
                 <ButtonField
                   text={isApprovalFinal ? "Kuesioner" : "Tambah Kuesioner"}
                   handler={handleClickAddKuesioner}
+                  disabled={isDisabled || isNewTemplate}
                 />
               </div>
               <div
