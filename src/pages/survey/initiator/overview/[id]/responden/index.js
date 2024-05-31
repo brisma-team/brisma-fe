@@ -647,6 +647,10 @@ const index = () => {
         (item) => item.is_signed
       ).length;
 
+      if (actionType === "" || actionType === undefined) {
+        return;
+      }
+
       switch (actionType) {
         case "change":
           data.approvers = dataWorkflow.ref_tim_audit_approver;

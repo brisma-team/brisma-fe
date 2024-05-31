@@ -709,6 +709,10 @@ const index = () => {
         (item) => item.is_signed
       ).length;
 
+      if (actionType === "" || actionType === undefined) {
+        return;
+      }
+
       switch (actionType) {
         case "change":
           data.approvers = workflowData.ref_tim_audit_approver;
@@ -843,6 +847,10 @@ const index = () => {
         workflowExtensionRequest?.ref_tim_audit_approver?.filter(
           (item) => item.is_signed
         ).length;
+
+      if (actionType === "" || actionType === undefined) {
+        return;
+      }
 
       switch (actionType) {
         case "change":
@@ -984,6 +992,10 @@ const index = () => {
         workflowTerminateRequest?.ref_tim_audit_approver?.filter(
           (item) => item.is_signed
         ).length;
+
+      if (actionType === "" || actionType === undefined) {
+        return;
+      }
 
       switch (actionType) {
         case "change":
