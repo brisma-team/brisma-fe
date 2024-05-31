@@ -605,6 +605,10 @@ const index = () => {
           sub_modul_id: respondenId,
         };
 
+        if (actionType === "" || actionType === undefined) {
+          return;
+        }
+
         switch (actionType) {
           case "change":
             data.approvers = workflowData?.ref_tim_audit_approver;
