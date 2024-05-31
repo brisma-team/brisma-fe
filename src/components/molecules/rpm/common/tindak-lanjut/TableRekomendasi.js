@@ -5,6 +5,7 @@ import {
   CustomCheckbox,
   DivButton,
   LozengeField,
+  TextInput,
 } from "@/components/atoms";
 import TableTree, {
   Cell,
@@ -13,7 +14,11 @@ import TableTree, {
   Row,
   Rows,
 } from "@atlaskit/table-tree";
-import { IconChevronDown, IconChevronRight } from "@/components/icons";
+import {
+  IconChevronDown,
+  IconChevronRight,
+  IconClose,
+} from "@/components/icons";
 import Link from "next/link";
 import { capitalizeEveryWord } from "@/helpers";
 import { CustomSelect, DataNotFound } from "@/components/molecules/commons";
@@ -26,15 +31,16 @@ const TableRekomendasi = ({
   data,
   dataActionPlan,
   dataTeam,
+  payload,
   isPIC,
   expansionMap,
   baseUrl,
   currentContentStage,
   handleToggleExpansion,
   handleCancel,
-  handleReject,
   handleSubmitPenugasan,
   handleSubmitApprove,
+  handleSubmitReject,
   handleChangePayload,
   handleClickCheckbox,
   handleClickPenugasan,
@@ -194,56 +200,70 @@ const TableRekomendasi = ({
           )}
           <div className="border-x border-b rounded-es-xl rounded-ee-xl min-h-[2.7rem]" />
         </TableTree>
-        {isPIC ? (
-          <div className="w-full flex items-center gap-3">
-            <div className="w-full flex justify-between">
-              <div className="w-full flex items-center">
-                <p className="text-atlasian-blue-light text-sm font-bold">
-                  {currentContentStage === 1
-                    ? "Mode Penugasan"
-                    : currentContentStage === 2
-                    ? "Mode Review Approval"
-                    : ""}
-                </p>
+        <div className="w-full flex items-center gap-3">
+          <div className="w-full flex justify-between">
+            <div className="w-full flex items-center">
+              <p className="text-atlasian-blue-light text-sm font-bold">
+                {currentContentStage === 1
+                  ? "Mode Penugasan"
+                  : currentContentStage === 2
+                  ? "Mode Review Approval"
+                  : ""}
+              </p>
+            </div>
+            {currentContentStage === 1 ? (
+              <div className="w-80">
+                <CustomSelect
+                  optionValue={dataTeam}
+                  handleChange={(e) => handleChangePayload("pic", e.value)}
+                />
               </div>
-              {currentContentStage === 1 ? (
-                <div className="w-64">
-                  <CustomSelect
-                    optionValue={dataTeam}
-                    handleChange={(e) => handleChangePayload("pic", e.value)}
+            ) : (
+              ""
+            )}
+          </div>
+          <div className="flex gap-3 h-fit">
+            {currentContentStage === 1 ? (
+              <>
+                <div className="rounded w-28 bg-atlasian-gray-dark">
+                  <ButtonField text="Batal" handler={handleCancel} />
+                </div>
+                <div className="rounded w-28 bg-atlasian-green">
+                  <ButtonField text="Simpan" handler={handleSubmitPenugasan} />
+                </div>
+              </>
+            ) : currentContentStage === 2 ? (
+              <div className="flex gap-3 items-center">
+                <div className="w-80">
+                  <TextInput
+                    placeholder={"Masukkan alasan"}
+                    value={payload?.note || ""}
+                    icon={
+                      <ButtonIcon
+                        handleClick={() => handleChangePayload("note", "")}
+                        icon={<IconClose />}
+                      />
+                    }
+                    onChange={(e) =>
+                      handleChangePayload("note", e.target.value)
+                    }
                   />
                 </div>
-              ) : (
-                ""
-              )}
-            </div>
-            <div className="flex gap-3 h-fit">
-              {currentContentStage === 1 ? (
-                <>
-                  <div className="rounded w-28 bg-atlasian-gray-dark">
-                    <ButtonField text="Batal" handler={handleCancel} />
-                  </div>
-                  <div className="rounded w-28 bg-atlasian-green">
-                    <ButtonField
-                      text="Simpan"
-                      handler={handleSubmitPenugasan}
-                    />
-                  </div>
-                </>
-              ) : currentContentStage === 2 ? (
-                <>
+                <div className="flex gap-3 h-fit">
                   <div className="rounded w-28 bg-atlasian-gray-dark">
                     <ButtonField text="Batal" handler={handleCancel} />
                   </div>
                   <div className="rounded w-28 bg-atlasian-red">
-                    <ButtonField text="Reject" handler={handleReject} />
+                    <ButtonField text="Reject" handler={handleSubmitReject} />
                   </div>
                   <div className="rounded w-28 bg-atlasian-green">
                     <ButtonField text="Approve" handler={handleSubmitApprove} />
                   </div>
-                </>
-              ) : (
-                <>
+                </div>
+              </div>
+            ) : (
+              <>
+                {isPIC ? (
                   <DivButton
                     handleClick={handleClickPenugasan}
                     className="w-32 h-10 rounded border border-gray-300 flex gap-2 justify-center items-center hover:bg-gray-100"
@@ -251,20 +271,20 @@ const TableRekomendasi = ({
                     <Image alt="" src={ImageCheck} width={18} height={18} />
                     <div className="font-semibold text-sm">Penugasan</div>
                   </DivButton>
-                  <DivButton
-                    handleClick={handleClickReview}
-                    className="w-32 h-10 rounded border border-gray-300 flex gap-2 justify-center items-center hover:bg-gray-100"
-                  >
-                    <Image alt="" src={ImageReview} width={18} height={18} />
-                    <div className="font-semibold text-sm">Review</div>
-                  </DivButton>
-                </>
-              )}
-            </div>
+                ) : (
+                  ""
+                )}
+                <DivButton
+                  handleClick={handleClickReview}
+                  className="w-32 h-10 rounded border border-gray-300 flex gap-2 justify-center items-center hover:bg-gray-100"
+                >
+                  <Image alt="" src={ImageReview} width={18} height={18} />
+                  <div className="font-semibold text-sm">Review</div>
+                </DivButton>
+              </>
+            )}
           </div>
-        ) : (
-          ""
-        )}
+        </div>
       </div>
     </Card>
   );

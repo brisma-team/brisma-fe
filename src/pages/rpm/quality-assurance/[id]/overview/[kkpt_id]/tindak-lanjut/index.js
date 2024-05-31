@@ -20,7 +20,7 @@ import {
   CardContentRekomendasi,
   TableRekomendasi,
 } from "@/components/molecules/rpm/common/tindak-lanjut";
-import { fetchApi, infoSwal, loadingSwal } from "@/helpers";
+import { fetchApi, infoSwal, loadingSwal, successSwal } from "@/helpers";
 import useUser from "@/data/useUser";
 
 const index = () => {
@@ -174,10 +174,12 @@ const index = () => {
   // [ START ] handler for table rekomendasi
   const handleClickPenugasan = () => {
     setCurrentContentStage(1);
+    dispatch(resetObjPayload());
   };
 
   const handleClickReview = () => {
     setCurrentContentStage(2);
+    dispatch(resetObjPayload());
   };
 
   const handleToggleExpansion = (kode, role) => {
@@ -239,6 +241,66 @@ const index = () => {
     rekomendasiListMutate();
     loadingSwal("close");
   };
+
+  const handleSubmitApprove = async () => {
+    if (!payload?.action_plan?.length) {
+      await infoSwal("Silahkan pilih data action plan terlebih dahulu!");
+      return;
+    }
+
+    loadingSwal();
+    await Promise.all(
+      payload?.action_plan?.map((action_plan_id) => {
+        const data = {
+          sub_modul: "action_plan_tindak_lanjut",
+          sub_modul_id: action_plan_id,
+          url_path: `${baseUrl}/tindak-lanjut/${action_plan_id}`,
+        };
+        fetchApi(
+          "POST",
+          `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/workflow/approve`,
+          data,
+          true
+        );
+      })
+    );
+    await successSwal("Berhasil approve workflow");
+    rekomendasiListMutate();
+    dispatch(resetObjPayload());
+    loadingSwal("close");
+  };
+
+  const handleSubmitReject = async () => {
+    if (!payload?.action_plan?.length) {
+      await infoSwal("Silahkan pilih data action plan terlebih dahulu!");
+      return;
+    }
+    if (!payload?.note) {
+      await infoSwal("Silahkan berikan alasan!");
+      return;
+    }
+    loadingSwal();
+    await Promise.all(
+      payload?.action_plan?.map((action_plan_id) => {
+        const data = {
+          sub_modul: "action_plan_tindak_lanjut",
+          sub_modul_id: action_plan_id,
+          url_path: `${baseUrl}/tindak-lanjut/${action_plan_id}`,
+          note: payload?.note,
+        };
+        fetchApi(
+          "POST",
+          `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/workflow/reject`,
+          data,
+          true
+        );
+      })
+    );
+    await successSwal("Berhasil reject workflow");
+    rekomendasiListMutate();
+    dispatch(resetObjPayload());
+    loadingSwal("close");
+  };
   // [ END ] handler for table rekomendasi
 
   return (
@@ -261,6 +323,7 @@ const index = () => {
           data={data}
           dataActionPlan={payload?.action_plan}
           dataTeam={dataTeam}
+          payload={payload}
           isPIC={isPIC}
           expansionMap={expansionMap}
           baseUrl={baseUrl}
@@ -272,6 +335,8 @@ const index = () => {
           handleClickCheckbox={handleClickCheckbox}
           handleClickPenugasan={handleClickPenugasan}
           handleClickReview={handleClickReview}
+          handleSubmitApprove={handleSubmitApprove}
+          handleSubmitReject={handleSubmitReject}
         />
       </div>
       {/* End Content */}

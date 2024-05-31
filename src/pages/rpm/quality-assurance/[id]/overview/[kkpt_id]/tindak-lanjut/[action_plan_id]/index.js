@@ -35,7 +35,6 @@ import {
 } from "@/helpers";
 import {
   ApprovalItems,
-  CardApproval,
   CardApprovalInfo,
   ModalAttachment,
   ModalWorkflow,
@@ -421,6 +420,10 @@ const index = () => {
       const signedCount = dataWorkflow?.ref_tim_audit_approver?.filter(
         (item) => item.is_signed
       ).length;
+
+      if (actionType === "" || actionType === undefined) {
+        return;
+      }
 
       switch (actionType) {
         case "change":
