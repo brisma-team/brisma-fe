@@ -20,10 +20,12 @@ const ModalAttachment = ({
               className="rounded w-28 h-8 bg-atlasian-blue-light text-white flex justify-center items-center"
             />
           )}
-          {data && (
+          {data ? (
             <Link target="_blank" href={data} className="text-base font-normal">
               {data}
             </Link>
+          ) : (
+            ""
           )}
         </div>
       </div>

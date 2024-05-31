@@ -75,11 +75,25 @@ const SidebarObjectLandingRPM = ({ withMenu, module_page, module_data }) => {
 
   useEffect(() => {
     const url = window.location.href;
-    const regex = new RegExp(`/${module_page}/\\d+/([^/]+)`);
-    const match = url.match(regex);
 
-    if (match && match[1]) {
-      setCurrentPage(match[1]);
+    const regexMenu = new RegExp(`/${module_page}/\\d+/([^/]+)`);
+    const matchMenu = url.match(regexMenu);
+
+    const regexSubMenu = new RegExp(
+      `/${module_page}/\\d+/overview/\\d+/([^/]+)`
+    );
+    const matchSubMenu = url.match(regexSubMenu);
+
+    if (matchSubMenu && matchSubMenu[1]) {
+      const page = matchSubMenu[1];
+
+      if (["tindak-lanjut", "evaluasi", "negosiasi"].includes(page)) {
+        setCurrentPage(page);
+      }
+    } else if (matchMenu && matchMenu[1]) {
+      setCurrentPage(matchMenu[1]);
+    } else {
+      setCurrentPage("");
     }
   }, [module_page]);
 

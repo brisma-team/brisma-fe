@@ -1,4 +1,5 @@
 import useProjectDetailRPM from "./useProjectDetailRPM";
 import useObjectAuditDetailRPM from "./useObjectAuditDetailRPM";
+import useWorkflowRPM from "./useWorkflowRPM";
 
-export { useProjectDetailRPM, useObjectAuditDetailRPM };
+export { useProjectDetailRPM, useObjectAuditDetailRPM, useWorkflowRPM };
