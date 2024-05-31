@@ -22,9 +22,9 @@ const DropdownCard = ({ actions }) => {
           {...props}
           role="button"
           tabIndex={0}
-          className="h-full flex text-atlasian-blue-dark hover:text-atlasian-blue-light items-center hover:border-atlasian-blue-light hover:border-2 hover:rounded-[40px] border-2 rounded-[40px] border-atlasian-blue-dark"
+          className="h-full flex text-atlasian-blue-dark hover:text-atlasian-blue-light items-center hover:border-atlasian-blue-light border-2 rounded-full border-atlasian-blue-dark p-1"
         >
-          <IconList size="medium" />
+          <IconList size="small" />
           {/* <Image src={ImageMore} alt="" height={22} width={22} /> */}
         </div>
       )}

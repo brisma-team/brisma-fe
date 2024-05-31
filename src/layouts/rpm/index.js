@@ -1,3 +1,4 @@
 import LandingLayoutRPMKegiatan from "./LandingLayoutRPMKegiatan";
+import LandingLayoutRPM from "./LandingLayoutRPM";
 
-export { LandingLayoutRPMKegiatan };
+export { LandingLayoutRPMKegiatan, LandingLayoutRPM };

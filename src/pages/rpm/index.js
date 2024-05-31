@@ -30,6 +30,13 @@ const index = () => {
         url: "/rpm/kegiatan",
       },
       {
+        subtitle: "R.P.M Quality Assurance",
+        title: "Quality Assurance",
+        description:
+          "Modul pengerjaan Rencana Perbaikan Manajemen Non-Audit dengan metode Survey.",
+        url: "/rpm/quality-assurance",
+      },
+      {
         subtitle: "R.P.M",
         title: "Approval Monitoring",
         description:
