@@ -50,6 +50,13 @@ const index = () => {
           "Monitoring proses approval pada aktivitas EWP Audit dan Non-Audit per masing-masing user.",
         url: "/ewp/approval",
       },
+      {
+        subtitle: "E.W.P",
+        title: "Kaji Ulang",
+        description:
+          "Modul pengerjaan Electronic Working Paper Audit untuk Kegiatan Non-Audit Kaji Ulang.",
+        url: "/ewp/kaji-ulang",
+      },
     ],
   };
   return (

@@ -3,6 +3,7 @@ import OverviewLayoutEWP from "./OverviewLayoutEWP";
 import LandingLayoutEWPConsulting from "./LandingLayoutEWPConsulting";
 import LandingLayoutEWPQualityAssurance from "./LandingLayoutEWPQualityAssurance";
 import LandingLayoutEWPMonOff from "./LandingLayoutEWPMonOff";
+import LandingLayoutEWPKajiUlang from "./LandingLayoutEWPKajiUlang";
 
 export {
   LandingLayoutEWP,
@@ -10,4 +11,5 @@ export {
   LandingLayoutEWPConsulting,
   LandingLayoutEWPQualityAssurance,
   LandingLayoutEWPMonOff,
+  LandingLayoutEWPKajiUlang,
 };
