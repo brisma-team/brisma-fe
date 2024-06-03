@@ -59,7 +59,7 @@ const CardOverview = ({
 
   const colorLabel = {
     online: "bg-cardColor-blue-dark",
-    onsite: "bg-cardColor-green",
+    onsite: "bg-cardColor-green-dark",
   };
 
   return (
