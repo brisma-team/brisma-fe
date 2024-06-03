@@ -91,6 +91,7 @@ import UkerAssessmentTable from "./UkerAssessmentTable";
 import RecommendationTypeSelect from "./RecommendationTypeSelect";
 import CardApprovalInfo from "./CardApprovalInfo";
 import DocumentTypeSelect from "./DocumentTypeSelect";
+import HasilEvaluasiSelect from "./HasilEvaluasiSelect";
 
 export {
   BackButton,
@@ -186,4 +187,5 @@ export {
   RecommendationTypeSelect,
   CardApprovalInfo,
   DocumentTypeSelect,
+  HasilEvaluasiSelect,
 };

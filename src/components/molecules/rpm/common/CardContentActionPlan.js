@@ -2,17 +2,11 @@ import { Card, DivButton } from "@/components/atoms";
 import { CardContentHeaderFooter } from "@/components/molecules/commons";
 import Image from "next/image";
 import { ImageReview } from "@/helpers/imagesUrl";
-import TableDokumenLampiran from "./TableDokumenLampiran";
-import TableCatatanNegosiasi from "./TableCatatanNegosiasi";
 
-const CardContentTindakLanjut = ({
-  withoutAction,
+const CardContentActionPlan = ({
   dataContent,
-  dataTableDokumenLampiran,
-  dataTableCatatanNegosiasi,
   handleClickOpenModalTanggapan,
-  handleClickOpenModalUpload,
-  handleClickDeleteDokumen,
+  children,
 }) => {
   return (
     <Card>
@@ -51,17 +45,10 @@ const CardContentTindakLanjut = ({
             </DivButton>
           </div>
         </CardContentHeaderFooter>
-        <TableDokumenLampiran
-          data={dataTableDokumenLampiran}
-          dataContent={dataContent}
-          withoutAction={withoutAction}
-          handleClickUpload={handleClickOpenModalUpload}
-          handleClickDelete={handleClickDeleteDokumen}
-        />
-        <TableCatatanNegosiasi data={dataTableCatatanNegosiasi} />
+        {children}
       </div>
     </Card>
   );
 };
 
-export default CardContentTindakLanjut;
+export default CardContentActionPlan;

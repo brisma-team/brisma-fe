@@ -99,6 +99,8 @@ import overviewRPMQualityAssuranceReducer from "./slices/rpm/quality-assurance/o
 import timOverviewRPMQualityAssuranceReducer from "./slices/rpm/quality-assurance/timOverviewRPMQualityAssuranceSlice";
 import tindakLanjutRPMQualityAssuranceReducer from "./slices/rpm/quality-assurance/tindakLanjutRPMQualityAssuranceSlice";
 import tindakLanjutActionPlanRPMQualityAssuranceReducer from "./slices/rpm/quality-assurance/tindakLanjutActionPlanRPMQualityAssuranceSlice";
+import evaluasiRPMQualityAssuranceReducer from "./slices/rpm/quality-assurance/evaluasiRPMQualityAssuranceSlice";
+import evaluasiActionPlanRPMQualityAssuranceReducer from "./slices/rpm/quality-assurance/evaluasiActionPlanRPMQualityAssuranceSlice";
 
 // CATALOG
 import catalogEWPReducer from "./slices/catalog/ewp/catalogEWPSlice";
@@ -222,6 +224,9 @@ export const store = configureStore({
     tindakLanjutRPMQualityAssurance: tindakLanjutRPMQualityAssuranceReducer,
     tindakLanjutActionPlanRPMQualityAssurance:
       tindakLanjutActionPlanRPMQualityAssuranceReducer,
+    evaluasiRPMQualityAssurance: evaluasiRPMQualityAssuranceReducer,
+    evaluasiActionPlanRPMQualityAssurance:
+      evaluasiActionPlanRPMQualityAssuranceReducer,
 
     //EWP Monoff
     projectOverviewEWPMonoff: projectOverviewEWPMonoffReducer,

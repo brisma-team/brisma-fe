@@ -1,4 +1,4 @@
-import CardContentTindakLanjut from "./CardContentTindakLanjut";
-import ModalTanggapan from "./ModalTanggapan";
+import TableCatatanNegosiasi from "./TableCatatanNegosiasi";
+import TableDokumenLampiran from "./TableDokumenLampiran";
 
-export { CardContentTindakLanjut, ModalTanggapan };
+export { TableCatatanNegosiasi, TableDokumenLampiran };

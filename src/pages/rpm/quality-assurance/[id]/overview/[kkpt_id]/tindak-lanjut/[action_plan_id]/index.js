@@ -40,12 +40,16 @@ import {
   ModalWorkflow,
 } from "@/components/molecules/commons";
 import {
-  CardContentTindakLanjut,
+  CardContentActionPlan,
   ModalTanggapan,
-} from "@/components/molecules/rpm/common/tindak-lanjut-action-plan";
+} from "@/components/molecules/rpm/common";
 import workflowSchema from "@/helpers/schemas/common/workflow/workflowSchema";
 import { useActionPlan } from "@/data/rpm/common/tindak-lanjut";
 import useUser from "@/data/useUser";
+import {
+  TableCatatanNegosiasi,
+  TableDokumenLampiran,
+} from "@/components/molecules/rpm/common/tindak-lanjut-action-plan";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -502,15 +506,18 @@ const index = () => {
         <PageTitle text="Tindak Lanjut Action Plan" />
       </div>
       <div className="flex gap-4">
-        <CardContentTindakLanjut
-          withoutAction={!(isOnProgress && isPIC)}
+        <CardContentActionPlan
           dataContent={dataContent}
-          dataTableDokumenLampiran={dataDokumenLampiran}
-          dataTableCatatanNegosiasi={dataCatatanNegosiasi}
           handleClickOpenModalTanggapan={handleClickOpenModalTanggapan}
-          handleClickOpenModalUpload={handleClickOpenModalUpload}
-          handleClickDeleteDokumen={handleClickDeleteDokomen}
-        />
+        >
+          <TableDokumenLampiran
+            data={dataDokumenLampiran}
+            dataContent={dataContent}
+            withoutAction={!(isOnProgress && isPIC)}
+            handleClickDelete={handleClickDeleteDokomen}
+          />
+          <TableCatatanNegosiasi data={dataCatatanNegosiasi} />
+        </CardContentActionPlan>
         <CardApprovalInfo handleClick={() => setShowModalApproval(true)}>
           <p className="text-brisma font-bold text-xl">Approval</p>
           <ApprovalItems
