@@ -68,7 +68,6 @@ const index = () => {
     { idx: 3, title: "UKER Assessment" },
     { idx: 4, title: "Info PAT" },
   ];
-  const [statusName, setStatusName] = useState("");
   const [isPAT, setIsPAT] = useState(false);
   const [isInitiator, setIsInitiator] = useState(false);
   const [isFinalProject, setIsFinalProject] = useState(false);
@@ -125,10 +124,10 @@ const index = () => {
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "EWP", path: "/ewp" },
-    { name: "Overview", path: "/ewp/konsulting" },
+    { name: "Overview", path: "/ewp/kaji-ulang" },
     {
       name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Info`,
-      path: `/ewp/konsulting/${params?.id}/info`,
+      path: `/ewp/kaji-ulang/${params?.id}/info`,
     },
   ];
 
@@ -141,85 +140,29 @@ const index = () => {
   }, [router.isReady]);
 
   useEffect(() => {
-    const status_code =
-      parseInt(projectDetail?.data?.project_info?.status_kode) || 0;
+    const projectInfo = projectDetail?.data?.project_info;
+    const status_code = parseInt(projectInfo?.status_kode) || 0;
 
-    setPatId(
-      projectDetail?.data?.project_info?.is_pat
-        ? projectDetail?.data?.project_info?.pat_id
-        : 0
-    );
+    setPatId(projectInfo?.is_pat ? projectInfo?.pat_id : 0);
     setScheduleActivityId(
-      projectDetail?.data?.project_info?.is_pat
-        ? projectDetail?.data?.project_info?.pat_jadwal_kegiatan_id
-        : 0
+      projectInfo?.is_pat ? projectInfo?.pat_jadwal_kegiatan_id : 0
     );
     setDataTables([
       {
         is_open: true,
-        is_onprogress: status_code === 2,
-        is_close: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end
-          ? true
-          : false,
-        status_code: 2,
-        is_addendum: Boolean(
-          projectDetail?.data?.realisasi?.pelaksanaan_audit_real_start &&
-            !projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end
-        ),
-        label: "Perencanaan",
-        start_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_start,
-        end_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
-        url: `/ewp/konsulting/${params?.id}/perencanaan`,
-      },
-      {
-        is_open: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
-        is_onprogress: status_code === 4 || status_code === 12,
-        is_close: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end
-          ? true
-          : false,
-        status_code: 4,
-        label: "Analisa",
-        start_date:
-          projectDetail?.data?.realisasi?.pelaksanaan_audit_real_start,
-        end_date: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
-        url: `/ewp/konsulting/${params?.id}/analisa`,
-      },
-      {
-        is_open: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
-        is_onprogress: status_code === 6,
-        is_close: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end
-          ? true
-          : false,
-        status_code: 6,
-        label: "Peluang Peningkatan",
-        start_date:
-          projectDetail?.data?.realisasi?.peluang_peningkatan_real_start,
-        end_date: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end,
-        url: `/ewp/konsulting/${params?.id}/peluang-peningkatan`,
-      },
-      {
-        is_open: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end,
-        is_onprogress: status_code === 8,
-        is_close: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end
-          ? true
-          : false,
-        status_code: 8,
-        label: "Wrap-Up",
-        start_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_start,
-        end_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end,
-        url: `/ewp/konsulting/${params?.id}/wrapup`,
+        is_onprogress: status_code === 1,
+        is_close: status_code === 9 ? true : false,
+        status_code: 1,
+        label: "Kaji Ulang",
+        start_date: projectInfo?.createdAt,
+        end_date: status_code == 9 ? projectInfo?.updatedAt : null,
+        url: `/ewp/kaji-ulang/${params?.id}/meeting`,
       },
     ]);
 
-    setIsInitiator(
-      Boolean(
-        projectDetail?.data?.project_info?.initiator?.pn == user?.data?.pn
-      )
-    );
-    setIsFinalProject(
-      Boolean(projectDetail?.data?.project_info?.status_kode === "9")
-    );
-    setIsPAT(Boolean(projectDetail?.data?.project_info?.is_pat));
+    setIsInitiator(Boolean(projectInfo?.initiator?.pn == user?.data?.pn));
+    setIsFinalProject(Boolean(projectInfo?.status_kode === "9"));
+    setIsPAT(Boolean(projectInfo?.is_pat));
   }, [projectDetail, user]);
 
   useEffect(() => {
@@ -249,8 +192,6 @@ const index = () => {
       tanggal_surat: convertDate(projectInfo?.tanggal_surat, "-"),
     };
     dispatch(setObjPayloadEditProject(objFixPayload));
-
-    setStatusName(projectInfo?.status_name);
   }, [projectDetail, showModalEditProject]);
 
   useEffect(() => {
@@ -332,18 +273,15 @@ const index = () => {
 
   const handleClickInitiate = async (statusCode, type) => {
     const pathMappings = {
-      2: "mapa",
-      4: "pelaksanaan",
-      6: "peluang_peningkatan",
-      8: "wrapup_meeting",
+      1: "close",
     };
 
     let path = pathMappings[statusCode] || "";
-    path += `/${type === "close" ? "close" : "initiate"}`;
+    path += `${type === "close" ? "final" : "initiate"}`;
 
     if (type === "close") {
       const confirm = await confirmationSwal(
-        "Aksi ini akan mengakhiri progres saat ini, apakah Anda yakin ingin melanjutkan ke proses berikutnya?"
+        "Aksi ini akan mengakhiri project ini, apakah Anda yakin ingin menutup project?"
       );
       if (!confirm.value) {
         return;
@@ -352,42 +290,18 @@ const index = () => {
 
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/initiate/${path}/${params?.id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/kaji-ulang/${path}/initiate/${params?.id}`,
       {}
     );
     projectDetailMutate();
   };
 
-  const handleClickInitiateAddendum = async () => {
-    if (statusName !== "addendum") {
-      const confirm = await confirmationSwal(
-        "Addendum belum dilaksanakan, apakah Anda yakin ingin inisiasi Addendum?"
-      );
-      if (!confirm.value) {
-        return;
-      }
-
-      loadingSwal();
-      await fetchApi(
-        "POST",
-        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/initiate/addendum/initiate/${params?.id}`,
-        {}
-      );
-
-      projectDetailMutate();
-      loadingSwal("close");
-    }
-    setTimeout(() => {
-      router.push(`/ewp/konsulting/${params?.id}/addendum`);
-    }, 1000);
-  };
-
   if (isError) {
-    errorSwalTimeout(projectDetailError, "/ewp/konsulting");
+    errorSwalTimeout(projectDetailError, "/ewp/kaji-ulang");
   }
 
   const handleClickLog = () => {
-    router.push(`/ewp/konsulting/${params?.id}/log`);
+    router.push(`/ewp/kaji-ulang/${params?.id}/log`);
   };
 
   // [ START ] handler for modal description
@@ -521,7 +435,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "DELETE",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/uker_info/${uker_id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/kaji-ulang/uker_info/${uker_id}`,
       {}
     );
 
@@ -534,7 +448,7 @@ const index = () => {
     loadingSwal();
     const response = await fetchApi(
       isUpdate ? "PATCH" : "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/uker_info/${
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/kaji-ulang/uker_info/${
         isUpdate ? uker_id : params?.id
       }`,
       {
@@ -570,7 +484,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/project_terkait`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/kaji-ulang/project_terkait`,
       {
         ewp_id: params?.id,
         project: _.map(dataRelatedProject, ({ project_id, project_name }) => ({
@@ -725,7 +639,7 @@ const index = () => {
       loadingSwal();
       await fetchApi(
         "PATCH",
-        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/${params?.id}/audit_info/update`,
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/kaji-ulang/${params?.id}/audit_info/update`,
         payload
       );
       dispatch(resetObjPayloadEditProject());
@@ -773,9 +687,8 @@ const index = () => {
                   <RealizationTable
                     data={dataTables}
                     handleClickInitiate={handleClickInitiate}
-                    handleClickInitiateAddendum={handleClickInitiateAddendum}
                     handleClickLog={handleClickLog}
-                    isHideButton={!isInitiator}
+                    isHideButton={true}
                   />
                 </div>
               </Card>

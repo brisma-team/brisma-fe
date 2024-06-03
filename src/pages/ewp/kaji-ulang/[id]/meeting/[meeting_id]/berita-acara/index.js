@@ -5,8 +5,8 @@ import {
   DivButton,
   PageTitle,
 } from "@/components/atoms";
-import { useProjectDetail } from "@/data/ewp/konsulting";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
+import { useProjectDetail } from "@/data/ewp/kaji-ulang";
+import { LandingLayoutEWPKajiUlang } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -29,7 +29,7 @@ import {
 import {
   useBeritaAcara,
   useMeetingDetail,
-} from "@/data/ewp/konsulting/meeting";
+} from "@/data/ewp/kaji-ulang/meeting";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setWorkflowData,
@@ -64,7 +64,7 @@ const routes = [
 const index = () => {
   const dispatch = useDispatch();
   const { id, meeting_id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const baseUrl = `/ewp/kaji-ulang/${id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
   const pathNameLanding = `${baseUrl}/meeting/${meeting_id}`;
 
@@ -109,7 +109,7 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting" },
+      { name: "Overview", path: "/ewp/kaji-ulang" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
@@ -364,7 +364,7 @@ const index = () => {
   // [ END ] handler for modal workflow
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutEWPKajiUlang>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -463,7 +463,7 @@ const index = () => {
         isProposer
       />
       {/* End Content */}
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutEWPKajiUlang>
   );
 };
 

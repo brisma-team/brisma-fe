@@ -1,13 +1,13 @@
 import { Breadcrumbs, CardLanding, PageTitle } from "@/components/atoms";
-import { useProjectDetail } from "@/data/ewp/konsulting";
+import { useProjectDetail } from "@/data/ewp/kaji-ulang";
 import { useLandingStatus } from "@/data/ewp/konsulting/meeting";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
+import { LandingLayoutEWPKajiUlang } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
 const index = () => {
   const { id, meeting_id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const baseUrl = `/ewp/kaji-ulang/${id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
   const pathNameLandingPage = `${pathNameSubModulMeeting}/${meeting_id}`;
 
@@ -21,7 +21,7 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting" },
+      { name: "Overview", path: "/ewp/kaji-ulang" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
@@ -72,7 +72,7 @@ const index = () => {
   }, [landingStatus]);
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutEWPKajiUlang>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -96,7 +96,7 @@ const index = () => {
         </div>
       </div>
       {/* End Content */}
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutEWPKajiUlang>
   );
 };
 

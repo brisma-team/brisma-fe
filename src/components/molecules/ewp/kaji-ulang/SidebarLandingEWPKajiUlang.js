@@ -50,7 +50,7 @@ const SidebarLandingEWPKajiUlang = () => {
       {
         name: "Close",
         href: `/close`,
-        isActive: projectInfo?.status_kode == 12,
+        isActive: true,
       },
     ]);
   }, [projectDetail]);

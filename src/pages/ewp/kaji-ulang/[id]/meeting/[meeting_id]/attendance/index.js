@@ -10,7 +10,7 @@ import { PrevNextNavigation } from "@/components/molecules/commons";
 import {
   PageCheckIn,
   TableAttendance,
-} from "@/components/molecules/ewp/konsulting/meeting/attendance";
+} from "@/components/molecules/ewp/kaji-ulang/meeting/attendance";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
@@ -20,13 +20,13 @@ import {
   loadingSwal,
   setErrorValidation,
 } from "@/helpers";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
-import { useProjectDetail } from "@/data/ewp/konsulting";
+import { LandingLayoutEWPKajiUlang } from "@/layouts/ewp";
+import { useProjectDetail } from "@/data/ewp/kaji-ulang";
 import {
   useAttendance,
   useLandingStatus,
   useMeetingDetail,
-} from "@/data/ewp/konsulting/meeting";
+} from "@/data/ewp/kaji-ulang/meeting";
 import _ from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import { loginSchema } from "@/helpers/schemas";
@@ -44,7 +44,7 @@ import {
 const index = () => {
   const dispatch = useDispatch();
   const { id, meeting_id, code } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const baseUrl = `/ewp/kaji-ulang/${id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
   const pathNameLanding = `${baseUrl}/meeting/${meeting_id}`;
 
@@ -97,7 +97,7 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting" },
+      { name: "Overview", path: "/ewp/kaji-ulang" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
@@ -185,7 +185,7 @@ const index = () => {
           })
         : [];
       setValueQR(
-        `${window.location.protocol}//${window.location.host}/ewp/konsulting/${id}/meeting/${meeting_id}/attendance?code=${attendance?.data?.attendance_info?.meet_code}`
+        `${window.location.protocol}//${window.location.host}/ewp/kaji-ulang/${id}/meeting/${meeting_id}/attendance?code=${attendance?.data?.attendance_info?.meet_code}`
       );
       dispatch(setObjDataAttendance(mappingAttendance));
     } else {
@@ -271,7 +271,7 @@ const index = () => {
   };
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutEWPKajiUlang>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -338,7 +338,7 @@ const index = () => {
           </div>
         </Card>
       </div>
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutEWPKajiUlang>
   );
 };
 
