@@ -16,12 +16,10 @@ import {
   resetObjPayload,
 } from "@/slices/rpm/quality-assurance/tindakLanjutRPMQualityAssuranceSlice";
 import _ from "lodash";
-import {
-  CardContentRekomendasi,
-  TableRekomendasi,
-} from "@/components/molecules/rpm/common/tindak-lanjut";
+import { TableRekomendasi } from "@/components/molecules/rpm/common/tindak-lanjut";
 import { fetchApi, infoSwal, loadingSwal, successSwal } from "@/helpers";
 import useUser from "@/data/useUser";
+import { CardContentRekomendasi } from "@/components/molecules/rpm/common";
 
 const index = () => {
   const dispatch = useDispatch();
