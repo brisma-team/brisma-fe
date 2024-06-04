@@ -77,7 +77,7 @@ const CardOverview = ({
         </div>
       ),
       action: handleChangeInitiator,
-      isDisabled: checkRoleIsAdmin(user?.role_kode),
+      isDisabled: !checkRoleIsAdmin(user?.role_kode),
     },
     {
       label: (
@@ -88,7 +88,7 @@ const CardOverview = ({
       ),
       action: handleCloseProject,
       isDisabled: Boolean(
-        user?.pn ==
+        user?.pn !=
           data?.auditor?.filter((item) => item.is_initiator === true)[0]?.pn
       ),
     },
@@ -102,7 +102,7 @@ const CardOverview = ({
         </DivButton>
       ),
       action: "",
-      isDisabled: true,
+      isDisabled: false,
     },
   ];
   const colorLabel = {
