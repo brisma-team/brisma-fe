@@ -77,7 +77,7 @@ const CardOverview = ({
         </div>
       ),
       action: handleChangeInitiator,
-      isDisabled: checkRoleIsAdmin(user?.role_kode),
+      isDisabled: !checkRoleIsAdmin(user?.role_kode),
     },
     {
       label: (
@@ -88,7 +88,7 @@ const CardOverview = ({
       ),
       action: handleCloseProject,
       isDisabled: Boolean(
-        user?.pn ==
+        user?.pn !=
           data?.auditor?.filter((item) => item.is_initiator === true)[0]?.pn
       ),
     },
@@ -102,7 +102,7 @@ const CardOverview = ({
         </DivButton>
       ),
       action: "",
-      isDisabled: true,
+      isDisabled: false,
     },
   ];
   const colorLabel = {
@@ -113,11 +113,14 @@ const CardOverview = ({
     <DivButton
       className={`bg-white ${
         !withoutHover &&
-        `hover:bg-gray-100 hover:rounded-[10px] hover:no-underline`
+        `hover:bg-gray-100 hover:rounded-[10px] hover:no-underline ${
+          data?.need_approval ? "cursor-not-allowed" : ""
+        }`
       }`}
-      handleClick={(e) => (
-        e.stopPropagation(), router.push(`konsulting/${data?.id}/info`)
-      )}
+      handleClick={(e) => {
+        e.stopPropagation();
+        if (!data?.need_approval) router.push(`konsulting/${data?.id}/info`);
+      }}
     >
       <div
         className={`w-full rounded flex flex-col items-center h-full border-2 ${
