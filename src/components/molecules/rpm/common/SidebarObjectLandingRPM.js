@@ -18,7 +18,7 @@ const SidebarObjectLandingRPM = ({ withMenu, module_page, module_data }) => {
     id: 0,
     kkpt_id: 0,
   });
-  const baseUrl = `/rpm/${module_page}/${params?.id}`;
+  const baseUrl = `/rpm/${module_page}/${params?.id}/overview/${params?.kkpt_id}`;
   const [data, setData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const { objectAuditDetailRPM } = useObjectAuditDetailRPM({
