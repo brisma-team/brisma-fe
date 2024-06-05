@@ -203,6 +203,46 @@ const index = () => {
     }
   }, [actionPlan]);
 
+  useEffect(() => {
+    if (payload?.metode_nego?.kode) {
+      const responseActionPlan = actionPlan?.data;
+      const responseKkpt = actionPlan?.data?.rekomendasi_kkpt;
+      const mappingPayload = {
+        ...payload,
+        action_plan: responseActionPlan?.action_plan_kkpt?.name,
+        tipe_rekomendasi: { ..._.pick(responseKkpt, ["kode", "nama"]) },
+        deskripsi_rekomendasi: responseKkpt?.description,
+      };
+      let objPayload;
+      switch (payload?.metode_nego?.kode) {
+        case "1":
+          objPayload = {
+            ...mappingPayload,
+          };
+          break;
+        case "2":
+          objPayload = {
+            ..._.omit(mappingPayload, ["action_plan"]),
+          };
+          break;
+        case "3":
+          objPayload = {
+            ..._.omit(mappingPayload, [
+              "action_plan",
+              "tipe_rekomendasi",
+              "deskripsi_rekomendasi",
+            ]),
+          };
+          break;
+      }
+      dispatch(setObjPayload(objPayload));
+      dispatch(resetValidationErrors());
+    } else {
+      dispatch(resetObjPayload());
+      dispatch(resetValidationErrors());
+    }
+  }, [payload?.metode_nego?.kode]);
+
   // [ START ] handler for table rekomendasi
   const handleClickInisiasiNegosiasi = (id) => {
     setSelectedActionPlanId(id);
@@ -243,46 +283,6 @@ const index = () => {
   const handleChangePayload = (property, value) => {
     dispatch(setObjPayload({ ...payload, [property]: value }));
   };
-
-  useEffect(() => {
-    if (payload?.metode_nego?.kode) {
-      const responseActionPlan = actionPlan?.data;
-      const responseKkpt = actionPlan?.data?.rekomendasi_kkpt;
-      const mappingPayload = {
-        ...payload,
-        action_plan: responseActionPlan?.action_plan_kkpt?.name,
-        tipe_rekomendasi: { ..._.pick(responseKkpt, ["kode", "nama"]) },
-        deskripsi_rekomendasi: responseKkpt?.description,
-      };
-      let objPayload;
-      switch (payload?.metode_nego?.kode) {
-        case "1":
-          objPayload = {
-            ...mappingPayload,
-          };
-          break;
-        case "2":
-          objPayload = {
-            ..._.omit(mappingPayload, ["action_plan"]),
-          };
-          break;
-        case "3":
-          objPayload = {
-            ..._.omit(mappingPayload, [
-              "action_plan",
-              "tipe_rekomendasi",
-              "deskripsi_rekomendasi",
-            ]),
-          };
-          break;
-      }
-      dispatch(setObjPayload(objPayload));
-      dispatch(resetValidationErrors());
-    } else {
-      dispatch(resetObjPayload());
-      dispatch(resetValidationErrors());
-    }
-  }, [payload?.metode_nego?.kode]);
 
   const handleSubmit = async () => {
     const responseKkptInfo = actionPlan?.data;

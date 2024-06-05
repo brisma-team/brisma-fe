@@ -9,7 +9,11 @@ import TableTree, {
 import { IconChevronDown, IconChevronRight } from "@/components/icons";
 import Link from "next/link";
 import { capitalizeEveryWord } from "@/helpers";
-import { DataNotFound, DropdownCard } from "@/components/molecules/commons";
+import {
+  DataNotFound,
+  DropdownCard,
+  RetryButton,
+} from "@/components/molecules/commons";
 const positionCenter = `w-full h-full flex justify-center items-center`;
 
 const TableRekomendasi = ({
@@ -19,6 +23,7 @@ const TableRekomendasi = ({
   baseUrl,
   handleToggleExpansion,
   handleClickInisiasiNegosiasi,
+  handleClickCancel,
 }) => {
   return (
     <Card>
@@ -93,19 +98,33 @@ const TableRekomendasi = ({
                     width="9%"
                     className="border-x cell-custom-dataTables justify-center"
                   >
-                    {role === "child" && isPIC && status === "on evaluator" ? (
-                      <DropdownCard
-                        actions={[
-                          {
-                            label: (
-                              <span className="my-auto">
-                                Inisiasi Negosiasi
-                              </span>
-                            ),
-                            action: () => handleClickInisiasiNegosiasi(id),
-                          },
-                        ]}
-                      />
+                    {role === "child" && isPIC ? (
+                      status === "on evaluator" ? (
+                        <DropdownCard
+                          actions={[
+                            {
+                              label: (
+                                <span className="my-auto">
+                                  Inisiasi Negosiasi
+                                </span>
+                              ),
+                              action: () => handleClickInisiasiNegosiasi(id),
+                            },
+                          ]}
+                        />
+                      ) : status === "on nego" ? (
+                        <ButtonIcon
+                          icon={
+                            <RetryButton
+                              size={"large"}
+                              className={"text-atlasian-red"}
+                            />
+                          }
+                          handleClick={() => handleClickCancel(id)}
+                        />
+                      ) : (
+                        ""
+                      )
                     ) : (
                       ""
                     )}
