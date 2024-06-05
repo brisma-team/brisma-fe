@@ -23,6 +23,7 @@ const index = () => {
   const [currentContentStage, setCurrentContentStage] = useState(1);
   const [isInitiator, setIsInitiator] = useState(false);
   const [isOnProgress, setIsOnProgress] = useState(false);
+  const [oldTimData, setOldTimData] = useState("");
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -88,11 +89,14 @@ const index = () => {
 
   const handleLoadFromMapa = async (type) => {
     loadingSwal();
-    await fetchApi(
+    const tim = await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/load_from_mapa/${params?.id}?part=${type}`,
       {}
     );
+    if (type == "tim") {
+      setOldTimData(tim?.data?.tim_audit);
+    }
     loadingSwal("close");
   };
 
@@ -120,6 +124,7 @@ const index = () => {
           isCloseSubmodule={!isOnProgress}
           dataProjectDetail={projectDetail?.data}
           handleLoadFromMapa={handleLoadFromMapa}
+          oldDataTimTimeplan={oldTimData}
         />
       ) : currentContentStage === 2 ? (
         <ProgramKerja

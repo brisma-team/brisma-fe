@@ -24,6 +24,7 @@ const TimTimeplan = ({
   isCloseSubmodule,
   dataProjectDetail,
   handleLoadFromMapa,
+  oldDataTimTimeplan,
 }) => {
   const dispatch = useDispatch();
 
@@ -41,9 +42,13 @@ const TimTimeplan = ({
 
   useEffect(() => {
     if (!timTimeplanError) {
+      const timData =
+        oldDataTimTimeplan !== ""
+          ? oldDataTimTimeplan
+          : timTimeplan.data?.tim_audit;
       const mappingInitiator = [dataProjectDetail?.project_info?.initiator];
-      const mappingAuditor = timTimeplan?.data?.tim_audit?.auditor?.length
-        ? timTimeplan?.data?.tim_audit?.auditor?.map((v) => {
+      const mappingAuditor = timData?.auditor?.length
+        ? timData?.auditor?.map((v) => {
             const { pn, nama, is_initiator } = v;
             return {
               pn,
@@ -53,8 +58,8 @@ const TimTimeplan = ({
           })
         : [];
 
-      const mappingAuditee = timTimeplan?.data?.tim_audit?.auditee?.length
-        ? timTimeplan?.data?.tim_audit?.auditee?.map((v) => {
+      const mappingAuditee = timData?.auditee?.length
+        ? timData?.auditee?.map((v) => {
             const { pn, nama, is_initiator } = v;
             return {
               pn,
@@ -64,8 +69,8 @@ const TimTimeplan = ({
           })
         : [];
 
-      const mappingATA = timTimeplan?.data?.tim_audit?.ata?.length
-        ? timTimeplan?.data?.tim_audit?.ata?.map((v) => {
+      const mappingATA = timData?.ata?.length
+        ? timData?.ata?.map((v) => {
             const { pn, nama, is_initiator, mandays, deskripsi } = v;
             return {
               pn,
@@ -88,7 +93,7 @@ const TimTimeplan = ({
     } else {
       dispatch(resetObjPayloadTimTimeplan());
     }
-  }, [timTimeplan, dataProjectDetail]);
+  }, [timTimeplan, oldDataTimTimeplan, dataProjectDetail]);
 
   const handleAdd = (property) => {
     const newTimAudit = [...payload[property]];
