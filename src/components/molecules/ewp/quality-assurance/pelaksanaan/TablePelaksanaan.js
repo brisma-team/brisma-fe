@@ -108,6 +108,7 @@ const TablePelaksanaan = ({ data, pathName, handleClickDetailObjectAudit }) => {
               project_id,
               judul,
               project_survei_id,
+              survei_id,
               petugas,
               status_survei,
               mtd_tipe,
@@ -159,9 +160,21 @@ const TablePelaksanaan = ({ data, pathName, handleClickDetailObjectAudit }) => {
                   </Link>
                 </Cell>
                 <Cell width="12%" className="border-r cell-custom-dataTables">
-                  <p className={is_close ? `text-atlasian-red` : ""}>
-                    {project_survei_id?.toUpperCase()}
-                  </p>
+                  {is_close ? (
+                    <p className="text-atlasian-red">
+                      {project_survei_id?.toUpperCase()}
+                    </p>
+                  ) : status_survei === "Sedang Berlangsung" ? (
+                    <Link
+                      className="underline"
+                      href={`/survey/responden/overview/${survei_id}`}
+                      target="_blank"
+                    >
+                      {project_survei_id?.toUpperCase()}
+                    </Link>
+                  ) : (
+                    project_survei_id?.toUpperCase()
+                  )}
                 </Cell>
                 <Cell
                   width="10%"

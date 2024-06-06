@@ -95,6 +95,7 @@ const index = () => {
           project_id: project?.mapa_project_audit?.project_id,
           judul: project?.mapa_project_audit?.project_name,
           project_survei_id: project?.project_survey?.project_survey_id,
+          survei_id: project?.project_survey?.id,
           petugas: project?.mapa_project_audit?.mapa_project_petugas?.length
             ? project?.mapa_project_audit?.mapa_project_petugas?.map(
                 (petugas) => {

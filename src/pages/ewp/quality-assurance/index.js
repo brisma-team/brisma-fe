@@ -223,7 +223,6 @@ const index = () => {
 
   useEffect(() => {
     if (overview?.data?.length) {
-      console.log("overview.data => ", overview.data);
       const mapping = overview.data.map((v) => {
         const {
           createdAt,
