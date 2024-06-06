@@ -120,7 +120,7 @@ const index = () => {
   );
 
   useEffect(() => {
-    if (workflowDetailEWP?.data) {
+    if (workflowDetailEWP?.data && showModalApprovalExtension) {
       const workflowInfo = workflowDetailEWP?.data?.info;
       const maker = workflowDetailEWP?.data?.initiator;
       const approvers = workflowDetailEWP?.data?.approver;
@@ -142,8 +142,8 @@ const index = () => {
 
       newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.name}`;
       newWorkflowData.maker = {
-        pn: workflowInfo?.initiator?.pn,
-        nama: workflowInfo?.initiator?.nama,
+        pn: workflowInfo?.pn_from,
+        nama: workflowInfo?.name_from,
       };
 
       if (approvers?.length) {
@@ -195,7 +195,7 @@ const index = () => {
     } else {
       dispatch(resetWorkflowData());
     }
-  }, [workflowDetailEWP, showModalApprovalExtension, changeInitiatorId]);
+  }, [workflowDetailEWP, showModalApprovalExtension, changeInitiatorId, user]);
 
   useEffect(() => {
     const handleSearch = () => {
@@ -298,13 +298,15 @@ const index = () => {
       if (!confirm.value) {
         return;
       }
-      await usePostData(
+      const init = await usePostData(
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/change_initiator/create`,
         { ewp_id, note: "change initiator" }
       );
+      setChangeInitiatorId(parseInt(init?.data?.id) + 1);
       overviewEWPKonsultingMutate();
       setShowModalApprovalExtension(true);
     } else {
+      dispatch(resetWorkflowData());
       setChangeInitiatorId(change_initiator_id);
       setShowModalApprovalExtension(!showModalApprovalExtension);
     }
@@ -416,6 +418,7 @@ const index = () => {
     }
     overviewEWPKonsultingMutate();
     workflowDetailEWPMutate();
+    dispatch(resetWorkflowData());
   };
 
   const handleCloseModalRequestChangeInitiator = () => {

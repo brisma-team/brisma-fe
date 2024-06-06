@@ -170,6 +170,7 @@ const NavbarField = () => {
 
   const handleMarkReadAll = async () => {
     await fetchApi(
+      "PATCH",
       `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/notifikasi/all`,
       {},
       true

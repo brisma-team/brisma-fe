@@ -8,7 +8,7 @@ import { useProjectDetail } from "@/data/ewp/kaji-ulang";
 import { errorSwalTimeout } from "@/helpers";
 import SidebarLandingEWPKajiUlang from "@/components/molecules/ewp/kaji-ulang/SidebarLandingEWPKajiUlang";
 
-const LandingLayoutEWPConsulting = ({ children }) => {
+const LandingLayoutEWPKajiUlang = ({ children }) => {
   const router = useRouter();
   const [params, setParams] = useState({
     id: 0,
@@ -76,4 +76,4 @@ const LandingLayoutEWPConsulting = ({ children }) => {
   );
 };
 
-export default LandingLayoutEWPConsulting;
+export default LandingLayoutEWPKajiUlang;

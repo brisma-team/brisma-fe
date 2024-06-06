@@ -26,16 +26,14 @@ const index = () => {
   useEffect(() => {
     setData([
       {
-        title: "Tim",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt tristique elit ut bibendum. Quisque tellus lacus, rutrum vitae felis id, accumsan pharetra libero.",
+        title: "Tim & Timeplan",
+        description: "Perencanaan Tim dan Timeplan Kegiatan.",
         status: perencanaaanStatus?.data?.tim_audit ? "success" : "failed",
         url: `${baseUrl}/perencanaan/tim`,
       },
       {
         title: "UKER Assessment",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt tristique elit ut bibendum. Quisque tellus lacus, rutrum vitae felis id, accumsan pharetra libero.",
+        description: "Perencanaan Unit Kerja dan Assessment Kegiatan.",
         status: perencanaaanStatus?.data?.uker_assesment ? "success" : "failed",
         url: `${baseUrl}/perencanaan/uker-assessment`,
       },

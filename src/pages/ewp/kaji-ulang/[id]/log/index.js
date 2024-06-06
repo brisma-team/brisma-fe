@@ -3,13 +3,13 @@ import { LogTable } from "@/components/molecules/ewp/konsulting/log";
 import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useLogSBP } from "@/data/ewp/konsulting/log";
 import { capitalizeEveryWord, convertDate } from "@/helpers";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
+import { LandingLayoutEWPKajiUlang } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const index = () => {
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const baseUrl = `/ewp/kaji-ulang/${id}`;
   const pathNameLog = `${baseUrl}/log`;
 
   const [dataTables, setDataTables] = useState([]);
@@ -22,7 +22,7 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting" },
+      { name: "Overview", path: "/ewp/kaji-ulang" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
@@ -66,7 +66,7 @@ const index = () => {
   }, [logSBP]);
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutEWPKajiUlang>
       <div className="w-[71.5rem]">
         {/* Start Breadcrumbs */}
         <Breadcrumbs data={breadcrumbs} />
@@ -80,7 +80,7 @@ const index = () => {
           </Card>
         </div>
       </div>
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutEWPKajiUlang>
   );
 };
 

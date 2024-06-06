@@ -3,17 +3,17 @@ import { CardContentHeaderFooter } from "@/components/molecules/commons";
 import {
   ModalCloseStatement,
   RealizationTable,
-} from "@/components/molecules/ewp/konsulting/close";
-import { useProjectDetail } from "@/data/ewp/konsulting";
+} from "@/components/molecules/ewp/kaji-ulang/close";
+import { useProjectDetail } from "@/data/ewp/kaji-ulang";
 import useUser from "@/data/useUser";
 import { confirmationSwal, fetchApi, loadingSwal } from "@/helpers";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
+import { LandingLayoutEWPKajiUlang } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const index = () => {
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const baseUrl = `/ewp/kaji-ulang/${id}`;
   const pathNameSubModulClose = `${baseUrl}/close`;
 
   const [showModal, setShowModal] = useState(false);
@@ -27,61 +27,26 @@ const index = () => {
   const { user } = useUser();
 
   useEffect(() => {
+    const projectInfo = projectDetail?.data?.project_info;
     const status_code =
       parseInt(projectDetail?.data?.project_info?.status_kode) || 0;
     setDataTables([
       {
         is_open: true,
-        is_onprogress: status_code === 2,
-        is_close: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end
-          ? true
-          : false,
-        label: "Perencanaan",
-        start_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_start,
-        end_date: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
-        url: `/ewp/konsulting/${id}/perencanaan`,
-      },
-      {
-        is_open: projectDetail?.data?.realisasi?.penyusunan_mapa_real_end,
-        is_onprogress: status_code === 4,
-        is_close: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end
-          ? true
-          : false,
-        label: "Analisa",
-        start_date:
-          projectDetail?.data?.realisasi?.pelaksanaan_audit_real_start,
-        end_date: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
-        url: `/ewp/konsulting/${id}/analisa`,
-      },
-      {
-        is_open: projectDetail?.data?.realisasi?.pelaksanaan_audit_real_end,
-        is_onprogress: status_code === 6,
-        is_close: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end
-          ? true
-          : false,
-        label: "Peluang Peningkatan",
-        start_date:
-          projectDetail?.data?.realisasi?.peluang_peningkatan_real_start,
-        end_date: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end,
-        url: `/ewp/konsulting/${id}/peluang-peningkatan`,
-      },
-      {
-        is_open: projectDetail?.data?.realisasi?.peluang_peningkatan_real_end,
-        is_onprogress: status_code === 8,
-        is_close: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end
-          ? true
-          : false,
-        label: "Wrap-Up",
-        start_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_start,
-        end_date: projectDetail?.data?.realisasi?.Wrapup_Meeting_real_end,
-        url: `/ewp/konsulting/${id}/wrapup`,
+        is_onprogress: status_code === 1,
+        is_close: status_code === 9 ? true : false,
+        status_code: 1,
+        label: "Kaji Ulang",
+        start_date: projectInfo?.createdAt,
+        end_date: status_code == 9 ? projectInfo?.updatedAt : null,
+        url: `/ewp/kaji-ulang/${id}/meeting`,
       },
     ]);
 
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting" },
+      { name: "Overview", path: "/ewp/kaji-ulang" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
@@ -115,7 +80,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/initiate/final/initiate/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/kaji-ulang/initiate/final/initiate/${id}`,
       { closing_statement: closingStatement }
     );
     projectDetailMutate();
@@ -142,7 +107,7 @@ const index = () => {
   };
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutEWPKajiUlang>
       <div className="w-[90rem]">
         {/* Start Breadcrumbs */}
         <Breadcrumbs data={breadcrumbs} />
@@ -153,7 +118,7 @@ const index = () => {
             <div className="flex flex-col gap-4 w-full">
               <Card>
                 <div className="px-6 pt-1 pb-3 w-full">
-                  <RealizationTable data={dataTables} />
+                  <RealizationTable data={dataTables} isHideButton={true} />
                 </div>
               </Card>
               {!isFinalProject && isInitiator ? (
@@ -199,7 +164,7 @@ const index = () => {
         handleCloseModal={handleCloseModal}
         handleSubmit={handleSubmitModal}
       />
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutEWPKajiUlang>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
+import { LandingLayoutEWPKajiUlang } from "@/layouts/ewp";
 import {
   Breadcrumbs,
   ButtonField,
@@ -19,9 +19,9 @@ import {
   CardOverview,
   ModalAddMeeting,
   CardFilterOverview,
-} from "@/components/molecules/ewp/konsulting/meeting/overview";
+} from "@/components/molecules/ewp/kaji-ulang/meeting/overview";
 import { useDispatch, useSelector } from "react-redux";
-import { useOverview } from "@/data/ewp/konsulting/meeting";
+import { useOverview } from "@/data/ewp/kaji-ulang/meeting";
 import {
   setObjData,
   setObjPayload,
@@ -32,13 +32,14 @@ import {
 } from "@/slices/ewp/konsulting/meeting/overviewMeetingEWPKonsultingSlice";
 import { useRouter } from "next/router";
 import createMeetingEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/meeting/createMeetingEWPKonsultingSchema";
-import { useProjectDetail } from "@/data/ewp/konsulting";
+import { useProjectDetail } from "@/data/ewp/kaji-ulang";
+import useUser from "@/data/useUser";
 
 const index = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/konsulting/${id}`;
+  const baseUrl = `/ewp/kaji-ulang/${id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
 
   const [showFilter, setShowFilter] = useState(false);
@@ -46,6 +47,9 @@ const index = () => {
 
   const [totalData, setTotalData] = useState(1);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
+
+  const [isInitiator, setIsInitiator] = useState(false);
+  const [isFinalProject, setIsFinalProject] = useState(false);
 
   const data = useSelector(
     (state) => state.overviewMeetingEWPKonsulting.objData
@@ -84,12 +88,13 @@ const index = () => {
 
   const { projectDetail } = useProjectDetail({ id });
   const { overview, overviewMutate } = useOverview({ id, ...params });
+  const { user } = useUser();
 
   useEffect(() => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
-      { name: "Overview", path: "/ewp/konsulting" },
+      { name: "Overview", path: "/ewp/kaji-ulang" },
       {
         name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
@@ -99,7 +104,15 @@ const index = () => {
         path: pathNameSubModulMeeting,
       },
     ]);
-  }, [projectDetail]);
+    setIsFinalProject(
+      Boolean(projectDetail?.data?.project_info?.status_kode === "9")
+    );
+    setIsInitiator(
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
+    );
+  }, [projectDetail, user]);
 
   useEffect(() => {
     const handleSearch = () => {
@@ -179,7 +192,7 @@ const index = () => {
 
   const handleClickCarding = (e, meeting_id) => {
     e.stopPropagation();
-    router.push(`/ewp/konsulting/${id}/meeting/${meeting_id}`);
+    router.push(`/ewp/kaji-ulang/${id}/meeting/${meeting_id}`);
   };
 
   const handleClickDelete = async (id) => {
@@ -294,7 +307,7 @@ const index = () => {
   // [ END ] handler for modal add meeting
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutEWPKajiUlang>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -310,10 +323,14 @@ const index = () => {
             />
           </div>
           <div className="w-36 rounded bg-atlasian-purple">
-            <ButtonField
-              handler={() => setShowModal(true)}
-              text={"Buat Meeting"}
-            />
+            {isInitiator && !isFinalProject ? (
+              <ButtonField
+                handler={() => setShowModal(true)}
+                text={"Buat Meeting"}
+              />
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>
@@ -373,7 +390,7 @@ const index = () => {
         handleClickDeletePIC={handleDeletePIC}
         handleClickDeletePembicara={handleDeletePembicara}
       />
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutEWPKajiUlang>
   );
 };
 
