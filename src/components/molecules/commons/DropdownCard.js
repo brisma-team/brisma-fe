@@ -35,15 +35,15 @@ const DropdownCard = ({ actions }) => {
         {actions?.map((v, i) => {
           return (
             <DropdownItem
-              onClick={() => (closeDropdown(), v?.action())}
+              onClick={(e) => (closeDropdown(), v?.action(e))}
               isDisabled={v?.isDisabled}
               key={i}
             >
-              <p
+              <span
                 className={`${v?.isDisabled && `text-gray-300`} font-semibold`}
               >
                 {v.label}
-              </p>
+              </span>
             </DropdownItem>
           );
         })}

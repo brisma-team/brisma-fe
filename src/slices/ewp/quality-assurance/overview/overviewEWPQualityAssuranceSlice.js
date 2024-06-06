@@ -2,6 +2,17 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   objData: [],
+  objDataWorkflow: {
+    sub_modul: "",
+    sub_modul_id: "",
+    pic: "",
+    ref_tim_audit_approver: [],
+    ref_tim_audit_signer: [],
+    initiator_from: "",
+    initiator_to: "",
+    note: "",
+  },
+  objDataHistoryWorfklow: [],
   objPayload: {
     project_name: "",
     info_periode_pelaksanaan_start: "",
@@ -39,6 +50,16 @@ const initialState = {
     project_id: "",
     project_name: "",
     is_new: true,
+  },
+  resetObjDataWorkflow: {
+    sub_modul: "",
+    sub_modul_id: "",
+    pic: "",
+    ref_tim_audit_approver: [],
+    ref_tim_audit_signer: [],
+    initiator_from: "",
+    initiator_to: "",
+    note: "",
   },
   resetObjPayload: {
     project_name: "",
@@ -84,6 +105,7 @@ const initialState = {
   validationErrorsScheduleNonPAT: {},
   validationErrorsSummaryNonPAT: {},
   validationErrorsRelatedProjectNonPAT: {},
+  validationErrorsWorkflow: {},
 };
 
 export const overviewEWPQualityAssuranceSlice = createSlice({
@@ -92,6 +114,12 @@ export const overviewEWPQualityAssuranceSlice = createSlice({
   reducers: {
     setObjData: (state, action) => {
       state.objData = action.payload;
+    },
+    setObjDataWorkflow: (state, action) => {
+      state.objDataWorkflow = action.payload;
+    },
+    setObjDataHistoryWorkflow: (state, action) => {
+      state.objDataHistoryWorfklow = action.payload;
     },
     setObjPayload: (state, action) => {
       state.objPayload = action.payload;
@@ -117,8 +145,17 @@ export const overviewEWPQualityAssuranceSlice = createSlice({
     setValidationErrorsRelatedProjectNonPAT: (state, action) => {
       state.validationErrorsRelatedProjectNonPAT = action.payload;
     },
+    setValidationErrorsWorkflow: (state, action) => {
+      state.validationErrorsWorkflow = action.payload;
+    },
     resetObjData: (state) => {
       state.objData = [];
+    },
+    resetObjDataWorkflow: (state) => {
+      state.objDataWorkflow = { ...state.resetObjDataWorkflow };
+    },
+    resetObjDataHistoryWorkflow: (state) => {
+      state.objDataHistoryWorfklow = [];
     },
     resetObjPayload: (state) => {
       state.objPayload = { ...state.resetObjPayload };
@@ -146,11 +183,16 @@ export const overviewEWPQualityAssuranceSlice = createSlice({
     resetValidationErrorsRelatedProjectNonPAT: (state) => {
       state.validationErrorsRelatedProjectNonPAT = {};
     },
+    resetValidationErrorsWorkflow: (state) => {
+      state.validationErrorsWorkflow = {};
+    },
   },
 });
 
 export const {
   setObjData,
+  setObjDataWorkflow,
+  setObjDataHistoryWorkflow,
   setObjPayload,
   setObjPayloadRelatedProject,
   setValidationErrorsSchedulePAT,
@@ -159,7 +201,10 @@ export const {
   setValidationErrorsDocumentNonPAT,
   setValidationErrorsSummaryNonPAT,
   setValidationErrorsRelatedProjectNonPAT,
+  setValidationErrorsWorkflow,
   resetObjData,
+  resetObjDataWorkflow,
+  resetObjDataHistoryWorkflow,
   resetObjPayload,
   resetObjPayloadRelatedProject,
   resetValidationErrorsSchedulePAT,
@@ -168,6 +213,7 @@ export const {
   resetValidationErrorsScheduleNonPAT,
   resetValidationErrorsSummaryNonPAT,
   resetValidationErrorsRelatedProjectNonPAT,
+  resetValidationErrorsWorkflow,
 } = overviewEWPQualityAssuranceSlice.actions;
 
 export default overviewEWPQualityAssuranceSlice.reducer;

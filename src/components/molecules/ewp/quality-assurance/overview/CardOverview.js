@@ -1,6 +1,7 @@
 import { DivButton } from "@/components/atoms";
+import { IconLink, IconPerson, IconTrash } from "@/components/icons";
 import { DropdownCard } from "@/components/molecules/commons";
-import { capitalizeEveryWord, convertDate } from "@/helpers";
+import { capitalizeEveryWord, checkRoleIsAdmin, convertDate } from "@/helpers";
 import ProgressBar from "@atlaskit/progress-bar";
 import { N800 } from "@atlaskit/theme/colors";
 import { token } from "@atlaskit/tokens";
@@ -36,9 +37,55 @@ const CardBody = ({ title, value, textColor, className }) => {
   );
 };
 
-const CardOverview = ({ data, withoutButton, withoutHover }) => {
+const CardOverview = ({
+  data,
+  user,
+  withoutButton,
+  withoutHover,
+  handleChangeInitiator,
+  handleCloseProject,
+  handleCopyProject,
+}) => {
   const router = useRouter();
-  const listDropdown = [{ label: "Approval", action: "#" }];
+  const listDropdown = [
+    {
+      label: (
+        <div className="flex gap-">
+          <IconPerson size="medium" />
+          <span className="my-auto ml-0.5">Change Initiator</span>
+        </div>
+      ),
+      action: async (e) =>
+        await handleChangeInitiator(
+          e,
+          Boolean(data?.change_initiator?.length),
+          data?.id,
+          data?.change_initiator?.length && data?.change_initiator[0]?.id
+        ),
+      isDisabled: !checkRoleIsAdmin(user?.role_kode),
+    },
+    {
+      label: (
+        <div className="flex gap-1">
+          <IconTrash size="medium" />
+          <span className="my-auto">Delete Project</span>
+        </div>
+      ),
+      action: handleCloseProject,
+      isDisabled: !(
+        checkRoleIsAdmin(user?.role_kode) || data?.initiator?.pn === user?.pn
+      ),
+    },
+    {
+      label: (
+        <div className="flex gap-1">
+          <IconLink size="medium" />
+          <span className="my-auto">Link Project</span>
+        </div>
+      ),
+      action: () => handleCopyProject(data?.id),
+    },
+  ];
   const colorLabel = {
     consulting: "bg-cardColor-turquoise",
   };
@@ -102,7 +149,10 @@ const CardOverview = ({ data, withoutButton, withoutHover }) => {
           </div>
           <div className="flex flex-col gap-3 mt-2">
             <div className="border-x border-t">
-              <CardBody title={"Maker"} value={data?.maker} />
+              <CardBody
+                title={"Maker"}
+                value={`${data?.initiator?.pn} - ${data?.initiator?.nama}`}
+              />
               <CardBody
                 title={"Tanggal Inisiasi"}
                 value={convertDate(data?.created_at, "-", "d")}
