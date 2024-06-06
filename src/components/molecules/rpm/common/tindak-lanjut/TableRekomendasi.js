@@ -90,7 +90,15 @@ const TableRekomendasi = ({
           {data?.length ? (
             <Rows
               items={data}
-              render={({ id, nama, status, pic, role, children = [] }) => (
+              render={({
+                id,
+                nama,
+                description,
+                status,
+                pic,
+                role,
+                children = [],
+              }) => (
                 <Row
                   itemId={id}
                   role={role}
@@ -137,8 +145,10 @@ const TableRekomendasi = ({
                       >
                         {role === "parent" ? (
                           <p>
-                            <span className="font-semibold">Action Plan</span> :{" "}
-                            {nama}
+                            <span className="font-semibold">
+                              {nama?.toUpperCase()}
+                            </span>{" "}
+                            : {description}
                           </p>
                         ) : role === "child" ? (
                           <Link href={`${baseUrl}/tindak-lanjut/${id}`}>

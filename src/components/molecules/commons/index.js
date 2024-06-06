@@ -92,6 +92,7 @@ import RecommendationTypeSelect from "./RecommendationTypeSelect";
 import CardApprovalInfo from "./CardApprovalInfo";
 import DocumentTypeSelect from "./DocumentTypeSelect";
 import HasilEvaluasiSelect from "./HasilEvaluasiSelect";
+import ModalCopyLink from "./ModalCopyLink";
 
 export {
   BackButton,
@@ -188,4 +189,5 @@ export {
   CardApprovalInfo,
   DocumentTypeSelect,
   HasilEvaluasiSelect,
+  ModalCopyLink,
 };

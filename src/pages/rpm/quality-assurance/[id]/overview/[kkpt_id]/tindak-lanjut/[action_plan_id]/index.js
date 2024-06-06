@@ -157,6 +157,7 @@ const index = () => {
 
   useEffect(() => {
     if (actionPlan?.data) {
+      console.log("actionPlan?.data => ", actionPlan?.data);
       const response = actionPlan?.data;
       const { batas_waktu } = response;
       const mappingContent = {
@@ -190,6 +191,7 @@ const index = () => {
   }, [actionPlan, user]);
 
   useEffect(() => {
+    console.log("workflowRPM?.data => ", workflowRPM?.data);
     if (workflowRPM?.data) {
       const workflowInfo = workflowRPM?.data?.info;
       const maker = workflowRPM?.data?.initiator;
@@ -266,10 +268,6 @@ const index = () => {
 
   const handleClickOpenModalTanggapan = () => {
     setShowModalTanggapan(true);
-  };
-
-  const handleClickOpenModalUpload = () => {
-    setShowModalUpload(true);
   };
 
   const handleChangePayloadTanggapan = (value) => {

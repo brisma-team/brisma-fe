@@ -130,7 +130,7 @@ const index = () => {
       const mapping = rekomendasiList?.data?.rekomendasi?.rekomendasi?.map(
         (rekomendasi) => {
           return {
-            ..._.pick(rekomendasi, ["id", "nama"]),
+            ..._.pick(rekomendasi, ["id", "nama", "description"]),
             role: "parent",
             children: rekomendasi?.action_plan?.length
               ? rekomendasi?.action_plan?.map((action_plan) => {

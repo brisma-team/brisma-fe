@@ -21,7 +21,7 @@ const CardContentActionPlan = ({
                 <div className="text-sm text-atlasian-red">
                   {dataContent?.rekomendasi?.nama ? (
                     <span className="font-semibold">
-                      {dataContent?.rekomendasi?.nama} -{" "}
+                      {dataContent?.rekomendasi?.nama?.toUpperCase()} -{" "}
                       {dataContent?.rekomendasi?.description}
                     </span>
                   ) : (
