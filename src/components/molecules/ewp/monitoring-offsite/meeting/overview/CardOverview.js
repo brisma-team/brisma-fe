@@ -51,16 +51,20 @@ const CardOverview = ({
   withoutHover,
   handleClickCarding,
   handleClickUrl,
+  handleClickDelete,
 }) => {
-  const listDropdown = [{ label: "Approval", action: "#" }];
+  const listDropdown = [
+    { label: "Hapus", action: async () => handleClickDelete(data?.id) },
+  ];
+
   const colorLabel = {
     online: "bg-cardColor-blue-dark",
-    onsite: "bg-cardColor-green",
+    onsite: "bg-cardColor-green-dark",
   };
 
   return (
     <DivButton
-      className={`${
+      className={`bg-white ${
         !withoutHover &&
         `hover:bg-gray-100 hover:rounded-[10px] hover:no-underline`
       }`}
@@ -140,7 +144,7 @@ const CardOverview = ({
               <p className="text-sm font-semibold -mb-1">Deskripsi Meeting</p>
               <p>{data?.desc}</p>
             </div>
-            <div className="border-x border-t">
+            <div className="border-x border-t overflow-auto">
               <CardBody
                 title={"Link Meeting"}
                 value={

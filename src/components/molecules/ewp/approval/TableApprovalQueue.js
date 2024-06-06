@@ -106,6 +106,8 @@ const TableApprovalQueue = ({ data, handleClickAction }) => {
                 ref_metode,
                 ref_tipe,
                 fase_approval,
+                pn_kta_requester,
+                nama_kta_requester,
               }) => (
                 <Row>
                   <Cell width="7%" className={`border-x ${customCell}`}>
@@ -155,7 +157,9 @@ const TableApprovalQueue = ({ data, handleClickAction }) => {
                   <Cell width="17%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p className="text-sm">
-                        {create_by?.pn + " - " + create_by?.nama}
+                        {(create_by?.pn || pn_kta_requester) +
+                          " - " +
+                          (create_by?.nama || nama_kta_requester)}
                       </p>
                     </div>
                   </Cell>

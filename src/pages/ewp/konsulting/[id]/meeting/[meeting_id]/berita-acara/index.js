@@ -21,6 +21,7 @@ import {
 import {
   confirmationSwal,
   convertDate,
+  errorSwal,
   fetchApi,
   loadingSwal,
   setErrorValidation,
@@ -238,6 +239,9 @@ const index = () => {
 
   const handleSubmitContent = async () => {
     loadingSwal();
+    if (content?.length === 0) {
+      return errorSwal("Isi Berita Acara terlebih dahulu");
+    }
     await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/meeting/ba`,
@@ -309,6 +313,10 @@ const index = () => {
 
       if (actionType === "" || actionType === undefined) {
         return;
+      }
+
+      if (content?.length === 0) {
+        return errorSwal("Isi Berita Acara terlebih dahulu");
       }
 
       switch (actionType) {

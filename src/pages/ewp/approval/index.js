@@ -71,6 +71,8 @@ const index = () => {
               "matrix_id",
               "ref_metode",
               "ref_tipe",
+              "pn_kta_requester",
+              "nama_kta_requester",
             ]),
             fase_approval: defineFaseApproval(sub_modul, ref_tipe),
           };
@@ -121,6 +123,8 @@ const index = () => {
           faseApproval = "Matrix Peluang Peningkatan";
         } else if (sub_modul === "adendum" || sub_modul === "addendum") {
           faseApproval = "Addendum";
+        } else if (sub_modul === "ewp_need_approval") {
+          faseApproval = "EWP Need Approval";
         }
         break;
       case "Monitoring Offsite":
@@ -166,6 +170,8 @@ const index = () => {
           query = `konsulting/${ewp_id}/peluang-peningkatan/${sub_modul_id}`;
         } else if (sub_modul === "adendum") {
           query = `konsulting/${ewp_id}/addendum`;
+        } else if (sub_modul === "ewp_need_approval") {
+          query = `konsulting`;
         }
         break;
       case "Quality Assurance":
@@ -178,7 +184,11 @@ const index = () => {
         }
         break;
     }
-    router.push(`${query}/dokumen?is_approval=true`);
+    if (sub_modul !== "ewp_need_approval") {
+      router.push(`${query}/dokumen?is_approval=true`);
+    } else {
+      router.push(`${query}?ewp_pat_id=${sub_modul_id}&is_approval=true`);
+    }
   };
 
   return (
