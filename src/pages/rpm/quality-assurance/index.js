@@ -154,7 +154,7 @@ const index = () => {
           project_code: data?.num_project,
           project_name: data?.nama_project,
           pic_submitter: data?.pic_auditee,
-          pic_evaluator: data?.pic_evaluator,
+          pic_evaluator: data?.pic_auditor,
           pic_negotiator: data?.pic_nego,
           submitter: [],
           evaluator: [],
@@ -251,12 +251,21 @@ const index = () => {
       loadingSwal();
       await fetchApi(
         "POST",
-        `${process.env.NEXT_PUBLIC_API_URL_EWP}/rpm/qa/projects/init`,
+        `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/qa/projects/init`,
         {
           ewp_id: payload?.ewp_id,
-          pic_auditee: payload?.pic_submitter,
-          pic_auditor: payload?.pic_evaluator,
-          pic_nego: payload?.pic_negotiator,
+          pic_auditee: {
+            pn: payload?.pic_submitter?.pn,
+            nama: payload?.pic_submitter?.name,
+          },
+          pic_auditor: {
+            pn: payload?.pic_evaluator?.pn,
+            nama: payload?.pic_evaluator?.name,
+          },
+          pic_nego: {
+            pn: payload?.pic_negotiator?.pn,
+            nama: payload?.pic_negotiator?.name,
+          },
         }
       );
       loadingSwal("close");

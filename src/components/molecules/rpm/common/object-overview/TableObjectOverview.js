@@ -92,7 +92,7 @@ const TableObjectOverview = ({ data, pathName, handleClickTeamManagement }) => {
               <Rows
                 items={data}
                 render={({
-                  id,
+                  kkpt_id,
                   project_id,
                   project_name,
                   branch,
@@ -113,7 +113,10 @@ const TableObjectOverview = ({ data, pathName, handleClickTeamManagement }) => {
                       width="23%"
                       className="border-r cell-custom-dataTables"
                     >
-                      <Link className="text-base" href={`${pathName}/${id}`}>
+                      <Link
+                        className="text-base"
+                        href={`${pathName}/${kkpt_id}`}
+                      >
                         {`[${project_id || ""}] - ${project_name}`}
                       </Link>
                     </Cell>

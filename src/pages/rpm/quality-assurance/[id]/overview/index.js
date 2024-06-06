@@ -55,6 +55,7 @@ const index = () => {
         return {
           ..._.pick(data, [
             "id",
+            "kkpt_id",
             "total_rekomendasi",
             "total_action_plan",
             "total_memadai",

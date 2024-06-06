@@ -9,9 +9,21 @@ import { N800 } from "@atlaskit/theme/colors";
 import { token } from "@atlaskit/tokens";
 import { useRouter } from "next/router";
 
-const CardOverview = ({ data, pathName, withoutButton, withoutHover }) => {
+const CardOverview = ({
+  data,
+  pathName,
+  withoutButton,
+  withoutHover,
+  handleClickDisableProject,
+}) => {
   const router = useRouter();
-  const listDropdown = [{ label: "Approval", action: "#" }];
+  const listDropdown = [
+    { label: "Approval", action: "#" },
+    {
+      label: "Disable Project",
+      action: () => handleClickDisableProject(data?.id),
+    },
+  ];
   const colorLabel = {
     consulting: "bg-cardColor-turquoise",
   };
@@ -23,7 +35,7 @@ const CardOverview = ({ data, pathName, withoutButton, withoutHover }) => {
         `hover:bg-gray-100 hover:rounded-[10px] hover:no-underline`
       }`}
       handleClick={(e) => (
-        e.stopPropagation(), router.push(`${pathName}/${data?.id}`)
+        e.stopPropagation(), router.push(`${pathName}/${data?.id}/overview`)
       )}
     >
       <div
