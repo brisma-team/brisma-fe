@@ -94,14 +94,12 @@ const CardOverview = ({
     },
     {
       label: (
-        <DivButton handleClick={(e) => handleCopyProject(e, data?.id)}>
-          <div className="flex gap-1">
-            <IconLink size="medium" />
-            <p className="my-auto">Link Project</p>
-          </div>
-        </DivButton>
+        <div className="flex gap-1">
+          <IconLink size="medium" />
+          <p className="my-auto">Link Project</p>
+        </div>
       ),
-      action: "",
+      action: handleCopyProject,
       isDisabled: false,
     },
   ];

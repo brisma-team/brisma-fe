@@ -38,7 +38,7 @@ const index = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { id } = useRouter().query;
-  const baseUrl = `/ewp/monitoring-offsite/overview/${id}`;
+  const baseUrl = `/ewp/monitoring-offsite/${id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
 
   const [showFilter, setShowFilter] = useState(false);
@@ -177,7 +177,7 @@ const index = () => {
 
   const handleClickCarding = (e, meeting_id) => {
     e.stopPropagation();
-    router.push(`/ewp/monitoring-offsite/overview/${id}/meeting/${meeting_id}`);
+    router.push(`/ewp/monitoring-offsite/${id}/meeting/${meeting_id}`);
   };
 
   // [ START ] handler for modal add meeting
