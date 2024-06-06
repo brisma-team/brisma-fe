@@ -21,6 +21,7 @@ import {
 import {
   confirmationSwal,
   convertDate,
+  errorSwal,
   fetchApi,
   loadingSwal,
   setErrorValidation,
@@ -233,6 +234,9 @@ const index = () => {
 
   const handleSubmitContent = async () => {
     loadingSwal();
+    if (content?.length === 0) {
+      return errorSwal("Isi Notulen terlebih dahulu");
+    }
     await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/meeting/notulen`,
@@ -304,6 +308,10 @@ const index = () => {
 
       if (actionType === "" || actionType === undefined) {
         return;
+      }
+
+      if (content?.length === 0) {
+        return errorSwal("Isi Notulen terlebih dahulu");
       }
 
       switch (actionType) {
