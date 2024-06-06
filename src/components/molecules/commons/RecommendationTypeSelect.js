@@ -9,6 +9,7 @@ const RecommendationTypeSelect = ({
   selectedValue,
   fieldsProps,
   customIcon,
+  isDisabled,
 }) => {
   const [options, setOptions] = useState([]);
   const { recommendationType } = useRecommendationType();
@@ -34,6 +35,7 @@ const RecommendationTypeSelect = ({
   return (
     <Select
       {...fieldsProps}
+      isDisabled={isDisabled}
       placeholder={placeholder}
       options={options}
       onChange={handleChange}

@@ -18,6 +18,7 @@ const ModalFooter = ({ handleConfirm }) => {
 
 const ModalDescription = ({
   data,
+  headerText,
   isEdit,
   showModal,
   handleCloseModal,
@@ -39,7 +40,9 @@ const ModalDescription = ({
     >
       <div className="w-[37.5rem] relative -mt-2.5">
         <CloseModal handleCloseModal={handleCloseModal} showModal={showModal} />
-        <p className="mb-2 text-lg font-semibold">Deskripsi Kegiatan</p>
+        <p className="mb-2 text-lg font-semibold">
+          {headerText || "Deskripsi Kegiatan"}
+        </p>
         {isEdit ? (
           <TextAreaField
             handleChange={(e) => setEditValue(e.target.value)}

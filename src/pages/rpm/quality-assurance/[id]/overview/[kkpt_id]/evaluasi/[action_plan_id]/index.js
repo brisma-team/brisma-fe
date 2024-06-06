@@ -446,10 +446,6 @@ const index = () => {
   };
   // [ END ] handler for modal workflow
 
-  useEffect(() => {
-    console.log("payloadHasilEvaluasi => ", payloadHasilEvaluasi);
-  }, [payloadHasilEvaluasi]);
-
   return (
     <LandingLayoutRPM
       module_page={"quality-assurance"}
