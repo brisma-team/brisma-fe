@@ -86,7 +86,7 @@ const convertProgressAndPercent = (status) => {
       progress = 0.4;
       percent = "40%";
       break;
-    case "monitoring":
+    case "reporting":
       progress = 0.6;
       percent = "60%";
       break;
