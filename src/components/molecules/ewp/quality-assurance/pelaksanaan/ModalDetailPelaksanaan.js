@@ -14,6 +14,7 @@ import { convertDate } from "@/helpers";
 
 const ModalDetailPelaksanaan = ({
   payload,
+  withoutButton,
   showModal,
   handleCloseModal,
   handleClickClose,
@@ -40,23 +41,27 @@ const ModalDetailPelaksanaan = ({
               </div>
             }
             footer={
-              <div className="py-3 px-4 flex justify-end">
-                {payload?.is_close ? (
-                  <div className="rounded bg-atlasian-purple w-fit">
-                    <ButtonField
-                      text="Replicate Survey"
-                      handler={handleClickReplicate}
-                    />
-                  </div>
-                ) : (
-                  <div className="rounded bg-atlasian-red w-fit">
-                    <ButtonField
-                      text="Close Survey"
-                      handler={handleClickClose}
-                    />
-                  </div>
-                )}
-              </div>
+              !withoutButton ? (
+                <div className="py-3 px-4 flex justify-end">
+                  {payload?.is_close ? (
+                    <div className="rounded bg-atlasian-purple w-fit">
+                      <ButtonField
+                        text="Replicate Survey"
+                        handler={handleClickReplicate}
+                      />
+                    </div>
+                  ) : (
+                    <div className="rounded bg-atlasian-red w-fit">
+                      <ButtonField
+                        text="Close Survey"
+                        handler={handleClickClose}
+                      />
+                    </div>
+                  )}
+                </div>
+              ) : (
+                ""
+              )
             }
           >
             <div className="p-4 flex gap-3">
@@ -115,11 +120,15 @@ const ModalDetailPelaksanaan = ({
                           </p>
                         </div>
                       </CardContent>
-                      <ButtonIcon
-                        icon={<ButtonEdit />}
-                        handleClick={() => handleClickEdit(payload?.id)}
-                        color={"yellow"}
-                      />
+                      {!withoutButton ? (
+                        <ButtonIcon
+                          icon={<ButtonEdit />}
+                          handleClick={() => handleClickEdit(payload?.id)}
+                          color={"yellow"}
+                        />
+                      ) : (
+                        ""
+                      )}
                     </div>
                   }
                   label="Tanggal Berakhir"

@@ -13,7 +13,12 @@ import TableTree, {
   Rows,
 } from "@atlaskit/table-tree";
 
-const TableActionPlan = ({ data, handleClickDelete, handleClickEdit }) => {
+const TableActionPlan = ({
+  data,
+  withoutButton,
+  handleClickDelete,
+  handleClickEdit,
+}) => {
   return (
     <div className="dataTables-custom bg-white">
       <TableTree>
@@ -48,16 +53,20 @@ const TableActionPlan = ({ data, handleClickDelete, handleClickEdit }) => {
                   width="10%"
                   className="border-x cell-custom-dataTables flex justify-center"
                 >
-                  <div className="flex gap-1.5">
-                    <ButtonIcon
-                      icon={<ButtonDelete />}
-                      handleClick={async () => handleClickDelete(id)}
-                    />
-                    <ButtonIcon
-                      icon={<ButtonEdit />}
-                      handleClick={async () => handleClickEdit(id)}
-                    />
-                  </div>
+                  {!withoutButton ? (
+                    <div className="flex gap-1.5">
+                      <ButtonIcon
+                        icon={<ButtonDelete />}
+                        handleClick={async () => handleClickDelete(id)}
+                      />
+                      <ButtonIcon
+                        icon={<ButtonEdit />}
+                        handleClick={async () => handleClickEdit(id)}
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </Cell>
                 <Cell width="20%" className="border-r cell-custom-dataTables">
                   {convertDate(batas_waktu, "/", "d")}

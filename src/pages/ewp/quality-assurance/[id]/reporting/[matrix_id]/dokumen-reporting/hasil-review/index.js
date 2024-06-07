@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import {
   AttachmentClipping,
+  ContentView,
   ImageClipping,
   PrevNextNavigation,
 } from "@/components/molecules/commons";
@@ -16,6 +17,7 @@ import {
 } from "@/helpers";
 import { useAuditInfo } from "@/data/ewp/common/info";
 import { useDokumenReporting } from "@/data/ewp/quality-assurance/reporting";
+import useUser from "@/data/useUser";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -48,11 +50,15 @@ const index = () => {
   const pathName = `${baseUrl}/reporting/${params?.matrix_id}/dokumen-reporting`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(true);
+
   const [imageClipList, setImageClipList] = useState([]);
   const [attachmentClipList, setAttachmentClipList] = useState([]);
   const [typeUpload, setTypeUpload] = useState("");
   const [content, setContent] = useState("");
 
+  const { user } = useUser();
   const { auditInfo } = useAuditInfo({ module: "qa", id: params?.id });
   const { dokumenReporting, dokumenReportingMutate } = useDokumenReporting({
     id: params?.matrix_id,
@@ -87,7 +93,14 @@ const index = () => {
         path: `${pathName}/hasil-review`,
       },
     ]);
-  }, [auditInfo]);
+
+    setIsCloseSubmodule(
+      Boolean(auditInfo?.data?.realisasi?.pelaksanaan_audit_real_end)
+    );
+    setIsInitiator(
+      Boolean(auditInfo?.data?.project_info?.initiator?.pn === user?.data?.pn)
+    );
+  }, [auditInfo, user]);
 
   useEffect(() => {
     setContent(dokumenReporting?.data || "");
@@ -176,48 +189,46 @@ const index = () => {
       </div>
       {/* Start Content */}
       <div className="my-4 flex gap-6">
-        {/* {(isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress && ( */}
-        <div className="w-64 flex flex-col gap-4">
-          <ImageClipping
-            data={imageClipList}
-            handleChange={handleUploadFile}
-            handleClick={handleClickUploadImage}
-            // isHideButton={!((isInitiator || isAuditor) && !isCloseSubmodule)}
-          />
-          <AttachmentClipping
-            data={attachmentClipList}
-            handleChange={handleUploadFile}
-            handleClick={handleClickUploadAttachment}
-            // isHideButton={!((isInitiator || isAuditor) && !isCloseSubmodule)}
-          />
-        </div>
-        {/* )} */}
-
-        <div>
-          {/* {(isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress ? ( */}
-          <div className="ckeditor-latar-belakang-mapa-ewp">
-            <Editor
-              contentData={content}
-              ready={true}
-              onChange={(value) => setContent(value)}
+        {isInitiator && !isCloseSubmodule ? (
+          <div className="w-64 flex flex-col gap-4">
+            <ImageClipping
+              data={imageClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadImage}
+            />
+            <AttachmentClipping
+              data={attachmentClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadAttachment}
             />
           </div>
-          {/* ) : (
+        ) : (
+          ""
+        )}
+        <div>
+          {isInitiator && !isCloseSubmodule ? (
+            <div className="ckeditor-latar-belakang-mapa-ewp">
+              <Editor
+                contentData={content}
+                ready={true}
+                onChange={(value) => setContent(value)}
+              />
+            </div>
+          ) : (
             <ContentView dataDoc={content} />
-          )} */}
-
-          {/* {(isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress ? ( */}
-          <div className="mt-3 flex gap-3 justify-end">
-            <div className="w-[7.75rem] bg-atlasian-yellow rounded">
-              <ButtonField text={"Async"} handler={handleAsync} />
+          )}
+          {isInitiator && !isCloseSubmodule ? (
+            <div className="mt-3 flex gap-3 justify-end">
+              <div className="w-[7.75rem] bg-atlasian-yellow rounded">
+                <ButtonField text={"Async"} handler={handleAsync} />
+              </div>
+              <div className="w-[7.75rem] bg-atlasian-green rounded">
+                <ButtonField text={"Simpan"} handler={handleSubmit} />
+              </div>
             </div>
-            <div className="w-[7.75rem] bg-atlasian-green rounded">
-              <ButtonField text={"Simpan"} handler={handleSubmit} />
-            </div>
-          </div>
-          {/* ) : (
+          ) : (
             ""
-          )} */}
+          )}
         </div>
       </div>
       {/* End Content */}

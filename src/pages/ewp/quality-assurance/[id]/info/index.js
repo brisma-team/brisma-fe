@@ -124,10 +124,6 @@ const index = () => {
   ];
 
   useEffect(() => {
-    console.log("statusName => ", statusName);
-  }, [statusName]);
-
-  useEffect(() => {
     if (!router.isReady) return;
     const { id } = router.query;
     setParams({

@@ -34,6 +34,7 @@ import { CardContentHeaderFooter } from "@/components/molecules/commons";
 import { TableActionPlan } from "@/components/molecules/ewp/quality-assurance/reporting/dokumen-reporting";
 import { IconPlus } from "@/components/icons";
 import ModalActionPlan from "@/components/molecules/ewp/quality-assurance/reporting/dokumen-reporting/ModalActionPlan";
+import useUser from "@/data/useUser";
 
 const index = () => {
   const router = useRouter();
@@ -50,6 +51,8 @@ const index = () => {
   const [showModal, setShowModal] = useState(false);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
 
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
   const [selectedId, setSelectedId] = useState(0);
 
@@ -63,6 +66,7 @@ const index = () => {
     (state) => state.actionPlanEWPQualityAssurance.validationErrors
   );
 
+  const { user } = useUser();
   const { auditInfo } = useAuditInfo({ module: "qa", id: params?.id });
   const { dokumenReporting, dokumenReportingMutate } = useDokumenReporting({
     id: params?.rekomendasi_id,
@@ -106,7 +110,13 @@ const index = () => {
         path: `${pathName}/rencana-perbaikan/${params?.rekomendasi_id}`,
       },
     ]);
-  }, [auditInfo]);
+    setIsCloseSubmodule(
+      Boolean(auditInfo?.data?.realisasi?.pelaksanaan_audit_real_end)
+    );
+    setIsInitiator(
+      Boolean(auditInfo?.data?.project_info?.initiator?.pn === user?.data?.pn)
+    );
+  }, [auditInfo, user]);
 
   useEffect(() => {
     if (dokumenReporting?.data) {
@@ -261,26 +271,31 @@ const index = () => {
           </div>
         }
         footer={
-          <div className="flex justify-end py-3 px-4">
-            <div className="w-fit">
-              <ButtonField
-                iconAfter={
-                  <div className="text-atlasian-purple">
-                    <IconPlus size="medium" />
-                  </div>
-                }
-                text={"Tambah ACTION PLAN"}
-                textColor={"purple"}
-                handler={handleClickAdd}
-              />
+          !isCloseSubmodule && isInitiator ? (
+            <div className="flex justify-end py-3 px-4">
+              <div className="w-fit">
+                <ButtonField
+                  iconAfter={
+                    <div className="text-atlasian-purple">
+                      <IconPlus size="medium" />
+                    </div>
+                  }
+                  text={"Tambah ACTION PLAN"}
+                  textColor={"purple"}
+                  handler={handleClickAdd}
+                />
+              </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )
         }
         className={"mt-4"}
       >
         <div className="p-4">
           <TableActionPlan
             data={data}
+            withoutButton={!(!isCloseSubmodule && isInitiator)}
             handleClickDelete={handleClickDelete}
             handleClickEdit={handleClickEdit}
           />

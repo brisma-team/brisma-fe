@@ -88,7 +88,7 @@ const TableRencanaPerbaikan = ({
                   width="8%"
                   className="border-x cell-custom-dataTables justify-center"
                 >
-                  {role === "child" ? (
+                  {role === "child" && !withoutButton ? (
                     <div className="flex gap-1.5">
                       <ButtonIcon
                         icon={<ButtonDelete />}
