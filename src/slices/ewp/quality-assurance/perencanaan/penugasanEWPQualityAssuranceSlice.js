@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   objData: [],
+  objDataTeam: [],
   objPayload: [],
   validationErrors: {},
 };
@@ -13,6 +14,9 @@ export const penugasanEWPQualityAssuranceSlice = createSlice({
     setObjData: (state, action) => {
       state.objData = action.payload;
     },
+    setObjDataTeam: (state, action) => {
+      state.objDataTeam = action.payload;
+    },
     setObjPayload: (state, action) => {
       state.objPayload = action.payload;
     },
@@ -21,6 +25,9 @@ export const penugasanEWPQualityAssuranceSlice = createSlice({
     },
     resetObjData: (state) => {
       state.objData = [];
+    },
+    resetObjDataTeam: (state) => {
+      state.objDataTeam = [];
     },
     resetObjPayload: (state) => {
       state.objPayload = [];
@@ -33,9 +40,11 @@ export const penugasanEWPQualityAssuranceSlice = createSlice({
 
 export const {
   setObjData,
+  setObjDataTeam,
   setObjPayload,
   setValidationErrors,
   resetObjData,
+  resetObjDataTeam,
   resetObjPayload,
   resetValidationErrors,
 } = penugasanEWPQualityAssuranceSlice.actions;
