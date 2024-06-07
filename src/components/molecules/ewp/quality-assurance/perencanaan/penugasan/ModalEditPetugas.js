@@ -6,9 +6,10 @@ import {
   ModalScroll,
 } from "@/components/atoms";
 import { IconClose, IconPlus } from "@/components/icons";
-import { ModalFooter, UserSKAISelect } from "@/components/molecules/commons";
+import { CustomSelect, ModalFooter } from "@/components/molecules/commons";
 
 const ModalEditPetugas = ({
+  dataTeam,
   payload,
   validation,
   showModal,
@@ -37,7 +38,8 @@ const ModalEditPetugas = ({
             ? payload?.map((petugas, index) => {
                 return (
                   <div className="" key={index}>
-                    <UserSKAISelect
+                    <CustomSelect
+                      optionValue={dataTeam}
                       selectedValue={
                         petugas?.pn
                           ? {

@@ -28,7 +28,7 @@ const index = () => {
     kkpa_id: 0,
   });
   const baseUrl = `/ewp/quality-assurance/${params?.id}`;
-  const pathName = `${baseUrl}/${params?.kkpa_id}`;
+  const pathName = `${baseUrl}/perencanaan`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [imageClipList, setImageClipList] = useState([]);

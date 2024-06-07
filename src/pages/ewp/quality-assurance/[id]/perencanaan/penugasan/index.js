@@ -6,9 +6,11 @@ import { useState, useEffect } from "react";
 import { PrevNextNavigation } from "@/components/molecules/commons";
 import {
   setObjData,
+  setObjDataTeam,
   setObjPayload,
   setValidationErrors,
   resetObjData,
+  resetObjDataTeam,
   resetObjPayload,
   resetValidationErrors,
 } from "@/slices/ewp/quality-assurance/perencanaan/penugasanEWPQualityAssuranceSlice";
@@ -32,6 +34,7 @@ import {
   TablePenugasan,
 } from "@/components/molecules/ewp/quality-assurance/perencanaan/penugasan";
 import penugasanEWPQualityAssuranceSchema from "@/helpers/schemas/ewp/quality-assurance/penugasanEWPQualityAssuranceSchema";
+import { useTim } from "@/data/ewp/quality-assurance/perencanaan/tim";
 
 const routes = [
   {
@@ -74,6 +77,9 @@ const index = () => {
   const data = useSelector(
     (state) => state.penugasanEWPQualityAssurance.objData
   );
+  const dataTeam = useSelector(
+    (state) => state.penugasanEWPQualityAssurance.objDataTeam
+  );
   const payload = useSelector(
     (state) => state.penugasanEWPQualityAssurance.objPayload
   );
@@ -91,6 +97,7 @@ const index = () => {
   const { penugasan, penugasanMutate } = usePenugasan({
     id: params?.id,
   });
+  const { tim } = useTim({ id: params?.id });
   const { petugas } = usePetugas({ id: selectedId });
 
   useEffect(() => {
@@ -171,6 +178,42 @@ const index = () => {
       dispatch(resetObjData());
     }
   }, [penugasan]);
+
+  useEffect(() => {
+    if (tim?.data?.tim_audit) {
+      const timAuditInfo = tim?.data?.tim_audit;
+      const mappingKTA = timAuditInfo?.kta?.length
+        ? timAuditInfo?.kta?.map((v) => {
+            const { pn, nama } = v;
+            return {
+              pn,
+              nama,
+            };
+          })
+        : [];
+
+      const mappingATA = timAuditInfo?.ata?.length
+        ? timAuditInfo?.ata?.map((v) => {
+            const { pn, nama } = v;
+            return {
+              pn,
+              nama,
+            };
+          })
+        : [];
+
+      const mergeMapping = [...mappingKTA, ...mappingATA];
+      const mapping = mergeMapping?.length
+        ? mergeMapping?.map((v) => {
+            return { label: v?.nama, value: { pn: v?.pn, name: v?.nama } };
+          })
+        : [];
+
+      dispatch(setObjDataTeam(mapping));
+    } else {
+      dispatch(resetObjDataTeam());
+    }
+  }, [tim]);
 
   useEffect(() => {
     if (petugas?.data?.length) {
@@ -296,6 +339,7 @@ const index = () => {
         handleClickFieldPetugas={handleClickFieldPetugas}
       />
       <ModalEditPetugas
+        dataTeam={dataTeam}
         showModal={showModalEditPetugas}
         payload={payload}
         validation={validation}
