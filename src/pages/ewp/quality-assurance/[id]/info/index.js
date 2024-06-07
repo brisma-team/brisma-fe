@@ -180,11 +180,11 @@ const index = () => {
       },
       {
         is_open: auditInfo?.data?.realisasi?.pelaksanaan_audit_real_end,
-        is_onprogress: status_code === 6,
+        is_onprogress: status_code === 10,
         is_close: auditInfo?.data?.realisasi?.monitoring_real_end
           ? true
           : false,
-        status_code: 6,
+        status_code: 10,
         label: "Reporting",
         start_date: auditInfo?.data?.realisasi?.monitoring_real_start,
         end_date: auditInfo?.data?.realisasi?.monitoring_real_end,
@@ -311,7 +311,7 @@ const index = () => {
     const pathMappings = {
       2: "mapa",
       4: "pelaksanaan",
-      6: "reporting",
+      10: "reporting",
       8: "wrapup_meeting",
     };
 
