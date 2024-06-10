@@ -3,9 +3,9 @@ import withTokenFetcher from "@/fetchers/withTokenFetcher";
 import useSWR from "swr";
 
 const useObjectAuditDetailRPM = (params) => {
-  const { id, module } = params;
+  const { id, kkpt_id, module } = params;
 
-  const path = `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/${module}/projects/kkpt/details/${id}`;
+  const path = `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/${module}/projects/kkpt/details/${id}/${kkpt_id}`;
   const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);
 
   return {
