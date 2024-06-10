@@ -6,23 +6,10 @@ import TableTree, {
   Row,
   Rows,
 } from "@atlaskit/table-tree";
-import { DataNotFound, DropdownCard } from "@/components/molecules/commons";
-import { IconPerson } from "@/components/icons";
+import { DataNotFound } from "@/components/molecules/commons";
 import Link from "next/link";
 
-const TableObjectOverview = ({ data, pathName, handleClickTeamManagement }) => {
-  const listDropdown = [
-    {
-      label: (
-        <div className="flex gap-2">
-          <IconPerson size="medium" />
-          <p className="my-auto">Team Management</p>
-        </div>
-      ),
-      action: () => handleClickTeamManagement(),
-    },
-  ];
-
+const TableObjectOverview = ({ data, pathName }) => {
   return (
     <Card>
       <div className="px-4 py-2 w-full">
@@ -30,18 +17,8 @@ const TableObjectOverview = ({ data, pathName, handleClickTeamManagement }) => {
           <TableTree>
             <Headers>
               <Header
-                width="7%"
+                width="30%"
                 className="border-x border-t rounded-ss-lg cell-custom-dataTables"
-              >
-                <div
-                  className={`custom-table-header justify-center text-sm font-semibold`}
-                >
-                  AKSI
-                </div>
-              </Header>
-              <Header
-                width="23%"
-                className="border-t border-r cell-custom-dataTables"
               >
                 <div className="custom-table-header text-sm font-semibold">
                   OBJECT
@@ -104,20 +81,16 @@ const TableObjectOverview = ({ data, pathName, handleClickTeamManagement }) => {
                 }) => (
                   <Row>
                     <Cell
-                      width="7%"
-                      className="border-x cell-custom-dataTables justify-center"
-                    >
-                      <DropdownCard actions={listDropdown} />
-                    </Cell>
-                    <Cell
-                      width="23%"
-                      className="border-r cell-custom-dataTables"
+                      width="30%"
+                      className="border-x cell-custom-dataTables"
                     >
                       <Link
                         className="text-base"
                         href={`${pathName}/${kkpt_id}`}
                       >
-                        {`[${project_id || ""}] - ${project_name}`}
+                        {`[${
+                          project_id?.toUpperCase() || ""
+                        }] - ${project_name}`}
                       </Link>
                     </Cell>
                     <Cell

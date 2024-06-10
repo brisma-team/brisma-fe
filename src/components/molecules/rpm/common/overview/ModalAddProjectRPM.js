@@ -7,7 +7,7 @@ import ModalFooter from "./ModalFooter";
 import TableProjectListEWP from "./TableProjectListEWP";
 import { ButtonIcon, ModalScroll, TextInput } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
-import CardTeam from "./CardTeam";
+import CardPICTeam from "./CardPICTeam";
 
 const ModalAddProjectRPM = ({
   showModal,
@@ -155,7 +155,7 @@ const ModalAddProjectRPM = ({
             </div>
           ) : (
             <div className="flex gap-3">
-              <CardTeam
+              <CardPICTeam
                 data={payload}
                 validation={validation}
                 label={"P.I.C Submitter"}
@@ -163,7 +163,7 @@ const ModalAddProjectRPM = ({
                 labelColor={"text-atlasian-blue-light"}
                 handleChange={handleChangePayload}
               />
-              <CardTeam
+              <CardPICTeam
                 data={payload}
                 validation={validation}
                 label={"P.I.C Evaluator"}
@@ -171,7 +171,7 @@ const ModalAddProjectRPM = ({
                 labelColor={"text-atlasian-yellow"}
                 handleChange={handleChangePayload}
               />
-              <CardTeam
+              <CardPICTeam
                 data={payload}
                 validation={validation}
                 label={"P.I.C Negosiator"}
