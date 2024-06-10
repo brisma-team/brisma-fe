@@ -224,6 +224,7 @@ const index = () => {
     }
 
     setShowModal(false);
+    dispatch(resetObjPayload());
   };
 
   const handleChangeTextPayload = (property, value) => {

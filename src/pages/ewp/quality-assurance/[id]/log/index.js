@@ -19,7 +19,7 @@ const index = () => {
   const [breadcrumbs, setBreadcrumbs] = useState([]);
 
   const { auditInfo } = useAuditInfo({ module: "qa", id: params?.id });
-  const { log } = useLog({ id: params?.id });
+  const { log } = useLog({ id: params?.id, module: "qa" });
 
   useEffect(() => {
     if (!router.isReady) return;

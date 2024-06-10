@@ -53,7 +53,11 @@ const index = () => {
   const { pelaksanaan, pelaksanaanMutate } = usePelaksanaan({
     id: params?.id,
   });
-  const { pelaksanaanDetail, pelaksanaanDetailMutate } = usePelaksanaanDetail({
+  const {
+    pelaksanaanDetail,
+    pelaksanaanDetailMutate,
+    pelaksanaanDetailIsLoading,
+  } = usePelaksanaanDetail({
     id: selectedId,
   });
 
@@ -272,6 +276,7 @@ const index = () => {
         payload={payload}
         showModal={showModalDetailPelaksanaan}
         withoutButton={isCloseSubmodule}
+        isLoading={pelaksanaanDetailIsLoading}
         handleClickEdit={handleClickEditSchedule}
         handleCloseModal={handleCloseModalDetailPelaksanaan}
         handleClickClose={handleClickCloseSurvey}

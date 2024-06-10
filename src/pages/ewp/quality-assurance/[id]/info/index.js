@@ -308,7 +308,7 @@ const index = () => {
       2: "mapa",
       4: "pelaksanaan",
       10: "reporting",
-      8: "wrapup_meeting",
+      8: "wrapup",
     };
 
     let path = pathMappings[statusCode] || "";
