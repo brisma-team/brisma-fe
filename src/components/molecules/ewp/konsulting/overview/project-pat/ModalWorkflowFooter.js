@@ -1,35 +1,31 @@
-import { ButtonField, ButtonIcon, TextInput } from "@/components/atoms";
-import { IconClose } from "@/components/icons";
-import { checkRoleIsAdmin } from "@/helpers";
+import { ButtonField } from "@/components/atoms";
+// import { IconClose } from "@/components/icons";
 
 const ModalWorkflowFooter = ({
   user,
   data,
   handleSubmit,
-  handleChangeText,
+  handleReject,
+  // handleChangeText,
 }) => {
-  let isApprover, isAdmin;
-  isApprover = user?.pn == data?.on_approver?.pn;
-  isAdmin = checkRoleIsAdmin(user?.role_kode);
+  let isApprover;
+  isApprover = user?.pn == data?.pn_approver;
 
-  if (data?.status_approver === "On Progress" && isAdmin) {
-    // Jika status nya on progress dan yang sedang login adalah si Initiator, maka hanya tampil button Send Approval
-    return (
-      <div className="flex justify-end gap-3">
-        <div className="rounded w-32 bg-atlasian-blue-light">
-          <ButtonField
-            text={"Send Approval"}
-            name="create"
-            handler={handleSubmit}
-          />
-        </div>
-      </div>
-    );
-  } else if (data?.status_approver === "On Approver" && isApprover) {
+  // if (isApprover) {
+  //   // Jika status nya on progress dan yang sedang login adalah si Initiator, maka hanya tampil button Send Approval
+  //   return (
+  //     <div className="flex justify-end gap-3">
+  //       <div className="rounded w-32 bg-atlasian-blue-light">
+  //         <ButtonField text={"Approve"} name="create" handler={handleSubmit} />
+  //       </div>
+  //     </div>
+  //   );
+  // }
+  if (isApprover) {
     // Jika status nya On Approver dan status approver nya sesuai dengan yang login, maka hanya tampil button text input alasan, button reject dan approve
     return (
       <div className="flex gap-3 items-center">
-        <div className="w-full">
+        {/* <div className="w-full">
           <TextInput
             placeholder={"Masukkan alasan"}
             value={data.note}
@@ -41,10 +37,10 @@ const ModalWorkflowFooter = ({
             }
             onChange={(e) => handleChangeText("note", e.target.value)}
           />
-        </div>
+        </div> */}
         <div>
           <div className="rounded w-32 bg-atlasian-red">
-            <ButtonField text={"Reject"} name="reject" handler={handleSubmit} />
+            <ButtonField text={"Reject"} name="reject" handler={handleReject} />
           </div>
         </div>
         <div>
@@ -58,23 +54,24 @@ const ModalWorkflowFooter = ({
         </div>
       </div>
     );
-  } else if (data?.status_approver === "On Approver" && isAdmin) {
-    // Jika status nya On Approver dan yang sedang login adalah seorang Initiator, maka hanya tampil button reset flow
-    return (
-      <div className="flex gap-3">
-        <div className="rounded w-32 bg-atlasian-red">
-          <ButtonField
-            text={"Reset Flow"}
-            name="reset"
-            handler={handleSubmit}
-          />
-        </div>
-        <div className="rounded w-32 bg-atlasian-yellow">
-          <ButtonField text={"Simpan"} name="change" handler={handleSubmit} />
-        </div>
-      </div>
-    );
   }
+  // else if (data?.status_approver === "On Approver" && isAdmin) {
+  //   // Jika status nya On Approver dan yang sedang login adalah seorang Initiator, maka hanya tampil button reset flow
+  //   return (
+  //     <div className="flex gap-3">
+  //       <div className="rounded w-32 bg-atlasian-red">
+  //         <ButtonField
+  //           text={"Reset Flow"}
+  //           name="reset"
+  //           handler={handleSubmit}
+  //         />
+  //       </div>
+  //       <div className="rounded w-32 bg-atlasian-yellow">
+  //         <ButtonField text={"Simpan"} name="change" handler={handleSubmit} />
+  //       </div>
+  //     </div>
+  //   );
+  // }
 };
 
 export default ModalWorkflowFooter;
