@@ -34,6 +34,7 @@ import {
   usePostFileData,
 } from "@/helpers";
 import { addRekomendasiSchema } from "@/helpers/schemas/ewp/quality-assurance/quality-assurance/rencanaPerbaikanEWPQualityAssuranceSchema";
+import useUser from "@/data/useUser";
 
 const routes = [
   {
@@ -69,6 +70,8 @@ const index = () => {
 
   const [currentContentStage, setCurrentContentStage] = useState(1);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(true);
 
   const [imageClipList, setImageClipList] = useState([]);
   const [attachmentClipList, setAttachmentClipList] = useState([]);
@@ -91,6 +94,7 @@ const index = () => {
     (state) => state.rencanaPerbaikanEWPQualityAssurance.validationErrors
   );
 
+  const { user } = useUser();
   const { auditInfo } = useAuditInfo({ module: "qa", id: params?.id });
   const { dokumenReporting, dokumenReportingMutate } = useDokumenReporting({
     id: params?.matrix_id,
@@ -134,7 +138,14 @@ const index = () => {
         path: `${pathName}/rencana-perbaikan`,
       },
     ]);
-  }, [auditInfo]);
+
+    setIsCloseSubmodule(
+      Boolean(auditInfo?.data?.realisasi?.pelaksanaan_audit_real_end)
+    );
+    setIsInitiator(
+      Boolean(auditInfo?.data?.project_info?.initiator?.pn === user?.data?.pn)
+    );
+  }, [auditInfo, user]);
 
   useEffect(() => {
     if (rekomendasiRencanaPerbaikan?.data?.length) {
@@ -375,6 +386,8 @@ const index = () => {
       {currentContentStage === 1 ? (
         <UraianRencanaPerbaikan
           content={content}
+          isInitiator={isInitiator}
+          isCloseSubmodule={isCloseSubmodule}
           dataImageClipList={imageClipList}
           dataAttachmentClipList={attachmentClipList}
           handleChangeContent={handleChangeUraian}
@@ -387,6 +400,7 @@ const index = () => {
         <TableRencanaPerbaikan
           data={data}
           expansionMap={expansionMap}
+          withoutButton={isCloseSubmodule}
           pathName={`/ewp/quality-assurance/${params?.id}/reporting/${params?.matrix_id}/dokumen-reporting/rencana-perbaikan`}
           handleToggleExpansion={handleToggleExpansion}
           handleAddRekomendasi={handleAddRekomendasi}

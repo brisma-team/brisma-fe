@@ -1,6 +1,15 @@
 import * as yup from "yup";
 
 const timOverviewRPMSchema = yup.object().shape({
+  pic_submitter: yup.object().shape({
+    pn: yup.string().required("Wajib diisi"),
+  }),
+  pic_evaluator: yup.object().shape({
+    pn: yup.string().required("Wajib diisi"),
+  }),
+  pic_negotiator: yup.object().shape({
+    pn: yup.string().required("Wajib diisi"),
+  }),
   submitter: yup
     .array()
     .of(

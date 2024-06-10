@@ -134,7 +134,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/initiate/wrapup_meeting/close/${params?.id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/initiate/wrapup/close/${params?.id}`,
       {}
     );
     auditInfoMutate();

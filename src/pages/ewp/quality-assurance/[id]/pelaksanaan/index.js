@@ -38,7 +38,7 @@ const index = () => {
     useState(false);
   const [showModalEditSchedule, setShowModalEditSchedule] = useState(false);
 
-  // const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
+  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
   // const [isOnProgress, setIsOnProgress] = useState(true);
   // const [isInitiator, setIsInitiator] = useState(true);
 
@@ -53,7 +53,11 @@ const index = () => {
   const { pelaksanaan, pelaksanaanMutate } = usePelaksanaan({
     id: params?.id,
   });
-  const { pelaksanaanDetail, pelaksanaanDetailMutate } = usePelaksanaanDetail({
+  const {
+    pelaksanaanDetail,
+    pelaksanaanDetailMutate,
+    pelaksanaanDetailIsLoading,
+  } = usePelaksanaanDetail({
     id: selectedId,
   });
 
@@ -83,6 +87,9 @@ const index = () => {
         path: pathName,
       },
     ]);
+    setIsCloseSubmodule(
+      Boolean(auditInfo?.data?.realisasi?.pelaksanaan_audit_real_end)
+    );
   }, [auditInfo]);
 
   useEffect(() => {
@@ -239,10 +246,6 @@ const index = () => {
   };
   // [ END ] handler for modal edit jadwal
 
-  useEffect(() => {
-    console.log("payload => ", payload);
-  }, [payload]);
-
   return (
     <LandingLayoutEWPQualityAssurance>
       {/* Start Breadcrumbs */}
@@ -272,6 +275,8 @@ const index = () => {
       <ModalDetailPelaksanaan
         payload={payload}
         showModal={showModalDetailPelaksanaan}
+        withoutButton={isCloseSubmodule}
+        isLoading={pelaksanaanDetailIsLoading}
         handleClickEdit={handleClickEditSchedule}
         handleCloseModal={handleCloseModalDetailPelaksanaan}
         handleClickClose={handleClickCloseSurvey}

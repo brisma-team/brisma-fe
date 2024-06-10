@@ -2,7 +2,7 @@ import { ButtonIcon, ErrorValidation } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
 import { CardContent, UserSKAISelect } from "@/components/molecules/commons";
 
-const CardTeam = ({
+const CardPICTeam = ({
   data,
   label,
   property,
@@ -18,23 +18,23 @@ const CardTeam = ({
           selectedValue={
             data[property]?.pn
               ? {
-                  label: data[property]?.name,
+                  label: `${data[property]?.pn} - ${data[property]?.nama}`,
                   value: data[property],
                 }
               : null
           }
           customIcon={
             <ButtonIcon
-              handleClick={() => handleChange(property, "")}
+              handleClick={() => handleChange(property, {})}
               icon={<IconClose size="medium" />}
             />
           }
           handleChange={(e) => {
-            handleChange(property, e.value);
+            handleChange(property, { pn: e.value.pn, nama: e.value.name });
           }}
         />
-        {validation && validation[property] ? (
-          <ErrorValidation message={validation[property]} />
+        {validation && validation[`${property}.pn`] ? (
+          <ErrorValidation message={validation[`${property}.pn`]} />
         ) : (
           ""
         )}
@@ -43,4 +43,4 @@ const CardTeam = ({
   );
 };
 
-export default CardTeam;
+export default CardPICTeam;

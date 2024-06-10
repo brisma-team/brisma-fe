@@ -124,10 +124,6 @@ const index = () => {
   ];
 
   useEffect(() => {
-    console.log("statusName => ", statusName);
-  }, [statusName]);
-
-  useEffect(() => {
     if (!router.isReady) return;
     const { id } = router.query;
     setParams({
@@ -312,7 +308,7 @@ const index = () => {
       2: "mapa",
       4: "pelaksanaan",
       10: "reporting",
-      8: "wrapup_meeting",
+      8: "wrapup",
     };
 
     let path = pathMappings[statusCode] || "";

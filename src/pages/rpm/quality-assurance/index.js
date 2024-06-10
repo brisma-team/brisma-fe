@@ -15,25 +15,19 @@ import { useApprovalRPM } from "@/data/rpm/kegiatan";
 import { useOverviewRPM, useProjectEWPList } from "@/data/rpm/common/overview";
 import { OverviewLayoutEWP } from "@/layouts/ewp";
 import { ModalAddProjectRPM } from "@/components/molecules/rpm/common/overview";
-import {
-  confirmationSwal,
-  fetchApi,
-  infoSwal,
-  loadingSwal,
-  setErrorValidation,
-} from "@/helpers";
+import { confirmationSwal, fetchApi, infoSwal, loadingSwal } from "@/helpers";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setObjData,
   setObjDataProjectEWPList,
   setObjPayload,
-  setValidationErrors,
+  // setValidationErrors,
   resetObjData,
   resetObjDataProjectEWPList,
   resetObjPayload,
-  resetValidationErrors,
+  // resetValidationErrors,
 } from "@/slices/rpm/quality-assurance/overviewRPMQualityAssuranceSlice";
-import overviewRPMSchema from "@/helpers/schemas/rpm/overview/overviewRPMSchema";
+// import overviewRPMSchema from "@/helpers/schemas/rpm/overview/overviewRPMSchema";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -217,7 +211,7 @@ const index = () => {
     setShowModal(false);
     setCurrentModalStage(1);
     dispatch(resetObjPayload());
-    dispatch(resetValidationErrors());
+    // dispatch(resetValidationErrors());
   };
 
   const handleChangePayload = (property, value) => {
@@ -239,43 +233,43 @@ const index = () => {
   };
 
   const handleSubmitForm = async () => {
-    const schemaMapping = {
-      schema: overviewRPMSchema,
-      resetErrors: resetValidationErrors,
-      setErrors: setValidationErrors,
-    };
+    // const schemaMapping = {
+    //   schema: overviewRPMSchema,
+    //   resetErrors: resetValidationErrors,
+    //   setErrors: setValidationErrors,
+    // };
 
-    const validate = setErrorValidation(payload, dispatch, schemaMapping);
+    // const validate = setErrorValidation(payload, dispatch, schemaMapping);
 
-    if (validate) {
-      loadingSwal();
-      await fetchApi(
-        "POST",
-        `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/qa/projects/init`,
-        {
-          ewp_id: payload?.ewp_id,
-          pic_auditee: {
-            pn: payload?.pic_submitter?.pn,
-            nama: payload?.pic_submitter?.name,
-          },
-          pic_auditor: {
-            pn: payload?.pic_evaluator?.pn,
-            nama: payload?.pic_evaluator?.name,
-          },
-          pic_nego: {
-            pn: payload?.pic_negotiator?.pn,
-            nama: payload?.pic_negotiator?.name,
-          },
-        }
-      );
-      loadingSwal("close");
-      setShowModal(false);
-      overviewRPMMutate();
-      projectEWPListMutate();
-      dispatch(resetObjPayload());
-      dispatch(resetValidationErrors());
-      setCurrentModalStage(1);
-    }
+    // if (validate) {
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/qa/projects/init`,
+      {
+        ewp_id: payload?.ewp_id,
+        pic_auditee: {
+          pn: payload?.pic_submitter?.pn,
+          nama: payload?.pic_submitter?.name,
+        },
+        pic_auditor: {
+          pn: payload?.pic_evaluator?.pn,
+          nama: payload?.pic_evaluator?.name,
+        },
+        pic_nego: {
+          pn: payload?.pic_negotiator?.pn,
+          nama: payload?.pic_negotiator?.name,
+        },
+      }
+    );
+    loadingSwal("close");
+    setShowModal(false);
+    overviewRPMMutate();
+    projectEWPListMutate();
+    dispatch(resetObjPayload());
+    // dispatch(resetValidationErrors());
+    setCurrentModalStage(1);
+    // }
   };
   // [ START ] handler for modal add project RPM
 

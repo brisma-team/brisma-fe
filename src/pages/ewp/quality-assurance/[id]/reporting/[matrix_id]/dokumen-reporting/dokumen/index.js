@@ -420,20 +420,11 @@ const index = () => {
         }
       }
 
-      if (actionType === "change") {
-        const response = await fetchApi(
-          "PATCH",
-          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/change`,
-          data
-        );
-        if (!response.isDismissed) return;
-      } else {
-        await fetchApi(
-          "POST",
-          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/${actionType}`,
-          data
-        );
-      }
+      await fetchApi(
+        actionType === "change" ? "PATCH" : "POST",
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/${actionType}`,
+        data
+      );
 
       workflowDetailEWPMutate();
       dispatch(resetObjDataWorkflow());
@@ -483,6 +474,7 @@ const index = () => {
             activeIndex={activeIndex}
             // isHideButton={isCloseSubmodule || !isOnProgress}
             renderContent={renderContent}
+            withoutComment
           />
         </div>
         <div>
