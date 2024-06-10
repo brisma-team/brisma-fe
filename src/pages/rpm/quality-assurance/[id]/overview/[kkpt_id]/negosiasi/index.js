@@ -74,7 +74,8 @@ const index = () => {
 
   const { user } = useUser();
   const { objectAuditDetailRPM } = useObjectAuditDetailRPM({
-    id: params?.kkpt_id,
+    id: params?.id,
+    kkpt_id: params?.kkpt_id,
     module: "qa",
   });
   const { rekomendasiList, rekomendasiListMutate } = useRekomendasiList({

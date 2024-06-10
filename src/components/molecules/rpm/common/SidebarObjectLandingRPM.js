@@ -22,7 +22,8 @@ const SidebarObjectLandingRPM = ({ withMenu, module_page, module_data }) => {
   const [data, setData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const { objectAuditDetailRPM } = useObjectAuditDetailRPM({
-    id: params?.kkpt_id,
+    id: params?.id,
+    kkpt_id: params?.kkpt_id,
     module: module_data,
   });
 
@@ -66,6 +67,10 @@ const SidebarObjectLandingRPM = ({ withMenu, module_page, module_data }) => {
       },
     ]);
   }, [objectAuditDetailRPM]);
+
+  useEffect(() => {
+    console.log("data => ", data);
+  }, [data]);
 
   const subMenu = [
     { name: "Log", href: `/log` },
@@ -112,7 +117,7 @@ const SidebarObjectLandingRPM = ({ withMenu, module_page, module_data }) => {
             <div className="flex flex-col gap-0.5">
               <div className="text-sm text-brisma font-bold">Object Audit</div>
               <div className="text-sm text-brisma">
-                {`[${data?.object?.id}] ${data?.object?.name}`}
+                {`[${data?.object?.id?.toUpperCase()}] ${data?.object?.name}`}
               </div>
             </div>
             <div className="flex flex-col gap-0.5">
