@@ -4,7 +4,12 @@ import {
   FormLabel,
   PekerjaSelect,
 } from "@/components/molecules/commons";
-import { ButtonIcon, CloseModal, TextInput } from "@/components/atoms";
+import {
+  ButtonIcon,
+  CloseModal,
+  ErrorValidation,
+  TextInput,
+} from "@/components/atoms";
 import { CardFormInputTeam } from "@/components/molecules/pat";
 import Image from "next/image";
 import { ImageCheck, ImageGroup } from "@/helpers/imagesUrl";
@@ -28,7 +33,6 @@ const ModalWorkflowHeader = ({
   let isInitiator, isAdmin;
   isInitiator = user?.pn == data?.maker?.pn;
   isAdmin = checkRoleIsAdmin(user?.role_kode);
-
   return (
     <div className={`${width ? width : `w-[61rem]`} relative`}>
       <CloseModal handleCloseModal={handleCloseModal} showModal={showModal} />
@@ -120,6 +124,13 @@ const ModalWorkflowHeader = ({
                 />
                 <FormLabel
                   title={"Inisiator Pengganti"}
+                  validationError={
+                    validationErrors[`initiator_to.pn`] && (
+                      <ErrorValidation
+                        message={validationErrors[`initiator_to.pn`]}
+                      />
+                    )
+                  }
                   form={
                     <PekerjaSelect
                       handleChange={(e) =>

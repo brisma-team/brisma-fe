@@ -1,26 +1,20 @@
 import { ModalScroll } from "@/components/atoms";
 import useUser from "@/data/useUser";
-import { checkRoleIsAdmin, confirmationSwal } from "@/helpers";
+import { confirmationSwal } from "@/helpers";
 import ModalWorkflowHeader from "./ModalWorkflowHeader";
 import ModalWorkflowFooter from "./ModalWorkflowFooter";
 
 const ModalApproveProjectPat = ({
-  workflowData,
   showModal,
   setShowModal,
   headerTitle,
   handleSubmit,
+  handleReject,
   handleChangeSelect,
-  handleCloseModal,
-  validationErrors,
-  widthHeader,
   objectId,
+  data,
 }) => {
   const { user } = useUser();
-  let isApproval, isInitiator, isAdmin;
-  isInitiator = user?.data?.pn == workflowData?.maker?.pn;
-  isApproval = user?.data?.pn == workflowData?.on_approver?.pn;
-  isAdmin = checkRoleIsAdmin(user?.data?.role_kode);
 
   console.log(objectId);
   const closeModal = async () => {
@@ -33,47 +27,55 @@ const ModalApproveProjectPat = ({
     }
 
     setShowModal(false);
-    handleCloseModal && handleCloseModal();
   };
 
   return (
     <ModalScroll
       showModal={showModal}
+      positionCenter={true}
       header={
         <ModalWorkflowHeader
           user={user?.data}
-          data={workflowData}
-          validationErrors={validationErrors}
+          data={data}
           handleCloseModal={closeModal}
           showModal={showModal}
           headerTitle={headerTitle}
           handleChange={handleChangeSelect}
-          width={widthHeader}
         />
       }
       footer={
         <ModalWorkflowFooter
           user={user?.data}
-          data={workflowData}
+          data={data}
           handleSubmit={handleSubmit}
+          handleReject={handleReject}
         />
       }
-      widthFullFooter={
-        workflowData?.status_approver === "On Approver" && isApproval && true
-      }
-      withoutFooter={
-        workflowData?.status_approver === "On Progress" && isInitiator
-          ? false
-          : workflowData?.status_approver === "On Approver" && isApproval
-          ? false
-          : workflowData?.maker?.pn === user?.data?.pn &&
-            workflowData?.status_approver === "On Approver"
-          ? false
-          : workflowData?.status_approver === "On Progress" && isAdmin
-          ? false
-          : true
-      }
-    ></ModalScroll>
+    >
+      <div className="p-5 w-[61rem] relative h-full">
+        <p className="text-sm font-semibold">Deskripsi</p>
+        <p className="text-sm text-justify">
+          Sebagai auditor, saya dengan ini menyatakan kesediaan untuk
+          melanjutkan dan menyetujui pembuatan proyek EWP P.A.T. ini. Saya
+          berkomitmen untuk mengikuti segala proses, tahapan, dan tanggung jawab
+          yang terkait dengan pelaksanaan proyek tersebut. Saya juga memahami
+          dan menerima segala konsekuensi yang mungkin timbul selama pelaksanaan
+          proyek ini, serta berjanji untuk mematuhi semua ketentuan dan prosedur
+          yang telah ditetapkan demi keberhasilan proyek ini.
+          <br />
+          <br />
+          Saya mengakui pentingnya peran saya dalam memastikan bahwa semua
+          langkah dan tahapan dalam proyek ini dilaksanakan dengan baik dan
+          sesuai dengan rencana. Oleh karena itu, saya akan memberikan dukungan
+          penuh dan kerjasama yang diperlukan untuk mencapai tujuan yang telah
+          ditetapkan. Saya juga berkomitmen untuk melaporkan setiap hambatan
+          atau masalah yang mungkin terjadi selama proses pelaksanaan proyek,
+          agar dapat segera diatasi demi kelancaran dan kesuksesan proyek ini,
+          serta memastikan bahwa semua temuan dan rekomendasi audit
+          ditindaklanjuti dengan tepat.
+        </p>
+      </div>
+    </ModalScroll>
   );
 };
 
