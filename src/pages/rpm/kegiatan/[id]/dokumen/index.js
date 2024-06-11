@@ -33,9 +33,10 @@ const listBab = [{ idx: 1, title: "Monitoring" }];
 const index = () => {
   const router = useRouter();
   const [params, setParams] = useState({
-    id: 1,
+    id: "",
     matrix_id: 1,
     kkpt_id: 1,
+    is_approval: false,
   });
 
   const baseUrl = `/rpm/kegiatan/${params?.id}`;
@@ -52,11 +53,12 @@ const index = () => {
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { id, matrix_id, kkpt_id } = router.query;
+    const { id, matrix_id, kkpt_id, is_approval } = router.query;
     setParams({
       id,
       matrix_id,
       kkpt_id,
+      is_approval,
     });
   }, [router.isReady]);
   const workflowData = useSelector(
@@ -116,6 +118,10 @@ const index = () => {
     }
   };
   // [ END ]
+
+  useEffect(() => {
+    setShowModalApproval(params?.is_approval);
+  }, [params?.is_approval]);
 
   // [ START ] Hook ini berfungsi untuk merubah fokus dokumen berdasarkan current active index
   // yang diklik pada bagian Navigation Document
@@ -253,7 +259,7 @@ const index = () => {
     } else {
       dispatch(resetWorkflowData());
     }
-  }, [workflowRPMData]);
+  }, [workflowRPMData, showModalApproval]);
   // [ END ]
 
   // [ START ] function untuk Modal Workflow
@@ -371,8 +377,8 @@ const index = () => {
         );
       }
 
-      workflowRPMMutate();
       dispatch(resetWorkflowData());
+      workflowRPMMutate();
       setShowModalApproval(false);
       loadingSwal("close");
     }
@@ -393,7 +399,6 @@ const index = () => {
           .join("")
       : "";
   };
-
   return (
     <LandingLayoutRPMKegiatan>
       <Breadcrumbs data={breadcrumbs} />
