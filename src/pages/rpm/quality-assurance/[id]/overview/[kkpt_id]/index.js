@@ -67,6 +67,12 @@ const index = () => {
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
           url: `${baseUrl}/negosiasi`,
         },
+        {
+          title: "Summary",
+          description:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          url: `${baseUrl}/summary`,
+        },
       ]);
     } else {
       setData([]);

@@ -56,6 +56,7 @@ const index = () => {
     id: 0,
     kkpt_id: 0,
     action_plan_id: 0,
+    is_approval: false,
   });
   const baseUrl = `/rpm/quality-assurance/${params?.id}/overview/${params?.kkpt_id}`;
   const pathName = `${baseUrl}/evaluasi/${params?.action_plan_id}`;
@@ -112,13 +113,18 @@ const index = () => {
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { id, kkpt_id, action_plan_id } = router.query;
+    const { id, kkpt_id, action_plan_id, is_approval } = router.query;
     setParams({
       id,
       kkpt_id,
       action_plan_id,
+      is_approval,
     });
   }, [router.isReady]);
+
+  useEffect(() => {
+    setShowModalApproval(params?.is_approval);
+  }, [params?.is_approval]);
 
   useEffect(() => {
     if (objectAuditDetailRPM?.data) {
@@ -134,7 +140,7 @@ const index = () => {
           path: `/rpm/quality-assurance/${params?.id}/overview`,
         },
         {
-          name: kkptInfo?.kkpt_ewp?.kkpt?.kkpa?.mapa_project_audit?.project_id,
+          name: kkptInfo?.kkpt_ewp?.kkpt?.kkpa?.mapa_project_audit?.project_id?.toUpperCase(),
           path: baseUrl,
         },
         {
@@ -155,7 +161,6 @@ const index = () => {
   useEffect(() => {
     if (actionPlan?.data) {
       const response = actionPlan?.data;
-      console.log("actionPlan?.data => ", actionPlan?.data);
       const { batas_waktu, hasil_evaluasi } = response;
       const mappingContent = {
         batas_waktu,
@@ -191,7 +196,7 @@ const index = () => {
       dispatch(resetObjPayloadTanggapan());
       dispatch(resetObjPayloadHasilEvaluasi());
     }
-  }, [actionPlan, user]);
+  }, [actionPlan, user, showModalTanggapan]);
 
   useEffect(() => {
     if (workflowRPM?.data) {

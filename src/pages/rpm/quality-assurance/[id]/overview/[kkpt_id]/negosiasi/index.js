@@ -133,7 +133,7 @@ const index = () => {
           path: `/rpm/quality-assurance/${params?.id}/overview`,
         },
         {
-          name: kkptInfo?.kkpt_ewp?.kkpt?.kkpa?.mapa_project_audit?.project_id,
+          name: kkptInfo?.kkpt_ewp?.kkpt?.kkpa?.mapa_project_audit?.project_id?.toUpperCase(),
           path: baseUrl,
         },
       ]);

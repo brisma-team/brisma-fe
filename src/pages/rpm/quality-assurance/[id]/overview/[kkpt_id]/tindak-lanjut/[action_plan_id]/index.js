@@ -58,6 +58,7 @@ const index = () => {
     id: 0,
     kkpt_id: 0,
     action_plan_id: 0,
+    is_approval: false,
   });
   const baseUrl = `/rpm/quality-assurance/${params?.id}/overview/${params?.kkpt_id}`;
   const pathName = `${baseUrl}/tindak-lanjut/${params?.action_plan_id}`;
@@ -116,13 +117,18 @@ const index = () => {
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { id, kkpt_id, action_plan_id } = router.query;
+    const { id, kkpt_id, action_plan_id, is_approval } = router.query;
     setParams({
       id,
       kkpt_id,
       action_plan_id,
+      is_approval,
     });
   }, [router.isReady]);
+
+  useEffect(() => {
+    setShowModalApproval(params?.is_approval);
+  }, [params?.is_approval]);
 
   useEffect(() => {
     if (objectAuditDetailRPM?.data) {
@@ -138,7 +144,7 @@ const index = () => {
           path: `/rpm/quality-assurance/${params?.id}/overview`,
         },
         {
-          name: kkptInfo?.kkpt_ewp?.kkpt?.kkpa?.mapa_project_audit?.project_id,
+          name: kkptInfo?.kkpt_ewp?.kkpt?.kkpa?.mapa_project_audit?.project_id?.toUpperCase(),
           path: baseUrl,
         },
         {
@@ -158,7 +164,6 @@ const index = () => {
 
   useEffect(() => {
     if (actionPlan?.data) {
-      console.log("actionPlan?.data => ", actionPlan?.data);
       const response = actionPlan?.data;
       const { batas_waktu } = response;
       const mappingContent = {
@@ -189,10 +194,9 @@ const index = () => {
       dispatch(resetObjDataDokumenLampiran());
       dispatch(resetObjPayloadTanggapan());
     }
-  }, [actionPlan, user]);
+  }, [actionPlan, user, showModalTanggapan]);
 
   useEffect(() => {
-    console.log("workflowRPM?.data => ", workflowRPM?.data);
     if (workflowRPM?.data) {
       const workflowInfo = workflowRPM?.data?.info;
       const maker = workflowRPM?.data?.initiator;
@@ -466,20 +470,11 @@ const index = () => {
         }
       }
 
-      if (actionType === "change") {
-        const response = await fetchApi(
-          "PATCH",
-          `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/workflow/change`,
-          data
-        );
-        if (!response.isDismissed) return;
-      } else {
-        await fetchApi(
-          "POST",
-          `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/workflow/${actionType}`,
-          data
-        );
-      }
+      await fetchApi(
+        actionType === "change" ? "PATCH" : "POST",
+        `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/workflow/${actionType}`,
+        data
+      );
 
       workflowRPMMutate();
       dispatch(resetObjDataWorkflow());

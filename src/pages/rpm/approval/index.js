@@ -9,7 +9,7 @@ import {
 import {
   TableApprovalQueue,
   TableHistory,
-} from "@/components/molecules/ewp/approval";
+} from "@/components/molecules/rpm/common/approval";
 import { useSelector, useDispatch } from "react-redux";
 import { CardTotalListSidebar } from "@/components/molecules/commons";
 import _ from "lodash";
@@ -61,16 +61,17 @@ const index = () => {
 
           return {
             ..._.pick(queue, [
-              "ewp_id",
+              "rpm_id",
+              "kkpt_id",
               "sub_modul_id",
               "sub_modul",
               "create_by",
               "project_id",
               "project_name",
-              "matrix_id",
               "ref_metode",
               "ref_tipe",
             ]),
+            project_name: queue?.nama_project,
             fase_approval: defineFaseApproval(sub_modul, ref_tipe),
           };
         });
@@ -86,13 +87,13 @@ const index = () => {
           return {
             ..._.pick(history, [
               "project_id",
-              "project_name",
               "createdAt",
               "created_at",
               "ref_metode",
               "ref_tipe",
               "note",
             ]),
+            project_name: history?.nama_project,
             sub_modul: defineFaseApproval(sub_modul, ref_tipe),
             status_approval:
               is_signed == null ? "" : is_signed ? "Approved" : "Rejected",
@@ -106,20 +107,16 @@ const index = () => {
     }
   }, [approvalRPM]);
 
+  useEffect(() => {
+    console.log("dataTablesApprovalQueue => ", dataTablesApprovalQueue);
+  }, [dataTablesApprovalQueue]);
+
   const defineFaseApproval = (sub_modul, tipe) => {
     let faseApproval;
     switch (tipe?.nama) {
       case "Consulting":
-        if (sub_modul === "mapa") {
-          faseApproval = "Perencanaan";
-        } else if (sub_modul === "kkpa") {
-          faseApproval = "Analisa";
-        } else if (sub_modul === "kkpt") {
-          faseApproval = "Peluang Peningkatan";
-        } else if (sub_modul === "matrix_peluang_peningkatan") {
-          faseApproval = "Matrix Peluang Peningkatan";
-        } else if (sub_modul === "adendum") {
-          faseApproval = "Addendum";
+        if (sub_modul === "project_rpm") {
+          faseApproval = "Monitoring";
         }
         break;
       case "Monitoring Offsite":
@@ -133,6 +130,11 @@ const index = () => {
           faseApproval = "Tindak Lanjut";
         }
         break;
+      case "Quality Assurance":
+        if (sub_modul === "action_plan_tindak_lanjut") {
+          faseApproval = "Action Plan Tindak Lanjut";
+        }
+        break;
       default:
         faseApproval = "-";
         break;
@@ -142,24 +144,23 @@ const index = () => {
   };
 
   const handleClickActionOnTableApprovalQueue = (data) => {
-    const { ref_tipe, sub_modul, ewp_id, sub_modul_id } = data;
+    const { ref_tipe, sub_modul, rpm_id, kkpt_id, sub_modul_id } = data;
     let query;
     switch (ref_tipe?.nama) {
       case "Consulting":
-        if (sub_modul === "mapa") {
-          query = `konsulting/${ewp_id}/perencanaan`;
-        } else if (sub_modul === "kkpa") {
-          query = `konsulting/${ewp_id}/analisa/${sub_modul_id}`;
-        } else if (sub_modul === "kkpt") {
-          query = `konsulting/${ewp_id}/peluang-peningkatan/${data?.matrix_id}/overview/${sub_modul_id}`;
-        } else if (sub_modul === "matrix_peluang_peningkatan") {
-          query = "Matrix Peluang Peningkatan";
-        } else if (sub_modul === "adendum") {
-          query = `konsulting/${ewp_id}/addendum`;
-          break;
+        if (sub_modul === "project_rpm") {
+          query = `kegiatan/${rpm_id}/dokumen`;
         }
+        break;
+      case "Quality Assurance":
+        if (sub_modul === "action_plan_tindak_lanjut") {
+          query = `quality-assurance/${rpm_id}/overview/${kkpt_id}/tindak-lanjut/${sub_modul_id}`;
+        } else if (sub_modul === "action_plan_evaluasi") {
+          query = `quality-assurance/${rpm_id}/overview/${kkpt_id}/evaluasi/${sub_modul_id}`;
+        }
+        break;
     }
-    router.push(`${query}/dokumen?is_approval=true`);
+    router.push(`${query}?is_approval=true`);
   };
 
   return (
