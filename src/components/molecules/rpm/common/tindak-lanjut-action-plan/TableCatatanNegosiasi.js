@@ -50,7 +50,7 @@ const TableCatatanNegosiasi = ({ data }) => {
                 <p className="font-bold text-brisma">DEADLINE</p>
               </Header>
               <Header
-                width="2O%"
+                width="20%"
                 className="border-t border-r cell-custom-dataTables justify-center"
               >
                 <p className="font-bold text-brisma">EVALUASI</p>
@@ -84,19 +84,19 @@ const TableCatatanNegosiasi = ({ data }) => {
                     </Cell>
                     <Cell
                       width="30%"
-                      className="border-r cell-custom-dataTables justify-center"
+                      className="border-r cell-custom-dataTables"
                     >
-                      test
+                      {action_plan}
                     </Cell>
                     <Cell
                       width="15%"
-                      className="border-r cell-custom-dataTables"
+                      className="border-r cell-custom-dataTables justify-center"
                     >
                       {deadline ? convertDate(deadline, "/", "d") : ""}
                     </Cell>
                     <Cell
                       width="20%"
-                      className="border-r cell-custom-dataTables"
+                      className="border-r cell-custom-dataTables justify-center"
                     >
                       <LozengeField appreance="default">
                         {evaluasi}
@@ -104,7 +104,7 @@ const TableCatatanNegosiasi = ({ data }) => {
                     </Cell>
                     <Cell
                       width="20%"
-                      className="border-r cell-custom-dataTables"
+                      className="border-r cell-custom-dataTables justify-center"
                     >
                       {negosiasi || ""}
                     </Cell>

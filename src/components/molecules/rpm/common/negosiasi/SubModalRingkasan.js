@@ -40,7 +40,9 @@ const SubModalRingkasan = ({
           <div className="p-3 flex flex-col gap-2.5 h-full">
             <Content
               title={"OBJEK TINDAK LANJUT"}
-              value={`[${data?.object?.id || ""}] ${data?.object?.name || ""}`}
+              value={`[${data?.object?.id?.toUpperCase() || ""}] ${
+                data?.object?.name || ""
+              }`}
             />
             <Content
               title={"UKER"}

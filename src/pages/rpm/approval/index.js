@@ -63,6 +63,7 @@ const index = () => {
             ..._.pick(queue, [
               "rpm_id",
               "kkpt_id",
+              "action_plan_id",
               "sub_modul_id",
               "sub_modul",
               "create_by",
@@ -107,10 +108,6 @@ const index = () => {
     }
   }, [approvalRPM]);
 
-  useEffect(() => {
-    console.log("dataTablesApprovalQueue => ", dataTablesApprovalQueue);
-  }, [dataTablesApprovalQueue]);
-
   const defineFaseApproval = (sub_modul, tipe) => {
     let faseApproval;
     switch (tipe?.nama) {
@@ -133,6 +130,10 @@ const index = () => {
       case "Quality Assurance":
         if (sub_modul === "action_plan_tindak_lanjut") {
           faseApproval = "Action Plan Tindak Lanjut";
+        } else if (sub_modul === "action_plan_evaluasi") {
+          faseApproval = "Action Plan Evaluasi";
+        } else if (sub_modul === "action_plan_nego") {
+          faseApproval = "Negosiasi";
         }
         break;
       default:
@@ -144,7 +145,14 @@ const index = () => {
   };
 
   const handleClickActionOnTableApprovalQueue = (data) => {
-    const { ref_tipe, sub_modul, rpm_id, kkpt_id, sub_modul_id } = data;
+    const {
+      ref_tipe,
+      sub_modul,
+      rpm_id,
+      kkpt_id,
+      sub_modul_id,
+      action_plan_id,
+    } = data;
     let query;
     switch (ref_tipe?.nama) {
       case "Consulting":
@@ -157,6 +165,8 @@ const index = () => {
           query = `quality-assurance/${rpm_id}/overview/${kkpt_id}/tindak-lanjut/${sub_modul_id}`;
         } else if (sub_modul === "action_plan_evaluasi") {
           query = `quality-assurance/${rpm_id}/overview/${kkpt_id}/evaluasi/${sub_modul_id}`;
+        } else if (sub_modul === "action_plan_nego") {
+          query = `quality-assurance/${rpm_id}/overview/${kkpt_id}/negosiasi/${action_plan_id}`;
         }
         break;
     }

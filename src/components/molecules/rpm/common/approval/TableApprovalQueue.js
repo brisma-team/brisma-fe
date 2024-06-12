@@ -98,6 +98,7 @@ const TableApprovalQueue = ({ data, handleClickAction }) => {
               render={({
                 rpm_id,
                 kkpt_id,
+                action_plan_id,
                 sub_modul_id,
                 sub_modul,
                 create_by,
@@ -122,6 +123,7 @@ const TableApprovalQueue = ({ data, handleClickAction }) => {
                           handleClickAction({
                             rpm_id,
                             kkpt_id,
+                            action_plan_id,
                             sub_modul,
                             sub_modul_id,
                             fase_approval,

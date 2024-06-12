@@ -173,6 +173,19 @@ const index = () => {
         },
         action_plan: response?.action_plan_kkpt?.name,
       };
+      const mappingCatatanNegosiasi = response?.catatan_negosiasi?.length
+        ? response?.catatan_negosiasi?.map((catatan_nego) => {
+            const responseActionPlanSebelum =
+              catatan_nego?.rpm_action_plan_sebelum;
+            return {
+              tanggal_kejadian: catatan_nego?.createdAt,
+              action_plan: responseActionPlanSebelum?.action_plan_kkpt?.name,
+              deadline: responseActionPlanSebelum?.batas_waktu,
+              evaluasi: responseActionPlanSebelum?.hasil_evaluasi,
+              negosiasi: catatan_nego?.metode_nego?.nama,
+            };
+          })
+        : [];
       const mappingDokumenLampiran = response?.lampiran_tindak_lanjut?.length
         ? response?.lampiran_tindak_lanjut?.map((doc) => {
             return {
@@ -186,11 +199,13 @@ const index = () => {
 
       setIsPIC(response?.maker_submitter?.pn === user?.data?.pn);
       dispatch(setObjDataContent(mappingContent));
+      dispatch(setObjDataCatatanNegosiasi(mappingCatatanNegosiasi));
       dispatch(setObjDataDokumenLampiran(mappingDokumenLampiran));
       dispatch(setObjPayloadTanggapan(response?.desc_tanggapan));
     } else {
       setIsPIC(false);
       dispatch(resetObjDataContent());
+      dispatch(resetObjDataCatatanNegosiasi());
       dispatch(resetObjDataDokumenLampiran());
       dispatch(resetObjPayloadTanggapan());
     }
