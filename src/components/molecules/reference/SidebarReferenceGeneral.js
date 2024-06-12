@@ -68,6 +68,7 @@ const SidebarReferenceGeneral = () => {
 
   const handleSidebarItemClick = (e, path) => {
     e.preventDefault();
+    console.log(path);
     // Redirect to the clicked path using router.push
     router.push(path);
   };
@@ -126,8 +127,8 @@ const SidebarReferenceGeneral = () => {
                               <li key={childIndex}>
                                 <button
                                   className="bg-transparent border-none cursor-pointer p-2"
-                                  onClick={() =>
-                                    handleItemClick(childItem.path)
+                                  onClick={(e) =>
+                                    handleItemClick(e, childItem.path)
                                   }
                                 >
                                   {childItem.name}

@@ -16,7 +16,9 @@ const CardContentObjek = ({ data, isNewData }) => {
       <div className="flex flex-col gap-2.5 h-full px-3 py-2">
         <Content
           title={"OBJEK TINDAK LANJUT"}
-          value={`[${data?.object?.id || ""}] ${data?.object?.name || ""}`}
+          value={`[${data?.object?.id?.toUpperCase() || ""}] ${
+            data?.object?.name || ""
+          }`}
           titleColor={isNewData ? "text-atlasian-red" : ""}
           textColor={isNewData ? "text-atlasian-red" : ""}
         />

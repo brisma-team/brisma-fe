@@ -114,30 +114,31 @@ const TableDokumenLampiran = ({
             </div>
           )}
         </TableTree>
-        {!withoutAction ? (
-          <div className="mt-4 w-full flex justify-end">
-            <div className="flex gap-3 items-center">
-              <div className="w-60">
-                <HasilEvaluasiSelect
-                  handleReset={() => handleChangePayload({})}
-                  handleChange={(e) => handleChangePayload(e.value)}
-                  selectedValue={
-                    payload?.kode
-                      ? { label: payload?.name, value: payload }
-                      : null
-                  }
-                />
-              </div>
+        <div className="mt-4 w-full flex justify-end">
+          <div className="flex gap-3 items-center">
+            <div className="w-60">
+              <HasilEvaluasiSelect
+                handleReset={() => handleChangePayload({})}
+                handleChange={(e) => handleChangePayload(e.value)}
+                selectedValue={
+                  payload?.kode
+                    ? { label: payload?.name, value: payload }
+                    : null
+                }
+                isDisabled={withoutAction}
+              />
+            </div>
+            {!withoutAction ? (
               <div className="flex gap-3 h-fit">
                 <div className="rounded w-28 bg-atlasian-green">
                   <ButtonField text="Simpan" handler={handleSubmitSave} />
                 </div>
               </div>
-            </div>
+            ) : (
+              ""
+            )}
           </div>
-        ) : (
-          ""
-        )}
+        </div>
       </div>
     </CardContentHeaderFooter>
   );

@@ -80,6 +80,7 @@ const TableRekomendasi = ({
               render={({
                 id,
                 nama,
+                description,
                 status,
                 hasil_evaluasi,
                 pic,
@@ -150,8 +151,10 @@ const TableRekomendasi = ({
                       >
                         {role === "parent" ? (
                           <p>
-                            <span className="font-semibold">Action Plan</span> :{" "}
-                            {nama}
+                            <span className="font-semibold">
+                              {nama?.toUpperCase()}
+                            </span>{" "}
+                            : {description}
                           </p>
                         ) : role === "child" ? (
                           <Link href={`${baseUrl}/negosiasi/${id}`}>

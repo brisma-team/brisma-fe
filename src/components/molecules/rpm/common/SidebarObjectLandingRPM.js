@@ -65,12 +65,12 @@ const SidebarObjectLandingRPM = ({ withMenu, module_page, module_data }) => {
         name: "Negosiasi",
         href: `/negosiasi`,
       },
+      {
+        name: "Summary",
+        href: `/summary`,
+      },
     ]);
   }, [objectAuditDetailRPM]);
-
-  useEffect(() => {
-    console.log("data => ", data);
-  }, [data]);
 
   const subMenu = [
     { name: "Log", href: `/log` },
@@ -92,7 +92,9 @@ const SidebarObjectLandingRPM = ({ withMenu, module_page, module_data }) => {
     if (matchSubMenu && matchSubMenu[1]) {
       const page = matchSubMenu[1];
 
-      if (["tindak-lanjut", "evaluasi", "negosiasi"].includes(page)) {
+      if (
+        ["tindak-lanjut", "evaluasi", "negosiasi", "summary"].includes(page)
+      ) {
         setCurrentPage(page);
       }
     } else if (matchMenu && matchMenu[1]) {
@@ -181,7 +183,7 @@ const SidebarObjectLandingRPM = ({ withMenu, module_page, module_data }) => {
                     );
                   })
                 ) : (
-                  <div className="min-h-[7.5rem]" />
+                  <div className="min-h-[10rem]" />
                 )}
               </div>
             </Section>

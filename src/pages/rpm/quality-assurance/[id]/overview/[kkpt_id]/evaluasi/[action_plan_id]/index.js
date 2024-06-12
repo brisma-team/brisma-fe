@@ -40,12 +40,10 @@ import {
 import {
   CardContentActionPlan,
   ModalTanggapan,
+  TableCatatanNegosiasi,
 } from "@/components/molecules/rpm/common";
 import useUser from "@/data/useUser";
-import {
-  TableCatatanNegosiasi,
-  TableDokumenLampiran,
-} from "@/components/molecules/rpm/common/evaluasi-action-plan";
+import { TableDokumenLampiran } from "@/components/molecules/rpm/common/evaluasi-action-plan";
 import workflowSchema from "@/helpers/schemas/common/workflow/workflowSchema";
 import { useActionPlan } from "@/data/rpm/common/evaluasi";
 
@@ -56,6 +54,7 @@ const index = () => {
     id: 0,
     kkpt_id: 0,
     action_plan_id: 0,
+    is_approval: false,
   });
   const baseUrl = `/rpm/quality-assurance/${params?.id}/overview/${params?.kkpt_id}`;
   const pathName = `${baseUrl}/evaluasi/${params?.action_plan_id}`;
@@ -112,13 +111,18 @@ const index = () => {
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { id, kkpt_id, action_plan_id } = router.query;
+    const { id, kkpt_id, action_plan_id, is_approval } = router.query;
     setParams({
       id,
       kkpt_id,
       action_plan_id,
+      is_approval,
     });
   }, [router.isReady]);
+
+  useEffect(() => {
+    setShowModalApproval(params?.is_approval);
+  }, [params?.is_approval]);
 
   useEffect(() => {
     if (objectAuditDetailRPM?.data) {
@@ -134,7 +138,7 @@ const index = () => {
           path: `/rpm/quality-assurance/${params?.id}/overview`,
         },
         {
-          name: kkptInfo?.kkpt_ewp?.kkpt?.kkpa?.mapa_project_audit?.project_id,
+          name: kkptInfo?.kkpt_ewp?.kkpt?.kkpa?.mapa_project_audit?.project_id?.toUpperCase(),
           path: baseUrl,
         },
         {
@@ -155,7 +159,6 @@ const index = () => {
   useEffect(() => {
     if (actionPlan?.data) {
       const response = actionPlan?.data;
-      console.log("actionPlan?.data => ", actionPlan?.data);
       const { batas_waktu, hasil_evaluasi } = response;
       const mappingContent = {
         batas_waktu,
@@ -164,6 +167,19 @@ const index = () => {
         },
         action_plan: response?.action_plan_kkpt?.name,
       };
+      const mappingCatatanNegosiasi = response?.catatan_negosiasi?.length
+        ? response?.catatan_negosiasi?.map((catatan_nego) => {
+            const responseActionPlanSebelum =
+              catatan_nego?.rpm_action_plan_sebelum;
+            return {
+              tanggal_kejadian: catatan_nego?.createdAt,
+              action_plan: responseActionPlanSebelum?.action_plan_kkpt?.name,
+              deadline: responseActionPlanSebelum?.batas_waktu,
+              evaluasi: responseActionPlanSebelum?.hasil_evaluasi,
+              negosiasi: catatan_nego?.metode_nego?.nama,
+            };
+          })
+        : [];
       const mappingDokumenLampiran = response?.lampiran_tindak_lanjut?.length
         ? response?.lampiran_tindak_lanjut?.map((doc) => {
             return {
@@ -177,6 +193,7 @@ const index = () => {
 
       setIsPIC(response?.maker_evaluator?.pn === user?.data?.pn);
       dispatch(setObjDataContent(mappingContent));
+      dispatch(setObjDataCatatanNegosiasi(mappingCatatanNegosiasi));
       dispatch(setObjDataDokumenLampiran(mappingDokumenLampiran));
       dispatch(setObjPayloadTanggapan(response?.desc_evaluasi));
       dispatch(
@@ -187,11 +204,12 @@ const index = () => {
     } else {
       setIsPIC(false);
       dispatch(resetObjDataContent());
+      dispatch(resetObjDataCatatanNegosiasi());
       dispatch(resetObjDataDokumenLampiran());
       dispatch(resetObjPayloadTanggapan());
       dispatch(resetObjPayloadHasilEvaluasi());
     }
-  }, [actionPlan, user]);
+  }, [actionPlan, user, showModalTanggapan]);
 
   useEffect(() => {
     if (workflowRPM?.data) {
@@ -476,7 +494,10 @@ const index = () => {
           />
           <TableCatatanNegosiasi data={dataCatatanNegosiasi} />
         </CardContentActionPlan>
-        <CardApprovalInfo handleClick={() => setShowModalApproval(true)}>
+        <CardApprovalInfo
+          handleClick={() => setShowModalApproval(true)}
+          isDisabled={!actionPlan?.data?.hasil_evaluasi}
+        >
           <p className="text-brisma font-bold text-xl">Approval</p>
           <ApprovalItems
             title={"Proposer"}
@@ -504,7 +525,7 @@ const index = () => {
           workflowData={dataWorkflow}
           historyWorkflow={dataHistoryWorkflow}
           validationErrors={validation}
-          showModal={showModalApproval}
+          showModal={showModalApproval && actionPlan?.data?.hasil_evaluasi}
           headerTitle={"Workflow & Riwayat Approval"}
           handleDelete={handleDelete}
           handleSubmit={handleSubmit}

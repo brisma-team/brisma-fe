@@ -133,7 +133,7 @@ const index = () => {
           path: `/rpm/quality-assurance/${params?.id}/overview`,
         },
         {
-          name: kkptInfo?.kkpt_ewp?.kkpt?.kkpa?.mapa_project_audit?.project_id,
+          name: kkptInfo?.kkpt_ewp?.kkpt?.kkpa?.mapa_project_audit?.project_id?.toUpperCase(),
           path: baseUrl,
         },
       ]);
@@ -152,7 +152,7 @@ const index = () => {
       const mapping = rekomendasiList?.data?.rekomendasi?.rekomendasi?.map(
         (rekomendasi) => {
           return {
-            ..._.pick(rekomendasi, ["id", "nama"]),
+            ..._.pick(rekomendasi, ["id", "nama", "description"]),
             role: "parent",
             children: rekomendasi?.action_plan?.length
               ? rekomendasi?.action_plan?.map((action_plan) => {

@@ -151,10 +151,17 @@ const TableRekomendasi = ({
                             : {description}
                           </p>
                         ) : role === "child" ? (
-                          <Link href={`${baseUrl}/tindak-lanjut/${id}`}>
-                            <span className="font-semibold">Action Plan</span> :{" "}
-                            {nama}
-                          </Link>
+                          pic?.pn ? (
+                            <Link href={`${baseUrl}/tindak-lanjut/${id}`}>
+                              <span className="font-semibold">Action Plan</span>{" "}
+                              : {nama}
+                            </Link>
+                          ) : (
+                            <p>
+                              <span className="font-semibold">Action Plan</span>{" "}
+                              : {nama}: {description}
+                            </p>
+                          )
                         ) : (
                           ""
                         )}

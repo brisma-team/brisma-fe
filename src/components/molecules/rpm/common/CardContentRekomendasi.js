@@ -9,7 +9,7 @@ const CardContentRekomendasi = ({ data }) => {
             OBJEK TINDAK LANJUT
           </div>
           <div className="text-sm text-brisma">
-            {`[${data?.object?.id}] ${data?.object?.name}`}
+            {`[${data?.object?.id?.toUpperCase()}] ${data?.object?.name}`}
           </div>
         </div>
         <div className="flex flex-col gap-0.5">
