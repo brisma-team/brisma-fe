@@ -96,7 +96,7 @@ const index = () => {
       const mapping = summary?.data?.rekomendasi?.rekomendasi?.map(
         (rekomendasi) => {
           return {
-            ..._.pick(rekomendasi, ["id", "nama"]),
+            ..._.pick(rekomendasi, ["id", "nama", "description"]),
             role: "parent",
             children: rekomendasi?.action_plan?.length
               ? rekomendasi?.action_plan?.map((action_plan) => {
@@ -132,18 +132,21 @@ const index = () => {
 
   useEffect(() => {
     if (actionPlan?.data?.catatan_negosiasi?.length) {
-      const mappingNegosiasi = actionPlan?.data?.catatan_negosiasi?.map(
-        (negosiasi) => {
-          return {
-            tanggal_kejadian: negosiasi?.createdAt,
-            action_plan: negosiasi?.action_plan_kkpt?.name,
-            deadline: negosiasi?.action_plan_kkpt?.batas_waktu,
-            evaluasi: negosiasi?.hasil_evaluasi,
-            negosiasi: negosiasi?.metode_nego?.nama,
-          };
-        }
-      );
-      dispatch(setObjDataActionPlan(mappingNegosiasi));
+      const mappingCatatanNegosiasi = actionPlan?.data?.catatan_negosiasi
+        ?.length
+        ? actionPlan?.data?.catatan_negosiasi?.map((catatan_nego) => {
+            const responseActionPlanSebelum =
+              catatan_nego?.rpm_action_plan_sebelum;
+            return {
+              tanggal_kejadian: catatan_nego?.createdAt,
+              action_plan: responseActionPlanSebelum?.action_plan_kkpt?.name,
+              deadline: responseActionPlanSebelum?.batas_waktu,
+              evaluasi: responseActionPlanSebelum?.hasil_evaluasi,
+              negosiasi: catatan_nego?.metode_nego?.nama,
+            };
+          })
+        : [];
+      dispatch(setObjDataActionPlan(mappingCatatanNegosiasi));
     } else {
       dispatch(resetObjDataActionPlan());
     }
@@ -199,8 +202,8 @@ const index = () => {
         />
       </div>
       <ModalSummaryDetail
-        showModal={showModal}
         data={dataActionPlan}
+        showModal={showModal}
         handleCloseModal={handleCloseModal}
       />
       {/* End Content */}

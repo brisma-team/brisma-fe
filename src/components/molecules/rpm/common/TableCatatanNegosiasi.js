@@ -1,3 +1,4 @@
+import { CardContentHeaderFooter } from "@/components/molecules/commons";
 import TableTree, {
   Cell,
   Header,
@@ -5,129 +6,138 @@ import TableTree, {
   Row,
   Rows,
 } from "@atlaskit/table-tree";
-import { DataNotFound } from "../../commons";
-import { LozengeField } from "@/components/atoms";
 import { convertDate } from "@/helpers";
+import { ButtonIcon, CloseModal, LozengeField } from "@/components/atoms";
+import { DataNotFound } from "@/components/molecules/commons";
+import { IconChevronUp, IconChevronDown } from "@/components/icons";
+import { useState } from "react";
 
-const TableCatatanNegosiasi = ({ data }) => {
+const TableCatatanNegosiasi = ({
+  data,
+  showModal,
+  isButtonCloseModal,
+  handleCloseModal,
+}) => {
+  const [showTable, setShowTable] = useState(true);
   return (
-    <TableTree>
-      <Headers>
-        <Header className="!hidden" />
-        <Header
-          width="15%"
-          className="border-x border-t rounded-ss-lg cell-custom-dataTables"
-        >
-          <div
-            className={`custom-table-header justify-center text-sm font-semibold`}
-          >
-            TANGGAL KEJADIAN
+    <CardContentHeaderFooter
+      header={
+        <div className="h-12 flex justify-between items-center px-3">
+          <div className="font-semibold text-base w-full">
+            Catatan Negosiasi
           </div>
-        </Header>
-        <Header
-          width="40%"
-          className="border-t border-r cell-custom-dataTables"
-        >
-          <div className="custom-table-header text-sm font-semibold">
-            ACTION PLAN
-          </div>
-        </Header>
-        <Header
-          width="15%"
-          className="border-t border-r cell-custom-dataTables"
-        >
-          <div className="custom-table-header text-sm font-semibold justify-center">
-            DEADLINE
-          </div>
-        </Header>
-        <Header
-          width="15%"
-          className="border-t border-r cell-custom-dataTables"
-        >
-          <div className="custom-table-header text-sm font-semibold justify-center">
-            EVALUASI
-          </div>
-        </Header>
-        <Header
-          width="15%"
-          className="border-t border-r cell-custom-dataTables rounded-se-lg"
-        >
-          <div className="custom-table-header justify-center text-sm font-semibold">
-            NEGOSIASI
-          </div>
-        </Header>
-      </Headers>
-      {data?.length ? (
-        <Rows
-          items={data}
-          render={({
-            tipe_rekomendasi,
-            action_plan,
-            tanggal_kejadian,
-            deadline,
-            hasil_evaluasi,
-            negosiasi,
-          }) => (
-            <Row>
-              <Cell className="!hidden" />
-              <Cell
-                width="15%"
-                className="border-x cell-custom-dataTables justify-center"
-              >
-                {tanggal_kejadian
-                  ? convertDate(tanggal_kejadian, "/", "d")
-                  : ""}
-              </Cell>
-              <Cell width="40%" className="border-r cell-custom-dataTables">
-                <p>
-                  <span className="font-semibold">
-                    Rekomendasi - {tipe_rekomendasi?.name}
-                  </span>{" "}
-                  : {tipe_rekomendasi?.description || ""}
-                </p>
-                <p>
-                  <span className="font-semibold">Action Plan</span> :{" "}
-                  {action_plan || ""}
-                </p>
-              </Cell>
-              <Cell width="15%" className="border-r cell-custom-dataTables">
-                {deadline ? convertDate(deadline, "/", "d") : "-"}
-              </Cell>
-              <Cell width="15%" className="border-r cell-custom-dataTables">
-                {hasil_evaluasi ? (
-                  <LozengeField
-                    appreance={
-                      hasil_evaluasi === "Memadai"
-                        ? "success"
-                        : hasil_evaluasi === "Dalam Pemantauan"
-                        ? "moved"
-                        : hasil_evaluasi === "Tidak Memadai"
-                        ? "removed"
-                        : ""
-                    }
-                    isBold
-                  >
-                    <div className="py-1 flex justify-center w-32">
-                      {hasil_evaluasi}
-                    </div>
-                  </LozengeField>
-                ) : (
-                  ""
-                )}
-              </Cell>
-              <Cell width="15%" className="border-r cell-custom-dataTables">
-                {negosiasi || "-"}
-              </Cell>
-            </Row>
+          {isButtonCloseModal ? (
+            <div className="relative w-4">
+              <CloseModal
+                handleCloseModal={handleCloseModal}
+                showModal={showModal}
+              />
+            </div>
+          ) : (
+            <ButtonIcon
+              handleClick={() => setShowTable(!showTable)}
+              icon={showTable ? <IconChevronUp /> : <IconChevronDown />}
+            />
           )}
-        />
-      ) : (
-        <div className="w-full border-x border-b pb-3">
-          <DataNotFound />
         </div>
-      )}
-      <div className="border-x border-b rounded-es-xl rounded-ee-xl min-h-[2.7rem]" />
-    </TableTree>
+      }
+    >
+      <div className="p-4">
+        {showTable || isButtonCloseModal ? (
+          <TableTree>
+            <Headers>
+              <Header className="!hidden" />
+              <Header
+                width="15%"
+                className="border-t border-x cell-custom-dataTables justify-center rounded-ss-lg"
+              >
+                <p className="font-bold text-brisma">TANGGAL KEJADIAN</p>
+              </Header>
+              <Header
+                width="30%"
+                className="border-t border-x cell-custom-dataTables"
+              >
+                <p className="font-bold text-brisma">ACTION PLAN</p>
+              </Header>
+              <Header
+                width="15%"
+                className="border-t border-r cell-custom-dataTables justify-center"
+              >
+                <p className="font-bold text-brisma">DEADLINE</p>
+              </Header>
+              <Header
+                width="20%"
+                className="border-t border-r cell-custom-dataTables justify-center"
+              >
+                <p className="font-bold text-brisma">EVALUASI</p>
+              </Header>
+              <Header
+                width="20%"
+                className="border-t border-r cell-custom-dataTables justify-center rounded-se-lg"
+              >
+                <p className="font-bold text-brisma">NEGOSIASI</p>
+              </Header>
+            </Headers>
+            {data?.length ? (
+              <Rows
+                items={data}
+                render={({
+                  tanggal_kejadian,
+                  action_plan,
+                  deadline,
+                  evaluasi,
+                  negosiasi,
+                }) => (
+                  <Row>
+                    <Cell className="!hidden" />
+                    <Cell
+                      width="15%"
+                      className="border-x cell-custom-dataTables flex justify-center"
+                    >
+                      {tanggal_kejadian
+                        ? convertDate(tanggal_kejadian, "/", "d")
+                        : ""}
+                    </Cell>
+                    <Cell
+                      width="30%"
+                      className="border-r cell-custom-dataTables"
+                    >
+                      {action_plan}
+                    </Cell>
+                    <Cell
+                      width="15%"
+                      className="border-r cell-custom-dataTables justify-center"
+                    >
+                      {deadline ? convertDate(deadline, "/", "d") : ""}
+                    </Cell>
+                    <Cell
+                      width="20%"
+                      className="border-r cell-custom-dataTables justify-center"
+                    >
+                      <LozengeField appreance="default">
+                        {evaluasi}
+                      </LozengeField>
+                    </Cell>
+                    <Cell
+                      width="20%"
+                      className="border-r cell-custom-dataTables justify-center"
+                    >
+                      {negosiasi || ""}
+                    </Cell>
+                  </Row>
+                )}
+              />
+            ) : (
+              <div className="w-full border-x border-b pb-3 rounded-es-lg rounded-ee-lg">
+                <DataNotFound />
+              </div>
+            )}
+          </TableTree>
+        ) : (
+          ""
+        )}
+      </div>
+    </CardContentHeaderFooter>
   );
 };
 

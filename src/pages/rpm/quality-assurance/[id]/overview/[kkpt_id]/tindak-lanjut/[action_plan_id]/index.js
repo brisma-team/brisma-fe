@@ -42,14 +42,12 @@ import {
 import {
   CardContentActionPlan,
   ModalTanggapan,
+  TableCatatanNegosiasi,
 } from "@/components/molecules/rpm/common";
 import workflowSchema from "@/helpers/schemas/common/workflow/workflowSchema";
 import { useActionPlan } from "@/data/rpm/common/tindak-lanjut";
 import useUser from "@/data/useUser";
-import {
-  TableCatatanNegosiasi,
-  TableDokumenLampiran,
-} from "@/components/molecules/rpm/common/tindak-lanjut-action-plan";
+import { TableDokumenLampiran } from "@/components/molecules/rpm/common/tindak-lanjut-action-plan";
 
 const index = () => {
   const dispatch = useDispatch();
