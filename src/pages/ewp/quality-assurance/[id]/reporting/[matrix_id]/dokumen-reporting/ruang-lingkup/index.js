@@ -90,7 +90,7 @@ const index = () => {
     ]);
 
     setIsCloseSubmodule(
-      Boolean(auditInfo?.data?.realisasi?.pelaksanaan_audit_real_end)
+      Boolean(auditInfo?.data?.realisasi?.monitoring_real_end)
     );
     setIsInitiator(
       Boolean(auditInfo?.data?.project_info?.initiator?.pn === user?.data?.pn)
