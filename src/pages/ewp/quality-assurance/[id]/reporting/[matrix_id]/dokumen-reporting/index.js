@@ -54,36 +54,34 @@ const index = () => {
       setData([
         {
           title: "Latar Belakang",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Informasi dan faktor yang mempengaruhi audit",
           status: dokumenReporting?.data?.latar_belakang ? "success" : "failed",
           url: `${pathNameCarding}/latar-belakang`,
         },
         {
           title: "Tujuan",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Untuk memberikan pendapat objektif tentang audit",
           status: dokumenReporting?.data?.tujuan ? "success" : "failed",
           url: `${pathNameCarding}/tujuan`,
         },
         {
           title: "Standar Review",
           description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+            "Pedoman yang digunakan oleh auditor dalam melakukan review dari suatu laporan",
           status: dokumenReporting?.data?.standar_review ? "success" : "failed",
           url: `${pathNameCarding}/standar-review`,
         },
         {
           title: "Ruang Lingkup",
           description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+            "Definisi dari area-area yang akan diaudit dalam sebuah audit",
           status: dokumenReporting?.data?.ruang_lingkup ? "success" : "failed",
           url: `${pathNameCarding}/ruang-lingkup`,
         },
         {
           title: "Metode Penilaian",
           description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+            "Teknik-teknik yang digunakan oleh auditor untuk menentukan nilai suatu audit",
           status: dokumenReporting?.data?.metode_penilaian
             ? "success"
             : "failed",
@@ -91,8 +89,7 @@ const index = () => {
         },
         {
           title: "Hasil Review Kualitas",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Laporan hasil review kualitas audit",
           status: dokumenReporting?.data?.hasil_review_kualitas
             ? "success"
             : "failed",
@@ -101,7 +98,7 @@ const index = () => {
         {
           title: "Peluang Peningkatan Kualitas",
           description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+            "Laporan identifikasi area-area di dalam proses audit yang memiliki potensi besar untuk memperbaiki kualitas audit",
           status: dokumenReporting?.data?.peluang_peningkatan_kualitas
             ? "success"
             : "failed",
@@ -110,7 +107,7 @@ const index = () => {
         {
           title: "Rencana Perbaikan",
           description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+            "Rencana tindakan yang dirancang untuk memperbaiki dan memenuhi saran-saran atau kekurangan yang ditemukan selama proses audit",
           status: dokumenReporting?.data?.uraian_rencana_perbaikan
             ? "success"
             : "failed",
@@ -118,8 +115,7 @@ const index = () => {
         },
         {
           title: "Dokumen",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Dokumen Proyek Survei Quality Assurance",
           url: `${pathNameCarding}/dokumen`,
         },
       ]);
@@ -134,7 +130,7 @@ const index = () => {
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
       <div className="flex justify-between items-center mb-7">
-        <PageTitle text="Reporting Landing" />
+        <PageTitle text="Dokumen Reporting" />
       </div>
       {/* Start Content */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-3">

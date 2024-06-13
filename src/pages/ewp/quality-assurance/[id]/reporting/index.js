@@ -51,15 +51,13 @@ const index = () => {
       setData([
         {
           title: "List Survei QA",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Daftar Survei Quality Assurance.",
           status: landingStatus?.data?.list_survey_qa ? "success" : "failed",
           url: `${baseUrl}/reporting/${matrix_id}/list`,
         },
         {
           title: "Dokumen Reporting",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "List Dokumen Reporting Quality Assurance.",
           status: landingStatus?.data?.dokumen_reporting ? "success" : "failed",
           url: `${baseUrl}/reporting/${matrix_id}/dokumen-reporting`,
         },
