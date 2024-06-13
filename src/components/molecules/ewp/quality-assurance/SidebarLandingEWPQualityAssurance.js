@@ -98,7 +98,7 @@ const SidebarLandingEWPQualityAssurance = () => {
               <p>{data?.projectName?.toUpperCase()}</p>
             </div>
             <div className="mb-2">
-              <div className="text-sm text-brisma font-bold">P.I.C</div>
+              <div className="text-sm text-brisma font-bold">Initiator</div>
               <div className="text-sm text-brisma">
                 {data?.initiatorName || "-"}
               </div>

@@ -50,6 +50,7 @@ const index = () => {
   const [doc, setDoc] = useState([]);
   const [currentPosition, setCurrentPosition] = useState(1);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
+  const [bab, setBab] = useState(1);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -75,6 +76,10 @@ const index = () => {
   });
 
   useEffect(() => {
+    setShowModalApproval(params?.is_approval);
+  }, [params?.is_approval]);
+
+  useEffect(() => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "RPM", path: "/rpm" },
@@ -89,6 +94,12 @@ const index = () => {
       },
     ]);
   }, [params?.id]);
+
+  useEffect(() => {
+    if (bab < listBab?.length && documentData?.data) {
+      setBab((prev) => parseInt(prev) + 1);
+    }
+  }, [documentData]);
 
   // [ START ] Function ini berfungsi agar setiap kali class page-container-a4 melewati class parent,
   // maka akan setter setCurrentPosition akan merubah data dan setter setHitEndpointCount
@@ -118,10 +129,6 @@ const index = () => {
     }
   };
   // [ END ]
-
-  useEffect(() => {
-    setShowModalApproval(params?.is_approval);
-  }, [params?.is_approval]);
 
   // [ START ] Hook ini berfungsi untuk merubah fokus dokumen berdasarkan current active index
   // yang diklik pada bagian Navigation Document
@@ -189,16 +196,18 @@ const index = () => {
           rekomendasi,
         };
       });
-
-      setDoc((prev) => [
-        ...prev,
-        {
-          idx: 1,
-          bab_id: 1,
-          title: "Monitoring",
-          content: mappingData,
-        },
-      ]);
+      const findDoc = doc?.find((value) => value?.idx === bab);
+      if (!findDoc) {
+        setDoc((prev) => [
+          ...prev,
+          {
+            idx: 1,
+            bab_id: 1,
+            title: "Monitoring",
+            content: mappingData,
+          },
+        ]);
+      }
     }
   }, [documentData]);
 

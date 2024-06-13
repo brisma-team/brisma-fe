@@ -33,43 +33,37 @@ const index = () => {
       setData([
         {
           title: "Latar Belakang",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Usulan terkait Latar Belakang Kegiatan.",
           status: landingStatus?.data?.latar_belakang ? "success" : "failed",
           url: `${baseUrl}/perencanaan/latar-belakang`,
         },
         {
           title: "Tujuan",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Usulan terkait Tujuan Kegiatan.",
           status: landingStatus?.data?.tujuan ? "success" : "failed",
           url: `${baseUrl}/perencanaan/tujuan`,
         },
         {
           title: "Analisa",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Usulan terkait Analisa Kegiatan.",
           status: landingStatus?.data?.analisa ? "success" : "failed",
           url: `${baseUrl}/perencanaan/analisa`,
         },
         {
           title: "Tim",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Perencanaan terkait Tim Kegiatan.",
           status: landingStatus?.data?.tim_audit ? "success" : "failed",
           url: `${baseUrl}/perencanaan/tim`,
         },
         {
           title: "UKER Assessment",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Perencanaan terkait UKER Assessment Kegiatan",
           status: landingStatus?.data?.uker_assesment ? "success" : "failed",
           url: `${baseUrl}/perencanaan/uker-assessment`,
         },
         {
           title: "Analisis Perencanaan",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Perencanaan terkait Analisis Perencanaan Kegiatan",
           status: landingStatus?.data?.analisis_perencanaan
             ? "success"
             : "failed",
@@ -77,22 +71,19 @@ const index = () => {
         },
         {
           title: "Penugasan",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Perencanaan terkait Penugasan Kegiatan",
           status: landingStatus?.data?.penugasan ? "success" : "failed",
           url: `${baseUrl}/perencanaan/penugasan`,
         },
         {
           title: "Jadwal",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Perencanaan terkait Jadwal Kegiatan",
           status: landingStatus?.data?.jadwal_audit ? "success" : "failed",
           url: `${baseUrl}/perencanaan/jadwal`,
         },
         {
           title: "Anggaran",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Perencanaan terkait Anggaran Kegiatan",
           status: landingStatus?.data?.anggaran ? "success" : "failed",
           url: `${baseUrl}/perencanaan/anggaran`,
         },
