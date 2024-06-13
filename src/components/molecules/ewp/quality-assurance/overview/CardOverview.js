@@ -150,7 +150,7 @@ const CardOverview = ({
           <div className="flex flex-col gap-3 mt-2">
             <div className="border-x border-t">
               <CardBody
-                title={"Maker"}
+                title={"Initiator"}
                 value={`${data?.initiator?.pn} - ${data?.initiator?.nama}`}
               />
               <CardBody

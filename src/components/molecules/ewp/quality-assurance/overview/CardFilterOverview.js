@@ -77,6 +77,10 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
                     label: "Addendum",
                     value: { kode: "Addendum", name: "Addendum" },
                   },
+                  {
+                    label: "Final",
+                    value: { kode: "Final", name: "Final" },
+                  },
                 ]}
                 customIcon={
                   <ButtonIcon
