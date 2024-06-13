@@ -48,26 +48,29 @@ const index = () => {
   useEffect(() => {
     if (log?.data?.length) {
       const mappingLog = log?.data?.map((v) => {
-        let _subModule;
+        let _subModule, _perihal;
         switch (v?.jenis) {
           case "mapa":
-            _subModule = "Perencanaan";
+            _subModule = "Perencanaan (MAR)";
+            _perihal = v?.perihal?.replace("Mapa", "Perencanaan (MAR)");
             break;
           case "kkpa":
-            _subModule = "Analisa";
+            _subModule = "Pelaksanaan";
+            _perihal = v?.perihal?.replace("Analisa", "Pelaksanaan");
             break;
           case "peluang":
             _subModule = "Peluang Peningkatan";
             break;
           default:
             _subModule = v?.jenis;
+            _perihal = v?.perihal;
             break;
         }
         return {
           tanggal: convertDate(v?.createdAt, "/", "d"),
           pnNama: v?.create_by?.pn + " - " + v?.create_by?.nama,
           subModul: capitalizeEveryWord(_subModule),
-          aktifitas: v?.perihal,
+          aktifitas: _perihal,
         };
       });
       setDataTables(mappingLog);
