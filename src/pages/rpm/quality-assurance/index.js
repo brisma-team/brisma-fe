@@ -164,10 +164,6 @@ const index = () => {
   }, [overviewRPM]);
 
   useEffect(() => {
-    console.log("paylaod => ", payload);
-  }, [payload]);
-
-  useEffect(() => {
     if (projectEWPList?.data?.length) {
       const mapping = projectEWPList?.data?.map((project) => {
         return {
@@ -250,15 +246,15 @@ const index = () => {
         ewp_id: payload?.ewp_id,
         pic_auditee: {
           pn: payload?.pic_submitter?.pn,
-          nama: payload?.pic_submitter?.name,
+          nama: payload?.pic_submitter?.nama,
         },
         pic_auditor: {
           pn: payload?.pic_evaluator?.pn,
-          nama: payload?.pic_evaluator?.name,
+          nama: payload?.pic_evaluator?.nama,
         },
         pic_nego: {
           pn: payload?.pic_negotiator?.pn,
-          nama: payload?.pic_negotiator?.name,
+          nama: payload?.pic_negotiator?.nama,
         },
       }
     );
@@ -267,9 +263,7 @@ const index = () => {
     overviewRPMMutate();
     projectEWPListMutate();
     dispatch(resetObjPayload());
-    // dispatch(resetValidationErrors());
     setCurrentModalStage(1);
-    // }
   };
   // [ START ] handler for modal add project RPM
 
