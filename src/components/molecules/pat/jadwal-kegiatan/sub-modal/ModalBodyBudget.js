@@ -9,6 +9,7 @@ const ModalBodyBudget = ({
   isDisabledButtonSave,
   currentModalStage,
   handleSubmit,
+  handlePrevStage,
   handleNextStage,
 }) => {
   useEffect(() => {
@@ -37,6 +38,7 @@ const ModalBodyBudget = ({
           isDisabled={isDisabledButtonSave}
           currentModalStage={currentModalStage}
           handleSubmit={handleSubmit}
+          handlePrevStage={handlePrevStage}
           handleNextStage={handleNextStage}
         />
       </div>

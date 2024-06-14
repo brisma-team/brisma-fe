@@ -73,7 +73,6 @@ const ModalActivitySchedule = ({
       nama,
       ref_metode,
       ref_tipe,
-      ref_jenis,
       pelaksanaan_start,
       pelaksanaan_end,
       penanggung_jawab,
@@ -84,7 +83,6 @@ const ModalActivitySchedule = ({
       nama &&
       ref_metode.kode &&
       ref_tipe.kode &&
-      ref_jenis.kode &&
       pelaksanaan_start &&
       pelaksanaan_end &&
       penanggung_jawab.length &&
@@ -251,6 +249,10 @@ const ModalActivitySchedule = ({
     }
   };
 
+  const handlePrevStage = async () => {
+    setCurrentModalStage(currentModalStage - 1);
+  };
+
   const handleNextStage = async () => {
     const validate = setErrorValidation(
       activityScheduleData,
@@ -282,31 +284,19 @@ const ModalActivitySchedule = ({
   const items = [
     {
       id: "step-1",
-      label: (
-        <DivButton handleClick={() => setCurrentModalStage(1)}>
-          Info Kegiatan
-        </DivButton>
-      ),
+      label: <span>Info Kegiatan</span>,
       percentageComplete: currentModalStage > 1 ? 100 : 20,
       status: currentModalStage === 1 ? "current" : "visited",
     },
     {
       id: "step-2",
-      label: (
-        <DivButton handleClick={() => setCurrentModalStage(2)}>
-          Objek Audit
-        </DivButton>
-      ),
+      label: <span>Objek Audit</span>,
       percentageComplete: currentModalStage > 2 ? 100 : 0,
       status: currentModalStage === 2 ? "current" : "visited",
     },
     {
       id: "step-3",
-      label: (
-        <DivButton handleClick={() => setCurrentModalStage(3)}>
-          Anggaran
-        </DivButton>
-      ),
+      label: <span>Anggaran</span>,
       percentageComplete: 0,
       status: currentModalStage === 3 ? "current" : "visited",
     },
@@ -342,6 +332,7 @@ const ModalActivitySchedule = ({
           isDisabledButtonSave={isDisabledButtonSave}
           currentModalStage={currentModalStage}
           handleSubmit={handleSubmit}
+          handlePrevStage={handlePrevStage}
           handleNextStage={handleNextStage}
         />
       )}
@@ -352,6 +343,7 @@ const ModalActivitySchedule = ({
           isDisabledButtonSave={isDisabledButtonSave}
           currentModalStage={currentModalStage}
           handleSubmit={handleSubmit}
+          handlePrevStage={handlePrevStage}
           handleNextStage={handleNextStage}
         />
       )}
