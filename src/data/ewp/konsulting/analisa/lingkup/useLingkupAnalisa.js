@@ -7,7 +7,7 @@ const useLingkupAnalisa = (params) => {
     process.env.NEXT_PUBLIC_API_URL_EWP
   }/ewp/sbp/kkpa/list/${id}?is_na&auditor=${
     auditor?.pn || ""
-  }&lingkup=${lingkup}&risk=${risk?.kode || ""}&control=${
+  }&lingkup=${encodeURIComponent(lingkup)}&risk=${risk?.kode || ""}&control=${
     control?.kode || ""
   }&status=${status?.kode || ""}`;
   const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);

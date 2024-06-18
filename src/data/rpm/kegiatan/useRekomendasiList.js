@@ -10,10 +10,12 @@ const useRekomendasiList = (parameters) => {
   }`;
   if (params) {
     if (params?.judul_lingkup != "") {
-      withParameters += `&judul_lingkup=${params?.judul_lingkup}`;
+      withParameters += `&judul_lingkup=${encodeURIComponent(
+        params?.judul_lingkup
+      )}`;
     }
     if (params?.desc != "") {
-      withParameters += `&desc=${params?.desc}`;
+      withParameters += `&desc=${encodeURIComponent(params?.desc)}`;
     }
     if (
       params?.control_kode?.kode != "" &&
@@ -40,8 +42,8 @@ const useRekomendasiList = (parameters) => {
   const path =
     `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/sbp/rekomendasi` +
     withParameters;
-  console.log(path);
   const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);
+
   return {
     rekomendasiList: data,
     rekomendasiListError: error,

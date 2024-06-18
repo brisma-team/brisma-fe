@@ -6,7 +6,7 @@ const useMonitoringPeluangList = (parameters) => {
   let withParameters = `?page=${params?.page}&limit=${params?.limit}&sort=createdAt ${params?.sort_by}`;
   if (params) {
     if (params?.nama_kkpt != "") {
-      withParameters += `&nama_kkpt=${params?.nama_kkpt}`;
+      withParameters += `&nama_kkpt=${encodeURIComponent(params?.nama_kkpt)}`;
     }
     if (params?.auditor?.pn != "" && params?.auditor?.pn != undefined) {
       withParameters += `&pn_auditor=${params?.auditor?.pn}`;
@@ -21,14 +21,15 @@ const useMonitoringPeluangList = (parameters) => {
       withParameters += `&risk_kode=${params?.risk_kode?.kode}`;
     }
     if (params?.judul_lingkup != "") {
-      withParameters += `&judul_lingkup=${params?.judul_lingkup}`;
+      withParameters += `&judul_lingkup=${encodeURIComponent(
+        params?.judul_lingkup
+      )}`;
     }
   }
   const path = `${
     process.env.NEXT_PUBLIC_API_URL_RPM
   }/rpm/sbp/projects/peluang/list/${id || 0}${withParameters}`;
   const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);
-  console.log(path);
   return {
     monitoringPeluangList: data,
     monitoringPeluangListError: error,
