@@ -18,6 +18,7 @@ import {
 import { useAuditInfo } from "@/data/ewp/common/info";
 import { useDokumenReporting } from "@/data/ewp/quality-assurance/reporting";
 import useUser from "@/data/useUser";
+import hasilReviewHtml from "@/templates/ewp/quality-assurance/reporting/hasilReview";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -39,6 +40,10 @@ const routes = [
   { name: "Rencana Perbaikan", slug: "rencana-perbaikan" },
   { name: "Dokumen", slug: "dokumen" },
 ];
+
+const renderDocument = (content) => {
+  return hasilReviewHtml(content);
+};
 
 const index = () => {
   const router = useRouter();
@@ -154,9 +159,9 @@ const index = () => {
     // setIsReset(true);
     const { data } = await fetchApi(
       "GET",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/matrix/doc/async/${params?.matrix_id}`
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/reporting/dokumen_reporting/hasil_review_kualitas/async/${params?.matrix_id}`
     );
-    // setContent(renderDocument(data));
+    setContent(renderDocument(data));
     loadingSwal("close");
   };
 
