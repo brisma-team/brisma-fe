@@ -125,6 +125,10 @@ const index = () => {
           faseApproval = "Addendum";
         } else if (sub_modul === "ewp_need_approval") {
           faseApproval = "EWP Need Approval";
+        } else if (sub_modul === "entrance_notulen") {
+          faseApproval = "Entrance Notulen";
+        } else if (sub_modul === "entrance_ba") {
+          faseApproval = "Entrance Berita Acara";
         }
         break;
       case "Monitoring Offsite":
@@ -136,6 +140,10 @@ const index = () => {
           faseApproval = "Reporting";
         } else if (sub_modul === "tidak_lanjut") {
           faseApproval = "Tindak Lanjut";
+        } else if (sub_modul === "entrance_notulen") {
+          faseApproval = "Entrance Notulen";
+        } else if (sub_modul === "entrance_ba") {
+          faseApproval = "Entrance Berita Acara";
         }
         break;
       case "Quality Assurance":
@@ -145,6 +153,10 @@ const index = () => {
           faseApproval = "Pelaksanaan";
         } else if (sub_modul === "lha") {
           faseApproval = "Reporting";
+        } else if (sub_modul === "entrance_notulen") {
+          faseApproval = "Entrance Notulen";
+        } else if (sub_modul === "entrance_ba") {
+          faseApproval = "Entrance Berita Acara";
         }
         break;
       default:
@@ -172,6 +184,10 @@ const index = () => {
           query = `konsulting/${ewp_id}/addendum`;
         } else if (sub_modul === "ewp_need_approval") {
           query = `konsulting`;
+        } else if (sub_modul === "entrance_notulen") {
+          query = `konsulting/${ewp_id}/meeting/${sub_modul_id}/notulen`;
+        } else if (sub_modul === "entrance_ba") {
+          query = `konsulting/${ewp_id}/meeting/${sub_modul_id}/berita-acara`;
         }
         break;
       case "Quality Assurance":
@@ -184,7 +200,9 @@ const index = () => {
         }
         break;
     }
-    if (sub_modul !== "ewp_need_approval") {
+    if (sub_modul == "entrance_notulen" || sub_modul == "entrance_ba") {
+      router.push(`${query}?is_approval=true`);
+    } else if (sub_modul !== "ewp_need_approval") {
       router.push(`${query}/dokumen?is_approval=true`);
     } else {
       router.push(`${query}?ewp_pat_id=${sub_modul_id}&is_approval=true`);
