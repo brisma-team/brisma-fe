@@ -300,6 +300,7 @@ const index = () => {
       const data = {
         sub_modul: "entrance_notulen",
         sub_modul_id: selectedNotulenId,
+        url_path: `${pathNameLanding}/notulen`,
       };
 
       const signedCount = workflowData?.ref_tim_audit_approver?.filter(
