@@ -267,6 +267,39 @@ const index = () => {
   };
   // [ START ] handler for modal add project RPM
 
+  const handleClickDisableProject = async (id) => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin ingin non-aktifkan project ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/qa/disable/${id}`,
+      {}
+    );
+    loadingSwal("close");
+  };
+
+  const handleCloseProject = async (id) => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin ingin finalkan project ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/qa/close/${id}`,
+      {}
+    );
+    loadingSwal("close");
+  };
   return (
     <OverviewLayoutEWP data={approvalRPM?.data?.header}>
       {/* Start Breadcrumbs */}
@@ -321,6 +354,8 @@ const index = () => {
                 key={i}
                 data={v}
                 pathName={`/rpm/quality-assurance`}
+                handleClickDisableProject={handleClickDisableProject}
+                handleCloseProject={handleCloseProject}
               />
             );
           })}
