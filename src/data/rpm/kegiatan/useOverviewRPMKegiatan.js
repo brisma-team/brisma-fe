@@ -8,7 +8,7 @@ const useOverviewRPMKonsulting = (params) => {
     withParams += `&project_id=${params?.project_code}`;
   }
   if (params?.project_name != "" && params?.project_name != undefined) {
-    withParams += `&nama=${params?.project_name}`;
+    withParams += `&nama=${encodeURIComponent(params?.project_name)}`;
   }
   if (params?.inisiator?.pn != "" && params?.inisiator?.pn != undefined) {
     withParams += `&pn_initiator=${params?.inisiator?.pn}`;

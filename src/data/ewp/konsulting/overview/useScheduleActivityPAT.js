@@ -7,8 +7,10 @@ const useScheduleActivityPAT = (params) => {
 
   const path = `${
     process.env.NEXT_PUBLIC_API_URL_EWP
-  }/ewp/sbp/auditor/pat_jadwal?tahun=${tahun}&name=${name}&is_audited=${
-    is_audited?.kode || ""
+  }/ewp/sbp/auditor/pat_jadwal?tahun=${tahun}&name=${encodeURIComponent(
+    name
+  )}&is_audited=${
+    is_audited?.kode !== undefined ? is_audited?.kode : ""
   }&ref_metode=${ref_metode?.kode || ""}&ref_tipe=${
     ref_tipe?.kode || ""
   }&ref_jenis=${ref_jenis?.kode || ""}&ref_tema=${ref_tema?.kode || ""}`;
