@@ -305,6 +305,7 @@ const index = () => {
       const data = {
         sub_modul: "entrance_ba",
         sub_modul_id: selectedBAId,
+        url_path: `${pathNameLanding}/berita-acara`,
       };
 
       const signedCount = workflowData?.ref_tim_audit_approver?.filter(

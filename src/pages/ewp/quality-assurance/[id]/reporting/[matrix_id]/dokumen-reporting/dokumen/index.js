@@ -29,6 +29,7 @@ import {
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useAuditInfo } from "@/data/ewp/common/info";
 import { useWorkflowDetailEWP } from "@/data/ewp";
+import rencanaPerbaikanHtml from "@/templates/ewp/quality-assurance/reporting/rencanaPerbaikan";
 
 const routes = [
   {
@@ -67,7 +68,7 @@ const index = () => {
     { idx: 5, title: "Metode Penilaian" },
     { idx: 6, title: "Hasil Review Kualitas" },
     { idx: 7, title: "Peluang Peningkatan Kualitas" },
-    { idx: 8, title: "Uraian Rencana Perbaikan" },
+    { idx: 8, title: "Rencana Perbaikan" },
   ];
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -441,7 +442,11 @@ const index = () => {
 
   const renderContent = (index, content) => {
     if (index === 8) {
-      return content?.uraian;
+      const contentData = {
+        uraian: content?.uraian ? content?.uraian : "",
+        rekomendasi: content?.kkpt ? content?.kkpt : "",
+      };
+      return rencanaPerbaikanHtml(contentData);
     } else {
       return content;
     }

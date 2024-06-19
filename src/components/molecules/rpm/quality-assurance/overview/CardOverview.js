@@ -1,4 +1,5 @@
 import { DivButton } from "@/components/atoms";
+import { IconFile, IconTrash } from "@/components/icons";
 import { DropdownCard } from "@/components/molecules/commons";
 import {
   CardBodyOverview,
@@ -15,13 +16,32 @@ const CardOverview = ({
   withoutButton,
   withoutHover,
   handleClickDisableProject,
+  handleCloseProject,
 }) => {
   const router = useRouter();
   const listDropdown = [
-    { label: "Approval", action: "#" },
     {
-      label: "Disable Project",
+      label: (
+        <div className="flex gap-1">
+          <IconTrash size="medium" />
+          <p className="my-auto">Disable Project</p>
+        </div>
+      ),
       action: () => handleClickDisableProject(data?.id),
+      isDisabled: false,
+    },
+    {
+      label: (
+        <div className="flex gap-1">
+          <IconFile size="medium" />
+          <p className="my-auto">Close Project</p>
+        </div>
+      ),
+      action: () => handleCloseProject(data?.id),
+      isDisabled: Boolean(
+        parseInt(data?.action_plan_memadai) !==
+          parseInt(data?.total_action_plan)
+      ),
     },
   ];
   const colorLabel = {
