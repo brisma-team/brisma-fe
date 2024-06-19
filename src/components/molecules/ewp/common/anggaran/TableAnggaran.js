@@ -35,7 +35,7 @@ const TableAnggaran = ({
             Tipe Pengeluaran
           </Header>
           <Header
-            width="22%"
+            width="27%"
             className="border-t border-r cell-custom-dataTables"
           >
             Periode
@@ -47,7 +47,7 @@ const TableAnggaran = ({
             Biaya
           </Header>
           <Header
-            width="30%"
+            width="25%"
             className="border-t border-r cell-custom-dataTables"
           >
             Deskripsi
@@ -89,7 +89,7 @@ const TableAnggaran = ({
                 {tipe_anggaran_name}
               </Cell>
               <Cell
-                width="22%"
+                width="27%"
                 className="border-r cell-width-full-height-full"
               >
                 <div className="w-full h-full flex">
@@ -119,14 +119,14 @@ const TableAnggaran = ({
               <Cell width="15%" className="border-r cell-custom-dataTables">
                 {"Rp. " + convertToRupiah(amount)}
               </Cell>
-              <Cell width="30%" className="border-r cell-custom-dataTables">
+              <Cell width="25%" className="border-r cell-custom-dataTables">
                 {deskripsi}
               </Cell>
             </Row>
           )}
         />
       </TableTree>
-      <div className="w-full border rounded-ee-lg rounded-es-lg min-h-[1.3rem]">
+      <div className="w-full border rounded-ee-lg rounded-es-lg min-h-[2rem]">
         {!withoutButtonAction ? (
           <div className="w-52 p-2 ">
             <ButtonField
