@@ -73,15 +73,16 @@ const SubModalActivityExpense = ({ typeModal }) => {
       const updatedOptionSubActivityCategory =
         prevData.ref_sub_kategori_anggarans.map((item, index) => {
           if (index === idx) {
+            // Remove dot (.) before converting to integer
+            const intValue = parseInt(value.replace(/\./g, ""), 10);
             return {
               ...item,
-              amount: value,
+              amount: intValue, // Convert value to integer,
             };
           } else {
             return item;
           }
         });
-
       return {
         ...prevData,
         ref_sub_kategori_anggarans: updatedOptionSubActivityCategory,
@@ -90,25 +91,37 @@ const SubModalActivityExpense = ({ typeModal }) => {
   };
 
   const handleAddBudget = () => {
-    const newData = [...activityScheduleData.anggaran_kegiatan];
-    const findByName = newData.findIndex(
-      (v) => v?.nama == selectedSubActivityCategory
-    );
+    if (activityScheduleData && activityScheduleData.anggaran_kegiatan) {
+      const newData = [...activityScheduleData.anggaran_kegiatan];
+      const findByName = newData.findIndex(
+        (v) => v?.nama === selectedSubActivityCategory
+      );
 
-    if (findByName !== -1) {
-      newData[findByName] = optionSubActivityCategory;
-    } else {
-      newData.push(optionSubActivityCategory);
+      // Convert amount to integer
+      const convertedOptionSubActivityCategory = {
+        ...optionSubActivityCategory,
+        ref_sub_kategori_anggarans:
+          optionSubActivityCategory.ref_sub_kategori_anggarans.map((item) => ({
+            ...item,
+            amount: parseInt(item.amount, 10), // Convert amount to integer
+          })),
+      };
+
+      if (findByName !== -1) {
+        newData[findByName] = convertedOptionSubActivityCategory;
+      } else {
+        newData.push(convertedOptionSubActivityCategory);
+      }
+
+      dispatch(
+        setActivityScheduleData({
+          ...activityScheduleData,
+          anggaran_kegiatan: newData,
+        })
+      );
+      setOptionSubActivityCategory([]);
+      setIsDisabled(true);
     }
-
-    dispatch(
-      setActivityScheduleData({
-        ...activityScheduleData,
-        anggaran_kegiatan: newData,
-      })
-    );
-    setOptionSubActivityCategory([]);
-    setIsDisabled(true);
   };
 
   return (
@@ -162,7 +175,7 @@ const SubModalActivityExpense = ({ typeModal }) => {
         <CardBodyContent>
           {activityScheduleData.anggaran_kegiatan.length ? (
             <div className="font-bold text-base">
-              Rincian Biaya Perjalanan Dinas
+              Rincian Biaya Selama Kegiatan
             </div>
           ) : (
             ""

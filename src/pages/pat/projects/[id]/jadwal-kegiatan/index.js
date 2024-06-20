@@ -9,7 +9,6 @@ import {
   PrevNextNavigation,
   SelectSortFilter,
 } from "@/components/molecules/commons";
-import Button from "@atlaskit/button";
 import { PatLandingLayout } from "@/layouts/pat";
 import {
   CardActivitySchedule,
@@ -26,7 +25,6 @@ import _ from "lodash";
 import { convertDate, deleteSwal } from "@/helpers";
 import { useDispatch } from "react-redux";
 import { resetActivityScheduleData } from "@/slices/pat/activityScheduleSlice";
-import { IconFile } from "@/components/icons";
 
 const routes = [
   {
@@ -35,9 +33,11 @@ const routes = [
   },
   { name: "Sumber Informasi", slug: "sumber-informasi" },
   { name: "Tim Audit", slug: "tim-audit" },
-  { name: "Target Audit", slug: "ringkasan-objek-audit" },
   { name: "Jadwal Audit", slug: "jadwal-audit" },
+  { name: "Target Audit", slug: "ringkasan-objek-audit" },
   { name: "Jadwal Kegiatan", slug: "jadwal-kegiatan" },
+  { name: "Jadwal Lainnya", slug: "jadwal-lainnya" },
+  { name: "Dokumen", slug: "dokumen" },
 ];
 
 const index = () => {
@@ -46,6 +46,7 @@ const index = () => {
   const baseUrl = `/pat/projects/${id}`;
   const { statusPat } = useStatusPat(id);
   const [content, setContent] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(false);
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "PAT", path: "/pat" },
@@ -101,12 +102,12 @@ const index = () => {
         value: statusPat?.data?.create_by?.nama,
       },
       {
-        title: "Created Date",
-        value: convertDate(statusPat?.data?.createdAt, "-", "d", true),
+        title: "Tanggal Inisiasi",
+        value: convertDate(statusPat?.data?.createdAt, "/", "d", true),
       },
       { title: "Document Status", value: statusPat?.data?.status_pat },
-      { title: "Document Status", value: statusPat?.data?.status_pat },
     ]);
+    setIsDisabled(statusPat?.data?.status_pat !== "On Progress");
   }, [statusPat]);
 
   useEffect(() => {
@@ -171,7 +172,7 @@ const index = () => {
     e.stopPropagation();
     await deleteSwal(
       "Apakah anda yakin ingin menghapus data ini?",
-      "Data ini dihapus seacara permanen",
+      "Data ini akan dihapus secara permanen",
       `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/sbp?jadwal_sbp_id=${scheduleId}&pat_id=${id}`
     );
     activityScheduleMutate();
@@ -207,14 +208,16 @@ const index = () => {
               text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
             />
           </div>
-          <div className="w-44 rounded bg-atlasian-purple">
-            <ButtonField
-              handler={handleCreateButton}
-              text={"Buat Jadwal Kegiatan"}
-            />
-          </div>
+          {!isDisabled && (
+            <div className="w-44 rounded bg-atlasian-purple">
+              <ButtonField
+                handler={handleCreateButton}
+                text={"Buat Jadwal Kegiatan"}
+              />
+            </div>
+          )}
         </div>
-        <div className="w-24">
+        {/* <div className="w-24">
           <Button
             appearance="primary"
             onClick={() => setShowModal(true)}
@@ -223,7 +226,7 @@ const index = () => {
           >
             Arsip
           </Button>
-        </div>
+        </div> */}
       </div>
       <div className="w-fit">
         <CardFilterActivitySchedule
@@ -232,7 +235,7 @@ const index = () => {
           setParams={setFilter}
         />
       </div>
-      <div className="flex justify-end items-end w-full gap-2 mt-3">
+      <div className="flex justify-end items-end w-full gap-2 mt-3 mb-5">
         <SelectSortFilter change={handleChangeFilter} />
       </div>
       {/* End of Filter */}

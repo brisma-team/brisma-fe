@@ -6,7 +6,6 @@ import useStatusPat from "@/data/pat/useStatusPat";
 import { setSearchParam } from "@/slices/pat/statusPatSlice";
 import { useDispatch } from "react-redux";
 import { convertDate } from "@/helpers";
-import { PrevNextNavigation } from "@/components/molecules/commons";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -83,20 +82,15 @@ const index = () => {
 
     setContent([
       {
-				title: "Initiator",
-				value: statusPat?.data?.create_by?.nama,
-			},
-			{
-				title: "Created Date",
-				value: convertDate(
-          statusPat?.data?.createdAt,
-          "-",
-          "d",
-          true
-        ),
-			},
-			{ title: "Document Status", value: statusPat?.data?.status_pat },
-			{ title: "Document Status", value: statusPat?.data?.status_pat },
+        title: "Initiator",
+        value: statusPat?.data?.create_by?.nama,
+      },
+      {
+        title: "Created Date",
+        value: convertDate(statusPat?.data?.createdAt, "-", "d", true),
+      },
+      { title: "Document Status", value: statusPat?.data?.status_pat },
+      { title: "Document Status", value: statusPat?.data?.status_pat },
     ]);
   }, [statusPat]);
 
@@ -107,9 +101,6 @@ const index = () => {
         <div className="flex justify-between items-center mb-6">
           <div className="text-3xl font-bold">
             Usulan Perencanaan Audit Tahunan
-          </div>
-          <div className="my-3 w-30">
-            <PrevNextNavigation />
           </div>
         </div>
         {/* Start Content */}

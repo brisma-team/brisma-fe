@@ -9,8 +9,6 @@ const CardActivityExpense = ({ data }) => {
     );
     return totalAmount;
   };
-
-  console.log("data => ", data);
   return data.length
     ? data.map((v, i) => {
         return (

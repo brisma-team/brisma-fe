@@ -13,9 +13,11 @@ const routes = [
   },
   { name: "Sumber Informasi", slug: "sumber-informasi" },
   { name: "Tim Audit", slug: "tim-audit" },
-  { name: "Target Audit", slug: "ringkasan-objek-audit" },
   { name: "Jadwal Audit", slug: "jadwal-audit" },
+  { name: "Target Audit", slug: "ringkasan-objek-audit" },
   { name: "Jadwal Kegiatan", slug: "jadwal-kegiatan" },
+  { name: "Jadwal Lainnya", slug: "jadwal-lainnya" },
+  { name: "Dokumen", slug: "dokumen" },
 ];
 
 const index = () => {
@@ -173,38 +175,77 @@ const index = () => {
         />
       </div>
       {/* Start Content */}
-      <Card>
-        <div className="flex gap-6 p-6">
-          <div className="w-[52rem] -my-3">
-            <div className="h-[40rem] my-3">
+      {/* <div className="w-full">
+        <Card withCenter={false}> */}
+      <div className="flex gap-6 p-6">
+        <div className=" -my-3">
+          <div className="h-full my-3">
+            <Card>
+              <div className="w-full h-full px-6">
+                <div className="text-xl font-bold p-2">Unit Kerja Audit</div>
+                <div className="mt-4 px-5 max-h-[29rem] overflow-y-scroll border rounded-t-xl">
+                  <TableField
+                    headers={[
+                      "Tipe Uker",
+                      "Uker Eksisting",
+                      "Uker Audit",
+                      "Presentase",
+                    ]}
+                    columnWidths={["30%", "35%", "30%", "20%"]}
+                    items={uker}
+                  />
+                </div>
+                <div className="w-full flex items-center my-3">
+                  <div className="w-full h-[3.125rem] flex text-lg border border-[#DFE1E6] rounded-b-xl">
+                    <div className="w-2/5 ml-8 font-black flex items-center">
+                      Total
+                    </div>
+                    <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-green">
+                      {totalUker.existing}
+                    </div>
+                    <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-yellow">
+                      {totalUker.target}
+                    </div>
+                    <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-dark">
+                      {totalUker.presentase}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+        <div className="-my-3 flex flex-col gap-2">
+          <div>
+            <div className="my-3">
               <Card>
                 <div className="w-full h-full px-6">
-                  <div className="text-xl font-bold p-2">Unit Kerja Audit</div>
-                  <div className="mt-4 max-h-[29rem] overflow-y-scroll border rounded-t-xl">
+                  <div className="text-xl font-bold p-2">E-Channel Audit</div>
+                  <div className="mt-4 max-h-[12rem] overflow-y-scroll border rounded-t-xl">
                     <TableField
                       headers={[
-                        "Tipe Uker",
-                        "Uker Eksisting",
-                        "Uker Audit",
+                        "Tipe E-Channel",
+                        "Eksisting",
+                        "Audit",
                         "Presentase",
                       ]}
-                      columnWidths={["40%", "20%", "20%", "20%"]}
-                      items={uker}
+                      columnWidths={["35%", "20%", "20%", "25%"]}
+                      items={echannel}
                     />
                   </div>
                   <div className="w-full flex items-center my-3">
-                    <div className="w-full h-[3.125rem] flex text-lg border border-[#DFE1E6] rounded-b-xl">
-                      <div className="w-2/5 ml-8 font-black flex items-center">
+                    <div className="w-full h-[3.125rem] flex text-base border border-[#DFE1E6] rounded-b-xl">
+                      <div className="w-[35%] ml-8 font-black flex items-center">
                         Total
                       </div>
-                      <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-green">
-                        {totalUker.existing}
+                      <div className="w-[20%] ml-2 font-semibold flex items-center text-atlasian-green">
+                        {totalEchannel.existing}
                       </div>
-                      <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-yellow">
-                        {totalUker.target}
+                      <div className="w-[20%] ml-2 font-semibold flex items-center text-atlasian-yellow">
+                        {totalEchannel.target}
                       </div>
-                      <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-dark">
-                        {totalUker.presentase}
+                      <div className="w-[25%] ml-2 font-semibold flex items-center text-atlasian-dark">
+                        {totalEchannel.presentase}
                       </div>
                     </div>
                   </div>
@@ -212,47 +253,10 @@ const index = () => {
               </Card>
             </div>
           </div>
-          <div className="w-[37rem] -my-3 flex flex-col gap-2">
-            <div>
-              <div className="h-[21rem] my-3">
-                <Card>
-                  <div className="w-full h-full px-6">
-                    <div className="text-xl font-bold p-2">E-Channel Audit</div>
-                    <div className="mt-4 max-h-[10.5rem] overflow-y-scroll border rounded-t-xl">
-                      <TableField
-                        headers={[
-                          "Tipe E-Channel",
-                          "Eksisting",
-                          "Audit",
-                          "Presentase",
-                        ]}
-                        columnWidths={["40%", "20%", "20%", "20%"]}
-                        items={echannel}
-                      />
-                    </div>
-                    <div className="w-full flex items-center my-3">
-                      <div className="w-full h-[3.125rem] flex text-base border border-[#DFE1E6] rounded-b-xl">
-                        <div className="w-2/5 ml-8 font-black flex items-center">
-                          Total
-                        </div>
-                        <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-green">
-                          {totalEchannel.existing}
-                        </div>
-                        <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-yellow">
-                          {totalEchannel.target}
-                        </div>
-                        <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-dark">
-                          {totalEchannel.presentase}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </div>
-            </div>
-          </div>
         </div>
-      </Card>
+      </div>
+      {/* </Card>
+      </div> */}
       {/* End Content */}
     </PatLandingLayout>
   );

@@ -1,4 +1,4 @@
-import { DivButton, Modal } from "@/components/atoms";
+import { Modal } from "@/components/atoms";
 import { useState } from "react";
 import {
   ModalBodyActivityInfo,
