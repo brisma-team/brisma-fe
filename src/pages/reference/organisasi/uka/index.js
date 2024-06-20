@@ -1,4 +1,9 @@
-import { Breadcrumbs, Card, PageTitle } from "@/components/atoms";
+import {
+  Breadcrumbs,
+  Card,
+  CustomPagination,
+  PageTitle,
+} from "@/components/atoms";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
@@ -47,11 +52,16 @@ const index = () => {
   //   );
 
   // const { user } = useUser();
+  const [params, setParams] = useState({
+    limit: 5,
+    page: 1,
+    offset: 1,
+    total_data: 5,
+  });
   const {
     uka,
     // ukaMutate
-  } = useUka();
-  //   const { userSKAIDetail } = useUserSKAIDetail(selectedPn);
+  } = useUka(params, "pagination");
 
   useEffect(() => {
     setBreadcrumbs([
@@ -92,6 +102,7 @@ const index = () => {
         ]);
       });
       dispatch(setObjData(mappingUkas));
+      setParams({ ...params, total_data: uka?.data?.total_data });
     } else {
       dispatch(resetObjData());
     }
@@ -228,6 +239,20 @@ const index = () => {
               //   handleClickAdd={handleClickAddTable}
               //   handleClickUpdate={handleClickUpdateTable}
               //   handleClickDelete={handleClickDeleteTable}
+            />
+            <CustomPagination
+              defaultCurrentPage={1}
+              perPage={5}
+              totalData={params?.total_data}
+              handleSetPagination={async (start, end, pageNow) =>
+                setParams((prev) => {
+                  return {
+                    ...prev,
+                    page: pageNow,
+                    offset: (pageNow - 1) * prev?.limit,
+                  };
+                })
+              }
             />
           </div>
         </Card>
