@@ -14,7 +14,7 @@ import {
   useUpdateData,
 } from "@/helpers";
 import { useRouter } from "next/router";
-import { ModalHeader, ModalFooter } from "@/components/molecules/pat";
+import { ModalHeader } from "@/components/molecules/pat";
 import {
   activityInfoSchema,
   activityObjectSchema,

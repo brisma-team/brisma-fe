@@ -347,7 +347,7 @@ const ModalOtherSchedule = ({
         <ModalBodyBudget
           setCurrentModalStage={setCurrentModalStage}
           isDisabled={isFormDisabled}
-          isDisabledButtonSave={isDisabledButtonSave}
+          isDisabledButtonSave={false}
           currentModalStage={currentModalStage}
           handleSubmit={handleSubmit}
           handleNextStage={handleNextStage}

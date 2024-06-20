@@ -1,10 +1,12 @@
 import { N800 } from "@atlaskit/theme/colors";
 import { token } from "@atlaskit/tokens";
 
-const Card = ({ children, hoverBorderColor }) => {
+const Card = ({ children, hoverBorderColor, withCenter = true }) => {
   return (
     <div
-      className="py-2 w-full rounded flex flex-col items-center h-full bg-white"
+      className={`py-2 w-full rounded flex flex-col ${
+        withCenter && `items-center`
+      } h-full bg-white`}
       style={{
         color: token("color.text", N800),
         borderRadius: "10px",

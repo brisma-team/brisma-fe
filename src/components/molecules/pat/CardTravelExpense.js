@@ -18,10 +18,10 @@ const CardTravelExpense = ({ data }) => {
               <div className="w-1/3 text-sm font-semibold">
                 Rp.{" "}
                 {convertToRupiah(
-                  v.biaya_tiket_pp +
-                    v.biaya_transport_lokal +
-                    v.biaya_perjalanan_hari +
-                    v.biaya_akomodasi
+                  parseInt(v.biaya_tiket_pp) +
+                    parseInt(v.biaya_transport_lokal) +
+                    parseInt(v.biaya_perjalanan_hari) +
+                    parseInt(v.biaya_akomodasi)
                 )}
               </div>
             </div>

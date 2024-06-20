@@ -72,9 +72,11 @@ const SubModalBiayaSelamaKegiatan = ({ typeModal }) => {
       const updatedOptionSubActivityCategory =
         prevData.ref_sub_kategori_anggarans.map((item, index) => {
           if (index === idx) {
+            // Remove dot (.) before converting to integer
+            const intValue = parseInt(value.replace(/\./g, ""), 10);
             return {
               ...item,
-              amount: value,
+              amount: intValue,
             };
           } else {
             return item;
@@ -94,10 +96,20 @@ const SubModalBiayaSelamaKegiatan = ({ typeModal }) => {
       (v) => v?.nama == selectedSubActivityCategory
     );
 
+    // Convert amount to integer
+    const convertedOptionSubActivityCategory = {
+      ...optionSubActivityCategory,
+      ref_sub_kategori_anggarans:
+        optionSubActivityCategory.ref_sub_kategori_anggarans.map((item) => ({
+          ...item,
+          amount: parseInt(item.amount, 10), // Convert amount to integer
+        })),
+    };
+
     if (findByName !== -1) {
-      newData[findByName] = optionSubActivityCategory;
+      newData[findByName] = convertedOptionSubActivityCategory;
     } else {
-      newData.push(optionSubActivityCategory);
+      newData.push(convertedOptionSubActivityCategory);
     }
 
     dispatch(
@@ -161,7 +173,7 @@ const SubModalBiayaSelamaKegiatan = ({ typeModal }) => {
         <CardBodyContent>
           {auditScheduleData.anggaran_kegiatan.length ? (
             <div className="font-bold text-base">
-              Rincian Biaya Perjalanan Dinas
+              Rincian Biaya Selama Kegiatan
             </div>
           ) : (
             ""
