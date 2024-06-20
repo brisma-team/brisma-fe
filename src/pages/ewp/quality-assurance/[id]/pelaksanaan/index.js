@@ -22,6 +22,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { CardContentHeaderFooter } from "@/components/molecules/commons";
 import { confirmationSwal, fetchApi, infoSwal, loadingSwal } from "@/helpers";
+import useUser from "@/data/useUser";
 
 const index = () => {
   const router = useRouter();
@@ -40,7 +41,7 @@ const index = () => {
 
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
   // const [isOnProgress, setIsOnProgress] = useState(true);
-  // const [isInitiator, setIsInitiator] = useState(true);
+  const [isInitiator, setIsInitiator] = useState(false);
 
   const data = useSelector(
     (state) => state.pelaksanaanEWPQualityAssurance.objData
@@ -60,6 +61,8 @@ const index = () => {
   } = usePelaksanaanDetail({
     id: selectedId,
   });
+
+  const { user } = useUser();
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -89,6 +92,9 @@ const index = () => {
     ]);
     setIsCloseSubmodule(
       Boolean(auditInfo?.data?.realisasi?.pelaksanaan_audit_real_end)
+    );
+    setIsInitiator(
+      Boolean(auditInfo?.data?.project_info?.initiator?.pn == user?.data?.pn)
     );
   }, [auditInfo]);
 
@@ -275,7 +281,7 @@ const index = () => {
       <ModalDetailPelaksanaan
         payload={payload}
         showModal={showModalDetailPelaksanaan}
-        withoutButton={isCloseSubmodule}
+        withoutButton={isCloseSubmodule || !isInitiator}
         isLoading={pelaksanaanDetailIsLoading}
         handleClickEdit={handleClickEditSchedule}
         handleCloseModal={handleCloseModalDetailPelaksanaan}
