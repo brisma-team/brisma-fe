@@ -153,10 +153,9 @@ const index = () => {
         value: statusPat?.data?.create_by?.nama,
       },
       {
-        title: "Created Date",
-        value: convertDate(statusPat?.data?.lb_created_at, "-", "d", true),
+        title: "Tanggal Inisiasi",
+        value: convertDate(statusPat?.data?.createdAt, "-", "d"),
       },
-      { title: "Document Status", value: statusPat?.data?.status_pat },
       { title: "Document Status", value: statusPat?.data?.status_pat },
     ]);
   }, [statusPat]);

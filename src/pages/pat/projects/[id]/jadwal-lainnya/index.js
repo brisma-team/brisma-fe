@@ -106,7 +106,7 @@ const index = () => {
       },
       {
         title: "Tanggal Inisiasi",
-        value: convertDate(statusPat?.data?.createdAt, "/", "d", true),
+        value: convertDate(statusPat?.data?.createdAt, "/", "d"),
       },
       { title: "Document Status", value: statusPat?.data?.status_pat },
     ]);
