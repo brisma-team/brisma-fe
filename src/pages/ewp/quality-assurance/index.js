@@ -611,9 +611,9 @@ const index = () => {
 
     loadingSwal();
     await fetchApi(
-      "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/disable/${id}`,
-      {}
+      "DELETE",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/disable/${id}`,
+      { id }
     );
     overviewMutate();
     loadingSwal("close");
