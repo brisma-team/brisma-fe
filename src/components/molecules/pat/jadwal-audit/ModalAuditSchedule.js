@@ -70,7 +70,6 @@ const ModalAuditSchedule = ({
       name_kegiatan_audit,
       ref_metode,
       ref_tipe,
-      ref_jenis,
       pelaksanaan_start,
       pelaksanaan_end,
       tim_audit_id,
@@ -81,7 +80,6 @@ const ModalAuditSchedule = ({
       name_kegiatan_audit &&
       ref_metode.kode &&
       ref_tipe.kode &&
-      ref_jenis.kode &&
       pelaksanaan_start &&
       pelaksanaan_end &&
       tim_audit_id &&
