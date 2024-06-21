@@ -1,23 +1,24 @@
-import { Card } from "@/components/atoms";
+import { ButtonIcon, Card } from "@/components/atoms";
 import { convertDate, convertToRupiah } from "@/helpers";
-import { DropdownIcon } from "../commons";
+// import { DropdownIcon } from "../commons";
 import TableTree, { Cell, Row, Rows } from "@atlaskit/table-tree";
+import { IconEdit, IconTrash } from "@/components/icons";
 
 const CardOtherSchedule = ({
-  kegiatan_lain_id,
+  // kegiatan_lain_id,
   type,
   title,
   maker,
   created_date,
   start_date,
   end_date,
-  audit_period,
+  // audit_period,
   jenis,
   tema,
   budget,
   pic,
   desc,
-  handleClickInfo,
+  // handleClickInfo,
   handleClickUpdate,
   handleClickDelete,
 }) => {
@@ -68,8 +69,20 @@ const CardOtherSchedule = ({
           >
             <p>{type}</p>
           </div>
-          <div className="flex justify-between -mb-1.5">
+          {/* <div className="flex justify-between -mb-1.5">
             <DropdownIcon color={"blue"} />
+          </div> */}
+          <div className="flex w-14 justify-between">
+            <ButtonIcon
+              handleClick={handleClickUpdate}
+              color={"yellow"}
+              icon={<IconEdit size="medium" />}
+            />
+            <ButtonIcon
+              handleClick={handleClickDelete}
+              color={"red"}
+              icon={<IconTrash size="medium" />}
+            />
           </div>
         </div>
         <div className="flex flex-row justify-between mb-3">

@@ -244,7 +244,7 @@ const index = () => {
                   ketua_tim_audit={v.ketua_tim_audit}
                   anggota_tim_audit={v.anggota_tim_audit}
                   tipe_tim={v.tipe_tim}
-                  button={!isDisabled}
+                  withButton={!isDisabled}
                   handleUpdate={(e) => handleUpdate(e, v.id)}
                   handleDelete={(e) => handleDelete(e, v.id)}
                 />
