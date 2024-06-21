@@ -1,10 +1,11 @@
-import { Card } from "@/components/atoms";
+import { ButtonIcon, Card } from "@/components/atoms";
 import { convertDate, convertToRupiah } from "@/helpers";
 import TableTree, { Cell, Row, Rows } from "@atlaskit/table-tree";
-import { DropdownIcon } from "../commons";
+// import { DropdownIcon } from "../commons";
+import { IconEdit, IconTrash } from "@/components/icons";
 
 const CardAuditSchedule = ({
-  jadwal_id,
+  // jadwal_id,
   type,
   title,
   maker,
@@ -13,10 +14,10 @@ const CardAuditSchedule = ({
   end_date,
   jenis,
   budget,
-  audit_type,
+  // audit_type,
   tema,
-  desc,
-  handleClickInfo,
+  // desc,
+  // handleClickInfo,
   handleClickUpdate,
   handleClickDelete,
 }) => {
@@ -66,9 +67,20 @@ const CardAuditSchedule = ({
           >
             <p>{type}</p>
           </div>
-          <div className="flex justify-between -mb-1.5">
-            <DropdownIcon color={"blue"} />
+          {/* {withButton && ( */}
+          <div className="flex w-14 justify-between">
+            <ButtonIcon
+              handleClick={handleClickUpdate}
+              color={"yellow"}
+              icon={<IconEdit size="medium" />}
+            />
+            <ButtonIcon
+              handleClick={handleClickDelete}
+              color={"red"}
+              icon={<IconTrash size="medium" />}
+            />
           </div>
+          {/* )} */}
         </div>
         <div className="flex flex-row justify-between my-4">
           <div className="text-xl font-bold text-atlasian-blue-dark">

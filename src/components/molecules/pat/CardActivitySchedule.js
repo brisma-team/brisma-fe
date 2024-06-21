@@ -1,8 +1,9 @@
-import { Card } from "@/components/atoms";
+import { ButtonIcon, Card } from "@/components/atoms";
 import { convertDate, convertToRupiah } from "@/helpers";
 import TableTree, { Cell, Row, Rows } from "@atlaskit/table-tree";
-import { DropdownIcon } from "../commons";
+// import { DropdownIcon } from "../commons";
 import ProgressBar from "@atlaskit/progress-bar";
+import { IconEdit, IconTrash } from "@/components/icons";
 
 const CardActivitySchedule = ({
   // jadwal_sbp_id,
@@ -18,8 +19,8 @@ const CardActivitySchedule = ({
   tema,
   desc,
   // handleClickInfo,
-  // handleClickUpdate,
-  // handleClickDelete,
+  handleClickUpdate,
+  handleClickDelete,
   // progress,
   // percent,
   // surveyTerkait,
@@ -72,8 +73,20 @@ const CardActivitySchedule = ({
           >
             <p>{type}</p>
           </div>
-          <div className="flex justify-between -mb-1.5">
+          {/* <div className="flex justify-between -mb-1.5">
             <DropdownIcon color={"blue"} />
+          </div> */}
+          <div className="flex w-14 justify-between">
+            <ButtonIcon
+              handleClick={handleClickUpdate}
+              color={"yellow"}
+              icon={<IconEdit size="medium" />}
+            />
+            <ButtonIcon
+              handleClick={handleClickDelete}
+              color={"red"}
+              icon={<IconTrash size="medium" />}
+            />
           </div>
         </div>
         <div className="flex flex-col justify-between my-3">
