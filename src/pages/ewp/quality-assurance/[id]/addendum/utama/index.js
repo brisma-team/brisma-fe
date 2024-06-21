@@ -24,7 +24,7 @@ import {
 } from "@/data/ewp/common/addendum/utama";
 
 //layout
-import LandingLayoutEWPSBPAddendum from "@/layouts/ewp/LandingLayoutEWPSBPAddendum";
+import { LandingLayoutEWPAddendum } from "@/layouts/ewp";
 
 //molecules
 import { NavigationTab } from "@/components/molecules/commons";
@@ -688,7 +688,7 @@ const index = () => {
   // [ END ] handler for tab uker assessment
 
   return (
-    <LandingLayoutEWPSBPAddendum>
+    <LandingLayoutEWPAddendum type="quality-assurance">
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -755,7 +755,7 @@ const index = () => {
         )}
       </div>
       {/* End Content */}
-    </LandingLayoutEWPSBPAddendum>
+    </LandingLayoutEWPAddendum>
   );
 };
 
