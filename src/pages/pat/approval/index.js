@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { PatOverviewLayout } from "@/layouts/pat";
 import useApproval from "@/data/pat/approval/useApproval";
-import { Breadcrumbs, ButtonField } from "@/components/atoms";
+import { Breadcrumbs } from "@/components/atoms";
 import {
   TableHistoryPAT,
   TableApprovalQueuePAT,
@@ -10,11 +10,11 @@ import _ from "lodash";
 import useApprovalHistory from "@/data/pat/approval/useApprovalHistory";
 import {
   CardApprovalList,
-  PrevNextNavigation,
+  // PrevNextNavigation,
 } from "@/components/molecules/commons";
 import { useRouter } from "next/router";
 import { useApprovalPat, useProjectOverview } from "@/data/pat";
-import { CardFilterProjectOverview } from "@/components/molecules/pat/overview";
+// import { CardFilterProjectOverview } from "@/components/molecules/pat/overview";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -55,7 +55,7 @@ const index = () => {
   const { approvalHistory } = useApprovalHistory();
 
   //   const [totalData, setTotalData] = useState(0);
-  const [openFilter, setOpenFilter] = useState(false);
+  // const [openFilter, setOpenFilter] = useState(false);
   const [data, setData] = useState([]);
   const [params, setParams] = useState({
     project_name: "",
@@ -171,11 +171,10 @@ const index = () => {
           <div className="">
             <div className="text-3xl font-bold">Approval Overview</div>
           </div>
-          <PrevNextNavigation />
         </div>
 
         {/* Start Filter */}
-        <div className="w-36 rounded bg-atlasian-blue-light">
+        {/* <div className="w-36 rounded bg-atlasian-blue-light">
           <ButtonField
             handler={() => setOpenFilter(!openFilter)}
             text={openFilter ? `Tutup Filter` : `Tampilkan Filter`}
@@ -188,7 +187,7 @@ const index = () => {
             filter={filter}
             setFilter={setFilter}
           />
-        </div>
+        </div> */}
         {/* End Filter */}
 
         <div className="flex mb-6">

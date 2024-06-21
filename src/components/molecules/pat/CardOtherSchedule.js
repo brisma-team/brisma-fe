@@ -5,7 +5,7 @@ import TableTree, { Cell, Row, Rows } from "@atlaskit/table-tree";
 import { IconEdit, IconTrash } from "@/components/icons";
 
 const CardOtherSchedule = ({
-  // kegiatan_lain_id,
+  kegiatan_lain_id,
   type,
   title,
   maker,
@@ -18,6 +18,7 @@ const CardOtherSchedule = ({
   budget,
   pic,
   desc,
+  withButton = true,
   // handleClickInfo,
   handleClickUpdate,
   handleClickDelete,
@@ -72,18 +73,20 @@ const CardOtherSchedule = ({
           {/* <div className="flex justify-between -mb-1.5">
             <DropdownIcon color={"blue"} />
           </div> */}
-          <div className="flex w-14 justify-between">
-            <ButtonIcon
-              handleClick={handleClickUpdate}
-              color={"yellow"}
-              icon={<IconEdit size="medium" />}
-            />
-            <ButtonIcon
-              handleClick={handleClickDelete}
-              color={"red"}
-              icon={<IconTrash size="medium" />}
-            />
-          </div>
+          {withButton && (
+            <div className="flex w-14 justify-between">
+              <ButtonIcon
+                handleClick={(e) => handleClickUpdate(e, kegiatan_lain_id)}
+                color={"yellow"}
+                icon={<IconEdit size="medium" />}
+              />
+              <ButtonIcon
+                handleClick={(e) => handleClickDelete(e, kegiatan_lain_id)}
+                color={"red"}
+                icon={<IconTrash size="medium" />}
+              />
+            </div>
+          )}
         </div>
         <div className="flex flex-row justify-between mb-3">
           <div className="text-xl font-bold text-atlasian-blue-dark">

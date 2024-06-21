@@ -2,11 +2,11 @@ import { ButtonIcon, Card } from "@/components/atoms";
 import { convertDate, convertToRupiah } from "@/helpers";
 import TableTree, { Cell, Row, Rows } from "@atlaskit/table-tree";
 // import { DropdownIcon } from "../commons";
-import ProgressBar from "@atlaskit/progress-bar";
+// import ProgressBar from "@atlaskit/progress-bar";
 import { IconEdit, IconTrash } from "@/components/icons";
 
 const CardActivitySchedule = ({
-  // jadwal_sbp_id,
+  jadwal_sbp_id,
   type,
   title,
   jenis,
@@ -18,6 +18,7 @@ const CardActivitySchedule = ({
   pic,
   tema,
   desc,
+  withButton = true,
   // handleClickInfo,
   handleClickUpdate,
   handleClickDelete,
@@ -76,18 +77,20 @@ const CardActivitySchedule = ({
           {/* <div className="flex justify-between -mb-1.5">
             <DropdownIcon color={"blue"} />
           </div> */}
-          <div className="flex w-14 justify-between">
-            <ButtonIcon
-              handleClick={handleClickUpdate}
-              color={"yellow"}
-              icon={<IconEdit size="medium" />}
-            />
-            <ButtonIcon
-              handleClick={handleClickDelete}
-              color={"red"}
-              icon={<IconTrash size="medium" />}
-            />
-          </div>
+          {withButton && (
+            <div className="flex w-14 justify-between">
+              <ButtonIcon
+                handleClick={(e) => handleClickUpdate(e, jadwal_sbp_id)}
+                color={"yellow"}
+                icon={<IconEdit size="medium" />}
+              />
+              <ButtonIcon
+                handleClick={(e) => handleClickDelete(e, jadwal_sbp_id)}
+                color={"red"}
+                icon={<IconTrash size="medium" />}
+              />
+            </div>
+          )}
         </div>
         <div className="flex flex-col justify-between my-3">
           <div className="text-2xl font-bold text-atlasian-blue-dark">
@@ -97,12 +100,12 @@ const CardActivitySchedule = ({
             {desc || ""}
           </div>
         </div>
-        <div className="flex flex-row justify-between leading-3 my-3 items-center">
+        {/* <div className="flex flex-row justify-between leading-3 my-3 items-center">
           <ProgressBar appearance="success" value={100} />
           <div className="flex justify-end font-medium text-sm ml-3 text-blue-500">
             100%
           </div>
-        </div>
+        </div> */}
         <div className="leading-3">
           <TableTree>
             <Rows
