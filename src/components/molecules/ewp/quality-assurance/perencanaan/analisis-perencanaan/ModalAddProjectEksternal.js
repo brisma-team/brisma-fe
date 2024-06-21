@@ -135,7 +135,7 @@ const ModalAddProjectEksternal = ({
                   selectedValue={payload.jenis}
                 />
               }
-              label="Jenis Kegiatan*"
+              label="Jenis Kegiatan"
               widthLabel={"w-3/12"}
               widthForm={"w-9/12"}
             />

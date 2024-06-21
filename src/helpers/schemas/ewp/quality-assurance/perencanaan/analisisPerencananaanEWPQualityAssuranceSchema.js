@@ -6,9 +6,6 @@ const addProjectEksternalSchema = yup.object().shape({
   mtd_tipe: yup.object().shape({
     kode: yup.string().required("Wajib diisi"),
   }),
-  mtd_jenis: yup.object().shape({
-    kode: yup.string().required("Wajib diisi"),
-  }),
   tahun: yup.string().required("Wajib diisi"),
   pic: yup.object().shape({
     pn: yup.string().required("Wajib diisi"),

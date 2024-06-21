@@ -88,7 +88,7 @@ export const addendumLainQualityAssuranceSlice = createSlice({
       state.objDataContentRingkasan = [];
     },
     resetObjDataContentDetailRingkasan: (state) => {
-      state.objDataContentDeteailRingkasan = {};
+      state.objDataContentDetailRingkasan = {};
     },
     resetObjPayloadAnggaran: (state) => {
       state.objPayloadAnggaran = { ...state.resetObjPayloadAnggaran };
