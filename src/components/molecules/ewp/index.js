@@ -8,11 +8,14 @@ import { SidebarLandingEWPConsulting } from "./konsulting";
 //monitoring-offsite
 import { SidebarLandingEWPMonOff } from "./monitoring-offsite";
 
+import SidebarLandingAddendum from "./SidebarLandingAddendum";
+
 export {
   ModalHeaderEWP,
   ModalFooterEWP,
   SidebarLandingEWP,
   SelectAuditTeamEWP,
   SidebarLandingEWPConsulting,
-  SidebarLandingEWPMonOff
+  SidebarLandingEWPMonOff,
+  SidebarLandingAddendum,
 };
