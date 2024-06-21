@@ -1,11 +1,11 @@
 import { Breadcrumbs, CardLanding, PageTitle } from "@/components/atoms";
 import { useAuditInfo } from "@/data/ewp/common/info";
-import LandingLayoutEWPSBPAddendum from "@/layouts/ewp/LandingLayoutEWPSBPAddendum";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
 import Button from "@atlaskit/button";
 import { confirmationSwal, fetchApi } from "@/helpers";
+import { LandingLayoutEWPAddendum } from "@/layouts/ewp";
 
 const index = () => {
   const router = useRouter();
@@ -94,7 +94,7 @@ const index = () => {
   };
 
   return (
-    <LandingLayoutEWPSBPAddendum>
+    <LandingLayoutEWPAddendum type="quality-assurance">
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -134,7 +134,7 @@ const index = () => {
         </div>
       </div>
       {/* End Content */}
-    </LandingLayoutEWPSBPAddendum>
+    </LandingLayoutEWPAddendum>
   );
 };
 
