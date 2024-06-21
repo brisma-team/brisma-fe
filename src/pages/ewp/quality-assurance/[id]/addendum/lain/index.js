@@ -26,9 +26,6 @@ import {
   useDetailRingkasan,
 } from "@/data/ewp/common/addendum/lain";
 
-//layout
-import LandingLayoutEWPSBPAddendum from "@/layouts/ewp/LandingLayoutEWPSBPAddendum";
-
 //molecules
 import { NavigationTab } from "@/components/molecules/commons";
 
@@ -48,10 +45,10 @@ import {
   setObjPayloadJadwal,
   setObjPayloadRingkasan,
   setValidationErrorsAnggaran,
-  setValidationErrorsRingkasan,
-  resetObjDataContentLatarBelakang,
-  resetObjDataContentTujuan,
-  resetObjDataContentAnalisa,
+  // setValidationErrorsRingkasan,
+  // resetObjDataContentLatarBelakang,
+  // resetObjDataContentTujuan,
+  // resetObjDataContentAnalisa,
   resetObjDataContentAnggaran,
   resetObjDataContentJadwal,
   resetObjDataContentRingkasan,
@@ -69,6 +66,7 @@ import {
 } from "@/components/molecules/ewp/quality-assurance/addendum/lain";
 import anggaranEWPSchema from "@/helpers/schemas/ewp/common/anggaranEWPSchema";
 import { TableJadwal } from "@/components/molecules/ewp/common/jadwal";
+import { LandingLayoutEWPAddendum } from "@/layouts/ewp";
 
 const index = () => {
   const router = useRouter();
@@ -771,7 +769,7 @@ const index = () => {
   // [ END ] handler for modal ringkasan
   // [ END ] handler for tab ringkasan
   return (
-    <LandingLayoutEWPSBPAddendum>
+    <LandingLayoutEWPAddendum type="quality-assurance">
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -871,7 +869,7 @@ const index = () => {
         )}
       </div>
       {/* End Content */}
-    </LandingLayoutEWPSBPAddendum>
+    </LandingLayoutEWPAddendum>
   );
 };
 

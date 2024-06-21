@@ -75,6 +75,8 @@ import attendanceMeetingEWPQualityAssuranceReducer from "./slices/ewp/quality-as
 import notulenMeetingEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/meeting/notulenMeetingEWPQualityAssuranceSlice";
 import beritaAcaraMeetingEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/meeting/beritaAcaraMeetingEWPQualityAssuranceSlice";
 import addendumLainQualityAssuranceReducer from "./slices/ewp/quality-assurance/addendum/addendumLainQualityAssuranceSlice";
+import addendumUtamaQualityAssuranceReducer from "./slices/ewp/quality-assurance/addendum/addendumUtamaQualityAssuranceSlice";
+import analisisPerencanaanAddendumUtamaEWPQualityAssuranceReducer from "./slices/ewp/quality-assurance/addendum/utama/analisisPerencanaanAddendumUtamaEWPQualityAssuranceSlice";
 
 //EWP MONOFF
 import projectOverviewEWPMonoffReducer from "./slices/ewp/monitoring-offsite/projectOverviewEWPMonoffSlice";
@@ -219,6 +221,9 @@ export const store = configureStore({
     beritaAcaraMeetingEWPQualityAssurance:
       beritaAcaraMeetingEWPQualityAssuranceReducer,
     addendumLainQualityAssurance: addendumLainQualityAssuranceReducer,
+    addendumUtamaQualityAssurance: addendumUtamaQualityAssuranceReducer,
+    analisisPerencanaanAddendumUtamaEWPQualityAssurance:
+      analisisPerencanaanAddendumUtamaEWPQualityAssuranceReducer,
 
     // RPM Konsulting
     documentRPMKegiatan: documentRPMKegiatanReducer,
