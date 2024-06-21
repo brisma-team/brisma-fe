@@ -326,7 +326,9 @@ const ModalAuditSchedule = ({
       showModal={showModal}
       header={
         <ModalHeader
-          headerText={"Buat Jadwal Audit"}
+          headerText={
+            typeModal == "update" ? "Ubah Jadwal Audit" : "Buat Jadwal Audit"
+          }
           progressItems={items}
           handleCloseModal={handleCloseModal}
           showModal={showModal}

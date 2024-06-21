@@ -315,7 +315,11 @@ const ModalOtherSchedule = ({
       showModal={showModal}
       header={
         <ModalHeader
-          headerText={"Buat Jadwal Kegiatan Lain"}
+          headerText={
+            typeModal == "update"
+              ? "Ubah Jadwal Kegiatan Lain"
+              : "Buat Jadwal Kegiatan Lain"
+          }
           progressItems={items}
           handleCloseModal={handleCloseModal}
           showModal={showModal}
