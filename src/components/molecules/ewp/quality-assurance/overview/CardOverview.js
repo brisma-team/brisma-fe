@@ -71,7 +71,7 @@ const CardOverview = ({
           <span className="my-auto">Delete Project</span>
         </div>
       ),
-      action: handleCloseProject,
+      action: () => handleCloseProject(data?.id),
       isDisabled: !(
         checkRoleIsAdmin(user?.role_kode) || data?.initiator?.pn === user?.pn
       ),

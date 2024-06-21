@@ -315,7 +315,11 @@ const ModalOtherSchedule = ({
       showModal={showModal}
       header={
         <ModalHeader
-          headerText={"Buat Jadwal Kegiatan Lain"}
+          headerText={
+            typeModal == "update"
+              ? "Ubah Jadwal Kegiatan Lain"
+              : "Buat Jadwal Kegiatan Lain"
+          }
           progressItems={items}
           handleCloseModal={handleCloseModal}
           showModal={showModal}
@@ -347,7 +351,7 @@ const ModalOtherSchedule = ({
         <ModalBodyBudget
           setCurrentModalStage={setCurrentModalStage}
           isDisabled={isFormDisabled}
-          isDisabledButtonSave={isDisabledButtonSave}
+          isDisabledButtonSave={false}
           currentModalStage={currentModalStage}
           handleSubmit={handleSubmit}
           handleNextStage={handleNextStage}

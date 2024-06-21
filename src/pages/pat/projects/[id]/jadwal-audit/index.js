@@ -9,7 +9,6 @@ import {
   PrevNextNavigation,
   SelectSortFilter,
 } from "@/components/molecules/commons";
-import Button from "@atlaskit/button";
 import { PatLandingLayout } from "@/layouts/pat";
 import CardAuditSchedule from "@/components/molecules/pat/CardAuditSchedule";
 import { useEffect, useState } from "react";
@@ -24,7 +23,6 @@ import _ from "lodash";
 import { useDispatch } from "react-redux";
 import { resetAuditScheduleData } from "@/slices/pat/auditScheduleSlice";
 import { convertDate, deleteSwal } from "@/helpers";
-import { IconFile } from "@/components/icons";
 
 const routes = [
   {
@@ -33,9 +31,11 @@ const routes = [
   },
   { name: "Sumber Informasi", slug: "sumber-informasi" },
   { name: "Tim Audit", slug: "tim-audit" },
-  { name: "Target Audit", slug: "ringkasan-objek-audit" },
   { name: "Jadwal Audit", slug: "jadwal-audit" },
+  { name: "Target Audit", slug: "ringkasan-objek-audit" },
   { name: "Jadwal Kegiatan", slug: "jadwal-kegiatan" },
+  { name: "Jadwal Lainnya", slug: "jadwal-lainnya" },
+  { name: "Dokumen", slug: "dokumen" },
 ];
 
 const index = () => {
@@ -56,6 +56,7 @@ const index = () => {
   const [showModal, setShowModal] = useState(false);
   const [showModalDetail, setShowModalDetail] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [params, setParams] = useState({
     project_name: "",
     metode: "",
@@ -102,12 +103,12 @@ const index = () => {
         value: statusPat?.data?.create_by?.nama,
       },
       {
-        title: "Created Date",
-        value: convertDate(statusPat?.data?.createdAt, "-", "d", true),
+        title: "Tanggal Inisiasi",
+        value: convertDate(statusPat?.data?.createdAt, "/", "d"),
       },
       { title: "Document Status", value: statusPat?.data?.status_pat },
-      { title: "Document Status", value: statusPat?.data?.status_pat },
     ]);
+    setIsDisabled(statusPat?.data?.status_pat !== "On Progress");
   }, [statusPat]);
 
   useEffect(() => {
@@ -127,7 +128,6 @@ const index = () => {
         desc: v?.deskripsi,
       };
     });
-    console.log(auditSchedule?.result)
     setData(mappedData);
     setTotalData(auditSchedule?.pagination?.totalData);
   }, [auditSchedule, auditScheduleMutate]);
@@ -201,14 +201,16 @@ const index = () => {
               text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
             />
           </div>
-          <div className="w-40 rounded bg-atlasian-purple">
-            <ButtonField
-              handler={handleCreateButton}
-              text={"Buat Jadwal Audit"}
-            />
-          </div>
+          {!isDisabled && (
+            <div className="w-40 rounded bg-atlasian-purple">
+              <ButtonField
+                handler={handleCreateButton}
+                text={"Buat Jadwal Audit"}
+              />
+            </div>
+          )}
         </div>
-        <div className="w-24">
+        {/* <div className="w-24">
           <Button
             appearance="primary"
             onClick={() => setShowModal(true)}
@@ -217,7 +219,7 @@ const index = () => {
           >
             Arsip
           </Button>
-        </div>
+        </div> */}
       </div>
       <div className="w-fit">
         <CardFilterAuditSchedule
@@ -226,7 +228,7 @@ const index = () => {
           setParams={setFilter}
         />
       </div>
-      <div className="flex justify-end items-end w-full gap-2 mt-3">
+      <div className="flex justify-end items-end w-full gap-2 mt-3 mb-5">
         <SelectSortFilter change={handleChangeFilter} />
       </div>
       {/* End of Filter */}

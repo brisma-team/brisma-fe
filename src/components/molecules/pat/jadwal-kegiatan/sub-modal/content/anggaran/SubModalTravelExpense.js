@@ -53,9 +53,11 @@ const SubModalTravelExpense = ({ typeModal }) => {
           [key]: 2000000000,
         }));
       } else {
+        // Remove dot (.) before converting to integer
+        const intValue = parseInt(value.replace(/\./g, ""), 10);
         setBudget((prevBudget) => ({
           ...prevBudget,
-          [key]: value,
+          [key]: intValue,
         }));
       }
     }
@@ -102,10 +104,6 @@ const SubModalTravelExpense = ({ typeModal }) => {
     });
 
     setOptionAuditTeam(mapping);
-  }, [activityScheduleData]);
-
-  useEffect(() => {
-    console.log("activity => ", activityScheduleData);
   }, [activityScheduleData]);
 
   return (

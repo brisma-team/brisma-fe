@@ -1,7 +1,8 @@
-import { Card, DivButton } from "@/components/atoms";
+import { ButtonIcon, Card } from "@/components/atoms";
 import { convertDate, convertToRupiah } from "@/helpers";
 import TableTree, { Cell, Row, Rows } from "@atlaskit/table-tree";
-import { DropdownIcon } from "../commons";
+// import { DropdownIcon } from "../commons";
+import { IconEdit, IconTrash } from "@/components/icons";
 
 const CardAuditSchedule = ({
   jadwal_id,
@@ -13,10 +14,11 @@ const CardAuditSchedule = ({
   end_date,
   jenis,
   budget,
-  audit_type,
+  // audit_type,
+  withButton = true,
   tema,
-  desc,
-  handleClickInfo,
+  // desc,
+  // handleClickInfo,
   handleClickUpdate,
   handleClickDelete,
 }) => {
@@ -27,11 +29,14 @@ const CardAuditSchedule = ({
     },
     {
       title: "Tanggal Inisiasi",
-      description: convertDate(start_date, "-", "d"),
+      description: convertDate(start_date, "/", "d"),
     },
     {
       title: "Durasi Proyek",
-      description: convertDate(start_date, "-", "d") + " - " + convertDate(end_date, "-", "d"),
+      description:
+        convertDate(start_date, "/", "d") +
+        " - " +
+        convertDate(end_date, "/", "d"),
     },
     {
       title: "Jenis Proyek",
@@ -47,61 +52,72 @@ const CardAuditSchedule = ({
     },
   ];
   return (
-    <DivButton
-      className="hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
-      handleClick={() => console.log("test")}
-    >
-      <Card>
-        <div className="w-full px-4 py-2">
-          <div className="flex mb-2 justify-between items-end -ml-4 -mr-1 -mt-4">
-            <div
-              className={`text-base font-semibold rounded-tl-lg text-white ${
-                type?.toLowerCase() === "individual"
-                  ? "bg-violet-500"
-                  : "bg-orange-400"
-              } px-5 h-9 flex items-center justify-center`}
-            >
-              <p>{type}</p>
-            </div>
-            <div className="flex justify-between -mb-1.5">
-              <DropdownIcon color={"blue"} />
-            </div>
+    // <DivButton
+    //   className="hover:bg-gray-100 hover:rounded-[10px] hover:no-underline"
+    //   handleClick={() => console.log("test")}
+    // >
+    <Card>
+      <div className="w-full px-4 py-2">
+        <div className="flex mb-2 justify-between items-end -ml-4 -mr-1 -mt-4">
+          <div
+            className={`text-base font-semibold rounded-tl-lg text-white ${
+              type?.toLowerCase() === "individual"
+                ? "bg-violet-500"
+                : "bg-orange-400"
+            } px-5 h-9 flex items-center justify-center`}
+          >
+            <p>{type}</p>
           </div>
-          <div className="flex flex-row justify-between my-4">
-            <div className="text-xl font-bold text-atlasian-blue-dark">
-              {title}
-            </div>
-          </div>
-          <div className="leading-3">
-            <TableTree>
-              <Rows
-                items={projectItems}
-                render={({ title, description }) => (
-                  <div className="border p-0">
-                    <Row itemId={title}>
-                      <Cell
-                        width="50%"
-                        className="font-bold border-r !p-2 !min-h-0"
-                      >
-                        {title}
-                      </Cell>
-                      <Cell width="50%" className="!min-h-0 !p-2">
-                        {description}
-                      </Cell>
-                    </Row>
-                  </div>
-                )}
+          {withButton && (
+            <div className="flex w-14 justify-between">
+              <ButtonIcon
+                handleClick={(e) => handleClickUpdate(e, jadwal_id)}
+                color={"yellow"}
+                icon={<IconEdit size="medium" />}
               />
-            </TableTree>
-            <div className="w-full h-[10rem] border-2 my-3 p-2 overflow-y-auto">
-              <p className="font-semibold text-lg">Pelaksana</p>
-              <p className="text-blue-600 font-semibold">Tim Audit</p>
-              <p className="">{audit_team}</p>
+              <ButtonIcon
+                handleClick={(e) => handleClickDelete(e, jadwal_id)}
+                color={"red"}
+                icon={<IconTrash size="medium" />}
+              />
             </div>
+          )}
+        </div>
+        <div className="flex flex-row justify-between my-4">
+          <div className="text-xl font-bold text-atlasian-blue-dark">
+            {title}
           </div>
         </div>
-      </Card>
-    </DivButton>
+        <div className="leading-3">
+          <TableTree>
+            <Rows
+              items={projectItems}
+              render={({ title, description }) => (
+                <div className="border p-0">
+                  <Row itemId={title}>
+                    <Cell
+                      width="40%"
+                      className="font-bold border-r !p-2 !min-h-0"
+                    >
+                      {title}
+                    </Cell>
+                    <Cell width="60%" className="!min-h-0 !p-2">
+                      {description || "-"}
+                    </Cell>
+                  </Row>
+                </div>
+              )}
+            />
+          </TableTree>
+          <div className="w-full h-[10rem] border-2 my-3 p-2 overflow-y-auto">
+            <p className="font-semibold text-lg">Pelaksana</p>
+            <p className="text-blue-600 font-semibold">Tim Audit</p>
+            <p className="">{audit_team}</p>
+          </div>
+        </div>
+      </div>
+    </Card>
+    // </DivButton>
   );
 };
 

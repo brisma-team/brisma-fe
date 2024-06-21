@@ -1,4 +1,4 @@
-import { DivButton, Modal } from "@/components/atoms";
+import { Modal } from "@/components/atoms";
 import { useState } from "react";
 import {
   ModalBodyActivityInfo,
@@ -307,7 +307,11 @@ const ModalActivitySchedule = ({
       showModal={showModal}
       header={
         <ModalHeader
-          headerText={"Buat Jadwal Kegiatan"}
+          headerText={
+            typeModal == "update"
+              ? "Ubah Jadwal Kegiatan"
+              : "Buat Jadwal Kegiatan"
+          }
           progressItems={items}
           handleCloseModal={handleCloseModal}
           showModal={showModal}

@@ -14,7 +14,7 @@ import {
   useUpdateData,
 } from "@/helpers";
 import { useRouter } from "next/router";
-import { ModalHeader, ModalFooter } from "@/components/molecules/pat";
+import { ModalHeader } from "@/components/molecules/pat";
 import {
   activityInfoSchema,
   activityObjectSchema,
@@ -70,7 +70,6 @@ const ModalAuditSchedule = ({
       name_kegiatan_audit,
       ref_metode,
       ref_tipe,
-      ref_jenis,
       pelaksanaan_start,
       pelaksanaan_end,
       tim_audit_id,
@@ -81,7 +80,6 @@ const ModalAuditSchedule = ({
       name_kegiatan_audit &&
       ref_metode.kode &&
       ref_tipe.kode &&
-      ref_jenis.kode &&
       pelaksanaan_start &&
       pelaksanaan_end &&
       tim_audit_id &&
@@ -328,7 +326,9 @@ const ModalAuditSchedule = ({
       showModal={showModal}
       header={
         <ModalHeader
-          headerText={"Buat Jadwal Audit"}
+          headerText={
+            typeModal == "update" ? "Ubah Jadwal Audit" : "Buat Jadwal Audit"
+          }
           progressItems={items}
           handleCloseModal={handleCloseModal}
           showModal={showModal}

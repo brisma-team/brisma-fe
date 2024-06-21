@@ -87,7 +87,7 @@ const ModalDetailPelaksanaan = ({
                   <FormWithLabel
                     form={
                       <CardContent>
-                        <div className="min-h-[1.3rem]">
+                        <div className="min-h-[1.3rem] overflow-x-scroll ">
                           <p>{payload?.survey_name || "-"}</p>
                         </div>
                       </CardContent>
@@ -112,7 +112,7 @@ const ModalDetailPelaksanaan = ({
                     }
                     label="Tanggal Mulai"
                     widthLabel={"w-4/12"}
-                    widthForm={"w-7/12"}
+                    widthForm={"w-8/12"}
                   />
                   <FormWithLabel
                     form={
@@ -126,7 +126,7 @@ const ModalDetailPelaksanaan = ({
                             </p>
                           </div>
                         </CardContent>
-                        {!withoutButton ? (
+                        {!withoutButton && !payload?.is_close ? (
                           <ButtonIcon
                             icon={<ButtonEdit />}
                             handleClick={() => handleClickEdit(payload?.id)}

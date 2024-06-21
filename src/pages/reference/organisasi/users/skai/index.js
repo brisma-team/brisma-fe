@@ -48,6 +48,7 @@ const index = () => {
   const [params, setParams] = useState({
     limit: 5,
     offset: 1,
+    page: 1,
     total_data: 5,
   });
 
@@ -240,7 +241,8 @@ const index = () => {
                 setParams((prev) => {
                   return {
                     ...prev,
-                    offset: pageNow,
+                    page: pageNow,
+                    offset: (pageNow - 1) * prev?.limit,
                   };
                 })
               }

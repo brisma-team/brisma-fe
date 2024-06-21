@@ -5,7 +5,6 @@ import {
   CustomPagination,
   PageTitle,
 } from "@/components/atoms";
-import { IconFile } from "@/components/icons";
 import { PatLandingLayout } from "@/layouts/pat";
 import {
   DataNotFound,
@@ -18,7 +17,6 @@ import {
 } from "@/components/molecules/pat/tim-audit";
 import { CardAuditTeam } from "@/components/molecules/pat";
 import useAuditTeam from "@/data/pat/useAuditTeam";
-import Button from "@atlaskit/button";
 import { useRouter } from "next/router";
 import { useStatusPat } from "@/data/pat";
 import { useDispatch } from "react-redux";
@@ -33,9 +31,11 @@ const routes = [
   },
   { name: "Sumber Informasi", slug: "sumber-informasi" },
   { name: "Tim Audit", slug: "tim-audit" },
-  { name: "Target Audit", slug: "ringkasan-objek-audit" },
   { name: "Jadwal Audit", slug: "jadwal-audit" },
+  { name: "Target Audit", slug: "ringkasan-objek-audit" },
   { name: "Jadwal Kegiatan", slug: "jadwal-kegiatan" },
+  { name: "Jadwal Lainnya", slug: "jadwal-lainnya" },
+  { name: "Dokumen", slug: "dokumen" },
 ];
 
 const index = () => {
@@ -44,6 +44,7 @@ const index = () => {
   const baseUrl = `/pat/projects/${id}`;
   const { statusPat } = useStatusPat(id);
   const [content, setContent] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(0);
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
     { name: "PAT", path: "/pat" },
@@ -89,12 +90,12 @@ const index = () => {
         value: statusPat?.data?.create_by?.nama,
       },
       {
-        title: "Created Date",
-        value: convertDate(statusPat?.data?.lb_created_at, "-", "d", true),
+        title: "Tanggal Inisiasi",
+        value: convertDate(statusPat?.data?.createdAt, "/", "d"),
       },
       { title: "Document Status", value: statusPat?.data?.status_pat },
-      { title: "Document Status", value: statusPat?.data?.status_pat },
     ]);
+    setIsDisabled(statusPat?.data?.status_pat !== "On Progress");
   }, [statusPat]);
 
   useEffect(() => {
@@ -104,7 +105,7 @@ const index = () => {
           id: v.id,
           header_title: v.name,
           maker: v.pic_maker_tim_audit.nama,
-          created_at: convertDate(v.createdAt, "-", "d"),
+          created_at: convertDate(v.createdAt, "/", "d"),
           manajer_audit: v.ref_tim_audit_mas,
           ketua_tim_audit: v.ref_tim_audit_kta,
           anggota_tim_audit: v.ref_tim_audit_ata,
@@ -193,11 +194,16 @@ const index = () => {
               text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
             />
           </div>
-          <div className="w-40 rounded bg-atlasian-purple">
-            <ButtonField handler={handleCreateButton} text={"Buat Tim Audit"} />
-          </div>
+          {!isDisabled && (
+            <div className="w-40 rounded bg-atlasian-purple">
+              <ButtonField
+                handler={handleCreateButton}
+                text={"Buat Tim Audit"}
+              />
+            </div>
+          )}
         </div>
-        <div className="w-24">
+        {/* <div className="w-24">
           <Button
             appearance="primary"
             onClick={() => setShowModal(true)}
@@ -206,7 +212,7 @@ const index = () => {
           >
             Arsip
           </Button>
-        </div>
+        </div> */}
       </div>
       <div className="flex justify-between items-end">
         <div className="w-[27rem]">
@@ -216,7 +222,7 @@ const index = () => {
             setFilter={setFilter}
           />
         </div>
-        <div className="flex justify-end items-end rounded-full">
+        <div className="flex justify-end items-end rounded-full mb-5">
           <SelectSortFilter change={handleChangeFilter} />
         </div>
       </div>
@@ -238,7 +244,7 @@ const index = () => {
                   ketua_tim_audit={v.ketua_tim_audit}
                   anggota_tim_audit={v.anggota_tim_audit}
                   tipe_tim={v.tipe_tim}
-                  button={true}
+                  withButton={!isDisabled}
                   handleUpdate={(e) => handleUpdate(e, v.id)}
                   handleDelete={(e) => handleDelete(e, v.id)}
                 />

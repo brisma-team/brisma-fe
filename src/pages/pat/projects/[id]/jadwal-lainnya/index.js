@@ -19,14 +19,12 @@ import {
   ModalOtherSchedule,
   ModalOtherScheduleDetail,
 } from "@/components/molecules/pat/jadwal-lainnya";
-import Button from "@atlaskit/button";
 import { convertDate, deleteSwal } from "@/helpers";
 import { useRouter } from "next/router";
 import { useActivityScheduleOther, useStatusPat } from "@/data/pat";
 import { resetOtherScheduleData } from "@/slices/pat/activityScheduleOtherSlice";
 import { useDispatch } from "react-redux";
 import _ from "lodash";
-import { IconFile } from "@/components/icons";
 
 const routes = [
   {
@@ -35,9 +33,11 @@ const routes = [
   },
   { name: "Sumber Informasi", slug: "sumber-informasi" },
   { name: "Tim Audit", slug: "tim-audit" },
-  { name: "Target Audit", slug: "ringkasan-objek-audit" },
   { name: "Jadwal Audit", slug: "jadwal-audit" },
+  { name: "Target Audit", slug: "ringkasan-objek-audit" },
   { name: "Jadwal Kegiatan", slug: "jadwal-kegiatan" },
+  { name: "Jadwal Lainnya", slug: "jadwal-lainnya" },
+  { name: "Dokumen", slug: "dokumen" },
 ];
 
 const index = () => {
@@ -60,6 +60,7 @@ const index = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [data, setData] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [selectedScheduleId, setSelectedScheduleId] = useState(null);
   const [params, setParams] = useState({
     nama: "",
@@ -104,12 +105,12 @@ const index = () => {
         value: statusPat?.data?.create_by?.nama,
       },
       {
-        title: "Created Date",
-        value: convertDate(statusPat?.data?.createdAt, "-", "d", true),
+        title: "Tanggal Inisiasi",
+        value: convertDate(statusPat?.data?.createdAt, "/", "d"),
       },
       { title: "Document Status", value: statusPat?.data?.status_pat },
-      { title: "Document Status", value: statusPat?.data?.status_pat },
     ]);
+    setIsDisabled(statusPat?.data?.status_pat !== "On Progress");
   }, [statusPat]);
 
   useEffect(() => {
@@ -137,7 +138,6 @@ const index = () => {
           desc: v?.deskripsi,
         };
       });
-      console.log(mappedData);
       setData(mappedData);
       setTotalData(activityScheduleOther?.pagination?.totalData);
     } else {
@@ -215,14 +215,16 @@ const index = () => {
               text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
             />
           </div>
-          <div className="w-44 rounded bg-atlasian-purple">
-            <ButtonField
-              handler={handleCreateButton}
-              text={"Buat Jadwal Lain"}
-            />
-          </div>
+          {!isDisabled && (
+            <div className="w-44 rounded bg-atlasian-purple">
+              <ButtonField
+                handler={handleCreateButton}
+                text={"Buat Jadwal Lain"}
+              />
+            </div>
+          )}
         </div>
-        <div className="w-24">
+        {/* <div className="w-24">
           <Button
             appearance="primary"
             onClick={() => setShowModal(true)}
@@ -231,7 +233,7 @@ const index = () => {
           >
             Arsip
           </Button>
-        </div>
+        </div> */}
       </div>
       <div className="w-fit">
         <CardFilterOtherSchedule
@@ -240,7 +242,7 @@ const index = () => {
           setParams={setFilter}
         />
       </div>
-      <div className="flex justify-end items-end relative mb-4 gap-2 mt-3">
+      <div className="flex justify-end items-end relative mb-5 gap-2 mt-3">
         <SelectSortFilter change={handleChangeFilter} />
       </div>
       {/* End of Filter */}

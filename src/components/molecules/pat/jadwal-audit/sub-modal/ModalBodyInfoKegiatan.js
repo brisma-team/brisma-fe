@@ -343,18 +343,20 @@ const ModalBodyInfoKegiatan = ({
             </CardBodyContent>
           </div>
           <div className="w-1/2 h-fit">
-            <CardMakeAuditTeam
-              header_title={auditTeam?.data?.name}
-              maker={auditTeam?.data?.pic_maker_tim_audit?.nama}
-              created_at={
-                auditTeam?.data?.createdAt &&
-                convertDate(auditTeam?.data?.createdAt, "-", "d")
-              }
-              tipe_tim={auditTeam?.data?.ref_tipe_tim?.nama}
-              manajer_audit={auditTeam?.data?.ref_tim_audit_mas}
-              ketua_tim_audit={auditTeam?.data?.ref_tim_audit_kta}
-              anggota_tim_audit={auditTeam?.data?.ref_tim_audit_ata}
-            />
+            {auditTeam?.data && (
+              <CardMakeAuditTeam
+                header_title={auditTeam?.data?.name}
+                maker={auditTeam?.data?.pic_maker_tim_audit?.nama}
+                created_at={
+                  auditTeam?.data?.createdAt &&
+                  convertDate(auditTeam?.data?.createdAt, "-", "d")
+                }
+                tipe_tim={auditTeam?.data?.ref_tipe_tim?.nama}
+                manajer_audit={auditTeam?.data?.ref_tim_audit_mas}
+                ketua_tim_audit={auditTeam?.data?.ref_tim_audit_kta}
+                anggota_tim_audit={auditTeam?.data?.ref_tim_audit_ata}
+              />
+            )}
           </div>
         </div>
       </div>
