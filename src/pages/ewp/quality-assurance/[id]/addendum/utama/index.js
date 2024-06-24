@@ -58,7 +58,6 @@ import {
   ContentRingkasan,
 } from "@/components/molecules/ewp/quality-assurance/addendum/utama";
 import timEWPQualityAssuranceSchema from "@/helpers/schemas/ewp/quality-assurance/tim/timEWPQualityAssuranceSchema";
-import { addProjectInternalSchema } from "@/helpers/schemas/ewp/quality-assurance/perencanaan/analisisPerencananaanEWPQualityAssuranceSchema";
 import useUser from "@/data/useUser";
 
 const index = () => {
@@ -250,6 +249,7 @@ const index = () => {
 
   useEffect(() => {
     if (ringkasan?.data?.length) {
+      console.log("ringkasan?.data => ", ringkasan?.data);
       const mappingRingkasan = ringkasan?.data?.map((v) => {
         return _.pick(v, [
           "id",
@@ -749,7 +749,22 @@ const index = () => {
             user={user}
           />
         ) : currentContentStage == "4" ? (
-          <ContentRingkasan />
+          <ContentRingkasan
+            data={dataContentRingkasan}
+            dataDetail={dataContentDetailRingkasan}
+            dataInfoProject={auditInfo?.data}
+            payload={payloadRingkasan}
+            validation={validationRingkasan}
+            showModalDetail={showModalDetailRingkasan}
+            showModalEdit={showModalEditRingkasan}
+            handleCloseModal={handleCloseModalRingkasan}
+            handleChangePayload={handleChangePayloadRingkasan}
+            handleClickUpdate={handleClickUpdateRingkasan}
+            handleClickView={handleClickViewRingkasan}
+            handleSaveRingkasan={handleSaveRingkasan}
+            handleResetRingkasan={handleResetRingkasan}
+            handleSubmitEditRingkasan={handleSubmitEditRingkasan}
+          />
         ) : (
           ""
         )}

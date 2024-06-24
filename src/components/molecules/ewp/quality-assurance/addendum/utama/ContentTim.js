@@ -67,7 +67,7 @@ const ContentTim = ({
               ) : (
                 ""
               )}
-              {validation["ata"] ? (
+              {validation && validation["ata"] ? (
                 <ErrorValidation
                   className={"mt-3"}
                   message={validation["ata"]}
