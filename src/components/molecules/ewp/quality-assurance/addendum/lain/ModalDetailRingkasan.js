@@ -47,7 +47,9 @@ const ModalDetailRingkasan = ({ data, showModal, handleCloseModal }) => {
               <SubContentAnggaran data={data?.sebelum?.anggaran} />
             </div>
           ) : data?.part == "jadwal" ? (
-            <SubContentJadwal data={data?.sebelum?.jadwal} />
+            <div className="p-4">
+              <SubContentJadwal data={data?.sebelum?.jadwal} />
+            </div>
           ) : (
             ""
           )}
@@ -77,9 +79,13 @@ const ModalDetailRingkasan = ({ data, showModal, handleCloseModal }) => {
               }}
             />
           ) : data?.part == "anggaran" ? (
-            <SubContentAnggaran data={data?.sesudah?.anggaran} />
+            <div className="p-4">
+              <SubContentAnggaran data={data?.sesudah?.anggaran} />
+            </div>
           ) : data?.part == "jadwal" ? (
-            <SubContentJadwal data={data?.sesudah?.jadwal} />
+            <div className="p-4">
+              <SubContentJadwal data={data?.sesudah?.jadwal} />
+            </div>
           ) : (
             ""
           )}

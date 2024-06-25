@@ -47,11 +47,12 @@ import {
   addProjectInternalSchema,
 } from "@/helpers/schemas/ewp/quality-assurance/perencanaan/analisisPerencananaanEWPQualityAssuranceSchema";
 import { NavigationTab } from "@/components/molecules/commons";
-import { Card } from "@/components/atoms";
+import { ButtonField, Card } from "@/components/atoms";
 import ModalEditProject from "./ModalEditProject";
 import TableAnalisisPerencanaan from "./TableAnalisisPerencanaan";
 import ModalEditAnalisa from "./ModalEditAnalisa";
 import editProjectAddendumUtamaEWPQualityAssuranceSchema from "@/helpers/schemas/ewp/quality-assurance/addendum/utama/editProjectAddendumUtamaEWPQualityAssuranceSchema";
+import { useRingkasan } from "@/data/ewp/common/addendum/utama";
 
 const ContentAnalisisPerencanaan = ({
   params,
@@ -60,12 +61,15 @@ const ContentAnalisisPerencanaan = ({
   isInitiator,
   isCloseSubmodule,
   isOnProgress,
+  handleLoadDataFromMAR,
 }) => {
   const dispatch = useDispatch();
   const navigationTabItems = [
     { idx: 1, title: "BRISMA" },
     { idx: 2, title: "Eksternal" },
   ];
+
+  const [isDisabledEditAnalisa, setIsDisabledEditAnalisa] = useState(false);
 
   const [expansionMapInternal, setExpansionMapInternal] = useState({});
   const [expansionMapEksternal, setExpansionMapEksternal] = useState({});
@@ -150,6 +154,10 @@ const ContentAnalisisPerencanaan = ({
     });
   const { analisisPerencanaanProyekDetail } =
     useAnalisisPerencanaanProyekDetail({ id: selectedProyekId });
+  const { ringkasanMutate } = useRingkasan({
+    id: params?.id,
+    module: "qa",
+  });
 
   useEffect(() => {
     if (analisisPerencanaanInternal?.data?.ukers?.length) {
@@ -387,6 +395,7 @@ const ContentAnalisisPerencanaan = ({
 
     analisisPerencanaanInternalMutate();
     analisisPerencanaanEksternalMutate();
+    ringkasanMutate();
     loadingSwal("close");
   };
 
@@ -408,11 +417,18 @@ const ContentAnalisisPerencanaan = ({
 
     analisisPerencanaanInternalMutate();
     analisisPerencanaanEksternalMutate();
+    ringkasanMutate();
     loadingSwal("close");
   };
 
   const handleClickEditProject = (id) => {
     setShowModalEditProject(true);
+    setSelectedProyekId(id);
+  };
+
+  const handleClickAnalisa = (id) => {
+    setShowModalEditAnalisa(true);
+    setIsDisabledEditAnalisa(true);
     setSelectedProyekId(id);
   };
   // [ END ] handler for table
@@ -469,6 +485,7 @@ const ContentAnalisisPerencanaan = ({
 
       analisisPerencanaanEksternalMutate();
       analisisPerencanaanProyekMutate();
+      ringkasanMutate();
       dispatch(resetObjPayloadEksternal());
       setShowModalEksternal(false);
       loadingSwal("close");
@@ -561,6 +578,7 @@ const ContentAnalisisPerencanaan = ({
       );
 
       analisisPerencanaanInternalMutate();
+      ringkasanMutate();
       dispatch(resetObjPayloadInternal());
       dispatch(resetObjDataTableObjekAudit());
       setShowModalInternal(false);
@@ -658,6 +676,7 @@ const ContentAnalisisPerencanaan = ({
 
       analisisPerencanaanInternalMutate();
       analisisPerencanaanEksternalMutate();
+      ringkasanMutate();
       dispatch(resetObjPayloadEditProject());
       dispatch(resetValidationErrorsEditProject());
       setShowModalEditProject(false);
@@ -677,6 +696,7 @@ const ContentAnalisisPerencanaan = ({
     }
 
     setShowModalEditAnalisa(false);
+    setIsDisabledEditAnalisa(false);
   };
 
   const handleSubmitModalEditAnalisa = (value) => {
@@ -687,97 +707,110 @@ const ContentAnalisisPerencanaan = ({
   // [ END ] handler for modal edit uraian control
 
   return (
-    <Card>
-      <div className="w-full px-6 py-2">
-        <NavigationTab
-          items={navigationTabItems}
-          currentStage={currentContentStage}
-          width={"w-40"}
-          handleChange={handleChangeTab}
-        />
-        {/* Start Content */}
-        <div className="w-full mt-4">
-          {currentContentStage === 1 ? (
-            <TableAnalisisPerencanaan
-              isInitiator={isInitiator}
-              user={user?.data}
-              data={dataTableInternal}
-              expansionMap={expansionMapInternal}
-              pathName={`/ewp/quality-assurance/${params?.id}/addendum/utama`}
-              withoutButton={!(isOnProgress && !isCloseSubmodule)}
-              handleClickAddProject={handleClickAddProjectInternal}
-              handleClickToggleExpansion={handleToggleExpansionInternal}
-              handleClickEditProject={handleClickEditProject}
-              handleClickDeleteProject={handleClickDeleteProject}
-              handleClickRestoreProject={handleClickRestoreProject}
-            />
-          ) : (
-            <TableAnalisisPerencanaan
-              isEksternal
-              isInitiator={isInitiator}
-              user={user?.data}
-              data={dataTableEksternal}
-              pathName={`/ewp/quality-assurance/${params?.id}/addendum/utama`}
-              expansionMap={expansionMapEksternal}
-              withoutButton={!(isOnProgress && !isCloseSubmodule)}
-              handleClickAddProject={handleClickAddProjectEksternal}
-              handleClickToggleExpansion={handleToggleExpansionEksternal}
-              handleClickEditProject={handleClickEditProject}
-              handleClickDeleteProject={handleClickDeleteProject}
-              handleClickRestoreProject={handleClickRestoreProject}
-            />
-          )}
+    <div>
+      <Card>
+        <div className="w-full px-6 py-2">
+          <NavigationTab
+            items={navigationTabItems}
+            currentStage={currentContentStage}
+            width={"w-40"}
+            handleChange={handleChangeTab}
+          />
+          {/* Start Content */}
+          <div className="w-full mt-4">
+            {currentContentStage === 1 ? (
+              <TableAnalisisPerencanaan
+                isInitiator={isInitiator}
+                user={user?.data}
+                data={dataTableInternal}
+                expansionMap={expansionMapInternal}
+                withoutButton={!(isOnProgress && !isCloseSubmodule)}
+                handleClickAddProject={handleClickAddProjectInternal}
+                handleClickToggleExpansion={handleToggleExpansionInternal}
+                handleClickEditProject={handleClickEditProject}
+                handleClickAnalisa={handleClickAnalisa}
+                handleClickDeleteProject={handleClickDeleteProject}
+                handleClickRestoreProject={handleClickRestoreProject}
+              />
+            ) : (
+              <TableAnalisisPerencanaan
+                isEksternal
+                isInitiator={isInitiator}
+                user={user?.data}
+                data={dataTableEksternal}
+                expansionMap={expansionMapEksternal}
+                withoutButton={!(isOnProgress && !isCloseSubmodule)}
+                handleClickAddProject={handleClickAddProjectEksternal}
+                handleClickToggleExpansion={handleToggleExpansionEksternal}
+                handleClickEditProject={handleClickEditProject}
+                handleClickAnalisa={handleClickAnalisa}
+                handleClickDeleteProject={handleClickDeleteProject}
+                handleClickRestoreProject={handleClickRestoreProject}
+              />
+            )}
+          </div>
+          <ModalAddProjectInternal
+            showModal={showModalInternal}
+            selectedData={selectedDataInternal}
+            selectedProject={payloadInternal}
+            data={dataTableObjekAudit}
+            dataPic={dataPicAnalisator}
+            totalData={totalDataProyekList}
+            filter={dataFilterModalInternal}
+            isDisabled={!payloadInternal?.length}
+            validation={validationPayloadInternal}
+            handleCloseModal={handleCloseModal}
+            handleChangePIC={handleChangePICProjectInternal}
+            handleResetPIC={handleResetPICProjectInternal}
+            handleChangeCheckbox={handleChangeCheckboxByProjectId}
+            handleChangeFilter={handleChangeFilterModalInternal}
+            handleSubmit={handleSubmitModalInternal}
+          />
+          <ModalAddProjectEksternal
+            showModal={showModalEksternal}
+            payload={payloadEksternal}
+            selectedData={selectedDataEksternal}
+            validation={validationPayloadEksternal}
+            handleCloseModal={handleCloseModal}
+            handleChangePayload={handleChangePayloadModalEksternal}
+            handleResetPayload={handleResetPayloadModalEksternal}
+            handleSubmit={handleSubmitModalEksternal}
+          />
+          <ModalEditProject
+            showModal={showModalEditProject}
+            validation={validationPayloadEditProject}
+            payload={payloadEditProject}
+            dataTeam={dataPicAnalisator}
+            selectedData={selectedDataEditProject}
+            handleCloseModal={handleCloseModalEditProject}
+            handleEditAnalisa={handleEditAnalisa}
+            handleChangePayload={handleChangePayloadEditProject}
+            handleResetPayload={handleResetPayloadEditProject}
+            handleChangePetugasPayload={handleChangePetugas}
+            handleAddPetugas={handleAddPetugas}
+            handleDeletePetugas={handleDeletePetugas}
+            handleSubmit={handleSubmitEditProject}
+          />
+          <ModalEditAnalisa
+            data={payloadEditProject?.analisa || ""}
+            showModal={showModalEditAnalisa}
+            isDisabled={isDisabledEditAnalisa}
+            handleCloseModal={handleCloseModalEditAnalisa}
+            handleSubmit={handleSubmitModalEditAnalisa}
+          />
         </div>
-        <ModalAddProjectInternal
-          showModal={showModalInternal}
-          selectedData={selectedDataInternal}
-          selectedProject={payloadInternal}
-          data={dataTableObjekAudit}
-          dataPic={dataPicAnalisator}
-          totalData={totalDataProyekList}
-          filter={dataFilterModalInternal}
-          isDisabled={!payloadInternal?.length}
-          validation={validationPayloadInternal}
-          handleCloseModal={handleCloseModal}
-          handleChangePIC={handleChangePICProjectInternal}
-          handleResetPIC={handleResetPICProjectInternal}
-          handleChangeCheckbox={handleChangeCheckboxByProjectId}
-          handleChangeFilter={handleChangeFilterModalInternal}
-          handleSubmit={handleSubmitModalInternal}
-        />
-        <ModalAddProjectEksternal
-          showModal={showModalEksternal}
-          payload={payloadEksternal}
-          selectedData={selectedDataEksternal}
-          validation={validationPayloadEksternal}
-          handleCloseModal={handleCloseModal}
-          handleChangePayload={handleChangePayloadModalEksternal}
-          handleResetPayload={handleResetPayloadModalEksternal}
-          handleSubmit={handleSubmitModalEksternal}
-        />
-        <ModalEditProject
-          showModal={showModalEditProject}
-          validation={validationPayloadEditProject}
-          payload={payloadEditProject}
-          dataTeam={dataPicAnalisator}
-          selectedData={selectedDataEditProject}
-          handleCloseModal={handleCloseModalEditProject}
-          handleEditAnalisa={handleEditAnalisa}
-          handleChangePayload={handleChangePayloadEditProject}
-          handleResetPayload={handleResetPayloadEditProject}
-          handleChangePetugasPayload={handleChangePetugas}
-          handleAddPetugas={handleAddPetugas}
-          handleDeletePetugas={handleDeletePetugas}
-          handleSubmit={handleSubmitEditProject}
-        />
-        <ModalEditAnalisa
-          data={payloadEditProject?.analisa || ""}
-          showModal={showModalEditAnalisa}
-          handleCloseModal={handleCloseModalEditAnalisa}
-          handleSubmit={handleSubmitModalEditAnalisa}
-        />
+      </Card>
+      <div className="mt-3 flex justify-end">
+        <div className="w-36 bg-atlasian-yellow rounded">
+          <ButtonField
+            text={"Load From MAR"}
+            handler={async () =>
+              await handleLoadDataFromMAR("analisis_perencanaan")
+            }
+          />
+        </div>
       </div>
-    </Card>
+    </div>
   );
 };
 

@@ -1,6 +1,7 @@
 import { ButtonField, ModalScroll } from "@/components/atoms";
 import {
   AttachmentClipping,
+  ContentView,
   ImageClipping,
   ModalHeader,
 } from "@/components/molecules/commons";
@@ -14,6 +15,7 @@ const Editor = dynamic(() => import("@/components/atoms/Editor"), {
 const ModalEditAnalisa = ({
   data,
   showModal,
+  isDisabled,
   handleCloseModal,
   handleSubmit,
 }) => {
@@ -86,43 +88,47 @@ const ModalEditAnalisa = ({
       }
       positionCenter
     >
-      <div className="w-[70rem]">
-        <div className="my-4 flex gap-6">
-          <div className="w-64 flex flex-col gap-4">
-            <ImageClipping
-              data={imageClipList}
-              handleChange={handleUploadFile}
-              handleClick={handleClickUploadImage}
-              // isHideButton={!((isInitiator || isAuditor) && !isCloseSubmodule)}
-            />
-            <AttachmentClipping
-              data={attachmentClipList}
-              handleChange={handleUploadFile}
-              handleClick={handleClickUploadAttachment}
-              // isHideButton={!((isInitiator || isAuditor) && !isCloseSubmodule)}
-            />
-          </div>
-          <div>
-            <div className="ckeditor-latar-belakang-mapa-ewp">
-              <Editor
-                contentData={content}
-                disabled={false}
-                ready={true}
-                onChange={(value) => setContent(value)}
+      <div className={isDisabled ? "" : "w-[70rem]"}>
+        {isDisabled ? (
+          <ContentView dataDoc={content} />
+        ) : (
+          <div className="my-4 flex gap-6">
+            <div className="w-64 flex flex-col gap-4">
+              <ImageClipping
+                data={imageClipList}
+                handleChange={handleUploadFile}
+                handleClick={handleClickUploadImage}
+                // isHideButton={!((isInitiator || isAuditor) && !isCloseSubmodule)}
+              />
+              <AttachmentClipping
+                data={attachmentClipList}
+                handleChange={handleUploadFile}
+                handleClick={handleClickUploadAttachment}
+                // isHideButton={!((isInitiator || isAuditor) && !isCloseSubmodule)}
               />
             </div>
-
-            {/* {(isInitiator || isAuditor) && !isCloseSubmodule ? ( */}
-            <div className="mt-3 flex justify-end">
-              <div className="w-[7.75rem] bg-atlasian-green rounded">
-                <ButtonField text={"Simpan"} handler={handleSave} />
+            <div>
+              <div className="ckeditor-latar-belakang-mapa-ewp">
+                <Editor
+                  contentData={content}
+                  disabled={false}
+                  ready={true}
+                  onChange={(value) => setContent(value)}
+                />
               </div>
-            </div>
-            {/* ) : (
+
+              {/* {(isInitiator || isAuditor) && !isCloseSubmodule ? ( */}
+              <div className="mt-3 flex justify-end">
+                <div className="w-[7.75rem] bg-atlasian-green rounded">
+                  <ButtonField text={"Simpan"} handler={handleSave} />
+                </div>
+              </div>
+              {/* ) : (
             ""
           )} */}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </ModalScroll>
   );

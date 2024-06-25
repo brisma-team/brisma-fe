@@ -10,7 +10,7 @@ const ContentAnggaran = ({
   handleClickAddAnggaran,
   handleClickUpdateAnggaran,
   handleClickDeleteAnggaran,
-  handleLoadDataFromEWP,
+  handleLoadDataFromMAR,
   handleSaveAnggaran,
   handleSubmitAnggaran,
   handleCloseModalAnggaran,
@@ -29,14 +29,14 @@ const ContentAnggaran = ({
           />
         </div>
       </Card>
-      <div className="mt-3 flex justify-end gap-2">
-        <div className="w-[8.75rem] bg-atlasian-yellow rounded">
+      <div className="mt-3 flex justify-end gap-3">
+        <div className="w-36 bg-atlasian-yellow rounded">
           <ButtonField
             text={"Load from MAPA"}
-            handler={() => handleLoadDataFromEWP("anggaran")}
+            handler={async () => handleLoadDataFromMAR("anggaran")}
           />
         </div>
-        <div className="w-[7.75rem] bg-atlasian-green rounded">
+        <div className="w-36 bg-atlasian-green rounded">
           <ButtonField text={"Simpan"} handler={handleSaveAnggaran} />
         </div>
       </div>

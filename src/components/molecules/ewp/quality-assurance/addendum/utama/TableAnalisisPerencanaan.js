@@ -6,7 +6,7 @@ import TableTree, {
   Rows,
 } from "@atlaskit/table-tree";
 import { IconChevronDown, IconChevronRight } from "@/components/icons";
-import { ButtonIcon, LinkIcon, LozengeField } from "@/components/atoms";
+import { ButtonIcon, LozengeField } from "@/components/atoms";
 import {
   ButtonDelete,
   ButtonEdit,
@@ -20,7 +20,6 @@ const positionCenter = `w-full h-full flex justify-center items-center`;
 const TableAnalisisPerencanaan = ({
   data,
   user,
-  pathName,
   isInitiator,
   isEksternal,
   withoutButton,
@@ -28,6 +27,7 @@ const TableAnalisisPerencanaan = ({
   handleClickToggleExpansion,
   handleClickAddProject,
   handleClickEditProject,
+  handleClickAnalisa,
   handleClickDeleteProject,
   handleClickRestoreProject,
 }) => {
@@ -335,13 +335,14 @@ const TableAnalisisPerencanaan = ({
               >
                 {role === "child" && (isInitiator || user?.pn === pic?.pn) ? (
                   <div className={analisa ? "" : "opacity-30"}>
-                    <LinkIcon
+                    <ButtonIcon
                       icon={
                         <LozengeField appreance="inprogress" isBold>
                           Kertas Kerja Analisa
                         </LozengeField>
                       }
-                      href={`${pathName}/${id}`}
+                      handleClick={() => handleClickAnalisa(id)}
+                      // href={`${pathName}/${id}`}
                     />
                   </div>
                 ) : (

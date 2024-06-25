@@ -61,11 +61,11 @@ import {
 } from "@/slices/ewp/quality-assurance/addendum/addendumLainQualityAssuranceSlice";
 import {
   ContentAnggaran,
+  ContentJadwal,
   ContentCKEditorAddendum,
   ContentRingkasan,
 } from "@/components/molecules/ewp/quality-assurance/addendum/lain";
 import anggaranEWPSchema from "@/helpers/schemas/ewp/common/anggaranEWPSchema";
-import { TableJadwal } from "@/components/molecules/ewp/common/jadwal";
 import { LandingLayoutEWPAddendum } from "@/layouts/ewp";
 
 const index = () => {
@@ -74,7 +74,7 @@ const index = () => {
   const [params, setParams] = useState({
     id: 0,
   });
-  // const pathName = `/ewp/quality-assurance/${params?.id}/addendum/lain`;
+  const pathName = `/ewp/quality-assurance/${params?.id}/addendum/lain`;
   const navigationTabItems = [
     { idx: 1, title: "Latar Belakang" },
     { idx: 2, title: "Tujuan" },
@@ -345,12 +345,29 @@ const index = () => {
     }
   }, [detailRingkasan, showModalDetailRingkasan]);
 
+  useEffect(() => {
+    if (showModalEditRingkasan && detailRingkasan?.data) {
+      dispatch(
+        setObjPayloadRingkasan(
+          _.pick(detailRingkasan?.data, [
+            "keterangan",
+            "note_sebelum",
+            "note_sesudah",
+            "alasan",
+          ])
+        )
+      );
+    } else {
+      dispatch(resetObjPayloadRingkasan());
+    }
+  }, [detailRingkasan, showModalEditRingkasan]);
+
   const handleChangeTab = (index) => {
     setCurrentContentStage(index);
-    // router.push({
-    //   pathname: pathName,
-    //   query: { stage: index },
-    // });
+    router.push({
+      pathname: pathName,
+      query: { stage: index },
+    });
   };
 
   const handleClickUploadAttachment = () => {
@@ -361,18 +378,25 @@ const index = () => {
     setTypeUpload("image");
   };
 
-  const handleLoadDataFromEWP = async (type) => {
+  const handleLoadDataFromMAR = async (type) => {
     loadingSwal();
     const response = await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/addendum/load_from_mapa/${params?.id}?part=${type}`,
       {}
     );
-    if (type == "sumber_informasi") {
+    if (type === "latar_belakang") {
       dispatch(setObjDataContentLatarBelakang(response?.data));
-    } else if (type == "anggaran") {
+    } else if (type === "tujuan") {
+      dispatch(setObjDataContentTujuan(response?.data));
+    } else if (type === "analisa") {
+      dispatch(setObjDataContentAnalisa(response?.data));
+    } else if (type === "anggaran") {
       anggaranMutate();
+    } else if (type === "jadwal") {
+      jadwalMutate();
     }
+    ringkasanMutate();
     loadingSwal("close");
   };
 
@@ -595,6 +619,7 @@ const index = () => {
       }
     );
     anggaranMutate();
+    ringkasanMutate();
     dispatch(resetObjPayloadAnggaran());
     setShowModalAnggaran(false);
     loadingSwal("close");
@@ -662,6 +687,24 @@ const index = () => {
   const handleClickUpdateRingkasan = async (addendum_id) => {
     setShowModalEditRingkasan(true);
     setSelectedRingkasanId(addendum_id);
+  };
+
+  const handleClickDeleteRingkasan = async (addendum_id) => {
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin ingin mengembalikan data seperti semula?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "DELETE",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/addendum/summary/delete/${addendum_id}`,
+      {}
+    );
+    loadingSwal("close");
   };
 
   const handleClickViewRingkasan = async (addendum_id) => {
@@ -786,6 +829,7 @@ const index = () => {
         />
         {currentContentStage == "1" ? (
           <ContentCKEditorAddendum
+            part={"latar_belakang"}
             isDisabled={
               !((isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress)
             }
@@ -797,9 +841,11 @@ const index = () => {
             handleClickUploadAttachment={handleClickUploadAttachment}
             handleClickUploadImage={handleClickUploadImage}
             handleSubmit={handleSubmitLatarBelakang}
+            handleLoadDataFromMAR={handleLoadDataFromMAR}
           />
         ) : currentContentStage == "2" ? (
           <ContentCKEditorAddendum
+            part={"tujuan"}
             isDisabled={
               !((isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress)
             }
@@ -811,9 +857,11 @@ const index = () => {
             handleClickUploadAttachment={handleClickUploadAttachment}
             handleClickUploadImage={handleClickUploadImage}
             handleSubmit={handleSubmitTujuan}
+            handleLoadDataFromMAR={handleLoadDataFromMAR}
           />
         ) : currentContentStage == "3" ? (
           <ContentCKEditorAddendum
+            part={"analisa"}
             isDisabled={
               !((isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress)
             }
@@ -825,6 +873,7 @@ const index = () => {
             handleClickUploadAttachment={handleClickUploadAttachment}
             handleClickUploadImage={handleClickUploadImage}
             handleSubmit={handleSubmitAnalisa}
+            handleLoadDataFromMAR={handleLoadDataFromMAR}
           />
         ) : currentContentStage == "4" ? (
           <ContentAnggaran
@@ -837,16 +886,17 @@ const index = () => {
             handleClickUpdateAnggaran={handleClickUpdateAnggaran}
             handleClickDeleteAnggaran={handleClickDeleteAnggaran}
             handleCloseModalAnggaran={handleCloseModalAnggaran}
-            handleLoadDataFromEWP={handleLoadDataFromEWP}
+            handleLoadDataFromMAR={handleLoadDataFromMAR}
             handleSaveAnggaran={handleSaveAnggaran}
             handleSubmitAnggaran={handleSubmitAnggaran}
           />
         ) : currentContentStage == "5" ? (
-          <TableJadwal
+          <ContentJadwal
             data={dataContentJadwal}
             payload={payloadJadwal}
             handleChange={handleChangePayloadJadwal}
             handleSubmit={handleSubmitJadwal}
+            handleLoadDataFromMAR={handleLoadDataFromMAR}
           />
         ) : currentContentStage == "6" ? (
           <ContentRingkasan
@@ -859,6 +909,7 @@ const index = () => {
             handleCloseModal={handleCloseModalRingkasan}
             handleChangePayload={handleChangePayloadRingkasan}
             handleClickUpdate={handleClickUpdateRingkasan}
+            handleClickDelete={handleClickDeleteRingkasan}
             handleClickView={handleClickViewRingkasan}
             handleSaveRingkasan={handleSaveRingkasan}
             handleResetRingkasan={handleResetRingkasan}
