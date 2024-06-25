@@ -27,11 +27,11 @@ import {
   setErrorValidation,
 } from "@/helpers";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
-import LandingLayoutEWPSBPAddendum from "@/layouts/ewp/LandingLayoutEWPSBPAddendum";
 import { useRingkasan } from "@/data/ewp/konsulting/addendum/lain";
 import { useAddendumStatus, useWorkflow } from "@/data/ewp/konsulting/addendum";
 import { addendumDocs } from "@/templates/ewp/konsulting";
 import { useProjectDetail } from "@/data/ewp/konsulting";
+import { LandingLayoutEWPAddendum } from "@/layouts/ewp";
 
 const section = {
   latar_belakang: "Latar Belakang",
@@ -50,7 +50,7 @@ const index = () => {
     is_approval: false,
   });
 
-  const baseUrl = `/ewp/konsulting/${params?.id}/addendum`;
+  const baseUrl = `/ewp/quality-assurance/${params?.id}/addendum`;
   const dispatch = useDispatch();
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -311,7 +311,7 @@ const index = () => {
           data
         );
         if (totalSigner - signedCount == 1 && actionType === "approve") {
-          router.push(`/ewp/konsulting/${params?.id}/info`);
+          router.push(`/ewp/quality-assurance/${params?.id}/info`);
         }
       }
 
@@ -325,7 +325,7 @@ const index = () => {
   // [ END ]
 
   return (
-    <LandingLayoutEWPSBPAddendum>
+    <LandingLayoutEWPAddendum type="quality-assurance">
       <Breadcrumbs data={breadcrumbs} />
       <div className="flex justify-between items-center mb-6">
         <PageTitle className={"text-atlasian-red"} text={"Dokumen Addendum"} />
@@ -478,7 +478,7 @@ const index = () => {
         </div>
       </div>
       {/* End Content */}
-    </LandingLayoutEWPSBPAddendum>
+    </LandingLayoutEWPAddendum>
   );
 };
 
