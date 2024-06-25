@@ -45,7 +45,7 @@ const TimTimeplan = ({
       const timData =
         oldDataTimTimeplan !== ""
           ? oldDataTimTimeplan
-          : timTimeplan.data?.tim_audit;
+          : timTimeplan?.data?.tim_audit;
       const mappingInitiator = [dataProjectDetail?.project_info?.initiator];
       const mappingAuditor = timData?.auditor?.length
         ? timData?.auditor?.map((v) => {

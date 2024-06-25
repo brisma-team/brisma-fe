@@ -104,7 +104,7 @@ const CardTeam = ({
                               isDisabled={isDisabled}
                             />
                           )}
-                          {validation[`${property}[${i}].pn`] ? (
+                          {validation && validation[`${property}[${i}].pn`] ? (
                             <ErrorValidation
                               className={"mt-3"}
                               message={validation[`${property}[${i}].pn`]}
@@ -177,7 +177,7 @@ const CardTeam = ({
                 : ""
               : ""
             : ""}
-          {validation[property] ? (
+          {validation && validation[property] ? (
             <ErrorValidation
               className={"mt-3"}
               message={validation[property]}
