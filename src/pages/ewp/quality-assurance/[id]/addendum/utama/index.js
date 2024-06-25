@@ -59,6 +59,10 @@ import {
 } from "@/components/molecules/ewp/quality-assurance/addendum/utama";
 import timEWPQualityAssuranceSchema from "@/helpers/schemas/ewp/quality-assurance/tim/timEWPQualityAssuranceSchema";
 import useUser from "@/data/useUser";
+import {
+  useAnalisisPerencanaanEksternal,
+  useAnalisisPerencanaanInternal,
+} from "@/data/ewp/common/addendum/utama/analisis-perencanaan";
 
 const index = () => {
   const router = useRouter();
@@ -66,7 +70,7 @@ const index = () => {
   const [params, setParams] = useState({
     id: 0,
   });
-  // const pathName = `/ewp/quality-assurance/${params?.id}/addendum/lain`;
+  const pathName = `/ewp/quality-assurance/${params?.id}/addendum/utama`;
   const navigationTabItems = [
     { idx: 1, title: "Tim Review" },
     { idx: 2, title: "Uker Assessment" },
@@ -139,6 +143,11 @@ const index = () => {
     id: params?.id,
     module: "qa",
   });
+  const { analisisPerencanaanInternalMutate } = useAnalisisPerencanaanInternal({
+    id: params?.id,
+  });
+  const { analisisPerencanaanEksternalMutate } =
+    useAnalisisPerencanaanEksternal({ id: params?.id });
   const { ringkasan, ringkasanMutate } = useRingkasan({
     id: params?.id,
     module: "qa",
@@ -170,47 +179,8 @@ const index = () => {
 
   useEffect(() => {
     if (tim?.data?.tim_audit) {
-      const mappingInitiator = [auditInfo?.data?.project_info?.initiator];
-      const mappingKTA = tim?.data?.tim_audit?.kta?.length
-        ? tim?.data?.tim_audit?.kta?.map((v) => {
-            const { pn, nama, is_initiator } = v;
-            return {
-              pn,
-              nama,
-              is_initiator,
-            };
-          })
-        : [];
-      const mappingMA = tim?.data?.tim_audit?.ma?.length
-        ? tim?.data?.tim_audit?.ma?.map((v) => {
-            const { pn, nama, is_initiator } = v;
-            return {
-              pn,
-              nama,
-              is_initiator,
-            };
-          })
-        : [];
-      const mappingATA = tim?.data?.tim_audit?.ata?.length
-        ? tim?.data?.tim_audit?.ata?.map((v) => {
-            const { pn, nama, is_initiator, mandays, deskripsi } = v;
-            return {
-              pn,
-              nama,
-              is_initiator,
-              mandays: convertIntegerToDecimal(mandays).decimal,
-              deskripsi,
-            };
-          })
-        : [];
-      dispatch(
-        setObjDataContentTim({
-          initiator: mappingInitiator,
-          kta: mappingKTA,
-          ma: mappingMA,
-          ata: mappingATA,
-        })
-      );
+      const mapping = mappingDataTeam(tim?.data?.tim_audit);
+      dispatch(setObjDataContentTim(mapping));
     } else {
       dispatch(resetObjDataContentTim());
     }
@@ -218,29 +188,7 @@ const index = () => {
 
   useEffect(() => {
     if (ukerAssessment?.data?.uker?.length) {
-      const listUpdated = ukerAssessment?.data?.updated_uker || [];
-      const mapping = ukerAssessment?.data?.uker?.map((v, i) => {
-        return {
-          index: i,
-          uker_id: v?.id,
-          branch: {
-            branch_kode: v?.ref_auditee_branch_kode,
-            branch_name: v?.ref_auditee_branch_name,
-          },
-          orgeh: {
-            orgeh_kode: v?.ref_auditee_orgeh_kode,
-            orgeh_name: v?.ref_auditee_orgeh_name,
-          },
-          uker_type: { name: v?.tipe_uker },
-          description: v?.desc,
-          attachments: v?.attachments,
-          is_new: false,
-          is_edit: false,
-          is_data_new: Boolean(!v?.mapa_uker_origin_id),
-          is_data_edit: Boolean(listUpdated?.find((id) => id == v?.id)),
-          is_data_delete: Boolean(!v?.is_active),
-        };
-      });
+      const mapping = mappingDataUkerAssessment(ukerAssessment?.data);
       dispatch(setObjDataContentUkerAssessment(mapping));
     } else {
       dispatch(resetObjDataContentUkerAssessment());
@@ -249,7 +197,6 @@ const index = () => {
 
   useEffect(() => {
     if (ringkasan?.data?.length) {
-      console.log("ringkasan?.data => ", ringkasan?.data);
       const mappingRingkasan = ringkasan?.data?.map((v) => {
         return _.pick(v, [
           "id",
@@ -285,26 +232,118 @@ const index = () => {
     }
   }, [detailRingkasan, showModalDetailRingkasan]);
 
-  const handleChangeTab = (index) => {
-    setCurrentContentStage(index);
-    // router.push({
-    //   pathname: pathName,
-    //   query: { stage: index },
-    // });
+  useEffect(() => {
+    if (showModalEditRingkasan && detailRingkasan?.data) {
+      dispatch(
+        setObjPayloadRingkasan(
+          _.pick(detailRingkasan?.data, [
+            "keterangan",
+            "note_sebelum",
+            "note_sesudah",
+            "alasan",
+          ])
+        )
+      );
+    } else {
+      dispatch(resetObjPayloadRingkasan());
+    }
+  }, [detailRingkasan, showModalEditRingkasan]);
+
+  const mappingDataTeam = (data) => {
+    const mappingInitiator = [auditInfo?.data?.project_info?.initiator];
+    const mappingKTA = data?.kta?.length
+      ? data?.kta?.map((v) => {
+          const { pn, nama, is_initiator } = v;
+          return {
+            pn,
+            nama,
+            is_initiator,
+          };
+        })
+      : [];
+    const mappingMA = data?.ma?.length
+      ? data?.ma?.map((v) => {
+          const { pn, nama, is_initiator } = v;
+          return {
+            pn,
+            nama,
+            is_initiator,
+          };
+        })
+      : [];
+    const mappingATA = data?.ata?.length
+      ? data?.ata?.map((v) => {
+          const { pn, nama, is_initiator, mandays, deskripsi } = v;
+          return {
+            pn,
+            nama,
+            is_initiator,
+            mandays: convertIntegerToDecimal(mandays).decimal,
+            deskripsi,
+          };
+        })
+      : [];
+
+    return {
+      initiator: mappingInitiator,
+      kta: mappingKTA,
+      ma: mappingMA,
+      ata: mappingATA,
+    };
   };
 
-  const handleLoadDataFromEWP = async (type) => {
+  const mappingDataUkerAssessment = (data) => {
+    const listUpdated = data?.updated_uker || [];
+    const mapping = data?.uker?.map((v, i) => {
+      return {
+        index: i,
+        uker_id: v?.id,
+        branch: {
+          branch_kode: v?.ref_auditee_branch_kode,
+          branch_name: v?.ref_auditee_branch_name,
+        },
+        orgeh: {
+          orgeh_kode: v?.ref_auditee_orgeh_kode,
+          orgeh_name: v?.ref_auditee_orgeh_name,
+        },
+        uker_type: { name: v?.tipe_uker },
+        description: v?.desc,
+        attachments: v?.attachments,
+        is_new: false,
+        is_edit: false,
+        is_data_new: Boolean(!v?.mapa_uker_origin_id),
+        is_data_edit: Boolean(listUpdated?.find((id) => id == v?.id)),
+        is_data_delete: Boolean(!v?.is_active),
+      };
+    });
+
+    return mapping;
+  };
+
+  const handleChangeTab = (index) => {
+    setCurrentContentStage(index);
+    router.push({
+      pathname: pathName,
+      query: { stage: index },
+    });
+  };
+
+  const handleLoadDataFromMAR = async (type) => {
     loadingSwal();
     const response = await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/addendum/load_from_mapa/${params?.id}?part=${type}`,
       {}
     );
-    // if (type == "sumber_informasi") {
-    //   dispatch(setObjDataContentLatarBelakang(response?.data));
-    // } else if (type == "anggaran") {
-    //   anggaranMutate();
-    // }
+    if (type == "tim" && response?.data?.tim_audit) {
+      dispatch(
+        setObjDataContentTim(mappingDataTeam(response?.data?.tim_audit))
+      );
+    } else if (type == "analisis_perencanaan") {
+      ukerAssessmentMutate();
+      analisisPerencanaanInternalMutate();
+      analisisPerencanaanEksternalMutate();
+    }
     loadingSwal("close");
   };
 
@@ -385,6 +424,7 @@ const index = () => {
         { tim_audit: _.omit(objPayload, ["initiator"]) }
       );
       timMutate();
+      ringkasanMutate();
       loadingSwal("close");
     }
   };
@@ -494,6 +534,8 @@ const index = () => {
     ringkasanMutate();
     timMutate();
     ukerAssessmentMutate();
+    analisisPerencanaanInternalMutate();
+    analisisPerencanaanEksternalMutate();
     loadingSwal("close");
   };
   // [ END ] handler for modal ringkasan
@@ -569,6 +611,7 @@ const index = () => {
     );
 
     ukerAssessmentMutate();
+    ringkasanMutate();
     loadingSwal("close");
   };
 
@@ -588,6 +631,7 @@ const index = () => {
     );
 
     ukerAssessmentMutate();
+    ringkasanMutate();
     loadingSwal("close");
   };
 
@@ -615,6 +659,7 @@ const index = () => {
     if (response.isDismissed) return;
     setIsAddNewRowUker(false);
     ukerAssessmentMutate();
+    ringkasanMutate();
     dispatch(resetObjPayloadUkerAssessment());
     loadingSwal("close");
   };
@@ -711,6 +756,7 @@ const index = () => {
             handleDeleteObject={handleDeleteObjectPayloadTim}
             handleChangeSelect={handleChangeSelectPayloadTim}
             handleChangeText={handleChangeTextPayloadTim}
+            handleLoadDataFromMAR={handleLoadDataFromMAR}
             handleSubmit={handleSubmitTim}
           />
         ) : currentContentStage == "2" ? (
@@ -747,6 +793,7 @@ const index = () => {
             params={params}
             tim={tim}
             user={user}
+            handleLoadDataFromMAR={handleLoadDataFromMAR}
           />
         ) : currentContentStage == "4" ? (
           <ContentRingkasan

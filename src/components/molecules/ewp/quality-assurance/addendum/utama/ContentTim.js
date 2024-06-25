@@ -12,6 +12,7 @@ const ContentTim = ({
   handleDeleteObject,
   handleChangeSelect,
   handleChangeText,
+  handleLoadDataFromMAR,
   handleSubmit,
 }) => {
   return (
@@ -92,7 +93,13 @@ const ContentTim = ({
         </div>
       </Card>
       {!isDisabled ? (
-        <div className="mt-3 flex justify-end">
+        <div className="mt-3 flex gap-3 justify-end">
+          <div className="w-36 bg-atlasian-yellow rounded">
+            <ButtonField
+              text={"Load From MAR"}
+              handler={async () => await handleLoadDataFromMAR("tim")}
+            />
+          </div>
           <div className="w-36 bg-atlasian-green rounded">
             <ButtonField text={"Simpan"} handler={handleSubmit} />
           </div>

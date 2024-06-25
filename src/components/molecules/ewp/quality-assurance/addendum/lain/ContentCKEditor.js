@@ -10,6 +10,7 @@ const Editor = dynamic(() => import("@/components/atoms/Editor"), {
 });
 
 const ContentCKEditor = ({
+  part,
   isDisabled,
   dataContent,
   dataAttachmentList,
@@ -19,6 +20,7 @@ const ContentCKEditor = ({
   handleClickUploadAttachment,
   handleChangeContent,
   handleSubmit,
+  handleLoadDataFromMAR,
 }) => {
   return (
     <div className="my-4 flex gap-6">
@@ -54,8 +56,14 @@ const ContentCKEditor = ({
         )}
 
         {!isDisabled ? (
-          <div className="mt-3 flex justify-end">
-            <div className="w-[7.75rem] bg-atlasian-green rounded">
+          <div className="mt-3 flex gap-3 justify-end">
+            <div className="w-36 bg-atlasian-yellow rounded">
+              <ButtonField
+                text={"Load From MAR"}
+                handler={async () => await handleLoadDataFromMAR(part)}
+              />
+            </div>
+            <div className="w-36 bg-atlasian-green rounded">
               <ButtonField text={"Simpan"} handler={handleSubmit} />
             </div>
           </div>
