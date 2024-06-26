@@ -56,7 +56,6 @@ const index = () => {
       ]);
 
       if (approvalEWP?.data?.body?.antrian?.length) {
-        console.log("antrian => ", approvalEWP?.data?.body?.antrian);
         const mapping = approvalEWP?.data?.body?.antrian?.map((queue) => {
           const { sub_modul, ref_tipe } = queue;
 
@@ -157,6 +156,8 @@ const index = () => {
           faseApproval = "Entrance Notulen";
         } else if (sub_modul === "entrance_ba") {
           faseApproval = "Entrance Berita Acara";
+        } else if (sub_modul === "adendum") {
+          faseApproval = "Addendum";
         }
         break;
       default:
@@ -197,6 +198,8 @@ const index = () => {
           query = `quality-assurance/${ewp_id}/pelaksanaan`;
         } else if (sub_modul === "lha") {
           query = `quality-assurance/${ewp_id}/reporting/${sub_modul_id}/dokumen-reporting`;
+        } else if (sub_modul === "adendum") {
+          query = `quality-assurance/${ewp_id}/addendum`;
         }
         break;
     }

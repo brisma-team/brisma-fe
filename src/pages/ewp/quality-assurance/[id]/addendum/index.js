@@ -40,7 +40,7 @@ const index = () => {
         path: `/ewp/quality-assurance/${params?.id}/info`,
       },
       {
-        name: "Addendum Perencanaan Kegiatan",
+        name: "Addendum Perencanaan",
         path: `/ewp/quality-assurance/${params?.id}/addendum`,
       },
     ]);
@@ -85,7 +85,7 @@ const index = () => {
     }
     await fetchApi(
       "DELETE",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/cancel/${params?.id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/addendum/cancel/${params?.id}`,
       {
         note: "cancel addendum",
       }

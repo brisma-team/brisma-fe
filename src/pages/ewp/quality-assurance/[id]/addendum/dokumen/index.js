@@ -39,6 +39,9 @@ const section = {
   tujuan: "Tujuan",
   analisa: "Analisa",
   jadwal: "Jadwal",
+  tim: "Tim",
+  uker: "Uker Assessment",
+  mapa_project: "Project",
 };
 
 const index = () => {
