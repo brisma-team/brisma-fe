@@ -1,4 +1,4 @@
-const RowContent = ({ label, value, isHtml }) => {
+const RowContent = ({ label, value, isHtml, isPenugasan }) => {
   return (
     <tr>
       <th width="18%">
@@ -8,7 +8,21 @@ const RowContent = ({ label, value, isHtml }) => {
         <p style={{ fontSize: "14px", fontWeight: 500 }}>:</p>
       </th>
       <th width="81%">
-        {isHtml ? (
+        {isPenugasan ? (
+          value?.length ? (
+            <ul className="list-disc w-full pl-2.5">
+              {value?.map((petugas, index) => {
+                return (
+                  <li key={index}>
+                    {petugas?.pn} - {petugas?.nama}
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            ""
+          )
+        ) : isHtml ? (
           <div
             className="mt-4"
             dangerouslySetInnerHTML={{
@@ -24,6 +38,7 @@ const RowContent = ({ label, value, isHtml }) => {
 };
 
 const SubContentProject = ({ data }) => {
+  console.log("dataSubContentProject => ", data);
   return (
     <div className="px-4 py-3">
       <table
@@ -46,6 +61,11 @@ const SubContentProject = ({ data }) => {
           <RowContent label={"Tipe"} value={data?.mtd_tipe?.nama || ""} />
           <RowContent label={"Jenis"} value={data?.mtd_jenis?.nama || ""} />
           <RowContent label={"Analisa"} value={data?.analisa || ""} isHtml />
+          <RowContent
+            label={"Penugasan"}
+            value={data?.mapa_petugas_adendum || []}
+            isPenugasan
+          />
         </tbody>
       </table>
     </div>

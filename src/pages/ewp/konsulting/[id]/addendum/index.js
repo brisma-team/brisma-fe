@@ -52,20 +52,18 @@ const index = () => {
     const mappingDataCarding = [
       {
         title: "Addendum Utama",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis ut euismod in, pharetra sit amet purus.",
+        description: "Perencanaan Addendum untuk bagian Tim dan Program Kerja.",
         url: base_path + `/utama`,
       },
       {
         title: "Addendum Lain",
         description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis ut euismod in, pharetra sit amet purus.",
+          "Perencanaan Addendum untuk bagian Sumber Informasi dan Anggaran.",
         url: base_path + `/lain`,
       },
       {
         title: "Dokumen",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis ut euismod in, pharetra sit amet purus.",
+        description: "Dokumen Perencanaan Addendum.",
         url: base_path + `/dokumen`,
       },
     ];

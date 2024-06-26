@@ -56,19 +56,18 @@ const index = () => {
       {
         title: "Addendum Utama",
         description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis ut euismod in, pharetra sit amet purus.",
+          "Perencanaan Addendum untuk bagian Tim, Uker Assessment dan Analisis Perencanaan.",
         url: base_path + `/utama`,
       },
       {
         title: "Addendum Lain",
         description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis ut euismod in, pharetra sit amet purus.",
+          "Perencanaan Addendum untuk bagian Latar Belakang, Tujuan, Analisa, Anggaran dan Jadwal.",
         url: base_path + `/lain`,
       },
       {
         title: "Dokumen",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis ut euismod in, pharetra sit amet purus.",
+        description: "Dokumen Perencanaan Addendum.",
         url: base_path + `/dokumen`,
       },
     ];
