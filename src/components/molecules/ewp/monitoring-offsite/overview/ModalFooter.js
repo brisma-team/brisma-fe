@@ -15,9 +15,9 @@ const ModalFooter = ({
   handleChange,
 }) => {
   return (
-    <div>
+    <div className="mt-2">
       <form
-        className="w-full flex justify-center items-center gap-3 -my-1"
+        className="w-full flex justify-end items-center gap-3 -my-1"
         onSubmit={handleSubmit}
       >
         {differentPIC && isPat && currentModalStage === maxStage && (
