@@ -19,8 +19,7 @@ const index = () => {
         title: "Agile",
         description:
           "Modul pengerjaan Electronic Working Paper Audit dengan metode Agile Scrum.",
-        url: "#",
-        isDisabled: true,
+        url: "/ewp/agile",
       },
       {
         subtitle: "E.W.P Non-Audit",
