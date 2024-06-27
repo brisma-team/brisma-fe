@@ -12,12 +12,12 @@ import _ from "lodash";
 import {
   CardOverview,
   // CardFilterOverview,
-  // ModalAddProjectEWP,
+  ModalAddProjectEWP,
 } from "@/components/molecules/ewp/monitoring-offsite/overview";
 import {
   // CardOverview,
   CardFilterOverview,
-  ModalAddProjectEWP,
+  // ModalAddProjectEWP,
 } from "@/components/molecules/ewp/konsulting/overview";
 import { useApprovalEWP } from "@/data/ewp";
 

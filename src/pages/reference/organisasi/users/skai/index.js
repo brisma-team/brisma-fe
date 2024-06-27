@@ -1,11 +1,6 @@
-import {
-  Breadcrumbs,
-  Card,
-  CustomPagination,
-  PageTitle,
-} from "@/components/atoms";
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
 import {
   setObjData,
   setObjPayload,
@@ -14,42 +9,55 @@ import {
   resetObjPayload,
   resetValidationErrors,
 } from "@/slices/ewp/konsulting/perencanaan/anggaranEWPKonsultingSlice";
-import { useSelector } from "react-redux";
 import {
   confirmationSwal,
   fetchApi,
   loadingSwal,
   setErrorValidation,
 } from "@/helpers";
-import _ from "lodash";
+import useUserSKAI from "@/data/useUserSKAI";
+import useUserSKAIDetail from "@/data/useUserSKAIDetail";
+import {
+  Breadcrumbs,
+  ButtonField,
+  Card,
+  CustomPagination,
+  PageTitle,
+} from "@/components/atoms";
 import {
   ModalAddUserSKAI,
   UserSkaiDataTables,
+  CardFilterUserSKAI,
 } from "@/components/molecules/reference/organisasi";
 import anggaranEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/perencanaan/anggaranEWPKonsultingSchema";
-import useUserSKAI from "@/data/useUserSKAI";
-import useUserSKAIDetail from "@/data/useUserSKAIDetail";
+
 import { LayoutReferenceGeneral } from "@/layouts/reference";
-// import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
-  const baseUrl = `/reference/`;
-  const pathName = `${baseUrl}/perencanaan`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  // const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
-  // const [isOnProgress, setIsOnProgress] = useState(false);
-  // const [isInitiator, setIsInitiator] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
   const [typeModal, setTypeModal] = useState("");
   const [selectedPn, setSelectedPn] = useState("");
 
+  // const [filter, setFilter] = useState({
+  //   personal_number: "",
+  //   name: "",
+  //   uka_kode: "",
+  //   role_kode: [],
+  // });
+
   const [params, setParams] = useState({
-    limit: 5,
+    pn: "",
+    name: "",
+    uka_kode: "",
+    role_kode: "",
+    limit: 10,
     offset: 1,
     page: 1,
-    total_data: 5,
+    total_data: 10,
   });
 
   const payload = useSelector(
@@ -60,7 +68,7 @@ const index = () => {
   );
 
   // const { user } = useUser();
-  const { userSKAI, userSKAIMutate } = useUserSKAI(params, "pagination");
+  const { userSKAI, userSKAIMutate } = useUserSKAI(params, "search");
   const { userSKAIDetail } = useUserSKAIDetail(selectedPn);
 
   useEffect(() => {
@@ -70,23 +78,9 @@ const index = () => {
       { name: "Organisasi", path: "/reference/organisasi" },
       {
         name: `User S.K.A.I`,
-        path: pathName,
+        path: "/reference/organisasi/users/skai",
       },
     ]);
-    // setIsCloseSubmodule(
-    //   Boolean(projectDetail?.data?.realisasi?.penyusunan_mapa_real_end)
-    // );
-    // setIsInitiator(
-    //   Boolean(
-    //     projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
-    //   )
-    // );
-    // setIsOnProgress(
-    //   Boolean(
-    //     projectDetail?.data?.project_info?.status_persetujuan_name ==
-    //       "On Progress"
-    //   )
-    // );
   }, []);
 
   useEffect(() => {
@@ -220,6 +214,23 @@ const index = () => {
       <div className="flex justify-between items-center mb-6">
         <PageTitle text="User S.K.A.I" />
       </div>
+      <div className="flex justify-between items-end mb-3">
+        <div className="flex justify-between items-center gap-2">
+          <div className="w-36 bg-atlasian-blue-light rounded">
+            <ButtonField
+              handler={() => setShowFilter(!showFilter)}
+              text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="mb-5">
+        <CardFilterUserSKAI
+          showFilter={showFilter}
+          filter={params}
+          setFilter={setParams}
+        />
+      </div>
       {/* Start Content */}
       <div className="w-full">
         <Card>
@@ -235,7 +246,7 @@ const index = () => {
             />
             <CustomPagination
               defaultCurrentPage={1}
-              perPage={5}
+              perPage={params?.limit}
               totalData={params?.total_data}
               handleSetPagination={async (start, end, pageNow) =>
                 setParams((prev) => {

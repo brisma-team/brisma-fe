@@ -12,9 +12,8 @@ import CardFilterProjectOverview from "./CardFilterProjectOverview";
 import {
   useYearPAT,
   useScheduleActivityPAT,
-} from "@/data/ewp/monitoring-offsite/overview";
-import RowTable from "../RowTable";
-import ModalFooter from "../../ModalFooter";
+} from "@/data/ewp/konsulting/overview";
+import RowTableSchedulePAT from "./RowTableSchedulePAT";
 
 const ModalBodySchedulePAT = ({
   data,
@@ -23,16 +22,6 @@ const ModalBodySchedulePAT = ({
   setCurrentModalStage,
   handleChangeData,
   handleChangeFilter,
-  currentModalStage,
-  maxStage,
-  differentPIC,
-  isDisabled,
-  isPat,
-  validation,
-  handleSubmit,
-  handlePrevStage,
-  handleNextStage,
-  handleChange,
 }) => {
   const [showFilter, setShowFilter] = useState(false);
   const [schedulePAT, setSchedulePAT] = useState([]);
@@ -105,6 +94,9 @@ const ModalBodySchedulePAT = ({
             "ref_jenis",
             "ref_tema",
             "audited",
+            "deskripsi",
+            "create_by",
+            "createdAt",
           ]);
         }
       );
@@ -142,48 +134,41 @@ const ModalBodySchedulePAT = ({
   };
 
   return (
-    <div className="w-[71rem] px-4 py-2">
+    <div className="w-[61rem] pb-2">
       <p className="text-brisma text-lg font-bold">{user?.uka_name}</p>
       <div className="w-full flex justify-between items-center my-3">
         <div className="w-full">
-          <div className="flex gap-3">
-            <div>
-              <CustomSelect
-                placeholder="Pilih tahun"
-                isSearchable={false}
-                optionValue={yearOption}
-                handleChange={(e) => {
-                  handleChangeFilter(e);
-                  scheduleActivityPATMutate();
-                }}
-                selectedValue={
-                  data?.audit_year
-                    ? {
-                        label: data?.audit_year,
-                        value: data?.audit_year,
-                      }
-                    : ""
-                }
-              />
-              {validationErrors["audit_year"] && (
-                <ErrorValidation message={validationErrors["audit_year"]} />
-              )}
-            </div>
-            <div>
-              <div className="bg-atlasian-blue-light w-32 h-8 rounded flex items-center mt-1">
+          <div className="flex w-full justify-between">
+            <div className="flex gap-3">
+              <div>
+                <CustomSelect
+                  placeholder="Pilih tahun"
+                  isSearchable={false}
+                  optionValue={yearOption}
+                  handleChange={(e) => {
+                    handleChangeFilter(e);
+                    scheduleActivityPATMutate();
+                  }}
+                  selectedValue={
+                    data?.audit_year
+                      ? {
+                          label: data?.audit_year,
+                          value: data?.audit_year,
+                        }
+                      : ""
+                  }
+                />
+                {validationErrors["audit_year"] && (
+                  <ErrorValidation message={validationErrors["audit_year"]} />
+                )}
+              </div>
+              <div className="bg-atlasian-blue-light h-8 rounded flex items-center mt-1">
                 <ButtonField
                   text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
                   handler={() => setShowFilter(!showFilter)}
                 />
               </div>
-              <CardFilterProjectOverview
-                showFilter={showFilter}
-                filter={filter}
-                setFilter={setFilter}
-              />
             </div>
-          </div>
-          <div className="flex justify-end mt-4">
             {countStatus?.length ? (
               <div className="flex gap-2">
                 {countStatus.map((v, i) => {
@@ -202,6 +187,11 @@ const ModalBodySchedulePAT = ({
               ""
             )}
           </div>
+          <CardFilterProjectOverview
+            showFilter={showFilter}
+            filter={filter}
+            setFilter={setFilter}
+          />
         </div>
       </div>
       <div className="w-full text-sm mt-4">
@@ -237,7 +227,7 @@ const ModalBodySchedulePAT = ({
                 ?.slice(pagination.min, pagination.max)
                 .map((items, idx) => {
                   return (
-                    <RowTable
+                    <RowTableSchedulePAT
                       key={idx}
                       idx={idx + 1}
                       totalData={totalData}
@@ -257,7 +247,11 @@ const ModalBodySchedulePAT = ({
         {validationErrors["pat_jadwal_audit_id"] && (
           <ErrorValidation message={validationErrors["pat_jadwal_audit_id"]} />
         )}
-
+        {validationErrors["pat_jadwal_kegiatan_id"] && (
+          <ErrorValidation
+            message={validationErrors["pat_jadwal_kegiatan_id"]}
+          />
+        )}
         {validationErrors["audited"] && (
           <ErrorValidation message={validationErrors["audited"]} />
         )}

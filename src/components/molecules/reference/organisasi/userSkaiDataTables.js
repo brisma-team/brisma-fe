@@ -93,7 +93,7 @@ const UserSkaiDataTables = ({
                 {kode_uka + " - " + name_uka}
               </Cell>
               <Cell width="25%" className="border-r cell-custom-dataTables">
-                <div className="flex gap-2">
+                <div className=" gap-2">
                   {role.map((role, i) => (
                     <li key={i}>{role.name_role}</li>
                   ))}

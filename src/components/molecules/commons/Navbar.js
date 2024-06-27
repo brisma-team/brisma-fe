@@ -135,6 +135,7 @@ const CustomHome = () => (
         src={"/images/amsbri-horizontal.png"}
         width={400}
         height={0}
+        priority={true}
         alt="test"
       ></Image>
     </Link>
