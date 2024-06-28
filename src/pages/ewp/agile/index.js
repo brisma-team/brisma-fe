@@ -19,7 +19,7 @@ import _ from "lodash";
 import {
   CardOverview,
   CardFilterOverview,
-} from "@/components/molecules/ewp/quality-assurance/overview";
+} from "@/components/molecules/ewp/agile/overview";
 import { useApprovalEWP } from "@/data/ewp";
 import useUser from "@/data/useUser";
 import { useOverview } from "@/data/ewp/agile/overview";
@@ -563,7 +563,7 @@ const index = () => {
         totalData={totalData}
       />
       <ModalAddProjectEWP
-        module={"qa"}
+        module={"agile"}
         showModal={showModal}
         payload={payload}
         payloadRelatedProject={payloadRelatedProject}

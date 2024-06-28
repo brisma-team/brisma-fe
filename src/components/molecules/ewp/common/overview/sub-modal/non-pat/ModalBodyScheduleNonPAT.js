@@ -33,7 +33,7 @@ const ModalBodyScheduleNonPAT = ({
   const [selectedTipe, setSelectedTipe] = useState(null);
   const [selectedJenis, setSelectedJenis] = useState(null);
 
-  const { metode } = useMetode("all", 2);
+  const { metode } = useMetode("all", ["agile"].includes(module) ? 1 : 2);
   const { tipe } = useTipe("all", selectedMetode);
   const { jenis } = useJenis("all", selectedTipe);
   const { tema } = useTema("all", selectedJenis);
@@ -249,7 +249,9 @@ const ModalBodyScheduleNonPAT = ({
                         placeholder={"Jenis Audit"}
                       />
                     }
-                    label={`Jenis Audit${module !== "qa" ? "*" : ""}`}
+                    label={`Jenis Audit${
+                      ["agile", "qa"].includes(module) ? "" : "*"
+                    }`}
                     widthLabel={"w-3/12"}
                     widthForm={"w-9/12"}
                     errors={
