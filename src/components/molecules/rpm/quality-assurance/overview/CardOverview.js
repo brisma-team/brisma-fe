@@ -72,7 +72,7 @@ const CardOverview = ({
               className={`${
                 colorLabel[data?.tipe?.toLowerCase()] ||
                 "bg-cardColor-blue-gray"
-              } text-base font-semibold rounded-tl-lg text-brisma -ml-[18px] -mt-0.5 min-w-[10rem] px-2 h-9 flex items-center justify-center`}
+              } text-sm font-semibold rounded-tl-lg text-brisma -ml-[18px] -mt-0.5 min-w-[12rem] px-2 h-9 flex items-center justify-center`}
             >
               <p className="text-white">{data?.tipe?.toUpperCase()}</p>
             </div>

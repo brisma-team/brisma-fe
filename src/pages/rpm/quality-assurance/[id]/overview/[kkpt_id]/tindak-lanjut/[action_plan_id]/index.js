@@ -522,6 +522,7 @@ const index = () => {
             dataContent={dataContent}
             withoutAction={!(isOnProgress && isPIC)}
             handleClickDelete={handleClickDeleteDokomen}
+            handleClickUpload={handleUploadDokumen}
           />
           <TableCatatanNegosiasi data={dataCatatanNegosiasi} />
         </CardContentActionPlan>

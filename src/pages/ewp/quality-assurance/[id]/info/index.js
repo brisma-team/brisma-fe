@@ -573,9 +573,15 @@ const index = () => {
         <PageTitle text="Project Info" />
         <div className="mt-7">
           <NavigationTab
-            items={navigationTabItems}
+            items={
+              auditInfo?.data?.project_info?.is_pat
+                ? navigationTabItems
+                : navigationTabItems.filter((v) => v.idx !== 4)
+            }
             currentStage={currentContentStage}
-            width={"w-[29rem]"}
+            width={
+              auditInfo?.data?.project_info?.is_pat ? "w-[30rem]" : "w-[25rem]"
+            }
             handleChange={handleChangeTab}
           />
           {currentContentStage === 1 ? (

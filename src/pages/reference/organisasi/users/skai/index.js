@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import {
   setObjData,
   setObjPayload,
   setValidationErrors,
-  resetObjData,
   resetObjPayload,
   resetValidationErrors,
 } from "@/slices/ewp/konsulting/perencanaan/anggaranEWPKonsultingSlice";
@@ -35,19 +34,11 @@ import { LayoutReferenceGeneral } from "@/layouts/reference";
 
 const index = () => {
   const dispatch = useDispatch();
-
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [typeModal, setTypeModal] = useState("");
   const [selectedPn, setSelectedPn] = useState("");
-
-  // const [filter, setFilter] = useState({
-  //   personal_number: "",
-  //   name: "",
-  //   uka_kode: "",
-  //   role_kode: [],
-  // });
 
   const [params, setParams] = useState({
     pn: "",
@@ -59,17 +50,6 @@ const index = () => {
     page: 1,
     total_data: 10,
   });
-
-  const payload = useSelector(
-    (state) => state.anggaranEWPKonsulting.objPayload
-  );
-  const validation = useSelector(
-    (state) => state.anggaranEWPKonsulting.validationErrors
-  );
-
-  // const { user } = useUser();
-  const { userSKAI, userSKAIMutate } = useUserSKAI(params, "search");
-  const { userSKAIDetail } = useUserSKAIDetail(selectedPn);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -83,118 +63,116 @@ const index = () => {
     ]);
   }, []);
 
+  const { userSKAI, userSKAIMutate } = useUserSKAI(params, "search");
+  const { userSKAIDetail } = useUserSKAIDetail(selectedPn);
+
+  console.log(userSKAIDetail);
+  const payload = useSelector(
+    (state) => state.anggaranEWPKonsulting.objPayload
+  );
+  const validation = useSelector(
+    (state) => state.anggaranEWPKonsulting.validationErrors
+  );
+
   useEffect(() => {
-    if (userSKAI?.data?.data?.length) {
-      const mappingUsers = userSKAI?.data?.data?.map((v) => {
-        return _.pick(v, ["id", "pn", "name", "kode_uka", "name_uka", "role"]);
-      });
-      dispatch(setObjData(mappingUsers));
-      setParams({ ...params, total_data: userSKAI?.data?.total_data });
-    } else {
-      dispatch(resetObjData());
-    }
+    const mappingUsers = userSKAI?.data?.data?.map((v) => ({
+      id: v.id,
+      pn: v.pn,
+      name: v.name,
+      kode_uka: v.kode_uka,
+      name_uka: v.name_uka,
+      role: v.role,
+    }));
+    dispatch(setObjData(mappingUsers));
+    setParams({ ...params, total_data: userSKAI?.data?.total_data });
   }, [userSKAI]);
 
   useEffect(() => {
-    if (userSKAIDetail?.data && typeModal === "update") {
-      dispatch(
-        setObjPayload(
-          _.pick(userSKAIDetail?.data, [
+    const payload =
+      userSKAIDetail?.data && typeModal === "update"
+        ? _.pick(userSKAIDetail?.data, [
             "pn",
             "name",
             "kode_uka",
             "name_uka",
             "role",
           ])
-        )
-      );
-    } else {
-      dispatch(resetObjPayload());
-    }
+        : {};
+    dispatch(setObjPayload(payload));
   }, [userSKAIDetail, typeModal, showModal]);
 
-  // [ START ] handler for modal
-  const handleCloseModal = async () => {
-    const confirm = await confirmationSwal(
-      "Apakah Anda ingin menutup modal ini?"
-    );
+  const handleCloseModal = () => {
+    confirmationSwal("Apakah Anda ingin menutup modal ini?").then((confirm) => {
+      if (confirm.value) {
+        setShowModal(false);
+        setTypeModal("");
+        setSelectedPn("");
+        dispatch(resetObjPayload());
+        dispatch(resetValidationErrors());
+      }
+    });
+  };
 
-    if (!confirm.value) {
-      return;
-    }
+  const handleChangeText = useCallback(
+    (property, value) => {
+      dispatch(setObjPayload({ ...payload, [property]: value }));
+    },
+    [dispatch, payload]
+  );
 
+  const handleChangeSelect = useCallback(
+    (property, value) => {
+      dispatch(setObjPayload({ ...payload, [property]: value }));
+    },
+    [dispatch, payload]
+  );
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const valid = setErrorValidation(payload, dispatch, {
+      schema: anggaranEWPKonsultingSchema,
+      resetErrors: resetValidationErrors,
+      setErrors: setValidationErrors,
+    });
+    if (!valid) return;
+    const amount = parseInt(payload.amount.replace(/\./g, ""));
+    const payloadWithoutAmount = _.omit(payload, "amount");
+    const url = `${
+      process.env.NEXT_PUBLIC_API_URL_REFERENCE
+    }/reference/user_skai${typeModal === "update" ? "/update" : "/create"}`;
+    const data =
+      typeModal === "update"
+        ? {
+            pn: "",
+            role_kode: [],
+            uka_kode: "",
+            ...payloadWithoutAmount,
+            amount,
+          }
+        : { ...payloadWithoutAmount, amount };
+    loadingSwal();
+    await fetchApi(typeModal === "update" ? "PATCH" : "POST", url, data);
+    userSKAIMutate();
     setShowModal(false);
     setTypeModal("");
     setSelectedPn("");
     dispatch(resetObjPayload());
-    dispatch(resetValidationErrors());
+    loadingSwal("close");
   };
 
-  const handleChangeText = (property, value) => {
-    const updatedData = {
-      ...payload,
-      [property]: value,
-    };
-    dispatch(setObjPayload(updatedData));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const schemaMapping = {
-      schema: anggaranEWPKonsultingSchema,
-      resetErrors: resetValidationErrors,
-      setErrors: setValidationErrors,
-    };
-    const validate = setErrorValidation(payload, dispatch, schemaMapping);
-
-    const objPayload = {
-      amount: parseInt(payload?.amount?.replace(/\./g, "")),
-      ..._.omit(payload, ["amount"]),
-    };
-
-    if (validate) {
-      loadingSwal();
-      if (typeModal === "update") {
-        await fetchApi(
-          "PATCH",
-          `${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/reference/user_skai/update`,
-          { pn: "", role_kode: [], uka_kode: "", ...objPayload }
-        );
-      } else {
-        await fetchApi(
-          "POST",
-          `${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/referencee/user_skai/create`,
-          objPayload
-        );
-      }
-
-      userSKAIMutate();
-      setShowModal(false);
-      setTypeModal("");
-      setSelectedPn("");
-      dispatch(resetObjPayload());
-      loadingSwal("close");
-    }
-  };
-  // [ END ] handler for modal
-
-  // [ START ] handler for table
   const handleClickAddTable = () => {
     setShowModal(true);
   };
 
-  const handleClickUpdateTable = async (id) => {
+  const handleClickUpdateTable = (pn) => {
     setShowModal(true);
     setTypeModal("update");
-    setSelectedPn(id);
+    setSelectedPn(pn);
   };
 
   const handleClickDeleteTable = async (id) => {
     const confirm = await confirmationSwal("Menghapus Pengguna.");
-
-    if (!confirm.value) {
-      return;
-    }
+    if (!confirm.value) return;
     loadingSwal();
     await fetchApi(
       "DELETE",
@@ -204,13 +182,10 @@ const index = () => {
     userSKAIMutate();
     loadingSwal("close");
   };
-  // [ END ] handler for table
 
   return (
     <LayoutReferenceGeneral>
-      {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
-      {/* End Breadcrumbs */}
       <div className="flex justify-between items-center mb-6">
         <PageTitle text="User S.K.A.I" />
       </div>
@@ -218,7 +193,7 @@ const index = () => {
         <div className="flex justify-between items-center gap-2">
           <div className="w-36 bg-atlasian-blue-light rounded">
             <ButtonField
-              handler={() => setShowFilter(!showFilter)}
+              handler={() => setShowFilter((show) => !show)}
               text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
             />
           </div>
@@ -231,12 +206,10 @@ const index = () => {
           setFilter={setParams}
         />
       </div>
-      {/* Start Content */}
       <div className="w-full">
         <Card>
           <div className="px-6 pt-2 pb-4 w-full">
-            <p className="ml-2 font-bold text-base">Pustaka Data</p>
-            <div className="my-2 " />
+            <p className="font-bold text-base mb-4">Pustaka Data</p>
             <UserSkaiDataTables
               data={userSKAI?.data?.data}
               setShowModal={setShowModal}
@@ -249,13 +222,11 @@ const index = () => {
               perPage={params?.limit}
               totalData={params?.total_data}
               handleSetPagination={async (start, end, pageNow) =>
-                setParams((prev) => {
-                  return {
-                    ...prev,
-                    page: pageNow,
-                    offset: (pageNow - 1) * prev?.limit,
-                  };
-                })
+                setParams((prev) => ({
+                  ...prev,
+                  page: pageNow,
+                  offset: (pageNow - 1) * prev?.limit,
+                }))
               }
             />
           </div>
@@ -267,10 +238,10 @@ const index = () => {
         showModal={showModal}
         validation={validation}
         handleChangeText={handleChangeText}
+        handleChangeSelect={handleChangeSelect}
         handleCloseModal={handleCloseModal}
         handleSubmit={handleSubmit}
       />
-      {/* End Content */}
     </LayoutReferenceGeneral>
   );
 };

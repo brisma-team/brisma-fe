@@ -93,7 +93,7 @@ const ModalBodySummaryNonPAT = ({ module, data, setCurrentModalStage }) => {
                     widthLabel={"w-3/12"}
                     widthForm={"w-9/12"}
                   />
-                  <FormWithLabel
+                  {/* <FormWithLabel
                     form={
                       <CardContent>
                         <div className="min-h-[1.1rem]">
@@ -104,7 +104,7 @@ const ModalBodySummaryNonPAT = ({ module, data, setCurrentModalStage }) => {
                     label="Deskripsi Kegiatan"
                     widthLabel={"w-3/12"}
                     widthForm={"w-9/12"}
-                  />
+                  /> */}
                 </div>
               </CardContent>
             </div>

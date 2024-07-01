@@ -77,7 +77,7 @@ const convertProgressAndPercent = (status) => {
 
 const index = () => {
   const router = useRouter();
-  const { ewp_pat_id, is_approval } = router.query;
+  const { ewp_pat_id, is_approval, cid, is_change } = router.query;
   const dispatch = useDispatch();
   const [showFilter, setShowFilter] = useState(false);
   const [totalData, setTotalData] = useState(1);
@@ -143,6 +143,15 @@ const index = () => {
       setPatId(ewp_pat_id);
     }
   }, [is_approval]);
+
+  useEffect(() => {
+    if (is_change) {
+      setShowModalApprovalExtension(!showModalApprovalExtension);
+      setChangeInitiatorId(cid);
+    }
+  }, [is_change]);
+
+  console.log(changeInitiatorId);
 
   useEffect(() => {
     if (workflowTempData !== undefined) {
@@ -254,7 +263,7 @@ const index = () => {
           initiator,
           change_initiator,
         } = v;
-        setChangeInitiatorId(change_initiator[0]?.id);
+        // setChangeInitiatorId(change_initiator[0]?.id || "a");
         return {
           id: v?.id,
           tipe: v?.ref_tipe?.nama,

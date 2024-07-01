@@ -115,6 +115,9 @@ const index = () => {
     setIsCloseSubmodule(
       Boolean(auditInfo?.data?.realisasi?.penyusunan_mapa_real_end)
     );
+    setIsInitiator(
+      Boolean(auditInfo?.data?.project_info?.initiator?.pn === user?.data?.pn)
+    );
   }, [auditInfo]);
 
   useEffect(() => {
@@ -334,7 +337,7 @@ const index = () => {
       <UkerAssessmentTable
         data={data}
         payload={payload}
-        withoutButton={!isInitiator}
+        withoutButton={!isInitiator || isCloseSubmodule || !isOnProgress}
         handleChange={handleChangePayloadUkerAssessment}
         handleClickAddUkerAssessment={handleClickAddRowUkerAssessment}
         handleClickSave={handleSaveUkerAssessment}

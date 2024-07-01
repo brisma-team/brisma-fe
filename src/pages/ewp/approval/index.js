@@ -128,6 +128,8 @@ const index = () => {
           faseApproval = "Entrance Notulen";
         } else if (sub_modul === "entrance_ba") {
           faseApproval = "Entrance Berita Acara";
+        } else if (sub_modul === "change_initiator") {
+          faseApproval = "Change Initiator";
         }
         break;
       case "Monitoring Offsite":
@@ -183,7 +185,10 @@ const index = () => {
           query = `konsulting/${ewp_id}/peluang-peningkatan/${sub_modul_id}`;
         } else if (sub_modul === "adendum") {
           query = `konsulting/${ewp_id}/addendum`;
-        } else if (sub_modul === "ewp_need_approval") {
+        } else if (
+          sub_modul === "ewp_need_approval" ||
+          sub_modul === "change_initiator"
+        ) {
           query = `konsulting`;
         } else if (sub_modul === "entrance_notulen") {
           query = `konsulting/${ewp_id}/meeting/${sub_modul_id}/notulen`;
@@ -205,6 +210,8 @@ const index = () => {
     }
     if (sub_modul == "entrance_notulen" || sub_modul == "entrance_ba") {
       router.push(`${query}?is_approval=true`);
+    } else if (sub_modul == "change_initiator") {
+      router.push(`${query}?cid=${sub_modul_id}&is_change=true`);
     } else if (sub_modul !== "ewp_need_approval") {
       router.push(`${query}/dokumen?is_approval=true`);
     } else {
