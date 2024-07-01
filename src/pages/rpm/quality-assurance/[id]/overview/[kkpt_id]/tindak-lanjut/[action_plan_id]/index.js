@@ -420,6 +420,10 @@ const index = () => {
     );
   };
 
+  const handleClickUploadDokumen = () => {
+    setShowModalUpload(true);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const schemaMapping = {
@@ -522,7 +526,7 @@ const index = () => {
             dataContent={dataContent}
             withoutAction={!(isOnProgress && isPIC)}
             handleClickDelete={handleClickDeleteDokomen}
-            handleClickUpload={handleUploadDokumen}
+            handleClickUpload={handleClickUploadDokumen}
           />
           <TableCatatanNegosiasi data={dataCatatanNegosiasi} />
         </CardContentActionPlan>
