@@ -54,8 +54,8 @@ const index = () => {
   const [content, setContent] = useState("");
 
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
-  const [isOnProgress, setIsOnProgress] = useState(true);
-  const [isInitiator, setIsInitiator] = useState(true);
+  const [isOnProgress, setIsOnProgress] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
   const [isAuditor, setIsAuditor] = useState(true);
 
   const { user } = useUser();

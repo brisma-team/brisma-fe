@@ -1,4 +1,5 @@
 const CardTeamOverview = ({ title, value, titleColor }) => {
+  console.log(value);
   return (
     <div className="flex flex-col gap-2.5">
       <div className={`text-xs ${titleColor} font-semibold`}>{title}</div>
@@ -6,7 +7,7 @@ const CardTeamOverview = ({ title, value, titleColor }) => {
         ? value?.map((v, i) => (
             <div key={i} className="text-xs">{`${v?.pn} - ${v?.nama}`}</div>
           ))
-        : ""}
+        : "-"}
     </div>
   );
 };

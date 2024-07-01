@@ -13,7 +13,6 @@ const RoleSelectRef = ({
   positionAbsolute,
   width,
 }) => {
-  const [open, setOpen] = useState(false);
   const [optionValue, setOptionValue] = useState([]);
 
   const { role } = useRoleList();
@@ -27,14 +26,6 @@ const RoleSelectRef = ({
     setOptionValue(mapping);
   }, [role]);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const DropdownIndicator = (props) => {
     return (
       <components.DropdownIndicator {...props}>
@@ -44,7 +35,7 @@ const RoleSelectRef = ({
   };
   return (
     <div
-      className={`${positionAbsolute && open ? `z-50 absolute` : ``} ${
+      className={`${positionAbsolute ? `z-50 absolute` : ``} ${
         width ? width : ""
       }`}
     >
@@ -57,8 +48,6 @@ const RoleSelectRef = ({
         isMulti={isMulti}
         value={selectedValue}
         components={customIcon && { DropdownIndicator }}
-        onMenuOpen={handleOpen}
-        onMenuClose={handleClose}
       />
     </div>
   );

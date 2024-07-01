@@ -99,7 +99,7 @@ const index = () => {
               return { label: `${pn} - ${nama}`, value: { pn, name: nama } };
             })
         : [];
-      const isPICEvaluator = projectInfo?.pic_auditee?.pn === user?.data?.pn;
+      const isPICEvaluator = projectInfo?.pic_auditor?.pn === user?.data?.pn;
 
       setBreadcrumbs([
         { name: "Menu", path: "/dashboard" },

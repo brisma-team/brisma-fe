@@ -245,6 +245,9 @@ const index = () => {
                       handleChange={(value) =>
                         handleChange(property_start, value)
                       }
+                      isDisabled={
+                        !isOnProgress || !isInitiator || isCloseSubmodule
+                      }
                       value={payload[property_start] || ""}
                       maxDate={convertDate(payload[property_end], "-")}
                     />
@@ -257,6 +260,9 @@ const index = () => {
                       placeholder="Tanggal"
                       handleChange={(value) =>
                         handleChange(property_end, value)
+                      }
+                      isDisabled={
+                        !isOnProgress || !isInitiator || isCloseSubmodule
                       }
                       value={payload[property_end] || ""}
                       minDate={convertDate(payload[property_start], "-")}

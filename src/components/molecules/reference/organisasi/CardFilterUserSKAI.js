@@ -1,19 +1,30 @@
 import { ButtonIcon, Card, TextInput } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
 import { UkaSelectRef, RoleSelectRef } from "../common";
+import { useCallback } from "react";
 
 const CardFilterUserSKAI = ({ showFilter, filter, setFilter }) => {
-  const handleChangeTextInput = (property, value) => {
-    setFilter({ ...filter, [property]: value });
-  };
+  const handleChangeTextInput = useCallback(
+    (property, value) => {
+      setFilter((prevFilter) => ({ ...prevFilter, [property]: value }));
+    },
+    [setFilter]
+  );
 
-  const handleChangeSelect = (property, e) => {
-    setFilter({ ...filter, [property]: e });
-  };
+  const handleChangeSelect = useCallback(
+    (property, e) => {
+      setFilter((prevFilter) => ({ ...prevFilter, [property]: e }));
+    },
+    [setFilter]
+  );
 
-  const handleReset = (property) => {
-    setFilter({ ...filter, [property]: "" });
-  };
+  const handleReset = useCallback(
+    (property) => {
+      setFilter((prevFilter) => ({ ...prevFilter, [property]: "" }));
+    },
+    [setFilter]
+  );
+
   return showFilter ? (
     <div className="rounded mt-4 w-[30rem]">
       <Card>
@@ -22,6 +33,7 @@ const CardFilterUserSKAI = ({ showFilter, filter, setFilter }) => {
             <div className="w-[50%]">
               <TextInput
                 placeholder="Personal Number"
+                isNumber
                 icon={
                   <ButtonIcon
                     handleClick={() => handleReset("pn")}
@@ -29,7 +41,7 @@ const CardFilterUserSKAI = ({ showFilter, filter, setFilter }) => {
                   />
                 }
                 onChange={(e) => handleChangeTextInput("pn", e.target.value)}
-                value={filter?.pn}
+                value={filter.pn || ""}
               />
             </div>
             <div className="w-[50%]">
@@ -42,23 +54,16 @@ const CardFilterUserSKAI = ({ showFilter, filter, setFilter }) => {
                   />
                 }
                 onChange={(e) => handleChangeTextInput("name", e.target.value)}
-                value={filter?.name}
+                value={filter.name || ""}
               />
             </div>
           </div>
           <div className="flex gap-3 items-center w-full">
             <div className="w-[50%]">
               <UkaSelectRef
-                isSearchable={true}
+                isSearchable
                 handleChange={(e) => handleChangeSelect("uka_kode", e)}
-                selectedValue={
-                  filter?.uka_kode
-                    ? {
-                        label: filter?.uka_kode?.label,
-                        value: filter?.uka_kode?.value,
-                      }
-                    : null
-                }
+                selectedValue={filter.uka_kode}
                 customIcon={
                   <ButtonIcon
                     handleClick={() => handleReset("uka_kode")}
@@ -70,8 +75,9 @@ const CardFilterUserSKAI = ({ showFilter, filter, setFilter }) => {
             </div>
             <div className="w-[50%]">
               <RoleSelectRef
-                isSearchable={true}
+                isSearchable
                 handleChange={(e) => handleChangeSelect("role_kode", e)}
+                selectedValue={filter.role_kode}
                 customIcon={
                   <ButtonIcon
                     handleClick={() => handleReset("role_kode")}
@@ -85,9 +91,7 @@ const CardFilterUserSKAI = ({ showFilter, filter, setFilter }) => {
         </div>
       </Card>
     </div>
-  ) : (
-    ""
-  );
+  ) : null;
 };
 
 export default CardFilterUserSKAI;
