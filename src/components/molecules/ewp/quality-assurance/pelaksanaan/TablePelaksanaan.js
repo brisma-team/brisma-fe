@@ -104,6 +104,7 @@ const TablePelaksanaan = ({ data, pathName, handleClickDetailObjectAudit }) => {
             render={({
               id,
               ewp_id,
+              mapa_id,
               tahun,
               project_id,
               judul,
@@ -219,7 +220,7 @@ const TablePelaksanaan = ({ data, pathName, handleClickDetailObjectAudit }) => {
                             Kertas Kerja Analisa
                           </div>
                         }
-                        href={`${pathName}/perencanaan/analisis-perencanaan/${id}`}
+                        href={`${pathName}/perencanaan/analisis-perencanaan/${mapa_id}`}
                         isBlank
                       />
                     </div>

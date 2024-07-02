@@ -104,6 +104,7 @@ const index = () => {
         return {
           id: project?.id,
           ewp_id: project?.mapa_project_audit?.ewp_id,
+          mapa_id: project?.mapa_project_id,
           tahun: project?.mapa_project_audit?.tahun,
           project_id: project?.mapa_project_audit?.project_id,
           judul: project?.mapa_project_audit?.project_name,
