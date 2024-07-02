@@ -54,9 +54,9 @@ const index = () => {
   const [content, setContent] = useState("");
 
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
-  const [isOnProgress, setIsOnProgress] = useState(false);
-  const [isInitiator, setIsInitiator] = useState(false);
-  const [isAuditor, setIsAuditor] = useState(true);
+  const [isOnProgress, setIsOnProgress] = useState(true);
+  const [isInitiator, setIsInitiator] = useState(true);
+  const [isAuditor, setIsAuditor] = useState(false);
 
   const { user } = useUser();
   const { auditInfo } = useAuditInfo({ module: "qa", id: params?.id });
@@ -213,7 +213,6 @@ const index = () => {
             />
           </div>
         )}
-
         <div>
           {(isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress ? (
             <div className="ckeditor-latar-belakang-mapa-ewp">
