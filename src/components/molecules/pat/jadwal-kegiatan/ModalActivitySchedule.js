@@ -1,4 +1,4 @@
-import { Modal } from "@/components/atoms";
+import { DivButton, Modal } from "@/components/atoms";
 import { useState } from "react";
 import {
   ModalBodyActivityInfo,
@@ -284,19 +284,31 @@ const ModalActivitySchedule = ({
   const items = [
     {
       id: "step-1",
-      label: <span>Info Kegiatan</span>,
+      label: (
+        <DivButton handleClick={() => setCurrentModalStage(1)}>
+          Info Kegiatan
+        </DivButton>
+      ),
       percentageComplete: currentModalStage > 1 ? 100 : 20,
       status: currentModalStage === 1 ? "current" : "visited",
     },
     {
       id: "step-2",
-      label: <span>Objek Audit</span>,
+      label: (
+        <DivButton handleClick={() => setCurrentModalStage(2)}>
+          Objek Audit
+        </DivButton>
+      ),
       percentageComplete: currentModalStage > 2 ? 100 : 0,
       status: currentModalStage === 2 ? "current" : "visited",
     },
     {
       id: "step-3",
-      label: <span>Anggaran</span>,
+      label: (
+        <DivButton handleClick={() => setCurrentModalStage(3)}>
+          Anggaran
+        </DivButton>
+      ),
       percentageComplete: 0,
       status: currentModalStage === 3 ? "current" : "visited",
     },
@@ -316,6 +328,7 @@ const ModalActivitySchedule = ({
           handleCloseModal={handleCloseModal}
           showModal={showModal}
           width={"63rem"}
+          setCurrentModalStage={setCurrentModalStage}
         />
       }
     >
