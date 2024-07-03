@@ -93,6 +93,7 @@ import ukerAssessmentEWPMonoffReducer from "./slices/ewp/monitoring-offsite/pere
 // EWP Agile
 import overviewEWPAgileReducer from "./slices/ewp/agile/overview/overviewEWPAgileSlice";
 import infoEWPAgileReducer from "./slices/ewp/agile/info/infoEWPAgileSlice";
+import auditCanvasEWPAgileReducer from "./slices/ewp/agile/initiation/auditCanvasEWPAgileSlice";
 
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
@@ -232,6 +233,7 @@ export const store = configureStore({
     // EWP Agile
     overviewEWPAgile: overviewEWPAgileReducer,
     infoEWPAgile: infoEWPAgileReducer,
+    auditCanvasEWPAgile: auditCanvasEWPAgileReducer,
 
     // RPM Konsulting
     documentRPMKegiatan: documentRPMKegiatanReducer,

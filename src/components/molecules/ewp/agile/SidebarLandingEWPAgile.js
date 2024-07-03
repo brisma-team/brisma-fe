@@ -25,6 +25,9 @@ const SidebarLandingEWPAgile = () => {
     const projectInfo = auditInfo?.data?.project_info;
     const projectRealisasi = auditInfo?.data?.realisasi;
     switch (projectInfo?.status_name) {
+      case "init project":
+        subModule = "Project Initiation";
+        break;
       case "mapa":
         subModule = "Project Plannings";
         break;
@@ -49,19 +52,19 @@ const SidebarLandingEWPAgile = () => {
     setMenu([
       { name: "Info", href: `/info`, isActive: true },
       {
+        name: "Project Initiation",
+        href: `/initiation`,
+        isActive: true,
+      },
+      {
         name: "Project Plannings",
-        href: `/landing`,
+        href: `/plannings`,
         isActive: projectRealisasi?.penyusunan_mapa_real_start,
       },
       {
         name: "Project Executions",
-        href: `/landing`,
+        href: `/executions`,
         isActive: projectRealisasi?.pelaksanaan_audit_real_start,
-      },
-      {
-        name: "Retro",
-        href: `/landing`,
-        isActive: projectRealisasi?.monitoring_real_start,
       },
       {
         name: "Wrap up",

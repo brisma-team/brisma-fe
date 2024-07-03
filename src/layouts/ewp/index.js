@@ -5,6 +5,7 @@ import LandingLayoutEWPQualityAssurance from "./LandingLayoutEWPQualityAssurance
 import LandingLayoutEWPMonOff from "./LandingLayoutEWPMonOff";
 import LandingLayoutEWPKajiUlang from "./LandingLayoutEWPKajiUlang";
 import LandingLayoutEWPAddendum from "./LandingLayoutAddendum";
+import LandingLayoutEWPAgile from "./LandingLayoutEWPAgile";
 
 export {
   LandingLayoutEWP,
@@ -14,4 +15,5 @@ export {
   LandingLayoutEWPMonOff,
   LandingLayoutEWPKajiUlang,
   LandingLayoutEWPAddendum,
+  LandingLayoutEWPAgile,
 };

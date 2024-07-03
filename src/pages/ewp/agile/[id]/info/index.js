@@ -136,6 +136,19 @@ const index = () => {
     setDataTables([
       {
         is_open: true,
+        is_onprogress: status_code === 1,
+        is_close: auditInfo?.data?.realisasi?.penyusunan_mapa_real_start
+          ? true
+          : false,
+        is_without_button: true,
+        status_code: 2,
+        label: "Project Initiation",
+        start_date: auditInfo?.data?.project_info?.createdAt,
+        end_date: auditInfo?.data?.realisasi?.penyusunan_mapa_real_start,
+        url: `${baseUrl}/initiation`,
+      },
+      {
+        is_open: status_code === 1,
         is_onprogress: status_code === 2,
         is_close: auditInfo?.data?.realisasi?.penyusunan_mapa_real_end
           ? true
@@ -148,7 +161,7 @@ const index = () => {
         label: "Project Plannings",
         start_date: auditInfo?.data?.realisasi?.penyusunan_mapa_real_start,
         end_date: auditInfo?.data?.realisasi?.penyusunan_mapa_real_end,
-        url: `${baseUrl}/landing`,
+        url: `${baseUrl}/plannings`,
       },
       {
         is_open: auditInfo?.data?.realisasi?.penyusunan_mapa_real_end,
@@ -160,7 +173,7 @@ const index = () => {
         label: "Project Executions",
         start_date: auditInfo?.data?.realisasi?.pelaksanaan_audit_real_start,
         end_date: auditInfo?.data?.realisasi?.pelaksanaan_audit_real_end,
-        url: `${baseUrl}/landing`,
+        url: `${baseUrl}/executions`,
       },
       {
         is_open: auditInfo?.data?.realisasi?.pelaksanaan_audit_real_end,
