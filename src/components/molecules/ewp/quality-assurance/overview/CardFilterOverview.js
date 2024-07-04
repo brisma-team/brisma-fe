@@ -7,6 +7,7 @@ import {
 import { IconClose } from "@/components/icons";
 import {
   CustomSelect,
+  PekerjaSelect,
   StatusApprovalSelect,
 } from "@/components/molecules/commons";
 
@@ -62,30 +63,38 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
               <CustomSelect
                 optionValue={[
                   {
-                    label: "Pengerjaan",
-                    value: { kode: "Pengerjaan", name: "Pengerjaan" },
+                    label: "Init Project",
+                    value: { kode: 1, name: "Init Project" },
                   },
                   {
-                    label: "Belum Dimulai",
-                    value: { kode: "Belum Dimulai", name: "Belum Dimulai" },
+                    label: "Perencanaan",
+                    value: { kode: 2, name: "Perencanaan" },
                   },
                   {
-                    label: "On Approve",
-                    value: { kode: "On Approve", name: "On Approve" },
+                    label: "Pelaksanaan",
+                    value: { kode: 4, name: "Pelaksanaan" },
+                  },
+                  {
+                    label: "Reporting",
+                    value: { kode: 10, name: "Reporting" },
+                  },
+                  {
+                    label: "Wrap Up",
+                    value: { kode: 8, name: "Wrap Up" },
                   },
                   {
                     label: "Addendum",
-                    value: { kode: "Addendum", name: "Addendum" },
+                    value: { kode: 12, name: "Addendum" },
                   },
                   {
                     label: "Final",
-                    value: { kode: "Final", name: "Final" },
+                    value: { kode: 9, name: "Final" },
                   },
                 ]}
                 customIcon={
                   <ButtonIcon
                     handleClick={() => handleReset("status_document")}
-                    icon={<IconClose size="large" />}
+                    icon={<IconClose />}
                   />
                 }
                 selectedValue={
@@ -97,24 +106,31 @@ const CardFilterOverview = ({ showFilter, filter, setFilter }) => {
                     : null
                 }
                 placeholder={"Status Dokumen"}
-                handleChange={(e) => handleChangeSelect("status_document", e)}
+                handleChange={(e) => {
+                  handleChangeSelect("status_document", e);
+                }}
               />
             </div>
           </div>
           <div className="flex gap-3 items-center w-full">
             <div className="w-[30%]">
-              <TextInput
-                placeholder="Anggota Tim Audit"
-                icon={
+              <PekerjaSelect
+                handleChange={(e) => handleChangeSelect("anggota_tim_audit", e)}
+                selectedValue={
+                  filter?.anggota_tim_audit?.pn
+                    ? {
+                        label: filter?.anggota_tim_audit?.name,
+                        value: filter?.anggota_tim_audit,
+                      }
+                    : null
+                }
+                customIcon={
                   <ButtonIcon
                     handleClick={() => handleReset("anggota_tim_audit")}
-                    icon={<IconClose size="large" />}
+                    icon={<IconClose />}
                   />
                 }
-                onChange={(e) =>
-                  handleChangeTextInput("anggota_tim_audit", e.target.value)
-                }
-                value={filter?.anggota_tim_audit}
+                placeholder={"Anggota Tim Audit"}
               />
             </div>
             <div className="w-[30%]">

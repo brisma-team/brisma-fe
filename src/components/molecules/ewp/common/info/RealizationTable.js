@@ -12,7 +12,7 @@ import { IconArrowRight } from "@/components/icons";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
-const RealizationTable = ({
+const CardContent = ({
   data,
   isHideButton,
   handleClickInitiate,
@@ -84,6 +84,7 @@ const RealizationTable = ({
               is_open,
               is_close,
               is_onprogress,
+              is_without_button,
               status_code,
               label,
               is_addendum,
@@ -95,7 +96,9 @@ const RealizationTable = ({
                 <Cell width="15%" className={`border-x ${customCell}`}>
                   <div className="custom-table-position-center justify-center">
                     {!isHideButton ? (
-                      is_onprogress && !is_close ? (
+                      is_without_button ? (
+                        ""
+                      ) : is_onprogress && !is_close ? (
                         <LozengeField appreance="removed" isBold>
                           <DivButton
                             className={"py-1 flex justify-center w-20"}
@@ -209,4 +212,4 @@ const RealizationTable = ({
   );
 };
 
-export default RealizationTable;
+export default CardContent;

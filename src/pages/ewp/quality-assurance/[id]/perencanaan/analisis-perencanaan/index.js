@@ -614,6 +614,7 @@ const index = () => {
       <ModalAddProjectEksternal
         showModal={showModalEksternal}
         payload={payloadEksternal}
+        dataPic={dataPicAnalisator}
         selectedData={selectedDataEksternal}
         validation={validationPayloadEksternal}
         handleCloseModal={handleCloseModal}

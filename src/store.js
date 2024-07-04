@@ -90,6 +90,12 @@ import documentMapaEWPMonoffReducer from "./slices/ewp/monitoring-offsite/report
 import tindakLanjutEWPMonoffReducer from "./slices/ewp/monitoring-offsite/tindak-lanjut/tindakLanjutEWPMonoffSlice";
 import ukerAssessmentEWPMonoffReducer from "./slices/ewp/monitoring-offsite/perencanaan/ukerAssessmentEWPMonoffSlice";
 
+// EWP Agile
+import overviewEWPAgileReducer from "./slices/ewp/agile/overview/overviewEWPAgileSlice";
+import infoEWPAgileReducer from "./slices/ewp/agile/info/infoEWPAgileSlice";
+import auditCanvasEWPAgileReducer from "./slices/ewp/agile/initiation/auditCanvasEWPAgileSlice";
+import workingAgreementsEWPAgileReducer from "./slices/ewp/agile/initiation/workingAgreementsEWPAgileSlice";
+
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
 import beritaAcaraEntranceEWPReducer from "./slices/ewp/konvensional/entrance/beritaAcaraEntranceEWPSlice";
@@ -224,6 +230,12 @@ export const store = configureStore({
     addendumUtamaQualityAssurance: addendumUtamaQualityAssuranceReducer,
     analisisPerencanaanAddendumUtamaEWPQualityAssurance:
       analisisPerencanaanAddendumUtamaEWPQualityAssuranceReducer,
+
+    // EWP Agile
+    overviewEWPAgile: overviewEWPAgileReducer,
+    infoEWPAgile: infoEWPAgileReducer,
+    auditCanvasEWPAgile: auditCanvasEWPAgileReducer,
+    workingAgreementsEWPAgile: workingAgreementsEWPAgileReducer,
 
     // RPM Konsulting
     documentRPMKegiatan: documentRPMKegiatanReducer,

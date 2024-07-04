@@ -18,6 +18,7 @@ import { getYearsList } from "@/helpers";
 
 const ModalAddProjectEksternal = ({
   payload,
+  dataPic,
   validation,
   selectedData,
   showModal,
@@ -168,7 +169,28 @@ const ModalAddProjectEksternal = ({
             />
             <FormWithLabel
               form={
-                <UserSKAISelect
+                // <UserSKAISelect
+                //   selectedValue={
+                //   payload?.pic?.pn
+                //     ? {
+                //         label: `${payload?.pic?.pn} - ${payload?.pic?.name}`,
+                //         value: {
+                //           pn: payload?.pic?.pn,
+                //           name: payload?.pic?.name,
+                //         },
+                //       }
+                //     : null
+                // }
+                //   customIcon={
+                //     <ButtonIcon
+                //       icon={<IconClose />}
+                //       handleClick={() => handleResetPayload("pic")}
+                //     />
+                //   }
+                //   handleChange={(e) => handleChangePayload("pic", e.value)}
+                // />
+                <CustomSelect
+                  optionValue={dataPic}
                   selectedValue={
                     payload?.pic?.pn
                       ? {
@@ -189,7 +211,7 @@ const ModalAddProjectEksternal = ({
                   handleChange={(e) => handleChangePayload("pic", e.value)}
                 />
               }
-              label="PIC Inisiator*"
+              label="PIC Analisator*"
               errors={validation?.tahun}
               widthLabel={"w-3/12"}
               widthForm={"w-9/12"}
