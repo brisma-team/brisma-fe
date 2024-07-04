@@ -1,12 +1,13 @@
 import { Breadcrumbs } from "@/components/atoms";
 import {
   CardContentHeaderFooter,
+  DataNotFound,
   PrevNextNavigation,
 } from "@/components/molecules/commons";
 import {
   useAuditCanvas,
   useAuditTimelineDetail,
-} from "@/data/ewp/agile/initiation/audit_canvas";
+} from "@/data/ewp/agile/initiation/audit-canvas";
 import { useAuditInfo } from "@/data/ewp/common/info";
 import LandingLayoutEWPAgile from "@/layouts/ewp/LandingLayoutEWPAgile";
 import { useRouter } from "next/router";
@@ -833,7 +834,7 @@ const index = () => {
                 >
                   <div className="py-1.5">
                     <div
-                      className="min-h-[10.5rem] max-h-[10.5rem] overflow-y-scroll"
+                      className="min-h-[10.5rem] max-h-[10.5rem] overflow-y-scroll px-2"
                       dangerouslySetInnerHTML={{
                         __html: dataProjectDrivers,
                       }}
@@ -848,7 +849,7 @@ const index = () => {
                 >
                   <div className="py-1.5">
                     <div
-                      className="min-h-[10.5rem] max-h-[10.5rem] overflow-y-scroll"
+                      className="min-h-[10.5rem] max-h-[10.5rem] overflow-y-scroll px-2"
                       dangerouslySetInnerHTML={{
                         __html: dataValueProportions,
                       }}
@@ -885,7 +886,7 @@ const index = () => {
                     <Headers>
                       <Header
                         width="30%"
-                        className="border-x border-t cell-custom-dataTables"
+                        className="border-x border-t cell-custom-dataTables rounded-ss-lg"
                       >
                         <div
                           className={`custom-table-header text-sm font-semibold`}
@@ -905,48 +906,54 @@ const index = () => {
                       </Header>
                       <Header
                         width="35%"
-                        className="border-t border-r cell-custom-dataTables"
+                        className="border-t border-r cell-custom-dataTables rounded-se-lg"
                       >
                         <div className="custom-table-header text-sm font-semibold">
                           Orgeh
                         </div>
                       </Header>
                     </Headers>
-                    <div className="min-h-[9rem] max-h-[9rem] overflow-y-scroll">
-                      <Rows
-                        items={dataUkerAssessment}
-                        render={({ uker_type, branch, orgeh }) => (
-                          <Row>
-                            <Cell
-                              width="30%"
-                              className={`border-x ${customCell}`}
-                            >
-                              <div className="cell-custom-dataTables-padding-0">
-                                <p className="text-base">
-                                  {uker_type?.name?.toUpperCase()}
-                                </p>
-                              </div>
-                            </Cell>
-                            <Cell
-                              width="35%"
-                              className={`border-r ${customCell}`}
-                            >
-                              <div className="cell-custom-dataTables-padding-0">
-                                <p className="text-base">{`${branch?.branch_kode} - ${branch?.branch_name}`}</p>
-                              </div>
-                            </Cell>
-                            <Cell
-                              width="35%"
-                              className={`border-r ${customCell}`}
-                            >
-                              <div className="cell-custom-dataTables-padding-0">
-                                <p className="text-base">{`${orgeh?.orgeh_kode} - ${orgeh?.orgeh_name}`}</p>
-                              </div>
-                            </Cell>
-                          </Row>
-                        )}
-                      />
-                    </div>
+                    {dataUkerAssessment?.length ? (
+                      <div className="min-h-[9rem] max-h-[9rem] overflow-y-scroll">
+                        <Rows
+                          items={dataUkerAssessment}
+                          render={({ uker_type, branch, orgeh }) => (
+                            <Row>
+                              <Cell
+                                width="30%"
+                                className={`border-x ${customCell}`}
+                              >
+                                <div className="cell-custom-dataTables-padding-0">
+                                  <p className="text-base">
+                                    {uker_type?.name?.toUpperCase()}
+                                  </p>
+                                </div>
+                              </Cell>
+                              <Cell
+                                width="35%"
+                                className={`border-r ${customCell}`}
+                              >
+                                <div className="cell-custom-dataTables-padding-0">
+                                  <p className="text-base">{`${branch?.branch_kode} - ${branch?.branch_name}`}</p>
+                                </div>
+                              </Cell>
+                              <Cell
+                                width="35%"
+                                className={`border-r ${customCell}`}
+                              >
+                                <div className="cell-custom-dataTables-padding-0">
+                                  <p className="text-base">{`${orgeh?.orgeh_kode} - ${orgeh?.orgeh_name}`}</p>
+                                </div>
+                              </Cell>
+                            </Row>
+                          )}
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-full border-x border-b rounded-es-xl rounded-ee-xl pb-4">
+                        <DataNotFound />
+                      </div>
+                    )}
                   </TableTree>
                 </div>
               </CardContent>
@@ -961,7 +968,7 @@ const index = () => {
                     <Headers>
                       <Header
                         width="35%"
-                        className="border-x border-t cell-custom-dataTables"
+                        className="border-x border-t cell-custom-dataTables rounded-ss-lg"
                       >
                         <div
                           className={`custom-table-header text-sm font-semibold`}
@@ -971,7 +978,7 @@ const index = () => {
                       </Header>
                       <Header
                         width="65%"
-                        className="border-t border-r cell-custom-dataTables"
+                        className="border-t border-r cell-custom-dataTables rounded-se-lg"
                       >
                         <div className="custom-table-header text-sm font-semibold">
                           PN & Name
@@ -1065,7 +1072,7 @@ const index = () => {
                       <Header className="!hidden" />
                       <Header
                         width="40%"
-                        className="border-t border-x cell-jadwal-audit-mapa-ewp"
+                        className="border-t border-x cell-jadwal-audit-mapa-ewp rounded-ss-lg"
                       >
                         Keterangan
                       </Header>
@@ -1077,39 +1084,45 @@ const index = () => {
                       </Header>
                       <Header
                         width="30%"
-                        className="border-t border-r cell-jadwal-audit-mapa-ewp"
+                        className="border-t border-r cell-jadwal-audit-mapa-ewp rounded-se-lg"
                       >
                         Tanggal Berakhir
                       </Header>
                     </Headers>
-                    <div className="min-h-[21.6rem] max-h-[21.6rem] overflow-y-scroll">
-                      <Rows
-                        items={dataAuditTimelines}
-                        render={({ title, start_date, end_date }) => (
-                          <Row>
-                            <Cell className="!hidden" />
-                            <Cell
-                              width="40%"
-                              className="border-x cell-jadwal-audit-mapa-ewp"
-                            >
-                              {title}
-                            </Cell>
-                            <Cell
-                              width="30%"
-                              className="border-r cell-jadwal-audit-mapa-ewp"
-                            >
-                              {convertDate(start_date, "/", "d")}
-                            </Cell>
-                            <Cell
-                              width="30%"
-                              className="border-r cell-jadwal-audit-mapa-ewp"
-                            >
-                              {convertDate(end_date, "/", "d")}
-                            </Cell>
-                          </Row>
-                        )}
-                      />
-                    </div>
+                    {dataAuditTimelines?.length ? (
+                      <div className="min-h-[21.6rem] max-h-[21.6rem] overflow-y-scroll">
+                        <Rows
+                          items={dataAuditTimelines}
+                          render={({ title, start_date, end_date }) => (
+                            <Row>
+                              <Cell className="!hidden" />
+                              <Cell
+                                width="40%"
+                                className="border-x cell-jadwal-audit-mapa-ewp"
+                              >
+                                {title}
+                              </Cell>
+                              <Cell
+                                width="30%"
+                                className="border-r cell-jadwal-audit-mapa-ewp"
+                              >
+                                {convertDate(start_date, "/", "d")}
+                              </Cell>
+                              <Cell
+                                width="30%"
+                                className="border-r cell-jadwal-audit-mapa-ewp"
+                              >
+                                {convertDate(end_date, "/", "d")}
+                              </Cell>
+                            </Row>
+                          )}
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-full border-x border-b rounded-es-xl rounded-ee-xl pb-4">
+                        <DataNotFound />
+                      </div>
+                    )}
                   </TableTree>
                 </div>
               </CardContent>

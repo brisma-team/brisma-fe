@@ -97,7 +97,7 @@ const CardOverview = ({
         `hover:bg-gray-100 hover:rounded-[10px] hover:no-underline`
       }`}
       handleClick={(e) => (
-        e.stopPropagation(), router.push(`agile/${data?.id}`)
+        e.stopPropagation(), router.push(`agile/${data?.id}/info`)
       )}
     >
       <div
