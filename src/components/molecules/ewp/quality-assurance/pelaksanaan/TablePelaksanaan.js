@@ -150,15 +150,23 @@ const TablePelaksanaan = ({ data, pathName, handleClickDetailObjectAudit }) => {
                   </DivButton>
                 </Cell>
                 <Cell width="20%" className="border-r cell-custom-dataTables">
-                  <Link
-                    href={generateUrl(mtd_tipe?.nama, ewp_id)}
-                    target="_blank"
-                    className={`${
-                      is_close ? "text-atlasian-red hover:text-red-500" : ""
-                    } underline`}
-                  >
-                    {judul}
-                  </Link>
+                  {ewp_id ? (
+                    <>
+                      <Link
+                        href={generateUrl(mtd_tipe?.nama, ewp_id)}
+                        target="_blank"
+                        className={`${
+                          is_close ? "text-atlasian-red hover:text-red-500" : ""
+                        } underline`}
+                      >
+                        {judul}
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <p className="mb-1">{judul}</p>
+                    </>
+                  )}
                 </Cell>
                 <Cell width="12%" className="border-r cell-custom-dataTables">
                   {is_close ? (

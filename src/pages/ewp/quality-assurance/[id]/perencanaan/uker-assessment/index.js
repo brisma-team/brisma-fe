@@ -16,6 +16,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import {
   confirmationSwal,
+  errorSwal,
   fetchApi,
   loadingSwal,
   usePostFileData,
@@ -217,17 +218,27 @@ const index = () => {
     }
 
     loadingSwal();
-    await fetchApi(
-      "DELETE",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/mapa/uker_assesment/${uker_id}`,
-      {}
-    );
+    if (uker_id) {
+      await fetchApi(
+        "DELETE",
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/mapa/uker_assesment/${uker_id}`,
+        {}
+      );
+    }
 
     ukerAssessmentMutate();
     loadingSwal("close");
   };
 
   const handleSaveUkerAssessment = async (isUpdate, uker_id) => {
+    if (
+      payload?.branch?.branch_kode == null ||
+      payload?.orgeh?.orgeh_kode == null ||
+      payload?.tipe_uker == null ||
+      payload?.description == null
+    ) {
+      return errorSwal("Semua kolom harus diisi");
+    }
     loadingSwal();
     const response = await fetchApi(
       isUpdate ? "PATCH" : "POST",
