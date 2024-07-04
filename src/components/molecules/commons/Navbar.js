@@ -27,7 +27,7 @@ const Notification = ({ data, handleMarkReadAll, handleClick }) => {
 
   return (
     <DropdownMenu
-      trigger={({ triggerRef, isSelected, testId, ...props }) => (
+      trigger={({ triggerRef, ...props }) => (
         <div
           className={`h-8 w-8 rounded-full hover:bg-blue-200 ${
             isOpen && `bg-blue-200`
@@ -135,6 +135,7 @@ const CustomHome = () => (
         src={"/images/amsbri-horizontal.png"}
         width={400}
         height={0}
+        priority={true}
         alt="test"
       ></Image>
     </Link>

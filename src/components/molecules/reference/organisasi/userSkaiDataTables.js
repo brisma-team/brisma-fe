@@ -55,17 +55,17 @@ const UserSkaiDataTables = ({
         <Rows
           items={data}
           render={({ id, pn, name, kode_uka, name_uka, role }) => (
-            <Row>
+            <Row key={id}>
               <Cell className="!hidden" />
               <Cell
                 width="8%"
                 className="border-x cell-custom-dataTables flex justify-center"
               >
-                {!withoutButtonAction ? (
-                  <div className="flex justify-center items-center gap-1">
+                {!withoutButtonAction && (
+                  <div className="flex gap-1">
                     <ButtonIcon
                       icon={<ButtonEdit />}
-                      handleClick={() => handleClickUpdate(id)}
+                      handleClick={() => handleClickUpdate(pn)}
                       color={"yellow"}
                     />
                     <ButtonIcon
@@ -73,8 +73,6 @@ const UserSkaiDataTables = ({
                       handleClick={() => handleClickDelete(id)}
                     />
                   </div>
-                ) : (
-                  ""
                 )}
               </Cell>
               <Cell
@@ -90,12 +88,12 @@ const UserSkaiDataTables = ({
                 width="25%"
                 className="border-r cell-custom-dataTables justify-center"
               >
-                {kode_uka + " - " + name_uka}
+                {`${kode_uka} - ${name_uka}`}
               </Cell>
               <Cell width="25%" className="border-r cell-custom-dataTables">
-                <div className="flex gap-2">
-                  {role.map((role, i) => (
-                    <li key={i}>{role.name_role}</li>
+                <div className="gap-2">
+                  {role.map(({ name_role: nameRole }) => (
+                    <li key={nameRole}>{nameRole}</li>
                   ))}
                 </div>
               </Cell>
@@ -103,24 +101,20 @@ const UserSkaiDataTables = ({
           )}
         />
       </TableTree>
-      <div className="w-full border rounded-ee-lg rounded-es-lg min-h-[1.3rem]">
-        {!withoutButtonAction ? (
-          <div className="w-52 p-2 ">
-            <ButtonField
-              iconAfter={
-                <div className="text-atlasian-purple">
-                  <IconPlus size="medium" />
-                </div>
-              }
-              text={"Tambah Pengguna"}
-              textColor={"purple"}
-              handler={handleClickAdd}
-            />
-          </div>
-        ) : (
-          ""
-        )}
-      </div>
+      {!withoutButtonAction && (
+        <div className="w-52 p-2">
+          <ButtonField
+            iconAfter={
+              <div className="text-atlasian-purple">
+                <IconPlus size="medium" />
+              </div>
+            }
+            text={"Tambah Pengguna"}
+            textColor={"purple"}
+            handler={handleClickAdd}
+          />
+        </div>
+      )}
     </div>
   );
 };

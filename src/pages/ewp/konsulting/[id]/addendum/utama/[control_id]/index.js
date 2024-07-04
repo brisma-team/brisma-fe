@@ -31,6 +31,10 @@ const index = () => {
   const [imageClipList, setImageClipList] = useState([]);
   const [attachmentClipList, setAttachmentClipList] = useState([]);
   const [content, setContent] = useState("");
+  const [pic, setPic] = useState({
+    pn_pic: "",
+    nama_pic: "",
+  });
   const [typeUpload, setTypeUpload] = useState("");
 
   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
@@ -83,6 +87,10 @@ const index = () => {
 
   useEffect(() => {
     setContent(controlDetail?.data?.uraian || "");
+    setPic({
+      pn_pic: controlDetail?.data?.pn_pic,
+      nama_pic: controlDetail?.data?.nama_pic,
+    });
     setIsPIC(Boolean(controlDetail?.data?.pn_pic == user?.data?.pn));
   }, [controlDetail, user]);
 
@@ -127,7 +135,7 @@ const index = () => {
     const upload = await fetchApi(
       "PATCH",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/addendum/program_kerja/control/update/${control_id}`,
-      { uraian: content }
+      { uraian: content, pn_pic: pic?.pn_pic, nama_pic: pic?.nama_pic }
     );
     if (upload.isConfirmed) {
       router.push(pathName);

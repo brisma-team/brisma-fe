@@ -15,7 +15,7 @@ const CardTeam = ({ title, value, titleColor }) => {
         ? value?.map((v, i) => (
             <div key={i} className="text-xs">{`${v?.pn} - ${v?.nama}`}</div>
           ))
-        : ""}
+        : "-"}
     </div>
   );
 };
@@ -125,7 +125,7 @@ const CardOverview = ({
               className={`${
                 colorLabel[data?.tipe?.toLowerCase()] ||
                 "bg-cardColor-blue-gray"
-              } text-base font-semibold rounded-tl-lg text-brisma px-4 h-9 flex items-center justify-center`}
+              } text-sm font-semibold rounded-tl-lg text-brisma min-w-[12rem] px-4 h-9 flex items-center justify-center`}
             >
               <p className="text-white">{data?.tipe?.toUpperCase()}</p>
             </div>
@@ -191,8 +191,8 @@ const CardOverview = ({
             <div className="border-x border-t">
               <CardBody
                 title={"Survey Terkait"}
-                value={data?.survey_terkait}
-                textColor={"text-atlasian-yellow"}
+                value={data?.survey_terkait || "-"}
+                textColor={data?.survey_terkait ? "text-atlasian-yellow" : ""}
               />
               <CardBody
                 title={"Project Status"}

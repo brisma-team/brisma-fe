@@ -150,8 +150,12 @@ const index = () => {
           pic_submitter: data?.pic_auditee,
           pic_evaluator: data?.pic_auditor,
           pic_negotiator: data?.pic_nego,
-          submitter: [],
-          evaluator: [],
+          submitter: data?.tim_audit?.filter(
+            (item) => item.title === "submitter"
+          ),
+          evaluator: data?.tim_audit?.filter(
+            (item) => item.title === "evaluator"
+          ),
           status_approval: data?.status_persetujuan,
         };
       });
@@ -306,7 +310,7 @@ const index = () => {
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
       <div className="flexitems-center mb-6">
-        <PageTitle text={"RPM Kegiatan Overview"} />
+        <PageTitle text={"RPM Quality Assurance Overview"} />
       </div>
       <div className="flex justify-between items-end">
         <div className="flex justify-between items-center gap-2">

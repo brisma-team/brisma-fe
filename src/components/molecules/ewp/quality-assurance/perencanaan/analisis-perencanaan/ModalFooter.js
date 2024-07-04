@@ -1,6 +1,6 @@
 import { ButtonField, ButtonIcon, ErrorValidation } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
-import { CustomSelect, UserSKAISelect } from "@/components/molecules/commons";
+import { CustomSelect } from "@/components/molecules/commons";
 const ModalFooter = ({
   dataPic,
   selectedData,

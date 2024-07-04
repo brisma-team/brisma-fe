@@ -78,7 +78,7 @@ const ModalEditProject = ({
                     handleChange={(e) => handleChangePayload("pic", e.value)}
                   />
                 }
-                label="PIC Inisiator*"
+                label="PIC Analisator*"
                 errors={validation["pic.pn"]}
                 widthLabel={"w-3/12"}
                 widthForm={"w-9/12"}
