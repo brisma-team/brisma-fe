@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import _ from "lodash";
 import {
   setObjData,
@@ -10,6 +11,7 @@ import {
 } from "@/slices/ewp/konsulting/perencanaan/anggaranEWPKonsultingSlice";
 import {
   confirmationSwal,
+  errorSwal,
   fetchApi,
   loadingSwal,
   setErrorValidation,
@@ -31,15 +33,17 @@ import {
 import userSkaiSchema from "@/helpers/schemas/reference/userSkaiSchema";
 
 import { LayoutReferenceGeneral } from "@/layouts/reference";
+import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [typeModal, setTypeModal] = useState("");
   const [selectedPn, setSelectedPn] = useState("");
-
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [params, setParams] = useState({
     pn: "",
     name: "",
@@ -65,13 +69,39 @@ const index = () => {
 
   const { userSKAI, userSKAIMutate } = useUserSKAI(params, "search");
   const { userSKAIDetail } = useUserSKAIDetail(selectedPn);
-
+  const { user } = useUser();
   const payload = useSelector(
     (state) => state.anggaranEWPKonsulting.objPayload
   );
   const validation = useSelector(
     (state) => state.anggaranEWPKonsulting.validationErrors
   );
+
+  useEffect(() => {
+    if (user !== undefined) {
+      const { role_kode } = user.data;
+
+      // Check if any role_kode is between 1 and 6
+      const isAuthorized = role_kode.some(
+        (code) => parseInt(code) >= 1 && parseInt(code) <= 6
+      );
+
+      setIsAuthorized(isAuthorized);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (!isAuthorized) {
+      // Display error message with a delay
+      errorSwal("Maaf, Anda tidak diizinkan mengakses halaman ini.");
+      // Redirect to unauthorized page after 2 seconds
+      const timeout = setTimeout(() => {
+        router.push("/reference/");
+      }, 2000); // 2 seconds timeout
+
+      return () => clearTimeout(timeout); // Cleanup timeout if component unmounts
+    }
+  }, [isAuthorized]);
 
   useEffect(() => {
     const mappingUsers = userSKAI?.data?.data?.map((v) => ({
@@ -247,6 +277,7 @@ const index = () => {
               handleClickAdd={handleClickAddTable}
               handleClickUpdate={handleClickUpdateTable}
               handleClickDelete={handleClickDeleteTable}
+              withoutButtonAction={!isAuthorized}
             />
             <CustomPagination
               defaultCurrentPage={1}
