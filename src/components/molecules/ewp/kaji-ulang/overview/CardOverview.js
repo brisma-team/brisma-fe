@@ -1,16 +1,11 @@
 import { DivButton } from "@/components/atoms";
+import { IconLink, IconPerson, IconTrash } from "@/components/icons";
 import { DropdownCard } from "@/components/molecules/commons";
-import {
-  capitalizeEveryWord,
-  //  checkRoleIsAdmin,
-  convertDate,
-} from "@/helpers";
+import { capitalizeEveryWord, checkRoleIsAdmin, convertDate } from "@/helpers";
 import ProgressBar from "@atlaskit/progress-bar";
 import { N800 } from "@atlaskit/theme/colors";
 import { token } from "@atlaskit/tokens";
 import { useRouter } from "next/router";
-
-// import { IconPerson, IconTrash, IconLink } from "@/components/icons";
 
 const helpMeFindTitle = (text) => {
   switch (text.toLowerCase()) {
@@ -56,14 +51,51 @@ const CardOverview = ({
   data,
   withoutButton,
   withoutHover,
-  // handleCloseProject,
-  // handleCopyProject,
-  // handleChangeInitiator,
-  // user,
+  handleCloseProject,
+  handleCopyProject,
+  handleChangeInitiator,
+  user,
 }) => {
   const router = useRouter();
-  const listDropdown = [];
-  // const listDropdown = [
+  const listDropdown = [
+    {
+      label: (
+        <div className="flex gap-">
+          <IconPerson size="medium" />
+          <span className="my-auto ml-0.5">Change Initiator</span>
+        </div>
+      ),
+      action: async (e) =>
+        await handleChangeInitiator(
+          e,
+          Boolean(data?.change_initiator?.length),
+          data?.id,
+          data?.change_initiator?.length && data?.change_initiator[0]?.id
+        ),
+      isDisabled: !checkRoleIsAdmin(user?.role_kode),
+    },
+    {
+      label: (
+        <div className="flex gap-1">
+          <IconTrash size="medium" />
+          <span className="my-auto">Delete Project</span>
+        </div>
+      ),
+      action: () => handleCloseProject(data?.id),
+      isDisabled: !(
+        checkRoleIsAdmin(user?.role_kode) || data?.initiator?.pn === user?.pn
+      ),
+    },
+    {
+      label: (
+        <div className="flex gap-1">
+          <IconLink size="medium" />
+          <span className="my-auto">Link Project</span>
+        </div>
+      ),
+      action: () => handleCopyProject(data?.id),
+    },
+  ];
   //   {
   //     label: (
   //       <div className="flex gap-">
