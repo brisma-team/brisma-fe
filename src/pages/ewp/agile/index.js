@@ -299,7 +299,7 @@ const index = () => {
         loadingSwal();
         await fetchApi(
           "POST",
-          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/auditor/create`,
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/auditor/create`,
           data
         );
         setShowModal(false);

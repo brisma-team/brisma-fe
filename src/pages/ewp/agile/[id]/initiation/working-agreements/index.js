@@ -201,7 +201,7 @@ const index = () => {
     } else {
       dispatch(resetObjDataRoles());
     }
-  }, [workingAgreementsMutate]);
+  }, [workingAgreements]);
 
   // [ START ] handler for content BMC
   const handleEditValue = () => {
@@ -294,9 +294,11 @@ const index = () => {
         break;
       case "Format of Communication":
         payload.format_communication = payloadFormatOfCommunication;
+        url = "format_communication";
         break;
       case "Setting Expectations":
         payload.setting_exppectations = payloadSettingExpectations;
+        url = "setting_exppectations";
         break;
       case "Escalation Points":
         payload.escalation_points = payloadEscalationPoints;
