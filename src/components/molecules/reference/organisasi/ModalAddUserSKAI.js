@@ -5,6 +5,7 @@ import {
   ModalFooter,
   CardBodyContent,
   FormWithLabel,
+  PekerjaSelect,
 } from "@/components/molecules/commons";
 import { RoleSelectRef, UkaSelectRef } from "../common";
 
@@ -24,12 +25,12 @@ const ModalAddUserSKAI = ({
       value: data?.pn,
       placeholder: "Personal Number",
       name: "pn",
-      inputText: true,
+      inputText: false,
     },
     {
       label: "Name",
       value: data?.name,
-      placeholder: "Name",
+      placeholder: "Please select pn first.",
       name: "name",
       inputText: true,
     },
@@ -48,7 +49,6 @@ const ModalAddUserSKAI = ({
       inputText: false,
     },
   ];
-
   return (
     <Modal
       showModal={showModal}
@@ -61,7 +61,12 @@ const ModalAddUserSKAI = ({
           }
         />
       }
-      footer={<ModalFooter handleSubmit={handleSubmit} />}
+      footer={
+        <ModalFooter
+          handleSubmit={handleSubmit}
+          buttonText={typeModal === "update" ? "Ubah" : "Simpan"}
+        />
+      }
     >
       <CardBodyContent>
         {fields?.map((field) => (
@@ -71,17 +76,18 @@ const ModalAddUserSKAI = ({
             form={
               field?.inputText ? (
                 <TextInput
-                  value={data?.[field?.name] || ""}
+                  value={data?.["pn"]?.value?.name || ""}
                   onChange={(e) =>
                     handleChangeText(field?.name, e.target.value)
                   }
                   placeholder={field?.placeholder}
-                  icon={
-                    <ButtonIcon
-                      handleClick={() => handleChangeText(field?.name, "")}
-                      icon={<IconClose size="medium" />}
-                    />
-                  }
+                  isDisabled={true}
+                  // icon={
+                  //   <ButtonIcon
+                  //     handleClick={() => handleChangeText(field?.name, "")}
+                  //     icon={<IconClose size="medium" />}
+                  //   />
+                  // }
                 />
               ) : field?.name == "uka_kode" ? (
                 <UkaSelectRef
@@ -95,6 +101,27 @@ const ModalAddUserSKAI = ({
                     />
                   }
                   placeholder={field?.placeholder}
+                />
+              ) : field?.name == "pn" ? (
+                <PekerjaSelect
+                  isSearchable={true}
+                  handleChange={(e) => handleChangeSelect(field?.name, e)}
+                  selectedValue={
+                    data?.[field?.name]
+                      ? {
+                          label: data?.[field?.name]?.value?.pn,
+                          value: data?.[field?.name]?.value,
+                        }
+                      : null
+                  }
+                  customIcon={
+                    <ButtonIcon
+                      handleClick={() => handleChangeSelect(field?.name, null)}
+                      icon={<IconClose size="medium" />}
+                    />
+                  }
+                  placeholder={field?.placeholder}
+                  width={"full"}
                 />
               ) : (
                 <RoleSelectRef

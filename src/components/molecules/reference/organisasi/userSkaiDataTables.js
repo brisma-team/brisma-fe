@@ -70,7 +70,7 @@ const UserSkaiDataTables = ({
                     />
                     <ButtonIcon
                       icon={<ButtonDelete />}
-                      handleClick={() => handleClickDelete(id)}
+                      handleClick={() => handleClickDelete(pn)}
                     />
                   </div>
                 )}
