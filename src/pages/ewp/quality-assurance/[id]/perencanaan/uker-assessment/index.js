@@ -231,14 +231,14 @@ const index = () => {
   };
 
   const handleSaveUkerAssessment = async (isUpdate, uker_id) => {
-    if (
-      payload?.branch?.branch_kode == null ||
-      payload?.orgeh?.orgeh_kode == null ||
-      payload?.tipe_uker == null ||
-      payload?.description == null
-    ) {
-      return errorSwal("Semua kolom harus diisi");
-    }
+    // if (
+    //   payload?.branch?.branch_kode == null ||
+    //   payload?.orgeh?.orgeh_kode == null ||
+    //   payload?.tipe_uker == null ||
+    //   payload?.description == null
+    // ) {
+    //   return errorSwal("Semua kolom harus diisi");
+    // }
     loadingSwal();
     const response = await fetchApi(
       isUpdate ? "PATCH" : "POST",

@@ -50,7 +50,7 @@ const LandingLayoutEWPAgile = ({ children }) => {
   }, [user, userError]);
 
   if (isError) {
-    errorSwalTimeout(auditInfoError, "/ewp/quality-assurance");
+    errorSwalTimeout(auditInfoError, "/ewp/agile");
   }
 
   if (!isShown) {

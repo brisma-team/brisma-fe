@@ -1,4 +1,9 @@
-import { ButtonField, ButtonIcon, ModalScroll } from "@/components/atoms";
+import {
+  ButtonField,
+  ButtonIcon,
+  ErrorValidation,
+  ModalScroll,
+} from "@/components/atoms";
 import { IconClose, IconPlus } from "@/components/icons";
 import {
   BranchSelect,
@@ -24,6 +29,7 @@ const ModalKeyStakeholder = ({
   showModal,
   data,
   payload,
+  validation,
   withoutButton,
   handleCloseModal,
   handleChange,
@@ -149,24 +155,35 @@ const ModalKeyStakeholder = ({
                   <Cell width="32%" className={`border-r ${customCell}`}>
                     <div className="cell-custom-dataTables-padding-0">
                       {is_new || is_edit ? (
-                        <BranchSelect
-                          customIcon={
-                            <ButtonIcon
-                              icon={<IconClose />}
-                              handleClick={() => handleChange("branch", "")}
+                        <>
+                          <BranchSelect
+                            customIcon={
+                              <ButtonIcon
+                                icon={<IconClose />}
+                                handleClick={() => handleChange("branch", "")}
+                              />
+                            }
+                            handleChange={(e) =>
+                              handleChange("branch", e?.value)
+                            }
+                            selectedValue={
+                              payload?.branch?.branch_kode
+                                ? {
+                                    label: payload?.branch?.branch_name,
+                                    value: payload?.branch,
+                                  }
+                                : null
+                            }
+                            placeholder={"Pilih Branch"}
+                          />
+                          {validation?.ref_auditee_branch_kode ? (
+                            <ErrorValidation
+                              message={validation?.ref_auditee_branch_kode}
                             />
-                          }
-                          handleChange={(e) => handleChange("branch", e?.value)}
-                          selectedValue={
-                            payload?.branch?.branch_kode
-                              ? {
-                                  label: payload?.branch?.branch_name,
-                                  value: payload?.branch,
-                                }
-                              : null
-                          }
-                          placeholder={"Pilih Branch"}
-                        />
+                          ) : (
+                            ""
+                          )}
+                        </>
                       ) : (
                         <p className="text-base">{`${branch?.branch_kode} - ${branch?.branch_name}`}</p>
                       )}
@@ -175,24 +192,35 @@ const ModalKeyStakeholder = ({
                   <Cell width="32%" className={`border-r ${customCell}`}>
                     <div className="cell-custom-dataTables-padding-0">
                       {is_new || is_edit ? (
-                        <OrgehSelect
-                          customIcon={
-                            <ButtonIcon
-                              icon={<IconClose />}
-                              handleClick={() => handleChange("orgeh", "")}
+                        <>
+                          <OrgehSelect
+                            customIcon={
+                              <ButtonIcon
+                                icon={<IconClose />}
+                                handleClick={() => handleChange("orgeh", "")}
+                              />
+                            }
+                            handleChange={(e) =>
+                              handleChange("orgeh", e?.value)
+                            }
+                            selectedValue={
+                              payload?.orgeh?.orgeh_kode
+                                ? {
+                                    label: payload?.orgeh?.orgeh_name,
+                                    value: payload?.orgeh,
+                                  }
+                                : null
+                            }
+                            placeholder={"Pilih Orgeh"}
+                          />
+                          {validation?.ref_auditee_orgeh_kode ? (
+                            <ErrorValidation
+                              message={validation?.ref_auditee_orgeh_kode}
                             />
-                          }
-                          handleChange={(e) => handleChange("orgeh", e?.value)}
-                          selectedValue={
-                            payload?.orgeh?.orgeh_kode
-                              ? {
-                                  label: payload?.orgeh?.orgeh_name,
-                                  value: payload?.orgeh,
-                                }
-                              : null
-                          }
-                          placeholder={"Pilih Orgeh"}
-                        />
+                          ) : (
+                            ""
+                          )}
+                        </>
                       ) : (
                         <p className="text-base">{`${orgeh?.orgeh_kode} - ${orgeh?.orgeh_name}`}</p>
                       )}
@@ -200,14 +228,21 @@ const ModalKeyStakeholder = ({
                   </Cell>
                   <Cell width="26%" className={`border-r ${customCell}`}>
                     {is_new || is_edit ? (
-                      <UkerTypeSelect
-                        handleChange={(e) =>
-                          handleChange("tipe_uker", e?.value)
-                        }
-                        selectedValue={payload?.tipe_uker || null}
-                        width={"w-full"}
-                        placeholder={"Pilih Tipe Uker"}
-                      />
+                      <>
+                        <UkerTypeSelect
+                          handleChange={(e) =>
+                            handleChange("tipe_uker", e?.value)
+                          }
+                          selectedValue={payload?.tipe_uker || null}
+                          width={"w-full"}
+                          placeholder={"Pilih Tipe Uker"}
+                        />
+                        {validation?.tipe_uker ? (
+                          <ErrorValidation message={validation?.tipe_uker} />
+                        ) : (
+                          ""
+                        )}
+                      </>
                     ) : (
                       <p className="text-base">
                         {uker_type?.name?.toUpperCase()}

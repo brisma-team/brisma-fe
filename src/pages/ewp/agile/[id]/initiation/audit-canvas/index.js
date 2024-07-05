@@ -49,6 +49,7 @@ import {
   setObjPayloadUkerAssessment,
   setObjPayloadAuditTimelines,
   setValidationErrorsTeam,
+  setValidationErrorsUkerAssessment,
   setValidationErrorsAuditTimelines,
   resetObjDataAuditTimelines,
   resetObjDataTeam,
@@ -64,6 +65,7 @@ import {
   resetObjPayloadUkerAssessment,
   resetObjPayloadAuditTimelines,
   resetValidationErrorsTeam,
+  resetValidationErrorsUkerAssessment,
   resetValidationErrorsAuditTimelines,
 } from "@/slices/ewp/agile/initiation/auditCanvasEWPAgileSlice";
 import timEWPAgileSchema from "@/helpers/schemas/ewp/agile/initiation/timEWPAgileSchema";
@@ -77,6 +79,7 @@ import {
 import { ModalProjectTeam } from "@/components/molecules/ewp/agile/initiation/audit-canvas";
 import auditTimelinesEWPSchema from "@/helpers/schemas/ewp/agile/initiation/auditTimelinesEWPAgileSchema";
 import _ from "lodash";
+import ukerAssessmentEWPSchema from "@/helpers/schemas/ewp/common/ukerAssessmentEWPSchema";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 const routes = [
@@ -187,6 +190,9 @@ const index = () => {
   );
   const validationTeam = useSelector(
     (state) => state.auditCanvasEWPAgile.validationErrorsTeam
+  );
+  const validationUkerAssessment = useSelector(
+    (state) => state.auditCanvasEWPAgile.validationErrorsUkerAssessment
   );
   const validationAuditTimelines = useSelector(
     (state) => state.auditCanvasEWPAgile.validationErrorsAuditTimelines
@@ -309,10 +315,6 @@ const index = () => {
       dispatch(resetObjDataAuditTimelines());
     }
   }, [auditCanvas]);
-
-  useEffect(() => {
-    console.log("payloadTeam => ", payloadTeam);
-  }, [payloadTeam]);
 
   useEffect(() => {
     if (auditTimelineDetail?.data) {
@@ -574,7 +576,7 @@ const index = () => {
     }
 
     setShowModalUkerAssessment(false);
-    dispatch(resetValidationErrorsTeam());
+    dispatch(resetValidationErrorsUkerAssessment());
   };
 
   const handleChangePayloadUkerAssessment = (property, value) => {
@@ -587,8 +589,6 @@ const index = () => {
   };
 
   const handleClickEditUkerAssessment = (index) => {
-    console.log("index => ", index);
-    console.log("sedang edit");
     const objData = dataUkerAssessment[index];
     const newData = [...dataUkerAssessment];
     newData[index] = { ...newData[index], is_edit: true };
@@ -650,31 +650,46 @@ const index = () => {
   };
 
   const handleSaveUkerAssessment = async (isUpdate, uker_id) => {
-    loadingSwal();
-    const response = await fetchApi(
-      isUpdate ? "PATCH" : "POST",
-      `${
-        process.env.NEXT_PUBLIC_API_URL_EWP
-      }/ewp/agile/assesment/audit_canvas/uker_assesment/${
-        isUpdate ? uker_id : params?.id
-      }`,
-      {
-        ref_auditee_branch_kode: parseInt(
-          payloadUkerAssessment?.branch?.branch_kode
-        ),
-        ref_auditee_branch_name: payloadUkerAssessment?.branch?.branch_name,
-        ref_auditee_orgeh_kode: parseInt(
-          payloadUkerAssessment?.orgeh?.orgeh_kode
-        ),
-        ref_auditee_orgeh_name: payloadUkerAssessment?.orgeh?.orgeh_name,
-        tipe_uker: payloadUkerAssessment?.tipe_uker,
-      }
-    );
-    if (response.isDismissed) return;
-    setIsAddNewRowUker(false);
-    auditCanvasMutate();
-    dispatch(resetObjPayloadUkerAssessment());
-    loadingSwal("close");
+    const payload = {
+      ref_auditee_orgeh_kode: payloadUkerAssessment?.orgeh?.orgeh_kode,
+      ref_auditee_branch_kode: payloadUkerAssessment?.branch?.branch_kode,
+      tipe_uker: payloadUkerAssessment?.tipe_uker,
+    };
+    const schemaMapping = {
+      schema: ukerAssessmentEWPSchema,
+      resetErrors: resetValidationErrorsUkerAssessment,
+      setErrors: setValidationErrorsUkerAssessment,
+    };
+    const validate = setErrorValidation(payload, dispatch, schemaMapping);
+
+    if (validate) {
+      loadingSwal();
+      const response = await fetchApi(
+        isUpdate ? "PATCH" : "POST",
+        `${
+          process.env.NEXT_PUBLIC_API_URL_EWP
+        }/ewp/agile/assesment/audit_canvas/uker_assesment/${
+          isUpdate ? uker_id : params?.id
+        }`,
+        {
+          ref_auditee_branch_kode: parseInt(
+            payloadUkerAssessment?.branch?.branch_kode
+          ),
+          ref_auditee_branch_name: payloadUkerAssessment?.branch?.branch_name,
+          ref_auditee_orgeh_kode: parseInt(
+            payloadUkerAssessment?.orgeh?.orgeh_kode
+          ),
+          ref_auditee_orgeh_name: payloadUkerAssessment?.orgeh?.orgeh_name,
+          tipe_uker: payloadUkerAssessment?.tipe_uker,
+        }
+      );
+      if (response.isDismissed) return;
+      setIsAddNewRowUker(false);
+      auditCanvasMutate();
+      dispatch(resetObjPayloadUkerAssessment());
+      dispatch(resetValidationErrorsUkerAssessment());
+      loadingSwal("close");
+    }
   };
   // [ END ] handler for uker assessment
 
@@ -1144,6 +1159,7 @@ const index = () => {
           showModal={showModalUkerAssessment}
           data={dataUkerAssessment}
           payload={payloadUkerAssessment}
+          validation={validationUkerAssessment}
           handleCloseModal={handleCloseModalUkerAssessment}
           handleChange={handleChangePayloadUkerAssessment}
           handleClickAddUkerAssessment={handleClickAddRowUkerAssessment}

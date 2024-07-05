@@ -22,6 +22,7 @@ const initialState = {
   objPayloadUkerAssessment: {},
   objPayloadAuditTimelines: {},
   validationErrorsTeam: {},
+  validationErrorsUkerAssessment: {},
   validationErrorsAuditTimelines: {},
 };
 
@@ -92,6 +93,9 @@ export const auditCanvasEWPAgileSlice = createSlice({
     setValidationErrorsTeam: (state, action) => {
       state.validationErrorsTeam = action.payload;
     },
+    setValidationErrorsUkerAssessment: (state, action) => {
+      state.validationErrorsUkerAssessment = action.payload;
+    },
     setValidationErrorsAuditTimelines: (state, action) => {
       state.validationErrorsAuditTimelines = action.payload;
     },
@@ -137,6 +141,9 @@ export const auditCanvasEWPAgileSlice = createSlice({
     resetValidationErrorsTeam: (state) => {
       state.validationErrorsTeam = {};
     },
+    resetValidationErrorsUkerAssessment: (state) => {
+      state.validationErrorsUkerAssessment = {};
+    },
     resetValidationErrorsAuditTimelines: (state) => {
       state.validationErrorsAuditTimelines = {};
     },
@@ -165,6 +172,7 @@ export const {
   setObjPayloadUkerAssessment,
   setObjPayloadAuditTimelines,
   setValidationErrorsTeam,
+  setValidationErrorsUkerAssessment,
   setValidationErrorsAuditTimelines,
   resetObjDataAuditTimelines,
   resetObjDataTeam,
@@ -180,6 +188,7 @@ export const {
   resetObjPayloadUkerAssessment,
   resetObjPayloadAuditTimelines,
   resetValidationErrorsTeam,
+  resetValidationErrorsUkerAssessment,
   resetValidationErrorsAuditTimelines,
 } = auditCanvasEWPAgileSlice.actions;
 
