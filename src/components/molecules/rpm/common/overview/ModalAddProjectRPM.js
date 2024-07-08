@@ -134,7 +134,7 @@ const ModalAddProjectRPM = ({
                         icon={<IconClose size="medium" />}
                       />
                     }
-                    placeholder={"Search by Project ID"}
+                    placeholder={"Search by Project Name"}
                     value={filter?.project_id || ""}
                     onChange={(e) =>
                       handleChangeFilter("project_id", e.target.value)

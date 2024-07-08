@@ -52,7 +52,7 @@ const TableApprovalQueue = ({ data, handleClickAction }) => {
               </div>
             </Header>
             <Header
-              width="23%"
+              width="15%"
               className="border-t border-r cell-custom-dataTables"
             >
               <div className="custom-table-header">
@@ -60,7 +60,7 @@ const TableApprovalQueue = ({ data, handleClickAction }) => {
               </div>
             </Header>
             <Header
-              width="12%"
+              width="8%"
               className="border-t border-r cell-custom-dataTables"
             >
               <div className="custom-table-header">
@@ -68,7 +68,7 @@ const TableApprovalQueue = ({ data, handleClickAction }) => {
               </div>
             </Header>
             <Header
-              width="12%"
+              width="11%"
               className="border-t border-r cell-custom-dataTables"
             >
               <div className="custom-table-header">
@@ -84,11 +84,19 @@ const TableApprovalQueue = ({ data, handleClickAction }) => {
               </div>
             </Header>
             <Header
+              width="13%"
+              className="border-t border-r cell-custom-dataTables"
+            >
+              <div className={`custom-table-header`}>
+                <p className="text-base font-bold">Fase Approval</p>
+              </div>
+            </Header>
+            <Header
               width="15%"
               className="border-t border-r rounded-se-xl cell-custom-dataTables"
             >
               <div className={`custom-table-header`}>
-                <p className="text-base font-bold">Fase Approval</p>
+                <p className="text-base font-bold">Waktu Pengajuan</p>
               </div>
             </Header>
           </Headers>
@@ -108,6 +116,7 @@ const TableApprovalQueue = ({ data, handleClickAction }) => {
                 fase_approval,
                 pn_kta_requester,
                 nama_kta_requester,
+                created_at,
               }) => (
                 <Row>
                   <Cell width="7%" className={`border-x ${customCell}`}>
@@ -139,17 +148,17 @@ const TableApprovalQueue = ({ data, handleClickAction }) => {
                       </p>
                     </div>
                   </Cell>
-                  <Cell width="23%" className={`border-r ${customCell} `}>
+                  <Cell width="15%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p className="text-sm">{project_name || "-"}</p>
                     </div>
                   </Cell>
-                  <Cell width="12%" className={`border-r ${customCell} `}>
+                  <Cell width="8%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p className="text-sm">{ref_metode?.nama || "-"}</p>
                     </div>
                   </Cell>
-                  <Cell width="12%" className={`border-r ${customCell} `}>
+                  <Cell width="11%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p className="text-sm">{ref_tipe?.nama || "-"}</p>
                     </div>
@@ -163,9 +172,18 @@ const TableApprovalQueue = ({ data, handleClickAction }) => {
                       </p>
                     </div>
                   </Cell>
-                  <Cell width="15%" className={`border-r ${customCell} `}>
+                  <Cell width="13%" className={`border-r ${customCell} `}>
                     <div className="custom-table-position-center">
                       <p className="text-sm">{fase_approval}</p>
+                    </div>
+                  </Cell>
+                  <Cell width="15%" className={`border-r ${customCell} `}>
+                    <div className="custom-table-position-center">
+                      <p className="text-sm">
+                        {new Date(created_at).toLocaleDateString("id-ID") +
+                          " " +
+                          new Date(created_at).toLocaleTimeString()}
+                      </p>
                     </div>
                   </Cell>
                 </Row>
