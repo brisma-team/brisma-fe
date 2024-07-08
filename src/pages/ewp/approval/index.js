@@ -58,7 +58,6 @@ const index = () => {
       if (approvalEWP?.data?.body?.antrian?.length) {
         const mapping = approvalEWP?.data?.body?.antrian?.map((queue) => {
           const { sub_modul, ref_tipe } = queue;
-
           return {
             ..._.pick(queue, [
               "ewp_id",
@@ -73,6 +72,7 @@ const index = () => {
               "pn_kta_requester",
               "nama_kta_requester",
             ]),
+            created_at: queue.createdAt,
             fase_approval: defineFaseApproval(sub_modul, ref_tipe),
           };
         });
