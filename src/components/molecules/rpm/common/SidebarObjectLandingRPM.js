@@ -19,6 +19,7 @@ const SidebarObjectLandingRPM = ({ withMenu, module_page, module_data }) => {
     kkpt_id: 0,
   });
   const baseUrl = `/rpm/${module_page}/${params?.id}/overview/${params?.kkpt_id}`;
+  const subModulBaseUrl = `/rpm/${module_page}/${params?.id}`;
   const [data, setData] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const { objectAuditDetailRPM } = useObjectAuditDetailRPM({
@@ -196,7 +197,7 @@ const SidebarObjectLandingRPM = ({ withMenu, module_page, module_data }) => {
                   return (
                     <Link
                       key={i}
-                      href={baseUrl + v?.href}
+                      href={subModulBaseUrl + v?.href}
                       className={`flex gap-2 items-center ${
                         currentPage === v?.href?.replace(/\//g, "")
                           ? `text-atlasian-blue-light`
