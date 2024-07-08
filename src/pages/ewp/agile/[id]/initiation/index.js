@@ -17,8 +17,8 @@ const index = () => {
 
   const { auditInfo } = useAuditInfo({ module: "qa", id: params?.id });
   const { landingStatus } = useLandingStatus({
-    module: "qa",
-    submodule: "mapa",
+    module: "agile",
+    submodule: "assesment",
     id: params?.id,
   });
 
@@ -53,20 +53,21 @@ const index = () => {
         {
           title: "Audit Canvas",
           description: "Project Mind-mapping BMC.",
-          // status: landingStatus?.data?.sumber_informasi ? "success" : "failed",
+          status: landingStatus?.data?.audit_canvas ? "success" : "failed",
           url: `${baseUrl}/initiation/audit-canvas`,
         },
         {
           title: "Working Agreements",
           description: "Project guidelines.",
-          // status: landingStatus?.data?.tim_audit ? "success" : "failed",
+          status: landingStatus?.data?.working_aggreements
+            ? "success"
+            : "failed",
           url: `${baseUrl}/initiation/working-agreements`,
         },
         {
           title: "Documents",
           description:
             "Tempat merangkum dan menginisiasi proposal workflow approval",
-          // status: landingStatus?.data?.anggaran ? "success" : "failed",
           url: `${baseUrl}/initiation/dokumen`,
         },
       ]);
