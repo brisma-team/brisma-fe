@@ -95,6 +95,7 @@ import overviewEWPAgileReducer from "./slices/ewp/agile/overview/overviewEWPAgil
 import infoEWPAgileReducer from "./slices/ewp/agile/info/infoEWPAgileSlice";
 import auditCanvasEWPAgileReducer from "./slices/ewp/agile/initiation/auditCanvasEWPAgileSlice";
 import workingAgreementsEWPAgileReducer from "./slices/ewp/agile/initiation/workingAgreementsEWPAgileSlice";
+import dokumenInitiationEWPAgileReducer from "./slices/ewp/agile/initiation/dokumenInitiationEWPAgileSlice";
 
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
@@ -236,6 +237,7 @@ export const store = configureStore({
     infoEWPAgile: infoEWPAgileReducer,
     auditCanvasEWPAgile: auditCanvasEWPAgileReducer,
     workingAgreementsEWPAgile: workingAgreementsEWPAgileReducer,
+    dokumenInitiationEWPAgile: dokumenInitiationEWPAgileReducer,
 
     // RPM Konsulting
     documentRPMKegiatan: documentRPMKegiatanReducer,

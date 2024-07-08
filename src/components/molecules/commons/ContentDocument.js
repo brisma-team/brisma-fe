@@ -22,6 +22,7 @@ const ContentDocument = ({
   withoutComment,
   overflowScrollX,
   width,
+  withBabNumber,
 }) => {
   const ref = useRef(null);
 
@@ -59,7 +60,9 @@ const ContentDocument = ({
               {v.content && (
                 <div className="px-4 h-full w-full relative page-content-a4">
                   <div className="flex justify-between">
-                    <div className="font-bold text-xl">{v.title}</div>
+                    <div className="font-bold text-xl">
+                      {withBabNumber ? `${i + 1}. ` : ""} {v.title}
+                    </div>
                     {!withoutComment ? (
                       <div className="flex items-center" ref={ref}>
                         <DivButton
