@@ -86,22 +86,23 @@ const index = () => {
         (code) => parseInt(code) >= 1 && parseInt(code) <= 6
       );
 
+      if (!isAuthorized) {
+        // Display error message with a delay
+        errorSwal("Maaf, Anda tidak diizinkan mengakses halaman ini.");
+        // Redirect to unauthorized page after 2 seconds
+        const timeout = setTimeout(() => {
+          router.push("/reference/");
+        }, 2000); // 2 seconds timeout
+
+        return () => clearTimeout(timeout); // Cleanup timeout if component unmounts
+      }
       setIsAuthorized(isAuthorized);
     }
   }, [user]);
 
-  useEffect(() => {
-    if (!isAuthorized) {
-      // Display error message with a delay
-      errorSwal("Maaf, Anda tidak diizinkan mengakses halaman ini.");
-      // Redirect to unauthorized page after 2 seconds
-      const timeout = setTimeout(() => {
-        router.push("/reference/");
-      }, 2000); // 2 seconds timeout
+  // useEffect(() => {
 
-      return () => clearTimeout(timeout); // Cleanup timeout if component unmounts
-    }
-  }, [isAuthorized]);
+  // }, [isAuthorized]);
 
   useEffect(() => {
     const mappingUsers = userSKAI?.data?.data?.map((v) => ({
