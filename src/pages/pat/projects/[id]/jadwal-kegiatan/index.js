@@ -267,6 +267,7 @@ const index = () => {
                   handleClickInfo={handleClickInfo}
                   handleClickUpdate={handleClickUpdate}
                   handleClickDelete={handleClickDelete}
+                  withButton={!isDisabled}
                 />
               );
             })}
