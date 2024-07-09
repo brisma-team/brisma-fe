@@ -66,13 +66,13 @@ const UkaDataTables = ({
                     <ButtonIcon
                       icon={<ButtonEdit />}
                       handleClick={() => handleClickUpdate(kode)}
-                      isDisabled={true}
+                      // isDisabled={true}
                       color={"yellow"}
                     />
                     <ButtonIcon
                       icon={<ButtonDelete />}
                       handleClick={() => handleClickDelete(kode)}
-                      isDisabled={true}
+                      // isDisabled={true}
                     />
                   </div>
                 ) : (
@@ -113,7 +113,7 @@ const UkaDataTables = ({
               text={"Tambah UKA"}
               textColor={"purple"}
               handler={handleClickAdd}
-              disabled={true}
+              // disabled={true}
             />
           </div>
         ) : (

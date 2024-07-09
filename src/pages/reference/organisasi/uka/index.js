@@ -5,43 +5,44 @@ import {
   CustomPagination,
   PageTitle,
 } from "@/components/atoms";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import {
   setObjData,
-  //   setObjPayload,
-  //   setValidationErrors,
+  setObjPayload,
+  // setValidationErrors,
   resetObjData,
-  //   resetObjPayload,
-  //   resetValidationErrors,
+  resetObjPayload,
+  resetValidationErrors,
 } from "@/slices/ewp/konsulting/perencanaan/anggaranEWPKonsultingSlice";
-// import { useSelector } from "react-redux";
-// import {
-//   confirmationSwal,
-//   fetchApi,
-//   loadingSwal,
-//   setErrorValidation,
-// } from "@/helpers";
+import { useSelector } from "react-redux";
+import {
+  confirmationSwal,
+  fetchApi,
+  loadingSwal,
+  // setErrorValidation,
+} from "@/helpers";
 import _ from "lodash";
 import {
   CardFilterUKA,
+  ModalAddUKA,
   UkaDataTables,
-  //   ModalAddUserSKAI,
 } from "@/components/molecules/reference/organisasi";
 // import anggaranEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/perencanaan/anggaranEWPKonsultingSchema";
 import { LayoutReferenceGeneral } from "@/layouts/reference";
 import useUka from "@/data/useUka";
-// import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
-  const baseUrl = `/reference/`;
+  const baseUrl = /reference/;
   const pathName = `${baseUrl}/perencanaan`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [typeModal, setTypeModal] = useState("");
   const [params, setParams] = useState({
-    kode_uka: "",
+    kode: "",
     name: "",
     branch: "",
     orgeh: "",
@@ -50,10 +51,13 @@ const index = () => {
     offset: 1,
     total_data: 10,
   });
-  const {
-    uka,
-    // ukaMutate
-  } = useUka(params, "search");
+  const { uka, ukaMutate } = useUka(params, "search");
+  const payload = useSelector(
+    (state) => state.anggaranEWPKonsulting.objPayload
+  );
+  const validation = useSelector(
+    (state) => state.anggaranEWPKonsulting.validationErrors
+  );
 
   useEffect(() => {
     setBreadcrumbs([
@@ -61,7 +65,7 @@ const index = () => {
       { name: "Reference", path: "/reference" },
       { name: "Organisasi", path: "/reference/organisasi" },
       {
-        name: `Unit Kantor Audit`,
+        name: "Unit Kantor Audit",
         path: pathName,
       },
     ]);
@@ -86,115 +90,128 @@ const index = () => {
     }
   }, [uka]);
 
-  //   useEffect(() => {
-  //     if (userSKAIDetail?.data && typeModal === "update") {
-  //       dispatch(
-  //         setObjPayload(
-  //           _.pick(userSKAIDetail?.data, [
-  //             "pn",
-  //             "name",
-  //             "kode_uka",
-  //             "name_uka",
-  //             "role",
-  //           ])
-  //         )
-  //       );
-  //     } else {
-  //       dispatch(resetObjPayload());
-  //     }
-  //   }, [userSKAIDetail, typeModal, showModal]);
+  // useEffect(() => {
+  //   if (userSKAIDetail?.data && typeModal === "update") {
+  //     dispatch(
+  //       setObjPayload(
+  //         _.pick(userSKAIDetail?.data, [
+  //           "pn",
+  //           "name",
+  //           "kode_uka",
+  //           "name_uka",
+  //           "role",
+  //         ])
+  //       )
+  //     );
+  //   } else {
+  //     dispatch(resetObjPayload());
+  //   }
+  // }, [userSKAIDetail, typeModal, showModal]);
 
   // [ START ] handler for modal
-  //   const handleCloseModal = async () => {
-  //     const confirm = await confirmationSwal(
-  //       "Apakah Anda ingin menutup modal ini?"
-  //     );
+  const handleCloseModal = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
 
-  //     if (!confirm.value) {
-  //       return;
-  //     }
+    if (!confirm.value) {
+      return;
+    }
 
-  //     setShowModal(false);
-  //     setTypeModal("");
-  //     setSelectedPn("");
-  //     dispatch(resetObjPayload());
-  //     dispatch(resetValidationErrors());
-  //   };
+    setShowModal(false);
+    setTypeModal("");
+    dispatch(resetObjPayload());
+    dispatch(resetValidationErrors());
+  };
 
-  //   const handleChangeText = (property, value) => {
-  //     const updatedData = {
-  //       ...payload,
-  //       [property]: value,
-  //     };
-  //     dispatch(setObjPayload(updatedData));
-  //   };
+  const handleChangeText = useCallback(
+    (property, value) => {
+      dispatch(setObjPayload({ ...payload, [property]: value }));
+    },
+    [dispatch, payload]
+  );
 
-  //   const handleSubmit = async (e) => {
-  //     e.preventDefault();
-  //     const schemaMapping = {
-  //       schema: anggaranEWPKonsultingSchema,
-  //       resetErrors: resetValidationErrors,
-  //       setErrors: setValidationErrors,
-  //     };
-  //     const validate = setErrorValidation(payload, dispatch, schemaMapping);
+  const handleChangeSelect = useCallback(
+    (property, value) => {
+      dispatch(setObjPayload({ ...payload, [property]: value }));
+    },
+    [dispatch, payload]
+  );
 
-  //     const objPayload = {
-  //       amount: parseInt(payload?.amount?.replace(/\./g, "")),
-  //       ..._.omit(payload, ["amount"]),
-  //     };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // const transformedPayload = {
+    //   kode: payload.pn.value.pn,
+    //   name: payload.pn.value.name,
+    //   branch: payload.uka_kode.value,
+    //   orgeh: payload.role_kode.map((role) => role.value),
+    // };
+    // const schemaMapping = {
+    //   schema: anggaranEWPKonsultingSchema,
+    //   resetErrors: resetValidationErrors,
+    //   setErrors: setValidationErrors,
+    // };
+    // const validate = setErrorValidation(payload, dispatch, schemaMapping);
 
-  //     if (validate) {
-  //       loadingSwal();
-  //       if (typeModal === "update") {
-  //         await fetchApi(
-  //           "PATCH",
-  //           `${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/reference/user_skai/update`,
-  //           { pn: "", role_kode: [], uka_kode: "", ...objPayload }
-  //         );
-  //       } else {
-  //         await fetchApi(
-  //           "POST",
-  //           `${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/referencee/user_skai/create`,
-  //           objPayload
-  //         );
-  //       }
+    // const objPayload = {
+    //   amount: parseInt(payload?.amount?.replace(/\./g, "")),
+    //   ..._.omit(payload, ["amount"]),
+    // };
+    // const validate = true;
+    console.log("payload");
+    console.log(payload);
+    // console.log("transformedPayload");
+    // return console.log(transformedPayload);
+    // if (validate) {
+    //   loadingSwal();
+    //   if (typeModal === "update") {
+    //     await fetchApi(
+    //       "PATCH",
+    //       ${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/reference/uka/update,
+    //       { kode: "", name: "", orgeh_kode: "", branch_kode: "", ...payload }
+    //     );
+    //   } else {
+    //     await fetchApi(
+    //       "POST",
+    //       ${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/referencee/uka/create,
+    //       payload
+    //     );
+    //   }
 
-  //       userSKAIMutate();
-  //       setShowModal(false);
-  //       setTypeModal("");
-  //       setSelectedPn("");
-  //       dispatch(resetObjPayload());
-  //       loadingSwal("close");
-  //     }
-  //   };
+    //   ukaMutate();
+    //   setShowModal(false);
+    //   setTypeModal("");
+    //   dispatch(resetObjPayload());
+    //   loadingSwal("close");
+    // }
+  };
   // [ END ] handler for modal
 
   // [ START ] handler for table
-  //   const handleClickAddTable = () => {
-  //     setShowModal(true);
-  //   };
+  const handleClickAddTable = () => {
+    setShowModal(true);
+  };
 
-  //   const handleClickUpdateTable = async (id) => {
-  //     setShowModal(true);
-  //     setTypeModal("update");
-  //     setSelectedPn(id);
-  //   };
+  const handleClickUpdateTable = async () => {
+    setShowModal(true);
+    setTypeModal("update");
+  };
 
-  //   const handleClickDeleteTable = async (id) => {
-  //     const confirm = await confirmationSwal("Menghapus Pengguna.");
+  const handleClickDeleteTable = async (id) => {
+    const confirm = await confirmationSwal("Menghapus Pengguna.");
 
-  //     if (!confirm.value) {
-  //       return;
-  //     }
-  //     loadingSwal();
-  //     await fetchApi(
-  //       "DELETE",
-  //       `${process.env.NEXT_PUBLIC_API_URL_EWP}/reference/user_skai/delete/${id}`,
-  //       {}
-  //     );
-  //     ukaMutate();
-  //     loadingSwal("close");
-  //   };
+    if (!confirm.value) {
+      return;
+    }
+    loadingSwal();
+    await fetchApi(
+      "DELETE",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/reference/user_skai/delete/${id}`,
+      {}
+    );
+    ukaMutate();
+    loadingSwal("close");
+  };
   // [ END ] handler for table
 
   return (
@@ -210,7 +227,7 @@ const index = () => {
           <div className="w-36 bg-atlasian-blue-light rounded">
             <ButtonField
               handler={() => setShowFilter(!showFilter)}
-              text={showFilter ? `Tutup Filter` : `Tampilkan Filter`}
+              text={showFilter ? "Tutup Filter" : "Tampilkan Filter"}
             />
           </div>
         </div>
@@ -230,10 +247,10 @@ const index = () => {
             <div className="my-2 " />
             <UkaDataTables
               data={uka?.data?.data}
-              //   setShowModal={setShowModal}
-              //   handleClickAdd={handleClickAddTable}
-              //   handleClickUpdate={handleClickUpdateTable}
-              //   handleClickDelete={handleClickDeleteTable}
+              setShowModal={setShowModal}
+              handleClickAdd={handleClickAddTable}
+              handleClickUpdate={handleClickUpdateTable}
+              handleClickDelete={handleClickDeleteTable}
             />
             <CustomPagination
               defaultCurrentPage={1}
@@ -252,15 +269,16 @@ const index = () => {
           </div>
         </Card>
       </div>
-      {/* <ModalAddUserSKAI
+      <ModalAddUKA
         data={payload}
         typeModal={typeModal}
         showModal={showModal}
         validation={validation}
         handleChangeText={handleChangeText}
+        handleChangeSelect={handleChangeSelect}
         handleCloseModal={handleCloseModal}
         handleSubmit={handleSubmit}
-      /> */}
+      />
       {/* End Content */}
     </LayoutReferenceGeneral>
   );
