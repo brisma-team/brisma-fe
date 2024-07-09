@@ -118,7 +118,8 @@ const DefaultProfile = ({ user }) => (
       <div className="px-3">
         <div className="flex flex-col items-center justify-center">
           <div className="font-bold  text-base">{user?.fullName}</div>
-          <div className="text-base mb-1.5">{user?.pn}</div>
+          <div className="text-base-mt-1 mb-2">{user?.pn}</div>
+          <p className="font-semibold text-base -mt-1 mb-2">{user?.uka_name}</p>
           <RoleLabel text={user?.jabatan} />
           <div className="mb-2" />
         </div>
