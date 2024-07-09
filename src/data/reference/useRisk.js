@@ -8,6 +8,9 @@ const useRisk = (type, params) => {
     case "all":
       query = `/${keyword}`;
       break;
+    case "mapping":
+      query = `/mapping/${params?.id}`;
+      break;
   }
   const path = `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/mtd_risk_issue${query}`;
   const { data, error, mutate, isLoading } = useSWR(path, withTokenFetcher);

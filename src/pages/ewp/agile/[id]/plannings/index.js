@@ -55,34 +55,34 @@ const index = () => {
           description:
             "Fitur utama pada flow Agile Method. Dimana segala macam kegiatan dan kebutuhan dari proyek dijabarkan.",
           status: landingStatus?.data?.aggregation ? "success" : "failed",
-          url: `${baseUrl}/initiation/story-aggregations`,
+          url: `${baseUrl}/plannings/story-aggregations`,
         },
         {
           title: "User Story (CRUD)",
           description:
             "Penjabaran kebutuhan audit sebagai parent dari implementasi kegiatan audit.",
           status: landingStatus?.data?.audit_backlog ? "success" : "failed",
-          url: `${baseUrl}/initiation/user-story`,
+          url: `${baseUrl}/plannings/user-story`,
         },
         {
           title: "Audit Backlog (CRUD)",
           description:
             "Fitur utama pada flow Agile Method. Dimana segala macam kegiatan dan kebutuhan dari proyek dijabarkan.",
           status: landingStatus?.data?.audit_backlog ? "success" : "failed",
-          url: `${baseUrl}/initiation/audit-backlog`,
+          url: `${baseUrl}/plannings/audit-backlog`,
         },
         {
           title: "Sprint Planning",
           description:
             "Bagian ini memuat business value atau Tujuan  yang diharapkan dari melakukan audit di area tersebut.",
           status: landingStatus?.data?.sprint_planning ? "success" : "failed",
-          url: `${baseUrl}/initiation/sprint-planning`,
+          url: `${baseUrl}/plannings/sprint-planning`,
         },
         {
           title: "Dokumen",
           description:
             "Tempat merangkum dan menginisiasi proposal workflow approval.",
-          url: `${baseUrl}/initiation/dokumen`,
+          url: `${baseUrl}/plannings/dokumen`,
         },
       ]);
     } else {
