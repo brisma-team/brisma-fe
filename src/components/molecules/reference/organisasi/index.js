@@ -1,13 +1,15 @@
 import UserSkaiDataTables from "./userSkaiDataTables";
-import ModalAddUserSKAI from "./ModalAddUserSKAI";
 import UkaDataTables from "./UkaDataTables";
+import ModalAddUserSKAI from "./ModalAddUserSKAI";
+import ModalAddUKA from "./ModalAddUKA";
 import CardFilterUserSKAI from "./CardFilterUserSKAI";
 import CardFilterUKA from "./CardFilterUKA";
 
 export {
   UserSkaiDataTables,
-  ModalAddUserSKAI,
   UkaDataTables,
+  ModalAddUserSKAI,
+  ModalAddUKA,
   CardFilterUserSKAI,
   CardFilterUKA,
 };
