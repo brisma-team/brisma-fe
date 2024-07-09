@@ -2,7 +2,7 @@ import * as yup from "yup";
 
 const userSkaiSchema = yup.object().shape({
   pn: yup.string().required("Wajib diisi"),
-  name: yup.string().required("Wajib diisi"),
+  // name: yup.string().required("Wajib diisi"),
   uka_kode: yup.string().required("Wajib diisi"),
   role_kode: yup
     .array()
