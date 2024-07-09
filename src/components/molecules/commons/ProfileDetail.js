@@ -7,7 +7,10 @@ const ProfileDetail = () => {
       <AvatarDefaultExample />
       <div className="pt-4 flex flex-col items-center justify-center">
         <p className="font-bold text-base">{user?.data?.fullName}</p>
-        <p className="-mt-1 mb-2 text-base">{user?.data?.pn}</p>
+        <p className="text-base -mt-1">{user?.data?.pn}</p>
+        <p className="font-semibold text-base -mt-1 mb-2">
+          {user?.data?.uka_name}
+        </p>
         <RoleLabel text={user?.data?.jabatan} />
       </div>
     </div>

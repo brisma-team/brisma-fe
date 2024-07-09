@@ -46,7 +46,7 @@ const CardFilterUserSKAI = ({ showFilter, filter, setFilter }) => {
             </div>
             <div className="w-[50%]">
               <TextInput
-                placeholder="Personal Name"
+                placeholder="Name"
                 icon={
                   <ButtonIcon
                     handleClick={() => handleReset("name")}
