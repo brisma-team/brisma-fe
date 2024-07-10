@@ -173,9 +173,9 @@ const index = () => {
     const transformedPayload = {
       kode: payload?.kode,
       name: payload?.name,
-      branch: payload?.branch?.value?.branch,
+      branch: payload?.branch?.value?.branch_kode,
       branch_name: payload?.branch?.value?.branch_name,
-      orgeh: payload?.orgeh?.value?.orgeh,
+      orgeh: payload?.orgeh?.value?.orgeh_kode,
       orgeh_name: payload?.orgeh?.value?.orgeh_name,
     };
     const schemaMapping = {
