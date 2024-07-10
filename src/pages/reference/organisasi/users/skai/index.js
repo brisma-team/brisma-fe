@@ -182,10 +182,10 @@ const index = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const transformedPayload = {
-      pn: payload.pn.value.pn,
-      name: payload.pn.value.name,
-      uka_kode: payload.uka_kode.value,
-      role_kode: payload.role_kode.map((role) => role.value),
+      pn: payload?.pn?.value?.pn,
+      name: payload?.pn.value?.name,
+      uka_kode: payload?.uka_kode?.value,
+      role_kode: payload?.role_kode?.map((role) => role?.value),
     };
     const valid = setErrorValidation(transformedPayload, dispatch, {
       schema: userSkaiSchema,
