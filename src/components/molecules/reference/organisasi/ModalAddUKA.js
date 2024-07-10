@@ -48,50 +48,6 @@ const ModalAddUKA = ({
       name: "orgeh",
       inputText: false,
     },
-<<<<<<< HEAD
-/*    {
-      label: "Uka Type*",
-      value: data?.uka_type || "",
-      placeholder: "Pilih Uka Type",
-      name: "uka_type",
-      inputText: false,
-    },
-    {
-      label: "Region",
-      value: data?.region || "",
-      placeholder: "Masukkan Region",
-      name: "region",
-      inputText: true,
-    },
-    {
-      label: "Alamat",
-      value: data?.alamat || "",
-      placeholder: "Masukkan Alamat",
-      name: "alamat",
-      inputText: true,
-    },
-    {
-      label: "No. Telepon",
-      value: data?.telp || "",
-      placeholder: "Masukkan No. Telepon",
-      name: "telp",
-      inputText: true,
-    },
-    {
-      label: "Email",
-      value: data?.email || "",
-      placeholder: "Masukkan Email",
-      name: "email",
-      inputText: true,
-    },
-    {
-      label: "Fax",
-      value: data?.fax || "",
-      placeholder: "Masukkan Fax",
-      name: "fax",
-      inputText: true,
-    },*/
-=======
     // {
     //   label: "Uka Type*",
     //   value: data?.uka_type || "",
@@ -134,7 +90,6 @@ const ModalAddUKA = ({
     //   name: "fax",
     //   inputText: true,
     // },
->>>>>>> aaf3fbc28c2c09cb85ed853d14ae8d1828647119
   ];
   return (
     <Modal
