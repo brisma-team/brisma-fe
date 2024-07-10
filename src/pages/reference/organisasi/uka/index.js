@@ -29,14 +29,17 @@ import {
   UkaDataTables,
 } from "@/components/molecules/reference/organisasi";
 // import anggaranEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/perencanaan/anggaranEWPKonsultingSchema";
+import ukaSchema from "@/helpers/schemas/reference/ukaSchema";
 import { LayoutReferenceGeneral } from "@/layouts/reference";
 import useUka from "@/data/useUka";
+import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
   const baseUrl = /reference/;
   const pathName = `${baseUrl}/perencanaan`;
 
+const [isAuthorized, setIsAuthorized] = useState(false);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -52,6 +55,7 @@ const index = () => {
     total_data: 10,
   });
   const { uka, ukaMutate } = useUka(params, "search");
+  const { user } = useUser();
   const payload = useSelector(
     (state) => state.anggaranEWPKonsulting.objPayload
   );
@@ -70,6 +74,29 @@ const index = () => {
       },
     ]);
   }, []);
+
+useEffect(() => {
+    if (user !== undefined) {
+      const { role_kode } = user.data;
+
+      // Check if any role_kode is between 1 and 6
+      const isAuthorized = role_kode.some(
+        (code) => parseInt(code) >= 1 && parseInt(code) <= 6
+      );
+
+      if (!isAuthorized) {
+        // Display error message with a delay
+        errorSwal("Maaf, Anda tidak diizinkan mengakses halaman ini.");
+        // Redirect to unauthorized page after 2 seconds
+        const timeout = setTimeout(() => {
+          router.push("/reference/");
+        }, 2000); // 2 seconds timeout
+
+        return () => clearTimeout(timeout); // Cleanup timeout if component unmounts
+      }
+      setIsAuthorized(isAuthorized);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (uka?.data?.data?.length) {
@@ -140,50 +167,43 @@ const index = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const transformedPayload = {
-    //   kode: payload.pn.value.pn,
-    //   name: payload.pn.value.name,
-    //   branch: payload.uka_kode.value,
-    //   orgeh: payload.role_kode.map((role) => role.value),
-    // };
-    // const schemaMapping = {
-    //   schema: anggaranEWPKonsultingSchema,
-    //   resetErrors: resetValidationErrors,
-    //   setErrors: setValidationErrors,
-    // };
-    // const validate = setErrorValidation(payload, dispatch, schemaMapping);
+     const transformedPayload = {
+       kode: payload?.kode,
+       name: payload?.name,
+       branch: payload?.branch?.value?.branch_kode,
+       branch_name: payload?.branch?.value?.branch_name,
+       orgeh: payload?.orgeh?.value?.orgeh_kode,
+       orgeh_name: payload?.orgeh?.value?.orgeh_name,
+     };
+     const schemaMapping = {
+       schema: ukaSchema,
+       resetErrors: resetValidationErrors,
+       setErrors: setValidationErrors,
+     };
+     const validate = setErrorValidation(payload, dispatch, schemaMapping);
 
-    // const objPayload = {
-    //   amount: parseInt(payload?.amount?.replace(/\./g, "")),
-    //   ..._.omit(payload, ["amount"]),
-    // };
-    // const validate = true;
-    console.log("payload");
-    console.log(payload);
-    // console.log("transformedPayload");
-    // return console.log(transformedPayload);
-    // if (validate) {
-    //   loadingSwal();
-    //   if (typeModal === "update") {
-    //     await fetchApi(
-    //       "PATCH",
-    //       ${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/reference/uka/update,
-    //       { kode: "", name: "", orgeh_kode: "", branch_kode: "", ...payload }
-    //     );
-    //   } else {
-    //     await fetchApi(
-    //       "POST",
-    //       ${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/referencee/uka/create,
-    //       payload
-    //     );
-    //   }
+     if (validate) {
+       loadingSwal();
+       if (typeModal === "update") {
+         await fetchApi(
+           "PATCH",
+           ${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/reference/uka/update,
+           { ...transformedPayload }
+         );
+       } else {
+         await fetchApi(
+           "POST",
+           ${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/referencee/uka/create,
+           transformedPayload
+         );
+       }
 
-    //   ukaMutate();
-    //   setShowModal(false);
-    //   setTypeModal("");
-    //   dispatch(resetObjPayload());
-    //   loadingSwal("close");
-    // }
+       ukaMutate();
+       setShowModal(false);
+       setTypeModal("");
+       dispatch(resetObjPayload());
+       loadingSwal("close");
+     }
   };
   // [ END ] handler for modal
 
@@ -198,7 +218,7 @@ const index = () => {
   };
 
   const handleClickDeleteTable = async (id) => {
-    const confirm = await confirmationSwal("Menghapus Pengguna.");
+    const confirm = await confirmationSwal("Apakah anda yakin untuk menghapus Unit Kantor Audit ini?");
 
     if (!confirm.value) {
       return;
@@ -206,7 +226,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "DELETE",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/reference/user_skai/delete/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/reference/uka/delete/${id}`,
       {}
     );
     ukaMutate();

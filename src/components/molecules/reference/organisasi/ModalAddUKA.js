@@ -49,7 +49,7 @@ const ModalAddUKA = ({
       name: "orgeh",
       inputText: false,
     },
-    {
+/*    {
       label: "Uka Type*",
       value: data?.uka_type || "",
       placeholder: "Pilih Uka Type",
@@ -90,7 +90,7 @@ const ModalAddUKA = ({
       placeholder: "Masukkan Fax",
       name: "fax",
       inputText: true,
-    },
+    },*/
   ];
   return (
     <Modal
