@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import {
   setObjData,
   setObjPayload,
-  // setValidationErrors,
+  setValidationErrors,
   resetObjData,
   resetObjPayload,
   resetValidationErrors,
@@ -18,9 +18,10 @@ import {
 import { useSelector } from "react-redux";
 import {
   confirmationSwal,
+  errorSwal,
   fetchApi,
   loadingSwal,
-  // setErrorValidation,
+  setErrorValidation,
 } from "@/helpers";
 import _ from "lodash";
 import {
@@ -32,11 +33,17 @@ import {
 import ukaSchema from "@/helpers/schemas/reference/ukaSchema";
 import { LayoutReferenceGeneral } from "@/layouts/reference";
 import useUka from "@/data/useUka";
+<<<<<<< HEAD
+=======
+import ukaSchema from "@/helpers/schemas/reference/ukaSchema";
+import { useRouter } from "next/router";
+>>>>>>> aaf3fbc28c2c09cb85ed853d14ae8d1828647119
 import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
-  const baseUrl = /reference/;
+  const baseUrl = "/reference/";
+  const router = useRouter();
   const pathName = `${baseUrl}/perencanaan`;
 
 const [isAuthorized, setIsAuthorized] = useState(false);
@@ -44,6 +51,7 @@ const [isAuthorized, setIsAuthorized] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [typeModal, setTypeModal] = useState("");
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [params, setParams] = useState({
     kode: "",
     name: "",
@@ -62,6 +70,29 @@ const [isAuthorized, setIsAuthorized] = useState(false);
   const validation = useSelector(
     (state) => state.anggaranEWPKonsulting.validationErrors
   );
+
+  useEffect(() => {
+    if (user !== undefined) {
+      const { role_kode } = user.data;
+
+      // Check if any role_kode is between 1 and 6
+      const isAuthorized = role_kode.some(
+        (code) => parseInt(code) >= 1 && parseInt(code) <= 6
+      );
+
+      if (!isAuthorized) {
+        // Display error message with a delay
+        errorSwal("Maaf, Anda tidak diizinkan mengakses halaman ini.");
+        // Redirect to unauthorized page after 2 seconds
+        const timeout = setTimeout(() => {
+          router.push("/reference/");
+        }, 2000); // 2 seconds timeout
+
+        return () => clearTimeout(timeout); // Cleanup timeout if component unmounts
+      }
+      setIsAuthorized(isAuthorized);
+    }
+  }, [user]);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -167,6 +198,7 @@ useEffect(() => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+<<<<<<< HEAD
      const transformedPayload = {
        kode: payload?.kode,
        name: payload?.name,
@@ -204,6 +236,49 @@ useEffect(() => {
        dispatch(resetObjPayload());
        loadingSwal("close");
      }
+=======
+    const transformedPayload = {
+      kode: payload?.kode,
+      name: payload?.name,
+      branch: payload?.branch?.value?.branch,
+      branch_name: payload?.branch?.value?.branch_name,
+      orgeh: payload?.orgeh?.value?.orgeh,
+      orgeh_name: payload?.orgeh?.value?.orgeh_name,
+    };
+    const schemaMapping = {
+      schema: ukaSchema,
+      resetErrors: resetValidationErrors,
+      setErrors: setValidationErrors,
+    };
+    const validate = setErrorValidation(
+      transformedPayload,
+      dispatch,
+      schemaMapping
+    );
+
+    if (validate) {
+      loadingSwal();
+      if (typeModal === "update") {
+        await fetchApi(
+          "PATCH",
+          `${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/reference/uka/update`,
+          { ...transformedPayload }
+        );
+      } else {
+        await fetchApi(
+          "POST",
+          `${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/reference/uka/create`,
+          transformedPayload
+        );
+      }
+
+      ukaMutate();
+      setShowModal(false);
+      setTypeModal("");
+      dispatch(resetObjPayload());
+      loadingSwal("close");
+    }
+>>>>>>> aaf3fbc28c2c09cb85ed853d14ae8d1828647119
   };
   // [ END ] handler for modal
 
@@ -218,7 +293,13 @@ useEffect(() => {
   };
 
   const handleClickDeleteTable = async (id) => {
+<<<<<<< HEAD
     const confirm = await confirmationSwal("Apakah anda yakin untuk menghapus Unit Kantor Audit ini?");
+=======
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin akan menghapus UKA ini?."
+    );
+>>>>>>> aaf3fbc28c2c09cb85ed853d14ae8d1828647119
 
     if (!confirm.value) {
       return;
@@ -271,6 +352,7 @@ useEffect(() => {
               handleClickAdd={handleClickAddTable}
               handleClickUpdate={handleClickUpdateTable}
               handleClickDelete={handleClickDeleteTable}
+              withoutButtonAction={!isAuthorized}
             />
             <CustomPagination
               defaultCurrentPage={1}
