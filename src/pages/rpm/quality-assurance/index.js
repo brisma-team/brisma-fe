@@ -285,6 +285,7 @@ const index = () => {
       `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/qa/projects/disable/${id}`,
       {}
     );
+    overviewRPMMutate();
     loadingSwal("close");
   };
 
@@ -302,6 +303,7 @@ const index = () => {
       `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/qa/projects/close/${id}`,
       {}
     );
+    overviewRPMMutate();
     loadingSwal("close");
   };
   return (
