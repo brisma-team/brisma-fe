@@ -194,13 +194,13 @@ const index = () => {
       if (typeModal === "update") {
         await fetchApi(
           "PATCH",
-          `${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/reference/uka/update`,
+          `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/uka/update`,
           { ...transformedPayload }
         );
       } else {
         await fetchApi(
           "POST",
-          `${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/reference/uka/create`,
+          `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/uka/create`,
           transformedPayload
         );
       }
@@ -235,7 +235,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "DELETE",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/reference/uka/delete/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/uka/delete/${id}`,
       {}
     );
     ukaMutate();
