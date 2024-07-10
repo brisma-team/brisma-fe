@@ -18,6 +18,7 @@ import {
 import { useSelector } from "react-redux";
 import {
   confirmationSwal,
+  errorSwal,
   fetchApi,
   loadingSwal,
   setErrorValidation,
@@ -32,16 +33,20 @@ import {
 import { LayoutReferenceGeneral } from "@/layouts/reference";
 import useUka from "@/data/useUka";
 import ukaSchema from "@/helpers/schemas/reference/ukaSchema";
+import { useRouter } from "next/router";
+import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
-  const baseUrl = /reference/;
+  const baseUrl = "/reference/";
+  const router = useRouter();
   const pathName = `${baseUrl}/perencanaan`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [typeModal, setTypeModal] = useState("");
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [params, setParams] = useState({
     kode: "",
     name: "",
@@ -53,12 +58,36 @@ const index = () => {
     total_data: 10,
   });
   const { uka, ukaMutate } = useUka(params, "search");
+  const { user } = useUser();
   const payload = useSelector(
     (state) => state.anggaranEWPKonsulting.objPayload
   );
   const validation = useSelector(
     (state) => state.anggaranEWPKonsulting.validationErrors
   );
+
+  useEffect(() => {
+    if (user !== undefined) {
+      const { role_kode } = user.data;
+
+      // Check if any role_kode is between 1 and 6
+      const isAuthorized = role_kode.some(
+        (code) => parseInt(code) >= 1 && parseInt(code) <= 6
+      );
+
+      if (!isAuthorized) {
+        // Display error message with a delay
+        errorSwal("Maaf, Anda tidak diizinkan mengakses halaman ini.");
+        // Redirect to unauthorized page after 2 seconds
+        const timeout = setTimeout(() => {
+          router.push("/reference/");
+        }, 2000); // 2 seconds timeout
+
+        return () => clearTimeout(timeout); // Cleanup timeout if component unmounts
+      }
+      setIsAuthorized(isAuthorized);
+    }
+  }, [user]);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -196,7 +225,9 @@ const index = () => {
   };
 
   const handleClickDeleteTable = async (id) => {
-    const confirm = await confirmationSwal("Menghapus Pengguna.");
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin akan menghapus UKA ini?."
+    );
 
     if (!confirm.value) {
       return;
@@ -204,7 +235,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "DELETE",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/reference/user_skai/delete/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/reference/uka/delete/${id}`,
       {}
     );
     ukaMutate();
@@ -249,6 +280,7 @@ const index = () => {
               handleClickAdd={handleClickAddTable}
               handleClickUpdate={handleClickUpdateTable}
               handleClickDelete={handleClickDeleteTable}
+              withoutButtonAction={!isAuthorized}
             />
             <CustomPagination
               defaultCurrentPage={1}
