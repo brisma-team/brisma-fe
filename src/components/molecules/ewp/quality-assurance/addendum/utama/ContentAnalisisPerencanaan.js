@@ -152,8 +152,10 @@ const ContentAnalisisPerencanaan = ({
       orgeh_kode: selectedDataInternal?.orgeh_kode,
       branch_kode: selectedDataInternal?.branch_kode,
     });
-  const { analisisPerencanaanProyekDetail } =
-    useAnalisisPerencanaanProyekDetail({ id: selectedProyekId });
+  const {
+    analisisPerencanaanProyekDetail,
+    analisisPerencanaanProyekDetailMutate,
+  } = useAnalisisPerencanaanProyekDetail({ id: selectedProyekId });
   const { ringkasanMutate } = useRingkasan({
     id: params?.id,
     module: "qa",
@@ -395,6 +397,7 @@ const ContentAnalisisPerencanaan = ({
 
     analisisPerencanaanInternalMutate();
     analisisPerencanaanEksternalMutate();
+    analisisPerencanaanProyekDetailMutate();
     ringkasanMutate();
     loadingSwal("close");
   };
@@ -417,6 +420,7 @@ const ContentAnalisisPerencanaan = ({
 
     analisisPerencanaanInternalMutate();
     analisisPerencanaanEksternalMutate();
+    analisisPerencanaanProyekDetailMutate();
     ringkasanMutate();
     loadingSwal("close");
   };
@@ -577,6 +581,7 @@ const ContentAnalisisPerencanaan = ({
         { project: payload }
       );
 
+      analisisPerencanaanProyekDetailMutate();
       analisisPerencanaanInternalMutate();
       ringkasanMutate();
       dispatch(resetObjPayloadInternal());
@@ -674,6 +679,7 @@ const ContentAnalisisPerencanaan = ({
         }
       );
 
+      analisisPerencanaanProyekDetailMutate();
       analisisPerencanaanInternalMutate();
       analisisPerencanaanEksternalMutate();
       ringkasanMutate();
@@ -767,6 +773,7 @@ const ContentAnalisisPerencanaan = ({
             handleSubmit={handleSubmitModalInternal}
           />
           <ModalAddProjectEksternal
+            dataPic={dataPicAnalisator}
             showModal={showModalEksternal}
             payload={payloadEksternal}
             selectedData={selectedDataEksternal}
