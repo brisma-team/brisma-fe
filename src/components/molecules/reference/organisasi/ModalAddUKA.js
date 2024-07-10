@@ -19,7 +19,6 @@ const ModalAddUKA = ({
   handleCloseModal,
   handleSubmit,
 }) => {
-  console.log(data);
   const fields = [
     {
       label: "Kode Kantor Audit*",

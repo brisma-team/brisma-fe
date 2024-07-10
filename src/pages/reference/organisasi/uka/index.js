@@ -240,9 +240,9 @@ useEffect(() => {
     const transformedPayload = {
       kode: payload?.kode,
       name: payload?.name,
-      branch: payload?.branch?.value?.branch,
+      branch: payload?.branch?.value?.branch_kode,
       branch_name: payload?.branch?.value?.branch_name,
-      orgeh: payload?.orgeh?.value?.orgeh,
+      orgeh: payload?.orgeh?.value?.orgeh_kode,
       orgeh_name: payload?.orgeh?.value?.orgeh_name,
     };
     const schemaMapping = {
@@ -261,13 +261,13 @@ useEffect(() => {
       if (typeModal === "update") {
         await fetchApi(
           "PATCH",
-          `${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/reference/uka/update`,
+          `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/uka/update`,
           { ...transformedPayload }
         );
       } else {
         await fetchApi(
           "POST",
-          `${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/reference/uka/create`,
+          `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/uka/create`,
           transformedPayload
         );
       }
@@ -307,7 +307,7 @@ useEffect(() => {
     loadingSwal();
     await fetchApi(
       "DELETE",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/reference/uka/delete/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/uka/delete/${id}`,
       {}
     );
     ukaMutate();
