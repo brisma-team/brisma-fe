@@ -282,7 +282,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/qa/disable/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/qa/projects/disable/${id}`,
       {}
     );
     loadingSwal("close");
@@ -299,7 +299,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/qa/close/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/qa/projects/close/${id}`,
       {}
     );
     loadingSwal("close");
