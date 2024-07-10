@@ -330,7 +330,7 @@ const index = () => {
           rekomendasi_kkpt: responseKkptInfo?.rekomendasi_kkpt,
           action_plan_kkpt: {
             ..._.pick(responseKkptInfo?.action_plan_kkpt, ["prev_id", "id"]),
-            nama: payload?.action_plan,
+            name: payload?.action_plan,
             batas_waktu: payload?.deadline,
           },
         };
