@@ -285,6 +285,21 @@ const index = () => {
     dispatch(setObjPayload({ ...payload, [property]: value }));
   };
 
+  const handleClickCancel = async (id) => {
+    const confirm = await confirmationSwal(
+      "Aktivitas ini akan reset perubahan negosiasi. Apakah anda yakin?"
+    );
+    if (!confirm.value) return;
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/qa/rekomendasi/nego/cancel/${id}`,
+      {}
+    );
+    rekomendasiListMutate();
+    loadingSwal("close");
+  };
+
   const handleSubmit = async () => {
     const responseKkptInfo = actionPlan?.data;
     const objData = {
@@ -413,6 +428,7 @@ const index = () => {
           baseUrl={baseUrl}
           handleToggleExpansion={handleToggleExpansion}
           handleClickInisiasiNegosiasi={handleClickInisiasiNegosiasi}
+          handleClickCancel={handleClickCancel}
         />
       </div>
       <ModalInisiasiNegosiasi
