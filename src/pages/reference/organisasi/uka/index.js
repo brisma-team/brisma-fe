@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import {
   setObjData,
   setObjPayload,
-  // setValidationErrors,
+  setValidationErrors,
   resetObjData,
   resetObjPayload,
   resetValidationErrors,
@@ -20,7 +20,7 @@ import {
   confirmationSwal,
   fetchApi,
   loadingSwal,
-  // setErrorValidation,
+  setErrorValidation,
 } from "@/helpers";
 import _ from "lodash";
 import {
@@ -31,6 +31,7 @@ import {
 // import anggaranEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/perencanaan/anggaranEWPKonsultingSchema";
 import { LayoutReferenceGeneral } from "@/layouts/reference";
 import useUka from "@/data/useUka";
+import ukaSchema from "@/helpers/schemas/reference/ukaSchema";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -140,50 +141,47 @@ const index = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const transformedPayload = {
-    //   kode: payload.pn.value.pn,
-    //   name: payload.pn.value.name,
-    //   branch: payload.uka_kode.value,
-    //   orgeh: payload.role_kode.map((role) => role.value),
-    // };
-    // const schemaMapping = {
-    //   schema: anggaranEWPKonsultingSchema,
-    //   resetErrors: resetValidationErrors,
-    //   setErrors: setValidationErrors,
-    // };
-    // const validate = setErrorValidation(payload, dispatch, schemaMapping);
+    const transformedPayload = {
+      kode: payload?.kode,
+      name: payload?.name,
+      branch: payload?.branch?.value?.branch,
+      branch_name: payload?.branch?.value?.branch_name,
+      orgeh: payload?.orgeh?.value?.orgeh,
+      orgeh_name: payload?.orgeh?.value?.orgeh_name,
+    };
+    const schemaMapping = {
+      schema: ukaSchema,
+      resetErrors: resetValidationErrors,
+      setErrors: setValidationErrors,
+    };
+    const validate = setErrorValidation(
+      transformedPayload,
+      dispatch,
+      schemaMapping
+    );
 
-    // const objPayload = {
-    //   amount: parseInt(payload?.amount?.replace(/\./g, "")),
-    //   ..._.omit(payload, ["amount"]),
-    // };
-    // const validate = true;
-    console.log("payload");
-    console.log(payload);
-    // console.log("transformedPayload");
-    // return console.log(transformedPayload);
-    // if (validate) {
-    //   loadingSwal();
-    //   if (typeModal === "update") {
-    //     await fetchApi(
-    //       "PATCH",
-    //       ${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/reference/uka/update,
-    //       { kode: "", name: "", orgeh_kode: "", branch_kode: "", ...payload }
-    //     );
-    //   } else {
-    //     await fetchApi(
-    //       "POST",
-    //       ${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/referencee/uka/create,
-    //       payload
-    //     );
-    //   }
+    if (validate) {
+      loadingSwal();
+      if (typeModal === "update") {
+        await fetchApi(
+          "PATCH",
+          `${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/reference/uka/update`,
+          { ...transformedPayload }
+        );
+      } else {
+        await fetchApi(
+          "POST",
+          `${process.env.NEXT_PUBLIC_API_URL_REFERENCE}/reference/uka/create`,
+          transformedPayload
+        );
+      }
 
-    //   ukaMutate();
-    //   setShowModal(false);
-    //   setTypeModal("");
-    //   dispatch(resetObjPayload());
-    //   loadingSwal("close");
-    // }
+      ukaMutate();
+      setShowModal(false);
+      setTypeModal("");
+      dispatch(resetObjPayload());
+      loadingSwal("close");
+    }
   };
   // [ END ] handler for modal
 
