@@ -26,6 +26,8 @@ import ImageDownload from "../../public/images/icon-download.png";
 import ImageCircleCheckGreen from "../../public/images/icon-circle-check-green.png";
 import ImageChecklist from "../../public/images/icon-checklist.svg";
 import ImageReview from "../../public/images/icon-review.svg";
+import ImageUncheck from "../../public/images/icon-uncheck.png";
+import ImageCheckAll from "../../public/images/icon-check-all.png";
 
 export {
   ImageBrismaVertical,
@@ -56,4 +58,6 @@ export {
   ImageCircleCheckGreen,
   ImageChecklist,
   ImageReview,
+  ImageUncheck,
+  ImageCheckAll,
 };

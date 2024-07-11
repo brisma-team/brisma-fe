@@ -35,7 +35,10 @@ const NavigationTab = ({
             handleClick={async () => await handleChangeCurrentStage(v.idx)}
             isDisabled={v.isDisabled}
           >
-            {v.title}
+            <div
+              className="mt-4"
+              dangerouslySetInnerHTML={{ __html: v.title }}
+            />
           </DivButton>
         );
       })}

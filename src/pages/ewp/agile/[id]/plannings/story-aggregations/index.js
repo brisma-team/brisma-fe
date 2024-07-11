@@ -28,8 +28,8 @@ const routes = [
     slug: "story-aggregations",
   },
   {
-    name: "User Story",
-    slug: "user-story",
+    name: "Story Aggegations Selected",
+    slug: "story-aggregations-selected",
   },
   {
     name: "Audit Backlog",
@@ -157,6 +157,8 @@ const index = () => {
         ref_risk_issue_name: nama,
       }
     );
+
+    userStoriesMutate();
     loadingSwal("close");
   };
 
@@ -185,17 +187,18 @@ const index = () => {
 
   return (
     <LandingLayoutEWPAgile>
-      <div className="!w-[100rem]">
+      <div className="!w-[95rem]">
         {/* Start Breadcrumbs */}
         <Breadcrumbs data={breadcrumbs} />
         {/* End Breadcrumbs */}
         <div className="flex justify-between items-center mb-7">
-          <PageTitle text="Project Plannings" />
+          <PageTitle text="Story Aggregations" />
           <PrevNextNavigation
             baseUrl={baseUrl}
             routes={routes}
-            nextUrl={"/user-story"}
-            marginLeft={"-65px"}
+            nextUrl={"/story-aggregations-selected"}
+            marginLeft={"-95px"}
+            widthDropdown={"w-[16rem]"}
           />
         </div>
         {/* Start Content */}

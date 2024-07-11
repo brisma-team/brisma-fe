@@ -17,7 +17,7 @@ const TableStoryPoint = ({
   handleClickMoreOptions,
 }) => {
   return (
-    <div className="overflow-x-scroll max-w-[100rem] pb-3">
+    <div className="overflow-x-scroll max-w-[95rem] pb-3">
       <div className="w-[2130px] bg-white">
         <TableTree>
           <Headers>
