@@ -675,7 +675,8 @@ const ContentAnalisisPerencanaan = ({
         {
           ..._.pick(payloadEditProject, "analisa", "petugas"),
           pn_pic: payloadEditProject?.pic?.pn,
-          name_pic: payloadEditProject?.pic?.nama,
+          name_pic:
+            payloadEditProject?.pic?.nama || payloadEditProject?.pic?.name,
         }
       );
 

@@ -717,6 +717,12 @@ const index = () => {
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/addendum/summary/delete/${addendum_id}`,
       {}
     );
+    ringkasanMutate();
+    latarBelakangMutate();
+    tujuanMutate();
+    analisaMutate();
+    anggaranMutate();
+    jadwalMutate();
     loadingSwal("close");
   };
 
