@@ -1,5 +1,5 @@
 //React & Next Library
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
@@ -72,7 +72,7 @@ const index = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [params, setParams] = useState({
-    id: 0,
+    id: "",
   });
   const pathName = `/ewp/quality-assurance/${params?.id}/addendum/lain`;
   const navigationTabItems = [
@@ -87,10 +87,23 @@ const index = () => {
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [currentContentStage, setCurrentContentStage] = useState(1);
   const [typeUpload, setTypeUpload] = useState("");
-  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
-  const [isOnProgress, setIsOnProgress] = useState(true);
-  const [isInitiator, setIsInitiator] = useState(true);
-  const [isAuditor, setIsAuditor] = useState(true);
+  const [contentCKE, setContentCKE] = useState("");
+  const [
+    isCloseSubmodule,
+    // setIsCloseSubmodule
+  ] = useState(false);
+  const [
+    isOnProgress,
+    // setIsOnProgress
+  ] = useState(true);
+  const [
+    isInitiator,
+    // setIsInitiator
+  ] = useState(true);
+  const [
+    isAuditor,
+    // setIsAuditor
+  ] = useState(true);
 
   const [showModalAnggaran, setShowModalAnggaran] = useState(false);
   const [typeModalAnggaran, setTypeModalAnggaran] = useState("");
@@ -362,13 +375,13 @@ const index = () => {
     }
   }, [detailRingkasan, showModalEditRingkasan]);
 
-  const handleChangeTab = (index) => {
-    setCurrentContentStage(index);
-    router.push({
-      pathname: pathName,
-      query: { stage: index },
-    });
-  };
+  const handleChangeTab = useCallback(
+    (index) => {
+      setCurrentContentStage(index);
+      router.push({ pathname: pathName, query: { stage: index } });
+    },
+    [pathName, router]
+  );
 
   const handleClickUploadAttachment = () => {
     setTypeUpload("attachment");
@@ -810,7 +823,24 @@ const index = () => {
     loadingSwal("close");
   };
   // [ END ] handler for modal ringkasan
-  // [ END ] handler for tab ringkasan
+
+  useEffect(() => {
+    if (currentContentStage === 1) {
+      setContentCKE(dataContentLatarBelakang);
+    } else if (currentContentStage === 2) {
+      setContentCKE(dataContentTujuan);
+    } else if (currentContentStage === 3) {
+      setContentCKE(dataContentAnalisa);
+    }
+  }, [
+    currentContentStage,
+    dataContentLatarBelakang,
+    dataContentTujuan,
+    dataContentAnalisa,
+  ]);
+
+  console.log(currentContentStage, typeof currentContentStage);
+
   return (
     <LandingLayoutEWPAddendum type="quality-assurance">
       {/* Start Breadcrumbs */}
@@ -827,94 +857,118 @@ const index = () => {
           width={"w-[32rem]"}
           handleChange={handleChangeTab}
         />
-        {currentContentStage == "1" ? (
-          <ContentCKEditorAddendum
-            part={"latar_belakang"}
-            isDisabled={
-              !((isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress)
-            }
-            dataContent={dataContentLatarBelakang}
-            dataAttachmentList={attachmentClipListLatarBelakang}
-            dataImageClipList={imageClipListLatarBelakang}
-            handleChangeContent={handleChangeContentLatarBelakang}
-            handleUploadFile={handleUploadFileLatarBelakang}
-            handleClickUploadAttachment={handleClickUploadAttachment}
-            handleClickUploadImage={handleClickUploadImage}
-            handleSubmit={handleSubmitLatarBelakang}
-            handleLoadDataFromMAR={handleLoadDataFromMAR}
-          />
-        ) : currentContentStage == "2" ? (
-          <ContentCKEditorAddendum
-            part={"tujuan"}
-            isDisabled={
-              !((isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress)
-            }
-            dataContent={dataContentTujuan}
-            dataAttachmentList={attachmentClipListTujuan}
-            dataImageClipList={imageClipListTujuan}
-            handleChangeContent={handleChangeContentTujuan}
-            handleUploadFile={handleUploadFileTujuan}
-            handleClickUploadAttachment={handleClickUploadAttachment}
-            handleClickUploadImage={handleClickUploadImage}
-            handleSubmit={handleSubmitTujuan}
-            handleLoadDataFromMAR={handleLoadDataFromMAR}
-          />
-        ) : currentContentStage == "3" ? (
-          <ContentCKEditorAddendum
-            part={"analisa"}
-            isDisabled={
-              !((isInitiator || isAuditor) && !isCloseSubmodule && isOnProgress)
-            }
-            dataContent={dataContentAnalisa}
-            dataAttachmentList={attachmentClipListAnalisa}
-            dataImageClipList={imageClipListAnalisa}
-            handleChangeContent={handleChangeContentAnalisa}
-            handleUploadFile={handleUploadFileAnalisa}
-            handleClickUploadAttachment={handleClickUploadAttachment}
-            handleClickUploadImage={handleClickUploadImage}
-            handleSubmit={handleSubmitAnalisa}
-            handleLoadDataFromMAR={handleLoadDataFromMAR}
-          />
-        ) : currentContentStage == "4" ? (
-          <ContentAnggaran
-            showModal={showModalAnggaran}
-            dataContent={dataContentAnggaran}
-            payload={payloadAnggaran}
-            validation={validationAnggaran}
-            handleChangePayload={handleChangePayloadAnggaran}
-            handleClickAddAnggaran={handleClickAddAnggaran}
-            handleClickUpdateAnggaran={handleClickUpdateAnggaran}
-            handleClickDeleteAnggaran={handleClickDeleteAnggaran}
-            handleCloseModalAnggaran={handleCloseModalAnggaran}
-            handleLoadDataFromMAR={handleLoadDataFromMAR}
-            handleSaveAnggaran={handleSaveAnggaran}
-            handleSubmitAnggaran={handleSubmitAnggaran}
-          />
-        ) : currentContentStage == "5" ? (
-          <ContentJadwal
-            data={dataContentJadwal}
-            payload={payloadJadwal}
-            handleChange={handleChangePayloadJadwal}
-            handleSubmit={handleSubmitJadwal}
-            handleLoadDataFromMAR={handleLoadDataFromMAR}
-          />
-        ) : currentContentStage == "6" ? (
-          <ContentRingkasan
-            data={dataContentRingkasan}
-            dataDetail={dataContentDetailRingkasan}
-            payload={payloadRingkasan}
-            validation={validationRingkasan}
-            showModalDetail={showModalDetailRingkasan}
-            showModalEdit={showModalEditRingkasan}
-            handleCloseModal={handleCloseModalRingkasan}
-            handleChangePayload={handleChangePayloadRingkasan}
-            handleClickUpdate={handleClickUpdateRingkasan}
-            handleClickDelete={handleClickDeleteRingkasan}
-            handleClickView={handleClickViewRingkasan}
-            handleSaveRingkasan={handleSaveRingkasan}
-            handleResetRingkasan={handleResetRingkasan}
-            handleSubmitEditRingkasan={handleSubmitEditRingkasan}
-          />
+        {currentContentStage == 1 ? (
+          <>
+            <ContentCKEditorAddendum
+              part={"latar_belakang"}
+              isDisabled={
+                !(
+                  (isInitiator || isAuditor) &&
+                  !isCloseSubmodule &&
+                  isOnProgress
+                )
+              }
+              dataContent={contentCKE}
+              dataAttachmentList={attachmentClipListLatarBelakang}
+              dataImageClipList={imageClipListLatarBelakang}
+              handleChangeContent={handleChangeContentLatarBelakang}
+              handleUploadFile={handleUploadFileLatarBelakang}
+              handleClickUploadAttachment={handleClickUploadAttachment}
+              handleClickUploadImage={handleClickUploadImage}
+              handleSubmit={handleSubmitLatarBelakang}
+              handleLoadDataFromMAR={handleLoadDataFromMAR}
+            />
+          </>
+        ) : currentContentStage == 2 ? (
+          <>
+            <ContentCKEditorAddendum
+              part={"tujuan"}
+              isDisabled={
+                !(
+                  (isInitiator || isAuditor) &&
+                  !isCloseSubmodule &&
+                  isOnProgress
+                )
+              }
+              dataContent={contentCKE}
+              dataAttachmentList={attachmentClipListTujuan}
+              dataImageClipList={imageClipListTujuan}
+              handleChangeContent={handleChangeContentTujuan}
+              handleUploadFile={handleUploadFileTujuan}
+              handleClickUploadAttachment={handleClickUploadAttachment}
+              handleClickUploadImage={handleClickUploadImage}
+              handleSubmit={handleSubmitTujuan}
+              handleLoadDataFromMAR={handleLoadDataFromMAR}
+            />
+          </>
+        ) : currentContentStage == 3 ? (
+          <>
+            <ContentCKEditorAddendum
+              part={"analisa"}
+              isDisabled={
+                !(
+                  (isInitiator || isAuditor) &&
+                  !isCloseSubmodule &&
+                  isOnProgress
+                )
+              }
+              dataContent={contentCKE}
+              dataAttachmentList={attachmentClipListAnalisa}
+              dataImageClipList={imageClipListAnalisa}
+              handleChangeContent={handleChangeContentAnalisa}
+              handleUploadFile={handleUploadFileAnalisa}
+              handleClickUploadAttachment={handleClickUploadAttachment}
+              handleClickUploadImage={handleClickUploadImage}
+              handleSubmit={handleSubmitAnalisa}
+              handleLoadDataFromMAR={handleLoadDataFromMAR}
+            />
+          </>
+        ) : currentContentStage == 4 ? (
+          <>
+            <ContentAnggaran
+              showModal={showModalAnggaran}
+              dataContent={dataContentAnggaran}
+              payload={payloadAnggaran}
+              validation={validationAnggaran}
+              handleChangePayload={handleChangePayloadAnggaran}
+              handleClickAddAnggaran={handleClickAddAnggaran}
+              handleClickUpdateAnggaran={handleClickUpdateAnggaran}
+              handleClickDeleteAnggaran={handleClickDeleteAnggaran}
+              handleCloseModalAnggaran={handleCloseModalAnggaran}
+              handleLoadDataFromMAR={handleLoadDataFromMAR}
+              handleSaveAnggaran={handleSaveAnggaran}
+              handleSubmitAnggaran={handleSubmitAnggaran}
+            />
+          </>
+        ) : currentContentStage == 5 ? (
+          <>
+            <ContentJadwal
+              data={dataContentJadwal}
+              payload={payloadJadwal}
+              handleChange={handleChangePayloadJadwal}
+              handleSubmit={handleSubmitJadwal}
+              handleLoadDataFromMAR={handleLoadDataFromMAR}
+            />
+          </>
+        ) : currentContentStage == 6 ? (
+          <>
+            <ContentRingkasan
+              data={dataContentRingkasan}
+              dataDetail={dataContentDetailRingkasan}
+              payload={payloadRingkasan}
+              validation={validationRingkasan}
+              showModalDetail={showModalDetailRingkasan}
+              showModalEdit={showModalEditRingkasan}
+              handleCloseModal={handleCloseModalRingkasan}
+              handleChangePayload={handleChangePayloadRingkasan}
+              handleClickUpdate={handleClickUpdateRingkasan}
+              handleClickDelete={handleClickDeleteRingkasan}
+              handleClickView={handleClickViewRingkasan}
+              handleSaveRingkasan={handleSaveRingkasan}
+              handleResetRingkasan={handleResetRingkasan}
+              handleSubmitEditRingkasan={handleSubmitEditRingkasan}
+            />
+          </>
         ) : (
           ""
         )}
