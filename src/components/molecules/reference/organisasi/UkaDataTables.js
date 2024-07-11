@@ -171,7 +171,7 @@ const UkaDataTables = ({
                   </Cell>
                   <Cell
                     width="9%"
-                    className="border-r cell-custom-dataTables justify-center"
+                    className="border-r cell-custom-dataTables justify-center overflow-x-auto"
                   >
                     {alamat}
                   </Cell>
@@ -183,7 +183,7 @@ const UkaDataTables = ({
                   </Cell>
                   <Cell
                     width="9%"
-                    className="border-r cell-custom-dataTables justify-center"
+                    className="border-r cell-custom-dataTables justify-center overflow-x-auto"
                   >
                     {email}
                   </Cell>
