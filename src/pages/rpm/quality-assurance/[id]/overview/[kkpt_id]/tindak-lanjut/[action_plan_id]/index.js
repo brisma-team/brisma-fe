@@ -302,6 +302,7 @@ const index = () => {
         desc_tanggapan: payloadTanggapan,
       }
     );
+    actionPlanMutate();
     setShowModalTanggapan(false);
     dispatch(resetObjPayloadTanggapan());
     loadingSwal("close");

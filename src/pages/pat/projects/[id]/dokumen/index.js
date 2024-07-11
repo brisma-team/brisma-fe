@@ -17,7 +17,12 @@ import {
 import { useRouter } from "next/router";
 import { getAuditTeamTable } from "@/helpers/templates/auditTeam";
 import { getAuditTargetTable } from "@/helpers/templates/auditTarget";
-import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common";
+// import { ModalWorkflowEWP } from "@/components/molecules/ewp/konvensional/common";
+import {
+  ModalWorkflow,
+  // ListContentDocument,
+  // ContentDocument,
+} from "@/components/molecules/commons";
 import {
   confirmationSwal,
   convertDate,
@@ -83,21 +88,20 @@ const index = () => {
     { name: "Dokumen", path: `/pat/projects/${id}/dokumen` },
   ];
 
-  const [showModal, setShowModal] = useState(false);
+  const [showModalApproval, setShowModalApproval] = useState(false);
   const [openCardComment, setOpenCardComment] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeIndexComment, setActiveIndexComment] = useState(0);
   const activeDivRef = useRef(null);
   const [hitEndpointCount, setHitEndpointCount] = useState(0);
   const [doc, setDoc] = useState([]);
-  const [workflowDetail, setWorkflowDetail] = useState({});
   const [currentPosition, setCurrentPosition] = useState(0);
   const [content, setContent] = useState(null);
   const [totalComment, setTotalComment] = useState([]);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
 
   const workflowData = useSelector((state) => state.documentPAT.workflowData);
-  const validationErrors = useSelector(
+  const validationErrorsWorkflow = useSelector(
     (state) => state.documentPAT.validationErrorsWorkflow
   );
 
@@ -141,7 +145,7 @@ const index = () => {
   };
 
   useEffect(() => {
-    if (is_approval) setShowModal(true);
+    if (is_approval) setShowModalApproval(true);
   }, [is_approval]);
 
   useEffect(() => {
@@ -176,7 +180,7 @@ const index = () => {
   }, [activeIndex]);
 
   useEffect(() => {
-    if (router.query?.openModal) setShowModal(true);
+    if (router.query?.openModal) setShowModalApproval(true);
     const addScrollListener = () => {
       const parentContainer = document.querySelector(".parent");
       if (parentContainer) {
@@ -214,23 +218,6 @@ const index = () => {
       ]);
     }
   }, [documentPAT, documentPATMutate]);
-
-  useEffect(() => {
-    const mappingChecker = workflow?.data?.approvers?.map((v) => {
-      return v;
-    });
-    const mappingSigner = workflow?.data?.signers?.map((v) => {
-      return v;
-    });
-
-    setWorkflowDetail({
-      statusPat: workflow?.data?.status_pat,
-      on_approver: workflow?.data?.status_approver,
-      maker: workflow?.data?.pn_maker_akhir?.nama,
-      checker: mappingChecker,
-      signer: mappingSigner,
-    });
-  }, [workflow]);
 
   useEffect(() => {
     const workflowDetail = workflow?.data;
@@ -304,7 +291,7 @@ const index = () => {
 
   // [START] Modal for approver
   const handleCloseModalWorkflow = async () => {
-    setShowModal(false);
+    setShowModalApproval(false);
   };
 
   const handleAdd = (property) => {
@@ -346,7 +333,7 @@ const index = () => {
     );
   };
 
-  const handleSaveApproval = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const schemaMapping = {
       schema: workflowSchema,
@@ -416,7 +403,7 @@ const index = () => {
       workflowLog.workflowMutate();
       workflowMutate();
       dispatch(resetWorkflowData());
-      setShowModal(false);
+      setShowModalApproval(false);
     }
     workflowMutate();
   };
@@ -520,44 +507,48 @@ const index = () => {
             </div>
           </Card>
         </div>
-        <DivButton
-          handleClick={() => (setShowModal(true), setHitEndpointCount(7))}
-          className="no-underline hover:no-underline h-auto"
-        >
-          <div>
+        <div>
+          <DivButton
+            handleClick={() => setShowModalApproval(true)}
+            className="no-underline hover:no-underline w-56"
+          >
             <Card>
-              <div className="w-full">
-                <div className="px-3">
-                  <p className="text-brisma font-bold text-xl">Approval UKA</p>
-                  <ApprovalItems title={"Maker"} text={workflowDetail?.maker} />
-                  <ApprovalItems
-                    title={"Checker"}
-                    text={workflowDetail?.checker}
-                    data={workflowDetail}
-                  />
-                  <ApprovalItems
-                    title={"Signer"}
-                    text={workflowDetail?.signer}
-                  />
-                </div>
+              <div className="w-full px-3">
+                <p className="text-brisma font-bold text-xl">Approval</p>
+                <ApprovalItems
+                  title={"P.I.C Auditor"}
+                  text={
+                    workflowData?.maker?.pn + " - " + workflowData?.maker?.nama
+                  }
+                />
+                <ApprovalItems
+                  title={"Approver"}
+                  text={workflowData?.ref_tim_audit_approver}
+                  data={workflowData}
+                />
+                <ApprovalItems
+                  title={"Signer"}
+                  text={workflowData?.ref_tim_audit_signer}
+                />
               </div>
             </Card>
-          </div>
-        </DivButton>
-        <ModalWorkflowEWP
-          workflowData={workflowData}
-          validationErrors={validationErrors}
-          historyWorkflow={historyWorkflow}
-          setShowModal={setShowModal}
-          showModal={showModal}
-          headerTitle={"Workflow"}
-          handleCloseModal={handleCloseModalWorkflow}
-          handleChange={handleChangeText}
-          handleChangeSelect={handleChangeSelect}
-          handleAdd={handleAdd}
-          handleDelete={handleDelete}
-          handleSubmit={handleSaveApproval}
-        />
+          </DivButton>
+          <ModalWorkflow
+            workflowData={workflowData}
+            historyWorkflow={historyWorkflow}
+            validationErrors={validationErrorsWorkflow}
+            showModal={showModalApproval}
+            headerTitle={"Workflow & Riwayat Approval"}
+            handleDelete={handleDelete}
+            handleSubmit={handleSubmit}
+            setShowModal={setShowModalApproval}
+            handleAdd={handleAdd}
+            handleChangeSelect={handleChangeSelect}
+            handleChangeText={handleChangeText}
+            handleCloseModal={handleCloseModalWorkflow}
+            withSigner
+          />
+        </div>
       </div>
       {/* End Content */}
     </PatLandingLayout>

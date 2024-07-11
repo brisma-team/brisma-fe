@@ -33,8 +33,9 @@ import {
   NavigationTab,
 } from "@/components/molecules/commons";
 import workflowSchema from "@/helpers/schemas/common/workflow/workflowSchema";
-import { useNegosiasiDetail } from "@/data/rpm/common/negosiasi";
+import { useActionPlan, useNegosiasiDetail } from "@/data/rpm/common/negosiasi";
 import { DetailNegosiasi } from "@/components/molecules/rpm/common/negosiasi-action-plan";
+import { TableCatatanNegosiasi } from "@/components/molecules/rpm/common";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -89,6 +90,11 @@ const index = () => {
     module: "qa",
   });
 
+  const { actionPlan, actionPlanMutate } = useActionPlan({
+    id: params?.action_plan_id,
+    module: "qa",
+  });
+
   useEffect(() => {
     if (!router.isReady) return;
     const { id, kkpt_id, action_plan_id, is_approval } = router.query;
@@ -103,6 +109,29 @@ const index = () => {
   useEffect(() => {
     setShowModalApproval(params?.is_approval);
   }, [params?.is_approval]);
+
+  useEffect(() => {
+    if (actionPlan?.data) {
+      const response = actionPlan?.data;
+      const mappingCatatanNegosiasi = response?.catatan_negosiasi?.length
+        ? response?.catatan_negosiasi?.map((catatan_nego) => {
+            const responseActionPlanSebelum =
+              catatan_nego?.rpm_action_plan_sebelum;
+            return {
+              tanggal_kejadian: catatan_nego?.createdAt,
+              action_plan: responseActionPlanSebelum?.action_plan_kkpt?.name,
+              deadline: responseActionPlanSebelum?.batas_waktu,
+              evaluasi: responseActionPlanSebelum?.hasil_evaluasi,
+              negosiasi: catatan_nego?.metode_nego?.nama,
+            };
+          })
+        : [];
+
+      dispatch(setObjDataCatatanNegosiasi(mappingCatatanNegosiasi));
+    } else {
+      dispatch(resetObjDataCatatanNegosiasi());
+    }
+  }, [actionPlan]);
 
   useEffect(() => {
     if (objectAuditDetailRPM?.data) {
@@ -372,6 +401,7 @@ const index = () => {
       );
 
       workflowRPMMutate();
+      actionPlanMutate();
       dispatch(resetObjDataWorkflow());
       setShowModalApproval(false);
       loadingSwal("close");
@@ -439,7 +469,9 @@ const index = () => {
             />
           </>
         ) : (
-          ""
+          <>
+            <TableCatatanNegosiasi data={dataCatatanNegosiasi} />
+          </>
         )}
       </div>
       {/* End Content */}

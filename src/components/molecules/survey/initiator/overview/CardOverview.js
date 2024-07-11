@@ -183,7 +183,10 @@ const CardOverview = ({
             </div>
             <hr />
             <div className="w-full flex flex-col gap-1 px-4">
-              <Content title={"Nama Pembuat"} text={data.createdBy.fullName} />
+              <Content
+                title={"Nama Pembuat"}
+                text={`${data.createdBy.pn} - ${data.createdBy.fullName}`}
+              />
               <Content
                 title={"Tanggal Pembuatan"}
                 text={convertDate(data.createdAt, "-", "d")}

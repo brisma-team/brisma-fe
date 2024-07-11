@@ -146,24 +146,27 @@ const TableRekomendasi = ({
                       ) : (
                         <div className="ml-[2.67rem]" />
                       )}
-                      <div
-                        className={`flex items-center w-full justify-between ml-2`}
-                      >
+                      <div className="flex items-center w-full justify-between ml-2">
                         {role === "parent" ? (
                           <p>
                             <span className="font-semibold">
                               {nama?.toUpperCase()}
-                            </span>{" "}
+                            </span>
                             : {description}
                           </p>
                         ) : role === "child" ? (
-                          <Link href={`${baseUrl}/negosiasi/${id}`}>
-                            <span className="font-semibold">Action Plan</span> :{" "}
-                            {nama}
-                          </Link>
-                        ) : (
-                          ""
-                        )}
+                          status === "on nego" ? (
+                            <Link href={`${baseUrl}/negosiasi/${id}`}>
+                              <span className="font-semibold">Action Plan</span>{" "}
+                              : {nama || "-"}
+                            </Link>
+                          ) : (
+                            <p>
+                              <span className="font-semibold">Action Plan</span>{" "}
+                              : {nama || "-"}
+                            </p>
+                          )
+                        ) : null}
                       </div>
                     </div>
                   </Cell>

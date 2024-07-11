@@ -61,10 +61,12 @@ const ModalEditProject = ({
                     selectedValue={
                       payload?.pic?.pn
                         ? {
-                            label: `${payload?.pic?.pn} - ${payload?.pic?.nama}`,
+                            label: `${payload?.pic?.pn} - ${
+                              payload?.pic?.nama || payload?.pic?.name
+                            }`,
                             value: {
                               pn: payload?.pic?.pn,
-                              name: payload?.pic?.nama,
+                              name: payload?.pic?.nama || payload?.pic?.name,
                             },
                           }
                         : null

@@ -41,7 +41,7 @@ import {
   setObjPayloadUkerAssessment,
   setObjPayloadRingkasan,
   setValidationErrorsTim,
-  setValidationErrorsRingkasan,
+  // setValidationErrorsRingkasan,
   resetObjDataContentTim,
   resetObjDataContentUkerAssessment,
   resetObjDataContentRingkasan,
@@ -80,10 +80,19 @@ const index = () => {
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [currentContentStage, setCurrentContentStage] = useState(1);
-  const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
-  const [isOnProgress, setIsOnProgress] = useState(true);
-  const [isInitiator, setIsInitiator] = useState(true);
-  const [isAuditor, setIsAuditor] = useState(true);
+  const [
+    isCloseSubmodule,
+    // setIsCloseSubmodule
+  ] = useState(false);
+  const [
+    isOnProgress,
+    // setIsOnProgress
+  ] = useState(true);
+  const [
+    isInitiator,
+    // setIsInitiator
+  ] = useState(true);
+  // const [isAuditor, setIsAuditor] = useState(true);
 
   // content ringkasan
   const [showModalDetailRingkasan, setShowModalDetailRingkasan] =
@@ -731,7 +740,6 @@ const index = () => {
   };
   // [ END ] handler for modal attachment
   // [ END ] handler for tab uker assessment
-
   return (
     <LandingLayoutEWPAddendum type="quality-assurance">
       {/* Start Breadcrumbs */}

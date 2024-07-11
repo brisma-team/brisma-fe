@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import _ from "lodash";
 import {
   setObjData,
@@ -10,6 +11,7 @@ import {
 } from "@/slices/ewp/konsulting/perencanaan/anggaranEWPKonsultingSlice";
 import {
   confirmationSwal,
+  errorSwal,
   fetchApi,
   loadingSwal,
   setErrorValidation,
@@ -28,18 +30,20 @@ import {
   UserSkaiDataTables,
   CardFilterUserSKAI,
 } from "@/components/molecules/reference/organisasi";
-import anggaranEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/perencanaan/anggaranEWPKonsultingSchema";
+import userSkaiSchema from "@/helpers/schemas/reference/userSkaiSchema";
 
 import { LayoutReferenceGeneral } from "@/layouts/reference";
+import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [typeModal, setTypeModal] = useState("");
   const [selectedPn, setSelectedPn] = useState("");
-
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [params, setParams] = useState({
     pn: "",
     name: "",
@@ -65,14 +69,40 @@ const index = () => {
 
   const { userSKAI, userSKAIMutate } = useUserSKAI(params, "search");
   const { userSKAIDetail } = useUserSKAIDetail(selectedPn);
-
-  console.log(userSKAIDetail);
+  const { user } = useUser();
   const payload = useSelector(
     (state) => state.anggaranEWPKonsulting.objPayload
   );
   const validation = useSelector(
     (state) => state.anggaranEWPKonsulting.validationErrors
   );
+
+  useEffect(() => {
+    if (user !== undefined) {
+      const { role_kode } = user.data;
+
+      // Check if any role_kode is between 1 and 6
+      const isAuthorized = role_kode.some(
+        (code) => parseInt(code) >= 1 && parseInt(code) <= 6
+      );
+
+      if (!isAuthorized) {
+        // Display error message with a delay
+        errorSwal("Maaf, Anda tidak diizinkan mengakses halaman ini.");
+        // Redirect to unauthorized page after 2 seconds
+        const timeout = setTimeout(() => {
+          router.push("/reference/");
+        }, 2000); // 2 seconds timeout
+
+        return () => clearTimeout(timeout); // Cleanup timeout if component unmounts
+      }
+      setIsAuthorized(isAuthorized);
+    }
+  }, [user]);
+
+  // useEffect(() => {
+
+  // }, [isAuthorized]);
 
   useEffect(() => {
     const mappingUsers = userSKAI?.data?.data?.map((v) => ({
@@ -88,17 +118,39 @@ const index = () => {
   }, [userSKAI]);
 
   useEffect(() => {
-    const payload =
-      userSKAIDetail?.data && typeModal === "update"
-        ? _.pick(userSKAIDetail?.data, [
-            "pn",
-            "name",
-            "kode_uka",
-            "name_uka",
-            "role",
-          ])
-        : {};
-    dispatch(setObjPayload(payload));
+    if (userSKAIDetail !== undefined) {
+      const payload =
+        userSKAIDetail?.data && typeModal === "update"
+          ? _.pick(userSKAIDetail?.data, [
+              "pn",
+              "name",
+              "kode_uka",
+              "name_uka",
+              "role",
+            ])
+          : {};
+
+      const transformedPayload = {
+        pn: {
+          label: `${payload.pn} - ${payload.name}`,
+          value: {
+            pn: payload.pn,
+            name: payload.name,
+            jabatan: "", // Assuming "MANAGER" as jabatan, modify if needed
+          },
+        },
+        uka_kode: {
+          label: `${payload.kode_uka} - ${payload.name_uka}`,
+          value: payload.kode_uka,
+        },
+        role_kode: payload?.role?.map((roles) => ({
+          label: `${roles.kode_role} - ${roles.name_role}`,
+          value: roles.kode_role,
+        })),
+      };
+
+      dispatch(setObjPayload(transformedPayload));
+    }
   }, [userSKAIDetail, typeModal, showModal]);
 
   const handleCloseModal = () => {
@@ -129,35 +181,43 @@ const index = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const valid = setErrorValidation(payload, dispatch, {
-      schema: anggaranEWPKonsultingSchema,
+    const transformedPayload = {
+      pn: payload?.pn?.value?.pn,
+      name: payload?.pn.value?.name,
+      uka_kode: payload?.uka_kode?.value,
+      role_kode: payload?.role_kode?.map((role) => role?.value),
+    };
+    const valid = setErrorValidation(transformedPayload, dispatch, {
+      schema: userSkaiSchema,
       resetErrors: resetValidationErrors,
       setErrors: setValidationErrors,
     });
+
     if (!valid) return;
-    const amount = parseInt(payload.amount.replace(/\./g, ""));
-    const payloadWithoutAmount = _.omit(payload, "amount");
+
     const url = `${
-      process.env.NEXT_PUBLIC_API_URL_REFERENCE
+      process.env.NEXT_PUBLIC_API_URL_SUPPORT
     }/reference/user_skai${typeModal === "update" ? "/update" : "/create"}`;
+
     const data =
       typeModal === "update"
-        ? {
-            pn: "",
-            role_kode: [],
-            uka_kode: "",
-            ...payloadWithoutAmount,
-            amount,
-          }
-        : { ...payloadWithoutAmount, amount };
+        ? { pn: "", role_kode: [], uka_kode: "", ...transformedPayload }
+        : transformedPayload;
+
     loadingSwal();
-    await fetchApi(typeModal === "update" ? "PATCH" : "POST", url, data);
-    userSKAIMutate();
-    setShowModal(false);
-    setTypeModal("");
-    setSelectedPn("");
-    dispatch(resetObjPayload());
-    loadingSwal("close");
+
+    try {
+      await fetchApi(typeModal === "update" ? "PATCH" : "POST", url, data);
+      userSKAIMutate();
+      setShowModal(false);
+      setTypeModal("");
+      setSelectedPn("");
+      dispatch(resetObjPayload());
+    } catch (error) {
+      console.error("Error submitting data:", error);
+    } finally {
+      loadingSwal("close");
+    }
   };
 
   const handleClickAddTable = () => {
@@ -171,12 +231,14 @@ const index = () => {
   };
 
   const handleClickDeleteTable = async (id) => {
-    const confirm = await confirmationSwal("Menghapus Pengguna.");
+    const confirm = await confirmationSwal(
+      "Aktivitas ini akan menghapus pengguna. Apakah anda yakin?"
+    );
     if (!confirm.value) return;
     loadingSwal();
     await fetchApi(
       "DELETE",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/reference/user_skai/delete/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_SUPPORT}/reference/user_skai/delete/${id}`,
       {}
     );
     userSKAIMutate();
@@ -216,6 +278,7 @@ const index = () => {
               handleClickAdd={handleClickAddTable}
               handleClickUpdate={handleClickUpdateTable}
               handleClickDelete={handleClickDeleteTable}
+              withoutButtonAction={!isAuthorized}
             />
             <CustomPagination
               defaultCurrentPage={1}
