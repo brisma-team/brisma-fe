@@ -1,4 +1,4 @@
-import { ButtonIcon, Modal, TextInput } from "@/components/atoms";
+import { ButtonIcon, ModalScroll, TextInput } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
 import {
   ModalHeader,
@@ -8,6 +8,7 @@ import {
   BranchSelect,
   OrgehSelect,
 } from "@/components/molecules/commons";
+import UkaTypeSelect from "../../commons/UkaTypeSelect";
 
 const ModalAddUKA = ({
   data,
@@ -48,57 +49,60 @@ const ModalAddUKA = ({
       name: "orgeh",
       inputText: false,
     },
-    // {
-    //   label: "Uka Type*",
-    //   value: data?.uka_type || "",
-    //   placeholder: "Pilih Uka Type",
-    //   name: "uka_type",
-    //   inputText: false,
-    // },
-    // {
-    //   label: "Region",
-    //   value: data?.region || "",
-    //   placeholder: "Masukkan Region",
-    //   name: "region",
-    //   inputText: true,
-    // },
-    // {
-    //   label: "Alamat",
-    //   value: data?.alamat || "",
-    //   placeholder: "Masukkan Alamat",
-    //   name: "alamat",
-    //   inputText: true,
-    // },
-    // {
-    //   label: "No. Telepon",
-    //   value: data?.telp || "",
-    //   placeholder: "Masukkan No. Telepon",
-    //   name: "telp",
-    //   inputText: true,
-    // },
-    // {
-    //   label: "Email",
-    //   value: data?.email || "",
-    //   placeholder: "Masukkan Email",
-    //   name: "email",
-    //   inputText: true,
-    // },
-    // {
-    //   label: "Fax",
-    //   value: data?.fax || "",
-    //   placeholder: "Masukkan Fax",
-    //   name: "fax",
-    //   inputText: true,
-    // },
+    {
+      label: "Tipe Kantor Audit*",
+      value: data?.uka_type || "",
+      placeholder: "Pilih Tipe Kantor Audit",
+      name: "uka_type",
+      inputText: false,
+    },
+    {
+      label: "Region",
+      value: data?.region || "",
+      placeholder: "Masukkan Region",
+      name: "region",
+      inputText: true,
+    },
+    {
+      label: "Alamat",
+      value: data?.alamat || "",
+      placeholder: "Masukkan Alamat",
+      name: "alamat",
+      inputText: true,
+    },
+    {
+      label: "No. Telp",
+      value: data?.telp || "",
+      placeholder: "Masukkan No. Telepon",
+      name: "telp",
+      inputText: true,
+    },
+    {
+      label: "Email",
+      value: data?.email || "",
+      placeholder: "Masukkan Email",
+      name: "email",
+      inputText: true,
+    },
+    {
+      label: "Fax",
+      value: data?.fax || "",
+      placeholder: "Masukkan Fax",
+      name: "fax",
+      inputText: true,
+    },
   ];
   return (
-    <Modal
+    <ModalScroll
+      positionCenter={true}
       showModal={showModal}
       header={
         <ModalHeader
           showModal={showModal}
           handleCloseModal={handleCloseModal}
-          headerText={typeModal === "update" ? "Ubah UKA" : "Tambah UKA"}
+          headerText={
+            typeModal === "update" ? "Ubah Kantor Audit" : "Tambah Kantor Audit"
+          }
         />
       }
       footer={
@@ -121,7 +125,7 @@ const ModalAddUKA = ({
                     handleChangeText(field?.name, e.target.value)
                   }
                   placeholder={field?.placeholder}
-                  //   isDisabled={true}
+                  isDisabled={typeModal == "update" && field?.name == "kode"}
                   // icon={
                   //   <ButtonIcon
                   //     handleClick={() => handleChangeText(field?.name, "")}
@@ -176,6 +180,29 @@ const ModalAddUKA = ({
                   placeholder={field?.placeholder}
                   width={"full"}
                 />
+              ) : field?.name == "uka_type" ? (
+                <UkaTypeSelect
+                  handleChange={(e) => handleChangeSelect(field?.name, e)}
+                  selectedValue={
+                    data?.[field?.name]
+                      ? {
+                          label:
+                            data?.[field?.name]?.kode +
+                            " - " +
+                            data?.[field?.name]?.name,
+                          value: data?.[field?.name]?.value?.kode,
+                        }
+                      : null
+                  }
+                  customIcon={
+                    <ButtonIcon
+                      handleClick={() => handleChangeSelect(field?.name, null)}
+                      icon={<IconClose size="medium" />}
+                    />
+                  }
+                  placeholder={field?.placeholder}
+                  width={"full"}
+                />
               ) : null
             }
             errors={validation?.[field?.name]}
@@ -184,7 +211,7 @@ const ModalAddUKA = ({
           />
         ))}
       </CardBodyContent>
-    </Modal>
+    </ModalScroll>
   );
 };
 

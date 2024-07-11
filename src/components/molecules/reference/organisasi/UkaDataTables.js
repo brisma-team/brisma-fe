@@ -21,39 +21,75 @@ const UkaDataTables = ({
   withoutButtonAction = false,
 }) => {
   return (
-    <div className="dataTables-custom">
+    <div className="w-[100rem] dataTables-custom overflow-x-auto">
       <TableTree>
         <Headers>
           <Header className="!hidden" />
           <Header
-            width="8%"
+            width="9%"
             className="border-t border-x cell-custom-dataTables flex justify-center"
           >
             Aksi
           </Header>
           <Header
-            width="15%"
+            width="9%"
             className="border-t border-x cell-custom-dataTables justify-center"
           >
             Kode UKA
           </Header>
           <Header
-            width="27%"
+            width="10%"
             className="border-t border-r cell-custom-dataTables justify-center"
           >
             Nama UKA
           </Header>
           <Header
-            width="25%"
+            width="9%"
             className="border-t border-r cell-custom-dataTables justify-center"
           >
             Branch
           </Header>
           <Header
-            width="25%"
+            width="9%"
             className="border-t border-r cell-custom-dataTables justify-center"
           >
             Orgeh
+          </Header>
+          <Header
+            width="9%"
+            className="border-t border-r cell-custom-dataTables justify-center"
+          >
+            Tipe Kantor Audit
+          </Header>
+          <Header
+            width="9%"
+            className="border-t border-r cell-custom-dataTables justify-center"
+          >
+            Region
+          </Header>
+          <Header
+            width="9%"
+            className="border-t border-r cell-custom-dataTables justify-center"
+          >
+            Alamat
+          </Header>
+          <Header
+            width="9%"
+            className="border-t border-r cell-custom-dataTables justify-center"
+          >
+            No. Telp
+          </Header>
+          <Header
+            width="9%"
+            className="border-t border-r cell-custom-dataTables justify-center"
+          >
+            Email
+          </Header>
+          <Header
+            width="9%"
+            className="border-t border-r cell-custom-dataTables justify-center"
+          >
+            Fax
           </Header>
         </Headers>
         {data?.length ? (
@@ -66,11 +102,17 @@ const UkaDataTables = ({
               branch_name,
               orgeh,
               orgeh_name,
+              uka_type,
+              region,
+              alamat,
+              no_telp,
+              email,
+              fax,
             }) => (
               <Row>
                 <Cell className="!hidden" />
                 <Cell
-                  width="8%"
+                  width="9%"
                   className="border-x cell-custom-dataTables flex justify-center"
                 >
                   {!withoutButtonAction ? (
@@ -92,22 +134,58 @@ const UkaDataTables = ({
                   )}
                 </Cell>
                 <Cell
-                  width="15%"
+                  width="9%"
                   className="border-r cell-custom-dataTables justify-center"
                 >
                   {kode}
                 </Cell>
-                <Cell width="27%" className="border-r cell-custom-dataTables">
+                <Cell width="10%" className="border-r cell-custom-dataTables">
                   {name}
                 </Cell>
                 <Cell
-                  width="25%"
+                  width="9%"
                   className="border-r cell-custom-dataTables justify-center"
                 >
                   {branch + " - " + branch_name}
                 </Cell>
-                <Cell width="25%" className="border-r cell-custom-dataTables">
+                <Cell
+                  width="9%"
+                  className="border-r cell-custom-dataTables justify-center"
+                >
                   <div className="flex gap-2">{orgeh + " - " + orgeh_name}</div>
+                </Cell>
+                <Cell
+                  width="9%"
+                  className="border-r cell-custom-dataTables justify-center"
+                >
+                  {uka_type}
+                </Cell>
+                <Cell
+                  width="9%"
+                  className="border-r cell-custom-dataTables justify-center"
+                >
+                  {region}
+                </Cell>
+                <Cell
+                  width="9%"
+                  className="border-r cell-custom-dataTables justify-center"
+                >
+                  {alamat}
+                </Cell>
+                <Cell
+                  width="9%"
+                  className="border-r cell-custom-dataTables justify-center"
+                >
+                  {no_telp}
+                </Cell>
+                <Cell
+                  width="9%"
+                  className="border-r cell-custom-dataTables justify-center"
+                >
+                  {email}
+                </Cell>
+                <Cell width="9%" className="border-r cell-custom-dataTables">
+                  {fax}
                 </Cell>
               </Row>
             )}
