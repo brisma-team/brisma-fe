@@ -29,24 +29,25 @@ import {
   ModalAddUKA,
   UkaDataTables,
 } from "@/components/molecules/reference/organisasi";
-// import anggaranEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/perencanaan/anggaranEWPKonsultingSchema";
 import { LayoutReferenceGeneral } from "@/layouts/reference";
 import useUka from "@/data/useUka";
 import ukaSchema from "@/helpers/schemas/reference/ukaSchema";
 import { useRouter } from "next/router";
 import useUser from "@/data/useUser";
+import useUkaDetail from "@/data/useUkaDetail";
 
 const index = () => {
   const dispatch = useDispatch();
-  const baseUrl = "/reference/";
+  const baseUrl = "/reference";
   const router = useRouter();
-  const pathName = `${baseUrl}/perencanaan`;
+  const pathName = `${baseUrl}/organisasi/uka`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [typeModal, setTypeModal] = useState("");
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [selectedKode, setSelectedKode] = useState("");
   const [params, setParams] = useState({
     kode: "",
     name: "",
@@ -58,7 +59,9 @@ const index = () => {
     total_data: 10,
   });
   const { uka, ukaMutate } = useUka(params, "search");
+  const { ukaDetail, ukaDetailMutate } = useUkaDetail(selectedKode);
   const { user } = useUser();
+  const objData = useSelector((state) => state.anggaranEWPKonsulting.objData);
   const payload = useSelector(
     (state) => state.anggaranEWPKonsulting.objPayload
   );
@@ -111,6 +114,12 @@ const index = () => {
           "branch_name",
           "orgeh",
           "orgeh_name",
+          "uka_type",
+          "region",
+          "alamat",
+          "no_telp",
+          "email",
+          "fax",
         ]);
       });
       dispatch(setObjData(mappingUkas));
@@ -119,24 +128,52 @@ const index = () => {
       dispatch(resetObjData());
     }
   }, [uka]);
-
-  // useEffect(() => {
-  //   if (userSKAIDetail?.data && typeModal === "update") {
-  //     dispatch(
-  //       setObjPayload(
-  //         _.pick(userSKAIDetail?.data, [
-  //           "pn",
-  //           "name",
-  //           "kode_uka",
-  //           "name_uka",
-  //           "role",
-  //         ])
-  //       )
-  //     );
-  //   } else {
-  //     dispatch(resetObjPayload());
-  //   }
-  // }, [userSKAIDetail, typeModal, showModal]);
+  useEffect(() => {
+    if (ukaDetail?.data && typeModal === "update") {
+      const detail = _.pick(ukaDetail?.data, [
+        "kode",
+        "name",
+        "branch",
+        "branch_name",
+        "orgeh",
+        "orgeh_name",
+        "uka_type_detail",
+        "region",
+        "alamat",
+        "no_telp",
+        "email",
+        "fax",
+      ]);
+      const transformedDetail = {
+        kode: detail?.kode,
+        name: detail?.name,
+        branch: {
+          value: {
+            branch_kode: detail?.branch,
+            branch_name: detail?.branch_name,
+          },
+        },
+        orgeh: {
+          value: {
+            orgeh_kode: detail?.orgeh,
+            orgeh_name: detail?.orgeh_name,
+          },
+        },
+        uka_type: {
+          kode: detail?.uka_type_detail?.kode,
+          name: detail?.uka_type_detail?.name,
+        },
+        region: detail?.region,
+        alamat: detail?.alamat,
+        telp: detail?.no_telp,
+        email: detail?.email,
+        fax: detail?.fax,
+      };
+      dispatch(setObjPayload(transformedDetail));
+    } else {
+      dispatch(resetObjPayload());
+    }
+  }, [ukaDetail, typeModal, showModal]);
 
   // [ START ] handler for modal
   const handleCloseModal = async () => {
@@ -177,6 +214,12 @@ const index = () => {
       branch_name: payload?.branch?.value?.branch_name,
       orgeh: payload?.orgeh?.value?.orgeh_kode,
       orgeh_name: payload?.orgeh?.value?.orgeh_name,
+      uka_type: payload?.uka_type?.kode,
+      region: payload?.region,
+      alamat: payload?.alamat,
+      no_telp: payload?.telp,
+      email: payload?.email,
+      fax: payload?.fax,
     };
     const schemaMapping = {
       schema: ukaSchema,
@@ -206,6 +249,7 @@ const index = () => {
       }
 
       ukaMutate();
+      ukaDetailMutate();
       setShowModal(false);
       setTypeModal("");
       dispatch(resetObjPayload());
@@ -219,9 +263,10 @@ const index = () => {
     setShowModal(true);
   };
 
-  const handleClickUpdateTable = async () => {
+  const handleClickUpdateTable = async (kode) => {
     setShowModal(true);
     setTypeModal("update");
+    setSelectedKode(kode);
   };
 
   const handleClickDeleteTable = async (id) => {
@@ -242,7 +287,6 @@ const index = () => {
     loadingSwal("close");
   };
   // [ END ] handler for table
-
   return (
     <LayoutReferenceGeneral>
       {/* Start Breadcrumbs */}
@@ -275,7 +319,7 @@ const index = () => {
             <p className="ml-2 font-bold text-base">Pustaka Data</p>
             <div className="my-2 " />
             <UkaDataTables
-              data={uka?.data?.data}
+              data={objData}
               setShowModal={setShowModal}
               handleClickAdd={handleClickAddTable}
               handleClickUpdate={handleClickUpdateTable}

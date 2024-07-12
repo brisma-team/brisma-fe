@@ -5,7 +5,7 @@ const ukaSchema = yup.object().shape({
   name: yup.string().required("Wajib diisi"),
   branch: yup.string().required("Wajib diisi"),
   orgeh: yup.string().required("Wajib diisi"),
+  uka_type: yup.string().required("Wajib diisi"),
 });
 
 export default ukaSchema;
-
