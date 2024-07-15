@@ -19,9 +19,9 @@ import {
   CardOverview,
   ModalAddMeeting,
   CardFilterOverview,
-} from "@/components/molecules/ewp/kaji-ulang/meeting/overview";
+} from "@/components/molecules/ewp/common/meeting/overview";
 import { useDispatch, useSelector } from "react-redux";
-import { useOverview } from "@/data/ewp/kaji-ulang/meeting";
+import { useOverview } from "@/data/ewp/common/meeting";
 import {
   setObjData,
   setObjPayload,
@@ -29,17 +29,18 @@ import {
   resetObjData,
   resetObjPayload,
   resetValidationErrors,
-} from "@/slices/ewp/konsulting/meeting/overviewMeetingEWPKonsultingSlice";
+} from "@/slices/ewp/quality-assurance/meeting/overviewMeetingEWPQualityAssuranceSlice";
 import { useRouter } from "next/router";
-import createMeetingEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/meeting/createMeetingEWPKonsultingSchema";
-import { useProjectDetail } from "@/data/ewp/kaji-ulang";
-import useUser from "@/data/useUser";
+import createMeetingEWPSchema from "@/helpers/schemas/ewp/common/createMeetingEWPKonsultingSchema";
+import { useAuditInfo } from "@/data/ewp/common/info";
 
 const index = () => {
   const router = useRouter();
+  const [params, setParams] = useState({
+    id: 0,
+  });
   const dispatch = useDispatch();
-  const { id } = useRouter().query;
-  const baseUrl = `/ewp/kaji-ulang/${id}`;
+  const baseUrl = `/ewp/kaji-ulang/${params?.id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
 
   const [showFilter, setShowFilter] = useState(false);
@@ -48,17 +49,14 @@ const index = () => {
   const [totalData, setTotalData] = useState(1);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
 
-  const [isInitiator, setIsInitiator] = useState(false);
-  const [isFinalProject, setIsFinalProject] = useState(false);
-
   const data = useSelector(
-    (state) => state.overviewMeetingEWPKonsulting.objData
+    (state) => state.overviewMeetingEWPQualityAssurance.objData
   );
   const payload = useSelector(
-    (state) => state.overviewMeetingEWPKonsulting.objPayload
+    (state) => state.overviewMeetingEWPQualityAssurance.objPayload
   );
   const validation = useSelector(
-    (state) => state.overviewMeetingEWPKonsulting.validationErrors
+    (state) => state.overviewMeetingEWPQualityAssurance.validationErrors
   );
 
   const [filter, setFilter] = useState({
@@ -73,7 +71,7 @@ const index = () => {
     limit: 4,
     page: 1,
   });
-  const [params, setParams] = useState({
+  const [paramsFilter, setParamsFilter] = useState({
     judul: "",
     metode: "",
     maker: "",
@@ -86,9 +84,19 @@ const index = () => {
     page: 1,
   });
 
-  const { projectDetail } = useProjectDetail({ id });
-  const { overview, overviewMutate } = useOverview({ id, ...params });
-  const { user } = useUser();
+  const { auditInfo } = useAuditInfo({ id: params?.id, module: "qa" });
+  const { overview, overviewMutate } = useOverview({
+    id: params?.id,
+    ...paramsFilter,
+  });
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      id,
+    });
+  }, [router.isReady]);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -96,7 +104,7 @@ const index = () => {
       { name: "EWP", path: "/ewp" },
       { name: "Overview", path: "/ewp/kaji-ulang" },
       {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
+        name: `${auditInfo?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
       },
       {
@@ -104,19 +112,11 @@ const index = () => {
         path: pathNameSubModulMeeting,
       },
     ]);
-    setIsFinalProject(
-      Boolean(projectDetail?.data?.project_info?.status_kode === "9")
-    );
-    setIsInitiator(
-      Boolean(
-        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
-      )
-    );
-  }, [projectDetail, user]);
+  }, [auditInfo]);
 
   useEffect(() => {
     const handleSearch = () => {
-      setParams(filter);
+      setParamsFilter(filter);
     };
     const debouncedSearch = _.debounce(handleSearch, 800);
     debouncedSearch();
@@ -192,7 +192,7 @@ const index = () => {
 
   const handleClickCarding = (e, meeting_id) => {
     e.stopPropagation();
-    router.push(`/ewp/kaji-ulang/${id}/meeting/${meeting_id}`);
+    router.push(`/ewp/kaji-ulang/${params?.id}/meeting/${meeting_id}`);
   };
 
   const handleClickDelete = async (id) => {
@@ -224,6 +224,7 @@ const index = () => {
     }
 
     setShowModal(false);
+    dispatch(resetObjPayload());
   };
 
   const handleChangeTextPayload = (property, value) => {
@@ -284,7 +285,7 @@ const index = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const schemaMappings = {
-      schema: createMeetingEWPKonsultingSchema,
+      schema: createMeetingEWPSchema,
       resetErrors: resetValidationErrors,
       setErrors: setValidationErrors,
     };
@@ -295,7 +296,7 @@ const index = () => {
       await fetchApi(
         "POST",
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/meeting/create`,
-        { ewp_id: id, ...payload }
+        { ewp_id: params?.id, ...payload }
       );
 
       overviewMutate();
@@ -323,14 +324,10 @@ const index = () => {
             />
           </div>
           <div className="w-36 rounded bg-atlasian-purple">
-            {isInitiator && !isFinalProject ? (
-              <ButtonField
-                handler={() => setShowModal(true)}
-                text={"Buat Meeting"}
-              />
-            ) : (
-              ""
-            )}
+            <ButtonField
+              handler={() => setShowModal(true)}
+              text={"Buat Meeting"}
+            />
           </div>
         </div>
       </div>

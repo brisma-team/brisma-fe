@@ -10,7 +10,7 @@ import { PrevNextNavigation } from "@/components/molecules/commons";
 import {
   PageCheckIn,
   TableAttendance,
-} from "@/components/molecules/ewp/kaji-ulang/meeting/attendance";
+} from "@/components/molecules/ewp/common/meeting/attendance";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
@@ -21,12 +21,11 @@ import {
   setErrorValidation,
 } from "@/helpers";
 import { LandingLayoutEWPKajiUlang } from "@/layouts/ewp";
-import { useProjectDetail } from "@/data/ewp/kaji-ulang";
 import {
   useAttendance,
   useLandingStatus,
   useMeetingDetail,
-} from "@/data/ewp/kaji-ulang/meeting";
+} from "@/data/ewp/common/meeting";
 import _ from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import { loginSchema } from "@/helpers/schemas";
@@ -39,14 +38,20 @@ import {
   resetObjDataMeeting,
   resetObjPayload,
   resetValidationErrors,
-} from "@/slices/ewp/konsulting/meeting/attendanceMeetingEWPKonsultingSlice";
+} from "@/slices/ewp/quality-assurance/meeting/attendanceMeetingEWPQualityAssuranceSlice";
+import { useAuditInfo } from "@/data/ewp/common/info";
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id, meeting_id, code } = useRouter().query;
-  const baseUrl = `/ewp/kaji-ulang/${id}`;
+  const router = useRouter();
+  const [params, setParams] = useState({
+    id: 0,
+    meeting_id: 0,
+    code: 0,
+  });
+  const baseUrl = `/ewp/kaji-ulang${params?.id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
-  const pathNameLanding = `${baseUrl}/meeting/${meeting_id}`;
+  const pathNameLanding = `${baseUrl}/meeting/${params?.meeting_id}`;
 
   const [valueQR, setValueQR] = useState("");
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -57,26 +62,26 @@ const index = () => {
   const [selectedAttendanceId, setSelectedAttendanceId] = useState(0);
 
   const dataAttendance = useSelector(
-    (state) => state.attendanceMeetingEWPKonsulting.objDataAttendance
+    (state) => state.attendanceMeetingEWPQualityAssurance.objDataAttendance
   );
   const dataMeeting = useSelector(
-    (state) => state.attendanceMeetingEWPKonsulting.objDataMeeting
+    (state) => state.attendanceMeetingEWPQualityAssurance.objDataMeeting
   );
   const payload = useSelector(
-    (state) => state.attendanceMeetingEWPKonsulting.objPayload
+    (state) => state.attendanceMeetingEWPQualityAssurance.objPayload
   );
   const validation = useSelector(
-    (state) => state.attendanceMeetingEWPKonsulting.validationErrors
+    (state) => state.attendanceMeetingEWPQualityAssurance.validationErrors
   );
 
-  const { projectDetail } = useProjectDetail({ id });
+  const { auditInfo } = useAuditInfo({ id: params?.id, module: "qa" });
   const { landingStatus, landingStatusMutate } = useLandingStatus({
-    id: meeting_id,
+    id: params?.meeting_id,
   });
   const { attendance, attendanceMutate } = useAttendance({
     id: selectedAttendanceId,
   });
-  const { meetingDetail } = useMeetingDetail({ id: meeting_id });
+  const { meetingDetail } = useMeetingDetail({ id: params?.meeting_id });
 
   const routes = [
     {
@@ -94,12 +99,22 @@ const index = () => {
   ];
 
   useEffect(() => {
+    if (!router.isReady) return;
+    const { id, meeting_id, code } = router.query;
+    setParams({
+      id,
+      meeting_id,
+      code,
+    });
+  }, [router.isReady]);
+
+  useEffect(() => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "EWP", path: "/ewp" },
       { name: "Overview", path: "/ewp/kaji-ulang" },
       {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
+        name: `${auditInfo?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
       },
       {
@@ -115,7 +130,7 @@ const index = () => {
         path: `${pathNameLanding}/attendance`,
       },
     ]);
-  }, [projectDetail]);
+  }, [auditInfo]);
 
   useEffect(() => {
     if (meetingDetail?.data) {
@@ -185,7 +200,7 @@ const index = () => {
           })
         : [];
       setValueQR(
-        `${window.location.protocol}//${window.location.host}/ewp/kaji-ulang/${id}/meeting/${meeting_id}/attendance?code=${attendance?.data?.attendance_info?.meet_code}`
+        `${window.location.protocol}//${window.location.host}/ewp/kaji-ulang/${params?.id}/meeting/${params?.meeting_id}/attendance?code=${attendance?.data?.attendance_info?.meet_code}`
       );
       dispatch(setObjDataAttendance(mappingAttendance));
     } else {
@@ -231,7 +246,7 @@ const index = () => {
       const response = await fetchApi(
         "POST",
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/meeting/attendance/login`,
-        { meet_code: code, ...payload }
+        { meet_code: params?.code, ...payload }
       );
 
       if (!response?.isDismissed) return;
@@ -245,13 +260,13 @@ const index = () => {
   };
   // [ END ] handler for CheckInAttendance
 
-  if (code) {
+  if (params?.code) {
     return (
       <PageCheckIn
         isLoading={isLoading}
         isSuccessCheckIn={isSuccessCheckIn}
         payload={payload}
-        meetingCode={code}
+        meetingCode={params?.code}
         meetingDetail={dataMeeting}
         validation={validation}
         handleSubmitLogin={handleSubmitLogin}

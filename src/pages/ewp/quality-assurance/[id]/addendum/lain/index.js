@@ -680,7 +680,6 @@ const index = () => {
 
   const handleSubmitJadwal = async (e) => {
     e.preventDefault();
-
     loadingSwal();
     await fetchApi(
       "POST",

@@ -1,21 +1,34 @@
 import { Breadcrumbs, CardLanding, PageTitle } from "@/components/atoms";
-import { useProjectDetail } from "@/data/ewp/kaji-ulang";
-import { useLandingStatus } from "@/data/ewp/konsulting/meeting";
-import { LandingLayoutEWPKajiUlang } from "@/layouts/ewp";
+import { useLandingStatus } from "@/data/ewp/common/meeting";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import { useAuditInfo } from "@/data/ewp/common/info";
+import { LandingLayoutEWPKajiUlang } from "@/layouts/ewp";
 
 const index = () => {
-  const { id, meeting_id } = useRouter().query;
-  const baseUrl = `/ewp/kaji-ulang/${id}`;
+  const router = useRouter();
+  const [params, setParams] = useState({
+    id: 0,
+    meeting_id: 0,
+  });
+  const baseUrl = `/ewp/kaji-ulang/${params?.id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
-  const pathNameLandingPage = `${pathNameSubModulMeeting}/${meeting_id}`;
+  const pathNameLandingPage = `${pathNameSubModulMeeting}/${params?.meeting_id}`;
 
   const [dataCarding, setDataCarding] = useState([]);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
 
-  const { projectDetail } = useProjectDetail({ id });
-  const { landingStatus } = useLandingStatus({ id: meeting_id });
+  const { auditInfo } = useAuditInfo({ id: params?.id, module: "qa" });
+  const { landingStatus } = useLandingStatus({ id: params?.meeting_id });
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id, meeting_id } = router.query;
+    setParams({
+      id,
+      meeting_id,
+    });
+  }, [router.isReady]);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -23,7 +36,7 @@ const index = () => {
       { name: "EWP", path: "/ewp" },
       { name: "Overview", path: "/ewp/kaji-ulang" },
       {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
+        name: `${auditInfo?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
       },
       {
@@ -32,10 +45,10 @@ const index = () => {
       },
       {
         name: `Entrance`,
-        path: `${pathNameSubModulMeeting}/${meeting_id}`,
+        path: `${pathNameSubModulMeeting}/${params?.meeting_id}`,
       },
     ]);
-  }, [projectDetail]);
+  }, [auditInfo]);
 
   useEffect(() => {
     if (landingStatus?.data) {

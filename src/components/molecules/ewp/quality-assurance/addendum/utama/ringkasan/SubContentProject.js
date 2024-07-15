@@ -57,6 +57,10 @@ const SubContentProject = ({ data }) => {
             value={data?.project_id?.toUpperCase()}
           />
           <RowContent label={"Project Name"} value={data?.project_name} />
+          <RowContent
+            label={"PIC Analisator"}
+            value={data?.pn_pic + " - " + data?.name_pic}
+          />
           <RowContent label={"Tahun"} value={data?.tahun} />
           <RowContent label={"Tipe"} value={data?.mtd_tipe?.nama || ""} />
           <RowContent label={"Jenis"} value={data?.mtd_jenis?.nama || ""} />

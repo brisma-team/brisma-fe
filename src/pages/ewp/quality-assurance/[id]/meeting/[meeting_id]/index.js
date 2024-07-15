@@ -23,9 +23,10 @@ const index = () => {
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { id } = router.query;
+    const { id, meeting_id } = router.query;
     setParams({
       id,
+      meeting_id,
     });
   }, [router.isReady]);
 

@@ -1,5 +1,5 @@
 import { Breadcrumbs, ButtonField, Card, PageTitle } from "@/components/atoms";
-import { useProjectDetail } from "@/data/ewp/kaji-ulang";
+import { useAuditInfo } from "@/data/ewp/common/info";
 import { LandingLayoutEWPKajiUlang } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
@@ -10,7 +10,7 @@ import {
   resetObjData,
   resetObjPayload,
   resetValidationErrors,
-} from "@/slices/ewp/konsulting/dokumen/documentEWPKonsultingSlice";
+} from "@/slices/ewp/quality-assurance/dokumen/documentEWPQualityAssuranceSlice";
 import { useSelector, useDispatch } from "react-redux";
 import {
   confirmationSwal,
@@ -28,20 +28,23 @@ import {
   ModalBulkDownload,
   DataTables,
   ModalDescription,
-} from "@/components/molecules/ewp/kaji-ulang/dokumen";
+} from "@/components/molecules/ewp/common/dokumen";
 import {
   useBulkDownloadDocument,
   useListDocument,
-} from "@/data/ewp/konsulting/dokumen";
-import uploadDocumentEWPKonsultingSchema from "@/helpers/schemas/ewp/konsulting/dokumen/uploadDocumentEWPKonsultingSchema";
+} from "@/data/ewp/common/dokumen";
+import uploadDocumentEWPSchema from "@/helpers/schemas/ewp/common/uploadDocumentEWPSchema";
 import { IconArrowDown } from "@/components/icons";
 import _ from "lodash";
 import useUser from "@/data/useUser";
 
 const index = () => {
+  const router = useRouter();
+  const [params, setParams] = useState({
+    id: 0,
+  });
   const dispatch = useDispatch();
-  const { id } = useRouter().query;
-  const baseUrl = `/ewp/kaji-ulang/${id}`;
+  const baseUrl = `/ewp/kaji-ulang/${params?.id}`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -53,21 +56,36 @@ const index = () => {
   const [isFinalProject, setIsFinalProject] = useState(false);
   const [isInitiator, setIsInitiator] = useState(false);
 
-  const data = useSelector((state) => state.documentEWPKonsulting.objData);
+  const data = useSelector(
+    (state) => state.documentEWPQualityAssurance.objData
+  );
   const payload = useSelector(
-    (state) => state.documentEWPKonsulting.objPayload
+    (state) => state.documentEWPQualityAssurance.objPayload
   );
   const validation = useSelector(
-    (state) => state.documentEWPKonsulting.validationErrors
+    (state) => state.documentEWPQualityAssurance.validationErrors
   );
 
-  const { projectDetail } = useProjectDetail({ id });
-  const { listDocument, listDocumentMutate } = useListDocument({ id });
+  const { auditInfo } = useAuditInfo({
+    module: "qa",
+    id: params?.id,
+  });
+  const { listDocument, listDocumentMutate } = useListDocument({
+    id: params?.id,
+  });
   const { bulkDownloadDocument } = useBulkDownloadDocument({
     ref_document_id: filterBulkDownload?.kode || "",
-    id,
+    id: params?.id,
   });
   const { user } = useUser();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
+    setParams({
+      id,
+    });
+  }, [router.isReady]);
 
   useEffect(() => {
     setBreadcrumbs([
@@ -75,7 +93,7 @@ const index = () => {
       { name: "EWP", path: "/ewp" },
       { name: "Overview", path: "/ewp/kaji-ulang" },
       {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()} / Berkas Dokumen`,
+        name: `${auditInfo?.data?.project_info?.project_id?.toUpperCase()} / Berkas Dokumen`,
         path: baseUrl + "/info",
       },
       {
@@ -84,14 +102,12 @@ const index = () => {
       },
     ]);
     setIsFinalProject(
-      Boolean(projectDetail?.data?.project_info?.status_kode === "9")
+      Boolean(auditInfo?.data?.project_info?.status_kode === "9")
     );
     setIsInitiator(
-      Boolean(
-        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
-      )
+      Boolean(auditInfo?.data?.project_info?.initiator?.pn === user?.data?.pn)
     );
-  }, [projectDetail, user]);
+  }, [auditInfo, user]);
 
   useEffect(() => {
     if (bulkDownloadDocument?.findAllDoc?.length) {
@@ -269,7 +285,7 @@ const index = () => {
   const handleSubmitUploadDocument = async (e) => {
     e.preventDefault();
     const schemaMapping = {
-      schema: uploadDocumentEWPKonsultingSchema,
+      schema: uploadDocumentEWPSchema,
       resetErrors: resetValidationErrors,
       setErrors: setValidationErrors,
     };
@@ -278,7 +294,7 @@ const index = () => {
     if (validate) {
       loadingSwal();
       const objPayload = {
-        ewp_id: id,
+        ewp_id: params?.id,
         doc_name: payload.document_name,
         deskripsi: payload.desc,
         by_system: false,
