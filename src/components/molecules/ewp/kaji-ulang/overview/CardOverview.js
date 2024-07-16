@@ -77,10 +77,11 @@ const CardOverview = ({
         </div>
       ),
       action: handleCloseProject,
-      isDisabled: Boolean(
-        user?.pn !=
-          data?.auditor?.filter((item) => item.is_initiator === true)[0]?.pn
-      ),
+      // isDisabled: Boolean(
+      //   user?.pn !=
+      //     data?.auditor?.filter((item) => item.is_initiator === true)[0]?.pn
+      // ),
+      isDisabled: Boolean(user?.pn != data?.pn_initiator),
     },
     {
       label: (
@@ -94,7 +95,7 @@ const CardOverview = ({
     },
   ];
   const colorLabel = {
-    consulting: "bg-cardColor-turquoise",
+    "kaji ulang": "bg-cardColor-green-dark",
   };
 
   return (

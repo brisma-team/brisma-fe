@@ -151,8 +151,6 @@ const index = () => {
     }
   }, [is_change]);
 
-  console.log(changeInitiatorId);
-
   useEffect(() => {
     if (workflowTempData !== undefined) {
       setTempWorkflowData(workflowTempData?.data);

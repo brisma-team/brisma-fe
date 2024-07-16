@@ -11,6 +11,7 @@ import {
   ModalCopyLink,
   SelectSortFilter,
 } from "@/components/molecules/commons";
+import { workflowChangeInitiatorSchema } from "@/helpers/schemas/ewp/konsulting/workflowChangeInitiator";
 import {
   confirmationSwal,
   convertDate,
@@ -18,11 +19,14 @@ import {
   errorSwal,
   fetchApi,
   loadingSwal,
+  setErrorValidation,
   usePostData,
 } from "@/helpers";
 import {
   setWorkflowData,
   resetWorkflowData,
+  setValidationErrorsWorkflow,
+  resetValidationErrorsWorkflow,
 } from "@/slices/ewp/konsulting/changeInitiatorSlice";
 import _ from "lodash";
 import {
@@ -107,14 +111,16 @@ const index = () => {
   const { overviewEWPKajiUlang, overviewEWPKajiUlangMutate } =
     useOverviewEWPKajiUlang(params);
 
-  const { approvalEWP } = useApprovalEWP("ewp");
+  const { approvalEWP, approvalEWPIsLoading } = useApprovalEWP("ewp");
 
-  const { workflowTempData } = useGetApprovalProjectPAT(patId);
+  const { workflowTempData, workflowTempDataIsLoading } =
+    useGetApprovalProjectPAT(patId);
 
-  const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
-    "change_initiator",
-    { id: changeInitiatorId }
-  );
+  const {
+    workflowDetailEWP,
+    workflowDetailEWPMutate,
+    workflowDetailEWPIsLoading,
+  } = useWorkflowDetailEWP("change_initiator", { id: changeInitiatorId });
 
   const workflowData = useSelector(
     (state) => state.changeInitiator.workflowData
@@ -122,6 +128,22 @@ const index = () => {
   const validationErrorsWorkflow = useSelector(
     (state) => state.changeInitiator.validationErrorsWorkflow
   );
+
+  useEffect(() => {
+    if (
+      approvalEWPIsLoading &&
+      workflowTempDataIsLoading &&
+      workflowDetailEWPIsLoading
+    ) {
+      loadingSwal();
+    } else {
+      loadingSwal("close");
+    }
+  }, [
+    approvalEWPIsLoading,
+    workflowTempDataIsLoading,
+    workflowDetailEWPIsLoading,
+  ]);
 
   useEffect(() => {
     if (is_approval) {
@@ -271,6 +293,8 @@ const index = () => {
           href: `/ewp/projects/kaji-ulang/${v?.id}/info`,
           created_at: createdAt,
           maker: `${initiator?.pn} - ${initiator?.nama}`,
+          pn_initiator: initiator?.pn,
+          name_initiator: initiator?.nama,
           change_initiator,
         };
       });
@@ -363,13 +387,13 @@ const index = () => {
   };
   const handleSubmitRequestChangeInitiator = async (e) => {
     e.preventDefault();
-    // const schemaMapping = {
-    //   schema: workflowSchema,
-    //   resetErrors: resetValidationErrorsWorkflow,
-    //   setErrors: setValidationErrorsWorkflow,
-    // };
-    // const validate = setErrorValidation(workflowData, dispatch, schemaMapping);
-    const validate = true;
+    const schemaMapping = {
+      schema: workflowChangeInitiatorSchema,
+      resetErrors: resetValidationErrorsWorkflow,
+      setErrors: setValidationErrorsWorkflow,
+    };
+    const validate = setErrorValidation(workflowData, dispatch, schemaMapping);
+    // const validate = true;
     if (validate) {
       const actionType = e.target.offsetParent.name;
       const data = {
