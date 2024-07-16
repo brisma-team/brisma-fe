@@ -680,6 +680,7 @@ const index = () => {
 
   const handleSubmitJadwal = async (e) => {
     e.preventDefault();
+    console.log(payloadJadwal);
     loadingSwal();
     await fetchApi(
       "POST",
@@ -687,9 +688,9 @@ const index = () => {
       { jadwal: payloadJadwal }
     );
 
+    // dispatch(resetObjPayloadJadwal());
     jadwalMutate();
     ringkasanMutate();
-    dispatch(resetObjPayloadJadwal());
     loadingSwal("close");
   };
   // [ END ] hanlder for tab jadwal
@@ -843,8 +844,6 @@ const index = () => {
     dataContentTujuan,
     dataContentAnalisa,
   ]);
-
-  console.log(currentContentStage, typeof currentContentStage);
 
   return (
     <LandingLayoutEWPAddendum type="quality-assurance">
