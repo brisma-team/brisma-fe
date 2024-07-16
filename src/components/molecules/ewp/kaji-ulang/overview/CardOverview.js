@@ -108,7 +108,7 @@ const CardOverview = ({
       }`}
       handleClick={(e) => {
         e.stopPropagation();
-        if (!data?.need_approval) router.push(`konsulting/${data?.id}/info`);
+        if (!data?.need_approval) router.push(`kaji-ulang/${data?.id}/info`);
       }}
     >
       <div
