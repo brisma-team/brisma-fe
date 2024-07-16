@@ -35,7 +35,11 @@ const ModalDescription = ({
       showModal={showModal}
       positionCenter
       footer={
-        isEdit && <ModalFooter handleConfirm={() => handleSubmit(editValue)} />
+        isEdit && (
+          <ModalFooter
+            handleConfirm={async () => await handleSubmit(editValue)}
+          />
+        )
       }
     >
       <div className="w-[37.5rem] relative -mt-2.5">
