@@ -49,7 +49,7 @@ const index = () => {
     meeting_id: 0,
     code: 0,
   });
-  const baseUrl = `/ewp/kaji-ulang${params?.id}`;
+  const baseUrl = `/ewp/kaji-ulang/${params?.id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
   const pathNameLanding = `${baseUrl}/meeting/${params?.meeting_id}`;
 

@@ -18,13 +18,13 @@ const TableAttendance = ({ data, handleDelete }) => {
     <div>
       <TableTree>
         <Headers>
-          <Header width="7%" className="border-x border-t rounded-ss-xl">
+          <Header width="8%" className="border-x border-t rounded-ss-xl">
             <div className={`${customHeader} justify-center text-center`}>
               Aksi
             </div>
           </Header>
           <Header
-            width="28%"
+            width="27%"
             className="border-t border-r cell-custom-dataTables"
           >
             <div className={`${customHeader}`}>Nama Anggota</div>

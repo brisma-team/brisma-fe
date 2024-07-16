@@ -6,7 +6,11 @@ import {
   CustomPagination,
   PageTitle,
 } from "@/components/atoms";
-import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
+import {
+  DataNotFound,
+  ModalCopyLink,
+  SelectSortFilter,
+} from "@/components/molecules/commons";
 import {
   confirmationSwal,
   convertDate,
@@ -32,6 +36,9 @@ import { ModalWorkflowRequestChangeInitiator } from "@/components/molecules/ewp/
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import useUser from "@/data/useUser";
+import { ModalApproveProjectPat } from "@/components/molecules/ewp/konsulting/overview";
+import { useRouter } from "next/router";
+import { useGetApprovalProjectPAT } from "@/data/ewp/konsulting/overview";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -55,13 +62,20 @@ const convertProgressAndPercent = (status) => {
 };
 
 const index = () => {
+  const router = useRouter();
+  const { ewp_pat_id, is_approval, cid, is_change } = router.query;
   const dispatch = useDispatch();
   const [showFilter, setShowFilter] = useState(false);
   const [totalData, setTotalData] = useState(1);
   const [data, setData] = useState([]);
+  const [copyLinkUrl, setCopyLinkUrl] = useState("");
+  const [tempWorkflowData, setTempWorkflowData] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [showModalCopyLink, setShowModalCopyLink] = useState(false);
+  const [patId, setPatId] = useState("");
   const [showModalApprovalExtension, setShowModalApprovalExtension] =
     useState(false);
+  const [showModalProjectPAT, setShowModalProjectPAT] = useState(false);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
   const [changeInitiatorId, setChangeInitiatorId] = useState("");
   const [filter, setFilter] = useState({
@@ -95,6 +109,8 @@ const index = () => {
 
   const { approvalEWP } = useApprovalEWP("ewp");
 
+  const { workflowTempData } = useGetApprovalProjectPAT(patId);
+
   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
     "change_initiator",
     { id: changeInitiatorId }
@@ -106,6 +122,26 @@ const index = () => {
   const validationErrorsWorkflow = useSelector(
     (state) => state.changeInitiator.validationErrorsWorkflow
   );
+
+  useEffect(() => {
+    if (is_approval) {
+      setShowModalProjectPAT(true);
+      setPatId(ewp_pat_id);
+    }
+  }, [is_approval]);
+
+  useEffect(() => {
+    if (is_change) {
+      setShowModalApprovalExtension(!showModalApprovalExtension);
+      setChangeInitiatorId(cid);
+    }
+  }, [is_change]);
+
+  useEffect(() => {
+    if (workflowTempData !== undefined) {
+      setTempWorkflowData(workflowTempData?.data);
+    }
+  }, [workflowTempData]);
 
   useEffect(() => {
     if (workflowDetailEWP?.data) {
@@ -269,12 +305,13 @@ const index = () => {
     loadingSwal("close");
   };
 
-  const handleCopyProject = (e, id) => {
+  const handleCopyProject = (e, url) => {
     e.stopPropagation();
-    copyToClipboard(
-      window.location.href + `/${id}/info`,
-      "Link meeting berhasil disalin ke clipboard."
-    );
+    copyToClipboard(url, "Link meeting berhasil disalin ke clipboard.");
+  };
+  const handleOpenCopyProject = (id) => {
+    setCopyLinkUrl(window.location.href + `/${id}/info`);
+    setShowModalCopyLink(true);
   };
 
   const handleChangeInitiator = async (status, ewp_id, change_initiator_id) => {
@@ -406,6 +443,40 @@ const index = () => {
     workflowDetailEWPMutate();
   };
 
+  const handleSubmitApprovePAT = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin ingin menyetujui project ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+    await usePostData(
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/ewp/need_approval/` +
+        patId +
+        `?is_approve=true`,
+      {}
+    );
+    setShowModalProjectPAT(false);
+  };
+
+  const handleRejectApprovePAT = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah anda yakin ingin menolak project ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+    await usePostData(
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/ewp/need_approval/` +
+        patId +
+        `?is_approve=false`,
+      {}
+    );
+    setShowModalProjectPAT(false);
+  };
+
   const handleCloseModalRequestChangeInitiator = () => {
     // dispatch(resetHistoryWorkflowExtensionRequest());
     dispatch(resetWorkflowData());
@@ -503,7 +574,7 @@ const index = () => {
                 key={i}
                 data={v}
                 handleCloseProject={async () => await handleCloseProject(v?.id)}
-                handleCopyProject={handleCopyProject}
+                handleCopyProject={() => handleOpenCopyProject(v?.id)}
                 handleChangeInitiator={async () =>
                   await handleChangeInitiator(
                     Boolean(v?.change_initiator?.length > 0),
@@ -544,6 +615,22 @@ const index = () => {
         handleAdd={handleAddApproverRequestChangeInitiator}
         handleSubmit={handleSubmitRequestChangeInitiator}
         handleCloseModal={handleCloseModalRequestChangeInitiator}
+      />
+      <ModalApproveProjectPat
+        headerTitle={"Persetujuan Project EWP P.A.T"}
+        showModal={showModalProjectPAT}
+        setShowModal={setShowModalProjectPAT}
+        handleChangeSelect={handleChangeSelect}
+        objectId={patId}
+        handleSubmit={handleSubmitApprovePAT}
+        handleReject={handleRejectApprovePAT}
+        data={tempWorkflowData}
+      />
+      <ModalCopyLink
+        showModal={showModalCopyLink}
+        setShowModal={setShowModalCopyLink}
+        handleCopyProject={handleCopyProject}
+        url={copyLinkUrl}
       />
       {/* End Content */}
     </OverviewLayoutEWP>
