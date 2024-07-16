@@ -145,14 +145,14 @@ const index = () => {
     if (response) {
       const mapping = response?.map((bab) => {
         return {
-          idx: bab?.bab,
+          idx: parseInt(bab?.bab),
           total_comment: 0,
           title: bab?.title,
         };
       });
 
       const filteredResult = mapping.filter((item) => {
-        return doc.some((docItem) => docItem.idx == item.idx);
+        return doc.some((docItem) => docItem.idx === item.idx);
       });
       setListContent(filteredResult);
     }
