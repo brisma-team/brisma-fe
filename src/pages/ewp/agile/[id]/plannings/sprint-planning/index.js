@@ -201,6 +201,7 @@ const index = () => {
         return {
           id: sprint?.id,
           sprint: { no: sprint?.no, nama: sprint?.sprint_name },
+          status: sprint?.status_penyelesaian,
           role: "parent",
           children: sprint?.user_stories?.length
             ? sprint?.user_stories?.map((user_story, user_story_index) => {
@@ -227,6 +228,7 @@ const index = () => {
                         };
                       })
                     : [],
+                  status: user_story?.status_penyelesaian,
                   role: "parent-child",
                   children: user_story?.user_story_task?.length
                     ? user_story?.user_story_task?.map((task, task_index) => {
@@ -241,6 +243,7 @@ const index = () => {
                             kode: task?.task_type_kode,
                             nama: task?.task_type_name,
                           },
+                          status: task?.status_penyelesaian,
                           role: "child",
                         };
                       })
@@ -402,6 +405,7 @@ const index = () => {
         dataSprintPlanning[sprint_index].children[user_story_index].comment
       )
     );
+    setShowModalCommentUserStory(true);
   };
 
   const handleClickDeleteUserStory = async (sprint_id) => {
@@ -453,6 +457,7 @@ const index = () => {
         ].comment
       )
     );
+    setShowModalCommentTask(true);
   };
 
   const handleClickDeleteTask = async (task_id) => {

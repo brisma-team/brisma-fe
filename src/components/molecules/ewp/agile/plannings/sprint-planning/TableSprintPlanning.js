@@ -147,9 +147,28 @@ const TableSprintPlanning = ({
                 width="9%"
                 className="border-r cell-custom-dataTables justify-center"
               >
-                <LozengeField appreance={status ? "" : "default"} isBold>
-                  {status || "draft"}
-                </LozengeField>
+                {status ? (
+                  <LozengeField
+                    appreance={
+                      status === "draft"
+                        ? "default"
+                        : status === "in progress"
+                        ? "inprogress"
+                        : status === "completed"
+                        ? "success"
+                        : status === "impended"
+                        ? "moved"
+                        : status === "canceled"
+                        ? "removed"
+                        : ""
+                    }
+                    isBold={status !== "draft"}
+                  >
+                    {status}
+                  </LozengeField>
+                ) : (
+                  ""
+                )}
               </Cell>
               <Cell
                 width="30%"
@@ -264,7 +283,7 @@ const TableSprintPlanning = ({
                 )}
               </Cell>
               <Cell width="20%" className="border-r cell-custom-dataTables">
-                {role === "child" ? (
+                {role === "parent-child" || role === "child" ? (
                   <div className={`${positionCenter} gap-2`}>
                     <ButtonIcon
                       icon={<ButtonEdit />}
