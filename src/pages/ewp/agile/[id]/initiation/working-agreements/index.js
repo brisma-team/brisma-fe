@@ -45,6 +45,7 @@ import {
 import { confirmationSwal, fetchApi, loadingSwal } from "@/helpers";
 // import _ from "lodash";
 import { useWorkingAgreements } from "@/data/ewp/agile/initiation/working-agreements";
+import useUser from "@/data/useUser";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 const routes = [
@@ -79,6 +80,8 @@ const index = () => {
   const [showModalEscalationPoints, setShowModalEscalationPoints] =
     useState(false);
   const [showModalOtherMatters, setShowModalOtherMatters] = useState(false);
+
+  const [isInitiator, setIsInitiator] = useState(false);
 
   const dataValue = useSelector(
     (state) => state.workingAgreementsEWPAgile.objDataValue
@@ -120,6 +123,7 @@ const index = () => {
     (state) => state.workingAgreementsEWPAgile.objPayloadOtherMatters
   );
 
+  const { user } = useUser();
   const { auditInfo } = useAuditInfo({
     id: params?.id,
     module: "agile",
@@ -152,7 +156,11 @@ const index = () => {
     } else {
       setBreadcrumbs([]);
     }
-  }, [auditInfo]);
+
+    setIsInitiator(
+      Boolean(auditInfo?.data?.project_info?.initiator?.pn === user?.data?.pn)
+    );
+  }, [auditInfo, user]);
 
   useEffect(() => {
     if (auditInfo?.data) {
@@ -351,7 +359,11 @@ const index = () => {
           <div className="p-4 flex flex-col gap-3">
             <div className="flex gap-3">
               <div className="w-2/3 flex flex-col gap-3">
-                <CardContent title={"Value"} handleClickEdit={handleEditValue}>
+                <CardContent
+                  title={"Value"}
+                  handleClickEdit={handleEditValue}
+                  withoutButton={!isInitiator}
+                >
                   <div className="py-1.5">
                     <div
                       className="min-h-[10.5rem] max-h-[10.5rem] overflow-y-scroll px-2"
@@ -365,6 +377,7 @@ const index = () => {
                   <CardContent
                     title={"Event"}
                     handleClickEdit={handleEditEvent}
+                    withoutButton={!isInitiator}
                   >
                     <div className="py-1.5">
                       <div
@@ -378,6 +391,7 @@ const index = () => {
                   <CardContent
                     title={"Format of Communication"}
                     handleClickEdit={handleEditFormatOfCommunication}
+                    withoutButton={!isInitiator}
                   >
                     <div className="py-1.5">
                       <div
@@ -456,6 +470,7 @@ const index = () => {
               <CardContent
                 title={"Setting Expectations"}
                 handleClickEdit={handleEditSettingExpectations}
+                withoutButton={!isInitiator}
               >
                 <div className="py-1.5">
                   <div
@@ -471,6 +486,7 @@ const index = () => {
               <CardContent
                 title={"Escalation Points"}
                 handleClickEdit={handleEditEscalationPoints}
+                withoutButton={!isInitiator}
               >
                 <div className="py-1.5">
                   <div
@@ -486,6 +502,7 @@ const index = () => {
               <CardContent
                 title={"Other Matters"}
                 handleClickEdit={handleEditOtherMatters}
+                withoutButton={!isInitiator}
               >
                 <div className="py-1.5">
                   <div

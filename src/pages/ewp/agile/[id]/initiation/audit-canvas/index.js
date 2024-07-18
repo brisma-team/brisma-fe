@@ -80,6 +80,7 @@ import { ModalProjectTeam } from "@/components/molecules/ewp/agile/initiation/au
 import auditTimelinesEWPSchema from "@/helpers/schemas/ewp/agile/initiation/auditTimelinesEWPAgileSchema";
 import _ from "lodash";
 import ukerAssessmentEWPSchema from "@/helpers/schemas/ewp/common/ukerAssessmentEWPSchema";
+import useUser from "@/data/useUser";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 const routes = [
@@ -124,6 +125,7 @@ const index = () => {
   const [showModalUkerAssessment, setShowModalUkerAssessment] = useState(false);
 
   const [isAddNewRowUker, setIsAddNewRowUker] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
 
   const [typeModalAuditTimeline, setTypeModalAuditTimeline] = useState("");
   const [selectedAuditTimelineId, setSelectedAuditTimelineId] = useState(0);
@@ -198,6 +200,7 @@ const index = () => {
     (state) => state.auditCanvasEWPAgile.validationErrorsAuditTimelines
   );
 
+  const { user } = useUser();
   const { auditInfo } = useAuditInfo({
     id: params?.id,
     module: "agile",
@@ -239,7 +242,11 @@ const index = () => {
     } else {
       setDataProjectId("");
     }
-  }, [auditInfo]);
+
+    setIsInitiator(
+      Boolean(auditInfo?.data?.project_info?.initiator?.pn === user?.data?.pn)
+    );
+  }, [auditInfo, user]);
 
   useEffect(() => {
     const response = auditCanvas?.data;
@@ -297,6 +304,7 @@ const index = () => {
             pn: v?.pn_auditor,
             nama: v?.nama_auditor,
           },
+          is_initiator: Boolean(v?.is_initiator),
         };
       });
       dispatch(setObjDataTeam(mappingData));
@@ -383,7 +391,10 @@ const index = () => {
     const mappingATA = dataTeam?.filter((v) => v?.role === "Audit Scrum Team");
     const mappingPayloadTeam = {
       ma: _.map(mappingMA, (v) => v?.pic),
-      kta: _.map(mappingKTA, (v) => v?.pic),
+      kta: _.map(mappingKTA, (v) => ({
+        ...v?.pic,
+        is_initiator: v?.is_initiator,
+      })),
       ata: _.map(mappingATA, (v) => v?.pic),
     };
     dispatch(setObjPayloadTeam(mappingPayloadTeam));
@@ -829,6 +840,7 @@ const index = () => {
               <CardContent
                 title={"Business Concern"}
                 handleClickEdit={handleEditBusinessConcern}
+                withoutButton={!isInitiator}
               >
                 <div className="py-1.5">
                   <div
@@ -846,6 +858,7 @@ const index = () => {
                 <CardContent
                   title={"Project Drivers"}
                   handleClickEdit={handleEditProjectDrivers}
+                  withoutButton={!isInitiator}
                 >
                   <div className="py-1.5">
                     <div
@@ -861,6 +874,7 @@ const index = () => {
                 <CardContent
                   title={"Value Proportions"}
                   handleClickEdit={handleEditValueProportions}
+                  withoutButton={!isInitiator}
                 >
                   <div className="py-1.5">
                     <div
@@ -878,6 +892,7 @@ const index = () => {
               <CardContent
                 title={"Cross-Functional Impact"}
                 handleClickEdit={handleEditCrossFunctionalImpact}
+                withoutButton={!isInitiator}
               >
                 <div className="py-1.5">
                   <div
@@ -895,6 +910,7 @@ const index = () => {
               <CardContent
                 title={"Key Stakeholders"}
                 handleClickEdit={handleEditUkerAssessment}
+                withoutButton={!isInitiator}
               >
                 <div className="p-3">
                   <TableTree>
@@ -977,6 +993,7 @@ const index = () => {
               <CardContent
                 title={"Project Team"}
                 handleClickEdit={handleEditProjectTeam}
+                withoutButton={!isInitiator}
               >
                 <div className="p-3">
                   <TableTree>
@@ -1033,6 +1050,7 @@ const index = () => {
               <CardContent
                 title={"Additional Informations"}
                 handleClickEdit={handleEditAdditionalInformation}
+                withoutButton={!isInitiator}
               >
                 <div className="py-1.5">
                   <div
@@ -1050,6 +1068,7 @@ const index = () => {
               <CardContent
                 title={"Project Objectives"}
                 handleClickEdit={handleEditProjectObjectives}
+                withoutButton={!isInitiator}
               >
                 <div className="py-1.5">
                   <div
@@ -1065,6 +1084,7 @@ const index = () => {
               <CardContent
                 title={"Audit Backlog"}
                 handleClickEdit={handleEditAuditBacklog}
+                withoutButton={!isInitiator}
               >
                 <div className="py-1.5">
                   <div
@@ -1080,6 +1100,7 @@ const index = () => {
               <CardContent
                 title={"Audit Timelines"}
                 handleClickEdit={handleEditAuditTimelines}
+                withoutButton={!isInitiator}
               >
                 <div className="p-3">
                   <TableTree>
