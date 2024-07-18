@@ -41,6 +41,7 @@ import { useSelector } from "react-redux";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import _ from "lodash";
 import useUser from "@/data/useUser";
+import { getAuditScheduleTable } from "@/helpers/templates/auditSchedule";
 
 const routes = [
   {
@@ -61,24 +62,19 @@ const index = () => {
   const ref = useRef(null);
   const baseUrl = `/pat/projects/${id}`;
   const nav = [
-    { idx: 0, name: "Latar Belakang dan Tujuan", url: "ltb" },
-    { idx: 1, name: "Sumber Informasi", url: "si" },
-    { idx: 2, name: "Ruang Lingkup", url: "target_audit" },
-    { idx: 3, name: "Jadwal Kegiatan", url: "jadwal_audit" },
-    { idx: 4, name: "Jadwal Konsulting", url: "jadwal_sbp" },
-    { idx: 5, name: "Jadwal Lainnya", url: "kegiatan_lain" },
-    {
-      idx: 6,
-      name: "Susunan Tim Audit, Unit Kerja, Binaan & Auditor",
-      url: "tim_audit",
-    },
-    { idx: 7, name: "Anggaran Audit", url: "anggaran" },
+    { idx: 1, name: "Latar Belakang dan Tujuan", url: "ltb" },
+    { idx: 2, name: "Sumber Informasi", url: "si" },
+    { idx: 3, name: "Target Audit", url: "target_audit" },
+    { idx: 4, name: "Tim Audit", url: "tim_audit" },
+    { idx: 5, name: "Jadwal Audit", url: "jadwal_audit" },
+    { idx: 6, name: "Jadwal Kegiatan", url: "jadwal_sbp" },
+    { idx: 7, name: "Jadwal Lainnya", url: "kegiatan_lain" },
   ];
 
   const { user } = useUser();
   const { statusPat } = useStatusPat(id);
   const { workflow, workflowMutate } = useWorkflow("detail", { id });
-  const workflowLog = useWorkflow("log", { id });
+  const { workflowLog, workflowLogMutate } = useWorkflow("log", { id });
 
   const breadcrumbs = [
     { name: "Menu", path: "/dashboard" },
@@ -90,12 +86,12 @@ const index = () => {
 
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [openCardComment, setOpenCardComment] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(1);
   const [activeIndexComment, setActiveIndexComment] = useState(0);
   const activeDivRef = useRef(null);
   const [hitEndpointCount, setHitEndpointCount] = useState(0);
   const [doc, setDoc] = useState([]);
-  const [currentPosition, setCurrentPosition] = useState(0);
+  const [currentPosition, setCurrentPosition] = useState(1);
   const [content, setContent] = useState(null);
   const [totalComment, setTotalComment] = useState([]);
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
@@ -121,25 +117,22 @@ const index = () => {
       });
 
       const viewportTop = parentContainer.scrollTop + 235;
-      const viewportBottom = viewportTop + parentContainer.clientHeight + 235;
 
-      let activeIndex = positions.findIndex(
-        (position) => position >= viewportTop && position < viewportBottom
-      );
-
-      if (activeIndex === -1) {
-        activeIndex = positions.findIndex(
-          (position) => position >= viewportBottom
+      let activeIndex = positions.findIndex((position, index) => {
+        const nextPosition = positions[index + 1];
+        return (
+          position <= viewportTop &&
+          (nextPosition ? nextPosition > viewportTop : true)
         );
-      }
+      });
 
-      setCurrentPosition(activeIndex);
+      setCurrentPosition(activeIndex + 1);
 
       const isAtBottom =
         parentContainer.scrollTop + parentContainer.clientHeight ===
         parentContainer.scrollHeight;
-      if (isAtBottom && hitEndpointCount < 7) {
-        setHitEndpointCount((prev) => Math.min(prev + 1, 7));
+      if (isAtBottom && hitEndpointCount < 8) {
+        setHitEndpointCount((prev) => Math.min(prev + 1, 8));
       }
     }
   };
@@ -258,8 +251,8 @@ const index = () => {
   }, [workflow]);
 
   useEffect(() => {
-    if (workflowLog?.workflow?.data?.log?.length) {
-      const mapping = workflowLog?.workflow?.data?.log?.map((v) => {
+    if (workflowLog?.data?.log?.length) {
+      const mapping = workflowLog?.data?.log?.map((v) => {
         return {
           "P.I.C": v?.from?.pn + " - " + v?.from?.nama,
           Alasan: v?.note,
@@ -274,7 +267,7 @@ const index = () => {
       });
       setHistoryWorkflow(mapping);
     }
-  }, [workflowLog.workflow]);
+  }, [workflowLog]);
 
   const handleClickComment = (idx) => {
     setOpenCardComment(true);
@@ -400,7 +393,7 @@ const index = () => {
         );
       }
 
-      workflowLog.workflowMutate();
+      workflowLogMutate();
       workflowMutate();
       dispatch(resetWorkflowData());
       setShowModalApproval(false);
@@ -408,6 +401,10 @@ const index = () => {
     workflowMutate();
   };
   // [END] Modal for approver
+
+  const handleActiveIndex = (index) => {
+    setActiveIndex(index);
+  };
 
   return (
     <PatLandingLayout content={content} data={statusPat?.data}>
@@ -435,7 +432,7 @@ const index = () => {
                         key={i}
                         no={i + 1}
                         title={v.name}
-                        handleClick={() => setActiveIndex(i)}
+                        handleClick={() => handleActiveIndex(v.idx)}
                         activeIndex={currentPosition}
                         count={findTotalComment(i)}
                       />
@@ -486,7 +483,14 @@ const index = () => {
                               __html: getAuditTargetTable(v.content),
                             }}
                           />
-                        ) : v.idx === 6 ? (
+                        ) : v.idx === 4 || v.idx === 5 || v.idx === 6 ? (
+                          <div
+                            className="mt-4"
+                            dangerouslySetInnerHTML={{
+                              __html: getAuditScheduleTable(v.content),
+                            }}
+                          />
+                        ) : v.idx === 3 ? (
                           <div
                             className="mt-4"
                             dangerouslySetInnerHTML={{
