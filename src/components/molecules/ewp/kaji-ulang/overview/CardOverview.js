@@ -1,11 +1,12 @@
 import { DivButton } from "@/components/atoms";
-import { IconLink, IconPerson, IconTrash } from "@/components/icons";
 import { DropdownCard } from "@/components/molecules/commons";
 import { capitalizeEveryWord, checkRoleIsAdmin, convertDate } from "@/helpers";
 import ProgressBar from "@atlaskit/progress-bar";
 import { N800 } from "@atlaskit/theme/colors";
 import { token } from "@atlaskit/tokens";
 import { useRouter } from "next/router";
+
+import { IconPerson, IconTrash, IconLink } from "@/components/icons";
 
 const helpMeFindTitle = (text) => {
   switch (text.toLowerCase()) {
@@ -62,89 +63,53 @@ const CardOverview = ({
       label: (
         <div className="flex gap-">
           <IconPerson size="medium" />
-          <span className="my-auto ml-0.5">Change Initiator</span>
+          <p className="my-auto">Change Initiator</p>
         </div>
       ),
-      action: async (e) =>
-        await handleChangeInitiator(
-          e,
-          Boolean(data?.change_initiator?.length),
-          data?.id,
-          data?.change_initiator?.length && data?.change_initiator[0]?.id
-        ),
+      action: handleChangeInitiator,
       isDisabled: !checkRoleIsAdmin(user?.role_kode),
     },
     {
       label: (
         <div className="flex gap-1">
           <IconTrash size="medium" />
-          <span className="my-auto">Delete Project</span>
+          <p className="my-auto">Delete Project</p>
         </div>
       ),
-      action: () => handleCloseProject(data?.id),
-      isDisabled: !(
-        checkRoleIsAdmin(user?.role_kode) || data?.initiator?.pn === user?.pn
-      ),
+      action: handleCloseProject,
+      // isDisabled: Boolean(
+      //   user?.pn !=
+      //     data?.auditor?.filter((item) => item.is_initiator === true)[0]?.pn
+      // ),
+      isDisabled: Boolean(user?.pn != data?.pn_initiator),
     },
     {
       label: (
         <div className="flex gap-1">
           <IconLink size="medium" />
-          <span className="my-auto">Link Project</span>
+          <p className="my-auto">Link Project</p>
         </div>
       ),
-      action: () => handleCopyProject(data?.id),
+      action: handleCopyProject,
+      isDisabled: false,
     },
   ];
-  //   {
-  //     label: (
-  //       <div className="flex gap-">
-  //         <IconPerson size="medium" />
-  //         <p className="my-auto">Change Initiator</p>
-  //       </div>
-  //     ),
-  //     action: handleChangeInitiator,
-  //     isDisabled: checkRoleIsAdmin(user?.role_kode),
-  //   },
-  //   {
-  //     label: (
-  //       <div className="flex gap-1">
-  //         <IconTrash size="medium" />
-  //         <p className="my-auto">Delete Project</p>
-  //       </div>
-  //     ),
-  //     action: handleCloseProject,
-  //     isDisabled: Boolean(
-  //       user?.pn ==
-  //         data?.auditor?.filter((item) => item.is_initiator === true)[0]?.pn
-  //     ),
-  //   },
-  //   {
-  //     label: (
-  //       <DivButton handleClick={(e) => handleCopyProject(e, data?.id)}>
-  //         <div className="flex gap-1">
-  //           <IconLink size="medium" />
-  //           <p className="my-auto">Link Project</p>
-  //         </div>
-  //       </DivButton>
-  //     ),
-  //     action: "",
-  //     isDisabled: true,
-  //   },
-  // ];
   const colorLabel = {
-    consulting: "bg-cardColor-turquoise",
+    "kaji ulang": "bg-cardColor-green-dark",
   };
 
   return (
     <DivButton
       className={`bg-white ${
         !withoutHover &&
-        `hover:bg-gray-100 hover:rounded-[10px] hover:no-underline`
+        `hover:bg-gray-100 hover:rounded-[10px] hover:no-underline ${
+          data?.need_approval ? "cursor-not-allowed" : ""
+        }`
       }`}
-      handleClick={(e) => (
-        e.stopPropagation(), router.push(`kaji-ulang/${data?.id}/info`)
-      )}
+      handleClick={(e) => {
+        e.stopPropagation();
+        if (!data?.need_approval) router.push(`kaji-ulang/${data?.id}/info`);
+      }}
     >
       <div
         className={`w-full rounded flex flex-col items-center h-full border-2 ${

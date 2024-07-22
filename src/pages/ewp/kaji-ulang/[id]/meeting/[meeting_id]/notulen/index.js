@@ -5,7 +5,6 @@ import {
   DivButton,
   PageTitle,
 } from "@/components/atoms";
-import { useProjectDetail } from "@/data/ewp/kaji-ulang";
 import { LandingLayoutEWPKajiUlang } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
@@ -26,7 +25,7 @@ import {
   setErrorValidation,
   usePostFileData,
 } from "@/helpers";
-import { useMeetingDetail, useNotulen } from "@/data/ewp/kaji-ulang/meeting";
+import { useMeetingDetail, useNotulen } from "@/data/ewp/common/meeting";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setWorkflowData,
@@ -35,11 +34,12 @@ import {
   resetWorkflowData,
   resetHistoryWorkflowData,
   resetValidationErrorsWorkflow,
-} from "@/slices/ewp/konsulting/meeting/notulenMeetingEWPKonsultingSlice";
+} from "@/slices/ewp/quality-assurance/meeting/notulenMeetingEWPQualityAssuranceSlice";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useWorkflowDetailEWP } from "@/data/ewp";
 import _ from "lodash";
 import useUser from "@/data/useUser";
+import { useAuditInfo } from "@/data/ewp/common/info";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -60,10 +60,14 @@ const routes = [
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id, meeting_id } = useRouter().query;
-  const baseUrl = `/ewp/kaji-ulang/${id}`;
+  const router = useRouter();
+  const [params, setParams] = useState({
+    id: 0,
+    meeting_id: 0,
+  });
+  const baseUrl = `/ewp/kaji-ulang/${params?.id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
-  const pathNameLanding = `${baseUrl}/meeting/${meeting_id}`;
+  const pathNameLanding = `${baseUrl}/meeting/${params?.meeting_id}`;
 
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -77,17 +81,17 @@ const index = () => {
   const [isInitiator, setIsInitiator] = useState(false);
 
   const workflowData = useSelector(
-    (state) => state.notulenMeetingEWPKonsulting.objWorkflowData
+    (state) => state.notulenMeetingEWPQualityAssurance.objWorkflowData
   );
   const historyWorkflowData = useSelector(
-    (state) => state.notulenMeetingEWPKonsulting.objHistoryWorkflowData
+    (state) => state.notulenMeetingEWPQualityAssurance.objHistoryWorkflowData
   );
   const validationErrorsWorkflow = useSelector(
-    (state) => state.notulenMeetingEWPKonsulting.validationErrorsWorkflow
+    (state) => state.notulenMeetingEWPQualityAssurance.validationErrorsWorkflow
   );
 
-  const { projectDetail } = useProjectDetail({ id });
-  const { meetingDetail } = useMeetingDetail({ id: meeting_id });
+  const { auditInfo } = useAuditInfo({ id: params?.id, module: "qa" });
+  const { meetingDetail } = useMeetingDetail({ id: params?.meeting_id });
   const { notulen, notulenMutate } = useNotulen({ id: selectedNotulenId });
   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
     "entrance_notulen",
@@ -95,6 +99,15 @@ const index = () => {
   );
 
   const { user } = useUser();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id, meeting_id } = router.query;
+    setParams({
+      id,
+      meeting_id,
+    });
+  }, [router.isReady]);
 
   useEffect(() => {
     setSelectedNotulenId(meetingDetail?.data?.notulen?.id || 0);
@@ -106,7 +119,7 @@ const index = () => {
       { name: "EWP", path: "/ewp" },
       { name: "Overview", path: "/ewp/kaji-ulang" },
       {
-        name: `${projectDetail?.data?.project_info?.project_id?.toUpperCase()}`,
+        name: `${auditInfo?.data?.project_info?.project_id?.toUpperCase()}`,
         path: `${baseUrl}/info`,
       },
       {
@@ -123,11 +136,9 @@ const index = () => {
       },
     ]);
     setIsInitiator(
-      Boolean(
-        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
-      )
+      Boolean(auditInfo?.data?.project_info?.initiator?.pn === user?.data?.pn)
     );
-  }, [projectDetail, user]);
+  }, [auditInfo, user]);
 
   useEffect(() => {
     setContent(notulen?.data?.notulen_info?.content || "");
@@ -301,10 +312,6 @@ const index = () => {
       const signedCount = workflowData?.ref_tim_audit_approver?.filter(
         (item) => item.is_signed
       ).length;
-
-      if (actionType === "" || actionType === undefined) {
-        return;
-      }
 
       switch (actionType) {
         case "change":

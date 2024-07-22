@@ -10,6 +10,7 @@ import CardFormInputTeam from "../CardFormInputTeam";
 import {
   confirmationSwal,
   errorSwalTimeout,
+  loadingSwal,
   usePostData,
   useUpdateData,
 } from "@/helpers";
@@ -245,16 +246,20 @@ const ModalAuditTeam = ({
         try {
           let result;
           if (typeModal === "update") {
+            loadingSwal();
             result = await useUpdateData(
               `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/tim_audit`,
               data
             );
+            loadingSwal("close");
             auditTeamMutate();
           } else {
+            loadingSwal();
             result = await usePostData(
               `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/tim_audit/create`,
               data
             );
+            loadingSwal("close");
           }
           mutate();
 

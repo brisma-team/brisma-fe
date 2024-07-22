@@ -63,7 +63,7 @@ import {
   ModalWorkflowRequestChangeInitiator,
   ModalWorkflowApproveProjectPat,
 } from "@/components/molecules/ewp/common/overview";
-import workflowSchema from "@/helpers/schemas/common/workflow/workflowSchema";
+import { workflowChangeInitiatorSchema } from "@/helpers/schemas/ewp/konsulting/workflowChangeInitiator";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -646,14 +646,14 @@ const index = () => {
       if (!confirm.value) {
         return;
       }
-      const response = await fetchApi(
+      await fetchApi(
         "POST",
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/change_initiator/create`,
         { ewp_id, note: "change initiator" }
       );
-      setChangeInitiatorId(parseInt(response?.data?.id) + 1);
+      // setChangeInitiatorId(parseInt(response?.data?.id) + 1);
       overviewMutate();
-      setShowModalApprovalExtension(true);
+      // setShowModalApprovalExtension(true);
     } else {
       dispatch(resetObjDataWorkflow());
       setChangeInitiatorId(change_initiator_id);
@@ -690,11 +690,12 @@ const index = () => {
   const handleSubmitRequestChangeInitiator = async (e) => {
     e.preventDefault();
     const schemaMapping = {
-      schema: workflowSchema,
+      schema: workflowChangeInitiatorSchema,
       resetErrors: resetValidationErrorsWorkflow,
       setErrors: setValidationErrorsWorkflow,
     };
     const validate = setErrorValidation(dataWorkflow, dispatch, schemaMapping);
+    // const validate = true;
     if (validate) {
       const actionType = e.target.offsetParent.name;
       const data = {
@@ -746,12 +747,19 @@ const index = () => {
         }
       }
 
-      await fetchApi(
-        actionType === "change" ? "PATCH" : "POST",
-        `${process.env.NEXT_PUBLIC_API_URL_RPM}/rpm/workflow/${actionType}`,
-        data
-      );
-
+      if (actionType === "change") {
+        await fetchApi(
+          "PATCH",
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/change`,
+          data
+        );
+      } else {
+        await fetchApi(
+          "POST",
+          `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/workflow/${actionType}`,
+          data
+        );
+      }
       overviewMutate();
       workflowDetailEWPMutate();
       dispatch(resetObjDataWorkflow());

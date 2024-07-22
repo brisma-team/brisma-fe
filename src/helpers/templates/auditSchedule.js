@@ -1,56 +1,37 @@
 import convertDate from "../converDate";
 
 const prepareData = (data) => {
+  console.log(data);
   return data
     .map((d, idx) => {
-      const start_month = convertDate(d.jadwal_audit.pelaksanaan_start, "-");
-      const end_month = convertDate(d.jadwal_audit.pelaksanaan_end, "-");
+      const start_month = convertDate(d?.pelaksanaan_start, "-");
+      const end_month = convertDate(d?.pelaksanaan_end, "-");
 
       return `
       <tr style="border: 1px solid black;">
-          <td style="border: 1px solid black;">
+          <td style="border: 1px solid black; text-align: center;">
               ${idx + 1}
           </td>
-          <td style="border: 1px solid black;">
+          <td style="border: 1px solid black; text-align: center;">
+              ${d?.tim_audit?.name || ""}
+          </td>
+          <td style="border: 1px solid black; text-align: center;">
+              ${d?.ref_tipe?.nama || ""}
+          </td>
+          <td style="border: 1px solid black; text-align: center;">
+              ${start_month || ""}
+          </td>
+          <td style="border: 1px solid black; text-align: center;">
+              ${end_month || ""}
+          </td>
+          <td style="border: 1px solid black; text-align: center;">
               ${
-                d.jadwal_audit.tipe_audit === "Regular Audit"
-                  ? d.jadwal_audit.uker
-                  : `${d.jadwal_audit.uker}, ...`
+                d?.auditee_jadwal_audits?.length > 0
+                  ? d?.auditee_jadwal_audits
+                      ?.map((a) => a?.ref_auditee_orgeh_kode)
+                      .join(", ")
+                  : ""
               }
-          </td style="border: 1px solid black;">
-          <td style="border: 1px solid black;">
-              ${d.jadwal_audit.tim_audit_name}
-          </td>
-          <td style="border: 1px solid black;">
-              ${d.jadwal_audit.tipe_audit}
-          </td>
-          ${[...Array(12)]
-            .map(
-              (_, idxm) =>
-                `<td ${
-                  idxm + 1 >= start_month && idxm + 1 <= end_month
-                    ? 'style="background-color:hsl(210, 75%, 60%);"'
-                    : ""
-                }></td>`
-            )
-            .join("")}
-          <td style="border: 1px solid black;">
-              ${Object.keys(d.targetAudit.count_target_jenis_auditee.existing)
-                .map((k) => {
-                  const existing =
-                    d.targetAudit.count_target_jenis_auditee.existing[k] || 0;
-                  const target =
-                    d.targetAudit.count_target_jenis_auditee.target[k] || 0;
-                  const percent = Math.round(
-                    (Number(target) / Number(existing)) * 100
-                  );
-                  return `
-                  <p>
-                      ${k}: [${existing}][${target}] ${percent}%&nbsp;
-                  </p>
-                `;
-                })
-                .join("")}
           </td>
       </tr>`;
     })
@@ -58,115 +39,37 @@ const prepareData = (data) => {
 };
 
 const auditSchedule = (rows) => `
-<figure class="table" style="border-bottom: 1px solid black;">
-    <table style="width: 100%;">
-        <thead style="border-bottom: 1px solid black;">
-            <tr style="border-bottom: 1px solid black;">
-                <th rowspan="2" style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="border: 1px solid black; background-color: #3C64B1; color: white;">
+                <th rowspan="2" style="border: 1px solid black; padding: 8px;">
+                    <p style="text-align:center; margin: 0;">
                         No
                     </p>
-                    <p style="text-align:center;">
-                        &nbsp;
-                    </p>
                 </th>
-                <th rowspan="2" style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
-                        Objek Audit
-                    </p>
-                    <p style="text-align:center;">
-                        &nbsp;
-                    </p>
-                </th>
-                <th rowspan="2" style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
+                <th rowspan="2" style="border: 1px solid black; padding: 8px;">
+                    <p style="text-align:center; margin: 0;">
                         Tim Audit
                     </p>
-                    <p style="text-align:center;">
-                        &nbsp;
-                    </p>
                 </th>
-                <th rowspan="2" style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
+                <th rowspan="2" style="border: 1px solid black; padding: 8px;">
+                    <p style="text-align:center; margin: 0;">
                         Tipe Audit
                     </p>
-                    <p style="text-align:center;">
-                        &nbsp;
+                </th>
+                <th rowspan="2" style="border: 1px solid black; padding: 8px;">
+                    <p style="text-align:center; margin: 0;">
+                        Tanggal Mulai
                     </p>
                 </th>
-                <th colspan="12" style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
-                        Periode
+                <th rowspan="2" style="border: 1px solid black; padding: 8px;">
+                    <p style="text-align:center; margin: 0;">
+                        Tanggal Berakhir
                     </p>
                 </th>
-                <th rowspan="2" style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
+                <th rowspan="2" style="border: 1px solid black; padding: 8px;">
+                    <p style="text-align:center; margin: 0;">
                         Objek Audit
-                    </p>
-                    <p style="text-align:center;">
-                        &nbsp;
-                    </p>
-                </th>
-            </tr>
-            <tr style="border-bottom: 1px solid black;">
-                <th style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
-                        Jan
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
-                        Feb
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
-                        Mar
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
-                        Apr
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
-                        Mei
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
-                        Jun
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
-                        Jul
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
-                        Ags
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
-                        Sep
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
-                        Okt
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
-                        Nov
-                    </p>
-                </th>
-                <th style="background-color: #3C64B1; color: white;">
-                    <p style="text-align:center;">
-                        Des
                     </p>
                 </th>
             </tr>
@@ -174,7 +77,6 @@ const auditSchedule = (rows) => `
         <tbody>
             ${rows}
         </tbody>
-    </table>
-</figure>`;
+    </table>`;
 
 export const getAuditScheduleTable = (data) => auditSchedule(prepareData(data));

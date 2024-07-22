@@ -6,7 +6,7 @@ const ContentRingkasan = ({
   dataDetail,
   dataInfoProject,
   payload,
-  validation,
+  // validation,
   showModalDetail,
   showModalEdit,
   handleChangePayload,
