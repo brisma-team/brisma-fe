@@ -644,7 +644,6 @@ const index = () => {
             handleChangeText={handleChangeText}
             handleCloseModal={handleCloseModalWorkflow}
             withSigner
-            withReset
           />
         </div>
       </div>
