@@ -1,9 +1,10 @@
-import { ButtonIcon, LozengeField } from "@/components/atoms";
+import { ButtonIcon, CustomTooltip, LozengeField } from "@/components/atoms";
 import {
   ButtonEdit,
   CardContentHeaderFooter,
   DataNotFound,
 } from "@/components/molecules/commons";
+import shortenWord from "@/helpers/shortenWord";
 import TableTree, {
   Cell,
   Header,
@@ -18,7 +19,7 @@ const TableAuditBacklog = ({ data, handleClickEdit }) => {
   return (
     <CardContentHeaderFooter withoutBorderBottom className={"!p-4"}>
       <div className="overflow-x-scroll max-w-[95rem] pb-3">
-        <div className="w-[3400px] bg-white">
+        <div className="w-[3700px] bg-white">
           <TableTree>
             <Headers>
               <Header
@@ -49,6 +50,14 @@ const TableAuditBacklog = ({ data, handleClickEdit }) => {
               >
                 <div className="custom-table-header">
                   <p className="text-sm font-bold">SPRINT NAME</p>
+                </div>
+              </Header>
+              <Header
+                width={350}
+                className="border-t border-r cell-custom-dataTables"
+              >
+                <div className="custom-table-header">
+                  <p className="text-sm font-bold">UKER</p>
                 </div>
               </Header>
               <Header
@@ -96,6 +105,14 @@ const TableAuditBacklog = ({ data, handleClickEdit }) => {
                 </div>
               </Header>
               <Header
+                width={350}
+                className="border-t border-r cell-custom-dataTables"
+              >
+                <div className="custom-table-header">
+                  <p className="text-sm font-bold">USER STORY DESCRIPTION</p>
+                </div>
+              </Header>
+              <Header
                 width={150}
                 className="border-t border-r cell-custom-dataTables"
               >
@@ -107,7 +124,7 @@ const TableAuditBacklog = ({ data, handleClickEdit }) => {
                 </div>
               </Header>
               <Header
-                width={200}
+                width={150}
                 className="border-t border-r cell-custom-dataTables"
               >
                 <div className="custom-table-header justify-center">
@@ -145,10 +162,12 @@ const TableAuditBacklog = ({ data, handleClickEdit }) => {
                   status,
                   feature,
                   sprint,
+                  uker,
                   design,
                   operating,
                   risk_issue,
                   sub_major,
+                  user_story_desc,
                   mandays,
                   priority,
                   dor,
@@ -165,12 +184,28 @@ const TableAuditBacklog = ({ data, handleClickEdit }) => {
                     </Cell>
                     <Cell width={150} className={`border-r ${customCell}`}>
                       <div className="custom-table-position-center justify-center">
-                        <LozengeField
-                          appreance={status ? "" : "default"}
-                          isBold
-                        >
-                          {status || "draft"}
-                        </LozengeField>
+                        {status ? (
+                          <LozengeField
+                            appreance={
+                              status === "draft"
+                                ? "default"
+                                : status === "in progress"
+                                ? "inprogress"
+                                : status === "completed"
+                                ? "success"
+                                : status === "impended"
+                                ? "moved"
+                                : status === "canceled"
+                                ? "removed"
+                                : ""
+                            }
+                            isBold={status !== "draft"}
+                          >
+                            {status}
+                          </LozengeField>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </Cell>
                     <Cell width={350} className={`border-r ${customCell}`}>
@@ -184,6 +219,34 @@ const TableAuditBacklog = ({ data, handleClickEdit }) => {
                           </span>{" "}
                           - {sprint?.nama}
                         </p>
+                      ) : (
+                        "-"
+                      )}
+                    </Cell>
+                    <Cell width={350} className={`border-r ${customCell}`}>
+                      {uker?.length ? (
+                        <CustomTooltip
+                          content={
+                            <ul className="list-disc w-full pl-2.5">
+                              {uker?.map((uker, index) => {
+                                return (
+                                  <li key={index}>
+                                    [{uker?.orgeh?.kode}][{uker?.branch?.kode}]
+                                    - {uker?.branch?.nama}
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          }
+                        >
+                          <p className="underline cursor-pointer">
+                            {shortenWord(
+                              uker?.map((item) => item?.orgeh?.kode).join(", "),
+                              0,
+                              27
+                            )}
+                          </p>
+                        </CustomTooltip>
                       ) : (
                         "-"
                       )}
@@ -214,6 +277,9 @@ const TableAuditBacklog = ({ data, handleClickEdit }) => {
                         "-"
                       )}
                     </Cell>
+                    <Cell width={350} className={`border-r ${customCell}`}>
+                      {user_story_desc || "-"}
+                    </Cell>
                     <Cell
                       width={150}
                       className={`border-r ${customCell} text-center`}
@@ -224,32 +290,12 @@ const TableAuditBacklog = ({ data, handleClickEdit }) => {
                         "-"
                       )}
                     </Cell>
-                    <Cell width={200} className={`border-r ${customCell}`}>
-                      <div className="custom-table-position-center justify-center">
-                        <LozengeField
-                          appreance={
-                            priority === "1"
-                              ? "default"
-                              : priority === "2"
-                              ? "success"
-                              : priority === "3"
-                              ? "moved"
-                              : priority === "4"
-                              ? "removed"
-                              : ""
-                          }
-                          isBold
-                        >
-                          {status == "1"
-                            ? "Low"
-                            : status == "2"
-                            ? "Normal"
-                            : status == "3"
-                            ? "High"
-                            : status == "4"
-                            ? "Urgent"
-                            : ""}
-                        </LozengeField>
+                    <Cell
+                      width={150}
+                      className={`border-r ${customCell} justify-center`}
+                    >
+                      <div className="text-center">
+                        {priority !== null ? priority : "-"}
                       </div>
                     </Cell>
                     <Cell width={350} className={`border-r ${customCell}`}>

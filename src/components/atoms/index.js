@@ -44,6 +44,7 @@ import ModalScroll from "./ModalScroll";
 import ButtonIconBack from "./ButtonIconBack";
 import UploadFileButton from "./UploadFileButton";
 import MainLayout from "./MainLayout";
+import TextInputFloat from "./TextInputFloat";
 
 export {
   AvatarDefaultExample,
@@ -92,4 +93,5 @@ export {
   ButtonIconBack,
   UploadFileButton,
   MainLayout,
+  TextInputFloat,
 };

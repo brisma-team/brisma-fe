@@ -35,6 +35,7 @@ const ModalWorkflow = ({
   isScrollHeader,
   isProposer,
   withSigner,
+  withReset,
 }) => {
   const { user } = useUser();
   let isApproval, isInitiator, statusApprover;
@@ -95,6 +96,7 @@ const ModalWorkflow = ({
           data={workflowData}
           handleSubmit={handleSubmit}
           handleChangeText={handleChangeText}
+          withReset={withReset}
         />
       }
       widthFullFooter={
@@ -104,6 +106,8 @@ const ModalWorkflow = ({
         statusApprover === "On Progress" && isInitiator
           ? false
           : statusApprover === "On Approver" && (isApproval || isInitiator)
+          ? false
+          : statusApprover === "Final" && isInitiator && withReset
           ? false
           : true
       }

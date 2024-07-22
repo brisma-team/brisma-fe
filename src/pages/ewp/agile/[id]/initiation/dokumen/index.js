@@ -296,7 +296,6 @@ const index = () => {
   // [START] Hook ini berfungsi untuk menyimpan data workflow untuk Modal Workflow yang akan
   // digunakan sebagai payload dan juga data yang akan ditampilkan saat Modal muncul
   useEffect(() => {
-    console.log("workflowDetailEWP => ", workflowDetailEWP);
     if (workflowDetailEWP?.data) {
       const workflowInfo = workflowDetailEWP?.data?.info;
       const maker = workflowDetailEWP?.data?.initiator;
@@ -329,11 +328,15 @@ const index = () => {
           })
         );
         newWorkflowData.ref_tim_audit_approver = mappingApprovers;
+      } else {
+        newWorkflowData.ref_tim_audit_approver = [];
       }
 
       if (signers?.length) {
         const mappingSigners = _.map(signers, ({ nama, pn }) => ({ nama, pn }));
         newWorkflowData.ref_tim_audit_signer = mappingSigners;
+      } else {
+        newWorkflowData.ref_tim_audit_signer = [];
       }
 
       if (workflowDetailEWP?.data?.log?.length) {
@@ -360,10 +363,6 @@ const index = () => {
     }
   }, [workflowDetailEWP, showModalApproval]);
   // [ END ]
-
-  useEffect(() => {
-    console.log("dataWorkflow => ", dataWorkflow);
-  }, [dataWorkflow]);
 
   const handleClickComment = (id, index) => {
     setOpenCardComment(true);
@@ -486,8 +485,8 @@ const index = () => {
         );
       }
 
-      workflowDetailEWPMutate();
       dispatch(resetObjDataWorkflow());
+      workflowDetailEWPMutate();
       setShowModalApproval(false);
       loadingSwal("close");
     }
@@ -755,6 +754,7 @@ const index = () => {
             handleChangeText={handleChangeText}
             handleCloseModal={handleCloseModalWorkflow}
             withSigner
+            withReset
           />
         </div>
       </div>

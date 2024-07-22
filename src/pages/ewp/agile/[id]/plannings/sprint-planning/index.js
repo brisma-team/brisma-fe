@@ -16,8 +16,9 @@ import {
   setObjPayloadUserStory,
   setObjPayloadTask,
   setObjPayloadUkerAssessment,
+  setObjPayloadCompletionStatusUserStory,
+  setObjPayloadPotentialProblemTask,
   setObjPayloadCommentTask,
-  setObjPayloadCommentUserStory,
   setValidationErrorsSprint,
   setValidationErrorsUserStory,
   setValidationErrorsTask,
@@ -29,8 +30,9 @@ import {
   resetObjPayloadUserStory,
   resetObjPayloadTask,
   resetObjPayloadUkerAssessment,
+  resetObjPayloadCompletionStatusUserStory,
+  resetObjPayloadPotentialProblemTask,
   resetObjPayloadCommentTask,
-  resetObjPayloadCommentUserStory,
   resetValidationErrorsSprint,
   resetValidationErrorsUserStory,
   resetValidationErrorsTask,
@@ -104,9 +106,13 @@ const index = () => {
   const [showModalUserStory, setShowModalUserStory] = useState(false);
   const [showModalUkerAssessment, setShowModalUkerAssessment] = useState(false);
   const [showModalTask, setShowModalTask] = useState(false);
-  const [showModalCommentTask, setShowModalCommentTask] = useState(false);
-  const [showModalCommentUserStory, setShowModalCommentUserStory] =
+  const [
+    showModalCompletionStatusUserStory,
+    setShowModalCompletionStatusUserStory,
+  ] = useState(false);
+  const [showModalPotentialProblemTask, setShowModalPotentialProblemTask] =
     useState(false);
+  const [showModalCommentTask, setShowModalCommentTask] = useState(false);
 
   const [isAddNewRowUker, setIsAddNewRowUker] = useState(false);
   const [isUpdateSprint, setIsUpdateSprint] = useState(false);
@@ -133,8 +139,11 @@ const index = () => {
   const payloadUkerAssessment = useSelector(
     (state) => state.sprintPlanningEWPAgile.objPayloadUkerAssessment
   );
-  const payloadCommentUserStory = useSelector(
-    (state) => state.sprintPlanningEWPAgile.objPayloadCommentUserStory
+  const payloadCompletionStatusUserStory = useSelector(
+    (state) => state.sprintPlanningEWPAgile.objPayloadCompletionStatusUserStory
+  );
+  const payloadPotentialProblemTask = useSelector(
+    (state) => state.sprintPlanningEWPAgile.objPayloadPotentialProblemTask
   );
   const payloadCommentTask = useSelector(
     (state) => state.sprintPlanningEWPAgile.objPayloadCommentTask
@@ -162,9 +171,10 @@ const index = () => {
   const { auditBacklog, auditBacklogMutate } = useAuditBacklog({
     id: params?.id,
   });
-  const { detailAuditBacklog } = useDetailAuditBacklog({
-    id: selectedUserStoryId,
-  });
+  const { detailAuditBacklog, detailAuditBacklogMutate } =
+    useDetailAuditBacklog({
+      id: selectedUserStoryId,
+    });
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -229,6 +239,7 @@ const index = () => {
                       })
                     : [],
                   status: user_story?.status_penyelesaian,
+                  completion_status: user_story?.user_story_desc,
                   role: "parent-child",
                   children: user_story?.user_story_task?.length
                     ? user_story?.user_story_task?.map((task, task_index) => {
@@ -243,6 +254,7 @@ const index = () => {
                             kode: task?.task_type_kode,
                             nama: task?.task_type_name,
                           },
+                          potential_problem: task?.potensial_isu,
                           status: task?.status_penyelesaian,
                           role: "child",
                         };
@@ -316,15 +328,7 @@ const index = () => {
     } else {
       dispatch(resetObjDataUserStory());
     }
-  }, [auditBacklog]);
-
-  // useEffect(() => {
-  //   if (detailAuditBacklog?.data) {
-  //     dispatch(setObjPayloadUserStory());
-  //   } else {
-  //     dispatch(resetObjPayloadUserStory());
-  //   }
-  // }, [detailAuditBacklog]);
+  }, [auditBacklog, showModalSprint]);
 
   useEffect(() => {
     if (detailAuditBacklog?.data?.user_stories_uker?.length) {
@@ -392,23 +396,12 @@ const index = () => {
   // [ END ] sprint
 
   // [ START ] user story
-  const handleClickAddUserStory = () => {
+  const handleClickAddUserStory = (id) => {
+    setSelectedSprintId(id);
     setShowModalUserStory(true);
   };
 
-  const handleClickEditCommentUserStory = (sprint_index, user_story_index) => {
-    setSelectedUserStoryId(
-      dataSprintPlanning[sprint_index].children[user_story_index].id
-    );
-    dispatch(
-      setObjPayloadCommentUserStory(
-        dataSprintPlanning[sprint_index].children[user_story_index].comment
-      )
-    );
-    setShowModalCommentUserStory(true);
-  };
-
-  const handleClickDeleteUserStory = async (sprint_id) => {
+  const handleClickDeleteUserStory = async (user_story_id) => {
     const confirm = await confirmationSwal(
       "Apakah Anda yakin ingin menghapus data User Story ini?"
     );
@@ -418,8 +411,8 @@ const index = () => {
 
     loadingSwal();
     await fetchApi(
-      "DELETE",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/perencanaan/user_stories/delete/${sprint_id}`,
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/perencanaan/sprint_planning/remove_risk/${user_story_id}`,
       {}
     );
     sprintPlanningMutate();
@@ -438,6 +431,42 @@ const index = () => {
     setIsUpdateTask(true);
     setSelectedTaskId(task_id);
     setShowModalTask(true);
+  };
+
+  const handleClickEditCompletionStatusUserStory = (
+    sprint_index,
+    user_story_index
+  ) => {
+    setSelectedUserStoryId(
+      dataSprintPlanning[sprint_index].children[user_story_index].id
+    );
+    dispatch(
+      setObjPayloadCompletionStatusUserStory(
+        dataSprintPlanning[sprint_index].children[user_story_index]
+          .completion_status
+      )
+    );
+    setShowModalCompletionStatusUserStory(true);
+  };
+
+  const handleClickEditPotentialProblemTask = (
+    sprint_index,
+    user_story_index,
+    task_index
+  ) => {
+    setSelectedTaskId(
+      dataSprintPlanning[sprint_index].children[user_story_index].children[
+        task_index
+      ].id
+    );
+    dispatch(
+      setObjPayloadPotentialProblemTask(
+        dataSprintPlanning[sprint_index].children[user_story_index].children[
+          task_index
+        ].potential_problem
+      )
+    );
+    setShowModalPotentialProblemTask(true);
   };
 
   const handleClickEditCommentTask = (
@@ -622,9 +651,10 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "DELETE",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/perencanaan/user_stories_uker/${uker_id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/perencanaan/user_stories_uker/delete/${uker_id}`,
       {}
     );
+    detailAuditBacklogMutate();
     sprintPlanningMutate();
     loadingSwal("close");
   };
@@ -672,6 +702,7 @@ const index = () => {
       );
       if (response.isDismissed) return;
       setIsAddNewRowUker(false);
+      detailAuditBacklogMutate();
       sprintPlanningMutate();
       dispatch(resetObjPayloadUkerAssessment());
       dispatch(resetValidationErrorsUkerAssessment());
@@ -718,7 +749,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/perencanaan/user_stories/sprint/add/${selectedUserStoryId}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/perencanaan/sprint_planning/add_risk/${selectedSprintId}`,
       { user_story: payloadUserStory }
     );
     sprintPlanningMutate();
@@ -795,8 +826,8 @@ const index = () => {
   };
   // [ END ] handler for modal task
 
-  // [ START ] handler for modal comment task
-  const handleCloseModalCommentUserStory = async () => {
+  // [ START ] handler for modal update user story desc
+  const handleCloseModalCompletionStatusUserStory = async () => {
     const confirm = await confirmationSwal(
       "Apakah Anda ingin menutup modal ini?"
     );
@@ -804,13 +835,13 @@ const index = () => {
       return;
     }
 
-    setShowModalCommentUserStory(false);
-    dispatch(resetObjPayloadCommentUserStory());
+    setShowModalCompletionStatusUserStory(false);
+    dispatch(resetObjPayloadCompletionStatusUserStory());
   };
 
-  const handleSubmitUpdateCommentUserStory = async (value) => {
+  const handleSubmitUpdateCompletionStatusUserStory = async (value) => {
     if (!value) {
-      infoSwal("Silahkan isi comment!");
+      infoSwal("Silahkan isi user story deskripsi!");
       return;
     }
 
@@ -818,16 +849,48 @@ const index = () => {
     await fetchApi(
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/perencanaan/user_stories/update/${selectedUserStoryId}`,
-      { comment: payloadCommentUserStory }
+      { user_story_desc: value }
     );
     sprintPlanningMutate();
-    dispatch(resetObjPayloadCommentUserStory());
-    setShowModalCommentUserStory(false);
+    dispatch(resetObjPayloadCompletionStatusUserStory());
+    setShowModalCompletionStatusUserStory(false);
     loadingSwal("close");
   };
-  // [ END ] handler for modal comment task
+  // [ END ] handler for modal update user story desc
 
-  // [ START ] handler for modal comment task
+  // [ START ] handler for modal update potential problem task
+  const handleCloseModalPotentialProblemTask = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    setShowModalPotentialProblemTask(false);
+    dispatch(resetObjPayloadPotentialProblemTask());
+  };
+
+  const handleSubmitUpdatePotentialProblemTask = async (value) => {
+    if (!value) {
+      infoSwal("Silahkan isi potensi isu!");
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "PATCH",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/perencanaan/task/update/${selectedTaskId}`,
+      { potensial_isu: value }
+    );
+    sprintPlanningMutate();
+    dispatch(resetObjPayloadPotentialProblemTask());
+    setShowModalPotentialProblemTask(false);
+    loadingSwal("close");
+  };
+  // [ END ] handler for modal update potential problem task
+
+  // [ START ] handler for modal update comment task
   const handleCloseModalCommentTask = async () => {
     const confirm = await confirmationSwal(
       "Apakah Anda ingin menutup modal ini?"
@@ -848,16 +911,16 @@ const index = () => {
 
     loadingSwal();
     await fetchApi(
-      "POST",
+      "PATCH",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/perencanaan/task/update/${selectedTaskId}`,
-      { comment: payloadCommentTask }
+      { comment: value }
     );
     sprintPlanningMutate();
     dispatch(resetObjPayloadCommentTask());
     setShowModalCommentTask(false);
     loadingSwal("close");
   };
-  // [ END ] handler for modal comment task
+  // [ END ] handler for modal update comment task
 
   return (
     <LandingLayoutEWPAgile>
@@ -890,8 +953,13 @@ const index = () => {
           handleClickAddTask={handleClickAddTask}
           handleClickDeleteTask={handleClickDeleteTask}
           handleClickEditTask={handleClickEditTask}
+          handleClickEditCompletionStatusUserStory={
+            handleClickEditCompletionStatusUserStory
+          }
+          handleClickEditPotentialProblemTask={
+            handleClickEditPotentialProblemTask
+          }
           handleClickEditCommentTask={handleClickEditCommentTask}
-          handleClickEditCommentUserStory={handleClickEditCommentUserStory}
         />
         <ModalSprint
           showModal={showModalSprint}
@@ -935,19 +1003,27 @@ const index = () => {
         />
         <ModalDescription
           isEdit
-          headerText={"Ubah Comment User Story"}
-          data={payloadCommentUserStory}
-          showModal={showModalCommentUserStory}
-          handleCloseModal={handleCloseModalCommentUserStory}
-          handleSubmit={handleSubmitUpdateCommentUserStory}
-        />
-        <ModalDescription
-          isEdit
           headerText={"Ubah Comment Task"}
           data={payloadCommentTask}
           showModal={showModalCommentTask}
           handleCloseModal={handleCloseModalCommentTask}
           handleSubmit={handleSubmitUpdateCommentTask}
+        />
+        <ModalDescription
+          isEdit
+          headerText={"Ubah User Story Description"}
+          data={payloadCompletionStatusUserStory}
+          showModal={showModalCompletionStatusUserStory}
+          handleCloseModal={handleCloseModalCompletionStatusUserStory}
+          handleSubmit={handleSubmitUpdateCompletionStatusUserStory}
+        />
+        <ModalDescription
+          isEdit
+          headerText={"Ubah Potensi Isu"}
+          data={payloadPotentialProblemTask}
+          showModal={showModalPotentialProblemTask}
+          handleCloseModal={handleCloseModalPotentialProblemTask}
+          handleSubmit={handleSubmitUpdatePotentialProblemTask}
         />
         {/* End Content */}
       </div>

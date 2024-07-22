@@ -96,12 +96,37 @@ const index = () => {
     if (auditBacklog?.data?.length) {
       const mapping = auditBacklog?.data?.map((v) => {
         return {
-          ..._.pick(v, ["id", "feature", "design", "operating", "priority"]),
+          ..._.pick(v, [
+            "id",
+            "feature",
+            "design",
+            "operating",
+            "priority",
+            "user_story_desc",
+          ]),
           status: v?.status_penyelesaian,
           sprint: v?.sprint?.no
             ? { no: v?.sprint?.no, nama: v?.sprint?.sprint_name }
             : null,
-          risk_issue: _.pick(v?.mtd_risk_issue, ["kode", "abbr", "nama"]),
+          uker: v?.user_stories_uker?.length
+            ? v?.user_stories_uker?.map((uker) => {
+                return {
+                  branch: {
+                    kode: uker?.ref_auditee_branch_kode,
+                    nama: uker?.ref_auditee_branch_name,
+                  },
+                  orgeh: {
+                    kode: uker?.ref_auditee_orgeh_kode,
+                    nama: uker?.ref_auditee_orgeh_name,
+                  },
+                };
+              })
+            : [],
+          risk_issue: {
+            kode: v?.ref_risk_issue_kode,
+            abbr: v?.ref_risk_issue_abbr,
+            nama: v?.ref_risk_issue_name,
+          },
           sub_major: _.pick(v?.mtd_risk_issue?.mtd_sub_major_proses, [
             "kode",
             "abbr",
@@ -127,6 +152,7 @@ const index = () => {
             "definition_of_ready",
             "feature",
             "priority",
+            "user_story_desc",
           ]),
           mandays: detailAuditBacklog?.data?.estimate,
         })
@@ -171,9 +197,9 @@ const index = () => {
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/perencanaan/user_stories/update/${selectedId}`,
       {
-        ...payload,
-        estimate: payload?.mandays ? parseInt(payload?.mandays) : 0,
-        priority: payload?.priority?.kode || null,
+        ..._.omit(payload, ["mandays", "priority"]),
+        priority: payload?.priority ? parseInt(payload?.priority) : 0,
+        estimate: payload?.mandays ? parseFloat(payload?.mandays) : 0,
       }
     );
     auditBacklogMutate();

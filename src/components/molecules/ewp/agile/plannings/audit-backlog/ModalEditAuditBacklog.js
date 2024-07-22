@@ -1,8 +1,9 @@
 import {
   ButtonIcon,
-  Modal,
+  ModalScroll,
   TextAreaField,
   TextInputDecimal,
+  TextInputFloat,
 } from "@/components/atoms";
 import { IconClose } from "@/components/icons";
 import {
@@ -11,8 +12,6 @@ import {
   CardBodyContent,
   FormWithLabel,
 } from "@/components/molecules/commons";
-import PrioritySelect from "./PrioritySelect";
-import { capitalizeEveryWord } from "@/helpers";
 
 const ModalEditAuditBacklog = ({
   data,
@@ -23,7 +22,7 @@ const ModalEditAuditBacklog = ({
   handleSubmit,
 }) => {
   return (
-    <Modal
+    <ModalScroll
       showModal={showModal}
       header={
         <ModalHeader
@@ -34,87 +33,101 @@ const ModalEditAuditBacklog = ({
       }
       footer={<ModalFooter handleSubmit={handleSubmit} />}
     >
-      <CardBodyContent>
-        <FormWithLabel
-          label={"Feature"}
-          form={
-            <TextAreaField
-              handleChange={(e) => handleChange("feature", e.target.value)}
-              value={data?.feature || ""}
-              placeholder={"Feature"}
-            />
-          }
-          widthLabel={"w-2/5"}
-          widthForm={"w-3/5"}
-        />
-        <FormWithLabel
-          label={"Mandays"}
-          form={
-            <TextInputDecimal
-              value={data?.mandays || ""}
-              onChange={(value) => handleChange("mandays", value)}
-              placeholder="Mandays"
-              icon={
-                <ButtonIcon
-                  handleClick={() => handleChange("mandays", "")}
-                  icon={<IconClose size="medium" />}
-                />
-              }
-            />
-          }
-          widthLabel={"w-2/5"}
-          widthForm={"w-3/5"}
-        />
-        <FormWithLabel
-          label={"Priority"}
-          form={
-            <PrioritySelect
-              handleChange={(e) => handleChange("priority", e.value)}
-              placeholder={"Priority"}
-              handleReset={() => handleReset("priority")}
-              selectedValue={
-                data?.priority?.kode
-                  ? {
-                      label: data?.priority?.nama,
-                      value: data?.priority,
-                    }
-                  : null
-              }
-            />
-          }
-          widthLabel={"w-2/5"}
-          widthForm={"w-3/5"}
-        />
-        <FormWithLabel
-          label={"Definition of Ready"}
-          form={
-            <TextAreaField
-              handleChange={(e) =>
-                handleChange("definition_of_ready", e.target.value)
-              }
-              value={data?.definition_of_ready || ""}
-              placeholder={"Definition of Ready"}
-            />
-          }
-          widthLabel={"w-2/5"}
-          widthForm={"w-3/5"}
-        />
-        <FormWithLabel
-          label={"Definition of Done"}
-          form={
-            <TextAreaField
-              handleChange={(e) =>
-                handleChange("definition_of_done", e.target.value)
-              }
-              value={data?.definition_of_done || ""}
-              placeholder={"Definition of Done"}
-            />
-          }
-          widthLabel={"w-2/5"}
-          widthForm={"w-3/5"}
-        />
-      </CardBodyContent>
-    </Modal>
+      <div className="w-[60rem]">
+        <CardBodyContent>
+          <FormWithLabel
+            label={"Feature"}
+            form={
+              <TextAreaField
+                handleChange={(e) => handleChange("feature", e.target.value)}
+                value={data?.feature || ""}
+                placeholder={"Feature"}
+              />
+            }
+            widthLabel={"w-2/5"}
+            widthForm={"w-3/5"}
+          />
+          <FormWithLabel
+            label={"User Story Description"}
+            form={
+              <TextAreaField
+                handleChange={(e) =>
+                  handleChange("user_story_desc", e.target.value)
+                }
+                value={data?.user_story_desc || ""}
+                placeholder={"User Story Description"}
+              />
+            }
+            widthLabel={"w-2/5"}
+            widthForm={"w-3/5"}
+          />
+          <FormWithLabel
+            label={"Mandays"}
+            form={
+              <TextInputFloat
+                value={data?.mandays || ""}
+                onChange={(value) => handleChange("mandays", value)}
+                placeholder="Mandays"
+                icon={
+                  <ButtonIcon
+                    handleClick={() => handleReset("mandays")}
+                    icon={<IconClose size="medium" />}
+                  />
+                }
+              />
+            }
+            widthLabel={"w-2/5"}
+            widthForm={"w-3/5"}
+          />
+          <FormWithLabel
+            label={"Priority"}
+            form={
+              <TextInputDecimal
+                value={data?.priority || ""}
+                onChange={(value) => handleChange("priority", value)}
+                placeholder="Priority"
+                icon={
+                  <ButtonIcon
+                    handleClick={() => handleChange("priority")}
+                    icon={<IconClose size="medium" />}
+                  />
+                }
+              />
+            }
+            widthLabel={"w-2/5"}
+            widthForm={"w-3/5"}
+          />
+          <FormWithLabel
+            label={"Definition of Ready"}
+            form={
+              <TextAreaField
+                handleChange={(e) =>
+                  handleChange("definition_of_ready", e.target.value)
+                }
+                value={data?.definition_of_ready || ""}
+                placeholder={"Definition of Ready"}
+              />
+            }
+            widthLabel={"w-2/5"}
+            widthForm={"w-3/5"}
+          />
+          <FormWithLabel
+            label={"Definition of Done"}
+            form={
+              <TextAreaField
+                handleChange={(e) =>
+                  handleChange("definition_of_done", e.target.value)
+                }
+                value={data?.definition_of_done || ""}
+                placeholder={"Definition of Done"}
+              />
+            }
+            widthLabel={"w-2/5"}
+            widthForm={"w-3/5"}
+          />
+        </CardBodyContent>
+      </div>
+    </ModalScroll>
   );
 };
 

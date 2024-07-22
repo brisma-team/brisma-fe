@@ -7,6 +7,7 @@ const ModalWorkflowFooter = ({
   data,
   handleSubmit,
   handleChangeText,
+  withReset,
 }) => {
   let isApprover, isInitiator, isAdmin;
   isInitiator = user?.pn == data?.maker?.pn;
@@ -83,6 +84,18 @@ const ModalWorkflowFooter = ({
         </div>
         <div className="rounded w-32 bg-atlasian-yellow">
           <ButtonField text={"Simpan"} name="change" handler={handleSubmit} />
+        </div>
+      </div>
+    );
+  } else if (data?.status_approver === "Final" && isInitiator && withReset) {
+    return (
+      <div className="flex justify-end gap-3">
+        <div className="rounded w-32 bg-atlasian-red">
+          <ButtonField
+            text={"Reset Flow"}
+            name="reset"
+            handler={handleSubmit}
+          />
         </div>
       </div>
     );

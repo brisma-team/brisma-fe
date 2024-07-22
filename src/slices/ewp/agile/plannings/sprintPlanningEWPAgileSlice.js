@@ -8,8 +8,9 @@ const initialState = {
   objPayloadUserStory: [],
   objPayloadTask: {},
   objPayloadUkerAssessment: {},
+  objPayloadCompletionStatusUserStory: "",
+  objPayloadPotentialProblemTask: "",
   objPayloadCommentTask: "",
-  objPayloadCommentUserStory: "",
   validationErrorsSprint: {},
   validationErrorsUserStory: {},
   validationErrorsTask: {},
@@ -44,8 +45,11 @@ export const sprintPlanningEWPAgileSlice = createSlice({
     setObjPayloadCommentTask: (state, action) => {
       state.objPayloadCommentTask = action.payload;
     },
-    setObjPayloadCommentUserStory: (state, action) => {
-      state.objPayloadCommentUserStory = action.payload;
+    setObjPayloadCompletionStatusUserStory: (state, action) => {
+      state.objPayloadCompletionStatusUserStory = action.payload;
+    },
+    setObjPayloadPotentialProblemTask: (state, action) => {
+      state.objPayloadPotentialProblemTask = action.payload;
     },
     setValidationErrorsSprint: (state, action) => {
       state.validationErrorsSprint = action.payload;
@@ -80,11 +84,14 @@ export const sprintPlanningEWPAgileSlice = createSlice({
     resetObjPayloadUkerAssessment: (state) => {
       state.objPayloadUkerAssessment = {};
     },
+    resetObjPayloadCompletionStatusUserStory: (state) => {
+      state.objPayloadCompletionStatusUserStory = "";
+    },
+    resetObjPayloadPotentialProblemTask: (state) => {
+      state.objPayloadPotentialProblemTask = "";
+    },
     resetObjPayloadCommentTask: (state) => {
       state.objPayloadCommentTask = "";
-    },
-    resetObjPayloadCommentUserStory: (state) => {
-      state.objPayloadCommentUserStory = "";
     },
     resetValidationErrorsSprint: (state) => {
       state.validationErrorsSprint = {};
@@ -109,8 +116,9 @@ export const {
   setObjPayloadUserStory,
   setObjPayloadTask,
   setObjPayloadUkerAssessment,
+  setObjPayloadCompletionStatusUserStory,
+  setObjPayloadPotentialProblemTask,
   setObjPayloadCommentTask,
-  setObjPayloadCommentUserStory,
   setValidationErrorsSprint,
   setValidationErrorsUserStory,
   setValidationErrorsTask,
@@ -122,8 +130,9 @@ export const {
   resetObjPayloadUserStory,
   resetObjPayloadTask,
   resetObjPayloadUkerAssessment,
+  resetObjPayloadCompletionStatusUserStory,
+  resetObjPayloadPotentialProblemTask,
   resetObjPayloadCommentTask,
-  resetObjPayloadCommentUserStory,
   resetValidationErrorsSprint,
   resetValidationErrorsUserStory,
   resetValidationErrorsTask,
