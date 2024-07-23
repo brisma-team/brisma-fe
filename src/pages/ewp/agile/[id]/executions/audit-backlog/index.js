@@ -70,7 +70,7 @@ const index = () => {
           name: `${auditInfo?.data?.project_info?.project_id?.toUpperCase()}`,
           path: `/ewp/agile/${params?.id}`,
         },
-        { name: "Project Plannings", path: baseUrl },
+        { name: "Project Executions", path: baseUrl },
         {
           name: "Audit Backlog",
           path: `${baseUrl}/audit-backlog`,
