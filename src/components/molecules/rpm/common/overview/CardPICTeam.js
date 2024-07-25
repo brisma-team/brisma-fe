@@ -9,11 +9,12 @@ const CardPICTeam = ({
   validation,
   labelColor,
   handleChange,
+  isDisabled = false,
 }) => {
   return (
     <CardContent>
       <div className="flex flex-col gap-2 pb-2">
-        <p className={labelColor}>{label}</p>
+        <p className={`${labelColor} text-sm font-semibold`}>{label}</p>
         <UserSKAISelect
           selectedValue={
             data[property]?.pn
@@ -32,6 +33,7 @@ const CardPICTeam = ({
           handleChange={(e) => {
             handleChange(property, { pn: e.value.pn, nama: e.value.name });
           }}
+          isDisabled={isDisabled}
         />
         {validation && validation[`${property}.pn`] ? (
           <ErrorValidation message={validation[`${property}.pn`]} />

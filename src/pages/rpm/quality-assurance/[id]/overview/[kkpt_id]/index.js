@@ -51,26 +51,23 @@ const index = () => {
       setData([
         {
           title: "Tindak Lanjut",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Tindak lanjut action plan dalam ranah Submitter.",
           url: `${baseUrl}/tindak-lanjut`,
         },
         {
           title: "Evaluasi",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Evaluasi action plan dalam ranah Evaluator.",
           url: `${baseUrl}/evaluasi`,
         },
         {
           title: "Negosiasi",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+          description: "Negosiasi action plan dalam ranah Negotiator.",
           url: `${baseUrl}/negosiasi`,
         },
         {
           title: "Summary",
           description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
+            "Kesimpulan seluruh rangkaian monitoring tindak lanjut, evaluasi, dan negosiasi.",
           url: `${baseUrl}/summary`,
         },
       ]);
