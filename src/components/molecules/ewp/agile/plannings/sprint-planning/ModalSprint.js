@@ -3,23 +3,27 @@ import {
   DatepickerStartEnd,
   Modal,
   TextInput,
+  TextInputDecimal,
 } from "@/components/atoms";
 import {
   ModalHeader,
   ModalFooter,
   CardBodyContent,
   FormWithLabel,
+  RetryButton,
 } from "@/components/molecules/commons";
 import { addDaysToDate, dateNow } from "@/helpers";
 import { IconClose } from "@/components/icons";
 
 const ModalSprint = ({
   data,
+  sprintNo,
   validation,
   showModal,
   isUpdate,
   handleChange,
   handleReset,
+  handleRefreshGenerateSprintNo,
   handleCloseModal,
   handleSubmit,
 }) => {
@@ -40,6 +44,34 @@ const ModalSprint = ({
       }
     >
       <CardBodyContent>
+        <FormWithLabel
+          label={"Nomer Sprint"}
+          form={
+            <div className="flex items-center gap-3">
+              <TextInputDecimal
+                value={isUpdate ? data?.no || "" : sprintNo}
+                onChange={(e) => handleChange("no", e.target.value)}
+                placeholder="Nomer Sprint"
+                isDisabled
+              />
+              {isUpdate ? (
+                <ButtonIcon
+                  color={"blue"}
+                  icon={
+                    <div className="p-1 border border-atlasian-blue-light rounded-full flex items-center justify-center">
+                      <RetryButton />{" "}
+                    </div>
+                  }
+                  handleClick={handleRefreshGenerateSprintNo}
+                />
+              ) : (
+                ""
+              )}
+            </div>
+          }
+          widthLabel={"w-2/5"}
+          widthForm={"w-2/5"}
+        />
         <FormWithLabel
           label={"Nama Sprint"}
           form={
@@ -62,8 +94,8 @@ const ModalSprint = ({
           label={"Periode Sprint"}
           form={
             <DatepickerStartEnd
-              valueStart={data?.start_date}
-              valueEnd={data?.end_date}
+              valueStart={data?.start_date || ""}
+              valueEnd={data?.end_date || ""}
               handlerChangeStart={(value) => handleChange("start_date", value)}
               handlerChangeEnd={(value) => handleChange("end_date", value)}
               placeholderStart="Tanggal Dimulai"

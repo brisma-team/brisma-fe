@@ -41,6 +41,7 @@ import {
 import {
   confirmationSwal,
   fetchApi,
+  generateSprintNo,
   infoSwal,
   loadingSwal,
   setErrorValidation,
@@ -117,6 +118,8 @@ const index = () => {
   const [isAddNewRowUker, setIsAddNewRowUker] = useState(false);
   const [isUpdateSprint, setIsUpdateSprint] = useState(false);
   const [isUpdateTask, setIsUpdateTask] = useState(false);
+
+  const [sprintNo, setSprintNo] = useState(1);
 
   const dataSprintPlanning = useSelector(
     (state) => state.sprintPlanningEWPAgile.objDataSprintPlanning
@@ -207,6 +210,7 @@ const index = () => {
 
   useEffect(() => {
     if (sprintPlanning?.data?.length) {
+      const getSprintNo = generateSprintNo(sprintPlanning?.data);
       const mapping = sprintPlanning?.data?.map((sprint, sprint_index) => {
         return {
           id: sprint?.id,
@@ -265,11 +269,17 @@ const index = () => {
             : [],
         };
       });
+      setSprintNo(getSprintNo);
       dispatch(setObjDataSprintPlanning(mapping));
     } else {
+      setSprintNo(1);
       dispatch(resetObjDataSprintPlanning());
     }
   }, [sprintPlanning]);
+
+  useEffect(() => {
+    console.log("sprintNo => ", sprintNo);
+  }, [sprintNo]);
 
   useEffect(() => {
     if (detailTask?.data) {
@@ -292,6 +302,7 @@ const index = () => {
       dispatch(
         setObjPayloadSprint({
           ..._.pick(detailSprint?.data, [
+            "no",
             "sprint_name",
             "start_date",
             "end_date",
@@ -548,6 +559,16 @@ const index = () => {
     );
   };
 
+  const handleRefreshGenerateSprintNo = () => {
+    const sprintNo = generateSprintNo(sprintPlanning?.data);
+    dispatch(
+      setObjPayloadSprint({
+        ...payloadSprint,
+        no: sprintNo,
+      })
+    );
+  };
+
   const handleSubmitSprint = async (e, isUpdate) => {
     e.preventDefault();
     const schemaMapping = {
@@ -559,12 +580,17 @@ const index = () => {
 
     if (validate) {
       loadingSwal();
+      const payload = { ...payloadSprint };
+      if (!isUpdate) {
+        const sprintNo = generateSprintNo(sprintPlanning?.data);
+        payload.no = sprintNo;
+      }
       await fetchApi(
         isUpdate ? "PATCH" : "POST",
         `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/perencanaan/sprint/${
           isUpdate ? `update/${selectedSprintId}` : `create/${params?.id}`
         }`,
-        payloadSprint
+        payload
       );
       sprintPlanningMutate();
       dispatch(resetObjPayloadSprint());
@@ -964,11 +990,13 @@ const index = () => {
         <ModalSprint
           showModal={showModalSprint}
           data={payloadSprint}
+          sprintNo={sprintNo}
           isUpdate={isUpdateSprint}
           validation={validationSprint}
           handleCloseModal={handleCloseModalSprint}
           handleChange={handleChangePayloadSprint}
           handleReset={handleResetPayloadSprint}
+          handleRefreshGenerateSprintNo={handleRefreshGenerateSprintNo}
           handleSubmit={handleSubmitSprint}
         />
         <ModalUserStory
