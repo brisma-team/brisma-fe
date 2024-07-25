@@ -27,6 +27,7 @@ import {
   checkRoleApprovalLog,
   confirmationSwal,
   convertDate,
+  errorSwal,
   fetchApi,
   infoSwal,
   loadingSwal,
@@ -380,6 +381,9 @@ const index = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!payloadHasilEvaluasi?.kode) {
+      errorSwal("Mohon pilih hasil evaluasi terlebih dahulu");
+    }
     const schemaMapping = {
       schema: workflowSchema,
       resetErrors: resetValidationErrors,
@@ -496,7 +500,9 @@ const index = () => {
         </CardContentActionPlan>
         <CardApprovalInfo
           handleClick={() => setShowModalApproval(true)}
-          isDisabled={!actionPlan?.data?.hasil_evaluasi}
+          isDisabled={
+            !actionPlan?.data?.hasil_evaluasi || !payloadHasilEvaluasi?.kode
+          }
         >
           <p className="text-brisma font-bold text-xl">Approval</p>
           <ApprovalItems

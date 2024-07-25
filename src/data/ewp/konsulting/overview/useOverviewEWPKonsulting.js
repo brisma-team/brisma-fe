@@ -17,7 +17,7 @@ const useOverviewEWPKonsulting = (params) => {
 
   const path = `${
     process.env.NEXT_PUBLIC_API_URL_EWP
-  }/ewp/sbp/auditor?page=${page}&limit=${limit}&sort_by=createdAt ${sort_by}&project_code=${project_code}&project_name=${encodeURIComponent(
+  }/ewp/sbp/auditor?page=${page}&limit=${limit}&sort=createdAt ${sort_by}&project_code=${project_code}&project_name=${encodeURIComponent(
     project_name
   )}&status_approval=${status_approval?.kode || ""}&status_document=${
     status_document?.kode || ""

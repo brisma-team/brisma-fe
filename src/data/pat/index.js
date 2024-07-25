@@ -12,6 +12,8 @@ import useDocument from "./useDocument";
 import useWorkflow from "./useWorkflow";
 import useSumberInformasiPAT from "./useSumberInformasiPAT";
 import useCommentPAT from "./useCommentPAT";
+import useWorkflowResetPAT from "./useWorkflowResetPAT";
+import useWorkflowResetPATLog from "./useWorkflowResetPATLog";
 
 export {
   useApprovalPat,
@@ -28,4 +30,6 @@ export {
   useWorkflow,
   useSumberInformasiPAT,
   useCommentPAT,
+  useWorkflowResetPAT,
+  useWorkflowResetPATLog,
 };

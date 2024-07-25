@@ -334,9 +334,10 @@ const index = () => {
       />
       <ModalAttachment
         data={
-          dataUkerAssessment[selectedIndex]?.is_new
+          dataUkerAssessment[selectedIndex]?.is_new ||
+          payload?.attachments !== undefined
             ? payload?.attachments[0]
-            : dataUkerAssessment[selectedIndex]?.attachments[0]
+            : dataUkerAssessment[selectedIndex]?.attachments?.[0]
         }
         isEdit={
           dataUkerAssessment[selectedIndex]?.is_new ||

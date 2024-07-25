@@ -44,8 +44,19 @@ const ModalWorkflowFooter = ({
           />
         </div>
         <div>
-          <div className="rounded w-32 bg-atlasian-red">
-            <ButtonField text={"Reject"} name="reject" handler={handleSubmit} />
+          <div
+            className={`rounded w-32 ${
+              !data.note || data.note.trim().length === 0
+                ? "bg-atlasian-gray-dark"
+                : "bg-atlasian-red"
+            } `}
+          >
+            <ButtonField
+              text={"Reject"}
+              name="reject"
+              handler={handleSubmit}
+              disabled={!data.note || data.note.trim().length === 0}
+            />
           </div>
         </div>
         <div>

@@ -13,9 +13,25 @@ import {
 import useProjectOverview from "@/data/pat/useProjectOverview";
 import { CardOverview } from "@/components/molecules/pat/overview";
 import { DataNotFound, SelectSortFilter } from "@/components/molecules/commons";
+import {
+  setWorkflowData,
+  resetWorkflowData,
+  setValidationErrorsWorkflow,
+  resetValidationErrorsWorkflow,
+} from "@/slices/ewp/konsulting/changeInitiatorSlice";
 import _ from "lodash";
 import useApprovalPat from "@/data/pat/useApprovalPat";
-import { useRouter } from "next/router";
+import {
+  confirmationSwal,
+  convertDate,
+  errorSwal,
+  fetchApi,
+  setErrorValidation,
+} from "@/helpers";
+import { ModalWorkflowResetPAT } from "@/components/molecules/pat/reset-pat";
+import { useWorkflowResetPAT, useWorkflowResetPATLog } from "@/data/pat";
+import { useDispatch, useSelector } from "react-redux";
+import workflowResetSchema from "@/helpers/schemas/pat/workflowResetSchema";
 
 const breadcrumbs = [
   { name: "Menu", path: "/dashboard" },
@@ -48,11 +64,17 @@ const convertProgressAndPercent = (approvers, status_approver, status_pat) => {
 };
 
 const index = () => {
-  const router = useRouter();
+  const dispatch = useDispatch();
   const [totalData, setTotalData] = useState(0);
   const [openFilter, setOpenFilter] = useState(false);
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showModalWorkflowApproval, setShowModalWorkflowApproval] =
+    useState(false);
+  const [payloadWorkflow, setPayloadWorkflow] = useState({
+    id: "",
+  });
+  const [historyWorkflow, setHistoryWorkflow] = useState([]);
   const [params, setParams] = useState({
     project_name: "",
     status_approver: "",
@@ -75,6 +97,20 @@ const index = () => {
   const { projectOverview, projectOverviewMutate, projectOverviewError } =
     useProjectOverview(params);
   const { approvalPat } = useApprovalPat();
+
+  const { workflowReset, workflowResetMutate } = useWorkflowResetPAT({
+    id: payloadWorkflow?.id,
+  });
+  const { workflowResetLog } = useWorkflowResetPATLog({
+    id: payloadWorkflow?.id,
+  });
+
+  const workflowData = useSelector(
+    (state) => state.changeInitiator.workflowData
+  );
+  const validationErrorsWorkflow = useSelector(
+    (state) => state.changeInitiator.validationErrorsWorkflow
+  );
 
   useEffect(() => {
     setFilter((prevFilter) => {
@@ -130,12 +166,237 @@ const index = () => {
     }
   }, [projectOverview, params]);
 
+  useEffect(() => {
+    if (workflowReset?.data && showModalWorkflowApproval) {
+      const workflowInfo = workflowReset?.data?.info;
+      const maker = workflowReset?.data?.initiator;
+      const approvers = workflowReset?.data?.approver;
+      const signers = workflowReset?.data?.signer;
+
+      const newWorkflowData = {
+        ...workflowData,
+        status_approver: workflowInfo?.status_persetujuan,
+        on_approver: workflowInfo?.status_approver,
+        initiator_from: {
+          pn: workflowInfo?.pn_from,
+          name: workflowInfo?.name_from,
+        },
+        initiator_to: {
+          pn: workflowInfo?.pn_to,
+          name: workflowInfo?.name_to,
+        },
+      };
+
+      newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.name}`;
+      newWorkflowData.maker = {
+        pn: workflowInfo?.pn_from,
+        nama: workflowInfo?.name_from,
+      };
+
+      if (approvers?.length) {
+        const mappingApprovers = _.map(
+          approvers,
+          ({ pn, nama, is_signed }) => ({
+            pn,
+            nama,
+            is_signed,
+          })
+        );
+        newWorkflowData.ref_tim_audit_approver = mappingApprovers;
+      }
+
+      if (signers?.length) {
+        const mappingSigners = _.map(signers, ({ nama, pn }) => ({ nama, pn }));
+        newWorkflowData.ref_tim_audit_signer = mappingSigners;
+      }
+
+      if (workflowResetLog?.data?.log?.length) {
+        const mapping = workflowResetLog?.data?.log?.map((v) => {
+          return {
+            children: v?.children?.length
+              ? v?.children?.map((child) => ({
+                  role: "child",
+                  pic: child?.from?.pn + " - " + child?.from?.nama,
+                  alasan: child?.note,
+                  status:
+                    child?.is_signed === true
+                      ? "Approved"
+                      : child?.is_signed === false
+                      ? "Rejected"
+                      : child?.note || "",
+                  tanggal: convertDate(v?.createdAt, "-", "d"),
+                }))
+              : [],
+            id: v?.id,
+            role: "parent",
+            pic: v?.create_by?.pn + " - " + v?.create_by?.fullName,
+            alasan: v?.note,
+            status: "",
+            tanggal: convertDate(v?.createdAt, "-", "d"),
+          };
+        });
+        setHistoryWorkflow(mapping);
+      }
+
+      dispatch(setWorkflowData(newWorkflowData));
+    } else {
+      dispatch(resetWorkflowData());
+    }
+  }, [workflowReset, setShowModalWorkflowApproval]);
+
   const handleChangeFilter = (props, value) => {
     setFilter({ ...filter, [props]: value });
   };
 
-  const handleApproval = (id) => {
-    router.push(`projects/${id}/dokumen?is_approval=true`);
+  const handleReset = async (id) => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin ingin mengajukan pengaturan ulang PAT ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/request-reset/create/${id}`,
+      { note: "kebutuhan reset pat" }
+    );
+  };
+
+  const handleApproval = async (id) => {
+    console.log(id);
+    setShowModalWorkflowApproval(true);
+    setPayloadWorkflow({ ...payloadWorkflow, id });
+  };
+
+  const handleSubmitWorkflow = async (e) => {
+    e.preventDefault();
+    const schemaMapping = {
+      schema: workflowResetSchema,
+      resetErrors: resetValidationErrorsWorkflow,
+      setErrors: setValidationErrorsWorkflow,
+    };
+    const validate = setErrorValidation(workflowData, dispatch, schemaMapping);
+    // const validate = true;
+    if (validate) {
+      const actionType = e.target.offsetParent.name;
+      const data = {
+        sub_modul: "reset_pat_id",
+        sub_modul_id: payloadWorkflow?.id,
+      };
+
+      data.pn_to = workflowData?.initiator_to?.pn;
+      data.name_to = workflowData?.initiator_to?.name;
+
+      const signedCount = workflowData?.ref_tim_audit_approver?.filter(
+        (item) => item.is_signed
+      ).length;
+
+      if (actionType === "" || actionType === undefined) {
+        return;
+      }
+
+      switch (actionType) {
+        case "change":
+          data.approvers = workflowData.ref_tim_audit_approver;
+          data.signers = [];
+          break;
+        case "create":
+          data.approvers = workflowData.ref_tim_audit_approver;
+          data.signers = [];
+          break;
+        case "reject":
+          if (!workflowData.note) {
+            await errorSwal("Silahkan berikan alasan!");
+            return;
+          }
+          data.note = workflowData.note;
+          break;
+        case "approve":
+          if (signedCount >= workflowData?.ref_tim_audit_approver?.length) {
+            data.data = "<p>pirli test</p>";
+          }
+          data.note = workflowData.note;
+          break;
+      }
+
+      if (actionType === "reset") {
+        const confirm = await confirmationSwal(
+          "Terkait dengan workflow ini, apakah Anda yakin ingin melakukan pengaturan ulang?"
+        );
+        if (!confirm.value) {
+          return;
+        }
+      }
+
+      if (actionType === "change") {
+        await fetchApi(
+          "PATCH",
+          `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/request-reset/workflow`,
+          data
+        );
+      } else {
+        await fetchApi(
+          "POST",
+          `${process.env.NEXT_PUBLIC_API_URL_PAT}/pat/request-reset/workflow/${actionType}`,
+          data
+        );
+      }
+      projectOverviewMutate();
+      workflowResetMutate();
+      dispatch(resetWorkflowData());
+      setShowModalWorkflowApproval(false);
+    }
+    projectOverviewMutate();
+    workflowResetMutate();
+  };
+
+  const handleChangeSelect = (property, index, e) => {
+    const newData = [...workflowData[property]];
+    const updated = { ...newData[index] };
+    updated["pn"] = e?.value?.pn;
+    updated["nama"] = e?.value?.name;
+    newData[index] = updated;
+    dispatch(
+      setWorkflowData({
+        ...workflowData,
+        [property]: newData,
+      })
+    );
+  };
+
+  const handleChangeText = (property, value) => {
+    dispatch(
+      setWorkflowData({
+        ...workflowData,
+        [property]: value,
+      })
+    );
+  };
+
+  const handleAdd = (property) => {
+    const newData = [...workflowData[property]];
+    newData.push({
+      pn: "",
+      nama: "",
+      is_signed: false,
+    });
+    dispatch(
+      setWorkflowData({
+        ...workflowData,
+        [property]: newData,
+      })
+    );
+  };
+
+  const handleDelete = (property, idx) => {
+    const newData = [...workflowData[property]];
+    newData.splice(idx, 1);
+    dispatch(
+      setWorkflowData({
+        ...workflowData,
+        [property]: newData,
+      })
+    );
   };
 
   return (
@@ -194,6 +455,7 @@ const index = () => {
                 addendum={v.addendum}
                 href={v.href}
                 handleApproval={handleApproval}
+                handleReset={handleReset}
               />
             );
           })}
@@ -208,6 +470,20 @@ const index = () => {
         }
         defaultCurrentPage={filter.page}
         totalData={totalData}
+      />
+      <ModalWorkflowResetPAT
+        workflowData={workflowData}
+        historyWorkflow={historyWorkflow}
+        validationErrors={validationErrorsWorkflow}
+        setShowModal={setShowModalWorkflowApproval}
+        showModal={showModalWorkflowApproval}
+        headerTitle={"Pengajuan Reset P.A.T"}
+        handleChange={handleChangeText}
+        handleChangeSelect={handleChangeSelect}
+        handleDelete={handleDelete}
+        handleAdd={handleAdd}
+        handleSubmit={handleSubmitWorkflow}
+        handleCloseModal={() => setShowModalWorkflowApproval(false)}
       />
       {/* End Content */}
       <ModalCreateProjectPAT

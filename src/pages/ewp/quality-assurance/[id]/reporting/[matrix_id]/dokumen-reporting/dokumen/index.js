@@ -479,7 +479,7 @@ const index = () => {
             activeIndex={activeIndex}
             // isHideButton={isCloseSubmodule || !isOnProgress}
             renderContent={renderContent}
-            withoutComment
+            // withoutComment
           />
         </div>
         <div>

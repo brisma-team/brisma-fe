@@ -273,24 +273,35 @@ const index = () => {
       setIsAddNewRow(false);
       return;
     }
-
-    loadingSwal();
-    await fetchApi(
-      "DELETE",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/kkpt_risk/delete/${id}`,
-      {}
-    );
+    if (id !== undefined) {
+      loadingSwal();
+      await fetchApi(
+        "DELETE",
+        `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/sbp/kkpt/kkpt_risk/delete/${id}`,
+        {}
+      );
+    }
 
     riskMutate();
     rekomendasiMutate();
     setSelectedRiskId(0);
     dispatch(resetDataTables());
-    loadingSwal("close");
+    if (id !== undefined) {
+      loadingSwal("close");
+    }
   };
 
   const handleClickSave = async () => {
     if (!payloadNewRisk?.risk_kode) {
       await errorSwal("Silahkan pilih risk control terlebih dahulu");
+      return;
+    }
+
+    if (
+      dataTables?.riskList?.some(
+        (item) => item?.abbr === payloadNewRisk?.risk_abbr
+      ) == false
+    ) {
       return;
     }
 
@@ -309,7 +320,6 @@ const index = () => {
     );
 
     riskMutate();
-    dispatch(resetPayloadNewRisk());
     dispatch(resetPayloadNewRisk());
     setIsAddNewRow(false);
     loadingSwal("close");
