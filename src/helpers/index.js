@@ -39,6 +39,7 @@ import generateCaptcha from "./generateCaptcha";
 import checkRoleApprovalLog from "./checkRoleApprovalLog";
 import getYearsList from "./getYearList";
 import generateSprintNo from "./generateSprintNo";
+import checkStatusSprint from "./checkStatusSprint";
 
 export {
   loadingSwal,
@@ -82,4 +83,5 @@ export {
   checkRoleApprovalLog,
   getYearsList,
   generateSprintNo,
+  checkStatusSprint,
 };

@@ -150,8 +150,7 @@ const index = () => {
           <PrevNextNavigation
             baseUrl={baseUrl}
             routes={routes}
-            prevUrl={"/story-aggregations-selected"}
-            nextUrl={"/sprint-planning"}
+            nextUrl={"/sprint-executions"}
             marginLeft={"-95px"}
             widthDropdown={"w-[16rem]"}
           />

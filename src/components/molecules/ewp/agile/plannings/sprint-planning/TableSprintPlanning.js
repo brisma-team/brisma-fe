@@ -42,14 +42,13 @@ const TableSprintPlanning = ({
   handleClickAddTask,
   handleClickEditTask,
   handleClickDeleteTask,
-  handleClickEditCompletionStatusUserStory,
   handleClickEditPotentialProblemTask,
   handleClickEditCommentTask,
 }) => {
   return (
     <CardContentHeaderFooter withoutBorderBottom className={"!p-4"}>
       <div className="overflow-x-scroll max-w-[95rem] pb-3">
-        <div className="w-[2000px] bg-white">
+        <div className="w-[1700px] bg-white">
           <TableTree>
             <Headers>
               <Header className="!hidden" />
@@ -87,12 +86,6 @@ const TableSprintPlanning = ({
                 width={300}
                 className="border-t border-r cell-custom-dataTables justify-center"
               >
-                USER STORY DESCRIPTION
-              </Header>
-              <Header
-                width={300}
-                className="border-t border-r cell-custom-dataTables justify-center"
-              >
                 POTENTIAL PROBLEM
               </Header>
               <Header
@@ -116,7 +109,6 @@ const TableSprintPlanning = ({
                 description,
                 uker,
                 task_type,
-                completion_status,
                 potential_problem,
                 comment,
                 children = [],
@@ -305,28 +297,6 @@ const TableSprintPlanning = ({
                           ? capitalizeEveryWord(task_type?.nama)
                           : ""}
                       </p>
-                    ) : (
-                      ""
-                    )}
-                  </Cell>
-                  <Cell width={300} className="border-r cell-custom-dataTables">
-                    {role === "parent-child" ? (
-                      <div className={`${positionCenter} gap-2`}>
-                        <ButtonIcon
-                          icon={<ButtonEdit />}
-                          handleClick={() =>
-                            handleClickEditCompletionStatusUserStory(
-                              sprint_index,
-                              user_story_index
-                            )
-                          }
-                        />
-                        <span>
-                          {completion_status
-                            ? shortenWord(completion_status, 0, 25)
-                            : ""}
-                        </span>
-                      </div>
                     ) : (
                       ""
                     )}
