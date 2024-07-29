@@ -12,7 +12,11 @@ import {
   DivButton,
   LozengeField,
 } from "@/components/atoms";
-import { CardContentHeaderFooter } from "@/components/molecules/commons";
+import {
+  ButtonEdit,
+  CardContentHeaderFooter,
+  StatusTaskAgileSelect,
+} from "@/components/molecules/commons";
 import shortenWord from "@/helpers/shortenWord";
 import Link from "next/link";
 
@@ -22,9 +26,12 @@ const TableSprintExecution = ({
   data,
   pathName,
   expansionMap,
+  withoutButton,
   handleClickToggleExpansion,
   handleClickInitiate,
   handleClickTerminate,
+  handleClickEditSprintTeam,
+  handleChangeStatusUserStory,
 }) => {
   return (
     <CardContentHeaderFooter
@@ -42,25 +49,31 @@ const TableSprintExecution = ({
             AKSI
           </Header>
           <Header
-            width={"10%"}
+            width={"12%"}
             className="border-t border-x cell-custom-dataTables justify-center"
           >
             STATUS
           </Header>
           <Header
-            width={"30%"}
+            width={"29%"}
             className="border-t border-x cell-custom-dataTables"
           >
             SPRINT ENTITIES
           </Header>
           <Header
-            width={"30%"}
+            width={"17%"}
+            className="border-t border-x cell-custom-dataTables"
+          >
+            SPRINT TEAM
+          </Header>
+          <Header
+            width={"21%"}
             className="border-t border-r cell-custom-dataTables justify-center"
           >
             OBJECT AUDIT (UKER/DIVISI)
           </Header>
           <Header
-            width={"30%"}
+            width={"21%"}
             className="border-t border-r rounded-se-lg cell-custom-dataTables justify-center"
           >
             USER STORY DESCRIPTION
@@ -73,6 +86,7 @@ const TableSprintExecution = ({
             role,
             status,
             sprint,
+            team,
             is_onprogress,
             is_open,
             is_close,
@@ -99,6 +113,7 @@ const TableSprintExecution = ({
                       <DivButton
                         className={"py-1 flex justify-center w-20"}
                         handleClick={async () => await handleClickTerminate(id)}
+                        isDisabled={withoutButton}
                       >
                         Terminate
                       </DivButton>
@@ -117,6 +132,7 @@ const TableSprintExecution = ({
                       <DivButton
                         className={"py-1 flex justify-center w-20"}
                         handleClick={async () => await handleClickInitiate(id)}
+                        isDisabled={withoutButton}
                       >
                         Initiate
                       </DivButton>
@@ -136,34 +152,47 @@ const TableSprintExecution = ({
                 )}
               </Cell>
               <Cell
-                width={"10%"}
-                className="border-r cell-custom-dataTables justify-center"
+                width={"12%"}
+                className="border-r cell-custom-dataTables cell-width-full-height-full justify-center"
               >
-                {status ? (
-                  <LozengeField
-                    appreance={
-                      status === "draft"
-                        ? "default"
-                        : status === "in progress"
-                        ? "inprogress"
-                        : status === "completed"
-                        ? "success"
-                        : status === "impended"
-                        ? "moved"
-                        : status === "canceled"
-                        ? "removed"
-                        : ""
-                    }
-                    isBold={status !== "draft"}
-                  >
-                    {status}
-                  </LozengeField>
-                ) : (
-                  ""
-                )}
+                <div className={`${positionCenter}`}>
+                  {role === "child" ? (
+                    !withoutButton ? (
+                      <StatusTaskAgileSelect
+                        selectedValue={
+                          status ? { label: status, value: status } : null
+                        }
+                        handleChange={async (e) =>
+                          await handleChangeStatusUserStory(id, e.value)
+                        }
+                      />
+                    ) : (
+                      <LozengeField
+                        appreance={
+                          status === "Draft"
+                            ? "default"
+                            : status === "On Progress"
+                            ? "inprogress"
+                            : status === "Completed"
+                            ? "success"
+                            : status === "Impended"
+                            ? "moved"
+                            : status === "Canceled"
+                            ? "removed"
+                            : ""
+                        }
+                        isBold={status !== "Draft"}
+                      >
+                        {status}
+                      </LozengeField>
+                    )
+                  ) : (
+                    ""
+                  )}
+                </div>
               </Cell>
               <Cell
-                width={"30%"}
+                width={"29%"}
                 className="border-r cell-custom-dataTables cell-width-full-height-full px-10"
               >
                 <div className={`${positionCenter}`}>
@@ -186,15 +215,15 @@ const TableSprintExecution = ({
                     className={`flex items-center w-full justify-between ml-2`}
                   >
                     {role === "parent" ? (
-                      <p>
+                      <Link href={`${pathName}/sprint/${id}`}>
                         <span className="font-bold">
                           {sprint?.no}
                           {" - "}
                         </span>
                         {sprint?.nama}
-                      </p>
+                      </Link>
                     ) : role === "child" ? (
-                      <Link href={`${pathName}/${id}`}>
+                      <Link href={`${pathName}/story-point/${id}`}>
                         <span className="font-bold">{risk_issue?.abbr}</span>
                         {" - "}
                         {risk_issue?.nama}
@@ -205,7 +234,46 @@ const TableSprintExecution = ({
                   </div>
                 </div>
               </Cell>
-              <Cell width={"30%"} className="border-r cell-custom-dataTables">
+              <Cell width={"17%"} className="border-r cell-custom-dataTables">
+                {role === "parent" ? (
+                  <div className={`${positionCenter} gap-2`}>
+                    {!withoutButton ? (
+                      <ButtonIcon
+                        icon={<ButtonEdit />}
+                        handleClick={() => handleClickEditSprintTeam(id)}
+                      />
+                    ) : (
+                      ""
+                    )}
+                    <CustomTooltip
+                      content={
+                        <ul className="list-disc w-full pl-2.5">
+                          {team?.map((data, index) => {
+                            return (
+                              <li key={index}>
+                                {`${data?.pic?.pn} - ${data?.pic?.name} ( ${data?.role} )`}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      }
+                    >
+                      <p className="underline cursor-pointer">
+                        {team?.length
+                          ? shortenWord(
+                              team?.map((data) => data?.pic?.name).join(", "),
+                              0,
+                              27
+                            )
+                          : ""}
+                      </p>
+                    </CustomTooltip>
+                  </div>
+                ) : (
+                  ""
+                )}
+              </Cell>
+              <Cell width={"21%"} className="border-r cell-custom-dataTables">
                 {role === "child" ? (
                   <div className={`${positionCenter}`}>
                     <CustomTooltip
@@ -227,7 +295,7 @@ const TableSprintExecution = ({
                           ? shortenWord(
                               uker?.map((item) => item?.orgeh?.kode).join(", "),
                               0,
-                              27
+                              20
                             )
                           : ""}
                       </p>
@@ -237,7 +305,7 @@ const TableSprintExecution = ({
                   ""
                 )}
               </Cell>
-              <Cell width={"30%"} className="border-r cell-custom-dataTables">
+              <Cell width={"21%"} className="border-r cell-custom-dataTables">
                 {role === "child" ? (
                   <div className={`${positionCenter}`}>
                     <span>

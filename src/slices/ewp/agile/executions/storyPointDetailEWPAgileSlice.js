@@ -4,7 +4,8 @@ const initialState = {
   objDataUserStory: {},
   objDataTask: [],
   objDataTeam: [],
-  objPayload: {},
+  objPayloadTask: {},
+  objPayloadCommentTask: "",
 };
 
 export const storyPointDetailEWPAgileSlice = createSlice({
@@ -20,8 +21,11 @@ export const storyPointDetailEWPAgileSlice = createSlice({
     setObjDataTeam: (state, action) => {
       state.objDataTeam = action.payload;
     },
-    setObjPayload: (state, action) => {
-      state.objPayload = action.payload;
+    setObjPayloadTask: (state, action) => {
+      state.objPayloadTask = action.payload;
+    },
+    setObjPayloadCommentTask: (state, action) => {
+      state.objPayloadCommentTask = action.payload;
     },
     resetObjDataUserStory: (state) => {
       state.objDataUserStory = {};
@@ -32,8 +36,11 @@ export const storyPointDetailEWPAgileSlice = createSlice({
     resetObjDataTeam: (state) => {
       state.objDataTeam = [];
     },
-    resetObjPayload: (state) => {
-      state.objPayload = {};
+    resetObjPayloadTask: (state) => {
+      state.objPayloadTask = {};
+    },
+    resetObjPayloadCommentTask: (state) => {
+      state.objPayloadCommentTask = "";
     },
   },
 });
@@ -42,11 +49,13 @@ export const {
   setObjDataUserStory,
   setObjDataTask,
   setObjDataTeam,
-  setObjPayload,
+  setObjPayloadTask,
+  setObjPayloadCommentTask,
   resetObjDataUserStory,
   resetObjDataTask,
   resetObjDataTeam,
-  resetObjPayload,
+  resetObjPayloadTask,
+  resetObjPayloadCommentTask,
 } = storyPointDetailEWPAgileSlice.actions;
 
 export default storyPointDetailEWPAgileSlice.reducer;

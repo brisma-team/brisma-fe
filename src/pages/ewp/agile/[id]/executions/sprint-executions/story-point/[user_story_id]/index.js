@@ -8,13 +8,14 @@ import {
   setObjDataUserStory,
   setObjDataTask,
   setObjDataTeam,
-  setObjPayload,
+  setObjPayloadTask,
+  setObjPayloadCommentTask,
   resetObjDataUserStory,
   resetObjDataTask,
   resetObjDataTeam,
-  resetObjPayload,
+  resetObjPayloadCommentTask,
 } from "@/slices/ewp/agile/executions/storyPointDetailEWPAgileSlice";
-import { fetchApi, infoSwal, loadingSwal } from "@/helpers";
+import { confirmationSwal, fetchApi, infoSwal, loadingSwal } from "@/helpers";
 import {
   CardContentStoryPointDetail,
   TableTask,
@@ -24,6 +25,7 @@ import {
   useStoryPointDetail,
 } from "@/data/ewp/agile/executions/story-point-detail";
 import _ from "lodash";
+import { ModalDescription } from "@/components/molecules/commons";
 const index = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -34,8 +36,9 @@ const index = () => {
   const baseUrl = `/ewp/agile/${params?.id}/executions`;
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
-
-  const [sprintId, setSprintId] = useState(0);
+  const [showModalCommentTask, setShowModalCommentTask] = useState(false);
+  const [selectedSprintId, setSelectedSprintId] = useState(0);
+  const [selectedTaskId, setSelectedTaskId] = useState(0);
 
   const dataUserStory = useSelector(
     (state) => state.storyPointDetailEWPAgile.objDataUserStory
@@ -46,15 +49,18 @@ const index = () => {
   const dataTeam = useSelector(
     (state) => state.storyPointDetailEWPAgile.objDataTeam
   );
-  const payload = useSelector(
+  const payloadTask = useSelector(
     (state) => state.storyPointDetailEWPAgile.objPayload
+  );
+  const payloadCommentTask = useSelector(
+    (state) => state.storyPointDetailEWPAgile.objPayloadCommentTask
   );
 
   const { auditInfo } = useAuditInfo({ module: "agile", id: params?.id });
   const { storyPointDetail, storyPointDetailMutate } = useStoryPointDetail({
     id: params?.user_story_id,
   });
-  const { sprintTeam } = useSprintTeam({ id: sprintId });
+  const { sprintTeam } = useSprintTeam({ id: selectedSprintId });
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -95,28 +101,36 @@ const index = () => {
       const response = storyPointDetail?.data;
       const team = [];
       if (sprintTeam?.data?.length) {
-        sprintTeam?.data?.map((v) => {
-          let role;
-          switch (v?.stc_auditor_type_team_kode) {
-            case "ma":
-              role = "Product Owner";
-              break;
-            case "kta":
-              role = "Scrum Master";
-              break;
-            case "ata":
-              role = "Scrum Team";
-              break;
-          }
-          team.push({
-            role,
-            pic: {
-              pn: v?.pn_auditor,
-              name: v?.nama_auditor,
-            },
-            is_initiator: Boolean(v?.is_initiator),
+        sprintTeam?.data
+          ?.sort((a, b) => {
+            const order = { ma: 1, kta: 2, ata: 3 };
+            return (
+              order[a.stc_auditor_type_team_kode] -
+              order[b.stc_auditor_type_team_kode]
+            );
+          })
+          ?.map((v) => {
+            let role;
+            switch (v?.stc_auditor_type_team_kode) {
+              case "ma":
+                role = "Product Owner";
+                break;
+              case "kta":
+                role = "Scrum Master";
+                break;
+              case "ata":
+                role = "Scrum Team";
+                break;
+            }
+            team.push({
+              role,
+              pic: {
+                pn: v?.pn_auditor,
+                name: v?.nama_auditor,
+              },
+              is_initiator: Boolean(v?.is_initiator),
+            });
           });
-        });
       }
       const mappingUserStory = {
         ..._.pick(response, [
@@ -152,9 +166,10 @@ const index = () => {
         team,
       };
       if (response?.user_story_task?.length) {
-        const mapping = response?.user_story_task?.map((task) => {
+        const mapping = response?.user_story_task?.map((task, index) => {
           return {
             ..._.pick(task, ["id", "comment", "description"]),
+            index,
             task_type: {
               kode: task?.task_type_kode,
               nama: task?.task_type_name,
@@ -169,18 +184,14 @@ const index = () => {
       } else {
         dispatch(resetObjDataTask());
       }
-      setSprintId(response?.sprint?.id);
+      setSelectedSprintId(response?.sprint?.id);
       dispatch(setObjDataUserStory(mappingUserStory));
     } else {
-      setSprintId(0);
+      setSelectedSprintId(0);
       dispatch(resetObjDataUserStory());
       dispatch(resetObjDataTask());
     }
   }, [storyPointDetail, sprintTeam]);
-
-  useEffect(() => {
-    console.log("userDataStory => ", dataUserStory);
-  }, [dataUserStory]);
 
   useEffect(() => {
     if (sprintTeam?.data?.length) {
@@ -205,7 +216,7 @@ const index = () => {
 
   // [ START ] handler for table task
   const handleClickCheckbox = (isChecked, task_id) => {
-    const newData = [...(payload?.task || [])];
+    const newData = [...(payloadTask?.task || [])];
     if (isChecked) {
       const findId = newData.some((value) => value === task_id);
 
@@ -214,23 +225,23 @@ const index = () => {
       }
     } else {
       const filter = newData.filter((value) => value !== task_id);
-      dispatch(setObjPayload({ ...payload, task: filter }));
+      dispatch(setObjPayloadTask({ ...payloadTask, task: filter }));
       return;
     }
 
-    dispatch(setObjPayload({ ...payload, task: newData }));
+    dispatch(setObjPayloadTask({ ...payloadTask, task: newData }));
   };
 
   const handleChangePayload = (property, value) => {
-    dispatch(setObjPayload({ ...payload, [property]: value }));
+    dispatch(setObjPayloadTask({ ...payloadTask, [property]: value }));
   };
 
   const handleSubmitAssigne = async () => {
-    if (!payload?.task?.length) {
+    if (!payloadTask?.task?.length) {
       await infoSwal("Silahkan pilih task terlebih dahulu!");
       return;
     }
-    if (!payload?.pic?.pn) {
+    if (!payloadTask?.pic?.pn) {
       await infoSwal("P.I.C penugasan belum terpilih!");
       return;
     }
@@ -239,15 +250,63 @@ const index = () => {
       "POST",
       `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/pelaksanaan/sprint/user_stories/task/${params?.id}`,
       {
-        task_id: payload?.task,
-        pn_auditor: payload?.pic?.pn,
-        name_auditor: payload?.pic?.name,
+        task_id: payloadTask?.task,
+        pn_auditor: payloadTask?.pic?.pn,
+        name_auditor: payloadTask?.pic?.name,
       }
     );
     storyPointDetailMutate();
     loadingSwal("close");
   };
+
+  const handleChangeStatusTask = async (id, value) => {
+    await fetchApi(
+      "PATCH",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/perencanaan/task/update/${id}`,
+      { status_penyelesaian: value },
+      true
+    );
+    storyPointDetailMutate();
+  };
+
+  const handleClickEditComment = (task_index) => {
+    setSelectedTaskId(dataTask[task_index].id);
+    dispatch(setObjPayloadCommentTask(dataTask[task_index].comment));
+    setShowModalCommentTask(true);
+  };
   // [ END ] handler for table task
+
+  // [ START ] handler for modal update comment task
+  const handleCloseModalCommentTask = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    setShowModalCommentTask(false);
+    dispatch(resetObjPayloadCommentTask());
+  };
+
+  const handleSubmitUpdateCommentTask = async (value) => {
+    if (!value) {
+      infoSwal("Silahkan isi comment!");
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "PATCH",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/perencanaan/task/update/${selectedTaskId}`,
+      { comment: value }
+    );
+    storyPointDetailMutate();
+    dispatch(resetObjPayloadCommentTask());
+    setShowModalCommentTask(false);
+    loadingSwal("close");
+  };
+  // [ END ] handler for modal update comment task
 
   return (
     <LandingLayoutEWPAgile>
@@ -266,12 +325,22 @@ const index = () => {
             data={dataTask}
             dataUserStory={dataUserStory}
             dataTeam={dataTeam}
-            payload={payload}
+            payload={payloadTask}
             handleClickCheckbox={handleClickCheckbox}
             handleChangePayload={handleChangePayload}
+            handleChangeStatusTask={handleChangeStatusTask}
             handleSubmitPenugasan={handleSubmitAssigne}
+            handleClickEditComment={handleClickEditComment}
           />
         </div>
+        <ModalDescription
+          isEdit
+          headerText={"Ubah Comment Task"}
+          data={payloadCommentTask}
+          showModal={showModalCommentTask}
+          handleCloseModal={handleCloseModalCommentTask}
+          handleSubmit={handleSubmitUpdateCommentTask}
+        />
         {/* End Content */}
       </div>
     </LandingLayoutEWPAgile>

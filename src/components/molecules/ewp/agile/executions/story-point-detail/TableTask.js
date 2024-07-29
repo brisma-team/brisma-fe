@@ -5,12 +5,21 @@ import TableTree, {
   Row,
   Rows,
 } from "@atlaskit/table-tree";
-import { ButtonField, CustomCheckbox, LozengeField } from "@/components/atoms";
 import {
+  ButtonField,
+  ButtonIcon,
+  CustomCheckbox,
+  LozengeField,
+} from "@/components/atoms";
+import {
+  ButtonEdit,
   CardContentHeaderFooter,
   CustomSelect,
+  StatusTaskAgileSelect,
 } from "@/components/molecules/commons";
 import { capitalizeEveryWord, convertDate } from "@/helpers";
+
+const positionCenter = `w-full h-full flex justify-center items-center`;
 
 const TableTask = ({
   data,
@@ -19,7 +28,9 @@ const TableTask = ({
   payload,
   withoutButton,
   handleClickCheckbox,
+  handleClickEditComment,
   handleChangePayload,
+  handleChangeStatusTask,
   handleSubmitPenugasan,
 }) => {
   return (
@@ -41,25 +52,29 @@ const TableTask = ({
         </div>
       }
       footer={
-        <div className="w-full flex items-center justify-end gap-3 p-3">
-          <div className="w-80">
-            <CustomSelect
-              selectedValue={
-                payload?.pic?.pn
-                  ? {
-                      label: `${payload?.pic?.pn} - ${payload?.pic?.name}`,
-                      value: payload?.pic,
-                    }
-                  : null
-              }
-              optionValue={dataTeam}
-              handleChange={(e) => handleChangePayload("pic", e.value)}
-            />
+        !withoutButton ? (
+          <div className="w-full flex items-center justify-end gap-3 p-3">
+            <div className="w-80">
+              <CustomSelect
+                selectedValue={
+                  payload?.pic?.pn
+                    ? {
+                        label: `${payload?.pic?.pn} - ${payload?.pic?.name}`,
+                        value: payload?.pic,
+                      }
+                    : null
+                }
+                optionValue={dataTeam}
+                handleChange={(e) => handleChangePayload("pic", e.value)}
+              />
+            </div>
+            <div className="rounded w-28 bg-atlasian-green">
+              <ButtonField text="Simpan" handler={handleSubmitPenugasan} />
+            </div>
           </div>
-          <div className="rounded w-28 bg-atlasian-green">
-            <ButtonField text="Simpan" handler={handleSubmitPenugasan} />
-          </div>
-        </div>
+        ) : (
+          ""
+        )
       }
     >
       <div className="p-4">
@@ -77,13 +92,13 @@ const TableTask = ({
               </div>
             </Header>
             <Header
-              width={"10%"}
+              width={"12%"}
               className="border-t border-r cell-custom-dataTables justify-center"
             >
               STATUS
             </Header>
             <Header
-              width={"28%"}
+              width={"26%"}
               className="border-t border-r cell-custom-dataTables"
             >
               TASK DESCRIPTIONS
@@ -109,7 +124,15 @@ const TableTask = ({
           </Headers>
           <Rows
             items={data}
-            render={({ id, status, description, task_type, pic, comment }) => (
+            render={({
+              index,
+              id,
+              status,
+              description,
+              task_type,
+              pic,
+              comment,
+            }) => (
               <Row>
                 <Cell className="!hidden" />
                 <Cell
@@ -128,33 +151,42 @@ const TableTask = ({
                   )}
                 </Cell>
                 <Cell
-                  width={"10%"}
-                  className="border-r cell-custom-dataTables justify-center"
+                  width={"12%"}
+                  className="border-r cell-custom-dataTables cell-width-full-height-full justify-center"
                 >
-                  {status ? (
-                    <LozengeField
-                      appreance={
-                        status === "draft"
-                          ? "default"
-                          : status === "in progress"
-                          ? "inprogress"
-                          : status === "completed"
-                          ? "success"
-                          : status === "impended"
-                          ? "moved"
-                          : status === "canceled"
-                          ? "removed"
-                          : ""
+                  {!withoutButton ? (
+                    <StatusTaskAgileSelect
+                      selectedValue={
+                        status ? { label: status, value: status } : null
                       }
-                      isBold={status !== "draft"}
-                    >
-                      {status}
-                    </LozengeField>
+                      handleChange={async (e) =>
+                        await handleChangeStatusTask(id, e.value)
+                      }
+                    />
                   ) : (
-                    ""
+                    <div className={`${positionCenter}`}>
+                      <LozengeField
+                        appreance={
+                          status === "Draft"
+                            ? "default"
+                            : status === "On Progress"
+                            ? "inprogress"
+                            : status === "Completed"
+                            ? "success"
+                            : status === "Impended"
+                            ? "moved"
+                            : status === "Canceled"
+                            ? "removed"
+                            : ""
+                        }
+                        isBold={status !== "Draft"}
+                      >
+                        {status}
+                      </LozengeField>
+                    </div>
                   )}
                 </Cell>
-                <Cell width={"28%"} className="border-r cell-custom-dataTables">
+                <Cell width={"26%"} className="border-r cell-custom-dataTables">
                   {description || ""}
                 </Cell>
                 <Cell
@@ -169,12 +201,22 @@ const TableTask = ({
                 </Cell>
                 <Cell
                   width={"23%"}
-                  className="border-r cell-custom-dataTables cell-width-full-height-full px-10"
+                  className="border-r cell-custom-dataTables px-10"
                 >
                   {pic?.pn ? `${pic?.pn} - ${pic?.name}` : ""}
                 </Cell>
                 <Cell width={"20%"} className="border-r cell-custom-dataTables">
-                  {comment}
+                  <div className={`${positionCenter} gap-2`}>
+                    {!withoutButton ? (
+                      <ButtonIcon
+                        icon={<ButtonEdit />}
+                        handleClick={() => handleClickEditComment(index)}
+                      />
+                    ) : (
+                      ""
+                    )}
+                    <span>{comment}</span>
+                  </div>
                 </Cell>
               </Row>
             )}

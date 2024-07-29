@@ -15,22 +15,17 @@ import { useAuditBacklog } from "@/data/ewp/agile/executions/audit-backlog";
 
 const routes = [
   {
-    name: "Story Aggregations",
-    slug: "story-aggregations",
-  },
-  {
-    name: "Story Aggegations Selected",
-    slug: "story-aggregations-selected",
-  },
-  {
     name: "Audit Backlog",
     slug: "audit-backlog",
   },
   {
-    name: "Sprint Planning",
-    slug: "sprint-planning",
+    name: "Sprint Executions",
+    slug: "sprint-executions",
   },
-  { name: "Documents", slug: "dokumen" },
+  {
+    name: "Sprint Working Papper",
+    slug: "sprint-working-papper",
+  },
 ];
 
 const index = () => {
@@ -135,10 +130,6 @@ const index = () => {
     }
   }, [auditBacklog]);
 
-  useEffect(() => {
-    console.log("data => ", data);
-  }, [data]);
-
   return (
     <LandingLayoutEWPAgile>
       <div className="!w-[95rem]">
@@ -151,7 +142,7 @@ const index = () => {
             baseUrl={baseUrl}
             routes={routes}
             nextUrl={"/sprint-executions"}
-            marginLeft={"-95px"}
+            marginLeft={"-80px"}
             widthDropdown={"w-[16rem]"}
           />
         </div>

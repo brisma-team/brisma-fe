@@ -163,19 +163,19 @@ const TableSprintPlanning = ({
                     {status ? (
                       <LozengeField
                         appreance={
-                          status === "draft"
+                          status === "Draft"
                             ? "default"
-                            : status === "in progress"
+                            : status === "On Progress"
                             ? "inprogress"
-                            : status === "completed"
+                            : status === "Completed"
                             ? "success"
-                            : status === "impended"
+                            : status === "Impended"
                             ? "moved"
-                            : status === "canceled"
+                            : status === "Canceled"
                             ? "removed"
                             : ""
                         }
-                        isBold={status !== "draft"}
+                        isBold={status !== "Draft"}
                       >
                         {status}
                       </LozengeField>

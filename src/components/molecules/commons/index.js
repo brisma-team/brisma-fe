@@ -93,6 +93,7 @@ import CardApprovalInfo from "./CardApprovalInfo";
 import DocumentTypeSelect from "./DocumentTypeSelect";
 import HasilEvaluasiSelect from "./HasilEvaluasiSelect";
 import ModalCopyLink from "./ModalCopyLink";
+import StatusTaskAgileSelect from "./StatusTaskAgileSelect";
 
 export {
   BackButton,
@@ -190,4 +191,5 @@ export {
   DocumentTypeSelect,
   HasilEvaluasiSelect,
   ModalCopyLink,
+  StatusTaskAgileSelect,
 };
