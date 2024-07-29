@@ -213,7 +213,7 @@ const index = () => {
     } else {
       dispatch(resetObjDataTeam());
     }
-  }, [tim]);
+  }, [tim, showModalEditPetugas]);
 
   useEffect(() => {
     if (petugas?.data?.length) {
