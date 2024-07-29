@@ -65,6 +65,7 @@ const index = () => {
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [showModalTanggapan, setShowModalTanggapan] = useState(false);
   const [showModalApproval, setShowModalApproval] = useState(false);
+  const [tanggapanSubmitter, setTanggapanSubmitter] = useState(false);
 
   const dataContent = useSelector(
     (state) => state.evaluasiActionPlanRPMQualityAssurance.objDataContent
@@ -198,6 +199,7 @@ const index = () => {
       dispatch(setObjDataContent(mappingContent));
       dispatch(setObjDataCatatanNegosiasi(mappingCatatanNegosiasi));
       dispatch(setObjDataDokumenLampiran(mappingDokumenLampiran));
+      setTanggapanSubmitter(response?.desc_tanggapan);
       dispatch(setObjPayloadTanggapan(response?.desc_evaluasi));
       dispatch(
         setObjPayloadHasilEvaluasi(
@@ -210,6 +212,7 @@ const index = () => {
       dispatch(resetObjDataCatatanNegosiasi());
       dispatch(resetObjDataDokumenLampiran());
       dispatch(resetObjPayloadTanggapan());
+      setTanggapanSubmitter("");
       dispatch(resetObjPayloadHasilEvaluasi());
     }
   }, [actionPlan, user, showModalTanggapan]);
@@ -523,11 +526,12 @@ const index = () => {
         </CardApprovalInfo>
         <ModalTanggapan
           isEditable={isOnProgress && isPIC}
-          data={payloadTanggapan}
+          data={{ submitter: tanggapanSubmitter, evaluator: payloadTanggapan }}
           showModal={showModalTanggapan}
           handleChangePayload={handleChangePayloadTanggapan}
           handleCloseModal={handleCloseModalTanggapan}
           handleSubmit={handleSubmitTanggapan}
+          currentPageStatus={{ isEvaluation: true }}
         />
         <ModalWorkflow
           workflowData={dataWorkflow}
