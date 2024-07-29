@@ -276,7 +276,7 @@ const index = () => {
       dispatch(resetObjDataWorkflow());
       dispatch(resetObjDataHistoryWorkflow());
     }
-  }, [workflowRPM, showModalApproval]);
+  }, [workflowRPM, showModalApproval, router?.pathname]);
 
   // [ START ] handler for modal tanggapan
   const handleCloseModalTanggapan = async () => {

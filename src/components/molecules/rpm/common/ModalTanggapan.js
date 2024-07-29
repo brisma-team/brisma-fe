@@ -54,7 +54,7 @@ const ModalTanggapan = ({
                 }
                 rows={5}
                 onChange={(e) => handleChangePayload(e.target.value)}
-                disabled={!isEditable}
+                disabled={!isEditable || !currentPageStatus?.isActionPlan}
               ></textarea>
             </div>
           </CardContentHeaderFooter>
@@ -80,7 +80,7 @@ const ModalTanggapan = ({
                   }
                   rows={5}
                   onChange={(e) => handleChangePayload(e.target.value)}
-                  disabled={!isEditable}
+                  disabled={!isEditable || !currentPageStatus?.isEvaluation}
                 ></textarea>
               </div>
             </CardContentHeaderFooter>
