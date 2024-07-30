@@ -88,7 +88,7 @@ const index = () => {
         },
         {
           name: "Story Point Detail",
-          path: `${baseUrl}/sprint-executions/${params?.user_story_id}`,
+          path: `${baseUrl}/sprint-executions/story-point/${params?.user_story_id}`,
         },
       ]);
     } else {

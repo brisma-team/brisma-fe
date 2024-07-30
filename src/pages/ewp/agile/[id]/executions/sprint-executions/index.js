@@ -268,6 +268,10 @@ const index = () => {
     setSprintId(id);
     setShowModalTeam(true);
   };
+
+  const handleClickWorkingPapper = (id) => {
+    router.push(`${baseUrl}/sprint-executions/sprint/${id}`);
+  };
   // [ END ] sprint
 
   // [ START ] user story
@@ -376,6 +380,7 @@ const index = () => {
           handleClickInitiate={handleClickInitiateSprint}
           handleClickTerminate={handleClickTerminateSprint}
           handleClickEditSprintTeam={handleClickEditSprintTeam}
+          handleClickWorkingPapper={handleClickWorkingPapper}
           handleChangeStatusUserStory={handleChangeStatusUserStory}
         />
         <ModalProjectTeam

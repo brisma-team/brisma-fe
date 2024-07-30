@@ -19,6 +19,8 @@ import {
 } from "@/components/molecules/commons";
 import shortenWord from "@/helpers/shortenWord";
 import Link from "next/link";
+import Image from "next/image";
+import { ImageBar } from "@/helpers/imagesUrl";
 
 const positionCenter = `w-full h-full flex justify-center items-center`;
 
@@ -31,6 +33,7 @@ const TableSprintExecution = ({
   handleClickInitiate,
   handleClickTerminate,
   handleClickEditSprintTeam,
+  handleClickWorkingPapper,
   handleChangeStatusUserStory,
 }) => {
   return (
@@ -215,13 +218,30 @@ const TableSprintExecution = ({
                     className={`flex items-center w-full justify-between ml-2`}
                   >
                     {role === "parent" ? (
-                      <Link href={`${pathName}/sprint/${id}`}>
-                        <span className="font-bold">
-                          {sprint?.no}
-                          {" - "}
-                        </span>
-                        {sprint?.nama}
-                      </Link>
+                      <>
+                        <p>
+                          <span className="font-bold">
+                            {sprint?.no}
+                            {" - "}
+                          </span>
+                          {sprint?.nama}
+                        </p>
+                        {!withoutButton ? (
+                          <ButtonIcon
+                            icon={
+                              <Image
+                                src={ImageBar}
+                                alt=""
+                                width={15}
+                                height={15}
+                              />
+                            }
+                            handleClick={() => handleClickWorkingPapper(id)}
+                          />
+                        ) : (
+                          ""
+                        )}
+                      </>
                     ) : role === "child" ? (
                       <Link href={`${pathName}/story-point/${id}`}>
                         <span className="font-bold">{risk_issue?.abbr}</span>
