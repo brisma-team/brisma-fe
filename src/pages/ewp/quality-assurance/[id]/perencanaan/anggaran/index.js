@@ -81,7 +81,9 @@ const index = () => {
   const { user } = useUser();
   const { auditInfo } = useAuditInfo({ module: "qa", id: params?.id });
   const { anggaran, anggaranMutate } = useAnggaran({ id: params?.id });
-  const { detailAnggaran } = useDetailAnggaran({ id: selectedId });
+  const { detailAnggaran, detailAnggaranMutate } = useDetailAnggaran({
+    id: selectedId,
+  });
   const { landingStatus } = useLandingStatus({
     module: "qa",
     submodule: "mapa",
@@ -142,8 +144,10 @@ const index = () => {
           "tanggal_end",
         ]);
       });
+      detailAnggaranMutate();
       dispatch(setObjData(mappingAnggaran));
     } else {
+      detailAnggaranMutate();
       dispatch(resetObjData());
     }
   }, [anggaran]);
@@ -165,7 +169,6 @@ const index = () => {
       dispatch(resetObjPayload());
     }
   }, [detailAnggaran, typeModal, showModal]);
-
   // [ START ] handler for modal
   const handleCloseModal = async () => {
     const confirm = await confirmationSwal(
@@ -199,9 +202,11 @@ const index = () => {
       setErrors: setValidationErrors,
     };
     const validate = setErrorValidation(payload, dispatch, schemaMapping);
-
     const objPayload = {
-      amount: parseInt(payload?.amount?.replace(/\./g, "")),
+      amount:
+        typeof payload?.amount === "number"
+          ? payload?.amount
+          : parseInt(payload?.amount?.replace(/\./g, "")),
       ..._.omit(payload, ["amount"]),
     };
 
