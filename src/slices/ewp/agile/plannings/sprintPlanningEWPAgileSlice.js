@@ -8,7 +8,6 @@ const initialState = {
   objPayloadUserStory: [],
   objPayloadTask: {},
   objPayloadUkerAssessment: {},
-  objPayloadCompletionStatusUserStory: "",
   objPayloadPotentialProblemTask: "",
   objPayloadCommentTask: "",
   validationErrorsSprint: {},
@@ -45,9 +44,6 @@ export const sprintPlanningEWPAgileSlice = createSlice({
     setObjPayloadCommentTask: (state, action) => {
       state.objPayloadCommentTask = action.payload;
     },
-    setObjPayloadCompletionStatusUserStory: (state, action) => {
-      state.objPayloadCompletionStatusUserStory = action.payload;
-    },
     setObjPayloadPotentialProblemTask: (state, action) => {
       state.objPayloadPotentialProblemTask = action.payload;
     },
@@ -83,9 +79,6 @@ export const sprintPlanningEWPAgileSlice = createSlice({
     },
     resetObjPayloadUkerAssessment: (state) => {
       state.objPayloadUkerAssessment = {};
-    },
-    resetObjPayloadCompletionStatusUserStory: (state) => {
-      state.objPayloadCompletionStatusUserStory = "";
     },
     resetObjPayloadPotentialProblemTask: (state) => {
       state.objPayloadPotentialProblemTask = "";

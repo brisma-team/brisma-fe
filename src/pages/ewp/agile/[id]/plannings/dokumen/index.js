@@ -25,6 +25,9 @@ import {
   confirmationSwal,
   convertDate,
   fetchApi,
+  findNextSprintNo,
+  generateSprintNo,
+  infoSwal,
   loadingSwal,
   setErrorValidation,
 } from "@/helpers";
@@ -33,6 +36,7 @@ import { useAuditInfo } from "@/data/ewp/common/info";
 import { useWorkflowDetailEWP } from "@/data/ewp";
 import { useCommentEWP } from "@/data/ewp/common/dokumen";
 import { auditBacklogeHtml } from "@/templates/ewp/agile/planning";
+import { useSprintPlanning } from "@/data/ewp/agile/plannings/sprint-planning";
 
 const routes = [
   {
@@ -109,6 +113,9 @@ const index = () => {
     sub_module: "perencanaan",
     id: params?.id,
     bab: activeIdComment,
+  });
+  const { sprintPlanning } = useSprintPlanning({
+    id: params?.id,
   });
 
   useEffect(() => {
@@ -551,6 +558,16 @@ const index = () => {
   };
   // [ END ]
 
+  const handleShowModalApproval = () => {
+    const totalSprint = sprintPlanning?.data?.length;
+    const checkSprintNo = generateSprintNo(sprintPlanning?.data);
+    if (totalSprint !== checkSprintNo - 1) {
+      infoSwal("Urutan nomer sprint tidak sesuai, silahkan cek kembali!");
+      return;
+    }
+    setShowModalApproval(true);
+  };
+
   const handleActiveIndex = (index) => {
     setActiveIndex(index);
   };
@@ -571,7 +588,7 @@ const index = () => {
       <div className="flex justify-between items-center mb-6">
         <PageTitle text={"Documents"} />
         <PrevNextNavigation
-          baseUrl={baseUrl}
+          baseUrl={pathName}
           routes={routes}
           prevUrl={"/sprint-planning"}
           marginLeft={"-95px"}
@@ -606,7 +623,7 @@ const index = () => {
         </div>
         <div>
           <DivButton
-            handleClick={() => setShowModalApproval(true)}
+            handleClick={handleShowModalApproval}
             className="no-underline hover:no-underline w-56"
           >
             <Card>
@@ -644,7 +661,6 @@ const index = () => {
             handleChangeText={handleChangeText}
             handleCloseModal={handleCloseModalWorkflow}
             withSigner
-            withReset
           />
         </div>
       </div>

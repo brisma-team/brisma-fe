@@ -154,10 +154,6 @@ const index = () => {
           ? true
           : false,
         status_code: 2,
-        is_addendum: Boolean(
-          auditInfo?.data?.realisasi?.pelaksanaan_audit_real_start &&
-            !auditInfo?.data?.realisasi?.pelaksanaan_audit_real_end
-        ),
         label: "Project Plannings",
         start_date: auditInfo?.data?.realisasi?.penyusunan_mapa_real_start,
         end_date: auditInfo?.data?.realisasi?.penyusunan_mapa_real_end,
