@@ -162,8 +162,13 @@ const index = () => {
     router.push(`overview/${id}?is_approval=true`);
   };
 
+  // const handleClickDownload = (id) => {
+  //   router.push(`overview/${id}/preview?is_print=true`);
+  // };
+
   const handleClickDownload = (id) => {
-    router.push(`overview/${id}/preview?is_print=true`);
+    const url = `overview/${id}/preview?is_print=true`;
+    window.open(url, "_blank");
   };
 
   const handleDeleteTemplate = async (id) => {
