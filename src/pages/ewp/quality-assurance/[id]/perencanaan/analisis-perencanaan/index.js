@@ -574,7 +574,7 @@ const index = () => {
             data={dataTableInternal}
             expansionMap={expansionMapInternal}
             pathName={`/ewp/quality-assurance/${params?.id}/perencanaan/analisis-perencanaan`}
-            withoutButton={!(isOnProgress && !isCloseSubmodule)}
+            withoutButton={!(isOnProgress && !isCloseSubmodule && isInitiator)}
             handleClickAddProject={handleClickAddProjectInternal}
             handleClickToggleExpansion={handleToggleExpansionInternal}
             handleClickDeleteProject={handleClickDeleteProject}
@@ -587,7 +587,7 @@ const index = () => {
             data={dataTableEksternal}
             pathName={`/ewp/quality-assurance/${params?.id}/perencanaan/analisis-perencanaan`}
             expansionMap={expansionMapEksternal}
-            withoutButton={!(isOnProgress && !isCloseSubmodule)}
+            withoutButton={!(isOnProgress && !isCloseSubmodule && isInitiator)}
             handleClickAddProject={handleClickAddProjectEksternal}
             handleClickToggleExpansion={handleToggleExpansionEksternal}
             handleClickDeleteProject={handleClickDeleteProject}

@@ -27,6 +27,7 @@ import {
   checkRoleApprovalLog,
   confirmationSwal,
   convertDate,
+  errorSwal,
   fetchApi,
   infoSwal,
   loadingSwal,
@@ -64,6 +65,7 @@ const index = () => {
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [showModalTanggapan, setShowModalTanggapan] = useState(false);
   const [showModalApproval, setShowModalApproval] = useState(false);
+  const [tanggapanSubmitter, setTanggapanSubmitter] = useState(false);
 
   const dataContent = useSelector(
     (state) => state.evaluasiActionPlanRPMQualityAssurance.objDataContent
@@ -173,6 +175,8 @@ const index = () => {
               catatan_nego?.rpm_action_plan_sebelum;
             return {
               tanggal_kejadian: catatan_nego?.createdAt,
+              rekomendasi: catatan_nego?.rekomendasi_kkpt?.nama,
+              desc: catatan_nego?.rekomendasi_kkpt?.description,
               action_plan: responseActionPlanSebelum?.action_plan_kkpt?.name,
               deadline: responseActionPlanSebelum?.batas_waktu,
               evaluasi: responseActionPlanSebelum?.hasil_evaluasi,
@@ -195,6 +199,7 @@ const index = () => {
       dispatch(setObjDataContent(mappingContent));
       dispatch(setObjDataCatatanNegosiasi(mappingCatatanNegosiasi));
       dispatch(setObjDataDokumenLampiran(mappingDokumenLampiran));
+      setTanggapanSubmitter(response?.desc_tanggapan);
       dispatch(setObjPayloadTanggapan(response?.desc_evaluasi));
       dispatch(
         setObjPayloadHasilEvaluasi(
@@ -207,6 +212,7 @@ const index = () => {
       dispatch(resetObjDataCatatanNegosiasi());
       dispatch(resetObjDataDokumenLampiran());
       dispatch(resetObjPayloadTanggapan());
+      setTanggapanSubmitter("");
       dispatch(resetObjPayloadHasilEvaluasi());
     }
   }, [actionPlan, user, showModalTanggapan]);
@@ -270,7 +276,7 @@ const index = () => {
       dispatch(resetObjDataWorkflow());
       dispatch(resetObjDataHistoryWorkflow());
     }
-  }, [workflowRPM, showModalApproval]);
+  }, [workflowRPM, showModalApproval, router?.pathname]);
 
   // [ START ] handler for modal tanggapan
   const handleCloseModalTanggapan = async () => {
@@ -380,6 +386,9 @@ const index = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!payloadHasilEvaluasi?.kode) {
+      errorSwal("Mohon pilih hasil evaluasi terlebih dahulu");
+    }
     const schemaMapping = {
       schema: workflowSchema,
       resetErrors: resetValidationErrors,
@@ -496,7 +505,9 @@ const index = () => {
         </CardContentActionPlan>
         <CardApprovalInfo
           handleClick={() => setShowModalApproval(true)}
-          isDisabled={!actionPlan?.data?.hasil_evaluasi}
+          isDisabled={
+            !actionPlan?.data?.hasil_evaluasi || !payloadHasilEvaluasi?.kode
+          }
         >
           <p className="text-brisma font-bold text-xl">Approval</p>
           <ApprovalItems
@@ -515,11 +526,12 @@ const index = () => {
         </CardApprovalInfo>
         <ModalTanggapan
           isEditable={isOnProgress && isPIC}
-          data={payloadTanggapan}
+          data={{ submitter: tanggapanSubmitter, evaluator: payloadTanggapan }}
           showModal={showModalTanggapan}
           handleChangePayload={handleChangePayloadTanggapan}
           handleCloseModal={handleCloseModalTanggapan}
           handleSubmit={handleSubmitTanggapan}
+          currentPageStatus={{ isEvaluation: true }}
         />
         <ModalWorkflow
           workflowData={dataWorkflow}

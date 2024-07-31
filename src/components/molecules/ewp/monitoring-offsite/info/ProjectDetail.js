@@ -1,4 +1,3 @@
-import PopupProject from "./PopupProject";
 import RowTable from "./RowTable";
 
 const ProjectDetail = ({ data }) => {
@@ -6,7 +5,6 @@ const ProjectDetail = ({ data }) => {
     <div className="w-full">
       <div className="flex gap-3">
         <p className="text-base font-bold mb-2 ml-2">Project Details</p>
-        <PopupProject />
       </div>
       <div className="w-full border-l-2 border-r-2 border-t-2 border-atlasian-gray-light">
         <RowTable

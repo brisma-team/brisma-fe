@@ -409,7 +409,12 @@ const index = () => {
 
     dispatch(setWorkflowData(newWorkflowData));
     setIsRefreshWorkflow(false);
-  }, [workflowSurvey, isRefreshWorkflow]);
+  }, [
+    workflowSurvey,
+    isRefreshWorkflow,
+    showModalApprovalExtension,
+    showModalApprovalTerminate,
+  ]);
 
   useEffect(() => {
     const workflowInfo = workflowSurveyExtensionRequest?.data?.info;
@@ -641,7 +646,17 @@ const index = () => {
 
   // [ START ] Handler for modal approval
   const handleClickOpenModalApproval = () => {
-    setShowModalApproval(true);
+    if (is_approval && extension) {
+      setSelectedExtensionRequestId(extension);
+      setShowModalApprovalExtension(true);
+      setShowModalApproval(false);
+    } else if (is_approval && terminate) {
+      setSelectedTerminateRequestId(terminate);
+      setShowModalApprovalTerminate(true);
+      setShowModalApproval(false);
+    } else if (is_approval) {
+      setShowModalApproval(true);
+    }
   };
 
   const handleCloseModalApproval = () => {

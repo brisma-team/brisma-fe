@@ -8,7 +8,7 @@ import TableTree, {
   Row,
   Rows,
 } from "@atlaskit/table-tree";
-import PopupProject from "./PopupProject";
+// import PopupProject from "./PopupProject";
 import { IconArrowRight } from "@/components/icons";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
@@ -23,7 +23,7 @@ const RealizationTable = ({
     <>
       <div className="flex gap-3">
         <p className="text-base font-bold mb-2 ml-2">Realisasi dan Inisiasi</p>
-        <PopupProject />
+        {/* <PopupProject /> */}
       </div>
       <TableTree>
         <Headers>

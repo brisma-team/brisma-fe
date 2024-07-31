@@ -16,12 +16,36 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import timOverviewRPMSchema from "@/helpers/schemas/rpm/object-overview/timOverviewRPMSchema";
 import CardPICTeam from "@/components/molecules/rpm/common/overview/CardPICTeam";
+import useUser from "@/data/useUser";
 
 const index = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [params, setParams] = useState({
     id: 0,
+  });
+
+  const [authorized, setAuthorized] = useState({
+    initiator: {
+      pn: "",
+      name: "",
+      isLogin: false,
+    },
+    submitter: {
+      pn: "",
+      name: "",
+      isLogin: false,
+    },
+    evaluator: {
+      pn: "",
+      name: "",
+      isLogin: false,
+    },
+    negotiator: {
+      pn: "",
+      name: "",
+      isLogin: false,
+    },
   });
 
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -41,6 +65,8 @@ const index = () => {
   const validation = useSelector(
     (state) => state.timOverviewRPMQualityAssurance.validationErrors
   );
+
+  const { user } = useUser();
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -64,7 +90,32 @@ const index = () => {
         path: `/rpm/quality-assurance/${params?.id}/tim`,
       },
     ]);
-  }, [projectDetailRPM]);
+
+    const projectInfo = projectDetailRPM?.data?.project;
+    setAuthorized({
+      ...authorized,
+      initiator: {
+        pn: projectInfo?.create_by?.pn || "",
+        name: projectInfo?.create_by?.nama || "",
+        isLogin: Boolean(projectInfo?.create_by?.pn == user?.data?.pn),
+      },
+      submitter: {
+        pn: projectInfo?.pic_auditee?.pn || "",
+        name: projectInfo?.pic_auditee?.nama || "",
+        isLogin: Boolean(projectInfo?.pic_auditee?.pn == user?.data?.pn),
+      },
+      evaluator: {
+        pn: projectInfo?.pic_auditor?.pn || "",
+        name: projectInfo?.pic_auditor?.nama || "",
+        isLogin: Boolean(projectInfo?.pic_auditor?.pn == user?.data?.pn),
+      },
+      negotiator: {
+        pn: projectInfo?.pic_nego?.pn || "",
+        name: projectInfo?.pic_nego?.nama || "",
+        isLogin: Boolean(projectInfo?.pic_nego?.pn == user?.data?.pn),
+      },
+    });
+  }, [projectDetailRPM, user]);
 
   useEffect(() => {
     const response = timOverview?.data;
@@ -187,6 +238,7 @@ const index = () => {
                     label={"P.I.C Submitter"}
                     property={"pic_submitter"}
                     labelColor={"text-atlasian-blue-light"}
+                    isDisabled={!authorized?.initiator?.isLogin}
                     handleChange={handleChangePayload}
                   />
                 </div>
@@ -197,6 +249,7 @@ const index = () => {
                     label={"P.I.C Evaluator"}
                     property={"pic_evaluator"}
                     labelColor={"text-atlasian-yellow"}
+                    isDisabled={!authorized?.initiator?.isLogin}
                     handleChange={handleChangePayload}
                   />
                 </div>
@@ -207,6 +260,7 @@ const index = () => {
                     label={"P.I.C Negosiator"}
                     property={"pic_negotiator"}
                     labelColor={"text-atlasian-red"}
+                    isDisabled={!authorized?.initiator?.isLogin}
                     handleChange={handleChangePayload}
                   />
                 </div>
@@ -223,12 +277,14 @@ const index = () => {
                       isUserSKAI
                       data={payload}
                       validation={validation}
-                      // withoutButton={
-                      //   isCloseSubmodule ? true : !isOnProgress ? true : !isInitiator
-                      // }
-                      // isDisabled={
-                      //   isCloseSubmodule ? true : !isOnProgress ? true : !isInitiator
-                      // }
+                      withoutButton={
+                        !authorized?.submitter?.isLogin &&
+                        !authorized?.initiator?.isLogin
+                      }
+                      isDisabled={
+                        !authorized?.submitter?.isLogin &&
+                        !authorized?.initiator?.isLogin
+                      }
                       property={"submitter"}
                       title={"Submitter"}
                       textColorTitle={"text-atlasian-blue-light"}
@@ -244,12 +300,14 @@ const index = () => {
                       isUserSKAI
                       data={payload}
                       validation={validation}
-                      // withoutButton={
-                      //   isCloseSubmodule ? true : !isOnProgress ? true : !isInitiator
-                      // }
-                      // isDisabled={
-                      //   isCloseSubmodule ? true : !isOnProgress ? true : !isInitiator
-                      // }
+                      withoutButton={
+                        !authorized?.evaluator?.isLogin &&
+                        !authorized?.initiator?.isLogin
+                      }
+                      isDisabled={
+                        !authorized?.evaluator?.isLogin &&
+                        !authorized?.initiator?.isLogin
+                      }
                       property={"evaluator"}
                       title={"Evaluator"}
                       textColorTitle={"text-atlasian-yellow"}
@@ -265,6 +323,9 @@ const index = () => {
             </div>
           </div>
         </Card>
+        {!authorized?.initiator?.isLogin &&
+          !authorized?.submitter?.isLogin &&
+          !authorized?.evaluator?.isLogin}
         <div className="flex justify-end">
           <div className="w-36 bg-atlasian-green rounded">
             <ButtonField text={"Simpan"} handler={handleSubmit} />

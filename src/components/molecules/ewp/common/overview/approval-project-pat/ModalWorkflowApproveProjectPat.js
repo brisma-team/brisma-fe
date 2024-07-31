@@ -14,7 +14,7 @@ const ModalWorkflowApproveProjectPat = ({
   handleCloseModal,
   validationErrors,
   widthHeader,
-  objectId,
+  // objectId,
 }) => {
   const { user } = useUser();
   let isApproval, isInitiator, isAdmin;
@@ -22,7 +22,6 @@ const ModalWorkflowApproveProjectPat = ({
   isApproval = user?.data?.pn == workflowData?.on_approver?.pn;
   isAdmin = checkRoleIsAdmin(user?.data?.role_kode);
 
-  console.log(objectId);
   const closeModal = async () => {
     const confirm = await confirmationSwal(
       "Apakah Anda ingin menutup modal ini?"

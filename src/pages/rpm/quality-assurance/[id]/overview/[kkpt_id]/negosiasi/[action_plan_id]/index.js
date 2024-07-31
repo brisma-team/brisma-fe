@@ -280,7 +280,7 @@ const index = () => {
       dispatch(resetObjDataWorkflow());
       dispatch(resetObjDataHistoryWorkflow());
     }
-  }, [workflowRPM, showModalApproval]);
+  }, [workflowRPM, showModalApproval, router?.pathname]);
 
   const handleChangeTab = (index) => {
     setCurrentContentStage(index);

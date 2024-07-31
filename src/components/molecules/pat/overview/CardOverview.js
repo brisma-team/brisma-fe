@@ -1,7 +1,8 @@
 import { Card, DivButton } from "@/components/atoms";
 import ProgressBar from "@atlaskit/progress-bar";
 import { useRouter } from "next/router";
-// import { DropdownIcon } from "../../commons";
+import { DropdownCard } from "@/components/molecules/commons";
+import { IconCross, IconPerson } from "@/components/icons";
 
 const CardBody = ({ title, value }) => {
   return (
@@ -21,7 +22,7 @@ const CardBody = ({ title, value }) => {
 };
 
 const CardOverview = ({
-  // id,
+  id,
   title,
   year,
   progress,
@@ -30,15 +31,55 @@ const CardOverview = ({
   apporovalStatus,
   addendum,
   href,
-  // handleApproval,
+  handleReset,
+  handleApproval,
   tipe_overview,
   withoutLabel,
 }) => {
   const router = useRouter();
-
-  // const listDropdown = [
-  //   { label: "Approval", action: async () => handleApproval(id) },
-  // ];
+  const listDropdown = [
+    {
+      label: (
+        <div className="flex gap-">
+          <IconCross size="medium" />
+          <span className="my-auto ml-0.5">Request Reset</span>
+        </div>
+      ),
+      action: () => handleReset(id),
+      // isDisabled: true,
+    },
+    {
+      label: (
+        <div className="flex gap-">
+          <IconPerson size="medium" />
+          <span className="my-auto ml-0.5">Approval</span>
+        </div>
+      ),
+      action: () => handleApproval(id),
+      // isDisabled: true,
+    },
+    // {
+    //   label: (
+    //     <div className="flex gap-1">
+    //       <IconTrash size="medium" />
+    //       <span className="my-auto">Delete Project</span>
+    //     </div>
+    //   ),
+    //   action: () => handleCloseProject(data?.id),
+    //   isDisabled: !(
+    //     checkRoleIsAdmin(user?.role_kode) || data?.initiator?.pn === user?.pn
+    //   ),
+    // },
+    // {
+    //   label: (
+    //     <div className="flex gap-1">
+    //       <IconLink size="medium" />
+    //       <span className="my-auto">Link Project</span>
+    //     </div>
+    //   ),
+    //   action: () => handleCopyProject(data?.id),
+    // },
+  ];
 
   const handleClickCard = () => {
     router.push(href);
@@ -66,6 +107,9 @@ const CardOverview = ({
             {/* <div className="w-7">
               <DropdownIcon actions={listDropdown} color={"blue"} />
             </div> */}
+            <div className="mt-1.5">
+              <DropdownCard actions={listDropdown} />
+            </div>
           </div>
           <div className="text-base mt-4 font-bold text-atlasian-blue-dark">
             {title}

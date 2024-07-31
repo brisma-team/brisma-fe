@@ -87,6 +87,8 @@ const TableCatatanNegosiasi = ({
                   deadline,
                   evaluasi,
                   negosiasi,
+                  rekomendasi,
+                  desc,
                 }) => (
                   <Row>
                     <Cell className="!hidden" />
@@ -102,7 +104,14 @@ const TableCatatanNegosiasi = ({
                       width="30%"
                       className="border-r cell-custom-dataTables"
                     >
-                      {action_plan}
+                      <p>
+                        <b>Rekomendasi - {rekomendasi}: </b>
+                        {desc}
+                      </p>
+                      <p>
+                        <b>Action Plan: </b>
+                        {action_plan}
+                      </p>
                     </Cell>
                     <Cell
                       width="15%"

@@ -213,7 +213,7 @@ const index = () => {
     } else {
       dispatch(resetObjDataTeam());
     }
-  }, [tim]);
+  }, [tim, showModalEditPetugas]);
 
   useEffect(() => {
     if (petugas?.data?.length) {
@@ -333,7 +333,7 @@ const index = () => {
         user={user?.data}
         expansionMap={expansionMap}
         pathName={`/ewp/quality-assurance/${params?.id}/perencanaan/analisis-perencanaan`}
-        withoutButton={!(isOnProgress && !isCloseSubmodule)}
+        withoutButton={!(isOnProgress && !isCloseSubmodule && isInitiator)}
         handleClickToggleExpansion={handleToggleExpansion}
         handleClickEdit={handleClickEdit}
         handleClickFieldPetugas={handleClickFieldPetugas}

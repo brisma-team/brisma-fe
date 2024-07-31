@@ -27,6 +27,7 @@ const ModalEditJadwal = ({
               <DatepickerField
                 handleChange={(value) => handleChange("end_date", value)}
                 value={payload?.end_date}
+                minDate={payload?.start_date}
                 placeholder="Tanggal Berakhir"
               />
             }

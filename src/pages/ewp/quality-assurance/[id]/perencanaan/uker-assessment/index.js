@@ -16,7 +16,6 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import {
   confirmationSwal,
-  errorSwal,
   fetchApi,
   loadingSwal,
   usePostFileData,
@@ -328,7 +327,6 @@ const index = () => {
     loadingSwal("close");
   };
   // [ END ] handler for modal attachment
-
   return (
     <LandingLayoutEWPQualityAssurance>
       {/* Start Breadcrumbs */}
@@ -371,8 +369,10 @@ const index = () => {
       <ModalAttachment
         data={
           data[selectedIndex]?.is_new
-            ? payload?.attachments[0]
-            : data[selectedIndex]?.attachments[0]
+            ? payload?.attachments !== undefined
+              ? payload?.attachments[0]
+              : data[selectedIndex]?.attachments?.[0]
+            : data[selectedIndex]?.attachments?.[0]
         }
         isEdit={data[selectedIndex]?.is_new || data[selectedIndex]?.is_edit}
         showModal={showModalAttachment}

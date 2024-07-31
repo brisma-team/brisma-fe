@@ -8,6 +8,7 @@ const ModalTanggapan = ({
   handleChangePayload,
   handleSubmit,
   handleCloseModal,
+  currentPageStatus,
 }) => {
   return (
     <Modal
@@ -38,24 +39,53 @@ const ModalTanggapan = ({
           <CardContentHeaderFooter
             header={
               <div className="py-2 px-4 text-base font-semibold w-full">
-                Tanggapan
+                Tanggapan Submitter
               </div>
             }
           >
-            <div className="flex flex-col gap-4 px-6 py-4 w-full">
+            <div className="flex flex-col gap-4 px-6 py-4 w-full ">
               <textarea
-                className="w-full border-2 border-gray-200 text-sm rounded-md"
-                value={data}
+                className="w-full border-2 border-gray-200 text-sm rounded-md "
+                value={data?.submitter}
                 placeholder={
-                  !isEditable && !data ? "" : "Berikan tanggapan disini..."
+                  !isEditable && !data?.submitter
+                    ? ""
+                    : "Berikan tanggapan disini..."
                 }
                 rows={5}
                 onChange={(e) => handleChangePayload(e.target.value)}
-                disabled={!isEditable}
+                disabled={!isEditable || !currentPageStatus?.isActionPlan}
               ></textarea>
             </div>
           </CardContentHeaderFooter>
         </div>
+        {(currentPageStatus?.isEvaluation ||
+          currentPageStatus?.isNegotiation) && (
+          <div className="w-full p-4 -mt-2">
+            <CardContentHeaderFooter
+              header={
+                <div className="py-2 px-4 text-base font-semibold w-full">
+                  Tanggapan Evaluator
+                </div>
+              }
+            >
+              <div className="flex flex-col gap-4 px-6 py-4 w-full">
+                <textarea
+                  className="w-full border-2 border-gray-200 text-sm rounded-md"
+                  value={data?.evaluator}
+                  placeholder={
+                    !isEditable && !data?.evaluator
+                      ? ""
+                      : "Berikan tanggapan disini..."
+                  }
+                  rows={5}
+                  onChange={(e) => handleChangePayload(e.target.value)}
+                  disabled={!isEditable || !currentPageStatus?.isEvaluation}
+                ></textarea>
+              </div>
+            </CardContentHeaderFooter>
+          </div>
+        )}
       </div>
     </Modal>
   );

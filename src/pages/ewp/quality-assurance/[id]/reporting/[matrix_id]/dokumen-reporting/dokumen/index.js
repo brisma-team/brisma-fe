@@ -9,7 +9,7 @@ import {
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { LandingLayoutEWPQualityAssurance } from "@/layouts/ewp";
-import { useDocumentEWP } from "@/data/ewp/common/dokumen";
+import { useCommentEWP, useDocumentEWP } from "@/data/ewp/common/dokumen";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setObjDataWorkflow,
@@ -17,6 +17,10 @@ import {
   resetObjDataWorkflow,
   resetValidationErrorsWorkflow,
 } from "@/slices/ewp/quality-assurance/reporting/dokumenReportingEWPQualityAssuranceSlice";
+import {
+  setObjDataComment,
+  resetObjDataComment,
+} from "@/slices/ewp/quality-assurance/perencanaan/dokumenPerencanaanEWPQualityAssuranceSlice";
 import _ from "lodash";
 import {
   checkRoleApprovalLog,
@@ -82,6 +86,10 @@ const index = () => {
   const [historyWorkflow, setHistoryWorkflow] = useState([]);
   const [bab, setBab] = useState(1);
 
+  const [openCardComment, setOpenCardComment] = useState(false);
+  const [activeIdComment, setActiveIdComment] = useState(0);
+  const [activeIndexComment, setActiveIndexComment] = useState(0);
+
   //   const [isCloseSubmodule, setIsCloseSubmodule] = useState(false);
   //   const [isOnProgress, setIsOnProgress] = useState(false);
 
@@ -92,9 +100,12 @@ const index = () => {
     (state) =>
       state.dokumenReportingEWPQualityAssurance.validationErrorsWorkflow
   );
+  const dataComment = useSelector(
+    (state) => state.dokumenPerencanaanEWPQualityAssurance.objDataComment
+  );
 
   const { auditInfo } = useAuditInfo({ id: params?.id, module: "qa" });
-  const { documentEWP } = useDocumentEWP({
+  const { documentEWP, documentEWPMutate } = useDocumentEWP({
     module: "qa",
     sub_module: "reporting",
     id: params?.matrix_id,
@@ -104,6 +115,13 @@ const index = () => {
     "lha",
     { id: params?.matrix_id }
   );
+
+  const { commentEWP, commentEWPMutate, commentEWPIsLoading } = useCommentEWP({
+    module: "qa",
+    sub_module: "reporting",
+    id: params?.matrix_id,
+    bab: activeIdComment,
+  });
 
   useEffect(() => {
     setShowModalApproval(params?.is_approval);
@@ -139,6 +157,44 @@ const index = () => {
       },
     ]);
   }, [auditInfo]);
+
+  useEffect(() => {
+    if (commentEWP?.data?.length) {
+      const mapping = commentEWP?.data?.map((parent) => {
+        const {
+          id,
+          create_by,
+          createdAt,
+          is_closed,
+          deskripsi,
+          child_comment,
+        } = parent;
+        return {
+          id,
+          created_by: create_by,
+          created_at: createdAt,
+          is_closed,
+          deskripsi,
+          child_comment: child_comment?.length
+            ? child_comment?.map((child) => {
+                const { id, create_by, createdAt, is_closed, deskripsi } =
+                  child;
+                return {
+                  id,
+                  created_by: create_by,
+                  created_at: createdAt,
+                  is_closed,
+                  deskripsi,
+                };
+              })
+            : [],
+        };
+      });
+      dispatch(setObjDataComment(mapping));
+    } else {
+      dispatch(resetObjDataComment());
+    }
+  }, [commentEWP, openCardComment]);
 
   useEffect(() => {
     const response = documentEWP?.data?.daftar_isi;
@@ -404,7 +460,7 @@ const index = () => {
             signedCount ===
             dataWorkflow?.ref_tim_audit_approver?.length - 1
           ) {
-            data.doc_name = `${auditInfo?.data?.project_info?.project_id?.toUpperCase()}-MAPA`;
+            data.doc_name = `${auditInfo?.data?.project_info?.project_id?.toUpperCase()}-REPORTING`;
             data.data = "test";
           }
           data.note = dataWorkflow.note;
@@ -452,6 +508,72 @@ const index = () => {
     }
   };
 
+  const handleClickComment = (id, index) => {
+    setOpenCardComment(true);
+    setActiveIdComment(id);
+    setActiveIndexComment(index);
+  };
+
+  const handleClickOpenCardComment = (value) => {
+    setOpenCardComment(value);
+  };
+
+  // [ START ] COMMENT
+  const handleCloseComment = async (e, value) => {
+    e.stopPropagation();
+
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/reporting/comment/close/${value?.parent_id}`,
+      {}
+    );
+
+    commentEWPMutate();
+    documentEWPMutate();
+    loadingSwal("close");
+  };
+
+  const handleSubmitCommentParent = async (e, value) => {
+    e.stopPropagation();
+    const body = {
+      ref_bab_lha_id: activeIdComment.toString(),
+      deskripsi: value,
+    };
+
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/reporting/comment/${params?.matrix_id}?ref_bab_lha_id=${activeIdComment}`,
+      body
+    );
+
+    commentEWPMutate();
+    documentEWPMutate();
+    loadingSwal("close");
+  };
+
+  const handleSubmitCommentChild = async (e, value) => {
+    e.stopPropagation();
+
+    const body = {
+      ref_bab_lha_id: activeIdComment.toString(),
+      deskripsi: value?.desc,
+      parent_comment_id: value?.parent_id,
+    };
+
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/reporting/comment/${params?.matrix_id}?ref_bab_lha_id=${activeIdComment}`,
+      body
+    );
+
+    commentEWPMutate();
+    loadingSwal("close");
+  };
+  // [ END ]
+
   return (
     <LandingLayoutEWPQualityAssurance>
       <Breadcrumbs data={breadcrumbs} />
@@ -475,11 +597,19 @@ const index = () => {
         <div>
           <ContentDocument
             dataDoc={doc}
+            dataComment={dataComment}
             activeDivRef={activeDivRef}
             activeIndex={activeIndex}
+            activeIndexComment={activeIndexComment}
+            isOpenCardComment={openCardComment}
+            isLoadingComment={commentEWPIsLoading}
             // isHideButton={isCloseSubmodule || !isOnProgress}
             renderContent={renderContent}
-            withoutComment
+            handleClickComment={handleClickComment}
+            handleIsOpenCardComment={handleClickOpenCardComment}
+            handleSubmitCommentParent={handleSubmitCommentParent}
+            handleSubmitCommentChild={handleSubmitCommentChild}
+            handleCloseComment={handleCloseComment}
           />
         </div>
         <div>

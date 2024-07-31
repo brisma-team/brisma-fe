@@ -268,7 +268,7 @@ const index = () => {
       dispatch(resetObjDataWorkflow());
       dispatch(resetObjDataHistoryWorkflow());
     }
-  }, [workflowRPM, showModalApproval]);
+  }, [workflowRPM, showModalApproval, router?.pathname]);
 
   // [ START ] handler for modal tanggapan
   const handleCloseModalTanggapan = async () => {
@@ -556,11 +556,12 @@ const index = () => {
         />
         <ModalTanggapan
           isEditable={isOnProgress && isPIC}
-          data={payloadTanggapan}
+          data={{ submitter: payloadTanggapan }}
           showModal={showModalTanggapan}
           handleChangePayload={handleChangePayloadTanggapan}
           handleCloseModal={handleCloseModalTanggapan}
           handleSubmit={handleSubmitTanggapan}
+          currentPageStatus={{ isActionPlan: true }}
         />
         <ModalWorkflow
           workflowData={dataWorkflow}
