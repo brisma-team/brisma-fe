@@ -94,6 +94,7 @@ import DocumentTypeSelect from "./DocumentTypeSelect";
 import HasilEvaluasiSelect from "./HasilEvaluasiSelect";
 import ModalCopyLink from "./ModalCopyLink";
 import StatusTaskAgileSelect from "./StatusTaskAgileSelect";
+import EffectivenessTaskSelect from "./EffectivenessTaskSelect";
 
 export {
   BackButton,
@@ -192,4 +193,5 @@ export {
   HasilEvaluasiSelect,
   ModalCopyLink,
   StatusTaskAgileSelect,
+  EffectivenessTaskSelect,
 };

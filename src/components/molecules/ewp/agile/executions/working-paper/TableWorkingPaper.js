@@ -11,7 +11,7 @@ import Link from "next/link";
 
 const customCell = `cell-width-full-height-full cell-custom-dataTables`;
 
-const TableWorkingPapper = ({ data, pathName }) => {
+const TableWorkingPaper = ({ data, pathName }) => {
   return (
     <div className="bg-white">
       <TableTree>
@@ -78,7 +78,7 @@ const TableWorkingPapper = ({ data, pathName }) => {
                 <Cell width={"24%"} className={`border-x ${customCell}`}>
                   <div className="custom-table-position-center">
                     {auditor ? (
-                      <Link href={`${pathName}/working-papper/${kkpa_id}`}>
+                      <Link href={`${pathName}/working-paper/${kkpa_id}`}>
                         {auditor?.pn} - {auditor?.name}
                       </Link>
                     ) : (
@@ -149,4 +149,4 @@ const TableWorkingPapper = ({ data, pathName }) => {
   );
 };
 
-export default TableWorkingPapper;
+export default TableWorkingPaper;

@@ -214,6 +214,10 @@ const index = () => {
     }
   }, [sprintTeam]);
 
+  const handleClickOpenWorkingPaper = () => {
+    router.push(`${baseUrl}/sprint-executions/sprint/${selectedSprintId}`);
+  };
+
   // [ START ] handler for table task
   const handleClickCheckbox = (isChecked, task_id) => {
     const newData = [...(payloadTask?.task || [])];
@@ -320,7 +324,10 @@ const index = () => {
         </div>
         {/* Start Content */}
         <div className="flex flex-col gap-4">
-          <CardContentStoryPointDetail data={dataUserStory} />
+          <CardContentStoryPointDetail
+            data={dataUserStory}
+            handleClickOpenWorkingPaper={handleClickOpenWorkingPaper}
+          />
           <TableTask
             data={dataTask}
             dataUserStory={dataUserStory}

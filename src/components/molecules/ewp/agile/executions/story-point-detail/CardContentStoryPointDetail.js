@@ -14,7 +14,7 @@ const Content = ({ property, value }) => {
 
 const CardContentStoryPointDetail = ({
   data,
-  handleClickOpenWorkingPapper,
+  handleClickOpenWorkingPaper,
   children,
 }) => {
   return (
@@ -90,11 +90,11 @@ const CardContentStoryPointDetail = ({
             </div>
             <DivButton
               className="w-48 border-l-2 border-neutral-200 flex items-center justify-center hover:bg-gray-100"
-              handleClick={handleClickOpenWorkingPapper}
+              handleClick={handleClickOpenWorkingPaper}
             >
               <Image alt="" src={ImageReview} height={50} width={50} />
               <div className="text-sm font-bold break-words w-[4.5rem]">
-                WORKING PAPPER
+                WORKING PAPER
               </div>
             </DivButton>
           </div>

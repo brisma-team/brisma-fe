@@ -1,5 +1,4 @@
 import { Card } from "@/components/atoms";
-import { CardContentHeaderFooter } from "@/components/molecules/commons";
 
 const Content = ({ property, value }) => {
   return (
@@ -10,7 +9,7 @@ const Content = ({ property, value }) => {
   );
 };
 
-const CardContentWorkingPapperDetail = ({ data }) => {
+const CardContentWorkingPaperDetail = ({ data }) => {
   return (
     <Card>
       <div className="w-full px-3 py-1 flex gap-3 max-h-[12rem] overflow-y-scroll">
@@ -44,4 +43,4 @@ const CardContentWorkingPapperDetail = ({ data }) => {
   );
 };
 
-export default CardContentWorkingPapperDetail;
+export default CardContentWorkingPaperDetail;

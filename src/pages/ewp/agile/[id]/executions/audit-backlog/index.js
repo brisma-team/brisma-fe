@@ -22,10 +22,6 @@ const routes = [
     name: "Sprint Executions",
     slug: "sprint-executions",
   },
-  {
-    name: "Sprint Working Papper",
-    slug: "sprint-working-papper",
-  },
 ];
 
 const index = () => {

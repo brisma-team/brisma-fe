@@ -35,10 +35,6 @@ const routes = [
     name: "Sprint Executions",
     slug: "sprint-executions",
   },
-  {
-    name: "Sprint Working Papper",
-    slug: "sprint-working-papper",
-  },
 ];
 
 const index = () => {
@@ -269,7 +265,7 @@ const index = () => {
     setShowModalTeam(true);
   };
 
-  const handleClickWorkingPapper = (id) => {
+  const handleClickWorkingPaper = (id) => {
     router.push(`${baseUrl}/sprint-executions/sprint/${id}`);
   };
   // [ END ] sprint
@@ -380,7 +376,7 @@ const index = () => {
           handleClickInitiate={handleClickInitiateSprint}
           handleClickTerminate={handleClickTerminateSprint}
           handleClickEditSprintTeam={handleClickEditSprintTeam}
-          handleClickWorkingPapper={handleClickWorkingPapper}
+          handleClickWorkingPaper={handleClickWorkingPaper}
           handleChangeStatusUserStory={handleChangeStatusUserStory}
         />
         <ModalProjectTeam

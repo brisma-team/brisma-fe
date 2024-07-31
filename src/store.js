@@ -104,8 +104,9 @@ import dokumenPlanningEWPAgileReducer from "./slices/ewp/agile/plannings/dokumen
 import auditBacklogExecutionEWPAgileReducer from "./slices/ewp/agile/executions/auditBacklogExecutionEWPAgileSlice";
 import sprintExecutionEWPAgileReducer from "./slices/ewp/agile/executions/sprintExecutionEWPAgileSlice";
 import storyPointDetailEWPAgileReducer from "./slices/ewp/agile/executions/storyPointDetailEWPAgileSlice";
-import sprintWorkingPapperExecutionEWPAgileReducer from "./slices/ewp/agile/executions/sprintWorkingPapperExecutionEWPAgileSlice";
-import workingPapperExecutionEWPAgileReducer from "./slices/ewp/agile/executions/workingPapperExecutionEWPAgileSlice";
+import sprintWorkingPaperExecutionEWPAgileReducer from "./slices/ewp/agile/executions/sprintWorkingPaperExecutionEWPAgileSlice";
+import workingPaperExecutionEWPAgileReducer from "./slices/ewp/agile/executions/workingPaperExecutionEWPAgileSlice";
+import designEffectivenessExecutionEWPAgileReducer from "./slices/ewp/agile/executions/designEffectivenessExecutionEWPAgileSlice";
 
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
@@ -256,9 +257,11 @@ export const store = configureStore({
     auditBacklogExecutionEWPAgile: auditBacklogExecutionEWPAgileReducer,
     sprintExecutionEWPAgile: sprintExecutionEWPAgileReducer,
     storyPointDetailEWPAgile: storyPointDetailEWPAgileReducer,
-    sprintWorkingPapperExecutionEWPAgile:
-      sprintWorkingPapperExecutionEWPAgileReducer,
-    workingPapperExecutionEWPAgile: workingPapperExecutionEWPAgileReducer,
+    sprintWorkingPaperExecutionEWPAgile:
+      sprintWorkingPaperExecutionEWPAgileReducer,
+    workingPaperExecutionEWPAgile: workingPaperExecutionEWPAgileReducer,
+    designEffectivenessExecutionEWPAgile:
+      designEffectivenessExecutionEWPAgileReducer,
 
     // RPM Konsulting
     documentRPMKegiatan: documentRPMKegiatanReducer,
