@@ -104,6 +104,7 @@ import dokumenPlanningEWPAgileReducer from "./slices/ewp/agile/plannings/dokumen
 import auditBacklogExecutionEWPAgileReducer from "./slices/ewp/agile/executions/auditBacklogExecutionEWPAgileSlice";
 import sprintExecutionEWPAgileReducer from "./slices/ewp/agile/executions/sprintExecutionEWPAgileSlice";
 import storyPointDetailEWPAgileReducer from "./slices/ewp/agile/executions/storyPointDetailEWPAgileSlice";
+import sprintWorkingPapperExecutionEWPAgileReducer from "./slices/ewp/agile/executions/sprintWorkingPapperExecutionEWPAgileSlice";
 import workingPapperExecutionEWPAgileReducer from "./slices/ewp/agile/executions/workingPapperExecutionEWPAgileSlice";
 
 // ENTRANCE
@@ -255,6 +256,8 @@ export const store = configureStore({
     auditBacklogExecutionEWPAgile: auditBacklogExecutionEWPAgileReducer,
     sprintExecutionEWPAgile: sprintExecutionEWPAgileReducer,
     storyPointDetailEWPAgile: storyPointDetailEWPAgileReducer,
+    sprintWorkingPapperExecutionEWPAgile:
+      sprintWorkingPapperExecutionEWPAgileReducer,
     workingPapperExecutionEWPAgile: workingPapperExecutionEWPAgileReducer,
 
     // RPM Konsulting

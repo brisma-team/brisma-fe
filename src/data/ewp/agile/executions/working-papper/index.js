@@ -1,3 +1,5 @@
 import useWorkingPapper from "./useWorkingPapper";
+import useWorkingPapperDetail from "./useWorkingPapperDetail";
+import useWorkingPapperStatus from "./useWorkingPapperStatus";
 
-export { useWorkingPapper };
+export { useWorkingPapper, useWorkingPapperDetail, useWorkingPapperStatus };

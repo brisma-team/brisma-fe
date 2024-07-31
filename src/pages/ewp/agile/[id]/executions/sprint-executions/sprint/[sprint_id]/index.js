@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setObjDataWorkingPapper,
   resetObjDataWorkingPapper,
-} from "@/slices/ewp/agile/executions/workingPapperExecutionEWPAgileSlice";
+} from "@/slices/ewp/agile/executions/sprintWorkingPapperExecutionEWPAgileSlice";
 import { useDetailSprint } from "@/data/ewp/agile/plannings/sprint-planning";
 import { useWorkingPapper } from "@/data/ewp/agile/executions/working-papper";
 import _ from "lodash";
@@ -21,11 +21,13 @@ const index = () => {
   });
 
   const baseUrl = `/ewp/agile/${params?.id}/executions`;
+  const pathSprint = `${baseUrl}/sprint-executions/sprint/${params?.sprint_id}`;
+
   const [pageTitle, setPageTitle] = useState("");
   const [breadcrumbs, setBreadcrumbs] = useState([]);
 
   const dataWorkingPapper = useSelector(
-    (state) => state.workingPapperExecutionEWPAgile.objDataWorkingPapper
+    (state) => state.sprintWorkingPapperExecutionEWPAgile.objDataWorkingPapper
   );
 
   const { auditInfo } = useAuditInfo({ module: "agile", id: params?.id });
@@ -78,8 +80,8 @@ const index = () => {
           path: `${baseUrl}/sprint-executions`,
         },
         {
-          name: "Sprint",
-          path: `${baseUrl}/sprint-executions/${params?.user_story_id}`,
+          name: responseSprint?.sprint_name,
+          path: pathSprint,
         },
       ]);
     } else {
@@ -100,7 +102,10 @@ const index = () => {
         </div>
         {/* Start Content */}
         <div className="flex flex-col gap-4">
-          <TableWorkingPapper data={dataWorkingPapper} pathName={baseUrl} />
+          <TableWorkingPapper
+            data={dataWorkingPapper}
+            pathName={`${baseUrl}/sprint-executions/sprint/${params?.sprint_id}`}
+          />
         </div>
         {/* End Content */}
       </div>

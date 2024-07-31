@@ -78,7 +78,7 @@ const TableWorkingPapper = ({ data, pathName }) => {
                 <Cell width={"24%"} className={`border-x ${customCell}`}>
                   <div className="custom-table-position-center">
                     {auditor ? (
-                      <Link href={`${pathName}/sprint/${kkpa_id}`}>
+                      <Link href={`${pathName}/working-papper/${kkpa_id}`}>
                         {auditor?.pn} - {auditor?.name}
                       </Link>
                     ) : (

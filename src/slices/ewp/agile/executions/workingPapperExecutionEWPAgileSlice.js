@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  objDataWorkingPapper: [],
+  objDataWorkingPapper: {},
+  objDataMenu: [],
 };
 
 export const workingPapperExecutionEWPAgileSlice = createSlice({
@@ -11,13 +12,23 @@ export const workingPapperExecutionEWPAgileSlice = createSlice({
     setObjDataWorkingPapper: (state, action) => {
       state.objDataWorkingPapper = action.payload;
     },
+    setObjDataMenu: (state, action) => {
+      state.objDataMenu = action.payload;
+    },
     resetObjDataWorkingPapper: (state) => {
       state.objDataWorkingPapper = [];
+    },
+    resetObjDataMenu: (state) => {
+      state.objDataMenu = [];
     },
   },
 });
 
-export const { setObjDataWorkingPapper, resetObjDataWorkingPapper } =
-  workingPapperExecutionEWPAgileSlice.actions;
+export const {
+  setObjDataWorkingPapper,
+  setObjDataMenu,
+  resetObjDataWorkingPapper,
+  resetObjDataMenu,
+} = workingPapperExecutionEWPAgileSlice.actions;
 
 export default workingPapperExecutionEWPAgileSlice.reducer;
