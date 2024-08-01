@@ -127,6 +127,11 @@ const ModalUploadDocument = ({
                 placeholder={"Deskripsi Dokumen"}
                 handleChange={(e) => handleChangeText("desc", e.target.value)}
               />
+              {validation?.desc ? (
+                <ErrorValidation message={validation?.desc} />
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </div>
