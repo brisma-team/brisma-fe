@@ -5,13 +5,13 @@ import { useState, useEffect } from "react";
 import { LandingLayoutEWPAgile } from "@/layouts/ewp";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  setObjDataWorkingPapper,
-  resetObjDataWorkingPapper,
-} from "@/slices/ewp/agile/executions/sprintWorkingPapperExecutionEWPAgileSlice";
+  setObjDataWorkingPaper,
+  resetObjDataWorkingPaper,
+} from "@/slices/ewp/agile/executions/sprintWorkingPaperExecutionEWPAgileSlice";
 import { useDetailSprint } from "@/data/ewp/agile/plannings/sprint-planning";
-import { useWorkingPapper } from "@/data/ewp/agile/executions/working-papper";
+import { useWorkingPaper } from "@/data/ewp/agile/executions/working-paper";
 import _ from "lodash";
-import { TableWorkingPapper } from "@/components/molecules/ewp/agile/executions/working-papper";
+import { TableWorkingPaper } from "@/components/molecules/ewp/agile/executions/working-paper";
 const index = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -26,12 +26,12 @@ const index = () => {
   const [pageTitle, setPageTitle] = useState("");
   const [breadcrumbs, setBreadcrumbs] = useState([]);
 
-  const dataWorkingPapper = useSelector(
-    (state) => state.sprintWorkingPapperExecutionEWPAgile.objDataWorkingPapper
+  const dataWorkingPaper = useSelector(
+    (state) => state.sprintWorkingPaperExecutionEWPAgile.objDataWorkingPaper
   );
 
   const { auditInfo } = useAuditInfo({ module: "agile", id: params?.id });
-  const { workingPapper } = useWorkingPapper({
+  const { workingPaper } = useWorkingPaper({
     id: params?.id,
     sprint_id: params?.sprint_id,
   });
@@ -47,8 +47,8 @@ const index = () => {
   }, [router.isReady]);
 
   useEffect(() => {
-    if (workingPapper?.data?.length) {
-      const mapping = workingPapper?.data?.map((v) => {
+    if (workingPaper?.data?.length) {
+      const mapping = workingPaper?.data?.map((v) => {
         return {
           ..._.pick(v, ["kkpa_id", "auditor", "risk_issue", "sub_major"]),
           status: v?.status_persetujuan,
@@ -56,11 +56,11 @@ const index = () => {
           sub_major: v?.sub_major_proses,
         };
       });
-      dispatch(setObjDataWorkingPapper(mapping));
+      dispatch(setObjDataWorkingPaper(mapping));
     } else {
-      dispatch(resetObjDataWorkingPapper());
+      dispatch(resetObjDataWorkingPaper());
     }
-  }, [workingPapper]);
+  }, [workingPaper]);
 
   useEffect(() => {
     if (auditInfo?.data && detailSprint?.data) {
@@ -102,8 +102,8 @@ const index = () => {
         </div>
         {/* Start Content */}
         <div className="flex flex-col gap-4">
-          <TableWorkingPapper
-            data={dataWorkingPapper}
+          <TableWorkingPaper
+            data={dataWorkingPaper}
             pathName={`${baseUrl}/sprint-executions/sprint/${params?.sprint_id}`}
           />
         </div>

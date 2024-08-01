@@ -37,6 +37,7 @@ import IconPerson from "@atlaskit/icon/glyph/person";
 import IconLink from "@atlaskit/icon/glyph/link";
 import IconList from "@atlaskit/icon/glyph/list";
 import IconChevronUp from "@atlaskit/icon/glyph/chevron-up";
+import IconUpload from "@atlaskit/icon/glyph/upload";
 
 export {
   IconPlus,
@@ -78,4 +79,5 @@ export {
   IconLink,
   IconList,
   IconChevronUp,
+  IconUpload,
 };

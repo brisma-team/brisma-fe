@@ -33,7 +33,7 @@ const TableSprintExecution = ({
   handleClickInitiate,
   handleClickTerminate,
   handleClickEditSprintTeam,
-  handleClickWorkingPapper,
+  handleClickWorkingPaper,
   handleChangeStatusUserStory,
 }) => {
   return (
@@ -236,7 +236,7 @@ const TableSprintExecution = ({
                                 height={15}
                               />
                             }
-                            handleClick={() => handleClickWorkingPapper(id)}
+                            handleClick={() => handleClickWorkingPaper(id)}
                           />
                         ) : (
                           ""

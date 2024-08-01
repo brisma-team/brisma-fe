@@ -11,17 +11,17 @@ import { LandingLayoutEWPAgile } from "@/layouts/ewp";
 import { useSelector, useDispatch } from "react-redux";
 import { useDetailSprint } from "@/data/ewp/agile/plannings/sprint-planning";
 import {
-  setObjDataWorkingPapper,
+  setObjDataWorkingPaper,
   setObjDataMenu,
-  resetObjDataWorkingPapper,
+  resetObjDataWorkingPaper,
   resetObjDataMenu,
-} from "@/slices/ewp/agile/executions/workingPapperExecutionEWPAgileSlice";
+} from "@/slices/ewp/agile/executions/workingPaperExecutionEWPAgileSlice";
 import {
-  useWorkingPapperDetail,
-  useWorkingPapperStatus,
-} from "@/data/ewp/agile/executions/working-papper";
+  useWorkingPaperDetail,
+  useWorkingPaperStatus,
+} from "@/data/ewp/agile/executions/working-paper";
 import _ from "lodash";
-import { CardContentWorkingPapperDetail } from "@/components/molecules/ewp/agile/executions/working-papper";
+import { CardContentWorkingPaperDetail } from "@/components/molecules/ewp/agile/executions/working-paper";
 
 const index = () => {
   const dispatch = useDispatch();
@@ -34,20 +34,21 @@ const index = () => {
 
   const baseUrl = `/ewp/agile/${params?.id}/executions`;
   const pathSprint = `${baseUrl}/sprint-executions/sprint/${params?.sprint_id}`;
+  const pathWorkingPaper = `${pathSprint}/working-paper/${params?.kkpa_id}`;
   const [breadcrumbs, setBreadcrumbs] = useState([]);
 
-  const dataWorkingPapper = useSelector(
-    (state) => state.workingPapperExecutionEWPAgile.objDataWorkingPapper
+  const dataWorkingPaper = useSelector(
+    (state) => state.workingPaperExecutionEWPAgile.objDataWorkingPaper
   );
   const dataMenu = useSelector(
-    (state) => state.workingPapperExecutionEWPAgile.objDataMenu
+    (state) => state.workingPaperExecutionEWPAgile.objDataMenu
   );
 
   const { auditInfo } = useAuditInfo({ module: "agile", id: params?.id });
-  const { workingPapperDetail } = useWorkingPapperDetail({
+  const { workingPaperDetail } = useWorkingPaperDetail({
     id: params?.kkpa_id,
   });
-  const { workingPapperStatus } = useWorkingPapperStatus({
+  const { workingPaperStatus } = useWorkingPaperStatus({
     id: params?.kkpa_id,
   });
   const { detailSprint } = useDetailSprint({ id: params?.sprint_id });
@@ -63,10 +64,10 @@ const index = () => {
   }, [router.isReady]);
 
   useEffect(() => {
-    if (workingPapperDetail?.data) {
-      const response = workingPapperDetail?.data;
+    if (workingPaperDetail?.data) {
+      const response = workingPaperDetail?.data;
       dispatch(
-        setObjDataWorkingPapper({
+        setObjDataWorkingPaper({
           ..._.pick(response, [
             "auditor",
             "status_persetujuan",
@@ -77,54 +78,52 @@ const index = () => {
         })
       );
     } else {
-      dispatch(resetObjDataWorkingPapper());
+      dispatch(resetObjDataWorkingPaper());
     }
-  }, [workingPapperDetail]);
+  }, [workingPaperDetail]);
 
   useEffect(() => {
-    if (workingPapperStatus?.data) {
+    if (workingPaperStatus?.data) {
       dispatch(
         setObjDataMenu([
           {
             title: "Design Effectiveness",
             description:
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
-            status: workingPapperStatus?.data?.design_effectiveness
+            status: workingPaperStatus?.data?.design_effectiveness
               ? "success"
               : "failed",
-            url: `${pathSprint}/design-effectiveness`,
+            url: `${pathWorkingPaper}/design-effectiveness`,
           },
           {
             title: "Operating Effectiveness",
             description:
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
-            status: workingPapperStatus?.data?.operating_effectiveness
+            status: workingPaperStatus?.data?.operating_effectiveness
               ? "success"
               : "failed",
-            url: `${pathSprint}/operating-effectiveness`,
+            url: `${pathWorkingPaper}/operating-effectiveness`,
           },
           {
             title: "Conclusion",
             description:
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
-            status: workingPapperStatus?.data?.kesimpulan
-              ? "success"
-              : "failed",
-            url: `${pathSprint}/conclusion`,
+            status: workingPaperStatus?.data?.kesimpulan ? "success" : "failed",
+            url: `${pathWorkingPaper}/conclusion`,
           },
           {
             title: "Document",
             description:
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In magna libero, lobortis non est quis, pharetra dignissim massa.",
-            status: workingPapperStatus?.data?.dokument ? "success" : "failed",
-            url: `${pathSprint}/dokumen`,
+            status: workingPaperStatus?.data?.dokument ? "success" : "failed",
+            url: `${pathWorkingPaper}/dokumen`,
           },
         ])
       );
     } else {
       dispatch(resetObjDataMenu());
     }
-  }, [workingPapperStatus]);
+  }, [workingPaperStatus]);
 
   useEffect(() => {
     if (auditInfo?.data && detailSprint?.data) {
@@ -147,8 +146,8 @@ const index = () => {
           path: pathSprint,
         },
         {
-          name: "Working Papper",
-          path: `${pathSprint}/working-papper/${params?.kkpa_id}`,
+          name: "Working Paper",
+          path: pathWorkingPaper,
         },
       ]);
     } else {
@@ -163,11 +162,11 @@ const index = () => {
       {/* End Breadcrumbs */}
       <div className="flex gap-3 items-center mb-7">
         <ButtonIconBack backUrl={pathSprint} />
-        <PageTitle text={"Working Papper"} />
+        <PageTitle text={"Working Paper"} />
       </div>
       {/* Start Content */}
       <div className="flex flex-col gap-1">
-        <CardContentWorkingPapperDetail data={dataWorkingPapper} />
+        <CardContentWorkingPaperDetail data={dataWorkingPaper} />
         <div className="grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-3">
           {dataMenu?.length
             ? dataMenu?.map((v, i) => {
