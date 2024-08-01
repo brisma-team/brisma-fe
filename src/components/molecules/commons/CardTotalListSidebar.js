@@ -5,7 +5,7 @@ const CardTotalListSidebar = ({ data }) => {
       {data?.map((v, i) => {
         return (
           <div key={i} className="w-full">
-            <Card>
+            <Card withCenter={true}>
               <p className={`${v.color} text-3xl font-semibold`}>{v.total}</p>
               <p className={`${v.color} text-base font-semibold -mt-1`}>
                 {v.name}
