@@ -544,7 +544,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/reporting/comment/${params?.matrix_id}?ref_bab_lha_id=${activeIdComment}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/reporting/comment/${params?.matrix_id}?ref_bab_lha_id=${activeIdComment}`,
       body
     );
 
