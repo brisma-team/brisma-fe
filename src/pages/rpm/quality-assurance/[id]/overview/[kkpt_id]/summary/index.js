@@ -20,6 +20,22 @@ import { useSummary } from "@/data/rpm/common/summary";
 import { useActionPlan } from "@/data/rpm/common/negosiasi";
 import { confirmationSwal } from "@/helpers";
 
+// const getStatusName = (flow_status, doc_status) => {
+//   if (flow_status == "On Submitter") {
+//     if (doc_status == "On Progress") {
+//       return "/";
+//     }
+//   } else if (flow_status == "On Evaluator") {
+//     if (doc_status == "On Progress") {
+//       return "/";
+//     }
+//   } else if (flow_status == "On Nego") {
+//     if (doc_status == "Final") {
+//       return "/";
+//     }
+//   }
+// };
+
 const index = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -115,6 +131,7 @@ const index = () => {
                           "On Progress"
                         ? "on evaluation"
                         : "",
+
                     hasil_evaluasi: action_plan?.hasil_evaluasi,
                     role: "child",
                   };
