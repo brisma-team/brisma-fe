@@ -3,7 +3,7 @@ const CardApprovalList = ({ data }) => {
   return (
     <div className="px-5">
       <div className="w-full">
-        <Card>
+        <Card withCenter={true}>
           <p className="text-atlasian-purple text-3xl font-semibold">
             {data && data.newApproval}
           </p>
@@ -13,7 +13,7 @@ const CardApprovalList = ({ data }) => {
         </Card>
       </div>
       <div className="w-full my-3 ">
-        <Card>
+        <Card withCenter={true}>
           <p className="text-atlasian-green text-3xl font-semibold">
             {data && data.totalApprove}
           </p>
@@ -23,7 +23,7 @@ const CardApprovalList = ({ data }) => {
         </Card>
       </div>
       <div className=" w-full my-3">
-        <Card>
+        <Card withCenter={true}>
           <p className="text-atlasian-red text-3xl font-semibold">
             {data && data.totalReject}
           </p>
