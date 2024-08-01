@@ -56,7 +56,7 @@ const routes = [
 const index = () => {
   const router = useRouter();
   const [params, setParams] = useState({
-    id: 0,
+    id: "",
     matrix_id: 0,
     is_approval: false,
   });
@@ -201,7 +201,7 @@ const index = () => {
     if (response) {
       const mapping = response?.map((bab) => {
         return {
-          idx: parseInt(bab?.bab),
+          idx: parseInt(bab?.id),
           total_comment: 0,
           title: bab?.title,
         };
