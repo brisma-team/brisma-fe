@@ -164,6 +164,14 @@ const CardOverview = ({
                 title={"Action Plan Memadai"}
                 value={data?.action_plan_memadai || 0}
               />
+              <CardBodyOverview
+                title={"Action Plan Tidak Memadai"}
+                value={data?.action_plan_tidak_memadai || 0}
+              />
+              <CardBodyOverview
+                title={"Action Plan Dalam Pemantauan"}
+                value={data?.action_plan_dalam_pemantauan || 0}
+              />
             </div>
           </div>
         </div>
