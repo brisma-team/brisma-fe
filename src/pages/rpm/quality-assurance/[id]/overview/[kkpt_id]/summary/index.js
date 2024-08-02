@@ -20,21 +20,32 @@ import { useSummary } from "@/data/rpm/common/summary";
 import { useActionPlan } from "@/data/rpm/common/negosiasi";
 import { confirmationSwal } from "@/helpers";
 
-// const getStatusName = (flow_status, doc_status) => {
-//   if (flow_status == "On Submitter") {
-//     if (doc_status == "On Progress") {
-//       return "/";
-//     }
-//   } else if (flow_status == "On Evaluator") {
-//     if (doc_status == "On Progress") {
-//       return "/";
-//     }
-//   } else if (flow_status == "On Nego") {
-//     if (doc_status == "Final") {
-//       return "/";
-//     }
-//   }
-// };
+const getStatusName = (
+  status_action_plan,
+  status_tindak_lanjut,
+  status_evaluasi,
+  hasil_evaluasi
+) => {
+  if (status_action_plan == "On Submitter") {
+    if (status_tindak_lanjut == "On Progress") {
+      return "On Submitter";
+    } else if (status_tindak_lanjut == "On Approver") {
+      return "On Review Tindak Lanjut";
+    }
+  } else if (status_action_plan == "On Evaluator") {
+    if (status_evaluasi == "On Progress") {
+      return "On Evaluator";
+    } else if (status_evaluasi == "On Approver") {
+      return "On Review Evaluasi";
+    } else if (status_evaluasi == "Final" && hasil_evaluasi == "Memadai") {
+      return "Final Evaluasi";
+    } else if (status_evaluasi == "Final" && hasil_evaluasi != "Memadai") {
+      return "Waiting Init Nego";
+    }
+  } else if (status_action_plan == "On Nego") {
+    return "On Nego";
+  }
+};
 
 const index = () => {
   const dispatch = useDispatch();
@@ -119,18 +130,24 @@ const index = () => {
                   return {
                     ..._.pick(action_plan, ["id", "nama"]),
                     pic: action_plan?.maker_evaluator,
-                    status:
-                      action_plan?.maker_evaluator?.pn &&
-                      action_plan?.status_persetujuan_evaluasi === "Final"
-                        ? "final"
-                        : action_plan?.maker_evaluator?.pn &&
-                          action_plan?.status_persetujuan_evaluasi ===
-                            "On Approver"
-                        ? "on review"
-                        : action_plan?.status_persetujuan_evaluasi ===
-                          "On Progress"
-                        ? "on evaluation"
-                        : "",
+                    status: getStatusName(
+                      action_plan?.status_action_plan,
+                      action_plan?.status_persetujuan_tindak_lanjut,
+                      action_plan?.status_persetujuan_evaluasi,
+                      action_plan?.hasil_evaluasi
+                    ),
+                    // status:
+                    //   action_plan?.maker_evaluator?.pn &&
+                    //   action_plan?.status_persetujuan_evaluasi === "Final"
+                    //     ? "final"
+                    //     : action_plan?.maker_evaluator?.pn &&
+                    //       action_plan?.status_persetujuan_evaluasi ===
+                    //         "On Approver"
+                    //     ? "on review"
+                    //     : action_plan?.status_persetujuan_evaluasi ===
+                    //       "On Progress"
+                    //     ? "on evaluation"
+                    //     : "",
 
                     hasil_evaluasi: action_plan?.hasil_evaluasi,
                     role: "child",
