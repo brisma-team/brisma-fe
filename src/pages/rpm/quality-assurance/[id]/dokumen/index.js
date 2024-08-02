@@ -100,11 +100,12 @@ const index = () => {
   useEffect(() => {
     if (bulkDownloadDocument?.findAllDoc?.length) {
       const mapping = listDocument?.findAllDoc?.map((v) => {
-        const { file_url, file_name } = v;
+        const { file_url, file_name, doc_name } = v;
         return {
           upload_date: v?.created_at,
           file_url,
           file_name,
+          doc_name,
         };
       });
       setDataBulkDownload(mapping);
