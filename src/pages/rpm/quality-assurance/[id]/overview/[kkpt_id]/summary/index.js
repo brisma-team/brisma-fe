@@ -40,7 +40,7 @@ const getStatusName = (
     } else if (status_evaluasi == "Final" && hasil_evaluasi == "Memadai") {
       return "Final Evaluasi";
     } else if (status_evaluasi == "Final" && hasil_evaluasi != "Memadai") {
-      return "Waiting Init Nego";
+      return "Init Nego";
     }
   } else if (status_action_plan == "On Nego") {
     return "On Nego";
