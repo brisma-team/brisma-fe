@@ -119,12 +119,21 @@ const TableListSurvey = ({ data }) => {
                   {project_id?.toUpperCase()}
                 </Cell>
                 <Cell width="28%" className="border-r cell-custom-dataTables">
-                  <Link
-                    href={generateUrl(mtd_tipe?.nama, ewp_id)}
-                    target="_blank"
-                  >
-                    {judul}
-                  </Link>
+                  {ewp_id ? (
+                    <>
+                      <Link
+                        href={generateUrl(mtd_tipe?.nama, ewp_id)}
+                        target="_blank"
+                        className={`underline`}
+                      >
+                        {judul}
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <p className="mb-1">{judul}</p>
+                    </>
+                  )}
                 </Cell>
                 <Cell width="14%" className="border-r cell-custom-dataTables">
                   {project_survei_id?.toUpperCase()}
