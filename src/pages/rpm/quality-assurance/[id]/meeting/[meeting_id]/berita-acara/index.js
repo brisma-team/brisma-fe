@@ -5,7 +5,7 @@ import {
   DivButton,
   PageTitle,
 } from "@/components/atoms";
-import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
+import { useProjectDetail } from "@/data/ewp/konsulting";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -25,7 +25,10 @@ import {
   setErrorValidation,
   usePostFileData,
 } from "@/helpers";
-import { useBeritaAcara, useMeetingDetail } from "@/data/ewp/common/meeting";
+import {
+  useBeritaAcara,
+  useMeetingDetail,
+} from "@/data/ewp/konsulting/meeting";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setWorkflowData,
@@ -34,12 +37,12 @@ import {
   resetWorkflowData,
   resetHistoryWorkflowData,
   resetValidationErrorsWorkflow,
-} from "@/slices/ewp/quality-assurance/meeting/beritaAcaraMeetingEWPQualityAssuranceSlice";
+} from "@/slices/ewp/konsulting/meeting/beritaAcaraMeetingEWPKonsultingSlice";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useWorkflowDetailEWP } from "@/data/ewp";
 import _ from "lodash";
+import { LandingLayoutRPM } from "@/layouts/rpm";
 import useUser from "@/data/useUser";
-import { useAuditInfo } from "@/data/ewp/common/info";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -60,14 +63,10 @@ const routes = [
 
 const index = () => {
   const dispatch = useDispatch();
-  const router = useRouter();
-  const [params, setParams] = useState({
-    id: 0,
-    meeting_id: 0,
-  });
-  const baseUrl = `/rpm/quality-assurance/${params?.id}`;
+  const { id, meeting_id } = useRouter().query;
+  const baseUrl = `/rpm/quality-assurance/${id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
-  const pathNameLanding = `${baseUrl}/meeting/${params?.meeting_id}`;
+  const pathNameLanding = `${baseUrl}/meeting/${meeting_id}`;
 
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -81,19 +80,17 @@ const index = () => {
   const [isInitiator, setIsInitiator] = useState(false);
 
   const workflowData = useSelector(
-    (state) => state.beritaAcaraMeetingEWPQualityAssurance.objWorkflowData
+    (state) => state.beritaAcaraMeetingEWPKonsulting.objWorkflowData
   );
   const historyWorkflowData = useSelector(
-    (state) =>
-      state.beritaAcaraMeetingEWPQualityAssurance.objHistoryWorkflowData
+    (state) => state.beritaAcaraMeetingEWPKonsulting.objHistoryWorkflowData
   );
   const validationErrorsWorkflow = useSelector(
-    (state) =>
-      state.beritaAcaraMeetingEWPQualityAssurance.validationErrorsWorkflow
+    (state) => state.beritaAcaraMeetingEWPKonsulting.validationErrorsWorkflow
   );
 
-  const { auditInfo } = useAuditInfo({ id: params?.id, module: "qa" });
-  const { meetingDetail } = useMeetingDetail({ id: params?.meeting_id });
+  const { projectDetail } = useProjectDetail({ id });
+  const { meetingDetail } = useMeetingDetail({ id: meeting_id });
   const { beritaAcara, beritaAcaraMutate } = useBeritaAcara({
     id: selectedBAId,
   });
@@ -105,15 +102,6 @@ const index = () => {
   const { user } = useUser();
 
   useEffect(() => {
-    if (!router.isReady) return;
-    const { id, meeting_id } = router.query;
-    setParams({
-      id,
-      meeting_id,
-    });
-  }, [router.isReady]);
-
-  useEffect(() => {
     setSelectedBAId(meetingDetail?.data?.ba?.id || 0);
   }, [meetingDetail]);
 
@@ -121,11 +109,7 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "RPM", path: "/rpm" },
-      { name: "Overview", path: "/rpm/quality-assurance" },
-      {
-        name: `${auditInfo?.data?.project_info?.project_id?.toUpperCase()}`,
-        path: `${baseUrl}/info`,
-      },
+      { name: "Quality Assurance", path: "/rpm/quality-assurance" },
       {
         name: `Meeting`,
         path: pathNameSubModulMeeting,
@@ -140,9 +124,11 @@ const index = () => {
       },
     ]);
     setIsInitiator(
-      Boolean(auditInfo?.data?.project_info?.initiator?.pn === user?.data?.pn)
+      Boolean(
+        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+      )
     );
-  }, [auditInfo, user]);
+  }, [projectDetail, user]);
 
   useEffect(() => {
     setContent(beritaAcara?.data?.berita_acara_info?.content || "");
@@ -317,6 +303,10 @@ const index = () => {
         (item) => item.is_signed
       ).length;
 
+      if (actionType === "" || actionType === undefined) {
+        return;
+      }
+
       switch (actionType) {
         case "change":
           data.approvers = workflowData.ref_tim_audit_approver;
@@ -370,7 +360,7 @@ const index = () => {
   // [ END ] handler for modal workflow
 
   return (
-    <LandingLayoutEWPConsulting>
+    <LandingLayoutRPM module_page={"quality-assurance"} module_data={"qa"}>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -469,7 +459,7 @@ const index = () => {
         isProposer
       />
       {/* End Content */}
-    </LandingLayoutEWPConsulting>
+    </LandingLayoutRPM>
   );
 };
 
