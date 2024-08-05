@@ -5,7 +5,7 @@ import {
   DivButton,
   PageTitle,
 } from "@/components/atoms";
-import { useProjectDetail } from "@/data/ewp/konsulting";
+import { LandingLayoutEWPConsulting } from "@/layouts/ewp";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -15,6 +15,7 @@ import {
   PrevNextNavigation,
   ModalWorkflow,
   ApprovalItems,
+  ContentView,
 } from "@/components/molecules/commons";
 import {
   confirmationSwal,
@@ -24,7 +25,7 @@ import {
   setErrorValidation,
   usePostFileData,
 } from "@/helpers";
-import { useMeetingDetail, useNotulen } from "@/data/ewp/konsulting/meeting";
+import { useMeetingDetail, useNotulen } from "@/data/ewp/common/meeting";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setWorkflowData,
@@ -33,11 +34,12 @@ import {
   resetWorkflowData,
   resetHistoryWorkflowData,
   resetValidationErrorsWorkflow,
-} from "@/slices/ewp/konsulting/meeting/notulenMeetingEWPKonsultingSlice";
+} from "@/slices/ewp/quality-assurance/meeting/notulenMeetingEWPQualityAssuranceSlice";
 import { workflowSchema } from "@/helpers/schemas/pat/documentSchema";
 import { useWorkflowDetailEWP } from "@/data/ewp";
 import _ from "lodash";
-import { LandingLayoutRPM } from "@/layouts/rpm";
+import useUser from "@/data/useUser";
+import { useAuditInfo } from "@/data/ewp/common/info";
 const Editor = dynamic(() => import("@/components/atoms/Editor"), {
   ssr: false,
 });
@@ -58,10 +60,14 @@ const routes = [
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id, meeting_id } = useRouter().query;
-  const baseUrl = `/rpm/quality-assurance/${id}`;
+  const router = useRouter();
+  const [params, setParams] = useState({
+    id: 0,
+    meeting_id: 0,
+  });
+  const baseUrl = `/rpm/quality-assurance/${params?.id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
-  const pathNameLanding = `${baseUrl}/meeting/${meeting_id}`;
+  const pathNameLanding = `${baseUrl}/meeting/${params?.meeting_id}`;
 
   const [showModalApproval, setShowModalApproval] = useState(false);
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -71,23 +77,37 @@ const index = () => {
   const [content, setContent] = useState("");
   const [typeUpload, setTypeUpload] = useState("");
 
+  const [isOnProgress, setIsOnProgress] = useState(false);
+  const [isInitiator, setIsInitiator] = useState(false);
+
   const workflowData = useSelector(
-    (state) => state.notulenMeetingEWPKonsulting.objWorkflowData
+    (state) => state.notulenMeetingEWPQualityAssurance.objWorkflowData
   );
   const historyWorkflowData = useSelector(
-    (state) => state.notulenMeetingEWPKonsulting.objHistoryWorkflowData
+    (state) => state.notulenMeetingEWPQualityAssurance.objHistoryWorkflowData
   );
   const validationErrorsWorkflow = useSelector(
-    (state) => state.notulenMeetingEWPKonsulting.validationErrorsWorkflow
+    (state) => state.notulenMeetingEWPQualityAssurance.validationErrorsWorkflow
   );
 
-  const { projectDetail } = useProjectDetail({ id });
-  const { meetingDetail } = useMeetingDetail({ id: meeting_id });
+  const { auditInfo } = useAuditInfo({ id: params?.id, module: "qa" });
+  const { meetingDetail } = useMeetingDetail({ id: params?.meeting_id });
   const { notulen, notulenMutate } = useNotulen({ id: selectedNotulenId });
   const { workflowDetailEWP, workflowDetailEWPMutate } = useWorkflowDetailEWP(
     "entrance_notulen",
     { id: selectedNotulenId }
   );
+
+  const { user } = useUser();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { id, meeting_id } = router.query;
+    setParams({
+      id,
+      meeting_id,
+    });
+  }, [router.isReady]);
 
   useEffect(() => {
     setSelectedNotulenId(meetingDetail?.data?.notulen?.id || 0);
@@ -97,7 +117,11 @@ const index = () => {
     setBreadcrumbs([
       { name: "Menu", path: "/dashboard" },
       { name: "RPM", path: "/rpm" },
-      { name: "Quality Assurance", path: "/rpm/quality-assurance" },
+      { name: "Overview", path: "/rpm/quality-assurance" },
+      {
+        name: `${auditInfo?.data?.project_info?.project_id?.toUpperCase()}`,
+        path: `${baseUrl}/info`,
+      },
       {
         name: `Meeting`,
         path: pathNameSubModulMeeting,
@@ -111,7 +135,10 @@ const index = () => {
         path: `${pathNameLanding}/notulen`,
       },
     ]);
-  }, [projectDetail]);
+    setIsInitiator(
+      Boolean(auditInfo?.data?.project_info?.initiator?.pn === user?.data?.pn)
+    );
+  }, [auditInfo, user]);
 
   useEffect(() => {
     setContent(notulen?.data?.notulen_info?.content || "");
@@ -129,6 +156,10 @@ const index = () => {
         status_approver: workflowInfo?.status_persetujuan,
         on_approver: workflowInfo?.status_approver,
       };
+
+      setIsOnProgress(
+        Boolean(workflowInfo?.status_persetujuan == "On Progress")
+      );
 
       newWorkflowData.ref_tim_audit_maker = `${maker?.pn} - ${maker?.nama}`;
       newWorkflowData.maker = maker;
@@ -282,10 +313,6 @@ const index = () => {
         (item) => item.is_signed
       ).length;
 
-      if (actionType === "" || actionType === undefined) {
-        return;
-      }
-
       switch (actionType) {
         case "change":
           data.approvers = workflowData.ref_tim_audit_approver;
@@ -339,7 +366,7 @@ const index = () => {
   // [ END ] handler for modal workflow
 
   return (
-    <LandingLayoutRPM module_page={"quality-assurance"} module_data={"qa"}>
+    <LandingLayoutEWPConsulting>
       {/* Start Breadcrumbs */}
       <Breadcrumbs data={breadcrumbs} />
       {/* End Breadcrumbs */}
@@ -355,31 +382,45 @@ const index = () => {
       </div>
       {/* Start Content */}
       <div className="my-4 flex gap-6">
-        <div className="w-64 flex flex-col gap-4">
-          <ImageClipping
-            data={imageClipList}
-            handleChange={handleUploadFile}
-            handleClick={handleClickUploadImage}
-          />
-          <AttachmentClipping
-            data={attachmentClipList}
-            handleChange={handleUploadFile}
-            handleClick={handleClickUploadAttachment}
-          />
-        </div>
-        <div>
-          <div className="ckeditor-latar-belakang-mapa-ewp">
-            <Editor
-              contentData={content}
-              onChange={(value) => setContent(value)}
-              ready
+        {isInitiator && isOnProgress && (
+          <div className="w-64 flex flex-col gap-4">
+            <ImageClipping
+              data={imageClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadImage}
+              isHideButton={!isInitiator}
+            />
+            <AttachmentClipping
+              data={attachmentClipList}
+              handleChange={handleUploadFile}
+              handleClick={handleClickUploadAttachment}
+              isHideButton={!isInitiator}
             />
           </div>
-          <div className="mt-3 flex justify-end">
-            <div className="w-[7.75rem] bg-atlasian-green rounded">
-              <ButtonField text={"Simpan"} handler={handleSubmitContent} />
+        )}
+
+        <div>
+          {isInitiator && isOnProgress ? (
+            <div className="ckeditor-latar-belakang-mapa-ewp">
+              <Editor
+                contentData={content}
+                ready={true}
+                onChange={(value) => setContent(value)}
+              />
             </div>
-          </div>
+          ) : (
+            <ContentView dataDoc={content} />
+          )}
+
+          {isInitiator && isOnProgress ? (
+            <div className="mt-3 flex justify-end">
+              <div className="w-[7.75rem] bg-atlasian-green rounded">
+                <ButtonField text={"Simpan"} handler={handleSubmitContent} />
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
         <DivButton
           handleClick={() => setShowModalApproval(true)}
@@ -409,6 +450,7 @@ const index = () => {
           </div>
         </DivButton>
       </div>
+
       <ModalWorkflow
         workflowData={workflowData}
         historyWorkflow={historyWorkflowData}
@@ -425,7 +467,7 @@ const index = () => {
         isProposer
       />
       {/* End Content */}
-    </LandingLayoutRPM>
+    </LandingLayoutEWPConsulting>
   );
 };
 
