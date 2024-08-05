@@ -9,7 +9,7 @@ import TableTree, {
 import { IconEdit } from "@/components/icons";
 import { DataNotFound } from "@/components/molecules/commons";
 
-const ContentSampleCSV = ({ data, handleChangeCheckbox }) => {
+const TableSampleFile = ({ data, handleChangeCheckbox, handleEditSample }) => {
   const customHeader = `w-full h-full flex items-center text-brisma font-bold`;
   const customCell = `cell-width-full-height-full cell-custom-dataTables`;
   const positionCenter = `w-full h-full flex items-center`;
@@ -24,26 +24,21 @@ const ContentSampleCSV = ({ data, handleChangeCheckbox }) => {
             </div>
           </Header>
           <Header
-            width="52%"
+            width="45%"
             className="border-t border-r cell-custom-dataTables"
           >
             <div className={customHeader}>Nama File Sample</div>
           </Header>
-          <Header width="17%" className="border-t border-r">
+          <Header width="42%" className="border-t border-r rounded-se-xl">
             <div className={`${customHeader} justify-center text-center`}>
-              Jumlah Baris
-            </div>
-          </Header>
-          <Header width="18%" className="border-t border-r rounded-se-xl">
-            <div className={`${customHeader} justify-center text-center`}>
-              Jumlah Sample
+              Deskripsi
             </div>
           </Header>
         </Headers>
         {data?.length ? (
           <Rows
             items={data}
-            render={({ id, filename, jumlah_baris, jumlah_sample }) => (
+            render={({ id, filename, description }) => (
               <Row>
                 <Cell width="13%" className={`border-x ${customCell}`}>
                   <div className={`${positionCenter} justify-center gap-0.5`}>
@@ -54,21 +49,17 @@ const ContentSampleCSV = ({ data, handleChangeCheckbox }) => {
                     />
                     <ButtonIcon
                       icon={<IconEdit size="medium" />}
+                      handleClick={async () => await handleEditSample(id)}
                       color="yellow"
                     />
                   </div>
                 </Cell>
-                <Cell width="52%" className={`border-r ${customCell}`}>
+                <Cell width="45%" className={`border-r ${customCell}`}>
                   <div className={`${positionCenter} text-xs`}>{filename}</div>
                 </Cell>
-                <Cell width="17%" className={`border-r ${customCell}`}>
-                  <div className={`${positionCenter} justify-center text-xs`}>
-                    {jumlah_baris}
-                  </div>
-                </Cell>
-                <Cell width="18%" className={`border-r ${customCell}`}>
-                  <div className={`${positionCenter} justify-center text-xs`}>
-                    {jumlah_sample}
+                <Cell width="42%" className={`border-r ${customCell}`}>
+                  <div className={`${positionCenter} text-xs`}>
+                    {description}
                   </div>
                 </Cell>
               </Row>
@@ -84,4 +75,4 @@ const ContentSampleCSV = ({ data, handleChangeCheckbox }) => {
   );
 };
 
-export default ContentSampleCSV;
+export default TableSampleFile;

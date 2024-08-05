@@ -40,6 +40,7 @@ import checkRoleApprovalLog from "./checkRoleApprovalLog";
 import getYearsList from "./getYearList";
 import generateSprintNo from "./generateSprintNo";
 import checkStatusSprint from "./checkStatusSprint";
+import convertDataFromCSV from "./convertDataFromCSV";
 
 export {
   loadingSwal,
@@ -84,4 +85,5 @@ export {
   getYearsList,
   generateSprintNo,
   checkStatusSprint,
+  convertDataFromCSV,
 };

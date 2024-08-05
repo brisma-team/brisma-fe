@@ -107,6 +107,7 @@ import storyPointDetailEWPAgileReducer from "./slices/ewp/agile/executions/story
 import sprintWorkingPaperExecutionEWPAgileReducer from "./slices/ewp/agile/executions/sprintWorkingPaperExecutionEWPAgileSlice";
 import workingPaperExecutionEWPAgileReducer from "./slices/ewp/agile/executions/workingPaperExecutionEWPAgileSlice";
 import designEffectivenessExecutionEWPAgileReducer from "./slices/ewp/agile/executions/designEffectivenessExecutionEWPAgileSlice";
+import operatingEffectivenessExecutionEWPAgileReducer from "./slices/ewp/agile/executions/operatingEffectivenessExecutionEWPAgileSlice";
 
 // ENTRANCE
 import notulenEntranceEWPReducer from "./slices/ewp/konvensional/entrance/notulenEntranceEWPSlice";
@@ -262,6 +263,8 @@ export const store = configureStore({
     workingPaperExecutionEWPAgile: workingPaperExecutionEWPAgileReducer,
     designEffectivenessExecutionEWPAgile:
       designEffectivenessExecutionEWPAgileReducer,
+    operatingEffectivenessExecutionEWPAgile:
+      operatingEffectivenessExecutionEWPAgileReducer,
 
     // RPM Konsulting
     documentRPMKegiatan: documentRPMKegiatanReducer,
