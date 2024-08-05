@@ -120,7 +120,7 @@ const index = () => {
   // };
 
   const handleClickDownload = (id) => {
-    const url = `overview/${id}/preview?is_print=true`;
+    const url = `overview/${id}?is_print=true`;
     window.open(url, "_blank");
   };
 
