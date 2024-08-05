@@ -77,7 +77,7 @@ const index = () => {
   const [typeUpload, setTypeUpload] = useState("");
 
   const [isOnProgress, setIsOnProgress] = useState(false);
-  const [isInitiator, setIsInitiator] = useState(false);
+  // const [isInitiator, setIsInitiator] = useState(false);
 
   const workflowData = useSelector(
     (state) => state.beritaAcaraMeetingEWPKonsulting.objWorkflowData
@@ -123,11 +123,11 @@ const index = () => {
         path: `${pathNameLanding}/berita-acara`,
       },
     ]);
-    setIsInitiator(
-      Boolean(
-        projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
-      )
-    );
+    // setIsInitiator(
+    //   Boolean(
+    //     projectDetail?.data?.project_info?.initiator?.pn === user?.data?.pn
+    //   )
+    // );
   }, [projectDetail, user]);
 
   useEffect(() => {
@@ -375,25 +375,25 @@ const index = () => {
       </div>
       {/* Start Content */}
       <div className="my-4 flex gap-6">
-        {isInitiator && isOnProgress && (
+        {isOnProgress && (
           <div className="w-64 flex flex-col gap-4">
             <ImageClipping
               data={imageClipList}
               handleChange={handleUploadFile}
               handleClick={handleClickUploadImage}
-              isHideButton={!isInitiator}
+              isHideButton={!isOnProgress}
             />
             <AttachmentClipping
               data={attachmentClipList}
               handleChange={handleUploadFile}
               handleClick={handleClickUploadAttachment}
-              isHideButton={!isInitiator}
+              isHideButton={!isOnProgress}
             />
           </div>
         )}
 
         <div>
-          {isInitiator && isOnProgress ? (
+          {isOnProgress ? (
             <div className="ckeditor-latar-belakang-mapa-ewp">
               <Editor
                 contentData={content}
@@ -405,7 +405,7 @@ const index = () => {
             <ContentView dataDoc={content} />
           )}
 
-          {isInitiator && isOnProgress ? (
+          {isOnProgress ? (
             <div className="mt-3 flex justify-end">
               <div className="w-[7.75rem] bg-atlasian-green rounded">
                 <ButtonField text={"Simpan"} handler={handleSubmitContent} />
