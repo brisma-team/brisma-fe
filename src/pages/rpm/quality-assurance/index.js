@@ -143,6 +143,8 @@ const index = () => {
             "createdAt",
             "total_action_plan",
             "action_plan_memadai",
+            "action_plan_tidak_memadai",
+            "action_plan_dalam_pemantauan",
           ]),
           tipe: data?.ref_tipe?.nama,
           project_code: data?.num_project,

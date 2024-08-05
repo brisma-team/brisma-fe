@@ -56,7 +56,7 @@ const routes = [
 const index = () => {
   const router = useRouter();
   const [params, setParams] = useState({
-    id: 0,
+    id: "",
     matrix_id: 0,
     is_approval: false,
   });
@@ -201,7 +201,7 @@ const index = () => {
     if (response) {
       const mapping = response?.map((bab) => {
         return {
-          idx: parseInt(bab?.bab),
+          idx: parseInt(bab?.id),
           total_comment: 0,
           title: bab?.title,
         };
@@ -544,7 +544,7 @@ const index = () => {
     loadingSwal();
     await fetchApi(
       "POST",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/reporting/comment/${params?.matrix_id}?ref_bab_lha_id=${activeIdComment}`,
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/qa/reporting/comment/${params?.matrix_id}?ref_bab_lha_id=${activeIdComment}`,
       body
     );
 

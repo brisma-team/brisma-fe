@@ -296,8 +296,6 @@ const index = () => {
         };
       });
 
-      console.log("mapping => ", mapping);
-
       dispatch(setPayloadKuesioner(mapping));
     } else {
       dispatch(resetPayloadKuesioner());
@@ -655,6 +653,8 @@ const index = () => {
       setShowModalApprovalTerminate(true);
       setShowModalApproval(false);
     } else if (is_approval) {
+      setShowModalApproval(true);
+    } else {
       setShowModalApproval(true);
     }
   };

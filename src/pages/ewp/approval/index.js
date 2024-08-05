@@ -160,6 +160,10 @@ const index = () => {
           faseApproval = "Entrance Berita Acara";
         } else if (sub_modul === "adendum") {
           faseApproval = "Addendum";
+        } else if (sub_modul === "change_initiator") {
+          faseApproval = "Change Initiator";
+        } else if (sub_modul === "ewp_need_approval") {
+          faseApproval = "EWP Need Approval";
         }
         break;
       default:
@@ -205,6 +209,15 @@ const index = () => {
           query = `quality-assurance/${ewp_id}/reporting/${sub_modul_id}/dokumen-reporting`;
         } else if (sub_modul === "adendum") {
           query = `quality-assurance/${ewp_id}/addendum`;
+        } else if (
+          sub_modul === "ewp_need_approval" ||
+          sub_modul === "change_initiator"
+        ) {
+          query = `quality-assurance`;
+        } else if (sub_modul === "entrance_notulen") {
+          query = `quality-assurance/${ewp_id}/meeting/${sub_modul_id}/notulen`;
+        } else if (sub_modul === "entrance_ba") {
+          query = `quality-assurance/${ewp_id}/meeting/${sub_modul_id}/berita-acara`;
         }
         break;
     }

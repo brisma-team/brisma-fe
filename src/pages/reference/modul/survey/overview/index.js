@@ -163,7 +163,7 @@ const index = () => {
   };
 
   // const handleClickDownload = (id) => {
-  //   router.push(`overview/${id}/preview?is_print=true`);
+  //   router.push(`overview/${id}/preview?is_print=true`);7
   // };
 
   const handleClickDownload = (id) => {
