@@ -90,7 +90,6 @@ const TabNewSampleCSV = ({ data, withoutAction, handleClickCheckbox }) => {
           </TableTree>
         </div>
       </div>
-      ;
     </>
   ) : (
     ""

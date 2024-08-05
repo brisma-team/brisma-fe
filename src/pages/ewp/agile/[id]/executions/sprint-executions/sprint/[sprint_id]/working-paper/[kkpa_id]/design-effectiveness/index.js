@@ -836,7 +836,7 @@ const index = () => {
       <div className="flex gap-3 justify-between items-center mb-7">
         <PageTitle text="Design Effectiveness" />
         <PrevNextNavigation
-          baseUrl={baseUrl}
+          baseUrl={pathWorkingPaper}
           routes={routes}
           nextUrl={"/operating-effectiveness"}
           marginLeft={"-80px"}
