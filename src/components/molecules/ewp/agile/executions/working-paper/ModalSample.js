@@ -1,10 +1,10 @@
 import { ButtonField, Card, DivButton, ModalScroll } from "@/components/atoms";
 import { ModalFooter, ModalHeader } from "@/components/molecules/commons";
-import { ContentSampleCSV, ContentSampleFile } from "./sample";
+import { TableSampleCSV, TableSampleFile } from "./sample";
 
 const classNavbarActive = `border-b-[5px] border-atlasian-blue-light text-atlasian-blue-light`;
 
-const ModalUploadSample = ({
+const ModalSample = ({
   showModal,
   currentModalStage,
   dataTab,
@@ -13,17 +13,22 @@ const ModalUploadSample = ({
   handleChangeCurrentTab,
   handleChangeCheckbox,
   handleClickPickSample,
+  handleEditSampleCSV,
+  handleEditSampleFile,
   handleDeleteSample,
+  handleCloseModal,
 }) => {
   return (
     <ModalScroll
       showModal={showModal}
       header={
         <ModalHeader
+          showModal={showModal}
+          handleCloseModal={handleCloseModal}
           headerText={`Sample  ${
-            currentModalStage === 1
+            currentModalStage === "csv"
               ? "CSV"
-              : currentModalStage === 2
+              : currentModalStage === "file"
               ? "File"
               : ""
           }`}
@@ -33,7 +38,7 @@ const ModalUploadSample = ({
     >
       <div className="!w-[50rem]">
         <Card>
-          <div className="px-4 pb-2 flex flex-col gap-4">
+          <div className="w-full px-4 pb-2 flex flex-col gap-4">
             <div className="w-fit border-b-2 flex">
               {dataTab?.length
                 ? dataTab?.map((tab, index) => {
@@ -41,9 +46,11 @@ const ModalUploadSample = ({
                       <DivButton
                         key={index}
                         className={`font-semibold text-base px-4 text-center pb-1 ${
-                          currentModalStage === tab?.no ? classNavbarActive : ""
+                          currentModalStage === tab?.kode
+                            ? classNavbarActive
+                            : ""
                         }`}
-                        handleClick={() => handleChangeCurrentTab(tab?.no)}
+                        handleClick={() => handleChangeCurrentTab(tab?.kode)}
                       >
                         {`Sample ${tab?.name}`}
                       </DivButton>
@@ -51,16 +58,20 @@ const ModalUploadSample = ({
                   })
                 : ""}
             </div>
-            {currentModalStage === 1 ? (
-              <ContentSampleCSV
+            {currentModalStage === "csv" ? (
+              <TableSampleCSV
                 data={dataSample?.csv}
                 handleChangeCheckbox={handleChangeCheckbox}
+                handleEditSample={handleEditSampleCSV}
               />
-            ) : (
-              <ContentSampleFile
+            ) : currentModalStage === "file" ? (
+              <TableSampleFile
                 data={dataSample?.file}
                 handleChangeCheckbox={handleChangeCheckbox}
+                handleEditSample={handleEditSampleFile}
               />
+            ) : (
+              ""
             )}
             <div className="w-full flex justify-between">
               <div className="w-32 bg-atlasian-blue-light rounded">
@@ -80,4 +91,4 @@ const ModalUploadSample = ({
   );
 };
 
-export default ModalUploadSample;
+export default ModalSample;

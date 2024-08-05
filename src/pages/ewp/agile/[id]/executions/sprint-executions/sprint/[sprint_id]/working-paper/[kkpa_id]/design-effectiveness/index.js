@@ -7,24 +7,39 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setObjDataUserStory,
   setObjDataTask,
+  setObjDataSample,
+  setObjDataNewSampleCSV,
+  setObjDataPoolSampleCSV,
+  setObjDataNewSampleFile,
+  setObjDataPoolSampleFile,
   setObjPayloadTask,
-  setObjPayloadSelectedSample,
+  setObjPayloadSample,
   resetObjDataUserStory,
   resetObjDataTask,
+  resetObjDataSample,
+  resetObjDataNewSampleCSV,
+  resetObjDataPoolSampleCSV,
+  resetObjDataNewSampleFile,
+  resetObjDataPoolSampleFile,
   resetObjPayloadTask,
-  resetObjPayloadSelectedSample,
+  resetObjPayloadSample,
+  resetObjPayloadUploadSample,
 } from "@/slices/ewp/agile/executions/designEffectivenessExecutionEWPAgileSlice";
 import {
   confirmationSwal,
+  convertDataFromCSV,
   errorSwal,
   fetchApi,
   infoSwal,
   loadingSwal,
+  usePostFileData,
+  withTokenConfig,
 } from "@/helpers";
 import {
   CardContentSampleDetail,
   TableTask,
-  ModalUploadSample,
+  ModalSample,
+  ModalUploadSampleFile,
 } from "@/components/molecules/ewp/agile/executions/working-paper";
 import _ from "lodash";
 import {
@@ -35,7 +50,13 @@ import { useDetailSprint } from "@/data/ewp/agile/plannings/sprint-planning";
 import {
   useWorkingPaperStatus,
   useWorkingPaperTaskList,
+  useWorkingPaperSample,
 } from "@/data/ewp/agile/executions/working-paper";
+import {
+  useContentSampleCSV,
+  useSamplePoolCSV,
+  useSamplePoolFile,
+} from "@/data/ewp/agile/executions/working-paper/sample";
 
 const routes = [
   {
@@ -57,8 +78,12 @@ const routes = [
 ];
 
 const dataTabUploadSample = [
-  { no: 1, name: "CSV" },
-  { no: 2, name: "File" },
+  { kode: "csv", name: "CSV" },
+  { kode: "file", name: "File" },
+];
+const dataTabUploadSampleType = [
+  { kode: "new", name: "Upload Sample Baru" },
+  { kode: "pool", name: "Pilih Sample Pool" },
 ];
 
 const index = () => {
@@ -80,10 +105,17 @@ const index = () => {
   const [selectedTaskId, setSelectedTaskId] = useState(0);
 
   // [ START ] state management for modal upload sample
-  const [showModalUploadSample, setShowModalUploadSample] = useState(false);
+  const [showModalSample, setShowModalSample] = useState(false);
+  const [showModalUploadSampleFile, setShowModalUploadSampleFile] =
+    useState(false);
   const [currentModalUploadSampleStage, setCurrentModalUploadSampleStage] =
-    useState(1);
-  const [isPickSample, setIsPickSample] = useState(false);
+    useState("csv");
+  const [
+    currentModalUploadSampleTypeStage,
+    setCurrentModalUploadSampleTypeStage,
+  ] = useState("new");
+  const [selectedSampleId, setSelectedSampleId] = useState(0);
+  const [isUpdateSample, setIsUpdateSample] = useState(false);
   // [ START ] state management for modal upload sample
 
   const dataUserStory = useSelector(
@@ -92,12 +124,26 @@ const index = () => {
   const dataTask = useSelector(
     (state) => state.designEffectivenessExecutionEWPAgile.objDataTask
   );
+  const dataSample = useSelector(
+    (state) => state.designEffectivenessExecutionEWPAgile.objDataSample
+  );
+  const dataNewSampleCSV = useSelector(
+    (state) => state.designEffectivenessExecutionEWPAgile.objDataNewSampleCSV
+  );
+  const dataPoolSampleCSV = useSelector(
+    (state) => state.designEffectivenessExecutionEWPAgile.objDataPoolSampleCSV
+  );
+  const dataNewSampleFile = useSelector(
+    (state) => state.designEffectivenessExecutionEWPAgile.objDataNewSampleFile
+  );
+  const dataPoolSampleFile = useSelector(
+    (state) => state.designEffectivenessExecutionEWPAgile.objDataPoolSampleFile
+  );
   const payloadTask = useSelector(
     (state) => state.designEffectivenessExecutionEWPAgile.objPayloadTask
   );
-  const payloadSelectedSample = useSelector(
-    (state) =>
-      state.designEffectivenessExecutionEWPAgile.objPayloadSelectedSample
+  const payloadSample = useSelector(
+    (state) => state.designEffectivenessExecutionEWPAgile.objPayloadSample
   );
 
   const { auditInfo } = useAuditInfo({ module: "agile", id: params?.id });
@@ -105,9 +151,24 @@ const index = () => {
   const { workingPaperTaskList, workingPaperTaskListMutate } =
     useWorkingPaperTaskList({
       id: params?.kkpa_id,
-      task_type: 1,
+      task_type: 2,
     });
   const { workingPaperStatus } = useWorkingPaperStatus({
+    id: params?.kkpa_id,
+  });
+  const {
+    workingPaperSample,
+    workingPaperSampleError,
+    workingPaperSampleMutate,
+  } = useWorkingPaperSample({ id: params?.kkpa_id, task_type: 2 });
+  const { contentSampleCSV } = useContentSampleCSV({
+    id: selectedSampleId,
+    kkpa_id: params?.kkpa_id,
+  });
+  const { samplePoolCSV, samplePoolCSVMutate } = useSamplePoolCSV({
+    id: params?.kkpa_id,
+  });
+  const { samplePoolFile, samplePoolFileMutate } = useSamplePoolFile({
     id: params?.kkpa_id,
   });
 
@@ -193,8 +254,103 @@ const index = () => {
     }
   }, [workingPaperStatus, workingPaperTaskList]);
 
+  useEffect(() => {
+    if (!workingPaperSampleError) {
+      dispatch(setObjDataSample(workingPaperSample?.data));
+    } else {
+      dispatch(resetObjDataSample());
+    }
+  }, [workingPaperSample, showModalSample]);
+
+  useEffect(() => {
+    if (contentSampleCSV?.data?.csvPool) {
+      const responseCsv = contentSampleCSV?.data?.csvPool;
+      const mappingValues = contentSampleCSV?.data?.existingSample?.length
+        ? contentSampleCSV?.data?.existingSample?.map((v) => {
+            return v?.value;
+          })
+        : [];
+      const fetchData = async () => {
+        try {
+          const { headers } = withTokenConfig();
+          const response = await fetch(responseCsv?.directory, {
+            method: "GET",
+            headers: {
+              ...headers,
+              "Strict-Transport-Security": "max-age=86400; preload",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          const file = await response.text();
+          const data = await convertDataFromCSV(file);
+
+          dispatch(
+            setObjDataNewSampleCSV({
+              ...dataNewSampleCSV,
+              url: responseCsv?.directory,
+              filename: responseCsv?.filename,
+              columns: data?.columns,
+              data: data?.data,
+              total_row: data?.total_data,
+              values: mappingValues,
+            })
+          );
+
+          setCurrentModalUploadSampleTypeStage("new");
+        } catch (error) {
+          console.log("error => ", error?.message);
+        }
+      };
+
+      fetchData();
+    }
+  }, [contentSampleCSV, selectedSampleId]);
+
+  useEffect(() => {
+    if (samplePoolCSV?.data?.length) {
+      const mapping = samplePoolCSV?.data?.map((v) => {
+        return {
+          ..._.pick(v, ["id", "directory", "filename"]),
+          uploader: {
+            pn: v?.pn_uploader,
+            name: v?.name_uploader,
+          },
+          risk_issue: _.pick(v?.original_risk_issue, ["kode", "abbr", "nama"]),
+        };
+      });
+
+      dispatch(setObjDataPoolSampleCSV(mapping));
+    } else {
+      dispatch(resetObjDataPoolSampleCSV());
+    }
+  }, [samplePoolCSV, showModalUploadSampleFile]);
+
+  useEffect(() => {
+    if (samplePoolFile?.data?.length) {
+      const mapping = samplePoolFile?.data?.map((v) => {
+        return {
+          ..._.pick(v, ["id", "directory", "filename", "description"]),
+          uploader: {
+            pn: v?.pn_uploader,
+            name: v?.name_uploader,
+          },
+          upload_date: v?.created_at,
+          risk_issue: _.pick(v?.original_risk_issue, ["kode", "abbr", "nama"]),
+        };
+      });
+
+      dispatch(setObjDataPoolSampleFile(mapping));
+    } else {
+      dispatch(resetObjDataPoolSampleFile());
+    }
+  }, [samplePoolFile, showModalUploadSampleFile]);
+
   const handleClickUploadSample = () => {
-    setShowModalUploadSample(true);
+    setShowModalSample(true);
   };
 
   // [ START ] handler for table task
@@ -262,17 +418,55 @@ const index = () => {
   };
   // [ END ] handler for modal update comment task
 
-  // [ START ] handler for modal upload sample
-  const handleChangeStage = (index) => {
-    setCurrentModalUploadSampleStage(index);
+  // [ START ] handler for modal sample
+  const handleCloseModalSample = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    setShowModalSample(false);
+    dispatch(resetObjDataSample());
+    dispatch(resetObjPayloadUploadSample());
+  };
+
+  const handleChangeTabUploadSample = (kode) => {
+    setCurrentModalUploadSampleStage(kode);
+    dispatch(resetObjPayloadSample());
   };
 
   const handleClickPickSample = () => {
-    setIsPickSample(true);
+    setShowModalUploadSampleFile(true);
+  };
+
+  const handleChangeCheckboxSample = (isChecked, sample_id) => {
+    const updatedData = [...payloadSample];
+
+    if (isChecked) {
+      const findId = updatedData.some((data) => data === sample_id);
+
+      if (!findId) {
+        updatedData.push(sample_id);
+      }
+    } else {
+      const filter = updatedData.filter((data) => data !== sample_id);
+      dispatch(setObjPayloadSample(filter));
+      return;
+    }
+
+    dispatch(setObjPayloadSample(updatedData));
+  };
+
+  const handleClickEditSample = (id) => {
+    setSelectedSampleId(id);
+    setIsUpdateSample(true);
+    setShowModalUploadSampleFile(true);
   };
 
   const handleClickDeleteSample = async () => {
-    if (!payloadSelectedSample.length) {
+    if (!payloadSample.length) {
       await errorSwal("Silahkan pilih data yang ingin dihapus");
       return;
     }
@@ -285,26 +479,353 @@ const index = () => {
       return;
     }
 
-    loadingSwal();
+    const payload = payloadSample?.map((sample_id) => {
+      return {
+        objek_sample_id: sample_id,
+      };
+    });
 
-    let url;
-    switch (currentModalUploadSampleStage) {
-      case 1:
-        url = `sample_csv`;
-        break;
-      case 2:
-        url = `sample_file`;
-        break;
-    }
+    loadingSwal();
     await fetchApi(
       "DELETE",
-      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/pelaksanaan/working_paper/${id}/${selectedRiskIssue}/${url}`,
-      payloadSelectedSample
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/pelaksanaan/working_paper/sample/${currentModalUploadSampleStage}/${params?.kkpa_id}`,
+      payload
     );
 
+    workingPaperSampleMutate();
+    dispatch(resetObjPayloadSample());
     loadingSwal("close");
-    sampleUploadMapaEWPMutate();
   };
+  // [ END ] handler for modal sample
+
+  // [ START ] handler for modal upload sample
+  const mappingReduxUploadSampleCSV = {
+    state: {
+      new: dataNewSampleCSV,
+      pool: dataPoolSampleCSV,
+    },
+    action: {
+      new: setObjDataNewSampleCSV,
+      pool: setObjDataPoolSampleCSV,
+    },
+  };
+
+  const mappingReduxUploadSampleFile = {
+    state: {
+      new: dataNewSampleFile,
+      pool: dataPoolSampleFile,
+    },
+    action: {
+      new: setObjDataNewSampleFile,
+      pool: setObjDataPoolSampleFile,
+    },
+  };
+
+  const handleChangeTabUploadSampleType = (kode) => {
+    setCurrentModalUploadSampleTypeStage(kode);
+  };
+
+  const handleCloseModalUploadSampleFile = async () => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda ingin menutup modal ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    setSelectedSampleId(0);
+    setIsUpdateSample(false);
+    setShowModalUploadSampleFile(false);
+    setCurrentModalUploadSampleTypeStage("new");
+    dispatch(resetObjDataNewSampleCSV());
+    dispatch(resetObjDataPoolSampleCSV());
+    dispatch(resetObjDataNewSampleFile());
+    dispatch(resetObjDataPoolSampleFile());
+  };
+
+  // [ START ] handler for upload csv
+  const handleChangeCheckboxCSV = (isChecked, no) => {
+    const updatedData = [...(dataNewSampleCSV?.values || [])];
+    if (isChecked) {
+      const findData = updatedData.some((value) => value === no);
+
+      if (!findData) {
+        updatedData.push(no);
+      }
+    } else {
+      const filter = updatedData.filter((value) => value !== no);
+      dispatch(
+        setObjDataNewSampleCSV({
+          ...dataNewSampleCSV,
+          values: filter,
+        })
+      );
+      return;
+    }
+
+    dispatch(
+      setObjDataNewSampleCSV({
+        ...dataNewSampleCSV,
+        values: updatedData,
+      })
+    );
+  };
+
+  const handleUploadSampleCSV = async (e) => {
+    loadingSwal();
+    if (e?.target?.files) {
+      if (e.target.files[0]?.type !== "application/vnd.ms-excel") {
+        await errorSwal(`Format .csv tidak didukung`);
+        return;
+      }
+
+      const upload = await usePostFileData(
+        `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/cdn/upload`,
+        {
+          file: e?.target?.files[0],
+          modul: "ewp",
+        }
+      );
+
+      const url = upload?.url[0];
+      const file = e?.target?.files[0];
+
+      convertDataFromCSV(file)
+        .then((data) => {
+          dispatch(
+            setObjDataNewSampleCSV({
+              ...dataNewSampleCSV,
+              url,
+              filename: file?.name,
+              columns: data?.columns,
+              data: data?.data,
+              total_row: data?.total_data,
+            })
+          );
+        })
+        .catch((error) => {
+          console.error(error.message);
+        });
+    }
+
+    loadingSwal("close");
+  };
+
+  const handleSubmitUpdateCSV = async () => {
+    if (!dataNewSampleCSV?.values?.length) {
+      infoSwal("Silahkan pilih data yang ingin dijadikan sample!");
+      return;
+    }
+    loadingSwal();
+
+    const mappingValue = dataNewSampleCSV?.values?.map((v) => {
+      return {
+        objek_sample_id: selectedSampleId,
+        value: v,
+      };
+    });
+    await fetchApi(
+      "PATCH",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/pelaksanaan/working_paper/sample/csv/update/${params?.kkpa_id}`,
+      {
+        sample_id: mappingValue,
+        task_type_kode: 2,
+        task_type_name: "Design Effectiveness",
+      }
+    );
+
+    setIsUpdateSample(false);
+    workingPaperSampleMutate();
+    samplePoolCSVMutate();
+    dispatch(resetObjDataNewSampleCSV());
+    setShowModalUploadSampleFile(false);
+    loadingSwal("close");
+  };
+
+  const handleSubmitUploadCSV = async () => {
+    if (!dataNewSampleCSV?.url) {
+      infoSwal("Silahkan upload file terlebih dahulu!");
+      return;
+    }
+
+    if (!dataNewSampleCSV?.values?.length) {
+      infoSwal("Silahkan pilih data yang ingin dijadikan sample!");
+      return;
+    }
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/pelaksanaan/working_paper/sample/csv/upload/${params?.kkpa_id}`,
+      {
+        ..._.pick(dataNewSampleCSV, [
+          "url",
+          "filename",
+          "values",
+          "sample_pool_id",
+        ]),
+        jumlah_baris: dataNewSampleCSV?.total_row,
+        uniq_column: "no",
+        task_type_kode: 2,
+        task_type_name: "Design Effectiveness",
+      }
+    );
+
+    workingPaperSampleMutate();
+    samplePoolCSVMutate();
+    dispatch(resetObjDataNewSampleCSV());
+    setShowModalUploadSampleFile(false);
+    loadingSwal("close");
+  };
+  // [ END ] handler for upload csv
+
+  // [ START ] handler for pool csv
+  const handleClickDownloadPoolSampleCSV = async (params) => {
+    loadingSwal();
+    const { headers } = withTokenConfig();
+    const response = await fetch(params?.directory, {
+      method: "GET",
+      headers: {
+        ...headers,
+        "Strict-Transport-Security": "max-age=86400; preload",
+      },
+    });
+
+    const file = await response.text();
+    convertDataFromCSV(file)
+      .then((data) => {
+        dispatch(
+          setObjDataNewSampleCSV({
+            ...dataNewSampleCSV,
+            sample_pool_id: params?.id,
+            url: params?.directory,
+            filename: params?.filename,
+            columns: data?.columns,
+            data: data?.data,
+            total_row: data?.total_data,
+          })
+        );
+      })
+      .catch((error) => {
+        console.log("error => ", error?.message);
+      });
+
+    setCurrentModalUploadSampleTypeStage("new");
+    loadingSwal("close");
+  };
+
+  const handleClickDeletePoolSampleCSV = async (id) => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin untuk mengahapus data ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "DELETE",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/pelaksanaan/working_paper/pool/csv/${id}`,
+      {}
+    );
+
+    samplePoolCSVMutate();
+    loadingSwal("close");
+  };
+  // [ END ] handler for pool csv
+
+  // [ START ] handler for upload file
+  const handleChangeDescriptionFile = (value) => {
+    dispatch(
+      setObjDataNewSampleFile({ ...dataNewSampleFile, description: value })
+    );
+  };
+
+  const handleUploadSampleFile = async (e) => {
+    loadingSwal();
+    if (e?.target?.files) {
+      const upload = await usePostFileData(
+        `${process.env.NEXT_PUBLIC_API_URL_COMMON}/common/cdn/upload`,
+        {
+          file: e?.target?.files[0],
+          modul: "ewp",
+        }
+      );
+
+      const url = upload?.url[0];
+      const file = e?.target?.files[0];
+
+      dispatch(
+        setObjDataNewSampleFile({
+          ...dataNewSampleFile,
+          filename: file?.name,
+          url,
+        })
+      );
+    }
+
+    loadingSwal("close");
+  };
+
+  const handleSubmitUploadFile = async () => {
+    if (!dataNewSampleFile?.url) {
+      infoSwal("Silahkan upload file terlebih dahulu!");
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "POST",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/pelaksanaan/working_paper/sample/file/upload/${params?.kkpa_id}`,
+      {
+        ...dataNewSampleFile,
+        task_type_kode: 2,
+        task_type_name: "Design Effectiveness",
+      }
+    );
+
+    workingPaperSampleMutate();
+    samplePoolFileMutate();
+    dispatch(resetObjDataNewSampleFile());
+    setShowModalUploadSampleFile(false);
+    loadingSwal("close");
+  };
+  // [ END ] handler for upload file
+
+  // [ START ] handler for pool file
+  const handleClickDownloadPoolSampleFile = async (params) => {
+    loadingSwal();
+    dispatch(
+      setObjDataNewSampleFile({
+        url: params?.directory,
+        filename: params?.filename,
+        description: params?.description,
+      })
+    );
+    setCurrentModalUploadSampleTypeStage("new");
+    loadingSwal("close");
+  };
+
+  const handleClickDeletePoolSampleFile = async (id) => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin untuk mengahapus data ini?"
+    );
+
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "DELETE",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/agile/pelaksanaan/working_paper/pool/file/${id}`,
+      {}
+    );
+
+    samplePoolFileMutate();
+    loadingSwal("close");
+  };
+  // [ END ] handler for pool csv
   // [ END ] handler for modal upload sample
 
   return (
@@ -345,12 +866,39 @@ const index = () => {
         handleCloseModal={handleCloseModalEvaluasi}
         handleSubmit={handleSubmitUpdateEvaluasi}
       />
-      <ModalUploadSample
-        showModal={showModalUploadSample}
-        dataTab={dataTabUploadSample}
+      <ModalSample
+        showModal={showModalSample}
         currentModalStage={currentModalUploadSampleStage}
+        dataTab={dataTabUploadSample}
+        dataSample={dataSample}
+        handleCloseModal={handleCloseModalSample}
         handleClickPickSample={handleClickPickSample}
-        handleChangeCurrentTab={handleChangeStage}
+        handleChangeCheckbox={handleChangeCheckboxSample}
+        handleChangeCurrentTab={handleChangeTabUploadSample}
+        handleEditSample={handleClickEditSample}
+        handleDeleteSample={handleClickDeleteSample}
+      />
+      <ModalUploadSampleFile
+        showModal={showModalUploadSampleFile}
+        mappingReduxCSV={mappingReduxUploadSampleCSV}
+        mappingReduxFile={mappingReduxUploadSampleFile}
+        currentModalStage={currentModalUploadSampleStage}
+        currentModalSubStage={currentModalUploadSampleTypeStage}
+        dataTab={dataTabUploadSampleType}
+        isUpdateSample={isUpdateSample}
+        handleCloseModal={handleCloseModalUploadSampleFile}
+        handleChangeCurrentTab={handleChangeTabUploadSampleType}
+        handleChangeDescriptionFile={handleChangeDescriptionFile}
+        handleClickCheckboxCSV={handleChangeCheckboxCSV}
+        handleClickDownloadPoolSampleCSV={handleClickDownloadPoolSampleCSV}
+        handleClickDeletePoolSampleCSV={handleClickDeletePoolSampleCSV}
+        handleClickDownloadPoolSampleFile={handleClickDownloadPoolSampleFile}
+        handleClickDeletePoolSampleFile={handleClickDeletePoolSampleFile}
+        handleUploadSampleCSV={handleUploadSampleCSV}
+        handleUploadSampleFile={handleUploadSampleFile}
+        handleSubmitUploadCSV={handleSubmitUploadCSV}
+        handleSubmitUploadFile={handleSubmitUploadFile}
+        handleSubmitUpdateCSV={handleSubmitUpdateCSV}
       />
       {/* End Content */}
     </LandingLayoutEWPAgile>
