@@ -202,6 +202,25 @@ const index = () => {
     router.push(`/rpm/quality-assurance/${id}/meeting/${meeting_id}`);
   };
 
+  const handleClickDelete = async (id) => {
+    const confirm = await confirmationSwal(
+      "Apakah Anda yakin ingin menghapus meeting ini?"
+    );
+    if (!confirm.value) {
+      return;
+    }
+
+    loadingSwal();
+    await fetchApi(
+      "DELETE",
+      `${process.env.NEXT_PUBLIC_API_URL_EWP}/ewp/meeting/delete/${id}`,
+      {}
+    );
+
+    overviewMutate();
+    loadingSwal("close");
+  };
+
   // [ START ] handler for modal add meeting
   const handleCloseModal = async () => {
     const confirm = await confirmationSwal(
@@ -343,6 +362,7 @@ const index = () => {
                 data={v}
                 handleClickCarding={handleClickCarding}
                 handleClickUrl={handleClickUrl}
+                handleClickDelete={handleClickDelete}
               />
             );
           })}
