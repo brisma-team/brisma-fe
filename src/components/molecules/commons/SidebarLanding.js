@@ -7,9 +7,14 @@ import Image from "next/image";
 
 const SidebarLanding = () => {
   const images = [
-    "/images/banner_new1.png",
     "/images/banner_brisma.png",
     "/images/banner_brisma21.png",
+    "/images/banner_new1.png",
+    "/images/banner_new2.png",
+    "/images/banner_new3.png",
+    "/images/banner_new4.png",
+    "/images/banner_new5.png",
+    "/images/banner_new6.png",
   ];
 
   return (
