@@ -7,14 +7,14 @@ import Image from "next/image";
 
 const SidebarLanding = () => {
   const images = [
-    "/images/banner_brisma.png",
-    "/images/banner_brisma21.png",
-    "/images/banner_new1.png",
-    "/images/banner_new2.png",
-    "/images/banner_new3.png",
-    "/images/banner_new4.png",
-    "/images/banner_new5.png",
-    "/images/banner_new6.png",
+    // "/images/banner_brisma.png",
+    // "/images/banner_brisma21.png",
+    "/images/banner_brisma1.png",
+    "/images/banner_brisma2.png",
+    "/images/banner_brisma3.png",
+    "/images/banner_brisma4.png",
+    "/images/banner_brisma5.png",
+    "/images/banner_brisma6.png",
   ];
 
   return (
