@@ -6,7 +6,11 @@ import Carousel from "./Carousel";
 import Image from "next/image";
 
 const SidebarLanding = () => {
-  const images = ["/images/banner_brisma.png", "/images/banner_brisma21.png"];
+  const images = [
+    "/images/banner_new1.png",
+    "/images/banner_brisma.png",
+    "/images/banner_brisma21.png",
+  ];
 
   return (
     <>
