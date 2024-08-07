@@ -34,6 +34,10 @@ const routes = [
     name: "Conclusion",
     slug: "conclusion",
   },
+  {
+    name: "Document",
+    slug: "dokumen",
+  },
 ];
 
 const index = () => {
