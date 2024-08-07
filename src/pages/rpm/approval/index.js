@@ -114,6 +114,10 @@ const index = () => {
       case "Consulting":
         if (sub_modul === "project_rpm") {
           faseApproval = "Monitoring";
+        } else if (sub_modul === "entrance_ba") {
+          faseApproval = "Entrance Berita Acara";
+        } else if (sub_modul === "entrance_notulen") {
+          faseApproval = "Entrance Notulen";
         }
         break;
       case "Monitoring Offsite":
@@ -125,6 +129,10 @@ const index = () => {
           faseApproval = "Reporting";
         } else if (sub_modul === "tidak_lanjut") {
           faseApproval = "Tindak Lanjut";
+        } else if (sub_modul === "entrance_ba") {
+          faseApproval = "Entrance Berita Acara";
+        } else if (sub_modul === "entrance_notulen") {
+          faseApproval = "Entrance Notulen";
         }
         break;
       case "Quality Assurance":
@@ -134,6 +142,10 @@ const index = () => {
           faseApproval = "Action Plan Evaluasi";
         } else if (sub_modul === "action_plan_nego") {
           faseApproval = "Negosiasi";
+        } else if (sub_modul === "entrance_ba") {
+          faseApproval = "Entrance Berita Acara";
+        } else if (sub_modul === "entrance_notulen") {
+          faseApproval = "Entrance Notulen";
         }
         break;
       default:
@@ -152,12 +164,17 @@ const index = () => {
       kkpt_id,
       sub_modul_id,
       action_plan_id,
+      ewp_meeting_id,
     } = data;
     let query;
     switch (ref_tipe?.nama) {
       case "Consulting":
         if (sub_modul === "project_rpm") {
           query = `kegiatan/${rpm_id}/dokumen`;
+        } else if (sub_modul === "entrance_ba") {
+          query = `kegiatan/${rpm_id}/meeting/${ewp_meeting_id}/berita-acara`;
+        } else if (sub_modul === "entrance_notulen") {
+          query = `quality-assurance/${rpm_id}/meeting/${ewp_meeting_id}/notulen`;
         }
         break;
       case "Quality Assurance":
@@ -167,6 +184,10 @@ const index = () => {
           query = `quality-assurance/${rpm_id}/overview/${kkpt_id}/evaluasi/${sub_modul_id}`;
         } else if (sub_modul === "action_plan_nego") {
           query = `quality-assurance/${rpm_id}/overview/${kkpt_id}/negosiasi/${action_plan_id}`;
+        } else if (sub_modul === "entrance_ba") {
+          query = `quality-assurance/${rpm_id}/meeting/${ewp_meeting_id}/berita-acara`;
+        } else if (sub_modul === "entrance_notulen") {
+          query = `quality-assurance/${rpm_id}/meeting/${ewp_meeting_id}/notulen`;
         }
         break;
     }

@@ -9,6 +9,7 @@ const ModalBodyActivityObject = ({
   isDisabledButtonSave,
   currentModalStage,
   handleSubmit,
+  handlePrevStage,
   handleNextStage,
 }) => {
   useEffect(() => {
@@ -29,6 +30,7 @@ const ModalBodyActivityObject = ({
           isDisabled={isDisabledButtonSave}
           currentModalStage={currentModalStage}
           handleSubmit={handleSubmit}
+          handlePrevStage={handlePrevStage}
           handleNextStage={handleNextStage}
         />
       </div>

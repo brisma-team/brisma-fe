@@ -30,6 +30,7 @@ const ModalBodyInfoKegiatan = ({
   isDisabled,
   currentModalStage,
   handleSubmit,
+  handlePrevStage,
   handleNextStage,
   isDisabledButtonSave,
 }) => {
@@ -365,6 +366,7 @@ const ModalBodyInfoKegiatan = ({
           isDisabled={isDisabledButtonSave}
           currentModalStage={currentModalStage}
           handleSubmit={handleSubmit}
+          handlePrevStage={handlePrevStage}
           handleNextStage={handleNextStage}
         />
       </div>

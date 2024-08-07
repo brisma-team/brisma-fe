@@ -119,6 +119,8 @@ const index = () => {
               catatan_nego?.rpm_action_plan_sebelum;
             return {
               tanggal_kejadian: catatan_nego?.createdAt,
+              rekomendasi: catatan_nego?.rekomendasi_kkpt?.nama,
+              desc: catatan_nego?.rekomendasi_kkpt?.description,
               action_plan: responseActionPlanSebelum?.action_plan_kkpt?.name,
               deadline: responseActionPlanSebelum?.batas_waktu,
               evaluasi: responseActionPlanSebelum?.hasil_evaluasi,

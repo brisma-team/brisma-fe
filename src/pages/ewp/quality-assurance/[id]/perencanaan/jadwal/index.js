@@ -241,6 +241,7 @@ const index = () => {
                     className="border-r cell-jadwal-audit-mapa-ewp"
                   >
                     <DatepickerField
+                      format={"DD/MM/YYYY"}
                       placeholder="Tanggal"
                       handleChange={(value) =>
                         handleChange(property_start, value)
@@ -257,6 +258,7 @@ const index = () => {
                     className="border-r cell-jadwal-audit-mapa-ewp"
                   >
                     <DatepickerField
+                      format={"DD/MM/YYYY"}
                       placeholder="Tanggal"
                       handleChange={(value) =>
                         handleChange(property_end, value)

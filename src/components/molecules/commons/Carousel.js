@@ -9,15 +9,17 @@ const Carousel = ({ images }) => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       nextSlide();
-    }, 10000); // Setiap 10 detik
+    }, 10000); // Change slide every 10 seconds
+
     return () => clearInterval(intervalId);
-  }, [currentSlide]);
+  }, []);
 
   useEffect(() => {
     setIsTransitioning(true);
     const timeoutId = setTimeout(() => {
       setIsTransitioning(false);
-    }, 500); // Sesuaikan dengan durasi transisi
+    }, 500); // Match the transition duration
+
     return () => clearTimeout(timeoutId);
   }, [currentSlide]);
 
@@ -37,17 +39,15 @@ const Carousel = ({ images }) => {
     <div className="relative max-w-screen mx-auto">
       <button
         onClick={prevSlide}
+        aria-label="Previous slide"
         className="absolute left-0 top-1/2 transform -translate-y-1/2 text-2xl focus:outline-none"
       >
         <IconArrowLeft size="large" />
       </button>
       <div
-        style={{
-          width: "100%",
-          overflow: "hidden",
-          opacity: isTransitioning ? 0 : 1,
-          transition: "opacity 0.5s ease-in-out",
-        }}
+        className={`w-full overflow-hidden transition-opacity duration-500 ease-in-out ${
+          isTransitioning ? "opacity-0" : "opacity-100"
+        }`}
       >
         <Image
           src={images[currentSlide]}
@@ -59,6 +59,7 @@ const Carousel = ({ images }) => {
       </div>
       <button
         onClick={nextSlide}
+        aria-label="Next slide"
         className="absolute right-0 top-1/2 transform -translate-y-1/2 text-2xl focus:outline-none"
       >
         <IconArrowRight size="large" />
