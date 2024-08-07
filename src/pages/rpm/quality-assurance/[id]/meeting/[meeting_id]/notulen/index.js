@@ -60,7 +60,7 @@ const routes = [
 
 const index = () => {
   const dispatch = useDispatch();
-  const { id, meeting_id } = useRouter().query;
+  const { id, meeting_id, is_approval } = useRouter().query;
   const baseUrl = `/rpm/quality-assurance/${id}`;
   const pathNameSubModulMeeting = `${baseUrl}/meeting`;
   const pathNameLanding = `${baseUrl}/meeting/${meeting_id}`;
@@ -96,6 +96,11 @@ const index = () => {
 
   const { user } = useUser();
 
+  useEffect(() => {
+    if (is_approval) {
+      setShowModalApproval(true);
+    }
+  }, [is_approval]);
   useEffect(() => {
     setSelectedNotulenId(meetingDetail?.data?.notulen?.id || 0);
   }, [meetingDetail]);
