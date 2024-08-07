@@ -200,13 +200,15 @@ const index = () => {
                       Total
                     </div>
                     <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-green">
-                      {totalUker.existing}
+                      {totalUker?.existing || 0}
                     </div>
                     <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-yellow">
-                      {totalUker.target}
+                      {totalUker?.target || 0}
                     </div>
                     <div className="w-1/5 ml-2 font-semibold flex items-center text-atlasian-dark">
-                      {totalUker.presentase}
+                      {totalUker?.presentase
+                        ? parseFloat(totalUker?.presentase).toFixed(2)
+                        : 0}
                     </div>
                   </div>
                 </div>
@@ -238,13 +240,15 @@ const index = () => {
                         Total
                       </div>
                       <div className="w-[20%] ml-2 font-semibold flex items-center text-atlasian-green">
-                        {totalEchannel.existing}
+                        {totalEchannel?.existing || 0}
                       </div>
                       <div className="w-[20%] ml-2 font-semibold flex items-center text-atlasian-yellow">
-                        {totalEchannel.target}
+                        {totalEchannel?.target || 0}
                       </div>
                       <div className="w-[25%] ml-2 font-semibold flex items-center text-atlasian-dark">
-                        {totalEchannel.presentase}
+                        {totalEchannel?.presentase
+                          ? parseFloat(totalEchannel?.presentase).toFixed(2)
+                          : 0}
                       </div>
                     </div>
                   </div>
