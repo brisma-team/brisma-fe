@@ -248,6 +248,9 @@ const ModalOtherSchedule = ({
       }
     }
   };
+  const handlePrevStage = async () => {
+    setCurrentModalStage(currentModalStage - 1);
+  };
 
   const handleNextStage = async () => {
     const validate = setErrorValidation(
@@ -334,6 +337,7 @@ const ModalOtherSchedule = ({
           isDisabledButtonSave={isDisabledButtonSave}
           currentModalStage={currentModalStage}
           handleSubmit={handleSubmit}
+          handlePrevStage={handlePrevStage}
           handleNextStage={handleNextStage}
         />
       )}
@@ -344,6 +348,7 @@ const ModalOtherSchedule = ({
           isDisabledButtonSave={isDisabledButtonSave}
           currentModalStage={currentModalStage}
           handleSubmit={handleSubmit}
+          handlePrevStage={handlePrevStage}
           handleNextStage={handleNextStage}
         />
       )}
@@ -354,6 +359,7 @@ const ModalOtherSchedule = ({
           isDisabledButtonSave={false}
           currentModalStage={currentModalStage}
           handleSubmit={handleSubmit}
+          handlePrevStage={handlePrevStage}
           handleNextStage={handleNextStage}
         />
       )}

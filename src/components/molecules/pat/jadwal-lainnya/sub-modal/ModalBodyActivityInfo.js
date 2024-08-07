@@ -21,6 +21,7 @@ const ModalBodyActivityInfo = ({
   isDisabled,
   currentModalStage,
   handleSubmit,
+  handlePrevStage,
   handleNextStage,
   isDisabledButtonSave,
 }) => {
@@ -340,6 +341,7 @@ const ModalBodyActivityInfo = ({
           isDisabled={isDisabledButtonSave}
           currentModalStage={currentModalStage}
           handleSubmit={handleSubmit}
+          handlePrevStage={handlePrevStage}
           handleNextStage={handleNextStage}
         />
       </div>
